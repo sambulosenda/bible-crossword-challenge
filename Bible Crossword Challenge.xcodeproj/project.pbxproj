@@ -1,0 +1,583 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXContainerItemProxy section */
+		4F1A3C4C2FE8883E005B59F2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4F1A3C362FE8883C005B59F2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4F1A3C3D2FE8883C005B59F2;
+			remoteInfo = "Bible Crossword Challenge";
+		};
+		4F1A3C562FE8883E005B59F2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4F1A3C362FE8883C005B59F2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4F1A3C3D2FE8883C005B59F2;
+			remoteInfo = "Bible Crossword Challenge";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		4F1A3C3E2FE8883C005B59F2 /* Bible Crossword Challenge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Bible Crossword Challenge.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4F1A3C4B2FE8883E005B59F2 /* Bible Crossword ChallengeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Bible Crossword ChallengeTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4F1A3C552FE8883E005B59F2 /* Bible Crossword ChallengeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Bible Crossword ChallengeUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		4F1A3C402FE8883C005B59F2 /* Bible Crossword Challenge */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Bible Crossword Challenge";
+			sourceTree = "<group>";
+		};
+		4F1A3C4E2FE8883E005B59F2 /* Bible Crossword ChallengeTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Bible Crossword ChallengeTests";
+			sourceTree = "<group>";
+		};
+		4F1A3C582FE8883E005B59F2 /* Bible Crossword ChallengeUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Bible Crossword ChallengeUITests";
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		4F1A3C3B2FE8883C005B59F2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4F1A3C482FE8883E005B59F2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4F1A3C522FE8883E005B59F2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4F1A3C352FE8883C005B59F2 = {
+			isa = PBXGroup;
+			children = (
+				4F1A3C402FE8883C005B59F2 /* Bible Crossword Challenge */,
+				4F1A3C4E2FE8883E005B59F2 /* Bible Crossword ChallengeTests */,
+				4F1A3C582FE8883E005B59F2 /* Bible Crossword ChallengeUITests */,
+				4F1A3C3F2FE8883C005B59F2 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		4F1A3C3F2FE8883C005B59F2 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4F1A3C3E2FE8883C005B59F2 /* Bible Crossword Challenge.app */,
+				4F1A3C4B2FE8883E005B59F2 /* Bible Crossword ChallengeTests.xctest */,
+				4F1A3C552FE8883E005B59F2 /* Bible Crossword ChallengeUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		4F1A3C3D2FE8883C005B59F2 /* Bible Crossword Challenge */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4F1A3C5F2FE8883E005B59F2 /* Build configuration list for PBXNativeTarget "Bible Crossword Challenge" */;
+			buildPhases = (
+				4F1A3C3A2FE8883C005B59F2 /* Sources */,
+				4F1A3C3B2FE8883C005B59F2 /* Frameworks */,
+				4F1A3C3C2FE8883C005B59F2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				4F1A3C402FE8883C005B59F2 /* Bible Crossword Challenge */,
+			);
+			name = "Bible Crossword Challenge";
+			packageProductDependencies = (
+			);
+			productName = "Bible Crossword Challenge";
+			productReference = 4F1A3C3E2FE8883C005B59F2 /* Bible Crossword Challenge.app */;
+			productType = "com.apple.product-type.application";
+		};
+		4F1A3C4A2FE8883E005B59F2 /* Bible Crossword ChallengeTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4F1A3C622FE8883E005B59F2 /* Build configuration list for PBXNativeTarget "Bible Crossword ChallengeTests" */;
+			buildPhases = (
+				4F1A3C472FE8883E005B59F2 /* Sources */,
+				4F1A3C482FE8883E005B59F2 /* Frameworks */,
+				4F1A3C492FE8883E005B59F2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4F1A3C4D2FE8883E005B59F2 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				4F1A3C4E2FE8883E005B59F2 /* Bible Crossword ChallengeTests */,
+			);
+			name = "Bible Crossword ChallengeTests";
+			packageProductDependencies = (
+			);
+			productName = "Bible Crossword ChallengeTests";
+			productReference = 4F1A3C4B2FE8883E005B59F2 /* Bible Crossword ChallengeTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		4F1A3C542FE8883E005B59F2 /* Bible Crossword ChallengeUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4F1A3C652FE8883E005B59F2 /* Build configuration list for PBXNativeTarget "Bible Crossword ChallengeUITests" */;
+			buildPhases = (
+				4F1A3C512FE8883E005B59F2 /* Sources */,
+				4F1A3C522FE8883E005B59F2 /* Frameworks */,
+				4F1A3C532FE8883E005B59F2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4F1A3C572FE8883E005B59F2 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				4F1A3C582FE8883E005B59F2 /* Bible Crossword ChallengeUITests */,
+			);
+			name = "Bible Crossword ChallengeUITests";
+			packageProductDependencies = (
+			);
+			productName = "Bible Crossword ChallengeUITests";
+			productReference = 4F1A3C552FE8883E005B59F2 /* Bible Crossword ChallengeUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		4F1A3C362FE8883C005B59F2 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2620;
+				LastUpgradeCheck = 2620;
+				TargetAttributes = {
+					4F1A3C3D2FE8883C005B59F2 = {
+						CreatedOnToolsVersion = 26.2;
+					};
+					4F1A3C4A2FE8883E005B59F2 = {
+						CreatedOnToolsVersion = 26.2;
+						TestTargetID = 4F1A3C3D2FE8883C005B59F2;
+					};
+					4F1A3C542FE8883E005B59F2 = {
+						CreatedOnToolsVersion = 26.2;
+						TestTargetID = 4F1A3C3D2FE8883C005B59F2;
+					};
+				};
+			};
+			buildConfigurationList = 4F1A3C392FE8883C005B59F2 /* Build configuration list for PBXProject "Bible Crossword Challenge" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 4F1A3C352FE8883C005B59F2;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 4F1A3C3F2FE8883C005B59F2 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				4F1A3C3D2FE8883C005B59F2 /* Bible Crossword Challenge */,
+				4F1A3C4A2FE8883E005B59F2 /* Bible Crossword ChallengeTests */,
+				4F1A3C542FE8883E005B59F2 /* Bible Crossword ChallengeUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		4F1A3C3C2FE8883C005B59F2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4F1A3C492FE8883E005B59F2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4F1A3C532FE8883E005B59F2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		4F1A3C3A2FE8883C005B59F2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4F1A3C472FE8883E005B59F2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4F1A3C512FE8883E005B59F2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		4F1A3C4D2FE8883E005B59F2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4F1A3C3D2FE8883C005B59F2 /* Bible Crossword Challenge */;
+			targetProxy = 4F1A3C4C2FE8883E005B59F2 /* PBXContainerItemProxy */;
+		};
+		4F1A3C572FE8883E005B59F2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4F1A3C3D2FE8883C005B59F2 /* Bible Crossword Challenge */;
+			targetProxy = 4F1A3C562FE8883E005B59F2 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		4F1A3C5D2FE8883E005B59F2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = Y53KNKBDS8;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		4F1A3C5E2FE8883E005B59F2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = Y53KNKBDS8;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		4F1A3C602FE8883E005B59F2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Y53KNKBDS8;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.sambulosendas1.Bible-Crossword-Challenge";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		4F1A3C612FE8883E005B59F2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Y53KNKBDS8;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.sambulosendas1.Bible-Crossword-Challenge";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		4F1A3C632FE8883E005B59F2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Y53KNKBDS8;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.sambulosendas1.Bible-Crossword-ChallengeTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Bible Crossword Challenge.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Bible Crossword Challenge";
+			};
+			name = Debug;
+		};
+		4F1A3C642FE8883E005B59F2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Y53KNKBDS8;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.sambulosendas1.Bible-Crossword-ChallengeTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Bible Crossword Challenge.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Bible Crossword Challenge";
+			};
+			name = Release;
+		};
+		4F1A3C662FE8883E005B59F2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Y53KNKBDS8;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.sambulosendas1.Bible-Crossword-ChallengeUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "Bible Crossword Challenge";
+			};
+			name = Debug;
+		};
+		4F1A3C672FE8883E005B59F2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Y53KNKBDS8;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.sambulosendas1.Bible-Crossword-ChallengeUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "Bible Crossword Challenge";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4F1A3C392FE8883C005B59F2 /* Build configuration list for PBXProject "Bible Crossword Challenge" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4F1A3C5D2FE8883E005B59F2 /* Debug */,
+				4F1A3C5E2FE8883E005B59F2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4F1A3C5F2FE8883E005B59F2 /* Build configuration list for PBXNativeTarget "Bible Crossword Challenge" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4F1A3C602FE8883E005B59F2 /* Debug */,
+				4F1A3C612FE8883E005B59F2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4F1A3C622FE8883E005B59F2 /* Build configuration list for PBXNativeTarget "Bible Crossword ChallengeTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4F1A3C632FE8883E005B59F2 /* Debug */,
+				4F1A3C642FE8883E005B59F2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4F1A3C652FE8883E005B59F2 /* Build configuration list for PBXNativeTarget "Bible Crossword ChallengeUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4F1A3C662FE8883E005B59F2 /* Debug */,
+				4F1A3C672FE8883E005B59F2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 4F1A3C362FE8883C005B59F2 /* Project object */;
+}
