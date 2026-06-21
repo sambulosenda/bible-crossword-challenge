@@ -1,0 +1,53 @@
+//
+//  RootView.swift
+//  Bible Crossword Challenge
+//
+//  Ensures a single local profile exists, normalises the streak on launch, and
+//  hosts the main tab navigation.
+//
+
+import SwiftUI
+import SwiftData
+
+struct RootView: View {
+    @Environment(\.modelContext) private var context
+    @Environment(\.analytics) private var analytics
+    @Query private var profiles: [PlayerProfile]
+
+    var body: some View {
+        Group {
+            if let profile = profiles.first {
+                TabView {
+                    Tab("Today", systemImage: "calendar") {
+                        HomeView(profile: profile)
+                    }
+                    Tab("Archive", systemImage: "books.vertical") {
+                        ArchiveView(profile: profile)
+                    }
+                    Tab("Achievements", systemImage: "trophy") {
+                        AchievementsView(profile: profile)
+                    }
+                    Tab("Profile", systemImage: "person") {
+                        ProfileView(profile: profile)
+                    }
+                }
+            } else {
+                ProgressView()
+            }
+        }
+        .task {
+            let profile = ensureProfile()
+            Streaks.normalize(profile)
+            try? context.save()
+            analytics.log(.appOpen)
+        }
+    }
+
+    private func ensureProfile() -> PlayerProfile {
+        if let existing = profiles.first { return existing }
+        let profile = PlayerProfile()
+        context.insert(profile)
+        try? context.save()
+        return profile
+    }
+}
