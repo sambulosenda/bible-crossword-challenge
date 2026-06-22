@@ -50,7 +50,7 @@ struct ProfileView: View {
                             Label("Upgrade to Premium", systemImage: "crown")
                         }
                         Button("Restore Purchase") {
-                            store.restore()
+                            Task { await store.restore() }
                         }
                     }
                 }

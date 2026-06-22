@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import FirebaseCore
 
 @main
 struct Bible_Crossword_ChallengeApp: App {
@@ -14,6 +15,7 @@ struct Bible_Crossword_ChallengeApp: App {
     private let container: ModelContainer
 
     init() {
+        FirebaseApp.configure()
         do {
             container = try ModelContainer(for: PlayerProfile.self, PuzzleRecord.self)
         } catch {

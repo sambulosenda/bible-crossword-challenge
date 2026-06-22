@@ -9,7 +9,7 @@
 import SwiftUI
 
 extension EnvironmentValues {
-    @Entry var analytics: any AnalyticsService = ConsoleAnalyticsService.shared
+    @Entry var analytics: any AnalyticsService = FirebaseAnalyticsService.shared
     @Entry var ads: any AdProvider = NoOpAdProvider.shared
     @Entry var puzzleProvider: PuzzleProvider = PuzzleProvider.shared
 }

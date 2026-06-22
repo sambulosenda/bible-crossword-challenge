@@ -2,8 +2,7 @@
 //  PaywallView.swift
 //  Bible Crossword Challenge
 //
-//  Premium upgrade screen. Purchase/restore go through StoreService (currently a
-//  local placeholder — wire StoreKit 2 before release).
+//  Premium upgrade screen. Purchase/restore go through StoreService (StoreKit 2).
 //
 
 import SwiftUI
@@ -83,21 +82,30 @@ struct PaywallView: View {
     private var purchaseButtons: some View {
         VStack(spacing: Theme.Spacing.m) {
             Button {
-                store.purchase()
-                analytics.log(.premiumPurchased)
+                Task {
+                    if await store.purchase() { analytics.log(.premiumPurchased) }
+                }
             } label: {
-                Text("Unlock for \(store.displayPrice)")
-                    .frame(maxWidth: .infinity)
+                Group {
+                    if store.purchaseInFlight {
+                        ProgressView()
+                    } else {
+                        Text("Unlock for \(store.displayPrice)")
+                    }
+                }
+                .frame(maxWidth: .infinity)
             }
             .buttonStyle(.borderedProminent)
             .controlSize(.extraLarge)
+            .disabled(store.purchaseInFlight || store.product == nil)
 
             Button("Restore Purchase") {
-                store.restore()
+                Task { await store.restore() }
             }
             .font(.subheadline)
+            .disabled(store.purchaseInFlight)
 
-            Text("A placeholder purchase flow. Connect StoreKit before release.")
+            Text("One-time purchase. Restores on your other devices.")
                 .font(.caption2)
                 .foregroundStyle(.tertiary)
                 .multilineTextAlignment(.center)

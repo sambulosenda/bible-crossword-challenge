@@ -214,14 +214,23 @@ struct OnboardingView: View {
                 .controlSize(.large)
             } else {
                 Button {
-                    store.purchase()
-                    analytics.log(.premiumPurchased)
-                    finish()
+                    Task {
+                        if await store.purchase() { analytics.log(.premiumPurchased) }
+                        finish()
+                    }
                 } label: {
-                    Text("Unlock Premium · \(store.displayPrice)").frame(maxWidth: .infinity)
+                    Group {
+                        if store.purchaseInFlight {
+                            ProgressView()
+                        } else {
+                            Text("Unlock Premium · \(store.displayPrice)")
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.borderedProminent)
                 .controlSize(.large)
+                .disabled(store.purchaseInFlight)
 
                 Button("Continue with the free daily puzzle") {
                     finish()
