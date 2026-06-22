@@ -13,6 +13,7 @@ struct HomeView: View {
     let profile: PlayerProfile
 
     @Environment(\.puzzleProvider) private var puzzleProvider
+    @Environment(\.ads) private var ads
     @Environment(StoreService.self) private var store
     @Query private var records: [PuzzleRecord]
 
@@ -55,7 +56,7 @@ struct HomeView: View {
                 CrosswordGameView(puzzle: puzzle, profile: profile)
             }
             .safeAreaInset(edge: .bottom) {
-                if !store.isPremium {
+                if !store.isPremium && ads.isLive {
                     BannerAdView()
                 }
             }

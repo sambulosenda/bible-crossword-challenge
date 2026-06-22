@@ -16,6 +16,8 @@ struct CellView: View, Equatable {
     let showError: Bool
     let onTap: () -> Void
 
+    @Environment(\.accessibilityDifferentiateWithoutColor) private var differentiateWithoutColor
+
     static func == (lhs: CellView, rhs: CellView) -> Bool {
         lhs.cell == rhs.cell
             && lhs.side == rhs.side
@@ -63,6 +65,15 @@ struct CellView: View, Equatable {
                             .font(.system(size: side * 0.5, weight: .semibold, design: .rounded))
                             .foregroundStyle(CellPalette.textColor(isSelected: isSelected))
                     }
+
+                    // Non-colour cue for correctness when colour can't be relied on.
+                    if differentiateWithoutColor, errorVisible || correctVisible {
+                        Image(systemName: errorVisible ? "xmark" : "checkmark")
+                            .font(.system(size: side * 0.22, weight: .bold))
+                            .foregroundStyle(errorVisible ? Color.red : Color.green)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
+                            .padding(side * 0.06)
+                    }
                 }
                 .frame(width: side, height: side)
                 .overlay(
@@ -77,9 +88,9 @@ struct CellView: View, Equatable {
 
     private var accessibilityLabel: String {
         let base = "Row \(cell.pos.row + 1), Column \(cell.pos.col + 1)"
-        if let entry = cell.entry {
-            return "\(base), \(String(entry))"
-        }
-        return "\(base), empty"
+        guard let entry = cell.entry else { return "\(base), empty" }
+        if errorVisible { return "\(base), \(String(entry)), incorrect" }
+        if correctVisible { return "\(base), \(String(entry)), correct" }
+        return "\(base), \(String(entry))"
     }
 }

@@ -47,6 +47,5 @@ struct ClueBarView: View {
         .padding(.horizontal, Theme.Spacing.m)
         .padding(.vertical, Theme.Spacing.s)
         .background(Color(.secondarySystemBackground))
-        .accessibilityElement(children: .combine)
     }
 }

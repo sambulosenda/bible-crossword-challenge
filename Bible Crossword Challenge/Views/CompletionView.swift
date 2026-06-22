@@ -16,6 +16,7 @@ struct CompletionView: View {
     let onHome: () -> Void
 
     @State private var appeared = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     private var shareText: String {
         """
@@ -47,7 +48,11 @@ struct CompletionView: View {
         }
         .background(Color(.systemGroupedBackground))
         .onAppear {
-            withAnimation(.spring(duration: 0.5)) { appeared = true }
+            if reduceMotion {
+                appeared = true
+            } else {
+                withAnimation(.spring(duration: 0.5)) { appeared = true }
+            }
         }
     }
 
@@ -56,8 +61,8 @@ struct CompletionView: View {
             Image(systemName: "checkmark.seal.fill")
                 .font(.system(size: 72))
                 .foregroundStyle(.green)
-                .symbolEffect(.bounce, value: appeared)
-                .scaleEffect(appeared ? 1 : 0.5)
+                .symbolEffect(.bounce, value: reduceMotion ? false : appeared)
+                .scaleEffect(reduceMotion ? 1 : (appeared ? 1 : 0.5))
 
             Text("Puzzle Completed!")
                 .font(.largeTitle.bold())
