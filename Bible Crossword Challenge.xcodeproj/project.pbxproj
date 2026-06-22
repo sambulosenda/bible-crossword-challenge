@@ -33,11 +33,21 @@
 		4F1A3C552FE8883E005B59F2 /* Bible Crossword ChallengeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Bible Crossword ChallengeUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		AA0000010000000000000004 /* Exceptions for "Bible Crossword Challenge" folder in "Bible Crossword Challenge" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Products.storekit,
+			);
+			target = 4F1A3C3D2FE8883C005B59F2 /* Bible Crossword Challenge */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		4F1A3C402FE8883C005B59F2 /* Bible Crossword Challenge */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				AA0000010000000000000004 /* PBXFileSystemSynchronizedBuildFileExceptionSet */,
+				AA0000010000000000000004 /* Exceptions for "Bible Crossword Challenge" folder in "Bible Crossword Challenge" target */,
 			);
 			path = "Bible Crossword Challenge";
 			sourceTree = "<group>";
@@ -53,16 +63,6 @@
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
-
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		AA0000010000000000000004 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				"Products.storekit",
-			);
-			target = 4F1A3C3D2FE8883C005B59F2 /* Bible Crossword Challenge */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		4F1A3C3B2FE8883C005B59F2 /* Frameworks */ = {
@@ -432,6 +432,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				INFOPLIST_KEY_CFBundleDisplayName = "Bible Crossword";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.sambulosendas1.Bible-Crossword-Challenge";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -440,7 +441,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = "1";
 			};
 			name = Debug;
 		};
@@ -464,6 +465,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				INFOPLIST_KEY_CFBundleDisplayName = "Bible Crossword";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.sambulosendas1.Bible-Crossword-Challenge";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -472,7 +474,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = "1";
 			};
 			name = Release;
 		};
@@ -493,7 +495,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = "1";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Bible Crossword Challenge.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Bible Crossword Challenge";
 			};
 			name = Debug;
@@ -515,7 +517,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = "1";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Bible Crossword Challenge.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Bible Crossword Challenge";
 			};
 			name = Release;
@@ -535,7 +537,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = "1";
 				TEST_TARGET_NAME = "Bible Crossword Challenge";
 			};
 			name = Debug;
@@ -555,7 +557,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = "1";
 				TEST_TARGET_NAME = "Bible Crossword Challenge";
 			};
 			name = Release;
@@ -616,7 +618,7 @@
 		AA0000010000000000000002 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = AA0000010000000000000001 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseAnalytics;
+			productName = FirebaseAnalyticsWithoutAdIdSupport;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

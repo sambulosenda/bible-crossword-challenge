@@ -278,6 +278,33 @@ final class GameViewModel {
         grid.reduce(0) { acc, row in acc + row.filter { !$0.isBlock }.count }
     }
 
+    #if DEBUG
+    /// Development-only: fill every playable cell with its solution and trigger
+    /// completion. Used to capture the completion screen for App Store assets.
+    func autoSolve() {
+        for r in 0..<size {
+            for c in 0..<size where !grid[r][c].isBlock {
+                grid[r][c].entry = grid[r][c].solution
+            }
+        }
+        onEntryChanged?()
+        checkCompletion()
+    }
+
+    /// Development-only: fill every cell with its solution and show the correct
+    /// (green) state WITHOUT triggering completion, so the solved grid stays
+    /// visible for App Store screenshots.
+    func fillSolvedNoComplete() {
+        for r in 0..<size {
+            for c in 0..<size where !grid[r][c].isBlock {
+                grid[r][c].entry = grid[r][c].solution
+            }
+        }
+        showErrors = true
+        onEntryChanged?()
+    }
+    #endif
+
     // MARK: - Resume snapshot
 
     func snapshot() -> [String: String] {

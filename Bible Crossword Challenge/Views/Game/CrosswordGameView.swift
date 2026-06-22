@@ -74,6 +74,15 @@ struct CrosswordGameView: View {
                 vm.restore(rec.entries)
             }
             analytics.log(.dailyPuzzleStarted(puzzleID: puzzle.id))
+            #if DEBUG
+            // Screenshot helpers, triggered by launch arguments — no visible UI.
+            let args = ProcessInfo.processInfo.arguments
+            if args.contains("-uiFillSolved") {
+                vm.fillSolvedNoComplete()
+            } else if args.contains("-uiAutoSolve") {
+                vm.autoSolve()
+            }
+            #endif
         }
         .onDisappear { saveProgress() }
     }

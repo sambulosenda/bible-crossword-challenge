@@ -12,6 +12,7 @@ import FirebaseCore
 @main
 struct Bible_Crossword_ChallengeApp: App {
     @State private var store = StoreService()
+    @AppStorage("appTheme") private var appTheme: AppTheme = .system
     private let container: ModelContainer
 
     init() {
@@ -27,6 +28,7 @@ struct Bible_Crossword_ChallengeApp: App {
         WindowGroup {
             RootView()
                 .environment(store)
+                .preferredColorScheme(appTheme.colorScheme)
         }
         .modelContainer(container)
     }

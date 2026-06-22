@@ -2,8 +2,9 @@
 //  Theme.swift
 //  Bible Crossword Challenge
 //
-//  Semantic colours and shared layout constants. Colours are built from system
-//  materials so dark mode is supported automatically.
+//  Shared design system. Colours stay on the app's native language — the system
+//  accent (blue) plus grouped-background greys. Cards lean on continuous-corner
+//  squircles and soft elevation; hierarchy (not colour) carries emphasis.
 //
 
 import SwiftUI
@@ -17,8 +18,72 @@ enum Theme {
         static let xl: CGFloat = 32
     }
 
-    static let cornerRadius: CGFloat = 16
+    static let cornerRadius: CGFloat = 18
+
+    /// The system accent (blue), used app-wide for the grid, links, and accents.
     static let accent = Color.accentColor
+
+    // MARK: - Surfaces (match the rest of the app)
+
+    static let background = Color(.systemGroupedBackground)
+    static let surface = Color(.secondarySystemGroupedBackground)
+}
+
+// MARK: - Appearance preference
+
+/// User-selectable app appearance, persisted via `@AppStorage("appTheme")` and
+/// applied with `.preferredColorScheme` at the app root.
+enum AppTheme: String, CaseIterable, Identifiable {
+    case system, light, dark
+
+    var id: String { rawValue }
+
+    var label: String {
+        switch self {
+        case .system: "System"
+        case .light: "Light"
+        case .dark: "Dark"
+        }
+    }
+
+    /// `nil` means follow the device setting.
+    var colorScheme: ColorScheme? {
+        switch self {
+        case .system: nil
+        case .light: .light
+        case .dark: .dark
+        }
+    }
+}
+
+// MARK: - Elevated card surface
+
+private struct ElevatedCard: ViewModifier {
+    var fill: Color
+    var cornerRadius: CGFloat
+
+    func body(content: Content) -> some View {
+        // Native inset-grouped style: just a rounded fill. No shadow or border —
+        // separation comes from the fill contrasting the grouped background,
+        // exactly like a system grouped List.
+        content.background(fill, in: .rect(cornerRadius: cornerRadius, style: .continuous))
+    }
+}
+
+extension View {
+    /// Applies the standard card treatment: a rounded grouped-background fill.
+    func elevatedCard(fill: Color = Theme.surface, cornerRadius: CGFloat = Theme.cornerRadius) -> some View {
+        modifier(ElevatedCard(fill: fill, cornerRadius: cornerRadius))
+    }
+
+    /// The shared eyebrow/kicker label style used above every card heading.
+    func kicker(_ color: Color = Theme.accent) -> some View {
+        self
+            .font(.caption.weight(.bold))
+            .textCase(.uppercase)
+            .tracking(1.0)
+            .foregroundStyle(color)
+    }
 }
 
 enum CellPalette {

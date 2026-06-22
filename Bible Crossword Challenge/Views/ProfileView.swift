@@ -11,6 +11,7 @@ struct ProfileView: View {
     @Bindable var profile: PlayerProfile
 
     @Environment(StoreService.self) private var store
+    @AppStorage("appTheme") private var appTheme: AppTheme = .system
     @State private var showPaywall = false
 
     private var unlockedCount: Int {
@@ -37,6 +38,15 @@ struct ProfileView: View {
                     stat("Current Streak", value: "\(profile.currentStreak)", symbol: "flame")
                     stat("Best Streak", value: "\(profile.bestStreak)", symbol: "trophy")
                     stat("Achievements", value: "\(unlockedCount)/\(Achievements.all.count)", symbol: "star")
+                }
+
+                Section("Appearance") {
+                    Picker("Appearance", selection: $appTheme) {
+                        ForEach(AppTheme.allCases) { theme in
+                            Text(theme.label).tag(theme)
+                        }
+                    }
+                    .pickerStyle(.segmented)
                 }
 
                 Section("Premium") {
