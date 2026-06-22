@@ -13,23 +13,18 @@ struct RootView: View {
     @Environment(\.modelContext) private var context
     @Environment(\.analytics) private var analytics
     @Query private var profiles: [PlayerProfile]
+    @AppStorage("hasOnboarded") private var hasOnboarded = false
 
     var body: some View {
         Group {
             if let profile = profiles.first {
-                TabView {
-                    Tab("Today", systemImage: "calendar") {
-                        HomeView(profile: profile)
+                if !hasOnboarded {
+                    OnboardingView(profile: profile) {
+                        try? context.save()
+                        withAnimation { hasOnboarded = true }
                     }
-                    Tab("Archive", systemImage: "books.vertical") {
-                        ArchiveView(profile: profile)
-                    }
-                    Tab("Achievements", systemImage: "trophy") {
-                        AchievementsView(profile: profile)
-                    }
-                    Tab("Profile", systemImage: "person") {
-                        ProfileView(profile: profile)
-                    }
+                } else {
+                    mainTabs(profile)
                 }
             } else {
                 ProgressView()
@@ -40,6 +35,23 @@ struct RootView: View {
             Streaks.normalize(profile)
             try? context.save()
             analytics.log(.appOpen)
+        }
+    }
+
+    private func mainTabs(_ profile: PlayerProfile) -> some View {
+        TabView {
+            Tab("Today", systemImage: "calendar") {
+                HomeView(profile: profile)
+            }
+            Tab("Archive", systemImage: "books.vertical") {
+                ArchiveView(profile: profile)
+            }
+            Tab("Achievements", systemImage: "trophy") {
+                AchievementsView(profile: profile)
+            }
+            Tab("Profile", systemImage: "person") {
+                ProfileView(profile: profile)
+            }
         }
     }
 
