@@ -33,8 +33,15 @@ final class GameViewModel {
     private(set) var hintsUsed: Int = 0
     private(set) var isComplete: Bool = false
 
+    /// Immutable creation time — used only as the `TimelineView` cadence anchor.
     let startDate: Date
     private(set) var completionSeconds: Int = 0
+
+    // Active-time accounting. Counts foreground time only and survives across
+    // sessions, so the recorded solve time is the sum of every sitting rather
+    // than the last session's wall-clock.
+    private(set) var accumulatedSeconds: Int = 0
+    private var runStart: Date?
 
     // Side-effect callbacks owned by the view.
     var onComplete: ((Int) -> Void)?
@@ -46,6 +53,7 @@ final class GameViewModel {
         self.puzzle = puzzle
         self.size = puzzle.size
         self.startDate = now
+        self.runStart = now
 
         // Build slots from clue data.
         var across: [Slot] = []
@@ -260,7 +268,8 @@ final class GameViewModel {
         }
         guard !isComplete else { return }
         isComplete = true
-        completionSeconds = max(0, Int(Date().timeIntervalSince(startDate)))
+        pauseTimer() // freeze the clock at the solve moment
+        completionSeconds = accumulatedSeconds
         onComplete?(completionSeconds)
     }
 
@@ -276,6 +285,33 @@ final class GameViewModel {
 
     var totalPlayableCount: Int {
         grid.reduce(0) { acc, row in acc + row.filter { !$0.isBlock }.count }
+    }
+
+    // MARK: - Timing
+
+    /// Total active seconds so far: committed time plus the live running segment.
+    func elapsed(asOf now: Date = Date()) -> Int {
+        accumulatedSeconds + (runStart.map { max(0, Int(now.timeIntervalSince($0))) } ?? 0)
+    }
+
+    /// Seed cumulative time from a saved record when resuming an in-progress
+    /// puzzle, and (re)start the clock from this moment.
+    func seedElapsed(_ seconds: Int, now: Date = Date()) {
+        accumulatedSeconds = max(0, seconds)
+        runStart = now
+    }
+
+    /// Freeze the clock (e.g. on backgrounding), committing the running segment.
+    func pauseTimer(asOf now: Date = Date()) {
+        guard let start = runStart else { return }
+        accumulatedSeconds += max(0, Int(now.timeIntervalSince(start)))
+        runStart = nil
+    }
+
+    /// Resume the clock after a pause. No-op if already running or complete.
+    func resumeTimer(asOf now: Date = Date()) {
+        guard runStart == nil, !isComplete else { return }
+        runStart = now
     }
 
     #if DEBUG

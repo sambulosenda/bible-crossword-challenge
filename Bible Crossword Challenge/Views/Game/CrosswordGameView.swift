@@ -17,6 +17,7 @@ struct CrosswordGameView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.analytics) private var analytics
     @Environment(\.notifications) private var notifications
+    @Environment(\.scenePhase) private var scenePhase
     @Environment(StoreService.self) private var store
 
     @AppStorage("remindersEnabled") private var remindersEnabled = false
@@ -74,8 +75,13 @@ struct CrosswordGameView: View {
         .task {
             vm.onComplete = { seconds in handleCompletion(seconds: seconds) }
             let rec = loadOrCreateRecord()
-            if !rec.isCompleted, !rec.entries.isEmpty {
-                vm.restore(rec.entries)
+            if !rec.isCompleted {
+                // Seed accumulated time before restoring, since restoring a
+                // fully-filled grid can trigger completion.
+                vm.seedElapsed(rec.elapsedSeconds)
+                if !rec.entries.isEmpty {
+                    vm.restore(rec.entries)
+                }
             }
             analytics.log(.dailyPuzzleStarted(puzzleID: puzzle.id))
             #if DEBUG
@@ -87,6 +93,19 @@ struct CrosswordGameView: View {
                 vm.autoSolve()
             }
             #endif
+        }
+        .onChange(of: scenePhase) { _, phase in
+            switch phase {
+            case .active:
+                vm.resumeTimer()
+            case .inactive, .background:
+                // Leaving the foreground is the last reliable moment before the
+                // app may be suspended/killed — freeze the clock and persist.
+                vm.pauseTimer()
+                saveProgress()
+            @unknown default:
+                break
+            }
         }
         .onDisappear { saveProgress() }
     }
@@ -142,9 +161,8 @@ struct CrosswordGameView: View {
                 .foregroundStyle(.green)
                 .monospacedDigit()
         } else {
-            TimelineView(.periodic(from: vm.startDate, by: 1)) { _ in
-                let secs = max(0, Int(Date().timeIntervalSince(vm.startDate)))
-                Label(TimeFormat.clock(secs), systemImage: "timer")
+            TimelineView(.periodic(from: vm.startDate, by: 1)) { context in
+                Label(TimeFormat.clock(vm.elapsed(asOf: context.date)), systemImage: "timer")
                     .monospacedDigit()
             }
         }
@@ -221,7 +239,7 @@ struct CrosswordGameView: View {
         let rec = loadOrCreateRecord()
         guard !rec.isCompleted else { return }
         rec.entries = vm.snapshot()
-        rec.elapsedSeconds = max(0, Int(Date().timeIntervalSince(vm.startDate)))
+        rec.elapsedSeconds = vm.elapsed()
         rec.updatedAt = Date()
         try? context.save()
     }
