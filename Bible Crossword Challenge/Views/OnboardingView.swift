@@ -270,7 +270,9 @@ struct OnboardingView: View {
             } else {
                 Button {
                     Task {
-                        if await store.purchase() { analytics.log(.premiumPurchased) }
+                        if let yearly = store.yearly, await store.purchase(yearly) {
+                            analytics.log(.premiumPurchased(plan: "yearly"))
+                        }
                         finish()
                     }
                 } label: {
@@ -278,19 +280,26 @@ struct OnboardingView: View {
                         if store.purchaseInFlight {
                             ProgressView()
                         } else {
-                            Text("Unlock Premium · \(store.displayPrice)")
+                            Text("Start 7-Day Free Trial")
                         }
                     }
                     .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.borderedProminent)
                 .controlSize(.large)
-                .disabled(store.purchaseInFlight)
+                .disabled(store.purchaseInFlight || store.yearly == nil)
 
                 Button("Continue with the free daily puzzle") {
                     finish()
                 }
                 .font(.subheadline)
+
+                if store.yearly != nil {
+                    Text("7-day free trial, then \(store.yearlyPriceText)/year. Cancel anytime.")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                }
             }
         }
         .padding(Theme.Spacing.l)

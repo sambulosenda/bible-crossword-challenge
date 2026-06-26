@@ -16,7 +16,7 @@ enum AnalyticsEvent {
     case hintUsed(type: String)
     case streakUpdated(streak: Int)
     case achievementUnlocked(id: String)
-    case premiumPurchased
+    case premiumPurchased(plan: String)
     case notificationPermission(granted: Bool)
     case reminderSettingChanged(enabled: Bool)
 
@@ -36,8 +36,10 @@ enum AnalyticsEvent {
 
     var parameters: [String: Any] {
         switch self {
-        case .appOpen, .premiumPurchased:
+        case .appOpen:
             return [:]
+        case .premiumPurchased(let plan):
+            return ["plan": plan]
         case .dailyPuzzleStarted(let id):
             return ["puzzle_id": id]
         case .dailyPuzzleCompleted(let id, let seconds):

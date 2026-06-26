@@ -2,14 +2,18 @@
 //  StoreService.swift
 //  Bible Crossword Challenge
 //
-//  Premium entitlement backed by StoreKit 2. Loads the non-consumable product,
-//  runs purchases, restores via `AppStore.sync()`, and tracks ownership from
-//  `Transaction.currentEntitlements`. A background task listens for
-//  `Transaction.updates` so entitlements granted outside the app (Ask to Buy,
-//  refunds, family sharing) are reflected automatically.
+//  Premium entitlement backed by StoreKit 2. Premium can be obtained three ways,
+//  all sharing one entitlement: an auto-renewable monthly or yearly subscription
+//  (yearly carries a free trial), or a one-time lifetime unlock (non-consumable).
+//  Ownership is derived from `Transaction.currentEntitlements`, which only yields
+//  active subscriptions (incl. an in-progress trial) plus the lifetime purchase.
+//  A background task listens for `Transaction.updates` so entitlements granted or
+//  revoked outside the app (renewals, Ask to Buy, refunds, family sharing) are
+//  reflected automatically.
 //
-//  The matching product must exist in App Store Connect with the identifier in
-//  `productID`. Local testing uses the bundled `Products.storekit` configuration.
+//  The matching products must exist in App Store Connect with these identifiers.
+//  Local testing uses the bundled `Products.storekit` configuration (referenced
+//  by the scheme).
 //
 
 import Foundation
@@ -18,16 +22,25 @@ import Observation
 
 @Observable
 final class StoreService {
-    /// Non-consumable IAP identifier. Must match App Store Connect and the
-    /// `Products.storekit` test configuration.
-    static let productID = "com.sambulosendas1.Bible-Crossword-Challenge.premium"
+    static let monthlyID = "com.sambulosendas1.biblecrossword.premium.monthly"
+    static let yearlyID = "com.sambulosendas1.biblecrossword.premium.yearly"
+    /// The original non-consumable, now offered as the lifetime tier.
+    static let lifetimeID = "com.sambulosendas1.biblecrossword.premium"
+    static let allProductIDs = [yearlyID, monthlyID, lifetimeID]
 
     private(set) var isPremium = false
-    private(set) var product: Product?
+    private(set) var products: [Product] = []
     private(set) var purchaseInFlight = false
 
-    /// Real localized price once the product loads; falls back until then.
-    var displayPrice: String { product?.displayPrice ?? "£4.99" }
+    var yearly: Product? { products.first { $0.id == Self.yearlyID } }
+    var monthly: Product? { products.first { $0.id == Self.monthlyID } }
+    var lifetime: Product? { products.first { $0.id == Self.lifetimeID } }
+
+    /// Representative single price for compact "Unlock Premium" spots.
+    var displayPrice: String { lifetime?.displayPrice ?? yearly?.displayPrice ?? "£19.99" }
+
+    /// Yearly subscription price for callers that can't import StoreKit.
+    var yearlyPriceText: String { yearly?.displayPrice ?? "£9.99" }
 
     private var updatesTask: Task<Void, Never>?
 
@@ -43,29 +56,27 @@ final class StoreService {
 
     deinit { updatesTask?.cancel() }
 
-    /// Load the product and re-check entitlement. Safe to call repeatedly.
+    /// Load products and re-check entitlement. Safe to call repeatedly.
     func refresh() async {
-        await loadProduct()
+        await loadProducts()
         await updateEntitlement()
     }
 
-    func loadProduct() async {
+    func loadProducts() async {
         do {
-            let products = try await Product.products(for: [Self.productID])
-            product = products.first
+            let loaded = try await Product.products(for: Self.allProductIDs)
+            // Keep a stable display order: yearly, monthly, lifetime.
+            products = Self.allProductIDs.compactMap { id in loaded.first { $0.id == id } }
         } catch {
             #if DEBUG
-            print("⚠️ StoreKit: failed to load product — \(error)")
+            print("⚠️ StoreKit: failed to load products — \(error)")
             #endif
         }
     }
 
-    /// Start a purchase. Returns true when the user now owns premium.
+    /// Start a purchase for a specific plan. Returns true when premium is owned.
     @discardableResult
-    func purchase() async -> Bool {
-        if product == nil { await loadProduct() }
-        guard let product else { return false }
-
+    func purchase(_ product: Product) async -> Bool {
         purchaseInFlight = true
         defer { purchaseInFlight = false }
 
@@ -100,7 +111,7 @@ final class StoreService {
         var owned = false
         for await result in Transaction.currentEntitlements {
             guard let transaction = try? checkVerified(result) else { continue }
-            if transaction.productID == Self.productID, transaction.revocationDate == nil {
+            if Self.allProductIDs.contains(transaction.productID), transaction.revocationDate == nil {
                 owned = true
             }
         }
@@ -120,10 +131,44 @@ final class StoreService {
         }
     }
 
+    // MARK: - Display helpers
+
+    /// e.g. "7-day free trial" when the product has a free introductory offer.
+    func introOfferText(for product: Product) -> String? {
+        guard let offer = product.subscription?.introductoryOffer,
+              offer.paymentMode == .freeTrial else { return nil }
+        let period = offer.period
+        // A "P1W" trial reads more naturally as "7-day".
+        if period.unit == .week { return "\(period.value * 7)-day free trial" }
+        let unit = unitLabel(period.unit)
+        return "\(period.value)-\(unit)\(period.value > 1 ? "s" : "") free trial"
+    }
+
+    /// e.g. "/month", "/year" for a subscription product; nil otherwise.
+    func periodText(for product: Product) -> String? {
+        guard let period = product.subscription?.subscriptionPeriod else { return nil }
+        switch period.unit {
+        case .day: return "/day"
+        case .week: return "/week"
+        case .month: return "/month"
+        case .year: return "/year"
+        @unknown default: return nil
+        }
+    }
+
+    private func unitLabel(_ unit: Product.SubscriptionPeriod.Unit) -> String {
+        switch unit {
+        case .day: return "day"
+        case .week: return "week"
+        case .month: return "month"
+        case .year: return "year"
+        @unknown default: return "day"
+        }
+    }
+
     #if DEBUG
-    /// Quick UI reset for development. Note: this only clears the in-memory flag;
-    /// the StoreKit transaction itself is cleared via Xcode's Transaction Manager
-    /// (Debug ▸ StoreKit ▸ Manage Transactions) or by deleting it there.
+    /// Quick UI reset for development. Clears only the in-memory flag; the
+    /// StoreKit transaction is cleared via Xcode's Transaction Manager.
     func resetForTesting() {
         isPremium = false
     }

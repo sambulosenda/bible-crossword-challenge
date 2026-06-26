@@ -5,18 +5,18 @@
   ],
   "products" : [
     {
-      "displayPrice" : "4.99",
+      "displayPrice" : "19.99",
       "familyShareable" : false,
       "internalID" : "A1B2C3D4-0000-0000-0000-000000000002",
       "localizations" : [
         {
-          "description" : "Remove ads, unlimited hints, the full puzzle archive, and future puzzle packs.",
-          "displayName" : "Bible Crossword Premium",
+          "description" : "Remove ads, unlimited hints, the full puzzle archive, and future puzzle packs — forever.",
+          "displayName" : "Lifetime",
           "locale" : "en_US"
         }
       ],
-      "productID" : "com.sambulosendas1.Bible-Crossword-Challenge.premium",
-      "referenceName" : "Premium",
+      "productID" : "com.sambulosendas1.biblecrossword.premium",
+      "referenceName" : "Premium Lifetime",
       "type" : "NonConsumable"
     }
   ],
@@ -27,7 +27,69 @@
     ]
   },
   "subscriptionGroups" : [
+    {
+      "id" : "A1B2C3D4-0000-0000-0000-000000000010",
+      "localizations" : [
 
+      ],
+      "name" : "Premium",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "1.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "A1B2C3D4-0000-0000-0000-000000000011",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Remove ads, unlimited hints, and the full puzzle archive.",
+              "displayName" : "Premium Monthly",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.sambulosendas1.biblecrossword.premium.monthly",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Premium Monthly",
+          "subscriptionGroupID" : "A1B2C3D4-0000-0000-0000-000000000010",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "9.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "A1B2C3D4-0000-0000-0000-000000000012",
+          "introductoryOffer" : {
+            "internalID" : "A1B2C3D4-0000-0000-0000-000000000013",
+            "paymentMode" : "free",
+            "subscriptionPeriod" : "P1W"
+          },
+          "localizations" : [
+            {
+              "description" : "Remove ads, unlimited hints, and the full puzzle archive. Includes a 7-day free trial.",
+              "displayName" : "Premium Yearly",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.sambulosendas1.biblecrossword.premium.yearly",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Premium Yearly",
+          "subscriptionGroupID" : "A1B2C3D4-0000-0000-0000-000000000010",
+          "type" : "RecurringSubscription"
+        }
+      ]
+    }
   ],
   "version" : {
     "major" : 3,

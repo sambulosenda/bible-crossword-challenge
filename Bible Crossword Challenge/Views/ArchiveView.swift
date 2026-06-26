@@ -128,7 +128,7 @@ struct ArchiveView: View {
             Button {
                 showPaywall = true
             } label: {
-                Text("Unlock Premium · \(store.displayPrice)")
+                Text("Unlock Premium")
                     .frame(maxWidth: 280)
             }
             .buttonStyle(.borderedProminent)

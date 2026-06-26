@@ -7,6 +7,7 @@
 
 import SwiftUI
 import UIKit
+import StoreKit
 
 struct ProfileView: View {
     @Bindable var profile: PlayerProfile
@@ -19,6 +20,7 @@ struct ProfileView: View {
     @AppStorage("remindersEnabled") private var remindersEnabled = false
     @AppStorage("reminderMinutes") private var reminderMinutes = ReminderTime.defaultMinutes
     @State private var showPaywall = false
+    @State private var showManageSubscriptions = false
 
     private var reminderTime: Binding<Date> {
         Binding(
@@ -89,6 +91,9 @@ struct ProfileView: View {
                     if store.isPremium {
                         Label("Premium unlocked", systemImage: "crown.fill")
                             .foregroundStyle(.yellow)
+                        Button("Manage Subscription") {
+                            showManageSubscriptions = true
+                        }
                     } else {
                         Button {
                             showPaywall = true
@@ -119,6 +124,7 @@ struct ProfileView: View {
             .sheet(isPresented: $showPaywall) {
                 PaywallView()
             }
+            .manageSubscriptionsSheet(isPresented: $showManageSubscriptions)
             .task { await notifications.refreshStatus() }
         }
     }
