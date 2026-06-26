@@ -114,6 +114,9 @@ struct ProfileView: View {
 
                 #if DEBUG
                 Section("Developer") {
+                    Button("Grant Premium") {
+                        store.grantForTesting()
+                    }
                     Button("Reset Premium", role: .destructive) {
                         store.resetForTesting()
                     }

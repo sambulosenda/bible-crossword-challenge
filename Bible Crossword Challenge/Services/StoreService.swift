@@ -167,6 +167,13 @@ final class StoreService {
     }
 
     #if DEBUG
+    /// Force the premium entitlement on for development, so premium-gated screens
+    /// can be exercised without a StoreKit purchase. Sticks for the session;
+    /// DEBUG builds only.
+    func grantForTesting() {
+        isPremium = true
+    }
+
     /// Quick UI reset for development. Clears only the in-memory flag; the
     /// StoreKit transaction is cleared via Xcode's Transaction Manager.
     func resetForTesting() {
