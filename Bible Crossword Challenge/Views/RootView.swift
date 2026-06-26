@@ -12,8 +12,12 @@ import SwiftData
 struct RootView: View {
     @Environment(\.modelContext) private var context
     @Environment(\.analytics) private var analytics
+    @Environment(\.notifications) private var notifications
+    @Environment(\.scenePhase) private var scenePhase
     @Query private var profiles: [PlayerProfile]
     @AppStorage("hasOnboarded") private var hasOnboarded = false
+    @AppStorage("remindersEnabled") private var remindersEnabled = false
+    @AppStorage("reminderMinutes") private var reminderMinutes = ReminderTime.defaultMinutes
 
     var body: some View {
         Group {
@@ -35,6 +39,15 @@ struct RootView: View {
             Streaks.normalize(profile)
             try? context.save()
             analytics.log(.appOpen)
+            await notifications.reschedule(for: profile, enabled: remindersEnabled, minutes: reminderMinutes)
+        }
+        .onChange(of: scenePhase) { _, phase in
+            // Returning to the foreground may cross midnight or land after a solve
+            // elsewhere — recompute streak-aware copy from the latest state.
+            guard phase == .active, let profile = profiles.first else { return }
+            Task {
+                await notifications.reschedule(for: profile, enabled: remindersEnabled, minutes: reminderMinutes)
+            }
         }
     }
 

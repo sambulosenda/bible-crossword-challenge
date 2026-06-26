@@ -17,6 +17,8 @@ enum AnalyticsEvent {
     case streakUpdated(streak: Int)
     case achievementUnlocked(id: String)
     case premiumPurchased
+    case notificationPermission(granted: Bool)
+    case reminderSettingChanged(enabled: Bool)
 
     var name: String {
         switch self {
@@ -27,6 +29,8 @@ enum AnalyticsEvent {
         case .streakUpdated: return "streak_updated"
         case .achievementUnlocked: return "achievement_unlocked"
         case .premiumPurchased: return "premium_purchased"
+        case .notificationPermission: return "notification_permission"
+        case .reminderSettingChanged: return "reminder_setting_changed"
         }
     }
 
@@ -44,6 +48,10 @@ enum AnalyticsEvent {
             return ["streak": streak]
         case .achievementUnlocked(let id):
             return ["achievement_id": id]
+        case .notificationPermission(let granted):
+            return ["granted": granted]
+        case .reminderSettingChanged(let enabled):
+            return ["enabled": enabled]
         }
     }
 }

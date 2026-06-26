@@ -6,13 +6,26 @@
 //
 
 import SwiftUI
+import UIKit
 
 struct ProfileView: View {
     @Bindable var profile: PlayerProfile
 
     @Environment(StoreService.self) private var store
+    @Environment(\.analytics) private var analytics
+    @Environment(\.notifications) private var notifications
+    @Environment(\.openURL) private var openURL
     @AppStorage("appTheme") private var appTheme: AppTheme = .system
+    @AppStorage("remindersEnabled") private var remindersEnabled = false
+    @AppStorage("reminderMinutes") private var reminderMinutes = ReminderTime.defaultMinutes
     @State private var showPaywall = false
+
+    private var reminderTime: Binding<Date> {
+        Binding(
+            get: { ReminderTime.date(fromMinutes: reminderMinutes) },
+            set: { reminderMinutes = ReminderTime.minutes(from: $0) }
+        )
+    }
 
     private var unlockedCount: Int {
         Achievements.all.filter { $0.isUnlocked(by: profile) }.count
@@ -49,6 +62,29 @@ struct ProfileView: View {
                     .pickerStyle(.segmented)
                 }
 
+                Section {
+                    Toggle("Daily reminder", isOn: $remindersEnabled)
+                        .onChange(of: remindersEnabled) { _, enabled in
+                            handleReminderToggle(enabled)
+                        }
+                    if remindersEnabled && notifications.authorizationStatus == .authorized {
+                        DatePicker(
+                            "Time",
+                            selection: reminderTime,
+                            displayedComponents: .hourAndMinute
+                        )
+                        .onChange(of: reminderMinutes) { _, _ in
+                            rescheduleReminders()
+                        }
+                    }
+                } header: {
+                    Text("Reminders")
+                } footer: {
+                    if notifications.authorizationStatus == .denied {
+                        Text("Notifications are turned off for this app. Enable them in Settings to receive your daily reminder.")
+                    }
+                }
+
                 Section("Premium") {
                     if store.isPremium {
                         Label("Premium unlocked", systemImage: "crown.fill")
@@ -83,6 +119,45 @@ struct ProfileView: View {
             .sheet(isPresented: $showPaywall) {
                 PaywallView()
             }
+            .task { await notifications.refreshStatus() }
+        }
+    }
+
+    // MARK: - Reminders
+
+    private func handleReminderToggle(_ enabled: Bool) {
+        guard enabled else {
+            analytics.log(.reminderSettingChanged(enabled: false))
+            notifications.cancelAll()
+            return
+        }
+        Task {
+            switch notifications.authorizationStatus {
+            case .notDetermined:
+                let granted = await notifications.requestAuthorization()
+                analytics.log(.notificationPermission(granted: granted))
+                if granted {
+                    analytics.log(.reminderSettingChanged(enabled: true))
+                    rescheduleReminders()
+                } else {
+                    remindersEnabled = false
+                }
+            case .denied:
+                // Can't grant from inside the app — bounce to Settings, leave off.
+                remindersEnabled = false
+                if let url = URL(string: UIApplication.openSettingsURLString) {
+                    openURL(url)
+                }
+            default:
+                analytics.log(.reminderSettingChanged(enabled: true))
+                rescheduleReminders()
+            }
+        }
+    }
+
+    private func rescheduleReminders() {
+        Task {
+            await notifications.reschedule(for: profile, enabled: remindersEnabled, minutes: reminderMinutes)
         }
     }
 

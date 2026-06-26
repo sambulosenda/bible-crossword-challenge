@@ -19,12 +19,23 @@ struct OnboardingView: View {
 
     @Environment(StoreService.self) private var store
     @Environment(\.analytics) private var analytics
+    @Environment(\.notifications) private var notifications
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    @AppStorage("remindersEnabled") private var remindersEnabled = false
+    @AppStorage("reminderMinutes") private var reminderMinutes = ReminderTime.defaultMinutes
 
     @State private var page = 0
     @FocusState private var nameFocused: Bool
 
-    private let lastPage = 3
+    private let lastPage = 4
+
+    private var reminderTime: Binding<Date> {
+        Binding(
+            get: { ReminderTime.date(fromMinutes: reminderMinutes) },
+            set: { reminderMinutes = ReminderTime.minutes(from: $0) }
+        )
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -32,7 +43,8 @@ struct OnboardingView: View {
                 welcomePage.tag(0)
                 featuresPage.tag(1)
                 namePage.tag(2)
-                premiumPage.tag(3)
+                remindersPage.tag(3)
+                premiumPage.tag(4)
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
             .animation(.easeInOut, value: page)
@@ -129,8 +141,38 @@ struct OnboardingView: View {
         .padding(Theme.Spacing.xl)
     }
 
-    private var premiumPage: some View {
+    private var remindersPage: some View {
         let active = page == 3
+        return VStack(spacing: Theme.Spacing.l) {
+            Spacer()
+            heroIcon("bell.badge.fill", tint: Theme.accent, active: active)
+            Text("Never miss\na day")
+                .font(.largeTitle.bold())
+                .multilineTextAlignment(.center)
+                .entrance(active: active, delay: 0.10, reduceMotion: reduceMotion)
+            Text("A gentle daily reminder keeps your streak alive and the habit strong.")
+                .font(.title3)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .entrance(active: active, delay: 0.18, reduceMotion: reduceMotion)
+            DatePicker(
+                "Remind me at",
+                selection: reminderTime,
+                displayedComponents: .hourAndMinute
+            )
+            .datePickerStyle(.compact)
+            .padding(Theme.Spacing.m)
+            .background(Color(.secondarySystemBackground), in: .rect(cornerRadius: Theme.cornerRadius))
+            .padding(.horizontal, Theme.Spacing.l)
+            .entrance(active: active, delay: 0.24, reduceMotion: reduceMotion)
+            Spacer()
+            Spacer()
+        }
+        .padding(Theme.Spacing.xl)
+    }
+
+    private var premiumPage: some View {
+        let active = page == 4
         return VStack(spacing: Theme.Spacing.l) {
             Spacer()
             heroIcon("crown.fill", tint: .yellow, active: active)
@@ -204,7 +246,20 @@ struct OnboardingView: View {
             }
             .accessibilityHidden(true)
 
-            if page < lastPage {
+            if page == 3 {
+                Button {
+                    enableReminders()
+                } label: {
+                    Text("Enable reminders").frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.borderedProminent)
+                .controlSize(.large)
+
+                Button("Not now") {
+                    withAnimation { page += 1 }
+                }
+                .font(.subheadline)
+            } else if page < lastPage {
                 Button {
                     withAnimation { page += 1 }
                 } label: {
@@ -240,6 +295,19 @@ struct OnboardingView: View {
         }
         .padding(Theme.Spacing.l)
         .animation(.easeInOut, value: page)
+    }
+
+    private func enableReminders() {
+        Task {
+            let granted = await notifications.requestAuthorization()
+            analytics.log(.notificationPermission(granted: granted))
+            if granted {
+                remindersEnabled = true
+                analytics.log(.reminderSettingChanged(enabled: true))
+                await notifications.reschedule(for: profile, enabled: true, minutes: reminderMinutes)
+            }
+            withAnimation { page += 1 }
+        }
     }
 
     private func finish() {

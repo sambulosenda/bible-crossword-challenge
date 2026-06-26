@@ -16,7 +16,11 @@ struct CrosswordGameView: View {
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
     @Environment(\.analytics) private var analytics
+    @Environment(\.notifications) private var notifications
     @Environment(StoreService.self) private var store
+
+    @AppStorage("remindersEnabled") private var remindersEnabled = false
+    @AppStorage("reminderMinutes") private var reminderMinutes = ReminderTime.defaultMinutes
 
     @State private var vm: GameViewModel
     @State private var showClues = false
@@ -190,6 +194,11 @@ struct CrosswordGameView: View {
         rec.entries = vm.snapshot()
         rec.updatedAt = Date()
         try? context.save()
+
+        // Today's puzzle is now solved — drop today's reminder and refresh copy.
+        Task {
+            await notifications.reschedule(for: profile, enabled: remindersEnabled, minutes: reminderMinutes)
+        }
 
         showCompletion = true
     }
