@@ -16,15 +16,14 @@ struct CompletionView: View {
     let onHome: () -> Void
 
     @State private var appeared = false
+    @State private var shareImage: Image?
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.displayScale) private var displayScale
 
-    private var shareText: String {
-        """
-        I just completed “\(puzzle.title)” in Bible Crossword Challenge! \
-        🔥 \(streak)-day streak.
-
-        “\(puzzle.verse)” — \(puzzle.reference)
-        """
+    private var shareCaption: String {
+        var text = "I solved “\(puzzle.title)” in \(TimeFormat.clock(seconds)) — \(streak)-day streak 🔥"
+        if let url = ShareConfig.storeURL { text += "\n\(url.absoluteString)" }
+        return text
     }
 
     var body: some View {
@@ -48,6 +47,7 @@ struct CompletionView: View {
         }
         .background(Color(.systemGroupedBackground))
         .onAppear {
+            renderShareCard()
             if reduceMotion {
                 appeared = true
             } else {
@@ -136,9 +136,17 @@ struct CompletionView: View {
 
     private var actions: some View {
         VStack(spacing: Theme.Spacing.m) {
-            ShareLink(item: shareText) {
-                Label("Share", systemImage: "square.and.arrow.up")
-                    .frame(maxWidth: .infinity)
+            Group {
+                if let shareImage {
+                    ShareLink(
+                        item: shareImage,
+                        message: Text(shareCaption),
+                        preview: SharePreview("Bible Crossword", image: shareImage)
+                    ) { shareLabel }
+                } else {
+                    // Fallback if image rendering failed.
+                    ShareLink(item: shareCaption) { shareLabel }
+                }
             }
             .buttonStyle(.borderedProminent)
             .controlSize(.large)
@@ -153,5 +161,29 @@ struct CompletionView: View {
             .controlSize(.large)
         }
         .padding(.top, Theme.Spacing.s)
+    }
+
+    private var shareLabel: some View {
+        Label("Share", systemImage: "square.and.arrow.up")
+            .frame(maxWidth: .infinity)
+    }
+
+    /// Rasterise the spoiler-free result card so it can be shared as an image.
+    /// `ImageRenderer.uiImage` is synchronous, so the image is ready before the
+    /// user can reach the Share button.
+    private func renderShareCard() {
+        let renderer = ImageRenderer(
+            content: ShareCardView(
+                title: puzzle.title,
+                seconds: seconds,
+                streak: streak,
+                verse: puzzle.verse,
+                reference: puzzle.reference
+            )
+        )
+        renderer.scale = displayScale
+        if let ui = renderer.uiImage {
+            shareImage = Image(uiImage: ui)
+        }
     }
 }
