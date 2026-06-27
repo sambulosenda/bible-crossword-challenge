@@ -13,6 +13,7 @@ struct CompletionView: View {
     let seconds: Int
     let streak: Int
     let newAchievements: [Achievement]
+    var earnedFreeze: Bool = false
     let onHome: () -> Void
 
     @State private var appeared = false
@@ -34,6 +35,10 @@ struct CompletionView: View {
                 statRow
 
                 verseCard
+
+                if earnedFreeze {
+                    freezeCard
+                }
 
                 if !newAchievements.isEmpty {
                     achievementsCard
@@ -111,6 +116,27 @@ struct CompletionView: View {
         .padding(Theme.Spacing.l)
         .frame(maxWidth: .infinity)
         .background(Color(.secondarySystemGroupedBackground), in: .rect(cornerRadius: Theme.cornerRadius))
+    }
+
+    private var freezeCard: some View {
+        HStack(spacing: Theme.Spacing.m) {
+            Image(systemName: "snowflake")
+                .font(.title2)
+                .foregroundStyle(.cyan)
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Streak freeze earned!")
+                    .font(.subheadline.weight(.semibold))
+                Text("It'll cover you if you miss a day.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            Spacer(minLength: 0)
+        }
+        .padding(Theme.Spacing.l)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color(.secondarySystemGroupedBackground), in: .rect(cornerRadius: Theme.cornerRadius))
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Streak freeze earned. It'll cover you if you miss a day.")
     }
 
     private var achievementsCard: some View {

@@ -28,6 +28,11 @@ final class PlayerProfile {
     var noHintSolves: Int = 0
     /// Count of hard puzzles completed (first completion only).
     var hardCompleted: Int = 0
+    /// Streak freezes on hand — each auto-forgives a single missed day. Every
+    /// player starts with one; more are earned at streak milestones.
+    var streakFreezes: Int = 1
+    /// The day a freeze was last spent, used to show a one-time "saved" note.
+    var lastFreezeUsedDate: Date? = nil
     var createdAt: Date
 
     init(
@@ -42,6 +47,8 @@ final class PlayerProfile {
         bestSolveSeconds: Int? = nil,
         noHintSolves: Int = 0,
         hardCompleted: Int = 0,
+        streakFreezes: Int = 1,
+        lastFreezeUsedDate: Date? = nil,
         createdAt: Date = Date()
     ) {
         self.username = username
@@ -55,6 +62,8 @@ final class PlayerProfile {
         self.bestSolveSeconds = bestSolveSeconds
         self.noHintSolves = noHintSolves
         self.hardCompleted = hardCompleted
+        self.streakFreezes = streakFreezes
+        self.lastFreezeUsedDate = lastFreezeUsedDate
         self.createdAt = createdAt
     }
 }
@@ -107,6 +116,9 @@ final class PuzzleRecord {
 
 extension PlayerProfile {
     static let freeHintLimit = 3
+    /// Most freezes a player can hold at once, so milestone rewards don't stack
+    /// into an indefinite safety net.
+    static let maxStreakFreezes = 3
 
     func hintsRemaining(isPremium: Bool, now: Date = Date(), calendar: Calendar = .current) -> Int {
         if isPremium { return .max }
@@ -126,7 +138,8 @@ extension PlayerProfile {
 // MARK: - Streak rules
 
 enum Streaks {
-    /// Called on app launch: drops a stale streak to zero if a day was missed.
+    /// Called on app launch: drops a stale streak to zero if a day was missed,
+    /// unless a single missed day can be bridged by spending a streak freeze.
     static func normalize(_ p: PlayerProfile, now: Date = Date(), calendar: Calendar = .current) {
         guard let last = p.lastCompletedDate else {
             p.currentStreak = 0
@@ -135,9 +148,22 @@ enum Streaks {
         let today = calendar.startOfDay(for: now)
         let lastDay = calendar.startOfDay(for: last)
         guard let yesterday = calendar.date(byAdding: .day, value: -1, to: today) else { return }
-        if lastDay < yesterday {
-            p.currentStreak = 0
+        // Solved today or yesterday — streak is current, nothing to do.
+        if lastDay >= yesterday { return }
+
+        // At least one full day was missed. A freeze can bridge exactly one
+        // missed day (last solve was the day before yesterday). Larger gaps
+        // reset regardless of freezes.
+        let dayBeforeYesterday = calendar.date(byAdding: .day, value: -2, to: today)
+        if lastDay == dayBeforeYesterday, p.currentStreak > 0, p.streakFreezes > 0 {
+            p.streakFreezes -= 1
+            // Fill the gap so the streak is treated as current and later
+            // same-day normalize passes don't spend another freeze.
+            p.lastCompletedDate = yesterday
+            p.lastFreezeUsedDate = today
+            return
         }
+        p.currentStreak = 0
     }
 
     /// Called when a puzzle is completed. Returns true if the streak advanced today.
@@ -167,6 +193,12 @@ enum Streaks {
         }
         p.totalPuzzlesCompleted += 1
         p.bestStreak = max(p.bestStreak, p.currentStreak)
+
+        // Reward sustained streaks: a freeze each time the streak crosses a
+        // 7-day milestone, capped so it can't grow without bound.
+        if advanced && p.currentStreak % 7 == 0 {
+            p.streakFreezes = min(p.streakFreezes + 1, PlayerProfile.maxStreakFreezes)
+        }
         return advanced
     }
 }

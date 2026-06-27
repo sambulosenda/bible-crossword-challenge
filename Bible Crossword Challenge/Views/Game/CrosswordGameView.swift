@@ -28,6 +28,8 @@ struct CrosswordGameView: View {
     @State private var showCompletion = false
     @State private var showPaywall = false
     @State private var newlyUnlocked: [Achievement] = []
+    /// Whether this solve crossed a streak milestone that granted a freeze.
+    @State private var earnedFreeze = false
 
     init(puzzle: Puzzle, profile: PlayerProfile) {
         self.puzzle = puzzle
@@ -65,6 +67,7 @@ struct CrosswordGameView: View {
                 seconds: vm.completionSeconds,
                 streak: profile.currentStreak,
                 newAchievements: newlyUnlocked,
+                earnedFreeze: earnedFreeze,
                 onHome: {
                     showCompletion = false
                     dismiss()
@@ -204,7 +207,9 @@ struct CrosswordGameView: View {
         let rec = loadOrCreateRecord()
         let firstCompletion = !rec.isCompleted
 
+        let freezesBefore = profile.streakFreezes
         let advanced = Streaks.registerCompletion(profile)
+        earnedFreeze = profile.streakFreezes > freezesBefore
         analytics.log(.dailyPuzzleCompleted(puzzleID: puzzle.id, seconds: seconds))
         if advanced {
             analytics.log(.streakUpdated(streak: profile.currentStreak))

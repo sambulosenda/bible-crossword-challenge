@@ -12,23 +12,58 @@ import SwiftUI
 struct StreakCard: View {
     let current: Int
     let best: Int
+    var freezes: Int = 0
+    /// True when a freeze was spent today, to surface a one-time reassurance.
+    var savedRecently: Bool = false
 
     @ScaledMetric(relativeTo: .title) private var iconSize = 40
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
-        HStack(spacing: 0) {
-            metric(value: current, label: "Current Streak", symbol: "flame.fill", tint: .orange)
-            Rectangle()
-                .fill(Color.primary.opacity(0.08))
-                .frame(width: 1, height: 48)
-            metric(value: best, label: "Best Streak", symbol: "trophy.fill", tint: .yellow)
+        VStack(spacing: Theme.Spacing.m) {
+            HStack(spacing: 0) {
+                metric(value: current, label: "Current Streak", symbol: "flame.fill", tint: .orange)
+                Rectangle()
+                    .fill(Color.primary.opacity(0.08))
+                    .frame(width: 1, height: 48)
+                metric(value: best, label: "Best Streak", symbol: "trophy.fill", tint: .yellow)
+            }
+
+            if savedRecently {
+                footnote("A freeze saved your streak", symbol: "snowflake", tint: .cyan)
+            } else if freezes > 0 {
+                footnote("^[\(freezes) freeze](inflect: true) ready to protect your streak",
+                         symbol: "snowflake", tint: .cyan)
+            }
         }
         .frame(maxWidth: .infinity)
         .padding(Theme.Spacing.l)
         .elevatedCard()
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("Current streak \(current) days, best streak \(best) days")
+        .accessibilityLabel(accessibilityLabel)
+    }
+
+    private var accessibilityLabel: String {
+        var label = "Current streak \(current) days, best streak \(best) days"
+        if savedRecently {
+            label += ". A freeze saved your streak"
+        } else if freezes > 0 {
+            label += ". \(freezes) streak \(freezes == 1 ? "freeze" : "freezes") available"
+        }
+        return label
+    }
+
+    private func footnote(_ text: LocalizedStringKey, symbol: String, tint: Color) -> some View {
+        Label(text, systemImage: symbol)
+            .font(.caption.weight(.medium))
+            .foregroundStyle(tint)
+            .frame(maxWidth: .infinity)
+            .padding(.top, Theme.Spacing.xs)
+            .overlay(alignment: .top) {
+                Rectangle()
+                    .fill(Color.primary.opacity(0.08))
+                    .frame(height: 1)
+            }
     }
 
     private func metric(value: Int, label: String, symbol: String, tint: Color) -> some View {
@@ -57,13 +92,26 @@ struct StreakCard: View {
 struct DifficultyBadge: View {
     let difficulty: PuzzleDifficulty
 
+    @Environment(\.colorScheme) private var scheme
+
     var body: some View {
         Text(difficulty.label)
             .font(.caption.weight(.semibold))
             .padding(.horizontal, Theme.Spacing.s)
             .padding(.vertical, 4)
             .background(difficulty.tint.opacity(0.18), in: .capsule)
-            .foregroundStyle(difficulty.tint)
+            .foregroundStyle(textColor)
+    }
+
+    /// The bright system tints fail WCAG contrast on the faint tinted capsule in
+    /// light mode, so use a darker same-hue shade there. Dark mode reads fine.
+    private var textColor: Color {
+        guard scheme == .light else { return difficulty.tint }
+        switch difficulty {
+        case .easy:   return Color(red: 0.10, green: 0.42, blue: 0.18)
+        case .medium: return Color(red: 0.55, green: 0.31, blue: 0.0)
+        case .hard:   return Color(red: 0.70, green: 0.12, blue: 0.12)
+        }
     }
 }
 

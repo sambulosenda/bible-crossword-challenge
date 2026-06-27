@@ -72,6 +72,62 @@ struct StreakTests {
         Streaks.normalize(p, now: day(2026, 7, 2), calendar: utc)
         #expect(p.currentStreak == 1)
     }
+
+    // MARK: - Streak freezes
+
+    @Test func freezeBridgesSingleMissedDay() {
+        let p = PlayerProfile() // starts with one freeze
+        Streaks.registerCompletion(p, now: day(2026, 7, 1), calendar: utc)
+        Streaks.normalize(p, now: day(2026, 7, 3), calendar: utc) // missed 7/2
+        #expect(p.currentStreak == 1)        // preserved
+        #expect(p.streakFreezes == 0)        // spent
+        #expect(p.lastFreezeUsedDate != nil) // surfaces the one-time note
+        // The next-day solve still continues the streak.
+        Streaks.registerCompletion(p, now: day(2026, 7, 3), calendar: utc)
+        #expect(p.currentStreak == 2)
+    }
+
+    @Test func missedDayWithoutFreezeResets() {
+        let p = PlayerProfile(streakFreezes: 0)
+        Streaks.registerCompletion(p, now: day(2026, 7, 1), calendar: utc)
+        Streaks.normalize(p, now: day(2026, 7, 3), calendar: utc) // missed 7/2
+        #expect(p.currentStreak == 0)
+    }
+
+    @Test func freezeDoesNotCoverTwoMissedDays() {
+        let p = PlayerProfile() // one freeze
+        Streaks.registerCompletion(p, now: day(2026, 7, 1), calendar: utc)
+        Streaks.normalize(p, now: day(2026, 7, 4), calendar: utc) // missed 7/2 and 7/3
+        #expect(p.currentStreak == 0)
+        #expect(p.streakFreezes == 1) // not spent on an uncoverable gap
+    }
+
+    @Test func freezeSpentOncePerGap() {
+        let p = PlayerProfile() // one freeze
+        Streaks.registerCompletion(p, now: day(2026, 7, 1), calendar: utc)
+        Streaks.normalize(p, now: day(2026, 7, 3), calendar: utc)
+        Streaks.normalize(p, now: day(2026, 7, 3), calendar: utc) // second pass, same day
+        #expect(p.streakFreezes == 0) // only one consumed
+        #expect(p.currentStreak == 1)
+    }
+
+    @Test func milestoneGrantsFreeze() {
+        let p = PlayerProfile() // starts with one
+        for d in 1...7 {
+            Streaks.registerCompletion(p, now: day(2026, 7, d), calendar: utc)
+        }
+        #expect(p.currentStreak == 7)
+        #expect(p.streakFreezes == 2) // earned one crossing the 7-day mark
+    }
+
+    @Test func freezesCapAtMax() {
+        let p = PlayerProfile() // starts with one
+        for d in 1...21 {
+            Streaks.registerCompletion(p, now: day(2026, 7, d), calendar: utc)
+        }
+        // Milestones at 7/14/21 would push to 4, but the cap holds it down.
+        #expect(p.streakFreezes == PlayerProfile.maxStreakFreezes)
+    }
 }
 
 struct HintTests {

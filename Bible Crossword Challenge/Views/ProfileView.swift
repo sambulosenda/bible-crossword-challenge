@@ -52,6 +52,7 @@ struct ProfileView: View {
                     stat("Puzzles Completed", value: "\(profile.totalPuzzlesCompleted)", symbol: "checkmark.circle")
                     stat("Current Streak", value: "\(profile.currentStreak)", symbol: "flame")
                     stat("Best Streak", value: "\(profile.bestStreak)", symbol: "trophy")
+                    stat("Streak Freezes", value: "\(profile.streakFreezes)", symbol: "snowflake")
                     stat("Achievements", value: "\(unlockedCount)/\(Achievements.all.count)", symbol: "star")
                 }
 

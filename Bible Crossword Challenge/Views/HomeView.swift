@@ -24,6 +24,13 @@ struct HomeView: View {
 
     private var dailyPuzzle: Puzzle? { puzzleProvider.dailyPuzzle() }
 
+    /// True when a streak freeze was spent today, so the streak card can show a
+    /// one-time reassurance instead of the idle freeze count.
+    private var freezeSavedToday: Bool {
+        guard let used = profile.lastFreezeUsedDate else { return false }
+        return Calendar.current.isDateInToday(used)
+    }
+
     var body: some View {
         // Resolve the daily puzzle + its record once per body pass; the verse
         // card derives from the puzzle so it never spoils today's answer.
@@ -44,7 +51,12 @@ struct HomeView: View {
                         emptyDailyCard
                     }
 
-                    StreakCard(current: profile.currentStreak, best: profile.bestStreak)
+                    StreakCard(
+                        current: profile.currentStreak,
+                        best: profile.bestStreak,
+                        freezes: profile.streakFreezes,
+                        savedRecently: freezeSavedToday
+                    )
 
                     if let verse = verseOfTheDay(excluding: daily) {
                         VerseCard(puzzle: verse)
