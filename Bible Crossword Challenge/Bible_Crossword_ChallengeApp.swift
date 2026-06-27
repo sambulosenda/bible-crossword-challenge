@@ -12,6 +12,7 @@ import FirebaseCore
 @main
 struct Bible_Crossword_ChallengeApp: App {
     @State private var store = StoreService()
+    @State private var showSplash = true
     @AppStorage("appTheme") private var appTheme: AppTheme = .system
     private let container: ModelContainer
 
@@ -26,9 +27,15 @@ struct Bible_Crossword_ChallengeApp: App {
 
     var body: some Scene {
         WindowGroup {
-            RootView()
-                .environment(store)
-                .preferredColorScheme(appTheme.colorScheme)
+            ZStack {
+                RootView()
+                    .environment(store)
+                    .preferredColorScheme(appTheme.colorScheme)
+                if showSplash {
+                    SplashView { showSplash = false }
+                        .zIndex(1)
+                }
+            }
         }
         .modelContainer(container)
     }
