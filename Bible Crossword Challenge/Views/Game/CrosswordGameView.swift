@@ -180,22 +180,42 @@ struct CrosswordGameView: View {
             showPaywall = true
             return
         }
+        // Mark the puzzle as hinted *before* revealing: a reveal can complete the
+        // puzzle and fire handleCompletion synchronously, which reads usedHint.
+        let rec = loadOrCreateRecord()
+        let priorUsedHint = rec.usedHint
+        rec.usedHint = true
+
         let didReveal: Bool
         switch type {
         case .letter: didReveal = vm.revealLetter()
         case .word: didReveal = vm.revealWord()
         }
-        guard didReveal else { return }
+        guard didReveal else {
+            rec.usedHint = priorUsedHint
+            return
+        }
         if !store.isPremium { profile.consumeHint() }
         analytics.log(.hintUsed(type: type.rawValue))
         saveProgress()
     }
 
     private func handleCompletion(seconds: Int) {
+        let rec = loadOrCreateRecord()
+        let firstCompletion = !rec.isCompleted
+
         let advanced = Streaks.registerCompletion(profile)
         analytics.log(.dailyPuzzleCompleted(puzzleID: puzzle.id, seconds: seconds))
         if advanced {
             analytics.log(.streakUpdated(streak: profile.currentStreak))
+        }
+
+        // Update achievement stats before evaluating unlocks. Best time updates on
+        // every solve; the once-per-puzzle stats only on the first completion.
+        profile.bestSolveSeconds = min(profile.bestSolveSeconds ?? .max, seconds)
+        if firstCompletion {
+            if !rec.usedHint { profile.noHintSolves += 1 }
+            if puzzle.difficulty == .hard { profile.hardCompleted += 1 }
         }
 
         let unlocked = Achievements.newlyUnlocked(for: profile)
@@ -205,7 +225,6 @@ struct CrosswordGameView: View {
         }
         newlyUnlocked = unlocked
 
-        let rec = loadOrCreateRecord()
         rec.isCompleted = true
         rec.completedDate = Date()
         rec.elapsedSeconds = seconds

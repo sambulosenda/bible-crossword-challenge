@@ -22,6 +22,12 @@ final class PlayerProfile {
     var hintsUsedToday: Int
     var hintsDate: Date?
     var unlockedAchievementIDs: [String]
+    /// Fastest completed solve, in seconds (nil until the first completion).
+    var bestSolveSeconds: Int?
+    /// Count of puzzles first solved without using any hint.
+    var noHintSolves: Int = 0
+    /// Count of hard puzzles completed (first completion only).
+    var hardCompleted: Int = 0
     var createdAt: Date
 
     init(
@@ -33,6 +39,9 @@ final class PlayerProfile {
         hintsUsedToday: Int = 0,
         hintsDate: Date? = nil,
         unlockedAchievementIDs: [String] = [],
+        bestSolveSeconds: Int? = nil,
+        noHintSolves: Int = 0,
+        hardCompleted: Int = 0,
         createdAt: Date = Date()
     ) {
         self.username = username
@@ -43,6 +52,9 @@ final class PlayerProfile {
         self.hintsUsedToday = hintsUsedToday
         self.hintsDate = hintsDate
         self.unlockedAchievementIDs = unlockedAchievementIDs
+        self.bestSolveSeconds = bestSolveSeconds
+        self.noHintSolves = noHintSolves
+        self.hardCompleted = hardCompleted
         self.createdAt = createdAt
     }
 }
@@ -57,6 +69,9 @@ final class PuzzleRecord {
     var elapsedSeconds: Int
     /// Encoded `[String: String]` of position storage-key -> letter, for resume.
     var entriesData: Data?
+    /// True once any hint was revealed on this puzzle — survives resume, so a
+    /// "no hints" solve stays accurate across sessions.
+    var usedHint: Bool = false
     var updatedAt: Date
 
     init(
@@ -65,6 +80,7 @@ final class PuzzleRecord {
         completedDate: Date? = nil,
         elapsedSeconds: Int = 0,
         entriesData: Data? = nil,
+        usedHint: Bool = false,
         updatedAt: Date = Date()
     ) {
         self.puzzleID = puzzleID
@@ -72,6 +88,7 @@ final class PuzzleRecord {
         self.completedDate = completedDate
         self.elapsedSeconds = elapsedSeconds
         self.entriesData = entriesData
+        self.usedHint = usedHint
         self.updatedAt = updatedAt
     }
 
@@ -160,6 +177,9 @@ struct Achievement: Identifiable, Hashable {
     enum Goal: Hashable {
         case puzzles(Int)
         case streak(Int)
+        case fastSolve(maxSeconds: Int)
+        case noHints(Int)
+        case difficulty(PuzzleDifficulty, Int)
     }
 
     let id: String
@@ -178,6 +198,14 @@ struct Achievement: Identifiable, Hashable {
             return min(1.0, Double(p.totalPuzzlesCompleted) / Double(target))
         case .streak(let target):
             return min(1.0, Double(max(p.bestStreak, p.currentStreak)) / Double(target))
+        case .fastSolve(let max):
+            // Binary: achieved once any solve beats the target time.
+            guard let best = p.bestSolveSeconds else { return 0 }
+            return best <= max ? 1.0 : 0.0
+        case .noHints(let target):
+            return min(1.0, Double(p.noHintSolves) / Double(target))
+        case .difficulty(let diff, let target):
+            return min(1.0, Double(count(of: diff, in: p)) / Double(target))
         }
     }
 
@@ -188,14 +216,30 @@ struct Achievement: Identifiable, Hashable {
             return "\(min(p.totalPuzzlesCompleted, target)) / \(target)"
         case .streak(let target):
             return "\(min(max(p.bestStreak, p.currentStreak), target)) / \(target)"
+        case .fastSolve(let max):
+            return "< \(TimeFormat.clock(max))"
+        case .noHints(let target):
+            return "\(min(p.noHintSolves, target)) / \(target)"
+        case .difficulty(let diff, let target):
+            return "\(min(count(of: diff, in: p), target)) / \(target)"
         }
+    }
+
+    /// Completion count for a difficulty. Only hard is tracked today.
+    private func count(of difficulty: PuzzleDifficulty, in p: PlayerProfile) -> Int {
+        difficulty == .hard ? p.hardCompleted : 0
     }
 }
 
 enum Achievements {
     static let all: [Achievement] = [
         Achievement(id: "bible-beginner", title: "Bible Beginner", detail: "Complete 5 puzzles", symbol: "book", goal: .puzzles(5)),
+        Achievement(id: "unaided", title: "Unaided", detail: "Solve a puzzle without hints", symbol: "hand.raised.slash", goal: .noHints(1)),
+        Achievement(id: "quick-wit", title: "Quick Wit", detail: "Solve a puzzle in under 5 minutes", symbol: "bolt.fill", goal: .fastSolve(maxSeconds: 300)),
         Achievement(id: "disciple", title: "Disciple", detail: "Complete 25 puzzles", symbol: "figure.walk", goal: .puzzles(25)),
+        Achievement(id: "lightning-round", title: "Lightning Round", detail: "Solve a puzzle in under 2 minutes", symbol: "bolt.horizontal.fill", goal: .fastSolve(maxSeconds: 120)),
+        Achievement(id: "trial-by-fire", title: "Trial by Fire", detail: "Complete 5 hard puzzles", symbol: "mountain.2.fill", goal: .difficulty(.hard, 5)),
+        Achievement(id: "purist", title: "Purist", detail: "Solve 10 puzzles without hints", symbol: "sparkles", goal: .noHints(10)),
         Achievement(id: "scholar", title: "Scholar", detail: "Complete 100 puzzles", symbol: "graduationcap", goal: .puzzles(100)),
         Achievement(id: "evangelist", title: "Evangelist", detail: "Reach a 30 day streak", symbol: "flame", goal: .streak(30)),
         Achievement(id: "apostle", title: "Apostle", detail: "Reach a 100 day streak", symbol: "crown", goal: .streak(100)),
