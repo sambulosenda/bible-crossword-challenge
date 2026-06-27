@@ -30,6 +30,20 @@ command above. Validate consistency afterwards if you like — every answer's
 letters must match the solution grid and no maximal run may be an unintended
 word (the generator already enforces this).
 
+**Do NOT set an `id` on new specs — leave it off.** The generator assigns the
+next free `daily-NNN` automatically, above the current maximum.
+
+## Puzzle IDs are permanent (do not edit)
+Each existing spec carries an explicit `"id"` (`daily-NNN`). That id is the
+ONLY link between a puzzle and a player's saved progress
+(`PuzzleRecord.puzzleID`). The generator uses a spec's `id` verbatim and only
+auto-assigns ids to specs that lack one, so adding new puzzles never renumbers
+existing ones.
+
+Never change or remove an existing spec's `id`, and never reuse a retired id —
+doing so silently reassigns players' completions to the wrong puzzles. (Daily
+rotation order and `publishDate` are cosmetic and may shift; ids must not.)
+
 ## Daily rotation
 `PuzzleProvider.dailyPuzzle(for:)` shows `puzzles[(daysSinceEpoch) % count]`,
 epoch = 2026-07-01. With 82 puzzles the daily puzzle is unique for ~82 days

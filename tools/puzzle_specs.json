@@ -1,5 +1,6 @@
 [
   {
+    "id": "daily-010",
     "title": "In the Beginning",
     "theme": "The Creation (Genesis 1-2)",
     "difficulty": "easy",
@@ -91,6 +92,7 @@
     ]
   },
   {
+    "id": "daily-020",
     "title": "The Garden of Eden",
     "theme": "Adam, Eve, and the Fall",
     "difficulty": "easy",
@@ -182,6 +184,7 @@
     ]
   },
   {
+    "id": "daily-014",
     "title": "Noah and the Flood",
     "theme": "Noah's ark and the great flood",
     "difficulty": "easy",
@@ -273,6 +276,7 @@
     ]
   },
   {
+    "id": "daily-060",
     "title": "The Tower of Babel",
     "theme": "The tower of Babel and scattered languages",
     "difficulty": "medium",
@@ -364,6 +368,7 @@
     ]
   },
   {
+    "id": "daily-006",
     "title": "Father Abraham",
     "theme": "Abraham, covenant and promise",
     "difficulty": "easy",
@@ -455,6 +460,7 @@
     ]
   },
   {
+    "id": "daily-032",
     "title": "Isaac and Rebekah",
     "theme": "Isaac, Rebekah, and the birthright",
     "difficulty": "medium",
@@ -546,6 +552,7 @@
     ]
   },
   {
+    "id": "daily-033",
     "title": "Jacob's Ladder",
     "theme": "Jacob, Esau, and the twelve sons",
     "difficulty": "medium",
@@ -637,6 +644,7 @@
     "issues": "Verified clean; KJV verse matches Genesis 28:12 exactly; all 20 answers valid and on-theme, no clue contains its answer."
   },
   {
+    "id": "daily-012",
     "title": "Joseph the Dreamer",
     "theme": "Joseph sold into Egypt, coat of many colours",
     "difficulty": "easy",
@@ -728,6 +736,7 @@
     "issues": "Verified clean; KJV verse matches Genesis 37:3 exactly; all 20 answers valid and on-theme, no clue contains its answer."
   },
   {
+    "id": "daily-018",
     "title": "The Burning Bush",
     "theme": "Moses called by God in Midian",
     "difficulty": "easy",
@@ -819,6 +828,7 @@
     "issues": "Verified clean; KJV verse matches Exodus 3:2 exactly; all 20 answers valid and on-theme, no clue contains its answer."
   },
   {
+    "id": "daily-059",
     "title": "The Ten Plagues",
     "theme": "The plagues upon Egypt",
     "difficulty": "medium",
@@ -910,6 +920,7 @@
     "issues": "Restored full KJV verse for Exodus 11:1 (puzzle had truncated it at 'let you go hence'); all 20 answers valid and on-theme, no clue contains its answer."
   },
   {
+    "id": "daily-002",
     "title": "Crossing the Red Sea",
     "theme": "The Exodus from Egypt",
     "difficulty": "easy",
@@ -1001,6 +1012,7 @@
     "issues": "Verified clean; KJV verse matches Exodus 14:22 exactly; all 20 answers valid and on-theme, no clue contains its answer."
   },
   {
+    "id": "daily-025",
     "title": "The Ten Commandments",
     "theme": "The law given at Mount Sinai",
     "difficulty": "easy",
@@ -1092,6 +1104,7 @@
     "issues": "Verified clean; KJV verse matches Exodus 20:12 exactly; all 20 answers valid and on-theme, no clue contains its answer."
   },
   {
+    "id": "daily-036",
     "title": "Manna in the Wilderness",
     "theme": "Israel wandering in the desert",
     "difficulty": "medium",
@@ -1183,6 +1196,7 @@
     "issues": "Verse matches KJV exactly; all facts and clues verified correct; reworded TENT clue to avoid repeating 'wander' family used in WANDER."
   },
   {
+    "id": "daily-081",
     "title": "The Tabernacle",
     "theme": "The tabernacle and worship",
     "difficulty": "hard",
@@ -1274,6 +1288,7 @@
     "issues": "Verse matches KJV exactly; all facts verified. CHERUBS retained as a valid A-Z plural (KJV uses 'cherubims'); SHOWBREAD valid at 9 letters."
   },
   {
+    "id": "daily-027",
     "title": "The Walls of Jericho",
     "theme": "Joshua and the fall of Jericho",
     "difficulty": "easy",
@@ -1365,6 +1380,7 @@
     "issues": "Verse matches KJV exactly; all facts verified correct; minor clarity edit to DAYS clue."
   },
   {
+    "id": "daily-031",
     "title": "Gideon's Three Hundred",
     "theme": "Gideon the judge",
     "difficulty": "medium",
@@ -1456,6 +1472,7 @@
     "issues": "Verse matches KJV exactly; all facts verified; FLEECE clue trimmed to drop the answer's owner-name redundancy."
   },
   {
+    "id": "daily-016",
     "title": "Samson and Delilah",
     "theme": "Samson the strong judge",
     "difficulty": "easy",
@@ -1547,6 +1564,7 @@
     "issues": "Verse matches KJV (Judges 13:24) exactly and is on-theme (Samson); all facts verified. Verse is about Samson's birth/growth rather than Delilah, but accurate and short."
   },
   {
+    "id": "daily-058",
     "title": "The Story of Ruth",
     "theme": "Ruth, Naomi, and Boaz",
     "difficulty": "medium",
@@ -1638,6 +1656,7 @@
     "issues": "Verse matches KJV exactly; all facts verified; BOAZ clue reworded from 'gleaner' to avoid echoing the GLEAN answer."
   },
   {
+    "id": "daily-017",
     "title": "Samuel Hears God",
     "theme": "Samuel the prophet called as a boy",
     "difficulty": "easy",
@@ -1729,6 +1748,7 @@
     "issues": "No errors found; verse matches KJV exactly, all clues correct, answers valid. Minor clue polish on VOICE."
   },
   {
+    "id": "daily-035",
     "title": "King Saul",
     "theme": "Saul, the first king of Israel",
     "difficulty": "medium",
@@ -1820,6 +1840,7 @@
     "issues": "No errors found; verse matches KJV exactly, all clues correct, answers valid and on-theme."
   },
   {
+    "id": "daily-004",
     "title": "David and Goliath",
     "theme": "David defeats the giant",
     "difficulty": "easy",
@@ -1911,6 +1932,7 @@
     "issues": "No errors found; verse matches KJV exactly, all clues correct (Goliath's helmet of brass per 1 Sam 17:5), answers valid."
   },
   {
+    "id": "daily-013",
     "title": "King David",
     "theme": "David, shepherd, king, psalmist",
     "difficulty": "easy",
@@ -2002,6 +2024,7 @@
     "issues": "No errors found; verse matches KJV exactly, all clues correct, answers valid and on-theme."
   },
   {
+    "id": "daily-044",
     "title": "Solomon's Wisdom",
     "theme": "Solomon and the temple",
     "difficulty": "medium",
@@ -2093,6 +2116,7 @@
     "issues": "No errors found; verse matches KJV exactly, all clues correct (olive wood doors 1 Kings 6:31), answers valid."
   },
   {
+    "id": "daily-066",
     "title": "Elijah and the Fire",
     "theme": "Elijah on Mount Carmel",
     "difficulty": "hard",
@@ -2184,6 +2208,7 @@
     "issues": "No errors found; verse matches KJV exactly, all clues correct, answers valid and on-theme."
   },
   {
+    "id": "daily-067",
     "title": "Elisha the Prophet",
     "theme": "Elisha's miracles",
     "difficulty": "hard",
@@ -2275,6 +2300,7 @@
     "issues": "Removed HEALED (clue referenced answers leper/waters which are answers; off-clue) and replaced with GEHAZI; fixed LEPER clue (contained 'cleansed' theme but original was fine, reworded to avoid the verse-bound 'dipping' detail which is Naaman's); added period to verse; reworded SPIRIT/RAISED clues. 20 valid words."
   },
   {
+    "id": "daily-057",
     "title": "The Patience of Job",
     "theme": "Job's suffering and faith",
     "difficulty": "medium",
@@ -2366,6 +2392,7 @@
     "issues": "Verse matches KJV Job 1:21 exactly; all clues factually sound and answer-free. No changes needed. 20 valid words."
   },
   {
+    "id": "daily-003",
     "title": "Daniel in the Lions' Den",
     "theme": "Daniel in Babylon",
     "difficulty": "easy",
@@ -2453,6 +2480,7 @@
     "issues": "Fixed verse to exact KJV Daniel 6:22 ('have I done no hurt' not 'I have done no hurt'). All clues sound. 19 valid words."
   },
   {
+    "id": "daily-052",
     "title": "The Fiery Furnace",
     "theme": "Shadrach, Meshach, and Abednego",
     "difficulty": "medium",
@@ -2544,6 +2572,7 @@
     "issues": "Removed NEBUCHADNEZZAR (14-letter limit; over 9) and replaced with KING. Verse matches KJV Daniel 3:25. 20 valid words."
   },
   {
+    "id": "daily-011",
     "title": "Jonah and the Whale",
     "theme": "Jonah and Nineveh",
     "difficulty": "easy",
@@ -2631,6 +2660,7 @@
     "issues": "Verse matches KJV Jonah 1:17. WHALE clue softened (KJV says 'great fish', not whale). 19 valid words."
   },
   {
+    "id": "daily-041",
     "title": "Queen Esther",
     "theme": "Esther saves her people",
     "difficulty": "medium",
@@ -2722,6 +2752,7 @@
     "issues": "Verse matches KJV Esther 4:14. Reworded clues that contained 'Esther' (the title/heroine) to avoid naming the answer ESTHER and for consistency. 20 valid words."
   },
   {
+    "id": "daily-071",
     "title": "Nehemiah Rebuilds",
     "theme": "Nehemiah and the walls of Jerusalem",
     "difficulty": "hard",
@@ -2809,6 +2840,7 @@
     ]
   },
   {
+    "id": "daily-078",
     "title": "The Major Prophets",
     "theme": "Isaiah, Jeremiah, Ezekiel, Daniel",
     "difficulty": "hard",
@@ -2900,6 +2932,7 @@
     ]
   },
   {
+    "id": "daily-022",
     "title": "The Lord Is My Shepherd",
     "theme": "Psalm 23 and trust in God",
     "difficulty": "easy",
@@ -2991,6 +3024,7 @@
     ]
   },
   {
+    "id": "daily-045",
     "title": "Songs of Praise",
     "theme": "The Psalms of David",
     "difficulty": "medium",
@@ -3082,6 +3116,7 @@
     ]
   },
   {
+    "id": "daily-063",
     "title": "Words of the Wise",
     "theme": "The Proverbs",
     "difficulty": "medium",
@@ -3173,6 +3208,7 @@
     ]
   },
   {
+    "id": "daily-019",
     "title": "The Christmas Story",
     "theme": "The nativity of Jesus in Bethlehem",
     "difficulty": "easy",
@@ -3264,6 +3300,7 @@
     ]
   },
   {
+    "id": "daily-028",
     "title": "Wise Men from the East",
     "theme": "The magi follow the star",
     "difficulty": "easy",
@@ -3355,6 +3392,7 @@
     ]
   },
   {
+    "id": "daily-034",
     "title": "John the Baptist",
     "theme": "John baptising in the Jordan",
     "difficulty": "medium",
@@ -3446,6 +3484,7 @@
     ]
   },
   {
+    "id": "daily-048",
     "title": "The Baptism of Jesus",
     "theme": "Jesus baptised, the dove and voice",
     "difficulty": "medium",
@@ -3537,6 +3576,7 @@
     ]
   },
   {
+    "id": "daily-074",
     "title": "Tempted in the Desert",
     "theme": "The temptation of Christ",
     "difficulty": "hard",
@@ -3628,6 +3668,7 @@
     ]
   },
   {
+    "id": "daily-026",
     "title": "The Twelve Disciples",
     "theme": "The apostles of Jesus",
     "difficulty": "easy",
@@ -3711,6 +3752,7 @@
     ]
   },
   {
+    "id": "daily-043",
     "title": "Sermon on the Mount",
     "theme": "Jesus' teaching on the mount",
     "difficulty": "medium",
@@ -3798,6 +3840,7 @@
     ]
   },
   {
+    "id": "daily-049",
     "title": "The Beatitudes",
     "theme": "Blessed are the meek (Matthew 5)",
     "difficulty": "medium",
@@ -3877,6 +3920,7 @@
     "issues": "Removed RIGHT (abbreviation, not a valid Bible word); verse and remaining 17 words verified correct."
   },
   {
+    "id": "daily-023",
     "title": "The Lord's Prayer",
     "theme": "Our Father, the model prayer",
     "difficulty": "easy",
@@ -3960,6 +4004,7 @@
     "issues": "Verse and all 18 words verified correct; no changes needed."
   },
   {
+    "id": "daily-056",
     "title": "The Parable of the Sower",
     "theme": "Seed on different soils",
     "difficulty": "medium",
@@ -4043,6 +4088,7 @@
     "issues": "Verse and all 18 words verified correct; no changes needed."
   },
   {
+    "id": "daily-024",
     "title": "The Prodigal Son",
     "theme": "The lost son returns home",
     "difficulty": "easy",
@@ -4134,6 +4180,7 @@
     "issues": "Verse and all 20 words verified correct; no changes needed."
   },
   {
+    "id": "daily-021",
     "title": "The Good Samaritan",
     "theme": "Love your neighbour parable",
     "difficulty": "easy",
@@ -4225,6 +4272,7 @@
     "issues": "Verse correct KJV; reworded awkward HALF clue; all 20 words verified valid."
   },
   {
+    "id": "daily-054",
     "title": "The Good Shepherd",
     "theme": "Jesus as the shepherd, lost sheep",
     "difficulty": "medium",
@@ -4316,6 +4364,7 @@
     "issues": "Verse and all 20 words verified correct; no changes needed."
   },
   {
+    "id": "daily-037",
     "title": "Miracles of Jesus",
     "theme": "The healings and wonders of Christ",
     "difficulty": "medium",
@@ -4407,6 +4456,7 @@
     "issues": "Verse verified KJV; fixed grammar in FEVER clue; all answers valid and on-theme."
   },
   {
+    "id": "daily-007",
     "title": "Feeding the Five Thousand",
     "theme": "Loaves and fishes miracle",
     "difficulty": "easy",
@@ -4498,6 +4548,7 @@
     "issues": "Verse verified KJV; all answers valid, on-theme, no clue contains its answer."
   },
   {
+    "id": "daily-061",
     "title": "Walking on Water",
     "theme": "Jesus and Peter on the sea",
     "difficulty": "medium",
@@ -4589,6 +4640,7 @@
     "issues": "Verse verified KJV; all answers valid and on-theme; no clue reveals its answer."
   },
   {
+    "id": "daily-030",
     "title": "Calming the Storm",
     "theme": "Jesus stills the tempest",
     "difficulty": "medium",
@@ -4680,6 +4732,7 @@
     "issues": "Verse verified KJV; all answers valid and on-theme; clues factually correct."
   },
   {
+    "id": "daily-070",
     "title": "Lazarus, Come Forth",
     "theme": "Raising of Lazarus",
     "difficulty": "hard",
@@ -4771,6 +4824,7 @@
     "issues": "Verse verified KJV; all answers valid and on-theme; clues factually correct."
   },
   {
+    "id": "daily-082",
     "title": "The Transfiguration",
     "theme": "Jesus glorified on the mountain",
     "difficulty": "hard",
@@ -4862,6 +4916,7 @@
     "issues": "Verse verified KJV; all answers valid and on-theme; clues factually correct."
   },
   {
+    "id": "daily-055",
     "title": "The Last Supper",
     "theme": "The final meal and communion",
     "difficulty": "medium",
@@ -4953,6 +5008,7 @@
     "issues": "Verse verified accurate KJV; all clues and answers valid."
   },
   {
+    "id": "daily-077",
     "title": "The Garden of Gethsemane",
     "theme": "Jesus prays before arrest",
     "difficulty": "hard",
@@ -5044,6 +5100,7 @@
     "issues": "Verse verified accurate KJV; all clues and answers valid."
   },
   {
+    "id": "daily-050",
     "title": "The Crucifixion",
     "theme": "The death of Christ at Calvary",
     "difficulty": "medium",
@@ -5135,6 +5192,7 @@
     "issues": "Verse verified accurate KJV; all clues and answers valid."
   },
   {
+    "id": "daily-009",
     "title": "He Is Risen",
     "theme": "The resurrection of Jesus",
     "difficulty": "easy",
@@ -5226,6 +5284,7 @@
     "issues": "Verse verified accurate KJV; all clues and answers valid."
   },
   {
+    "id": "daily-080",
     "title": "The Road to Emmaus",
     "theme": "Risen Jesus appears to two",
     "difficulty": "hard",
@@ -5317,6 +5376,7 @@
     "issues": "Verse verified KJV; replaced invalid 10-letter SCRIPTURES with JERUSALEM (Luke 24:13)."
   },
   {
+    "id": "daily-047",
     "title": "The Ascension",
     "theme": "Jesus taken up into heaven",
     "difficulty": "medium",
@@ -5408,6 +5468,7 @@
     "issues": "Verse verified KJV (corrected closing punctuation to semicolon); rewrote broken GALILEE clue."
   },
   {
+    "id": "daily-051",
     "title": "The Day of Pentecost",
     "theme": "The Holy Spirit comes",
     "difficulty": "medium",
@@ -5495,6 +5556,7 @@
     "issues": "Removed FILLED (echoes verse/clue trivially); trimmed leading space from JEWS; tightened POWER and REPENT clues; 19 valid words remain."
   },
   {
+    "id": "daily-076",
     "title": "The Early Church",
     "theme": "The book of Acts, first believers",
     "difficulty": "hard",
@@ -5586,6 +5648,7 @@
     "issues": "All on-theme and valid; no changes needed; 20 words."
   },
   {
+    "id": "daily-042",
     "title": "Saul on the Damascus Road",
     "theme": "Paul's conversion",
     "difficulty": "medium",
@@ -5677,6 +5740,7 @@
     "issues": "All valid and on-theme; no changes needed; 20 words."
   },
   {
+    "id": "daily-072",
     "title": "Paul's Journeys",
     "theme": "The missionary journeys of Paul",
     "difficulty": "hard",
@@ -5768,6 +5832,7 @@
     "issues": "All valid and on-theme; no changes needed; 20 words."
   },
   {
+    "id": "daily-073",
     "title": "Shipwrecked on Malta",
     "theme": "Paul's voyage and shipwreck",
     "difficulty": "hard",
@@ -5859,6 +5924,7 @@
     "issues": "BARBARIANS is 10 letters (over 9-letter limit) so removed; tightened RAIN and WHEAT clues; 19 valid words remain."
   },
   {
+    "id": "daily-053",
     "title": "The Fruit of the Spirit",
     "theme": "Galatians 5 love joy peace",
     "difficulty": "medium",
@@ -5942,6 +6008,7 @@
     "issues": "Removed GENTLENESS (10 letters, over limit) and TEMPERANCE is also 10 letters but kept? No-corrected: TEMPERANCE removed too (10 letters); kept 16 valid words at/under 9 letters."
   },
   {
+    "id": "daily-046",
     "title": "The Armour of God",
     "theme": "Ephesians 6 spiritual armour",
     "difficulty": "medium",
@@ -6029,6 +6096,7 @@
     ]
   },
   {
+    "id": "daily-005",
     "title": "Faith, Hope, and Love",
     "theme": "1 Corinthians 13",
     "difficulty": "easy",
@@ -6116,6 +6184,7 @@
     ]
   },
   {
+    "id": "daily-079",
     "title": "The Names of God",
     "theme": "Titles and names for God",
     "difficulty": "hard",
@@ -6203,6 +6272,7 @@
     ]
   },
   {
+    "id": "daily-029",
     "title": "Angels of the Bible",
     "theme": "Gabriel, Michael, and the heavenly host",
     "difficulty": "medium",
@@ -6290,6 +6360,7 @@
     ]
   },
   {
+    "id": "daily-062",
     "title": "Women of the Bible",
     "theme": "Sarah, Mary, Esther, Deborah, and more",
     "difficulty": "medium",
@@ -6381,6 +6452,7 @@
     ]
   },
   {
+    "id": "daily-069",
     "title": "Kings of Israel and Judah",
     "theme": "The kings after David",
     "difficulty": "hard",
@@ -6472,6 +6544,7 @@
     ]
   },
   {
+    "id": "daily-065",
     "title": "Books of the Old Testament",
     "theme": "Genesis to Malachi",
     "difficulty": "hard",
@@ -6563,6 +6636,7 @@
     "issues": "Verse matches KJV; all 20 answers valid OT books, A-Z only, on-theme; no answers appear in clues. No changes needed."
   },
   {
+    "id": "daily-064",
     "title": "Books of the New Testament",
     "theme": "Matthew to Revelation",
     "difficulty": "hard",
@@ -6646,6 +6720,7 @@
     "issues": "Verse matches KJV (a famous on-theme partial of John 3:16); all 18 answers valid NT books, A-Z only; no answers appear in clues. No changes needed."
   },
   {
+    "id": "daily-001",
     "title": "Animals of the Bible",
     "theme": "Lambs, lions, doves, serpents",
     "difficulty": "easy",
@@ -6733,6 +6808,7 @@
     "issues": "Verse matches KJV; all 19 answers valid, A-Z only, on-theme. Refined DONKEY clue to note its KJV name (ass) for accuracy. No answers appear in clues."
   },
   {
+    "id": "daily-039",
     "title": "Places in the Holy Land",
     "theme": "Bethlehem, Nazareth, Jericho, Galilee",
     "difficulty": "medium",
@@ -6824,6 +6900,7 @@
     "issues": "Verse text matches KJV wording (a valid shortened clause); added terminal period. All 20 answers valid, A-Z only, on-theme; no answers appear in clues."
   },
   {
+    "id": "daily-068",
     "title": "Feasts and Festivals",
     "theme": "Passover, Pentecost, Tabernacles",
     "difficulty": "hard",
@@ -6915,6 +6992,7 @@
     "issues": "Verse matches KJV; added terminal period. Corrected PENTECOST clue from 'fifty days after the Sabbath' to 'fifty days after firstfruits' for accuracy. All 20 answers valid, A-Z only, on-theme; no answers appear in clues."
   },
   {
+    "id": "daily-038",
     "title": "Parables of the Kingdom",
     "theme": "Mustard seed, pearl, treasure",
     "difficulty": "medium",
@@ -7006,6 +7084,7 @@
     "issues": "Verse matches KJV; added terminal period. All 20 answers valid, A-Z only, on-theme; no answers appear in clues. Minor ROOT clue refinement for accuracy."
   },
   {
+    "id": "daily-075",
     "title": "The Book of Revelation",
     "theme": "John's apocalypse and new Jerusalem",
     "difficulty": "hard",
@@ -7097,6 +7176,7 @@
     "issues": "Verse and reference correct; added trailing period to verse; all 20 answers valid A-Z, on-theme, no duplicates, clues factual and answer-free."
   },
   {
+    "id": "daily-008",
     "title": "Fruits of Faith",
     "theme": "Christian virtues and discipleship",
     "difficulty": "easy",
@@ -7188,6 +7268,7 @@
     "issues": "Verse and reference correct (KJV ends with comma, retained); all 20 answers valid A-Z, on-theme, no duplicates, clues factual and answer-free."
   },
   {
+    "id": "daily-015",
     "title": "Praise and Worship",
     "theme": "Worship, hymns, and thanksgiving",
     "difficulty": "easy",
@@ -7279,6 +7360,7 @@
     "issues": "Verse and reference correct; all 20 answers valid A-Z, on-theme, no duplicates, clues factual and answer-free."
   },
   {
+    "id": "daily-040",
     "title": "Promises of God",
     "theme": "God's covenant promises",
     "difficulty": "medium",

@@ -192,7 +192,12 @@ def build(spec, min_words=10):
         "clues": clues,
     }, None
 
+def id_num(pid):
+    m = re.match(r"daily-(\d+)$", pid or "")
+    return int(m.group(1)) if m else 0
+
 def main():
+    import datetime
     specs = json.load(open(sys.argv[1]))
     out = []
     fails = []
@@ -200,15 +205,29 @@ def main():
     # deterministic order by difficulty then title for stable daily rotation
     order = {"easy": 0, "medium": 1, "hard": 2}
     specs.sort(key=lambda s: (order.get(s.get("difficulty"), 1), s.get("title", "")))
+
+    # IDs are content-stable: a spec's explicit "id" is the permanent link to a
+    # user's saved PuzzleRecord, so it must NOT change when the bank grows.
+    # Specs without an id (newly authored) get the next free daily-NNN above the
+    # current maximum, never renumbering existing puzzles.
+    reserved = {s["id"] for s in specs if s.get("id")}
+    next_free = max((id_num(i) for i in reserved), default=0) + 1
+
     for spec in specs:
         puzzle, err = build(spec)
         if err:
             fails.append((spec.get("title"), err))
             continue
         idx += 1
-        puzzle["id"] = f"daily-{idx:03d}"
-        # publishDate sequential from 2026-07-01
-        import datetime
+        pid = spec.get("id")
+        if not pid:
+            while f"daily-{next_free:03d}" in reserved:
+                next_free += 1
+            pid = f"daily-{next_free:03d}"
+            reserved.add(pid)
+            next_free += 1
+        puzzle["id"] = pid
+        # publishDate sequential from 2026-07-01 by output position (cosmetic).
         d = datetime.date(2026, 7, 1) + datetime.timedelta(days=idx - 1)
         puzzle["publishDate"] = d.isoformat()
         # reorder keys for readability
