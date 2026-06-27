@@ -46,8 +46,15 @@ final class GameViewModel {
     // Side-effect callbacks owned by the view.
     var onComplete: ((Int) -> Void)?
     var onEntryChanged: (() -> Void)?
+    /// Fired with a word's cell positions the moment the player fills it in
+    /// correctly. The view uses it to flash those cells and play feedback.
+    var onWordCompleted: (([GridPos]) -> Void)?
 
     private var slotIndex: [ClueDirection: [GridPos: Int]] = [.across: [:], .down: [:]]
+
+    /// Slot ids whose cells are all filled correctly. Tracks the transition into
+    /// "solved" so the word-complete flash fires once, not on every keystroke.
+    private var solvedSlotIDs: Set<String> = []
 
     init(puzzle: Puzzle, now: Date = Date()) {
         self.puzzle = puzzle
@@ -188,23 +195,31 @@ final class GameViewModel {
     func enter(_ letter: Character) {
         guard isSelectable(selected) else { return }
         let upper = Character(letter.uppercased())
-        grid[selected.row][selected.col].entry = upper
-        grid[selected.row][selected.col].isRevealed = false
+        let edited = selected
+        grid[edited.row][edited.col].entry = upper
+        grid[edited.row][edited.col].isRevealed = false
         showErrors = false
         onEntryChanged?()
         checkCompletion()
-        if !isComplete { advanceWithinWord() }
+        if !isComplete {
+            refreshSolvedSlots(around: [edited])
+            advanceWithinWord()
+        }
     }
 
     func delete() {
+        var cleared: GridPos?
         if grid[selected.row][selected.col].entry != nil {
             grid[selected.row][selected.col].entry = nil
+            cleared = selected
         } else if let prev = previousCellInWord() {
             selected = prev
             grid[prev.row][prev.col].entry = nil
+            cleared = prev
         }
         showErrors = false
         onEntryChanged?()
+        if let cleared { refreshSolvedSlots(around: [cleared]) }
     }
 
     private func advanceWithinWord() {
@@ -235,7 +250,10 @@ final class GameViewModel {
         hintsUsed += 1
         onEntryChanged?()
         checkCompletion()
-        if !isComplete { advanceWithinWord() }
+        if !isComplete {
+            refreshSolvedSlots(around: [selected])
+            advanceWithinWord()
+        }
         return true
     }
 
@@ -250,7 +268,55 @@ final class GameViewModel {
         hintsUsed += 1
         onEntryChanged?()
         checkCompletion()
+        if !isComplete { refreshSolvedSlots(around: slot.positions) }
         return true
+    }
+
+    // MARK: - Word completion tracking
+
+    private func slotSolved(_ slot: Slot) -> Bool {
+        for p in slot.positions {
+            let cell = grid[p.row][p.col]
+            if cell.entry == nil || cell.entry != cell.solution { return false }
+        }
+        return true
+    }
+
+    /// The (deduplicated) slots passing through any of `positions`.
+    private func slotsContaining(_ positions: [GridPos]) -> [Slot] {
+        var seen = Set<String>()
+        var result: [Slot] = []
+        for p in positions {
+            if let i = slotIndex[.across]?[p], seen.insert(acrossSlots[i].id).inserted {
+                result.append(acrossSlots[i])
+            }
+            if let i = slotIndex[.down]?[p], seen.insert(downSlots[i].id).inserted {
+                result.append(downSlots[i])
+            }
+        }
+        return result
+    }
+
+    /// Re-evaluate the words touching `positions`, firing `onWordCompleted` for
+    /// any that just became fully correct. Pass `silent` to seed the bookkeeping
+    /// without firing (used when restoring saved progress).
+    private func refreshSolvedSlots(around positions: [GridPos], silent: Bool = false) {
+        for slot in slotsContaining(positions) {
+            if slotSolved(slot) {
+                if solvedSlotIDs.insert(slot.id).inserted, !silent {
+                    onWordCompleted?(slot.positions)
+                }
+            } else {
+                solvedSlotIDs.remove(slot.id)
+            }
+        }
+    }
+
+    /// Reseed solved-word bookkeeping from the whole grid without firing, so
+    /// pre-filled words don't flash on the next keystroke after a restore.
+    private func seedSolvedSlots() {
+        solvedSlotIDs.removeAll()
+        for slot in allSlots where slotSolved(slot) { solvedSlotIDs.insert(slot.id) }
     }
 
     // MARK: - Validation
@@ -275,6 +341,13 @@ final class GameViewModel {
 
     var hasAnyEntries: Bool {
         grid.contains { row in row.contains { !$0.isBlock && $0.entry != nil } }
+    }
+
+    /// True when any filled cell holds the wrong letter — drives the check shake.
+    var hasVisibleErrors: Bool {
+        grid.contains { row in
+            row.contains { !$0.isBlock && $0.entry != nil && $0.entry != $0.solution }
+        }
     }
 
     var filledPlayableCount: Int {
@@ -362,5 +435,6 @@ final class GameViewModel {
             grid[r][c].entry = letter
         }
         checkCompletion()
+        seedSolvedSlots()
     }
 }

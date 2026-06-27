@@ -14,9 +14,12 @@ struct CellView: View, Equatable {
     let isSelected: Bool
     let isInWord: Bool
     let showError: Bool
+    /// Transient green pulse shown when the cell's word was just completed.
+    let flash: Bool
     let onTap: () -> Void
 
     @Environment(\.accessibilityDifferentiateWithoutColor) private var differentiateWithoutColor
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     static func == (lhs: CellView, rhs: CellView) -> Bool {
         lhs.cell == rhs.cell
@@ -24,6 +27,7 @@ struct CellView: View, Equatable {
             && lhs.isSelected == rhs.isSelected
             && lhs.isInWord == rhs.isInWord
             && lhs.showError == rhs.showError
+            && lhs.flash == rhs.flash
     }
 
     private var errorVisible: Bool {
@@ -51,6 +55,11 @@ struct CellView: View, Equatable {
                             isCorrect: correctVisible
                         ))
 
+                    // Green pulse when this cell's word was just completed.
+                    if flash {
+                        Rectangle().fill(Color.green.opacity(0.5))
+                    }
+
                     if let number = cell.number {
                         Text("\(number)")
                             .font(.system(size: side * 0.26, weight: .medium))
@@ -64,6 +73,7 @@ struct CellView: View, Equatable {
                         Text(String(entry))
                             .font(.system(size: side * 0.5, weight: .semibold, design: .rounded))
                             .foregroundStyle(CellPalette.textColor(isSelected: isSelected))
+                            .scaleEffect(flash && !reduceMotion ? 1.18 : 1.0)
                     }
 
                     // Non-colour cue for correctness when colour can't be relied on.

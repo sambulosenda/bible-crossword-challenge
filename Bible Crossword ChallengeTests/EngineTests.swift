@@ -87,6 +87,57 @@ struct EngineTests {
         #expect(completedSeconds != nil)
     }
 
+    @Test func completingAWordFiresWordCompletedOnce() {
+        let vm = GameViewModel(puzzle: makePuzzle())
+        var completed: [[GridPos]] = []
+        vm.onWordCompleted = { completed.append($0) }
+
+        vm.enter("C"); vm.enter("A")     // CAT not finished yet
+        #expect(completed.isEmpty)
+        vm.enter("T")                    // CAT now complete → fires once
+        #expect(completed.count == 1)
+        #expect(Set(completed[0]) == Set([
+            GridPos(row: 0, col: 0), GridPos(row: 0, col: 1), GridPos(row: 0, col: 2),
+        ]))
+    }
+
+    @Test func wrongWordDoesNotFireWordCompleted() {
+        let vm = GameViewModel(puzzle: makePuzzle())
+        var fired = false
+        vm.onWordCompleted = { _ in fired = true }
+        vm.enter("C"); vm.enter("A"); vm.enter("X")  // CAX is wrong
+        #expect(fired == false)
+        #expect(vm.hasVisibleErrors == true)
+    }
+
+    @Test func finalWordDoesNotDoubleFireWithCompletion() {
+        let vm = GameViewModel(puzzle: makePuzzle())
+        var wordEvents = 0
+        vm.onWordCompleted = { _ in wordEvents += 1 }
+        vm.enter("C"); vm.enter("A"); vm.enter("T")  // CAT completes → 1 event
+        vm.select(GridPos(row: 1, col: 0))
+        vm.enter("O"); vm.enter("D")                 // COD completes the puzzle
+        // The puzzle-completing word defers to onComplete, not a word flash.
+        #expect(wordEvents == 1)
+        #expect(vm.isComplete)
+    }
+
+    @Test func restoredWordsDoNotFlashOnNextKeystroke() {
+        let vm = GameViewModel(puzzle: makePuzzle())
+        vm.restore(["0,0": "C", "0,1": "A", "0,2": "T"])  // CAT already solved
+        var fired = false
+        vm.onWordCompleted = { _ in fired = true }
+        vm.select(GridPos(row: 1, col: 0))  // down COD: C filled, O/D empty
+        vm.enter("O"); vm.enter("D")        // finishes COD; CAT was seeded silently
+        #expect(fired == true)  // COD fires
+        // CAT must not re-fire — only one event total.
+        var count = 0
+        vm.onWordCompleted = { _ in count += 1 }
+        vm.select(GridPos(row: 0, col: 0))
+        vm.enter("C")  // retyping an already-correct, already-tracked letter
+        #expect(count == 0)
+    }
+
     @Test func showErrorsFlagsWrongEntries() {
         let vm = GameViewModel(puzzle: makePuzzle())
         vm.enter("X") // wrong at (0,0)
