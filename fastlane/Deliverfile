@@ -1,0 +1,15 @@
+# Push App Store metadata only (no binary, no screenshots) for all locales.
+# Run with an App Store Connect API key (see fastlane/README_DELIVER.md).
+app_identifier("com.sambulosendas1.Bible-Crossword-Challenge")
+
+# We only manage textual metadata here; don't touch the build or screenshots.
+skip_binary_upload(true)
+skip_screenshots(true)
+
+# Safety: review the diff in App Store Connect before it goes live with the next version.
+submit_for_review(false)
+automatic_release(false)
+
+# Precheck can't scan in-app purchases with App Store Connect API key auth — skip it.
+run_precheck_before_submit(false)
+force(false) # set true to skip the HTML preview confirmation in CI

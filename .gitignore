@@ -15,3 +15,13 @@ xcuserdata/
 # Tooling scratch
 *.pyc
 __pycache__/
+
+# fastlane secrets
+fastlane/api_key.json
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/.env
+
+# bundler
+vendor/bundle
+.bundle
