@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		AA0000010000000000000003 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */ = {isa = PBXBuildFile; productRef = AA0000010000000000000002 /* FirebaseAnalyticsWithoutAdIdSupport */; };
+		E6B29C08521CBEF2D95113D0 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 42F868B83D5BFCA01AFC66C8 /* Lottie */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,11 +55,15 @@
 		};
 		4F1A3C4E2FE8883E005B59F2 /* Bible Crossword ChallengeTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = "Bible Crossword ChallengeTests";
 			sourceTree = "<group>";
 		};
 		4F1A3C582FE8883E005B59F2 /* Bible Crossword ChallengeUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = "Bible Crossword ChallengeUITests";
 			sourceTree = "<group>";
 		};
@@ -70,6 +75,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA0000010000000000000003 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */,
+				E6B29C08521CBEF2D95113D0 /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -131,6 +137,7 @@
 			name = "Bible Crossword Challenge";
 			packageProductDependencies = (
 				AA0000010000000000000002 /* FirebaseAnalyticsWithoutAdIdSupport */,
+				42F868B83D5BFCA01AFC66C8 /* Lottie */,
 			);
 			productName = "Bible Crossword Challenge";
 			productReference = 4F1A3C3E2FE8883C005B59F2 /* Bible Crossword Challenge.app */;
@@ -153,8 +160,6 @@
 				4F1A3C4E2FE8883E005B59F2 /* Bible Crossword ChallengeTests */,
 			);
 			name = "Bible Crossword ChallengeTests";
-			packageProductDependencies = (
-			);
 			productName = "Bible Crossword ChallengeTests";
 			productReference = 4F1A3C4B2FE8883E005B59F2 /* Bible Crossword ChallengeTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -176,8 +181,6 @@
 				4F1A3C582FE8883E005B59F2 /* Bible Crossword ChallengeUITests */,
 			);
 			name = "Bible Crossword ChallengeUITests";
-			packageProductDependencies = (
-			);
 			productName = "Bible Crossword ChallengeUITests";
 			productReference = 4F1A3C552FE8883E005B59F2 /* Bible Crossword ChallengeUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
@@ -216,6 +219,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				AA0000010000000000000001 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				F6D385BEF7023C5038BB08CF /* XCRemoteSwiftPackageReference "lottie-ios" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 4F1A3C3F2FE8883C005B59F2 /* Products */;
@@ -612,9 +616,22 @@
 				minimumVersion = 11.0.0;
 			};
 		};
+		F6D385BEF7023C5038BB08CF /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/lottie-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.5.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		42F868B83D5BFCA01AFC66C8 /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F6D385BEF7023C5038BB08CF /* XCRemoteSwiftPackageReference "lottie-ios" */;
+			productName = Lottie;
+		};
 		AA0000010000000000000002 /* FirebaseAnalyticsWithoutAdIdSupport */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = AA0000010000000000000001 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;

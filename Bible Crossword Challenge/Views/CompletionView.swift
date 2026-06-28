@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import Lottie
 
 struct CompletionView: View {
     let puzzle: Puzzle
@@ -63,17 +64,59 @@ struct CompletionView: View {
 
     private var header: some View {
         VStack(spacing: Theme.Spacing.m) {
-            Image(systemName: "checkmark.seal.fill")
-                .font(.system(size: 72))
-                .foregroundStyle(.green)
-                .symbolEffect(.bounce, value: reduceMotion ? false : appeared)
-                .scaleEffect(reduceMotion ? 1 : (appeared ? 1 : 0.5))
+            celebration
 
             Text("Puzzle Completed!")
                 .font(.largeTitle.bold())
                 .multilineTextAlignment(.center)
         }
         .padding(.top, Theme.Spacing.xl)
+    }
+
+    /// Celebratory completion mark. Plays the branded Lottie burst once;
+    /// falls back to the static seal when Reduce Motion is on.
+    @ViewBuilder private var celebration: some View {
+        if reduceMotion {
+            Image(systemName: "checkmark.seal.fill")
+                .font(.system(size: 72))
+                .foregroundStyle(.green)
+        } else {
+            LottieView(animation: .named("puzzle_complete"))
+                .configure { $0.contentMode = .scaleAspectFit }
+                .playing(loopMode: .playOnce)
+                .frame(width: 180, height: 180)
+                .accessibilityHidden(true)
+        }
+    }
+
+    /// Snowflake mark for the streak-freeze card.
+    @ViewBuilder private var freezeMark: some View {
+        if reduceMotion {
+            Image(systemName: "snowflake")
+                .font(.title2)
+                .foregroundStyle(.cyan)
+        } else {
+            LottieView(animation: .named("streak_freeze"))
+                .configure { $0.contentMode = .scaleAspectFit }
+                .playing(loopMode: .playOnce)
+                .frame(width: 72, height: 72)
+                .accessibilityHidden(true)
+        }
+    }
+
+    /// Star-burst mark crowning the new-achievements card.
+    @ViewBuilder private var achievementMark: some View {
+        if reduceMotion {
+            Image(systemName: "star.fill")
+                .font(.system(size: 44))
+                .foregroundStyle(.yellow)
+        } else {
+            LottieView(animation: .named("achievement_unlock"))
+                .configure { $0.contentMode = .scaleAspectFit }
+                .playing(loopMode: .playOnce)
+                .frame(width: 112, height: 112)
+                .accessibilityHidden(true)
+        }
     }
 
     private var statRow: some View {
@@ -120,9 +163,7 @@ struct CompletionView: View {
 
     private var freezeCard: some View {
         HStack(spacing: Theme.Spacing.m) {
-            Image(systemName: "snowflake")
-                .font(.title2)
-                .foregroundStyle(.cyan)
+            freezeMark
             VStack(alignment: .leading, spacing: 2) {
                 Text("Streak freeze earned!")
                     .font(.subheadline.weight(.semibold))
@@ -141,6 +182,8 @@ struct CompletionView: View {
 
     private var achievementsCard: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.m) {
+            achievementMark
+                .frame(maxWidth: .infinity)
             Text("New Achievement\(newAchievements.count > 1 ? "s" : "")!")
                 .font(.headline)
             ForEach(newAchievements) { achievement in
