@@ -55,15 +55,11 @@
 		};
 		4F1A3C4E2FE8883E005B59F2 /* Bible Crossword ChallengeTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = "Bible Crossword ChallengeTests";
 			sourceTree = "<group>";
 		};
 		4F1A3C582FE8883E005B59F2 /* Bible Crossword ChallengeUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = "Bible Crossword ChallengeUITests";
 			sourceTree = "<group>";
 		};
