@@ -8,6 +8,7 @@
 //
 
 import SwiftUI
+import Lottie
 
 struct SplashView: View {
     /// Called after the exit fade completes so the host can remove the splash.
@@ -42,8 +43,21 @@ struct SplashView: View {
         .accessibilityLabel("Bible Crossword")
     }
 
+    /// Animated mark (Lottie) — falls back to the static SF-Symbol mark under
+    /// Reduce Motion.
+    @ViewBuilder private var mark: some View {
+        if reduceMotion {
+            staticMark
+        } else {
+            LottieView(animation: .named("splash_mark"))
+                .configure { $0.contentMode = .scaleAspectFit }
+                .playing(loopMode: .playOnce)
+                .frame(width: 140, height: 140)
+        }
+    }
+
     /// White book with a glowing gold cross, echoing the app icon.
-    private var mark: some View {
+    private var staticMark: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 30, style: .continuous)
                 .fill(.white.opacity(0.16))
