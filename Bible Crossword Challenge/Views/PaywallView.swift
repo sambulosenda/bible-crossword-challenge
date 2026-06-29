@@ -9,11 +9,13 @@
 
 import SwiftUI
 import StoreKit
+import Lottie
 
 struct PaywallView: View {
     @Environment(StoreService.self) private var store
     @Environment(\.analytics) private var analytics
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     @State private var selectedID = StoreService.yearlyID
 
@@ -28,13 +30,27 @@ struct PaywallView: View {
         store.products.first { $0.id == selectedID }
     }
 
+    /// Premium hero mark. Loops a gentle gold crown; falls back to the static
+    /// crown symbol under Reduce Motion.
+    @ViewBuilder private var crownMark: some View {
+        if reduceMotion {
+            Image(systemName: "crown.fill")
+                .font(.system(size: 64))
+                .foregroundStyle(.yellow)
+        } else {
+            LottieView(animation: .named("premium_crown"))
+                .configure { $0.contentMode = .scaleAspectFit }
+                .looping()
+                .frame(width: 150, height: 150)
+                .accessibilityHidden(true)
+        }
+    }
+
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: Theme.Spacing.l) {
-                    Image(systemName: "crown.fill")
-                        .font(.system(size: 64))
-                        .foregroundStyle(.yellow)
+                    crownMark
                         .padding(.top, Theme.Spacing.xl)
 
                     Text("Bible Crossword Premium")
@@ -215,9 +231,8 @@ struct PaywallView: View {
     }
 }
 
-/// External legal links shown on the paywall. Terms uses Apple's standard EULA;
-/// `privacy` is a placeholder — replace with the real policy URL before submission.
+/// External legal links shown on the paywall. Terms uses Apple's standard EULA.
 enum LegalLinks {
     static let terms = URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!
-    static let privacy = URL(string: "https://example.com/privacy")!
+    static let privacy = URL(string: "https://biblecrosswordchallenge.com/privacy.html")!
 }
