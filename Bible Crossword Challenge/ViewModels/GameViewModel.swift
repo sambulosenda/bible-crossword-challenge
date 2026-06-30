@@ -46,9 +46,10 @@ final class GameViewModel {
     // Side-effect callbacks owned by the view.
     var onComplete: ((Int) -> Void)?
     var onEntryChanged: (() -> Void)?
-    /// Fired with a word's cell positions the moment the player fills it in
-    /// correctly. The view uses it to flash those cells and play feedback.
-    var onWordCompleted: (([GridPos]) -> Void)?
+    /// Fired with the word the moment the player fills it in correctly. The view
+    /// uses it to flash the word's cells, play feedback, and announce the solve
+    /// to VoiceOver.
+    var onWordCompleted: ((Slot) -> Void)?
 
     private var slotIndex: [ClueDirection: [GridPos: Int]] = [.across: [:], .down: [:]]
 
@@ -304,7 +305,7 @@ final class GameViewModel {
         for slot in slotsContaining(positions) {
             if slotSolved(slot) {
                 if solvedSlotIDs.insert(slot.id).inserted, !silent {
-                    onWordCompleted?(slot.positions)
+                    onWordCompleted?(slot)
                 }
             } else {
                 solvedSlotIDs.remove(slot.id)

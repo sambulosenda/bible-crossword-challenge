@@ -41,6 +41,7 @@ struct ProfileView: View {
                         Image(systemName: "person.crop.circle.fill")
                             .font(.system(size: 44))
                             .foregroundStyle(Theme.accent)
+                            .accessibilityHidden(true)
                         TextField("Your name", text: $profile.username)
                             .font(.title3.weight(.semibold))
                             .textInputAutocapitalization(.words)

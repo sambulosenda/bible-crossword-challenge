@@ -161,11 +161,13 @@ struct CrosswordGameView: View {
     private var timerView: some View {
         if vm.isComplete {
             Label(TimeFormat.clock(vm.completionSeconds), systemImage: "checkmark.circle.fill")
+                .labelStyle(.titleAndIcon)
                 .foregroundStyle(.green)
                 .monospacedDigit()
         } else {
             TimelineView(.periodic(from: vm.startDate, by: 1)) { context in
                 Label(TimeFormat.clock(vm.elapsed(asOf: context.date)), systemImage: "timer")
+                    .labelStyle(.titleAndIcon)
                     .monospacedDigit()
             }
         }

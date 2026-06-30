@@ -1,0 +1,6 @@
+Thanks for playing Bible Crossword Challenge! This update includes:
+
+• Improved VoiceOver support, so the puzzle is easier to play with assistive technology
+• Larger Text support on the on-screen keyboard
+• Smoother animations and a more polished solving experience
+• Bug fixes and performance improvements

@@ -15,6 +15,10 @@ struct LetterKeyboardView: View {
 
     @State private var lastKeyTick = 0
 
+    /// Key height grows with the user's text-size setting so large Dynamic Type
+    /// glyphs aren't clipped.
+    @ScaledMetric(relativeTo: .title3) private var keyHeight: CGFloat = 46
+
     private let rows = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"]
 
     var body: some View {
@@ -44,7 +48,7 @@ struct LetterKeyboardView: View {
         } label: {
             Text(String(letter))
                 .font(.system(.title3, design: .rounded).weight(.semibold))
-                .frame(maxWidth: .infinity, minHeight: 46)
+                .frame(maxWidth: .infinity, minHeight: keyHeight)
                 .background(Color(.secondarySystemBackground), in: .rect(cornerRadius: 8))
         }
         .buttonStyle(.plain)
@@ -59,7 +63,7 @@ struct LetterKeyboardView: View {
         } label: {
             Image(systemName: "delete.left")
                 .font(.title3)
-                .frame(maxWidth: .infinity, minHeight: 46)
+                .frame(maxWidth: .infinity, minHeight: keyHeight)
                 .background(Color(.secondarySystemBackground), in: .rect(cornerRadius: 8))
         }
         .buttonStyle(.plain)

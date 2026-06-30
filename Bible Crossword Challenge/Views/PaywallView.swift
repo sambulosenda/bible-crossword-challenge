@@ -37,6 +37,7 @@ struct PaywallView: View {
             Image(systemName: "crown.fill")
                 .font(.system(size: 64))
                 .foregroundStyle(.yellow)
+                .accessibilityHidden(true)
         } else {
             LottieView(animation: .named("premium_crown"))
                 .configure { $0.contentMode = .scaleAspectFit }
@@ -106,6 +107,7 @@ struct PaywallView: View {
                     Spacer(minLength: 0)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
+                .accessibilityElement(children: .combine)
             }
         }
         .padding(Theme.Spacing.l)

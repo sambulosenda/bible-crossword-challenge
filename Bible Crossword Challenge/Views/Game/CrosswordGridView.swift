@@ -72,8 +72,11 @@ struct CrosswordGridView: View {
 
     /// Wire the engine's word-complete callback to the flash + haptic.
     private func wireFeedback() {
-        vm.onWordCompleted = { positions in
+        vm.onWordCompleted = { slot in
+            let positions = slot.positions
             wordTick &+= 1
+            // Confirm the solve to VoiceOver — a no-op when VoiceOver is off.
+            AccessibilityNotification.Announcement("\(slot.answer.capitalized) complete").post()
             withAnimation(.easeOut(duration: 0.18)) { flashing.formUnion(positions) }
             Task { @MainActor in
                 try? await Task.sleep(for: .milliseconds(480))

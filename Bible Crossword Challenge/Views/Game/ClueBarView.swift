@@ -35,6 +35,8 @@ struct ClueBarView: View {
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel(clueAccessibilityLabel)
 
             Button {
                 vm.advanceClue(by: 1)
@@ -47,5 +49,10 @@ struct ClueBarView: View {
         .padding(.horizontal, Theme.Spacing.m)
         .padding(.vertical, Theme.Spacing.s)
         .background(Color(.secondarySystemBackground))
+    }
+
+    private var clueAccessibilityLabel: String {
+        guard let slot = vm.activeSlot else { return "Select a cell to begin" }
+        return "Clue \(slot.number) \(slot.direction.label): \(slot.clue)"
     }
 }
