@@ -52,6 +52,20 @@ struct CrosswordGameView: View {
             .background(Color(.systemBackground))
         }
         .background(Color(.systemGroupedBackground))
+        .background(
+            // Ground truth for the solve clock. SwiftUI's lifecycle events are
+            // unreliable here: hidden tab content can stay alive (and keep
+            // rendering TimelineView ticks) without onDisappear, and
+            // navigation destinations can be prewarmed offscreen with a
+            // spurious onAppear. A UIView's window attachment can't lie.
+            WindowAttachmentProbe { attached in
+                vm.isAttachedToWindow = attached
+                if !attached {
+                    vm.pauseTimer()
+                    saveProgress()
+                }
+            }
+        )
         .navigationTitle(puzzle.title)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar { toolbarContent }
@@ -101,7 +115,7 @@ struct CrosswordGameView: View {
         .onChange(of: scenePhase) { _, phase in
             switch phase {
             case .active:
-                vm.resumeTimer()
+                break
             case .inactive, .background:
                 // Leaving the foreground is the last reliable moment before the
                 // app may be suspended/killed — freeze the clock and persist.
@@ -111,7 +125,10 @@ struct CrosswordGameView: View {
                 break
             }
         }
-        .onDisappear { saveProgress() }
+        .onDisappear {
+            vm.pauseTimer()
+            saveProgress()
+        }
     }
 
     // MARK: - Toolbar
@@ -167,9 +184,12 @@ struct CrosswordGameView: View {
                 .monospacedDigit()
         } else {
             TimelineView(.periodic(from: vm.startDate, by: 1)) { context in
-                Label(TimeFormat.clock(vm.elapsed(asOf: context.date)), systemImage: "timer")
+                Label(TimeFormat.clock(vm.elapsed()), systemImage: "timer")
                     .labelStyle(.titleAndIcon)
                     .monospacedDigit()
+                    // Drives the clock: ticks stop whenever this timer isn't
+                    // actually rendering, so hidden time never accrues.
+                    .onChange(of: context.date) { _, now in vm.tick(now: now) }
             }
         }
     }
@@ -269,5 +289,39 @@ struct CrosswordGameView: View {
         rec.elapsedSeconds = vm.elapsed()
         rec.updatedAt = Date()
         try? context.save()
+    }
+}
+
+/// A zero-size UIKit view that reports whether it's attached to a window.
+/// Used as the reliable "is this screen actually visible" signal — see the
+/// comment at the use site in `CrosswordGameView`.
+private struct WindowAttachmentProbe: UIViewRepresentable {
+    let onChange: (Bool) -> Void
+
+    func makeUIView(context: Context) -> ProbeView {
+        let view = ProbeView()
+        view.onWindowChange = onChange
+        view.isUserInteractionEnabled = false
+        view.isAccessibilityElement = false
+        return view
+    }
+
+    func updateUIView(_ uiView: ProbeView, context: Context) {
+        uiView.onWindowChange = onChange
+    }
+
+    final class ProbeView: UIView {
+        var onWindowChange: ((Bool) -> Void)?
+
+        override func didMoveToWindow() {
+            super.didMoveToWindow()
+            let attached = window != nil
+            // didMoveToWindow can fire mid-layout; hop to the next runloop turn
+            // before touching observable state that drives SwiftUI updates.
+            DispatchQueue.main.async { [weak self] in
+                guard let self, (self.window != nil) == attached else { return }
+                self.onWindowChange?(attached)
+            }
+        }
     }
 }

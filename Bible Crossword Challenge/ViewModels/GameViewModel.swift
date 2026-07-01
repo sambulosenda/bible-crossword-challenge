@@ -37,11 +37,19 @@ final class GameViewModel {
     let startDate: Date
     private(set) var completionSeconds: Int = 0
 
-    // Active-time accounting. Counts foreground time only and survives across
-    // sessions, so the recorded solve time is the sum of every sitting rather
-    // than the last session's wall-clock.
+    // Active-time accounting. The clock advances only from render ticks of the
+    // visible toolbar timer (see `tick(now:)`), so time on other tabs, under
+    // covers, or in the background never accrues. Survives across sessions, so
+    // the recorded solve time is the sum of every sitting.
     private(set) var accumulatedSeconds: Int = 0
-    private var runStart: Date?
+    private var lastTick: Date?
+    /// Sub-second remainder carried between ticks so the clock doesn't drift.
+    private var tickFraction: Double = 0
+    /// True while the game screen's UIView is attached to a window — the only
+    /// reliable "actually on screen" signal. SwiftUI can keep hidden tab
+    /// content alive and rendering (ticks keep arriving), and can prewarm
+    /// navigation destinations that were never shown; both must not count.
+    var isAttachedToWindow = false
 
     // Side-effect callbacks owned by the view.
     var onComplete: ((Int) -> Void)?
@@ -61,7 +69,6 @@ final class GameViewModel {
         self.puzzle = puzzle
         self.size = puzzle.size
         self.startDate = now
-        self.runStart = now
 
         // Build slots from clue data.
         var across: [Slot] = []
@@ -362,30 +369,49 @@ final class GameViewModel {
     }
 
     // MARK: - Timing
+    //
+    // Tick-driven: the toolbar timer's `TimelineView` reports each rendered
+    // tick via `tick(now:)`. `TimelineView` pauses whenever it isn't actually
+    // on screen, and each delta is capped near the 1s cadence, so hidden time
+    // can never leak into the clock — no lifecycle events required. (Events
+    // like tab switches don't reach hidden views anyway, which is why a
+    // pause/resume model can't work here.)
 
-    /// Total active seconds so far: committed time plus the live running segment.
-    func elapsed(asOf now: Date = Date()) -> Int {
-        accumulatedSeconds + (runStart.map { max(0, Int(now.timeIntervalSince($0))) } ?? 0)
+    /// Total active seconds so far.
+    func elapsed() -> Int { accumulatedSeconds }
+
+    /// Advance the clock from a rendered timer tick. The delta since the last
+    /// tick is capped just above the 1s cadence, so any stretch where the
+    /// timer wasn't rendering counts for at most one tick.
+    func tick(now: Date) {
+        guard !isComplete else { return }
+        guard isAttachedToWindow else {
+            lastTick = nil
+            return
+        }
+        defer { lastTick = now }
+        guard let last = lastTick else { return }
+        let delta = now.timeIntervalSince(last)
+        guard delta > 0 else { return }
+        tickFraction += min(delta, 1.5)
+        let whole = Int(tickFraction)
+        if whole > 0 {
+            accumulatedSeconds += whole
+            tickFraction -= Double(whole)
+        }
     }
 
     /// Seed cumulative time from a saved record when resuming an in-progress
-    /// puzzle, and (re)start the clock from this moment.
-    func seedElapsed(_ seconds: Int, now: Date = Date()) {
+    /// puzzle. The clock starts counting again from the next rendered tick.
+    func seedElapsed(_ seconds: Int) {
         accumulatedSeconds = max(0, seconds)
-        runStart = now
+        lastTick = nil
     }
 
-    /// Freeze the clock (e.g. on backgrounding), committing the running segment.
-    func pauseTimer(asOf now: Date = Date()) {
-        guard let start = runStart else { return }
-        accumulatedSeconds += max(0, Int(now.timeIntervalSince(start)))
-        runStart = nil
-    }
-
-    /// Resume the clock after a pause. No-op if already running or complete.
-    func resumeTimer(asOf now: Date = Date()) {
-        guard runStart == nil, !isComplete else { return }
-        runStart = now
+    /// Drop the tick baseline (e.g. on backgrounding or at the solve moment)
+    /// so the gap until the next rendered tick counts nothing.
+    func pauseTimer() {
+        lastTick = nil
     }
 
     #if DEBUG

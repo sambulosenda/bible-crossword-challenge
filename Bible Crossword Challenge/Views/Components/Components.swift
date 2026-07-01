@@ -18,6 +18,13 @@ struct StreakCard: View {
 
     @ScaledMetric(relativeTo: .title) private var iconSize = 40
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.colorScheme) private var scheme
+
+    /// System yellow washes out against the faint tinted circle in light mode,
+    /// so use a deeper gold there. Dark mode reads fine.
+    private var trophyTint: Color {
+        scheme == .light ? Color(red: 0.72, green: 0.52, blue: 0.0) : .yellow
+    }
 
     var body: some View {
         VStack(spacing: Theme.Spacing.m) {
@@ -26,7 +33,7 @@ struct StreakCard: View {
                 Rectangle()
                     .fill(Color.primary.opacity(0.08))
                     .frame(width: 1, height: 48)
-                metric(value: best, label: "Best Streak", symbol: "trophy.fill", tint: .yellow)
+                metric(value: best, label: "Best Streak", symbol: "trophy.fill", tint: trophyTint)
             }
 
             if savedRecently {

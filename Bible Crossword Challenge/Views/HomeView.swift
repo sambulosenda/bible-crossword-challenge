@@ -93,7 +93,7 @@ struct HomeView: View {
             Label("DAILY PUZZLE", systemImage: "calendar").kicker()
             Text("Today's puzzle is on its way")
                 .font(.title3.weight(.bold))
-            Text("Check back soon for today's puzzle.")
+            Text("In the meantime, you can replay any puzzle from the Archive.")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
         }
