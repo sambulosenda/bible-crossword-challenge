@@ -18,3 +18,36 @@ enum TimeFormat {
         return String(format: "%d:%02d", minutes, secs)
     }
 }
+
+enum ShareGrid {
+    /// Message-friendly width — Wordle-scale, well under iMessage line wrap.
+    static let targetSize = 8
+
+    /// Renders the puzzle's silhouette as a spoiler-free emoji grid: the
+    /// letter cells become 🟩, blocks ⬛. Grids wider than `targetSize` are
+    /// downsampled by marking a coarse cell filled when any source cell in
+    /// its block holds a letter, preserving the rough shape.
+    static func emoji(for puzzle: Puzzle) -> String {
+        let rows = puzzle.grid.map(Array.init)
+        let size = rows.count
+        guard size > 0 else { return "" }
+
+        let scale = max(1, Int((Double(size) / Double(targetSize)).rounded(.up)))
+        let coarse = Int((Double(size) / Double(scale)).rounded(.up))
+
+        var lines: [String] = []
+        for cr in 0..<coarse {
+            var line = ""
+            for cc in 0..<coarse {
+                let filled = (cr * scale..<min((cr + 1) * scale, size)).contains { r in
+                    (cc * scale..<min((cc + 1) * scale, size)).contains { c in
+                        c < rows[r].count && rows[r][c] != "."
+                    }
+                }
+                line += filled ? "🟩" : "⬛"
+            }
+            lines.append(line)
+        }
+        return lines.joined(separator: "\n")
+    }
+}

@@ -30,7 +30,9 @@ struct CompletionView: View {
 
     private var shareCaption: String {
         var text = "I solved “\(puzzle.title)” in \(TimeFormat.clock(seconds)) — \(streak)-day streak 🔥"
-        if let url = ShareConfig.storeURL { text += "\n\(url.absoluteString)" }
+        let grid = ShareGrid.emoji(for: puzzle)
+        if !grid.isEmpty { text += "\n\n\(grid)" }
+        if let url = ShareConfig.storeURL { text += "\n\n\(url.absoluteString)" }
         return text
     }
 
