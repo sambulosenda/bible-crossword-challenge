@@ -2,7 +2,8 @@
 //  NotificationService.swift
 //  Bible Crossword Challenge
 //
-//  Schedules the daily reminder as local notifications — no server, no APNs.
+//  Schedules the daily reminder and streak-risk nudge as local notifications —
+//  no server, no APNs.
 //  Because a local notification can't recompute state at fire time, we instead
 //  reschedule the next two weeks whenever the app's state changes (launch,
 //  foreground, puzzle completion, settings change). The next reminder is the one
@@ -30,6 +31,10 @@ final class NotificationService {
 
     /// How many days ahead we keep scheduled. Well under iOS's 64-pending cap.
     private let horizonDays = 14
+
+    /// When the streak-risk nudge fires (9:00 PM) — late enough to be a last
+    /// call, early enough to leave time to solve.
+    private let streakRiskMinutes = 21 * 60
 
     private init() {}
 
@@ -100,6 +105,39 @@ final class NotificationService {
             let request = UNNotificationRequest(identifier: "daily-\(dayOffset)", content: content, trigger: trigger)
             try? await center.add(request)
         }
+
+        await scheduleStreakRiskNudge(
+            minutes: minutes, streak: streak, completedToday: completedToday,
+            calendar: calendar, now: now
+        )
+    }
+
+    /// A second, last-call reminder for the evening a streak would break.
+    /// Targets tonight when today is still unsolved, or tomorrow night right
+    /// after a solve — every reschedule clears and recomputes it, so it only
+    /// fires if the day genuinely ends with the streak on the line. Skipped
+    /// when there's no streak or the regular reminder already fires at 9 PM
+    /// or later.
+    private func scheduleStreakRiskNudge(
+        minutes: Int, streak: Int, completedToday: Bool, calendar: Calendar, now: Date
+    ) async {
+        guard streak > 0, minutes < streakRiskMinutes else { return }
+        guard let day = calendar.date(
+            byAdding: .day, value: completedToday ? 1 : 0, to: calendar.startOfDay(for: now)
+        ), let fireDate = calendar.date(
+            bySettingHour: streakRiskMinutes / 60, minute: streakRiskMinutes % 60,
+            second: 0, of: day
+        ), fireDate > now else { return }
+
+        let content = UNMutableNotificationContent()
+        content.title = "Your \(streak)-day streak ends at midnight ⏰"
+        content.body = "Solve today's Bible puzzle before the day is over to keep it alive."
+        content.sound = .default
+
+        let components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: fireDate)
+        let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
+        let request = UNNotificationRequest(identifier: "streak-risk", content: content, trigger: trigger)
+        try? await center.add(request)
     }
 
     func cancelAll() {

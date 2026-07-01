@@ -68,6 +68,7 @@ struct CrosswordGameView: View {
                 streak: profile.currentStreak,
                 newAchievements: newlyUnlocked,
                 earnedFreeze: earnedFreeze,
+                totalCompleted: profile.totalPuzzlesCompleted,
                 onHome: {
                     showCompletion = false
                     dismiss()

@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import StoreKit
 import Lottie
 
 struct CompletionView: View {
@@ -15,12 +16,17 @@ struct CompletionView: View {
     let streak: Int
     let newAchievements: [Achievement]
     var earnedFreeze: Bool = false
+    var totalCompleted: Int = 0
     let onHome: () -> Void
 
     @State private var appeared = false
     @State private var shareImage: Image?
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.displayScale) private var displayScale
+    @Environment(\.requestReview) private var requestReview
+    /// Highest completion milestone we've already asked a review at, so each
+    /// milestone prompts at most once across sessions.
+    @AppStorage("reviewPromptMilestone") private var reviewPromptMilestone = 0
 
     private var shareCaption: String {
         var text = "I solved “\(puzzle.title)” in \(TimeFormat.clock(seconds)) — \(streak)-day streak 🔥"
@@ -45,6 +51,8 @@ struct CompletionView: View {
                     achievementsCard
                 }
 
+                nextPuzzleCard
+
                 actions
             }
             .padding(Theme.Spacing.l)
@@ -59,6 +67,7 @@ struct CompletionView: View {
             } else {
                 withAnimation(.spring(duration: 0.5)) { appeared = true }
             }
+            maybeRequestReview()
         }
     }
 
@@ -201,6 +210,53 @@ struct CompletionView: View {
         .padding(Theme.Spacing.l)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color(.secondarySystemGroupedBackground), in: .rect(cornerRadius: Theme.cornerRadius))
+    }
+
+    /// Tomorrow hook: live countdown to the next daily puzzle, framed around
+    /// the streak that's now at stake.
+    private var nextPuzzleCard: some View {
+        VStack(spacing: Theme.Spacing.xs) {
+            Text("Next puzzle in")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.secondary)
+            Text(timerInterval: Date()...nextMidnight, countsDown: true)
+                .font(.title2.bold())
+                .monospacedDigit()
+                .foregroundStyle(Theme.accent)
+            Text(
+                streak > 0
+                    ? "Come back tomorrow to keep your \(streak)-day streak going."
+                    : "Come back tomorrow for a fresh challenge."
+            )
+            .font(.caption)
+            .foregroundStyle(.secondary)
+            .multilineTextAlignment(.center)
+        }
+        .padding(Theme.Spacing.l)
+        .frame(maxWidth: .infinity)
+        .background(Color(.secondarySystemGroupedBackground), in: .rect(cornerRadius: Theme.cornerRadius))
+    }
+
+    private var nextMidnight: Date {
+        let calendar = Calendar.current
+        let startOfToday = calendar.startOfDay(for: Date())
+        return calendar.date(byAdding: .day, value: 1, to: startOfToday) ?? startOfToday
+    }
+
+    /// Ask for a rating at completion milestones — the happiest moment in the
+    /// loop. Each milestone asks at most once; the system further rate-limits.
+    private static let reviewMilestones = [3, 10, 30]
+
+    private func maybeRequestReview() {
+        guard let milestone = Self.reviewMilestones.last(where: { totalCompleted >= $0 }),
+              milestone > reviewPromptMilestone
+        else { return }
+        reviewPromptMilestone = milestone
+        Task {
+            // Let the celebration land before the system sheet appears.
+            try? await Task.sleep(for: .seconds(2))
+            requestReview()
+        }
     }
 
     private var actions: some View {
