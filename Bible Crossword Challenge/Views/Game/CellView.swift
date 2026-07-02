@@ -40,8 +40,9 @@ struct CellView: View, Equatable {
 
     var body: some View {
         if cell.isBlock {
-            Rectangle()
-                .fill(CellPalette.block)
+            // Blocks are invisible: on these sparse criss-cross grids the word
+            // slots float on the background instead of sitting in a black slab.
+            Color.clear
                 .frame(width: side, height: side)
                 .accessibilityHidden(true)
         } else {

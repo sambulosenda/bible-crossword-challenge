@@ -48,11 +48,6 @@ struct CrosswordGridView: View {
                 }
             }
             .frame(width: total, height: total)
-            .background(CellPalette.border)
-            .overlay(
-                Rectangle().strokeBorder(CellPalette.border, lineWidth: 1)
-            )
-            .clipShape(.rect(cornerRadius: 6))
             .modifier(ShakeEffect(animatableData: CGFloat(shakeTick)))
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }

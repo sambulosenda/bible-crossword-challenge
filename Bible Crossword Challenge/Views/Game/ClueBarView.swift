@@ -11,43 +11,55 @@ struct ClueBarView: View {
     @Bindable var vm: GameViewModel
 
     var body: some View {
-        HStack(spacing: Theme.Spacing.m) {
+        HStack(spacing: Theme.Spacing.s) {
             Button {
                 vm.advanceClue(by: -1)
             } label: {
                 Image(systemName: "chevron.left")
                     .font(.headline)
+                    .frame(width: 44, height: 44)
+                    .contentShape(.rect)
             }
             .accessibilityLabel("Previous clue")
 
-            VStack(alignment: .leading, spacing: 2) {
-                if let slot = vm.activeSlot {
-                    Text("\(slot.number) \(slot.direction.label)")
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(Theme.accent)
-                    Text(slot.clue)
-                        .font(.callout)
-                        .lineLimit(2)
-                } else {
-                    Text("Select a cell to begin")
-                        .font(.callout)
-                        .foregroundStyle(.secondary)
+            Button {
+                vm.toggleDirection()
+            } label: {
+                VStack(alignment: .leading, spacing: 2) {
+                    if let slot = vm.activeSlot {
+                        Text("\(slot.number) \(slot.direction.label)")
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(Theme.accent)
+                        Text(slot.clue)
+                            .font(.callout)
+                            .foregroundStyle(.primary)
+                            .lineLimit(2)
+                    } else {
+                        Text("Select a cell to begin")
+                            .font(.callout)
+                            .foregroundStyle(.secondary)
+                    }
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .contentShape(.rect)
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .buttonStyle(.plain)
             .accessibilityElement(children: .combine)
             .accessibilityLabel(clueAccessibilityLabel)
+            .accessibilityHint("Switches between across and down")
 
             Button {
                 vm.advanceClue(by: 1)
             } label: {
                 Image(systemName: "chevron.right")
                     .font(.headline)
+                    .frame(width: 44, height: 44)
+                    .contentShape(.rect)
             }
             .accessibilityLabel("Next clue")
         }
-        .padding(.horizontal, Theme.Spacing.m)
-        .padding(.vertical, Theme.Spacing.s)
+        .padding(.horizontal, Theme.Spacing.xs)
+        .padding(.vertical, Theme.Spacing.xs)
         .background(Color(.secondarySystemBackground))
         .overlay(alignment: .bottom) { progressStrip }
     }

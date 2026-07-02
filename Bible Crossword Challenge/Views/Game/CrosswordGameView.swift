@@ -69,6 +69,7 @@ struct CrosswordGameView: View {
         )
         .navigationTitle(puzzle.title)
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar(.hidden, for: .tabBar)
         .toolbar { toolbarContent }
         .sheet(isPresented: $showClues) {
             ClueListView(vm: vm)
@@ -136,6 +137,9 @@ struct CrosswordGameView: View {
 
     @ToolbarContentBuilder
     private var toolbarContent: some ToolbarContent {
+        ToolbarItem(placement: .topBarLeading) {
+            StreakFlameView(streak: profile.currentStreak, pulseTick: vm.wordSolveTick)
+        }
         ToolbarItem(placement: .principal) {
             timerView
         }
@@ -153,18 +157,18 @@ struct CrosswordGameView: View {
                         Label("Reveal Word", systemImage: "text.word.spacing")
                     }
                 }
+                Section {
+                    Toggle(isOn: Binding(
+                        get: { vm.showErrors },
+                        set: { _ in vm.toggleCheck() }
+                    )) {
+                        Label("Check Answers", systemImage: "checkmark.circle")
+                    }
+                }
             } label: {
                 Image(systemName: "lightbulb")
             }
-            .accessibilityLabel("Hints")
-        }
-        ToolbarItem(placement: .topBarTrailing) {
-            Button {
-                vm.toggleCheck()
-            } label: {
-                Image(systemName: vm.showErrors ? "checkmark.circle.fill" : "checkmark.circle")
-            }
-            .accessibilityLabel("Check answers")
+            .accessibilityLabel("Hints and check answers")
         }
         ToolbarItem(placement: .topBarTrailing) {
             Button {
@@ -178,16 +182,19 @@ struct CrosswordGameView: View {
 
     @ViewBuilder
     private var timerView: some View {
+        // No leading icon and fixedSize: the principal slot gets squeezed
+        // between the streak flame and the trailing buttons, and a Label
+        // truncates the time there ("2:14…").
         if vm.isComplete {
-            Label(TimeFormat.clock(vm.completionSeconds), systemImage: "checkmark.circle.fill")
-                .labelStyle(.titleAndIcon)
+            Text(TimeFormat.clock(vm.completionSeconds))
                 .foregroundStyle(.green)
                 .monospacedDigit()
+                .fixedSize()
         } else {
             TimelineView(.periodic(from: vm.startDate, by: 1)) { context in
-                Label(TimeFormat.clock(vm.elapsed()), systemImage: "timer")
-                    .labelStyle(.titleAndIcon)
+                Text(TimeFormat.clock(vm.elapsed()))
                     .monospacedDigit()
+                    .fixedSize()
                     // Drives the clock: ticks stop whenever this timer isn't
                     // actually rendering, so hidden time never accrues.
                     .onChange(of: context.date) { _, now in vm.tick(now: now) }
@@ -296,6 +303,35 @@ struct CrosswordGameView: View {
         rec.elapsedSeconds = vm.elapsed()
         rec.updatedAt = Date()
         try? context.save()
+    }
+}
+
+/// Toolbar streak indicator: flame + current streak count, pulsing with a
+/// spring pop each time a word is solved (and once more at the full solve,
+/// right as the streak number ticks up).
+private struct StreakFlameView: View {
+    let streak: Int
+    let pulseTick: Int
+
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    var body: some View {
+        HStack(spacing: 3) {
+            Image(systemName: "flame.fill")
+            Text("\(streak)")
+                .font(.subheadline.weight(.bold))
+                .monospacedDigit()
+                .contentTransition(.numericText(value: Double(streak)))
+        }
+        .foregroundStyle(streak > 0 ? Color.orange : Color.secondary)
+        .animation(.snappy, value: streak)
+        .phaseAnimator([1.0, 1.35], trigger: pulseTick) { content, scale in
+            content.scaleEffect(reduceMotion ? 1.0 : scale)
+        } animation: { _ in
+            .spring(duration: 0.25, bounce: 0.6)
+        }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Current streak: \(streak) days")
     }
 }
 

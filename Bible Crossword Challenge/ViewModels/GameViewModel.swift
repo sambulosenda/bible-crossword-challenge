@@ -65,6 +65,11 @@ final class GameViewModel {
     /// "solved" so the word-complete flash fires once, not on every keystroke.
     private var solvedSlotIDs: Set<String> = []
 
+    /// Monotonic count of word-solve moments this session (including the final
+    /// solve). Observable trigger for UI that reacts to each solve, e.g. the
+    /// toolbar streak-flame pulse.
+    private(set) var wordSolveTick = 0
+
     init(puzzle: Puzzle, now: Date = Date()) {
         self.puzzle = puzzle
         self.size = puzzle.size
@@ -312,6 +317,7 @@ final class GameViewModel {
         for slot in slotsContaining(positions) {
             if slotSolved(slot) {
                 if solvedSlotIDs.insert(slot.id).inserted, !silent {
+                    wordSolveTick += 1
                     onWordCompleted?(slot)
                 }
             } else {
@@ -342,6 +348,8 @@ final class GameViewModel {
         }
         guard !isComplete else { return }
         isComplete = true
+        // The final word skips refreshSolvedSlots (see enter), so pulse here.
+        wordSolveTick += 1
         pauseTimer() // freeze the clock at the solve moment
         completionSeconds = accumulatedSeconds
         onComplete?(completionSeconds)

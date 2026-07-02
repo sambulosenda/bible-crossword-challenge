@@ -8,6 +8,7 @@
 //
 
 import SwiftUI
+import UIKit
 
 enum Theme {
     enum Spacing {
@@ -87,15 +88,20 @@ extension View {
 }
 
 enum CellPalette {
-    static let block = Color(.label).opacity(0.92)
     static let empty = Color(.secondarySystemGroupedBackground)
     static let border = Color(.separator)
+
+    /// Active-word tint. Stronger in dark mode, where an 0.18 accent wash over
+    /// near-black cells is barely distinguishable from the empty fill.
+    private static let inWord = Color(uiColor: UIColor { trait in
+        .tintColor.withAlphaComponent(trait.userInterfaceStyle == .dark ? 0.30 : 0.18)
+    })
 
     static func fill(isSelected: Bool, isInWord: Bool, showError: Bool, isCorrect: Bool) -> Color {
         if isSelected { return Theme.accent.opacity(0.85) }
         if showError { return Color.red.opacity(0.28) }
         if isCorrect { return Color.green.opacity(0.18) }
-        if isInWord { return Theme.accent.opacity(0.18) }
+        if isInWord { return inWord }
         return empty
     }
 
