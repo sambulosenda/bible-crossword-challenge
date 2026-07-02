@@ -4,7 +4,10 @@
 //
 //  SwiftData models for the single local player profile and per-puzzle
 //  progress, plus the streak/achievement rules that operate on them.
-//  No authentication in v1 — everything is stored on device.
+//  Synced across the player's devices via CloudKit (private database).
+//  CloudKit requires every attribute to be optional or defaulted and forbids
+//  unique constraints, so duplicates from sync races are collapsed by the
+//  SyncMerge helpers below.
 //
 
 import Foundation
@@ -14,14 +17,14 @@ import SwiftData
 
 @Model
 final class PlayerProfile {
-    var username: String
-    var currentStreak: Int
-    var bestStreak: Int
-    var totalPuzzlesCompleted: Int
+    var username: String = "Friend"
+    var currentStreak: Int = 0
+    var bestStreak: Int = 0
+    var totalPuzzlesCompleted: Int = 0
     var lastCompletedDate: Date?
-    var hintsUsedToday: Int
+    var hintsUsedToday: Int = 0
     var hintsDate: Date?
-    var unlockedAchievementIDs: [String]
+    var unlockedAchievementIDs: [String] = []
     /// Fastest completed solve, in seconds (nil until the first completion).
     var bestSolveSeconds: Int?
     /// Count of puzzles first solved without using any hint.
@@ -33,7 +36,7 @@ final class PlayerProfile {
     var streakFreezes: Int = 1
     /// The day a freeze was last spent, used to show a one-time "saved" note.
     var lastFreezeUsedDate: Date? = nil
-    var createdAt: Date
+    var createdAt: Date = Date()
 
     init(
         username: String = "Friend",
@@ -72,16 +75,16 @@ final class PlayerProfile {
 
 @Model
 final class PuzzleRecord {
-    @Attribute(.unique) var puzzleID: String
-    var isCompleted: Bool
+    var puzzleID: String = ""
+    var isCompleted: Bool = false
     var completedDate: Date?
-    var elapsedSeconds: Int
+    var elapsedSeconds: Int = 0
     /// Encoded `[String: String]` of position storage-key -> letter, for resume.
     var entriesData: Data?
     /// True once any hint was revealed on this puzzle — survives resume, so a
     /// "no hints" solve stays accurate across sessions.
     var usedHint: Bool = false
-    var updatedAt: Date
+    var updatedAt: Date = Date()
 
     init(
         puzzleID: String,
@@ -109,6 +112,83 @@ final class PuzzleRecord {
             return decoded
         }
         set { entriesData = try? JSONEncoder().encode(newValue) }
+    }
+}
+
+// MARK: - CloudKit duplicate merging
+
+/// CloudKit can't enforce uniqueness, so two devices syncing for the first
+/// time can each contribute a profile, or in-flight solves can land as
+/// duplicate records for the same puzzle. Merging always keeps the most
+/// generous value of each progress field so sync never costs the player
+/// anything they earned on either device.
+enum SyncMerge {
+    /// Collapses all profiles into the oldest one and deletes the rest.
+    /// Returns the surviving profile (nil only if the list is empty).
+    @discardableResult
+    static func mergeProfiles(_ profiles: [PlayerProfile], context: ModelContext) -> PlayerProfile? {
+        guard let primary = profiles.min(by: { $0.createdAt < $1.createdAt }) else { return nil }
+        for other in profiles where other !== primary {
+            if primary.username == "Friend", other.username != "Friend" {
+                primary.username = other.username
+            }
+            primary.currentStreak = max(primary.currentStreak, other.currentStreak)
+            primary.bestStreak = max(primary.bestStreak, other.bestStreak)
+            primary.totalPuzzlesCompleted = max(primary.totalPuzzlesCompleted, other.totalPuzzlesCompleted)
+            if let d = other.lastCompletedDate, d > (primary.lastCompletedDate ?? .distantPast) {
+                primary.lastCompletedDate = d
+            }
+            // The device that spent hints most recently owns today's count.
+            if (other.hintsDate ?? .distantPast) > (primary.hintsDate ?? .distantPast) {
+                primary.hintsDate = other.hintsDate
+                primary.hintsUsedToday = other.hintsUsedToday
+            }
+            for id in other.unlockedAchievementIDs where !primary.unlockedAchievementIDs.contains(id) {
+                primary.unlockedAchievementIDs.append(id)
+            }
+            if let best = other.bestSolveSeconds, best < (primary.bestSolveSeconds ?? .max) {
+                primary.bestSolveSeconds = best
+            }
+            primary.noHintSolves = max(primary.noHintSolves, other.noHintSolves)
+            primary.hardCompleted = max(primary.hardCompleted, other.hardCompleted)
+            primary.streakFreezes = min(
+                max(primary.streakFreezes, other.streakFreezes),
+                PlayerProfile.maxStreakFreezes
+            )
+            if let d = other.lastFreezeUsedDate, d > (primary.lastFreezeUsedDate ?? .distantPast) {
+                primary.lastFreezeUsedDate = d
+            }
+            context.delete(other)
+        }
+        return primary
+    }
+
+    /// Collapses duplicate records for one puzzle into the most advanced
+    /// (completed beats in-progress, then most recently updated) and deletes
+    /// the rest. Returns the survivor (nil only if the list is empty).
+    @discardableResult
+    static func mergeRecords(_ records: [PuzzleRecord], context: ModelContext) -> PuzzleRecord? {
+        guard let primary = records.max(by: {
+            ($0.isCompleted ? 1 : 0, $0.updatedAt) < ($1.isCompleted ? 1 : 0, $1.updatedAt)
+        }) else { return nil }
+        for other in records where other !== primary {
+            // The earliest completion is the historically accurate one.
+            if let d = other.completedDate, d < (primary.completedDate ?? .distantFuture) {
+                primary.completedDate = d
+            }
+            primary.usedHint = primary.usedHint || other.usedHint
+            context.delete(other)
+        }
+        return primary
+    }
+
+    /// Sweeps the whole store for duplicate puzzle records — run on launch
+    /// and when returning to the foreground, after sync may have landed.
+    static func mergeDuplicateRecords(in context: ModelContext) {
+        guard let all = try? context.fetch(FetchDescriptor<PuzzleRecord>()) else { return }
+        for (_, dupes) in Dictionary(grouping: all, by: \.puzzleID) where dupes.count > 1 {
+            mergeRecords(dupes, context: context)
+        }
     }
 }
 

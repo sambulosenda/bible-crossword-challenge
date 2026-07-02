@@ -90,7 +90,7 @@ struct EngineTests {
     @Test func completingAWordFiresWordCompletedOnce() {
         let vm = GameViewModel(puzzle: makePuzzle())
         var completed: [[GridPos]] = []
-        vm.onWordCompleted = { completed.append($0) }
+        vm.onWordCompleted = { completed.append($0.positions) }
 
         vm.enter("C"); vm.enter("A")     // CAT not finished yet
         #expect(completed.isEmpty)

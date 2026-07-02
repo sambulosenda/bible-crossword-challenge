@@ -19,9 +19,22 @@ struct Bible_Crossword_ChallengeApp: App {
     init() {
         FirebaseApp.configure()
         do {
-            container = try ModelContainer(for: PlayerProfile.self, PuzzleRecord.self)
+            container = try ModelContainer(
+                for: PlayerProfile.self, PuzzleRecord.self,
+                configurations: ModelConfiguration(cloudKitDatabase: .automatic)
+            )
         } catch {
-            fatalError("Failed to create the model container: \(error)")
+            // iCloud can be unavailable (signed out, entitlement missing in a
+            // dev build). Both configurations use the same default store URL,
+            // so falling back keeps the player's local data intact.
+            do {
+                container = try ModelContainer(
+                    for: PlayerProfile.self, PuzzleRecord.self,
+                    configurations: ModelConfiguration(cloudKitDatabase: .none)
+                )
+            } catch {
+                fatalError("Failed to create the model container: \(error)")
+            }
         }
     }
 

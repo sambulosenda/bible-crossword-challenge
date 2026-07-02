@@ -7,6 +7,7 @@
 
 import Testing
 import Foundation
+import SwiftData
 @testable import Bible_Crossword_Challenge
 
 private let utc: Calendar = {
@@ -172,6 +173,111 @@ struct AchievementTests {
     @Test func alreadyUnlockedNotReturnedAgain() {
         let p = PlayerProfile(totalPuzzlesCompleted: 5, unlockedAchievementIDs: ["bible-beginner"])
         #expect(Achievements.newlyUnlocked(for: p).map(\.id).contains("bible-beginner") == false)
+    }
+}
+
+struct SyncMergeTests {
+
+    private func makeContext() throws -> ModelContext {
+        let container = try ModelContainer(
+            for: PlayerProfile.self, PuzzleRecord.self,
+            configurations: ModelConfiguration(isStoredInMemoryOnly: true)
+        )
+        return ModelContext(container)
+    }
+
+    @Test func profileMergeKeepsBestOfEverything() throws {
+        let context = try makeContext()
+        let old = PlayerProfile(
+            username: "Friend", currentStreak: 2, bestStreak: 5, totalPuzzlesCompleted: 10,
+            unlockedAchievementIDs: ["bible-beginner"], bestSolveSeconds: 200,
+            streakFreezes: 1, createdAt: day(2026, 6, 1)
+        )
+        let new = PlayerProfile(
+            username: "Sam", currentStreak: 7, bestStreak: 3, totalPuzzlesCompleted: 4,
+            unlockedAchievementIDs: ["bible-beginner", "quick-wit"], bestSolveSeconds: 90,
+            noHintSolves: 3, streakFreezes: 2, createdAt: day(2026, 6, 20)
+        )
+        context.insert(old)
+        context.insert(new)
+
+        let survivor = SyncMerge.mergeProfiles([new, old], context: context)
+
+        #expect(survivor === old) // oldest profile wins
+        #expect(old.username == "Sam") // real name beats the default
+        #expect(old.currentStreak == 7)
+        #expect(old.bestStreak == 5)
+        #expect(old.totalPuzzlesCompleted == 10)
+        #expect(Set(old.unlockedAchievementIDs) == ["bible-beginner", "quick-wit"])
+        #expect(old.bestSolveSeconds == 90)
+        #expect(old.noHintSolves == 3)
+        #expect(old.streakFreezes == 2)
+        let remaining = try context.fetch(FetchDescriptor<PlayerProfile>())
+        #expect(remaining.count == 1)
+    }
+
+    @Test func profileMergeLatestHintDayOwnsTheCounter() throws {
+        let context = try makeContext()
+        let a = PlayerProfile(hintsUsedToday: 3, hintsDate: day(2026, 7, 1), createdAt: day(2026, 6, 1))
+        let b = PlayerProfile(hintsUsedToday: 1, hintsDate: day(2026, 7, 2), createdAt: day(2026, 6, 2))
+        context.insert(a)
+        context.insert(b)
+
+        SyncMerge.mergeProfiles([a, b], context: context)
+
+        #expect(a.hintsUsedToday == 1)
+        #expect(a.hintsDate == day(2026, 7, 2))
+    }
+
+    @Test func recordMergeCompletedBeatsInProgress() throws {
+        let context = try makeContext()
+        let done = PuzzleRecord(
+            puzzleID: "daily-001", isCompleted: true, completedDate: day(2026, 7, 1),
+            elapsedSeconds: 300, usedHint: false, updatedAt: day(2026, 7, 1)
+        )
+        let partial = PuzzleRecord(
+            puzzleID: "daily-001", elapsedSeconds: 40, usedHint: true, updatedAt: day(2026, 7, 2)
+        )
+        context.insert(done)
+        context.insert(partial)
+
+        let survivor = SyncMerge.mergeRecords([partial, done], context: context)
+
+        #expect(survivor === done) // completion outranks a newer partial save
+        #expect(done.usedHint) // hint use on either device sticks
+        let remaining = try context.fetch(FetchDescriptor<PuzzleRecord>())
+        #expect(remaining.count == 1)
+    }
+
+    @Test func recordMergeKeepsEarliestCompletion() throws {
+        let context = try makeContext()
+        let first = PuzzleRecord(
+            puzzleID: "daily-001", isCompleted: true, completedDate: day(2026, 7, 1),
+            updatedAt: day(2026, 7, 1)
+        )
+        let second = PuzzleRecord(
+            puzzleID: "daily-001", isCompleted: true, completedDate: day(2026, 7, 3),
+            updatedAt: day(2026, 7, 3)
+        )
+        context.insert(first)
+        context.insert(second)
+
+        let survivor = SyncMerge.mergeRecords([first, second], context: context)
+
+        #expect(survivor?.completedDate == day(2026, 7, 1))
+    }
+
+    @Test func storeSweepOnlyCollapsesDuplicates() throws {
+        let context = try makeContext()
+        context.insert(PuzzleRecord(puzzleID: "daily-001", updatedAt: day(2026, 7, 1)))
+        context.insert(PuzzleRecord(puzzleID: "daily-001", updatedAt: day(2026, 7, 2)))
+        context.insert(PuzzleRecord(puzzleID: "daily-002", updatedAt: day(2026, 7, 1)))
+
+        SyncMerge.mergeDuplicateRecords(in: context)
+
+        let remaining = try context.fetch(FetchDescriptor<PuzzleRecord>())
+        #expect(remaining.count == 2)
+        #expect(Set(remaining.map(\.puzzleID)) == ["daily-001", "daily-002"])
     }
 }
 

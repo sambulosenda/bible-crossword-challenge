@@ -304,7 +304,10 @@ struct CrosswordGameView: View {
     private func loadOrCreateRecord() -> PuzzleRecord {
         let id = puzzle.id
         let descriptor = FetchDescriptor<PuzzleRecord>(predicate: #Predicate { $0.puzzleID == id })
-        if let existing = try? context.fetch(descriptor).first {
+        // CloudKit sync may have delivered a duplicate for this puzzle from
+        // another device — merge instead of blindly taking the first match.
+        if let matches = try? context.fetch(descriptor),
+           let existing = SyncMerge.mergeRecords(matches, context: context) {
             return existing
         }
         let rec = PuzzleRecord(puzzleID: id)
