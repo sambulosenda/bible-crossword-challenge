@@ -31,6 +31,8 @@ struct CrosswordGameView: View {
     @State private var newlyUnlocked: [Achievement] = []
     /// Whether this solve crossed a streak milestone that granted a freeze.
     @State private var earnedFreeze = false
+    /// Keeps the screen focused so a hardware keyboard can type into the grid.
+    @FocusState private var gridFocused: Bool
 
     init(puzzle: Puzzle, profile: PlayerProfile) {
         self.puzzle = puzzle
@@ -67,6 +69,20 @@ struct CrosswordGameView: View {
                 }
             }
         )
+        // Hardware keyboard entry (iPad / Bluetooth): the screen itself takes
+        // focus and routes letters and backspace into the engine.
+        .focusable()
+        .focusEffectDisabled()
+        .focused($gridFocused)
+        .onKeyPress(characters: .letters, phases: .down) { press in
+            guard let letter = press.characters.first else { return .ignored }
+            vm.enter(letter)
+            return .handled
+        }
+        .onKeyPress(.delete, phases: .down) { _ in
+            vm.delete()
+            return .handled
+        }
         .navigationTitle(puzzle.title)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar(.hidden, for: .tabBar)
@@ -93,6 +109,7 @@ struct CrosswordGameView: View {
         }
         .sensoryFeedback(.success, trigger: vm.isComplete)
         .task {
+            gridFocused = true
             vm.onComplete = { seconds in handleCompletion(seconds: seconds) }
             let rec = loadOrCreateRecord()
             if !rec.isCompleted {

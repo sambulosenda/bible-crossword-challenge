@@ -207,10 +207,15 @@ final class GameViewModel {
 
     func enter(_ letter: Character) {
         guard isSelectable(selected) else { return }
+        // Hint-revealed cells are locked — typing skips over them instead of
+        // destroying a letter the player paid for.
+        guard !grid[selected.row][selected.col].isRevealed else {
+            advanceWithinWord()
+            return
+        }
         let upper = Character(letter.uppercased())
         let edited = selected
         grid[edited.row][edited.col].entry = upper
-        grid[edited.row][edited.col].isRevealed = false
         showErrors = false
         onEntryChanged?()
         checkCompletion()
@@ -222,13 +227,17 @@ final class GameViewModel {
 
     func delete() {
         var cleared: GridPos?
-        if grid[selected.row][selected.col].entry != nil {
+        let current = grid[selected.row][selected.col]
+        if current.entry != nil, !current.isRevealed {
             grid[selected.row][selected.col].entry = nil
             cleared = selected
         } else if let prev = previousCellInWord() {
+            // Step back; clear the previous cell unless it's a locked reveal.
             selected = prev
-            grid[prev.row][prev.col].entry = nil
-            cleared = prev
+            if grid[prev.row][prev.col].entry != nil, !grid[prev.row][prev.col].isRevealed {
+                grid[prev.row][prev.col].entry = nil
+                cleared = prev
+            }
         }
         showErrors = false
         onEntryChanged?()
@@ -243,6 +252,27 @@ final class GameViewModel {
             selected = nextEmpty
         } else if idx + 1 < slot.positions.count {
             selected = slot.positions[idx + 1]
+        } else if let gap = slot.positions.first(where: { grid[$0.row][$0.col].entry == nil }) {
+            // At the word's end with a gap left behind (the player jumped in
+            // mid-word): wrap back to it.
+            selected = gap
+        } else {
+            // Word is full: move on to the next word that still needs letters.
+            advanceToNextIncompleteSlot(after: slot)
+        }
+    }
+
+    /// Select the next slot (in across-then-down order, wrapping) that still
+    /// has at least one empty cell. No-op when every remaining cell is filled.
+    private func advanceToNextIncompleteSlot(after slot: Slot) {
+        let ordered = acrossSlots + downSlots
+        guard let idx = ordered.firstIndex(of: slot) else { return }
+        for step in 1..<ordered.count {
+            let candidate = ordered[(idx + step) % ordered.count]
+            if candidate.positions.contains(where: { grid[$0.row][$0.col].entry == nil }) {
+                select(slot: candidate)
+                return
+            }
         }
     }
 
@@ -256,15 +286,25 @@ final class GameViewModel {
 
     @discardableResult
     func revealLetter() -> Bool {
-        guard isSelectable(selected),
-              let solution = grid[selected.row][selected.col].solution else { return false }
-        grid[selected.row][selected.col].entry = solution
-        grid[selected.row][selected.col].isRevealed = true
+        // A hint must always buy progress: if the selected cell already holds
+        // the right letter, fall back to the active word's first not-yet-correct
+        // cell; if the whole word is correct, refuse (the caller refunds).
+        var target = selected
+        if !isSelectable(target) || grid[target.row][target.col].isCorrect {
+            guard let fallback = activeSlot?.positions.first(where: { !grid[$0.row][$0.col].isCorrect }) else {
+                return false
+            }
+            target = fallback
+        }
+        guard let solution = grid[target.row][target.col].solution else { return false }
+        selected = target
+        grid[target.row][target.col].entry = solution
+        grid[target.row][target.col].isRevealed = true
         hintsUsed += 1
         onEntryChanged?()
         checkCompletion()
         if !isComplete {
-            refreshSolvedSlots(around: [selected])
+            refreshSolvedSlots(around: [target])
             advanceWithinWord()
         }
         return true
@@ -272,9 +312,12 @@ final class GameViewModel {
 
     @discardableResult
     func revealWord() -> Bool {
-        guard let slot = activeSlot else { return false }
+        // Refuse when the word is already fully correct — no progress to buy.
+        guard let slot = activeSlot, !slotSolved(slot) else { return false }
         for (i, pos) in slot.positions.enumerated() {
             let ch = Array(slot.answer)[i]
+            // Leave the player's own correct letters alone (and unlocked).
+            guard grid[pos.row][pos.col].entry != ch else { continue }
             grid[pos.row][pos.col].entry = ch
             grid[pos.row][pos.col].isRevealed = true
         }
@@ -455,7 +498,13 @@ final class GameViewModel {
         var out: [String: String] = [:]
         for row in grid {
             for cell in row where !cell.isBlock {
-                if let entry = cell.entry { out[cell.pos.storageKey] = String(entry) }
+                if let entry = cell.entry {
+                    // Lowercase marks a hint-revealed (locked) cell, so the lock
+                    // survives relaunch without a record-schema change.
+                    out[cell.pos.storageKey] = cell.isRevealed
+                        ? String(entry).lowercased()
+                        : String(entry)
+                }
             }
         }
         return out
@@ -464,10 +513,12 @@ final class GameViewModel {
     func restore(_ entries: [String: String]) {
         for (key, value) in entries {
             let parts = key.split(separator: ",").compactMap { Int($0) }
-            guard parts.count == 2, let letter = value.uppercased().first else { continue }
+            guard parts.count == 2, let raw = value.first,
+                  let letter = value.uppercased().first else { continue }
             let r = parts[0], c = parts[1]
             guard r >= 0, r < size, c >= 0, c < size, !grid[r][c].isBlock else { continue }
             grid[r][c].entry = letter
+            grid[r][c].isRevealed = raw.isLowercase
         }
         checkCompletion()
         seedSolvedSlots()
