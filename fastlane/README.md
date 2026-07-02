@@ -23,6 +23,14 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 Push title/subtitle/keywords for all locales. Shows an HTML preview and asks for confirmation before uploading. No binary, no screenshots, no submission.
 
+### ios upload_screenshots
+
+```sh
+[bundle exec] fastlane ios upload_screenshots
+```
+
+Upload App Store screenshots for all locales (no metadata, no binary, no submission). Overwrites the existing screenshot set for the editable version.
+
 ----
 
 This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.

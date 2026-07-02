@@ -3,175 +3,293 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Bible Crossword Challenge — Learn Scripture one puzzle a day</title>
-<meta name="description" content="A beautiful daily Bible crossword. Build a streak, unlock achievements, and learn Scripture one puzzle a day. Free on iOS." />
+<title>Bible Crossword Challenge — a daily Bible crossword for iOS</title>
+<meta name="description" content="A fresh Bible crossword every day. Clues rooted in Scripture, from Genesis to Revelation. Build a streak, earn achievements, and end every puzzle on a verse. Free on iOS." />
+<link rel="canonical" href="https://biblecrosswordchallenge.com/" />
+<meta name="robots" content="index, follow" />
+<meta name="author" content="Sambulo Senda" />
+<meta name="keywords" content="bible crossword, daily bible puzzle, christian word game, scripture crossword, KJV puzzle, bible trivia, faith word game, iOS bible game" />
+<meta name="theme-color" content="#FBFAF6" />
+<meta name="apple-itunes-app" content="app-id=6783034270" />
 
 <!-- Open Graph / social -->
 <meta property="og:type" content="website" />
+<meta property="og:url" content="https://biblecrosswordchallenge.com/" />
 <meta property="og:title" content="Bible Crossword Challenge" />
-<meta property="og:description" content="Learn Scripture one puzzle a day. A beautiful daily Bible crossword for iOS." />
-<meta property="og:image" content="assets/og-image.png" />
+<meta property="og:description" content="Know the Word, one square at a time. A fresh Bible crossword every day, free on iOS." />
+<meta property="og:image" content="https://biblecrosswordchallenge.com/assets/shot-today.png" />
+<meta property="og:image:alt" content="The Today screen of Bible Crossword Challenge: daily puzzle, streak, and Verse of the Day" />
+<meta property="og:site_name" content="Bible Crossword Challenge" />
+<meta property="og:locale" content="en_US" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Bible Crossword Challenge" />
+<meta name="twitter:description" content="Know the Word, one square at a time. A fresh Bible crossword every day, free on iOS." />
+<meta name="twitter:image" content="https://biblecrosswordchallenge.com/assets/shot-today.png" />
 
-<link rel="icon" href="assets/favicon.png" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23141416'/%3E%3Crect x='24' y='8' width='16' height='48' rx='2' fill='%23fff'/%3E%3Crect x='8' y='24' width='48' height='16' rx='2' fill='%23fff'/%3E%3Crect x='24' y='24' width='16' height='16' fill='%230B7BFF'/%3E%3C/svg%3E" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital@0;1&display=swap" rel="stylesheet">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Bible Crossword Challenge",
+  "url": "https://biblecrosswordchallenge.com/",
+  "installUrl": "https://apps.apple.com/app/bible-crossword-challenge/id6783034270",
+  "image": "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/f2/48/05/f24805b2-ec10-c1cb-6cf2-e2b0fdfa5716/AppIcon-0-0-1x_U007ephone-0-1-85-220.png/512x512bb.jpg",
+  "operatingSystem": "iOS",
+  "applicationCategory": "GameApplication",
+  "applicationSubCategory": "Word",
+  "author": { "@type": "Person", "name": "Sambulo Senda" },
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD",
+    "url": "https://apps.apple.com/app/bible-crossword-challenge/id6783034270"
+  },
+  "description": "A fresh Bible crossword every day. Solve scripture-themed puzzles, build a daily streak, and learn the Word as you play."
+}
+</script>
+
 <style>
   :root{
-    --blue:#007AFF;
-    --blue-press:#0062cc;
-    --ink:#1c1c1e;
-    --ink-2:#3a3a3c;
-    --muted:#8e8e93;
-    --bg:#f2f2f7;
-    --card:#ffffff;
-    --line:#e5e5ea;
-    --green:#34c759;
-    --gold:#ffcc00;
-    --radius:22px;
-    --shadow:0 10px 40px rgba(0,0,0,.08);
-    --shadow-sm:0 4px 16px rgba(0,0,0,.06);
-    --maxw:1080px;
-    --font:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    /* Palette: newsprint puzzle + gilt-edged Bible */
+    --paper:#FBFAF6;        /* warm white page */
+    --ink:#141416;          /* crossword black */
+    --ink-soft:#3D3D40;
+    --muted:#6E6D68;
+    --line:#E7E4DC;         /* hairline on paper */
+    --cell:#FFFFFF;
+    --blue:#0B7BFF;         /* the app's accent */
+    --blue-press:#0063D6;
+    --blue-wash:#D9EAFF;    /* in-word highlight, as in the app */
+    --green-wash:#DBF2E1;   /* solved flash, as in the app */
+    --gilt:#B8922E;         /* Bible page-edge gold — micro-accents only */
+
+    --display:"Libre Caslon Display", Georgia, "Times New Roman", serif;
+    --serif:"Libre Caslon Text", Georgia, serif;
+    --sans:-apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --mono:ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+
+    --maxw:1060px;
   }
+
   *{box-sizing:border-box}
   html{scroll-behavior:smooth}
   body{
-    margin:0;font-family:var(--font);color:var(--ink);background:var(--bg);
-    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;line-height:1.5;
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:var(--sans); line-height:1.55; font-size:17px;
+    -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
   }
-  a{color:inherit;text-decoration:none}
-  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  ::selection{background:rgba(184,146,46,.28)}
+  a{color:inherit; text-decoration:none}
+  :focus-visible{outline:3px solid var(--blue); outline-offset:3px; border-radius:4px}
+  img{max-width:100%; display:block}
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 24px}
 
-  /* Nav */
-  header.nav{
-    position:sticky;top:0;z-index:50;
-    background:rgba(242,242,247,.8);backdrop-filter:saturate(180%) blur(20px);
-    border-bottom:1px solid var(--line);
+  /* ---------- Nav ---------- */
+  .nav{border-bottom:1px solid var(--line); background:var(--paper)}
+  .nav-inner{display:flex; align-items:center; justify-content:space-between; gap:16px; height:68px}
+  .brand{display:flex; align-items:center; gap:11px}
+  .brand svg{display:block}
+  .brand-name{font-family:var(--display); font-size:19px; letter-spacing:.01em}
+  .nav-link{
+    font-size:15px; font-weight:600; color:var(--blue);
+    padding:8px 2px; border-bottom:2px solid transparent;
   }
-  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:64px}
-  .brand{display:flex;align-items:center;gap:12px;font-weight:700;font-size:17px}
-  .brand .logo{
-    width:34px;height:34px;border-radius:9px;background:var(--blue);
-    display:grid;place-items:center;color:#fff;font-size:18px;box-shadow:var(--shadow-sm);
-  }
-  .nav-cta{
-    background:var(--blue);color:#fff;font-weight:600;font-size:15px;
-    padding:9px 18px;border-radius:980px;transition:background .15s ease,transform .15s ease;
-  }
-  .nav-cta:hover{background:var(--blue-press);transform:translateY(-1px)}
+  .nav-link:hover{border-bottom-color:var(--blue)}
 
-  /* Hero */
-  .hero{padding:72px 0 40px;text-align:center}
-  .pill{
-    display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--blue);
-    background:rgba(0,122,255,.1);padding:7px 14px;border-radius:980px;margin-bottom:22px;
+  /* ---------- Hero ---------- */
+  .hero{padding:76px 0 84px; border-bottom:1px solid var(--line)}
+  .hero-grid{display:grid; grid-template-columns:1.05fr .95fr; gap:56px; align-items:center}
+  .eyebrow{
+    font-family:var(--mono); font-size:12px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--gilt); margin:0 0 20px;
   }
   h1{
-    font-size:clamp(34px,6vw,60px);line-height:1.05;letter-spacing:-.02em;
-    font-weight:800;margin:0 auto 18px;max-width:14ch;
+    font-family:var(--display); font-weight:400; margin:0 0 20px;
+    font-size:clamp(38px, 5.4vw, 62px); line-height:1.06; letter-spacing:-.01em;
+    max-width:13ch;
   }
-  .hero p.lede{font-size:clamp(17px,2.4vw,21px);color:var(--ink-2);max-width:34ch;margin:0 auto 30px}
-  .cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
-  .btn-app{
-    display:inline-flex;align-items:center;gap:10px;background:#000;color:#fff;
-    padding:13px 22px;border-radius:14px;font-weight:600;transition:transform .15s ease,opacity .15s ease;
+  .lede{font-size:clamp(17px, 2vw, 19px); color:var(--ink-soft); max-width:44ch; margin:0 0 30px}
+  .cta-row{display:flex; align-items:center; gap:18px; flex-wrap:wrap}
+  .btn-store{
+    display:inline-flex; align-items:center; gap:11px;
+    background:var(--ink); color:#fff; padding:12px 22px 12px 18px; border-radius:12px;
+    transition:transform .15s ease, background .15s ease;
   }
-  .btn-app:hover{transform:translateY(-1px);opacity:.9}
-  .btn-app small{display:block;font-size:10px;font-weight:500;opacity:.8;line-height:1.1}
-  .btn-app strong{font-size:18px;font-weight:600;line-height:1.1}
-  .btn-ghost{
-    display:inline-flex;align-items:center;padding:13px 22px;border-radius:14px;font-weight:600;
-    background:var(--card);box-shadow:var(--shadow-sm);transition:transform .15s ease;
-  }
-  .btn-ghost:hover{transform:translateY(-1px)}
+  .btn-store:hover{transform:translateY(-1px); background:#000}
+  .btn-store small{display:block; font-size:11px; font-weight:500; opacity:.75; line-height:1.2}
+  .btn-store strong{display:block; font-size:19px; font-weight:600; line-height:1.15}
+  .cta-note{font-size:14px; color:var(--muted)}
 
-  /* Phone mockups */
-  .shots{display:flex;gap:24px;justify-content:center;align-items:flex-end;margin-top:56px;flex-wrap:wrap}
-  .phone{
-    width:240px;aspect-ratio:9/19.5;border-radius:42px;background:#fff;
-    border:1px solid var(--line);box-shadow:var(--shadow);position:relative;overflow:hidden;
-    padding:10px;
+  /* Load-in (reduced-motion turns this off) */
+  .rise{opacity:0; transform:translateY(10px); animation:rise .7s ease forwards}
+  .rise.d1{animation-delay:.08s} .rise.d2{animation-delay:.16s} .rise.d3{animation-delay:.24s}
+  @keyframes rise{to{opacity:1; transform:none}}
+
+  /* ---------- The signature: self-solving mini crossword ---------- */
+  .xw-wrap{display:flex; flex-direction:column; align-items:center; gap:18px}
+  .xw{
+    --cellsize:clamp(36px, 6.2vw, 52px);
+    background:var(--ink); border-radius:16px;
+    padding:calc(var(--cellsize) * .18);
+    box-shadow:0 24px 60px rgba(20,20,22,.18);
+    display:grid;
+    grid-template-columns:repeat(7, var(--cellsize));
+    grid-template-rows:repeat(7, var(--cellsize));
+    gap:2px;
   }
-  .phone.center{width:268px;transform:translateY(-22px);box-shadow:0 24px 60px rgba(0,0,0,.16)}
-  .phone .screen{
-    width:100%;height:100%;border-radius:32px;
-    background:linear-gradient(160deg,#eef2ff,#f7f8fa);
-    display:grid;place-items:center;text-align:center;color:var(--muted);
-    border:1px solid var(--line);
+  .xw-cell{
+    background:var(--cell); border-radius:3px; position:relative;
+    display:grid; place-items:center;
+    font-weight:700; font-size:calc(var(--cellsize) * .52);
+    transition:background .25s ease;
   }
-  .phone .screen .ph-label{font-size:13px;font-weight:600;padding:0 18px}
-  .phone .notch{
-    position:absolute;top:18px;left:50%;transform:translateX(-50%);
-    width:84px;height:24px;background:#000;border-radius:980px;z-index:2;
+  .xw-cell .num{
+    position:absolute; top:2px; left:4px;
+    font-family:var(--mono); font-size:calc(var(--cellsize) * .21);
+    font-weight:500; color:var(--muted);
   }
-  /* When you have images: <img class="screen" src="assets/shot-today.png" alt="..."> */
-  img.screen{object-fit:cover}
+  .xw-cell.inword{background:var(--blue-wash)}
+  .xw-cell .ltr{display:block}
+  .xw-cell .ltr.pop{animation:pop .28s cubic-bezier(.34,1.56,.64,1)}
+  @keyframes pop{0%{transform:scale(.4); opacity:0} 100%{transform:scale(1); opacity:1}}
+  .xw.solved .xw-cell{background:var(--green-wash)}
 
-  /* Section heading */
-  section{padding:64px 0}
-  .sec-head{text-align:center;max-width:36ch;margin:0 auto 44px}
-  .sec-head h2{font-size:clamp(28px,4vw,40px);letter-spacing:-.02em;font-weight:800;margin:0 0 12px}
-  .sec-head p{color:var(--ink-2);font-size:17px;margin:0}
-
-  /* Feature grid */
-  .features{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-  .feat{
-    background:var(--card);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow-sm);
-    transition:transform .2s ease,box-shadow .2s ease;
+  .xw-clue{
+    min-height:48px; text-align:center; max-width:34ch;
+    display:flex; flex-direction:column; gap:3px; align-items:center;
+    opacity:1; transition:opacity .25s ease;
   }
-  .feat:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
-  .feat .ic{
-    width:46px;height:46px;border-radius:13px;display:grid;place-items:center;font-size:22px;margin-bottom:16px;
-    background:rgba(0,122,255,.1);
+  .xw-clue.fade{opacity:0}
+  .xw-clue .xw-clue-num{
+    font-family:var(--mono); font-size:12px; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--blue);
   }
-  .feat h3{font-size:19px;margin:0 0 8px;letter-spacing:-.01em}
-  .feat p{color:var(--ink-2);font-size:15px;margin:0}
+  .xw-clue .xw-clue-text{font-family:var(--serif); font-style:italic; font-size:16.5px; color:var(--ink-soft)}
 
-  /* Stats band */
-  .band{background:var(--ink);color:#fff;border-radius:32px;padding:48px 32px;text-align:center}
-  .band-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:760px;margin:0 auto}
-  .band .num{font-size:clamp(34px,5vw,48px);font-weight:800;letter-spacing:-.02em}
-  .band .lbl{color:#aeaeb2;font-size:15px;margin-top:4px}
-
-  /* Showcase rows */
-  .row{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;margin-bottom:72px}
-  .row:nth-child(even) .row-text{order:2}
-  .row-text h3{font-size:clamp(24px,3vw,32px);letter-spacing:-.02em;margin:0 0 14px}
-  .row-text p{color:var(--ink-2);font-size:17px;margin:0 0 18px}
-  .row-text .tag{display:inline-block;font-size:13px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px}
-  .row-shot{
-    background:linear-gradient(160deg,#eef2ff,#f7f8fa);border-radius:24px;aspect-ratio:4/3;
-    display:grid;place-items:center;color:var(--muted);font-weight:600;border:1px solid var(--line);
-    box-shadow:var(--shadow-sm);
+  /* ---------- Section scaffolding ---------- */
+  .section{padding:84px 0}
+  .sec-eyebrow{
+    font-family:var(--mono); font-size:12px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--gilt); margin:0 0 14px;
   }
-  img.row-shot{object-fit:contain;padding:24px}
+  .sec-title{
+    font-family:var(--display); font-weight:400; font-size:clamp(28px, 3.6vw, 40px);
+    line-height:1.12; margin:0 0 10px; letter-spacing:-.005em;
+  }
+  .sec-sub{color:var(--muted); font-size:17px; margin:0; max-width:52ch}
 
-  /* FAQ */
-  .faq{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
-  details{background:var(--card);border-radius:16px;padding:20px 22px;box-shadow:var(--shadow-sm);cursor:pointer}
-  details summary{font-weight:600;font-size:17px;list-style:none;display:flex;justify-content:space-between;align-items:center}
-  details summary::-webkit-details-marker{display:none}
-  details summary::after{content:"+";color:var(--muted);font-size:22px;font-weight:400}
-  details[open] summary::after{content:"–"}
-  details p{color:var(--ink-2);font-size:15px;margin:14px 0 0}
+  /* ---------- Features as a clue list ---------- */
+  .clues{display:grid; grid-template-columns:1fr 1fr; gap:0 64px; margin-top:48px}
+  .clue-col h3{
+    font-family:var(--mono); font-weight:600; font-size:13px; letter-spacing:.18em;
+    text-transform:uppercase; margin:0 0 6px; padding-bottom:10px;
+    border-bottom:2px solid var(--ink);
+  }
+  .clue{
+    display:flex; flex-direction:column; gap:10px;
+    padding:20px 0; border-bottom:1px solid var(--line);
+  }
+  .clue-q{display:flex; gap:14px; align-items:baseline}
+  .clue-n{
+    font-family:var(--mono); font-size:13px; font-weight:600; color:var(--muted);
+    min-width:2.2em; text-align:right;
+  }
+  .clue-text{font-size:16.5px; color:var(--ink-soft)}
+  .clue-text .enum{color:var(--muted); font-size:14px; white-space:nowrap}
+  .tiles{display:flex; gap:4px; margin-left:calc(2.2em + 14px); flex-wrap:wrap}
+  .tile{
+    width:30px; height:30px; border:1.5px solid var(--ink); border-radius:4px;
+    display:grid; place-items:center; font-weight:700; font-size:15px;
+    background:var(--cell);
+  }
+  .tile span{opacity:0; transform:scale(.5)}
+  .tile.on span{opacity:1; transform:scale(1); transition:opacity .2s ease, transform .25s cubic-bezier(.34,1.56,.64,1)}
+  .clues-foot{
+    grid-column:1 / -1; margin-top:26px; font-size:15px; color:var(--muted);
+  }
+  .clues-foot strong{color:var(--ink-soft); font-weight:600}
 
-  /* Final CTA */
-  .final{text-align:center}
-  .final h2{font-size:clamp(30px,4.5vw,46px);letter-spacing:-.02em;margin:0 0 16px;font-weight:800}
-  .final p{color:var(--ink-2);font-size:18px;margin:0 0 28px}
+  /* ---------- Verse band ---------- */
+  .verse-band{background:var(--ink); color:var(--paper); padding:96px 0; text-align:center}
+  .verse-band .orn{color:var(--gilt); font-size:18px; letter-spacing:.6em; padding-left:.6em}
+  .verse-band blockquote{
+    font-family:var(--serif); font-style:italic; font-weight:400;
+    font-size:clamp(24px, 3.4vw, 36px); line-height:1.35; letter-spacing:.002em;
+    max-width:24ch; margin:26px auto;
+  }
+  .verse-band cite{
+    font-family:var(--mono); font-style:normal; font-size:13px; letter-spacing:.18em;
+    text-transform:uppercase; color:var(--gilt);
+  }
+  .verse-band .verse-note{color:#9C9B97; font-size:15px; max-width:44ch; margin:30px auto 0}
 
-  /* Footer */
-  footer{border-top:1px solid var(--line);padding:40px 0;color:var(--muted);font-size:14px}
-  .foot-inner{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
-  .foot-links{display:flex;gap:22px}
+  /* ---------- Screens ---------- */
+  .screens{display:grid; grid-template-columns:repeat(3, 1fr); gap:36px; margin-top:52px}
+  .screen-card{display:flex; flex-direction:column; gap:16px}
+  .device{
+    border-radius:34px; border:1px solid var(--line); background:#fff;
+    padding:9px; box-shadow:0 18px 44px rgba(20,20,22,.10);
+  }
+  .device img{border-radius:26px; width:100%; height:auto}
+  .screen-cap{display:flex; gap:12px; align-items:baseline; padding:0 6px}
+  .screen-cap .clue-n{min-width:auto; color:var(--blue)}
+  .screen-cap p{margin:0; font-size:15px; color:var(--ink-soft)}
+  .screen-cap p strong{display:block; font-family:var(--display); font-weight:400; font-size:18px; color:var(--ink); margin-bottom:2px}
+
+  /* ---------- FAQ ---------- */
+  .faq{max-width:680px; margin-top:40px}
+  .faq details{border-bottom:1px solid var(--line); padding:20px 4px}
+  .faq details:first-child{border-top:2px solid var(--ink)}
+  .faq summary{
+    font-weight:600; font-size:17px; cursor:pointer; list-style:none;
+    display:flex; justify-content:space-between; align-items:center; gap:16px;
+  }
+  .faq summary::-webkit-details-marker{display:none}
+  .faq summary::after{content:"+"; font-family:var(--mono); font-size:20px; color:var(--gilt); flex-shrink:0}
+  .faq details[open] summary::after{content:"–"}
+  .faq details p{color:var(--ink-soft); font-size:16px; margin:12px 0 0; max-width:56ch}
+
+  /* ---------- Final CTA ---------- */
+  .final{padding:100px 0; text-align:center; border-top:1px solid var(--line)}
+  .final .sec-title{max-width:20ch; margin-left:auto; margin-right:auto}
+  .final .sec-sub{margin:0 auto 34px}
+  .final .cta-row{justify-content:center}
+
+  /* ---------- Footer ---------- */
+  footer{border-top:1px solid var(--line); padding:36px 0; font-size:14px; color:var(--muted)}
+  .foot-inner{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px}
+  .foot-links{display:flex; gap:26px}
   .foot-links a:hover{color:var(--ink)}
 
-  @media(max-width:860px){
-    .features{grid-template-columns:1fr}
-    .row{grid-template-columns:1fr;gap:24px}
-    .row:nth-child(even) .row-text{order:0}
-    .band-grid{grid-template-columns:1fr;gap:28px}
-    .phone{display:none}
-    .phone.center{display:block;transform:none}
+  /* ---------- Responsive ---------- */
+  @media (max-width:900px){
+    .hero{padding:56px 0 64px}
+    .hero-grid{grid-template-columns:1fr; gap:48px}
+    .hero-copy{text-align:center}
+    .hero-copy h1, .hero-copy .lede{margin-left:auto; margin-right:auto}
+    .cta-row{justify-content:center}
+    .clues{grid-template-columns:1fr; gap:0}
+    .clue-col + .clue-col h3{margin-top:36px}
+    .screens{grid-template-columns:1fr; max-width:340px; margin-left:auto; margin-right:auto}
+    .section{padding:64px 0}
+  }
+
+  @media (max-width:420px){
+    .brand-name{font-size:16px}
+    .nav-link{white-space:nowrap}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+    .rise{opacity:1; transform:none; animation:none}
+    .xw-cell .ltr.pop{animation:none}
+    .tile span{transition:none}
   }
 </style>
 </head>
@@ -179,122 +297,168 @@
 
 <header class="nav">
   <div class="wrap nav-inner">
-    <div class="brand"><span class="logo">✝</span> Bible Crossword</div>
-    <a class="nav-cta" href="#get">Download</a>
+    <a class="brand" href="/" aria-label="Bible Crossword Challenge home">
+      <svg width="30" height="30" viewBox="0 0 64 64" aria-hidden="true">
+        <rect width="64" height="64" rx="14" fill="#141416"/>
+        <rect x="24" y="8" width="16" height="48" rx="2" fill="#fff"/>
+        <rect x="8" y="24" width="48" height="16" rx="2" fill="#fff"/>
+        <rect x="24" y="24" width="16" height="16" fill="#0B7BFF"/>
+      </svg>
+      <span class="brand-name">Bible Crossword Challenge</span>
+    </a>
+    <a class="nav-link" href="https://apps.apple.com/app/bible-crossword-challenge/id6783034270" rel="noopener">Get the app</a>
   </div>
 </header>
 
 <!-- HERO -->
 <section class="hero">
-  <div class="wrap">
-    <span class="pill">📖 New daily puzzle every day</span>
-    <h1>Learn Scripture, one puzzle a day.</h1>
-    <p class="lede">A beautiful Bible crossword that turns daily devotion into a habit. Build a streak, unlock achievements, and know the Word.</p>
-    <div class="cta-row">
-      <a class="btn-app" href="#get">
-        <span style="font-size:24px"></span>
-        <span><small>Download on the</small><strong>App Store</strong></span>
-      </a>
-      <a class="btn-ghost" href="#features">See features →</a>
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <p class="eyebrow rise">A daily Bible crossword for iPhone</p>
+      <h1 class="rise d1">Know the Word, one square at a time.</h1>
+      <p class="lede rise d2">A fresh crossword every day, with clues rooted in Scripture — from Genesis to Revelation. Build a streak, earn achievements, and end every puzzle on a verse.</p>
+      <div class="cta-row rise d3">
+        <a class="btn-store" href="https://apps.apple.com/app/bible-crossword-challenge/id6783034270" rel="noopener">
+          <svg width="26" height="30" viewBox="0 0 24 29" fill="#fff" aria-hidden="true"><path d="M19.7 15.3c0-3.3 2.7-4.9 2.8-5-1.5-2.2-3.9-2.6-4.7-2.6-2-.2-3.9 1.2-4.9 1.2-1 0-2.6-1.2-4.3-1.1-2.2 0-4.2 1.3-5.3 3.2-2.3 4-.6 9.8 1.6 13 1.1 1.6 2.4 3.3 4.1 3.3 1.6-.1 2.3-1.1 4.2-1.1 2 0 2.5 1.1 4.3 1 1.8 0 2.9-1.6 4-3.2 1.3-1.8 1.8-3.6 1.8-3.7-.1 0-3.5-1.4-3.6-5zM16.4 5.2c.9-1.1 1.5-2.6 1.3-4.2-1.3.1-2.9.9-3.8 2-.8 1-1.6 2.5-1.4 4 1.5.1 3-.7 3.9-1.8z"/></svg>
+          <span><small>Download on the</small><strong>App Store</strong></span>
+        </a>
+        <span class="cta-note">Free to play · No account · Works offline</span>
+      </div>
     </div>
 
-    <div class="shots">
-      <div class="phone">
-        <img class="screen" src="assets/shot-archive.png" alt="Puzzle archive" />
-      </div>
-      <div class="phone center">
-        <img class="screen" src="assets/shot-today.png" alt="Today screen with daily puzzle and verse of the day" />
-      </div>
-      <div class="phone">
-        <img class="screen" src="assets/shot-puzzle.png" alt="Crossword grid" />
+    <div class="xw-wrap" aria-label="Animated example crossword solving the words faith, grace, daily and streak">
+      <div class="xw" id="xw" aria-hidden="true"></div>
+      <div class="xw-clue" id="xw-clue" aria-hidden="true">
+        <span class="xw-clue-num" id="xw-clue-num">&nbsp;</span>
+        <span class="xw-clue-text" id="xw-clue-text">&nbsp;</span>
       </div>
     </div>
   </div>
 </section>
 
-<!-- FEATURES -->
-<section id="features">
+<!-- FEATURES AS A CLUE LIST -->
+<section class="section" id="features">
   <div class="wrap">
-    <div class="sec-head">
-      <h2>Everything you need to keep coming back</h2>
-      <p>Designed to feel right at home on iOS — fast, clean, and offline-first.</p>
-    </div>
-    <div class="features">
-      <div class="feat"><div class="ic">📅</div><h3>Daily Puzzle</h3><p>A fresh themed crossword every day, from easy to hard. Pick up right where you left off.</p></div>
-      <div class="feat"><div class="ic">🔥</div><h3>Streaks</h3><p>Play every day to grow your streak. Track your current and best run as motivation.</p></div>
-      <div class="feat"><div class="ic">📖</div><h3>Verse of the Day</h3><p>Start each session with a Scripture passage to reflect on and remember.</p></div>
-      <div class="feat"><div class="ic">🏆</div><h3>Achievements</h3><p>From Bible Beginner to Apostle — unlock milestones as you complete puzzles and streaks.</p></div>
-      <div class="feat"><div class="ic">📚</div><h3>Full Archive</h3><p>80+ themed puzzles to explore and replay, searchable and always available.</p></div>
-      <div class="feat"><div class="ic">📶</div><h3>Plays Offline</h3><p>No account, no connection needed. Your progress stays on your device.</p></div>
+    <p class="sec-eyebrow">What&rsquo;s inside</p>
+    <h2 class="sec-title">Everything, in so many words.</h2>
+    <p class="sec-sub">The features, written the only way a crossword app should write them.</p>
+
+    <div class="clues">
+      <div class="clue-col">
+        <h3>Across</h3>
+        <div class="clue" data-answer="DAILY">
+          <div class="clue-q"><span class="clue-n">2A</span><span class="clue-text">A new hand-crafted puzzle waiting every morning <span class="enum">(5)</span></span></div>
+          <div class="tiles" aria-label="Answer: daily"></div>
+        </div>
+        <div class="clue" data-answer="STREAK">
+          <div class="clue-q"><span class="clue-n">4A</span><span class="clue-text">Played today, and yesterday, and the day before <span class="enum">(6)</span></span></div>
+          <div class="tiles" aria-label="Answer: streak"></div>
+        </div>
+        <div class="clue" data-answer="VERSE">
+          <div class="clue-q"><span class="clue-n">6A</span><span class="clue-text">What every finished puzzle ends on — KJV, chapter and all <span class="enum">(5)</span></span></div>
+          <div class="tiles" aria-label="Answer: verse"></div>
+        </div>
+      </div>
+      <div class="clue-col">
+        <h3>Down</h3>
+        <div class="clue" data-answer="HINTS">
+          <div class="clue-q"><span class="clue-n">1D</span><span class="clue-text">Fair nudges that unstick you without spoiling it <span class="enum">(5)</span></span></div>
+          <div class="tiles" aria-label="Answer: hints"></div>
+        </div>
+        <div class="clue" data-answer="ARCHIVE">
+          <div class="clue-q"><span class="clue-n">3D</span><span class="clue-text">Where 80+ puzzles live, from Noah&rsquo;s Ark to Easter morning <span class="enum">(7)</span></span></div>
+          <div class="tiles" aria-label="Answer: archive"></div>
+        </div>
+        <div class="clue" data-answer="OFFLINE">
+          <div class="clue-q"><span class="clue-n">5D</span><span class="clue-text">Works on a plane, in the pew, or anywhere else <span class="enum">(7)</span></span></div>
+          <div class="tiles" aria-label="Answer: offline"></div>
+        </div>
+      </div>
+      <p class="clues-foot"><strong>Also in the box:</strong> achievements from Bible Beginner to Apostle, iCloud sync across your devices, light &amp; dark mode, and not a single ad between you and the Word.</p>
     </div>
   </div>
 </section>
 
-<!-- STATS BAND -->
-<section>
+<!-- VERSE BAND -->
+<section class="verse-band">
   <div class="wrap">
-    <div class="band">
-      <div class="band-grid">
-        <div><div class="num">80+</div><div class="lbl">Themed puzzles</div></div>
-        <div><div class="num">Daily</div><div class="lbl">Fresh challenge</div></div>
-        <div><div class="num">Free</div><div class="lbl">To download &amp; play</div></div>
-      </div>
-    </div>
+    <span class="orn" aria-hidden="true">✦ ✦ ✦</span>
+    <blockquote>&ldquo;Thy word have I hid in mine heart, that I might not sin against thee.&rdquo;</blockquote>
+    <cite>Psalm 119 : 11 · KJV</cite>
+    <p class="verse-note">Every puzzle closes with the verse behind its theme — so each day&rsquo;s play plants a little more Scripture in your memory.</p>
   </div>
 </section>
 
-<!-- SHOWCASE ROWS -->
-<section>
+<!-- SCREENS -->
+<section class="section">
   <div class="wrap">
-    <div class="row">
-      <div class="row-text">
-        <span class="tag">Today</span>
-        <h3>Your daily devotion, made into a game</h3>
-        <p>Open the app to today's puzzle, the Verse of the Day, your streak, and your next achievement — all in one calm, focused home screen.</p>
-      </div>
-      <img class="row-shot" src="assets/shot-today.png" alt="Today screen" />
-    </div>
+    <p class="sec-eyebrow">A look inside</p>
+    <h2 class="sec-title">Calm, focused, and made for iOS.</h2>
+    <p class="sec-sub">No clutter, no pressure — just you, a grid, and the Word.</p>
 
-    <div class="row">
-      <div class="row-text">
-        <span class="tag">Play</span>
-        <h3>A crossword built for Scripture</h3>
-        <p>Clean grid, smart clue navigation, hints, and check — clues like “Black bird that fed the prophet Elijah” teach as you solve.</p>
-      </div>
-      <img class="row-shot" src="assets/shot-puzzle.png" alt="Crossword grid" />
-    </div>
-
-    <div class="row">
-      <div class="row-text">
-        <span class="tag">Progress</span>
-        <h3>Watch your knowledge grow</h3>
-        <p>Track puzzles completed, current and best streaks, and the achievements you've earned along the way on your Profile.</p>
-      </div>
-      <img class="row-shot" src="assets/shot-profile.png" alt="Profile screen" />
+    <div class="screens">
+      <figure class="screen-card" style="margin:0">
+        <div class="device"><img src="assets/shot-today.png" alt="The Today screen: streak counter, today's puzzle, Verse of the Day, and next achievement" loading="lazy" width="1206" height="2622"></div>
+        <figcaption class="screen-cap">
+          <span class="clue-n">1</span>
+          <p><strong>Begin the day</strong>Your streak, today&rsquo;s puzzle, and the Verse of the Day in one quiet screen.</p>
+        </figcaption>
+      </figure>
+      <figure class="screen-card" style="margin:0">
+        <div class="device"><img src="assets/shot-puzzle.png" alt="The crossword grid mid-solve, with the clue “Black bird that fed the prophet Elijah”" loading="lazy" width="1206" height="2622"></div>
+        <figcaption class="screen-cap">
+          <span class="clue-n">2</span>
+          <p><strong>Solve the grid</strong>Clues like &ldquo;Black bird that fed the prophet Elijah&rdquo; teach as you type.</p>
+        </figcaption>
+      </figure>
+      <figure class="screen-card" style="margin:0">
+        <div class="device"><img src="assets/shot-profile.png" alt="The Profile screen with puzzles completed, streaks, and achievements" loading="lazy" width="1206" height="2622"></div>
+        <figcaption class="screen-cap">
+          <span class="clue-n">3</span>
+          <p><strong>Watch it grow</strong>Puzzles completed, best streaks, and achievements earned along the way.</p>
+        </figcaption>
+      </figure>
     </div>
   </div>
 </section>
 
 <!-- FAQ -->
-<section>
+<section class="section" id="faq">
   <div class="wrap">
-    <div class="sec-head"><h2>Questions</h2></div>
+    <p class="sec-eyebrow">Questions</p>
+    <h2 class="sec-title">Before you ask.</h2>
     <div class="faq">
-      <details><summary>Is it free?</summary><p>Yes — download and play the daily puzzle for free. Premium unlocks the full archive and extras.</p></details>
-      <details><summary>Do I need an account?</summary><p>No. The app works fully offline and your progress is saved right on your device.</p></details>
-      <details><summary>Which translation do the verses use?</summary><p>Verses are drawn from the public-domain King James Version.</p></details>
-      <details><summary>Is there an Android version?</summary><p>Bible Crossword Challenge is available on iOS today. Tell us if you'd like Android!</p></details>
+      <details>
+        <summary>Is it free?</summary>
+        <p>Yes — download and play the daily puzzle for free. Premium unlocks the full archive and extras.</p>
+      </details>
+      <details>
+        <summary>Do I need an account?</summary>
+        <p>No. The app works fully offline and your progress is saved on your device — and synced privately through iCloud if you play on more than one.</p>
+      </details>
+      <details>
+        <summary>Which translation do the verses use?</summary>
+        <p>All verses are drawn from the King James Version (KJV).</p>
+      </details>
+      <details>
+        <summary>Is there an Android version?</summary>
+        <p>Bible Crossword Challenge is on iOS today. If you&rsquo;d like it on Android, tell us — it genuinely helps us decide.</p>
+      </details>
     </div>
   </div>
 </section>
 
 <!-- FINAL CTA -->
-<section id="get" class="final">
+<section class="final" id="get">
   <div class="wrap">
-    <h2>Start your streak today</h2>
-    <p>Free on the App Store. Your first puzzle is waiting.</p>
+    <p class="sec-eyebrow">Today&rsquo;s puzzle is waiting</p>
+    <h2 class="sec-title">Start your streak today.</h2>
+    <p class="sec-sub">Free on the App Store. Tomorrow&rsquo;s puzzle will be there too.</p>
     <div class="cta-row">
-      <a class="btn-app" href="#"><span><small>Download on the</small><strong>App Store</strong></span></a>
+      <a class="btn-store" href="https://apps.apple.com/app/bible-crossword-challenge/id6783034270" rel="noopener">
+        <svg width="26" height="30" viewBox="0 0 24 29" fill="#fff" aria-hidden="true"><path d="M19.7 15.3c0-3.3 2.7-4.9 2.8-5-1.5-2.2-3.9-2.6-4.7-2.6-2-.2-3.9 1.2-4.9 1.2-1 0-2.6-1.2-4.3-1.1-2.2 0-4.2 1.3-5.3 3.2-2.3 4-.6 9.8 1.6 13 1.1 1.6 2.4 3.3 4.1 3.3 1.6-.1 2.3-1.1 4.2-1.1 2 0 2.5 1.1 4.3 1 1.8 0 2.9-1.6 4-3.2 1.3-1.8 1.8-3.6 1.8-3.7-.1 0-3.5-1.4-3.6-5zM16.4 5.2c.9-1.1 1.5-2.6 1.3-4.2-1.3.1-2.9.9-3.8 2-.8 1-1.6 2.5-1.4 4 1.5.1 3-.7 3.9-1.8z"/></svg>
+        <span><small>Download on the</small><strong>App Store</strong></span>
+      </a>
     </div>
   </div>
 </section>
@@ -302,13 +466,173 @@
 <footer>
   <div class="wrap foot-inner">
     <div>© <span id="yr"></span> Bible Crossword Challenge</div>
-    <div class="foot-links">
+    <nav class="foot-links" aria-label="Footer">
       <a href="privacy.html">Privacy</a>
       <a href="mailto:sambulosendas@gmail.com">Support</a>
-    </div>
+    </nav>
   </div>
 </footer>
 
-<script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
+<script>
+document.getElementById("yr").textContent = new Date().getFullYear();
+
+// ── Hero crossword ────────────────────────────────────────────────────────
+(function () {
+  var SIZE = 7;
+  var WORDS = [
+    { num: 1, dir: "Down",   ans: "FAITH",  clue: "The substance of things hoped for — Hebrews 11:1", cells: [[0,2],[1,2],[2,2],[3,2],[4,2]] },
+    { num: 2, dir: "Across", ans: "GRACE",  clue: "“By ___ are ye saved through faith” — Ephesians 2:8", cells: [[1,0],[1,1],[1,2],[1,3],[1,4]] },
+    { num: 3, dir: "Down",   ans: "DAILY",  clue: "How often a fresh puzzle arrives", cells: [[2,5],[3,5],[4,5],[5,5],[6,5]] },
+    { num: 4, dir: "Across", ans: "STREAK", clue: "What grows when you play every day", cells: [[3,1],[3,2],[3,3],[3,4],[3,5],[3,6]] }
+  ];
+
+  var grid = document.getElementById("xw");
+  var clueNum = document.getElementById("xw-clue-num");
+  var clueText = document.getElementById("xw-clue-text");
+  var clueBox = document.getElementById("xw-clue");
+
+  // Build cell lookup
+  var isCell = {};
+  WORDS.forEach(function (w) {
+    w.cells.forEach(function (rc) { isCell[rc[0] + "," + rc[1]] = true; });
+  });
+
+  var cellEls = {};
+  for (var r = 0; r < SIZE; r++) {
+    for (var c = 0; c < SIZE; c++) {
+      var key = r + "," + c;
+      if (isCell[key]) {
+        var el = document.createElement("div");
+        el.className = "xw-cell";
+        el.style.gridRow = (r + 1);
+        el.style.gridColumn = (c + 1);
+        cellEls[key] = el;
+        grid.appendChild(el);
+      }
+    }
+  }
+  WORDS.forEach(function (w) {
+    var start = cellEls[w.cells[0][0] + "," + w.cells[0][1]];
+    if (!start.querySelector(".num")) {
+      var n = document.createElement("span");
+      n.className = "num";
+      n.textContent = w.num;
+      start.appendChild(n);
+    }
+  });
+
+  function setLetter(key, ltr, pop) {
+    var el = cellEls[key];
+    var old = el.querySelector(".ltr");
+    if (old) old.remove();
+    if (!ltr) return;
+    var s = document.createElement("span");
+    s.className = "ltr" + (pop ? " pop" : "");
+    s.textContent = ltr;
+    el.appendChild(s);
+  }
+  function clearAll() {
+    Object.keys(cellEls).forEach(function (k) { setLetter(k, ""); });
+    grid.classList.remove("solved");
+  }
+  function fillAll() {
+    WORDS.forEach(function (w) {
+      w.cells.forEach(function (rc, i) { setLetter(rc[0] + "," + rc[1], w.ans[i], false); });
+    });
+  }
+  function showClue(w) {
+    clueNum.textContent = w ? (w.num + " " + w.dir) : " ";
+    clueText.textContent = w ? w.clue : " ";
+  }
+
+  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduceMotion) {
+    fillAll();
+    showClue(WORDS[0]);
+    return;
+  }
+
+  // Pause the loop while the grid is off screen
+  var visible = true;
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver(function (entries) {
+      visible = entries[0].isIntersecting;
+    }, { threshold: 0.1 }).observe(grid);
+  }
+
+  function sleep(ms) { return new Promise(function (res) { setTimeout(res, ms); }); }
+  function waitVisible() {
+    return new Promise(function (res) {
+      (function check() {
+        if (visible && !document.hidden) return res();
+        setTimeout(check, 250);
+      })();
+    });
+  }
+
+  async function run() {
+    for (;;) {
+      clearAll();
+      showClue(null);
+      await sleep(700);
+      for (var i = 0; i < WORDS.length; i++) {
+        var w = WORDS[i];
+        await waitVisible();
+        clueBox.classList.add("fade");
+        await sleep(220);
+        showClue(w);
+        clueBox.classList.remove("fade");
+        w.cells.forEach(function (rc) { cellEls[rc[0] + "," + rc[1]].classList.add("inword"); });
+        await sleep(650);
+        for (var j = 0; j < w.ans.length; j++) {
+          setLetter(w.cells[j][0] + "," + w.cells[j][1], w.ans[j], true);
+          await sleep(170);
+        }
+        await sleep(750);
+        w.cells.forEach(function (rc) { cellEls[rc[0] + "," + rc[1]].classList.remove("inword"); });
+      }
+      grid.classList.add("solved");
+      clueBox.classList.add("fade");
+      await sleep(220);
+      clueNum.textContent = "Solved";
+      clueText.textContent = "Tomorrow’s puzzle arrives at midnight.";
+      clueBox.classList.remove("fade");
+      await sleep(3400);
+      clueBox.classList.add("fade");
+      await sleep(300);
+      clueBox.classList.remove("fade");
+    }
+  }
+  run();
+})();
+
+// ── Clue-list tiles fill when scrolled into view ─────────────────────────
+(function () {
+  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  document.querySelectorAll(".clue").forEach(function (clue) {
+    var word = clue.getAttribute("data-answer");
+    var tiles = clue.querySelector(".tiles");
+    word.split("").forEach(function (ch) {
+      var t = document.createElement("span");
+      t.className = "tile";
+      var inner = document.createElement("span");
+      inner.textContent = ch;
+      t.appendChild(inner);
+      tiles.appendChild(t);
+    });
+    var els = tiles.querySelectorAll(".tile");
+    function reveal() {
+      els.forEach(function (t, i) {
+        setTimeout(function () { t.classList.add("on"); }, reduceMotion ? 0 : 90 * i);
+      });
+    }
+    if (reduceMotion || !("IntersectionObserver" in window)) { reveal(); return; }
+    var io = new IntersectionObserver(function (entries) {
+      if (entries[0].isIntersecting) { reveal(); io.disconnect(); }
+    }, { threshold: 0.4 });
+    io.observe(clue);
+  });
+})();
+</script>
 </body>
 </html>
