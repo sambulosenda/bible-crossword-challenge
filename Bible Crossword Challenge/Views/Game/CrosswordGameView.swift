@@ -18,6 +18,7 @@ struct CrosswordGameView: View {
     @Environment(\.analytics) private var analytics
     @Environment(\.notifications) private var notifications
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(StoreService.self) private var store
 
     @AppStorage("remindersEnabled") private var remindersEnabled = false
@@ -265,7 +266,13 @@ struct CrosswordGameView: View {
             await notifications.reschedule(for: profile, enabled: remindersEnabled, minutes: reminderMinutes)
         }
 
-        showCompletion = true
+        // Hold the cover long enough for the grid's celebration wave (a diagonal
+        // sweep, 40ms per diagonal, ~550ms tail) to finish playing.
+        let waveMillis = reduceMotion ? 0 : 2 * (puzzle.size - 1) * 40 + 550
+        Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(waveMillis))
+            showCompletion = true
+        }
     }
 
     // MARK: - Persistence

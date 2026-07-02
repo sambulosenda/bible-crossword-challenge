@@ -68,6 +68,10 @@ struct CrosswordGridView: View {
                 withAnimation(.linear(duration: 0.45)) { shakeTick += 1 }
             }
         }
+        .onChange(of: vm.isComplete) { _, complete in
+            guard complete, !reduceMotion else { return }
+            celebrationWave()
+        }
     }
 
     /// Wire the engine's word-complete callback to the flash + haptic.
@@ -77,10 +81,47 @@ struct CrosswordGridView: View {
             wordTick &+= 1
             // Confirm the solve to VoiceOver — a no-op when VoiceOver is off.
             AccessibilityNotification.Announcement("\(slot.answer.capitalized) complete").post()
-            withAnimation(.easeOut(duration: 0.18)) { flashing.formUnion(positions) }
+            if reduceMotion {
+                withAnimation(.easeOut(duration: 0.18)) { flashing.formUnion(positions) }
+                Task { @MainActor in
+                    try? await Task.sleep(for: .milliseconds(480))
+                    withAnimation(.easeOut(duration: 0.3)) { flashing.subtract(positions) }
+                }
+            } else {
+                cascadeFlash(positions)
+            }
+        }
+    }
+
+    /// Pop the word's cells one after another along its length, each fading
+    /// back out on its own — a rolling green cascade rather than a block flash.
+    private func cascadeFlash(_ positions: [GridPos], perCellMillis: Int = 45) {
+        for (i, pos) in positions.enumerated() {
             Task { @MainActor in
-                try? await Task.sleep(for: .milliseconds(480))
-                withAnimation(.easeOut(duration: 0.3)) { flashing.subtract(positions) }
+                try? await Task.sleep(for: .milliseconds(i * perCellMillis))
+                withAnimation(.spring(duration: 0.25, bounce: 0.5)) { _ = flashing.insert(pos) }
+                try? await Task.sleep(for: .milliseconds(450))
+                withAnimation(.easeOut(duration: 0.3)) { _ = flashing.remove(pos) }
+            }
+        }
+    }
+
+    /// Diagonal sweep across the whole grid at the solve moment, played in the
+    /// beat before the completion screen covers it. Cells are batched per
+    /// diagonal so the sweep costs two state updates per diagonal, not per cell.
+    private func celebrationWave() {
+        var diagonals: [Int: Set<GridPos>] = [:]
+        for r in 0..<vm.size {
+            for c in 0..<vm.size where !vm.grid[r][c].isBlock {
+                diagonals[r + c, default: []].insert(GridPos(row: r, col: c))
+            }
+        }
+        for (diagonal, positions) in diagonals {
+            Task { @MainActor in
+                try? await Task.sleep(for: .milliseconds(diagonal * 40))
+                withAnimation(.spring(duration: 0.25, bounce: 0.5)) { flashing.formUnion(positions) }
+                try? await Task.sleep(for: .milliseconds(380))
+                withAnimation(.easeOut(duration: 0.25)) { flashing.subtract(positions) }
             }
         }
     }

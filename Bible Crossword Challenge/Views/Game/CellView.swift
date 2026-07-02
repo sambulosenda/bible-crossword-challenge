@@ -74,6 +74,10 @@ struct CellView: View, Equatable {
                             .font(.system(size: side * 0.5, weight: .semibold, design: .rounded))
                             .foregroundStyle(CellPalette.textColor(isSelected: isSelected))
                             .scaleEffect(flash && !reduceMotion ? 1.18 : 1.0)
+                            .transition(reduceMotion ? .opacity : .scale(scale: 0.4).combined(with: .opacity))
+                            // Identity follows the letter so overtyping a filled
+                            // cell re-pops instead of swapping text in place.
+                            .id(entry)
                     }
 
                     // Non-colour cue for correctness when colour can't be relied on.
@@ -89,6 +93,8 @@ struct CellView: View, Equatable {
                 .overlay(
                     Rectangle().strokeBorder(CellPalette.border, lineWidth: 0.5)
                 )
+                // Pops each typed letter in with a small spring bounce.
+                .animation(reduceMotion ? nil : .spring(duration: 0.22, bounce: 0.55), value: cell.entry)
             }
             .buttonStyle(.plain)
             .accessibilityLabel(accessibilityLabel)
