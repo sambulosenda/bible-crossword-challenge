@@ -17,6 +17,7 @@ enum AnalyticsEvent {
     case streakUpdated(streak: Int)
     case achievementUnlocked(id: String)
     case premiumPurchased(plan: String)
+    case paywallOpened(source: String)
     case notificationPermission(granted: Bool)
     case reminderSettingChanged(enabled: Bool)
 
@@ -29,6 +30,7 @@ enum AnalyticsEvent {
         case .streakUpdated: return "streak_updated"
         case .achievementUnlocked: return "achievement_unlocked"
         case .premiumPurchased: return "premium_purchased"
+        case .paywallOpened: return "paywall_opened"
         case .notificationPermission: return "notification_permission"
         case .reminderSettingChanged: return "reminder_setting_changed"
         }
@@ -40,6 +42,8 @@ enum AnalyticsEvent {
             return [:]
         case .premiumPurchased(let plan):
             return ["plan": plan]
+        case .paywallOpened(let source):
+            return ["source": source]
         case .dailyPuzzleStarted(let id):
             return ["puzzle_id": id]
         case .dailyPuzzleCompleted(let id, let seconds):

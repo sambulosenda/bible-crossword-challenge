@@ -22,7 +22,7 @@ struct PaywallView: View {
     private let benefits: [(symbol: String, title: String, detail: String)] = [
         ("nosign", "Remove Ads", "Enjoy a distraction-free experience"),
         ("lightbulb.fill", "Unlimited Hints", "Never get stuck on a tricky clue"),
-        ("archivebox.fill", "Puzzle Archive", "Replay every past daily puzzle"),
+        ("archivebox.fill", "Puzzle Archive", "Replay every past daily puzzle and Mini"),
         ("gift.fill", "Future Packs", "Get upcoming puzzle packs included"),
     ]
 

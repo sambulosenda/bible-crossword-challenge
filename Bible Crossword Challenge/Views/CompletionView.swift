@@ -20,10 +20,14 @@ struct CompletionView: View {
     let onHome: () -> Void
 
     @State private var shareImage: Image?
+    @State private var showPaywall = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.displayScale) private var displayScale
     @Environment(\.gameCenter) private var gameCenter
     @Environment(\.requestReview) private var requestReview
+    @Environment(\.puzzleProvider) private var puzzleProvider
+    @Environment(\.analytics) private var analytics
+    @Environment(StoreService.self) private var store
     /// Highest completion milestone we've already asked a review at, so each
     /// milestone prompts at most once across sessions.
     @AppStorage("reviewPromptMilestone") private var reviewPromptMilestone = 0
@@ -51,6 +55,10 @@ struct CompletionView: View {
                     achievementsCard
                 }
 
+                if puzzle.isMini && !store.isPremium && pastMiniCount > 0 {
+                    miniUpsellCard
+                }
+
                 nextPuzzleFooter
             }
             .padding(Theme.Spacing.l)
@@ -70,6 +78,49 @@ struct CompletionView: View {
             renderShareCard()
             maybeRequestReview()
         }
+        .sheet(isPresented: $showPaywall) {
+            PaywallView()
+        }
+    }
+
+    // MARK: - Mini upsell
+
+    /// Every mini in the bank except today's — the library Premium unlocks.
+    private var pastMiniCount: Int { max(0, puzzleProvider.minis.count - 1) }
+
+    /// The post-win ask: shown only to free users right after a Mini solve,
+    /// when the appetite for "one more" is highest. A single quiet card — the
+    /// celebration stays the hero.
+    private var miniUpsellCard: some View {
+        Button {
+            analytics.log(.paywallOpened(source: "mini_completion"))
+            showPaywall = true
+        } label: {
+            HStack(spacing: Theme.Spacing.m) {
+                Image(systemName: "bolt.circle.fill")
+                    .font(.title)
+                    .foregroundStyle(Theme.accent)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Enjoyed that?")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.primary)
+                    Text("\(pastMiniCount) more Minis are waiting in Premium.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                Spacer(minLength: 0)
+                Image(systemName: "chevron.right")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(.secondary)
+            }
+            .padding(Theme.Spacing.l)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Theme.accent.opacity(0.10), in: .rect(cornerRadius: Theme.cornerRadius, style: .continuous))
+        }
+        .buttonStyle(.plain)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Enjoyed that? \(pastMiniCount) more Minis are waiting in Premium.")
+        .accessibilityHint("Opens Premium upgrade options")
     }
 
     private var header: some View {
