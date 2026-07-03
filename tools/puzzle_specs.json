@@ -7450,5 +7450,1441 @@
     ],
     "keep": true,
     "issues": "Verse and reference correct; replaced PROMISE (echoed title/theme word, appears in verse) with PLEDGE to avoid answer-in-clue overlap; all 20 answers valid A-Z, on-theme, no duplicates, clues factual and answer-free."
+  },
+  {
+    "kind": "mini",
+    "title": "Noah and the Flood",
+    "theme": "Noah's ark (Genesis 6-9)",
+    "difficulty": "easy",
+    "verse": "And the rain was upon the earth forty days and forty nights.",
+    "reference": "Genesis 7:12",
+    "words": [
+      {
+        "answer": "ARK",
+        "clue": "Vessel of gopher wood that saved Noah's family"
+      },
+      {
+        "answer": "NOAH",
+        "clue": "Builder found righteous in his generation"
+      },
+      {
+        "answer": "FLOOD",
+        "clue": "The waters that covered the whole earth"
+      },
+      {
+        "answer": "DOVE",
+        "clue": "Bird that returned with an olive leaf"
+      },
+      {
+        "answer": "RAVEN",
+        "clue": "First bird sent out, which went to and fro"
+      },
+      {
+        "answer": "OLIVE",
+        "clue": "Kind of leaf plucked as proof the waters abated"
+      },
+      {
+        "answer": "RAIN",
+        "clue": "It fell for forty days and forty nights"
+      },
+      {
+        "answer": "SHEM",
+        "clue": "One of Noah's three sons"
+      },
+      {
+        "answer": "ARARAT",
+        "clue": "Mountains where the vessel came to rest"
+      },
+      {
+        "answer": "FORTY",
+        "clue": "Number of days and nights it rained"
+      }
+    ]
+  },
+  {
+    "kind": "mini",
+    "title": "In the Garden",
+    "theme": "The Garden of Eden (Genesis 2-3)",
+    "difficulty": "easy",
+    "verse": "And the LORD God planted a garden eastward in Eden; and there he put the man whom he had formed.",
+    "reference": "Genesis 2:8",
+    "words": [
+      {
+        "answer": "EDEN",
+        "clue": "The garden planted eastward"
+      },
+      {
+        "answer": "ADAM",
+        "clue": "The first man, formed of the dust"
+      },
+      {
+        "answer": "EVE",
+        "clue": "The mother of all living"
+      },
+      {
+        "answer": "SERPENT",
+        "clue": "The most subtil beast of the field"
+      },
+      {
+        "answer": "FRUIT",
+        "clue": "What the woman took and did eat"
+      },
+      {
+        "answer": "RIB",
+        "clue": "What God took from Adam to make woman"
+      },
+      {
+        "answer": "DUST",
+        "clue": "What man was formed from, and returns to"
+      },
+      {
+        "answer": "TREE",
+        "clue": "Of life, or of knowledge of good and evil"
+      },
+      {
+        "answer": "SWORD",
+        "clue": "The flaming one kept the way of the tree of life"
+      }
+    ]
+  },
+  {
+    "kind": "mini",
+    "title": "The Shepherd and the Giant",
+    "theme": "David and Goliath (1 Samuel 17)",
+    "difficulty": "easy",
+    "verse": "So David prevailed over the Philistine with a sling and with a stone.",
+    "reference": "1 Samuel 17:50",
+    "words": [
+      {
+        "answer": "DAVID",
+        "clue": "The shepherd boy who felled a giant"
+      },
+      {
+        "answer": "SLING",
+        "clue": "The weapon that needed no sword"
+      },
+      {
+        "answer": "STONE",
+        "clue": "One of five, smooth from the brook"
+      },
+      {
+        "answer": "GIANT",
+        "clue": "Goliath of Gath, six cubits and a span"
+      },
+      {
+        "answer": "SWORD",
+        "clue": "Goliath's own blade, used against him"
+      },
+      {
+        "answer": "SAUL",
+        "clue": "King whose armour was refused"
+      },
+      {
+        "answer": "BROOK",
+        "clue": "Where the five smooth stones were chosen"
+      },
+      {
+        "answer": "JESSE",
+        "clue": "Father of eight sons in Bethlehem"
+      },
+      {
+        "answer": "SPEAR",
+        "clue": "The giant carried one like a weaver's beam"
+      },
+      {
+        "answer": "GATH",
+        "clue": "The giant's home city"
+      },
+      {
+        "answer": "FIVE",
+        "clue": "How many smooth stones were taken"
+      },
+      {
+        "answer": "ARMY",
+        "clue": "The host of Israel, set in battle array"
+      }
+    ]
+  },
+  {
+    "kind": "mini",
+    "title": "Born in Bethlehem",
+    "theme": "The Nativity (Luke 2, Matthew 2)",
+    "difficulty": "easy",
+    "verse": "For unto you is born this day in the city of David a Saviour, which is Christ the Lord.",
+    "reference": "Luke 2:11",
+    "words": [
+      {
+        "answer": "MANGER",
+        "clue": "Where the newborn Saviour was laid"
+      },
+      {
+        "answer": "MARY",
+        "clue": "She kept all these things in her heart"
+      },
+      {
+        "answer": "JOSEPH",
+        "clue": "The carpenter espoused to Mary"
+      },
+      {
+        "answer": "STAR",
+        "clue": "It went before the wise men to the young child"
+      },
+      {
+        "answer": "ANGEL",
+        "clue": "Messenger who brought good tidings of great joy"
+      },
+      {
+        "answer": "INN",
+        "clue": "There was no room here"
+      },
+      {
+        "answer": "BABE",
+        "clue": "Found wrapped in swaddling clothes"
+      },
+      {
+        "answer": "GOLD",
+        "clue": "A wise man's gift, with frankincense and myrrh"
+      },
+      {
+        "answer": "MYRRH",
+        "clue": "Fragrant gift of the magi"
+      },
+      {
+        "answer": "HEROD",
+        "clue": "Troubled king who asked where Christ should be born"
+      }
+    ]
+  },
+  {
+    "kind": "mini",
+    "title": "Out of Egypt",
+    "theme": "Moses and the Exodus",
+    "difficulty": "easy",
+    "verse": "Come now therefore, and I will send thee unto Pharaoh, that thou mayest bring forth my people the children of Israel out of Egypt.",
+    "reference": "Exodus 3:10",
+    "words": [
+      {
+        "answer": "MOSES",
+        "clue": "Drawn out of the water, he led Israel out"
+      },
+      {
+        "answer": "EGYPT",
+        "clue": "The house of bondage"
+      },
+      {
+        "answer": "PLAGUE",
+        "clue": "One of ten sent upon Pharaoh's land"
+      },
+      {
+        "answer": "MANNA",
+        "clue": "Bread from heaven in the wilderness"
+      },
+      {
+        "answer": "SINAI",
+        "clue": "Mount where the law was given"
+      },
+      {
+        "answer": "BUSH",
+        "clue": "It burned but was not consumed"
+      },
+      {
+        "answer": "AARON",
+        "clue": "Moses' brother and spokesman"
+      },
+      {
+        "answer": "ROD",
+        "clue": "It became a serpent before Pharaoh"
+      },
+      {
+        "answer": "FROGS",
+        "clue": "The second plague, covering the land"
+      },
+      {
+        "answer": "LAMB",
+        "clue": "Its blood marked the doorposts at Passover"
+      }
+    ]
+  },
+  {
+    "kind": "mini",
+    "title": "Swallowed by the Sea",
+    "theme": "Jonah and the great fish",
+    "difficulty": "easy",
+    "verse": "Now the LORD had prepared a great fish to swallow up Jonah. And Jonah was in the belly of the fish three days and three nights.",
+    "reference": "Jonah 1:17",
+    "words": [
+      {
+        "answer": "JONAH",
+        "clue": "Prophet who fled toward Tarshish"
+      },
+      {
+        "answer": "FISH",
+        "clue": "A great one, prepared by the LORD"
+      },
+      {
+        "answer": "STORM",
+        "clue": "The mighty tempest sent upon the sea"
+      },
+      {
+        "answer": "SHIP",
+        "clue": "It was like to be broken in the tempest"
+      },
+      {
+        "answer": "GOURD",
+        "clue": "The plant that shaded the pouting prophet"
+      },
+      {
+        "answer": "PRAY",
+        "clue": "What the prophet did from the fish's belly"
+      },
+      {
+        "answer": "WAVES",
+        "clue": "They passed over the drowning prophet"
+      },
+      {
+        "answer": "NINEVEH",
+        "clue": "The great city that repented in sackcloth"
+      },
+      {
+        "answer": "THREE",
+        "clue": "Days and nights spent inside the fish"
+      }
+    ]
+  },
+  {
+    "kind": "mini",
+    "title": "In the Lions' Den",
+    "theme": "Daniel in Babylon",
+    "difficulty": "easy",
+    "verse": "My God hath sent his angel, and hath shut the lions' mouths, that they have not hurt me.",
+    "reference": "Daniel 6:22",
+    "words": [
+      {
+        "answer": "DANIEL",
+        "clue": "He kneeled three times a day, windows open"
+      },
+      {
+        "answer": "LIONS",
+        "clue": "Their mouths were shut by an angel"
+      },
+      {
+        "answer": "DEN",
+        "clue": "Where the faithful man spent the night"
+      },
+      {
+        "answer": "DREAM",
+        "clue": "Nebuchadnezzar's forgotten vision"
+      },
+      {
+        "answer": "PRAY",
+        "clue": "What the decree forbade for thirty days"
+      },
+      {
+        "answer": "ANGEL",
+        "clue": "Sent to protect the man in the pit"
+      },
+      {
+        "answer": "BABYLON",
+        "clue": "Kingdom of the captivity"
+      },
+      {
+        "answer": "KING",
+        "clue": "Darius, who could not sleep that night"
+      },
+      {
+        "answer": "MEDES",
+        "clue": "Their law, with the Persians, altereth not"
+      }
+    ]
+  },
+  {
+    "kind": "mini",
+    "title": "The Shepherd's Psalm",
+    "theme": "Psalm 23",
+    "difficulty": "easy",
+    "verse": "The LORD is my shepherd; I shall not want.",
+    "reference": "Psalm 23:1",
+    "words": [
+      {
+        "answer": "PSALM",
+        "clue": "A sacred song of David"
+      },
+      {
+        "answer": "HARP",
+        "clue": "Instrument David played for Saul"
+      },
+      {
+        "answer": "SHEEP",
+        "clue": "The shepherd's flock"
+      },
+      {
+        "answer": "STAFF",
+        "clue": "With the rod, it comforts me"
+      },
+      {
+        "answer": "CUP",
+        "clue": "Mine runneth over"
+      },
+      {
+        "answer": "OIL",
+        "clue": "Thou anointest my head with it"
+      },
+      {
+        "answer": "PATH",
+        "clue": "Of righteousness, for his name's sake"
+      },
+      {
+        "answer": "SOUL",
+        "clue": "He restoreth it"
+      },
+      {
+        "answer": "TABLE",
+        "clue": "Prepared in the presence of mine enemies"
+      },
+      {
+        "answer": "VALLEY",
+        "clue": "Of the shadow of death"
+      }
+    ]
+  },
+  {
+    "kind": "mini",
+    "title": "Fruit of the Spirit",
+    "theme": "Galatians 5:22-23",
+    "difficulty": "easy",
+    "verse": "But the fruit of the Spirit is love, joy, peace, longsuffering, gentleness, goodness, faith.",
+    "reference": "Galatians 5:22",
+    "words": [
+      {
+        "answer": "LOVE",
+        "clue": "The first fruit named, and the greatest gift"
+      },
+      {
+        "answer": "JOY",
+        "clue": "Second fruit — of the LORD, it is your strength"
+      },
+      {
+        "answer": "PEACE",
+        "clue": "Fruit that passeth all understanding"
+      },
+      {
+        "answer": "FAITH",
+        "clue": "Fruit that is the substance of things hoped for"
+      },
+      {
+        "answer": "SPIRIT",
+        "clue": "The fruit-bearer of Galatians five"
+      },
+      {
+        "answer": "FRUIT",
+        "clue": "By theirs ye shall know them"
+      },
+      {
+        "answer": "GENTLE",
+        "clue": "Like the fruit of longsuffering kindness"
+      },
+      {
+        "answer": "WALK",
+        "clue": "Do this in the Spirit, and fulfil not the flesh"
+      },
+      {
+        "answer": "GRACE",
+        "clue": "Unmerited favour"
+      },
+      {
+        "answer": "MEEK",
+        "clue": "Blessed are they, of quiet spirit"
+      },
+      {
+        "answer": "HOPE",
+        "clue": "It abideth, with faith and charity"
+      },
+      {
+        "answer": "REST",
+        "clue": "Come unto me, and I will give you this"
+      }
+    ]
+  },
+  {
+    "kind": "mini",
+    "title": "The Twelve",
+    "theme": "The apostles of Jesus",
+    "difficulty": "easy",
+    "verse": "And he ordained twelve, that they should be with him, and that he might send them forth to preach.",
+    "reference": "Mark 3:14",
+    "words": [
+      {
+        "answer": "PETER",
+        "clue": "The rock who denied thrice"
+      },
+      {
+        "answer": "JAMES",
+        "clue": "Son of Zebedee, brother of John"
+      },
+      {
+        "answer": "JOHN",
+        "clue": "The disciple whom Jesus loved"
+      },
+      {
+        "answer": "JUDAS",
+        "clue": "He betrayed with a kiss"
+      },
+      {
+        "answer": "SIMON",
+        "clue": "Called the Zealot — or Peter's given name"
+      },
+      {
+        "answer": "ANDREW",
+        "clue": "He first found his brother Simon"
+      },
+      {
+        "answer": "THOMAS",
+        "clue": "He doubted until he saw the prints"
+      },
+      {
+        "answer": "PHILIP",
+        "clue": "He told Nathanael, Come and see"
+      },
+      {
+        "answer": "MATTHEW",
+        "clue": "The publican who wrote a Gospel"
+      }
+    ]
+  },
+  {
+    "kind": "mini",
+    "title": "Signs and Wonders",
+    "theme": "Miracles of Jesus",
+    "difficulty": "easy",
+    "verse": "This beginning of miracles did Jesus in Cana of Galilee, and manifested forth his glory.",
+    "reference": "John 2:11",
+    "words": [
+      {
+        "answer": "WATER",
+        "clue": "It became wine at the marriage feast"
+      },
+      {
+        "answer": "WINE",
+        "clue": "The good kind, kept until now"
+      },
+      {
+        "answer": "BREAD",
+        "clue": "Five loaves fed five thousand"
+      },
+      {
+        "answer": "FISH",
+        "clue": "Two of them, with the loaves"
+      },
+      {
+        "answer": "BLIND",
+        "clue": "Bartimaeus was, until Jesus passed by"
+      },
+      {
+        "answer": "LAME",
+        "clue": "They walk, as John's disciples were told"
+      },
+      {
+        "answer": "STORM",
+        "clue": "Rebuked with Peace, be still"
+      },
+      {
+        "answer": "WALK",
+        "clue": "What Jesus did upon the sea"
+      },
+      {
+        "answer": "CANA",
+        "clue": "Galilean town of the first miracle"
+      }
+    ]
+  },
+  {
+    "kind": "mini",
+    "title": "He Is Risen",
+    "theme": "The crucifixion and resurrection",
+    "difficulty": "easy",
+    "verse": "He is not here: for he is risen, as he said. Come, see the place where the Lord lay.",
+    "reference": "Matthew 28:6",
+    "words": [
+      {
+        "answer": "CROSS",
+        "clue": "Simon of Cyrene was compelled to bear it"
+      },
+      {
+        "answer": "TOMB",
+        "clue": "The new sepulchre, found empty"
+      },
+      {
+        "answer": "STONE",
+        "clue": "Rolled away by an angel"
+      },
+      {
+        "answer": "RISEN",
+        "clue": "He is not here, for he is ___"
+      },
+      {
+        "answer": "THORNS",
+        "clue": "The crown platted by the soldiers"
+      },
+      {
+        "answer": "NAILS",
+        "clue": "Thomas asked to see their print"
+      },
+      {
+        "answer": "VEIL",
+        "clue": "Rent in twain from top to bottom"
+      },
+      {
+        "answer": "THIEF",
+        "clue": "He asked to be remembered in the kingdom"
+      },
+      {
+        "answer": "LINEN",
+        "clue": "The clean cloth Joseph wrapped the body in"
+      }
+    ]
+  },
+  {
+    "kind": "mini",
+    "title": "Whither Thou Goest",
+    "theme": "The book of Ruth",
+    "difficulty": "easy",
+    "verse": "Whither thou goest, I will go; and where thou lodgest, I will lodge: thy people shall be my people, and thy God my God.",
+    "reference": "Ruth 1:16",
+    "words": [
+      {
+        "answer": "RUTH",
+        "clue": "The Moabitess who would not turn back"
+      },
+      {
+        "answer": "NAOMI",
+        "clue": "She asked to be called Mara, bitter"
+      },
+      {
+        "answer": "BOAZ",
+        "clue": "The mighty man of wealth who spread his skirt"
+      },
+      {
+        "answer": "GLEAN",
+        "clue": "To gather the leavings of the harvest"
+      },
+      {
+        "answer": "BARLEY",
+        "clue": "The harvest when they came to Bethlehem"
+      },
+      {
+        "answer": "MOAB",
+        "clue": "Country where Naomi's sons took wives"
+      },
+      {
+        "answer": "FIELD",
+        "clue": "Where the young widow happened to glean"
+      },
+      {
+        "answer": "SHEAF",
+        "clue": "A bundle of harvested grain"
+      },
+      {
+        "answer": "OBED",
+        "clue": "Son born to Ruth, grandfather of David"
+      }
+    ]
+  },
+  {
+    "kind": "mini",
+    "title": "For Such a Time",
+    "theme": "The book of Esther",
+    "difficulty": "easy",
+    "verse": "And who knoweth whether thou art come to the kingdom for such a time as this?",
+    "reference": "Esther 4:14",
+    "words": [
+      {
+        "answer": "ESTHER",
+        "clue": "The queen who went in unto the king unbidden"
+      },
+      {
+        "answer": "QUEEN",
+        "clue": "Vashti refused; Hadassah was crowned"
+      },
+      {
+        "answer": "HAMAN",
+        "clue": "He built a gallows fifty cubits high"
+      },
+      {
+        "answer": "PURIM",
+        "clue": "The feast named for the lot"
+      },
+      {
+        "answer": "CROWN",
+        "clue": "The royal one set upon Esther's head"
+      },
+      {
+        "answer": "FEAST",
+        "clue": "Esther prepared one for the king and Haman"
+      },
+      {
+        "answer": "KING",
+        "clue": "Ahasuerus, who reigned from India to Ethiopia"
+      },
+      {
+        "answer": "PERSIA",
+        "clue": "Empire of one hundred twenty-seven provinces"
+      },
+      {
+        "answer": "GATE",
+        "clue": "Where Mordecai sat and would not bow"
+      }
+    ]
+  },
+  {
+    "kind": "mini",
+    "title": "Heavenly Host",
+    "theme": "Angels in scripture",
+    "difficulty": "easy",
+    "verse": "And suddenly there was with the angel a multitude of the heavenly host praising God.",
+    "reference": "Luke 2:13",
+    "words": [
+      {
+        "answer": "GABRIEL",
+        "clue": "He stands in the presence of God, sent to Mary"
+      },
+      {
+        "answer": "MICHAEL",
+        "clue": "The archangel who disputed with the devil"
+      },
+      {
+        "answer": "WINGS",
+        "clue": "Seraphims had six of these"
+      },
+      {
+        "answer": "HOST",
+        "clue": "The heavenly multitude"
+      },
+      {
+        "answer": "GLORY",
+        "clue": "It shone round about the shepherds"
+      },
+      {
+        "answer": "HEAVEN",
+        "clue": "Whence the messengers descend"
+      },
+      {
+        "answer": "TRUMPET",
+        "clue": "The archangel's instrument at the last day"
+      },
+      {
+        "answer": "LADDER",
+        "clue": "Jacob saw angels ascending on it"
+      },
+      {
+        "answer": "FEAR",
+        "clue": "What angels tell shepherds not to do"
+      }
+    ]
+  },
+  {
+    "kind": "mini",
+    "title": "Ask, Seek, Knock",
+    "theme": "Prayer",
+    "difficulty": "easy",
+    "verse": "Ask, and it shall be given you; seek, and ye shall find; knock, and it shall be opened unto you.",
+    "reference": "Matthew 7:7",
+    "words": [
+      {
+        "answer": "AMEN",
+        "clue": "So be it — the word that seals a prayer"
+      },
+      {
+        "answer": "KNEEL",
+        "clue": "Daniel did this three times a day"
+      },
+      {
+        "answer": "FAITH",
+        "clue": "Pray with it, nothing wavering"
+      },
+      {
+        "answer": "ASK",
+        "clue": "Do it, and it shall be given you"
+      },
+      {
+        "answer": "SEEK",
+        "clue": "Do it, and ye shall find"
+      },
+      {
+        "answer": "KNOCK",
+        "clue": "Do it, and it shall be opened"
+      },
+      {
+        "answer": "ALTAR",
+        "clue": "Leave thy gift there and be reconciled first"
+      },
+      {
+        "answer": "PRAISE",
+        "clue": "Enter his courts with it"
+      },
+      {
+        "answer": "CLOSET",
+        "clue": "Enter it, shut the door, pray in secret"
+      }
+    ]
+  },
+  {
+    "kind": "mini",
+    "title": "Written in Stone",
+    "theme": "The Ten Commandments",
+    "difficulty": "easy",
+    "verse": "Thou shalt have no other gods before me.",
+    "reference": "Exodus 20:3",
+    "words": [
+      {
+        "answer": "TABLETS",
+        "clue": "The two tables of testimony"
+      },
+      {
+        "answer": "STONE",
+        "clue": "What the tables were hewn from"
+      },
+      {
+        "answer": "SINAI",
+        "clue": "The mount that was altogether on a smoke"
+      },
+      {
+        "answer": "LAW",
+        "clue": "It was given by Moses"
+      },
+      {
+        "answer": "MOSES",
+        "clue": "He was in the mount forty days"
+      },
+      {
+        "answer": "COVET",
+        "clue": "Thou shalt not do this to thy neighbour's house"
+      },
+      {
+        "answer": "IDOL",
+        "clue": "A graven image"
+      },
+      {
+        "answer": "SABBATH",
+        "clue": "Remember this day, to keep it holy"
+      },
+      {
+        "answer": "STEAL",
+        "clue": "The eighth commandment forbids it"
+      }
+    ]
+  },
+  {
+    "kind": "mini",
+    "title": "Thrones of Israel",
+    "theme": "Kings of Israel and Judah",
+    "difficulty": "easy",
+    "verse": "Give therefore thy servant an understanding heart to judge thy people, that I may discern between good and bad.",
+    "reference": "1 Kings 3:9",
+    "words": [
+      {
+        "answer": "SAUL",
+        "clue": "Israel's first king, head and shoulders taller"
+      },
+      {
+        "answer": "DAVID",
+        "clue": "The man after God's own heart"
+      },
+      {
+        "answer": "SOLOMON",
+        "clue": "He asked for wisdom, not riches"
+      },
+      {
+        "answer": "AHAB",
+        "clue": "Wicked king who married Jezebel"
+      },
+      {
+        "answer": "JEHU",
+        "clue": "He driveth furiously"
+      },
+      {
+        "answer": "THRONE",
+        "clue": "The royal seat"
+      },
+      {
+        "answer": "CROWN",
+        "clue": "What rests on a royal head"
+      },
+      {
+        "answer": "ANOINT",
+        "clue": "What Samuel did with the horn of oil"
+      },
+      {
+        "answer": "TEMPLE",
+        "clue": "The house Solomon built in seven years"
+      }
+    ]
+  },
+  {
+    "kind": "mini",
+    "title": "House of the LORD",
+    "theme": "The temple and its worship",
+    "difficulty": "easy",
+    "verse": "I was glad when they said unto me, Let us go into the house of the LORD.",
+    "reference": "Psalm 122:1",
+    "words": [
+      {
+        "answer": "ALTAR",
+        "clue": "Where the offerings were burned"
+      },
+      {
+        "answer": "PRIEST",
+        "clue": "Aaron's office, after the order of his sons"
+      },
+      {
+        "answer": "LAMP",
+        "clue": "It burned continually before the LORD"
+      },
+      {
+        "answer": "VEIL",
+        "clue": "It divided the holy place from the most holy"
+      },
+      {
+        "answer": "ARK",
+        "clue": "Of the covenant, with the mercy seat above"
+      },
+      {
+        "answer": "GOLD",
+        "clue": "The most holy place was overlaid with it"
+      },
+      {
+        "answer": "CEDAR",
+        "clue": "Timber from Lebanon for the LORD's house"
+      },
+      {
+        "answer": "INCENSE",
+        "clue": "Sweet smoke offered morning and evening"
+      },
+      {
+        "answer": "COURT",
+        "clue": "A day in thine is better than a thousand"
+      }
+    ]
+  },
+  {
+    "kind": "mini",
+    "title": "He Spake in Parables",
+    "theme": "The parables of Jesus",
+    "difficulty": "easy",
+    "verse": "And he spake many things unto them in parables, saying, Behold, a sower went forth to sow.",
+    "reference": "Matthew 13:3",
+    "words": [
+      {
+        "answer": "SOWER",
+        "clue": "He went forth to sow"
+      },
+      {
+        "answer": "SEED",
+        "clue": "Some fell by the way side"
+      },
+      {
+        "answer": "TARES",
+        "clue": "Sown among the wheat by an enemy"
+      },
+      {
+        "answer": "PEARL",
+        "clue": "One of great price"
+      },
+      {
+        "answer": "COIN",
+        "clue": "The piece of silver the woman swept for"
+      },
+      {
+        "answer": "SHEEP",
+        "clue": "Ninety and nine were left to find one"
+      },
+      {
+        "answer": "VINE",
+        "clue": "I am the true one, ye are the branches"
+      },
+      {
+        "answer": "TALENT",
+        "clue": "One was buried in the earth"
+      },
+      {
+        "answer": "LEAVEN",
+        "clue": "A little of it worketh through the whole lump"
+      }
+    ]
+  },
+  {
+    "kind": "mini",
+    "title": "A Chosen Vessel",
+    "theme": "Paul's life and journeys",
+    "difficulty": "easy",
+    "verse": "Go thy way: for he is a chosen vessel unto me, to bear my name before the Gentiles, and kings, and the children of Israel.",
+    "reference": "Acts 9:15",
+    "words": [
+      {
+        "answer": "PAUL",
+        "clue": "Saul of Tarsus, after the Damascus road"
+      },
+      {
+        "answer": "ROME",
+        "clue": "The city where he appealed unto Caesar"
+      },
+      {
+        "answer": "SILAS",
+        "clue": "He sang praises with Paul at midnight in prison"
+      },
+      {
+        "answer": "SHIP",
+        "clue": "It was wrecked on the isle called Melita"
+      },
+      {
+        "answer": "ATHENS",
+        "clue": "City with an altar to the unknown god"
+      },
+      {
+        "answer": "CORINTH",
+        "clue": "Church that received two epistles"
+      },
+      {
+        "answer": "TENT",
+        "clue": "The apostle's craft was making these"
+      },
+      {
+        "answer": "LUKE",
+        "clue": "The beloved physician who travelled with him"
+      },
+      {
+        "answer": "GRACE",
+        "clue": "My ___ is sufficient for thee"
+      }
+    ]
+  },
+  {
+    "kind": "mini",
+    "title": "The Whole Armour",
+    "theme": "The armour of God (Ephesians 6)",
+    "difficulty": "easy",
+    "verse": "Put on the whole armour of God, that ye may be able to stand against the wiles of the devil.",
+    "reference": "Ephesians 6:11",
+    "words": [
+      {
+        "answer": "SHIELD",
+        "clue": "Of faith, to quench the fiery darts"
+      },
+      {
+        "answer": "SWORD",
+        "clue": "Of the Spirit, which is the word of God"
+      },
+      {
+        "answer": "TRUTH",
+        "clue": "Gird your loins about with it"
+      },
+      {
+        "answer": "FAITH",
+        "clue": "Above all, take this shield"
+      },
+      {
+        "answer": "PEACE",
+        "clue": "Feet shod with the gospel of it"
+      },
+      {
+        "answer": "STAND",
+        "clue": "Having done all, do this"
+      },
+      {
+        "answer": "DARTS",
+        "clue": "The fiery missiles of the wicked"
+      },
+      {
+        "answer": "PRAY",
+        "clue": "Do it always, with all supplication"
+      },
+      {
+        "answer": "LOINS",
+        "clue": "Gird them about with truth"
+      },
+      {
+        "answer": "GOSPEL",
+        "clue": "Of peace — let your feet be shod with it"
+      },
+      {
+        "answer": "FEET",
+        "clue": "Shod with the preparation of the gospel"
+      },
+      {
+        "answer": "EVIL",
+        "clue": "The day to withstand"
+      },
+      {
+        "answer": "ARMOUR",
+        "clue": "Put on the whole of it"
+      }
+    ]
+  },
+  {
+    "kind": "mini",
+    "title": "Living Waters",
+    "theme": "Rivers and seas of scripture",
+    "difficulty": "easy",
+    "verse": "But let judgment run down as waters, and righteousness as a mighty stream.",
+    "reference": "Amos 5:24",
+    "words": [
+      {
+        "answer": "JORDAN",
+        "clue": "River where Jesus was baptized"
+      },
+      {
+        "answer": "NILE",
+        "clue": "Egypt's river, where a basket floated"
+      },
+      {
+        "answer": "WELL",
+        "clue": "Jacob's, where Jesus met a Samaritan woman"
+      },
+      {
+        "answer": "RAIN",
+        "clue": "It falls on the just and on the unjust"
+      },
+      {
+        "answer": "FLOOD",
+        "clue": "The waters of Noah's day"
+      },
+      {
+        "answer": "RIVER",
+        "clue": "A pure one of water of life, clear as crystal"
+      },
+      {
+        "answer": "SEA",
+        "clue": "The Red one parted; the Galilean one calmed"
+      },
+      {
+        "answer": "GALILEE",
+        "clue": "The sea where fishermen were called"
+      },
+      {
+        "answer": "DEEP",
+        "clue": "Darkness was upon the face of it"
+      }
+    ]
+  },
+  {
+    "kind": "mini",
+    "title": "Daily Bread",
+    "theme": "Food in the Bible",
+    "difficulty": "easy",
+    "verse": "Man did eat angels' food: he sent them meat to the full.",
+    "reference": "Psalm 78:25",
+    "words": [
+      {
+        "answer": "BREAD",
+        "clue": "Give us this day our daily kind"
+      },
+      {
+        "answer": "HONEY",
+        "clue": "The promised land flowed with milk and this"
+      },
+      {
+        "answer": "MANNA",
+        "clue": "What is it? — gathered fresh each morning"
+      },
+      {
+        "answer": "FIGS",
+        "clue": "Fruit of the tree Jesus found bare"
+      },
+      {
+        "answer": "GRAPES",
+        "clue": "The spies carried a cluster on a staff"
+      },
+      {
+        "answer": "OIL",
+        "clue": "The widow's cruse of it failed not"
+      },
+      {
+        "answer": "WINE",
+        "clue": "New, not for old bottles"
+      },
+      {
+        "answer": "FISH",
+        "clue": "Broiled, eaten by the risen Lord"
+      },
+      {
+        "answer": "CORN",
+        "clue": "The disciples plucked its ears on the sabbath"
+      }
+    ]
+  },
+  {
+    "kind": "mini",
+    "title": "The Dreamer",
+    "theme": "Joseph in Egypt (Genesis 37-47)",
+    "difficulty": "easy",
+    "verse": "Now Israel loved Joseph more than all his children, because he was the son of his old age: and he made him a coat of many colours.",
+    "reference": "Genesis 37:3",
+    "words": [
+      {
+        "answer": "JOSEPH",
+        "clue": "The dreamer sold for twenty pieces of silver"
+      },
+      {
+        "answer": "COAT",
+        "clue": "Of many colours"
+      },
+      {
+        "answer": "DREAM",
+        "clue": "Pharaoh's, of seven kine and seven ears"
+      },
+      {
+        "answer": "EGYPT",
+        "clue": "Where the brothers came to buy grain"
+      },
+      {
+        "answer": "GRAIN",
+        "clue": "Stored up in the seven plenteous years"
+      },
+      {
+        "answer": "PIT",
+        "clue": "Where the brothers first cast the dreamer"
+      },
+      {
+        "answer": "FAMINE",
+        "clue": "Seven years of it, over all the earth"
+      },
+      {
+        "answer": "SILVER",
+        "clue": "Twenty pieces of it changed hands"
+      },
+      {
+        "answer": "SHEAVES",
+        "clue": "In the dream, his brothers' bowed to his"
+      }
+    ]
+  },
+  {
+    "kind": "mini",
+    "title": "Virtuous Women",
+    "theme": "Women of the Bible",
+    "difficulty": "easy",
+    "verse": "Who can find a virtuous woman? for her price is far above rubies.",
+    "reference": "Proverbs 31:10",
+    "words": [
+      {
+        "answer": "SARAH",
+        "clue": "She laughed, then bare a son at ninety"
+      },
+      {
+        "answer": "RACHEL",
+        "clue": "Jacob served seven years for her"
+      },
+      {
+        "answer": "LEAH",
+        "clue": "The tender-eyed elder sister"
+      },
+      {
+        "answer": "MARY",
+        "clue": "She sat at Jesus' feet and heard his word"
+      },
+      {
+        "answer": "MARTHA",
+        "clue": "Cumbered about much serving"
+      },
+      {
+        "answer": "HANNAH",
+        "clue": "She lent her son Samuel to the LORD"
+      },
+      {
+        "answer": "ANNA",
+        "clue": "The aged prophetess in the temple"
+      },
+      {
+        "answer": "MIRIAM",
+        "clue": "She took a timbrel after the Red Sea"
+      },
+      {
+        "answer": "ABIGAIL",
+        "clue": "Wise wife who turned away David's wrath"
+      }
+    ]
+  },
+  {
+    "kind": "mini",
+    "title": "Blessed Are They",
+    "theme": "The Beatitudes (Matthew 5)",
+    "difficulty": "easy",
+    "verse": "Blessed are the meek: for they shall inherit the earth.",
+    "reference": "Matthew 5:5",
+    "words": [
+      {
+        "answer": "MEEK",
+        "clue": "They shall inherit the earth"
+      },
+      {
+        "answer": "MOURN",
+        "clue": "They that do so shall be comforted"
+      },
+      {
+        "answer": "MERCY",
+        "clue": "The merciful shall obtain it"
+      },
+      {
+        "answer": "PURE",
+        "clue": "The ___ in heart shall see God"
+      },
+      {
+        "answer": "PEACE",
+        "clue": "Its makers are called the children of God"
+      },
+      {
+        "answer": "HUNGER",
+        "clue": "Do this after righteousness and be filled"
+      },
+      {
+        "answer": "POOR",
+        "clue": "In spirit — theirs is the kingdom"
+      },
+      {
+        "answer": "HEART",
+        "clue": "Where the pure see God"
+      },
+      {
+        "answer": "SALT",
+        "clue": "Ye are this, of the earth"
+      }
+    ]
+  },
+  {
+    "kind": "mini",
+    "title": "The Patience of Job",
+    "theme": "The book of Job",
+    "difficulty": "easy",
+    "verse": "The LORD gave, and the LORD hath taken away; blessed be the name of the LORD.",
+    "reference": "Job 1:21",
+    "words": [
+      {
+        "answer": "JOB",
+        "clue": "Perfect and upright, one that feared God"
+      },
+      {
+        "answer": "ASHES",
+        "clue": "He sat down among them with a potsherd"
+      },
+      {
+        "answer": "BOILS",
+        "clue": "Sore ones, from sole to crown"
+      },
+      {
+        "answer": "CAMELS",
+        "clue": "Three thousand of them, carried away"
+      },
+      {
+        "answer": "OXEN",
+        "clue": "Five hundred yoke were plowing"
+      },
+      {
+        "answer": "WIND",
+        "clue": "A great one smote the house's four corners"
+      },
+      {
+        "answer": "DOUBLE",
+        "clue": "The LORD gave Job this much of what he had"
+      },
+      {
+        "answer": "ELIHU",
+        "clue": "The young man who spoke after the three friends"
+      },
+      {
+        "answer": "WHIRL",
+        "clue": "The LORD answered out of the ___wind"
+      }
+    ]
+  },
+  {
+    "kind": "mini",
+    "title": "Alpha and Omega",
+    "theme": "The book of Revelation",
+    "difficulty": "easy",
+    "verse": "I am Alpha and Omega, the beginning and the ending, saith the Lord.",
+    "reference": "Revelation 1:8",
+    "words": [
+      {
+        "answer": "LAMB",
+        "clue": "Worthy is the ___ that was slain"
+      },
+      {
+        "answer": "SEAL",
+        "clue": "One of seven on the book"
+      },
+      {
+        "answer": "ANGEL",
+        "clue": "One flew in the midst of heaven"
+      },
+      {
+        "answer": "TRUMPET",
+        "clue": "Seven angels prepared to sound them"
+      },
+      {
+        "answer": "CROWN",
+        "clue": "Of life, promised to the faithful"
+      },
+      {
+        "answer": "THRONE",
+        "clue": "Set in heaven, and one sat on it"
+      },
+      {
+        "answer": "ALPHA",
+        "clue": "The beginning, first letter"
+      },
+      {
+        "answer": "OMEGA",
+        "clue": "The ending, last letter"
+      },
+      {
+        "answer": "SCROLL",
+        "clue": "The heavens departed as one rolled together"
+      }
+    ]
+  },
+  {
+    "kind": "mini",
+    "title": "The Good Shepherd",
+    "theme": "Shepherds and sheep",
+    "difficulty": "easy",
+    "verse": "I am the good shepherd: the good shepherd giveth his life for the sheep.",
+    "reference": "John 10:11",
+    "words": [
+      {
+        "answer": "FLOCK",
+        "clue": "Fear not, little one"
+      },
+      {
+        "answer": "LAMB",
+        "clue": "Behold the ___ of God"
+      },
+      {
+        "answer": "STAFF",
+        "clue": "It comforts, with the rod"
+      },
+      {
+        "answer": "FOLD",
+        "clue": "Other sheep I have, which are not of this"
+      },
+      {
+        "answer": "PASTURE",
+        "clue": "Green place where the shepherd makes us lie"
+      },
+      {
+        "answer": "WOLF",
+        "clue": "The hireling fleeth when he sees it coming"
+      },
+      {
+        "answer": "GATE",
+        "clue": "The door of the sheep — enter by it"
+      },
+      {
+        "answer": "SHEEP",
+        "clue": "They hear his voice and follow"
+      },
+      {
+        "answer": "VOICE",
+        "clue": "The flock knows the shepherd's"
+      }
+    ]
   }
 ]

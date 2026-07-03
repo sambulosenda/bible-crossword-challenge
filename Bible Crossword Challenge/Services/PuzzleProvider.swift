@@ -12,13 +12,19 @@ import Foundation
 final class PuzzleProvider {
     static let shared = PuzzleProvider()
 
+    /// Full-size daily puzzles only — the pool the daily rotation and archive
+    /// list draw from, unchanged by however many minis the bundle gains.
     let puzzles: [Puzzle]
+    /// Quick 7×7 minis with their own daily rotation.
+    let minis: [Puzzle]
 
     /// Reference date that maps day-index 0 to the first puzzle.
     private let epoch: Date
 
     init(bundle: Bundle = .main) {
-        self.puzzles = Self.loadBundledPuzzles(bundle: bundle)
+        let all = Self.loadBundledPuzzles(bundle: bundle)
+        self.puzzles = all.filter { !$0.isMini }
+        self.minis = all.filter(\.isMini)
         var components = DateComponents()
         components.year = 2026
         components.month = 7
@@ -42,15 +48,24 @@ final class PuzzleProvider {
 
     /// Deterministic daily puzzle: rotates through the bundled set by calendar day.
     func dailyPuzzle(for date: Date = Date(), calendar: Calendar = .current) -> Puzzle? {
-        guard !puzzles.isEmpty else { return nil }
+        rotated(puzzles, for: date, calendar: calendar)
+    }
+
+    /// Today's Mini — the quick 7×7, rotating through its own pool.
+    func dailyMini(for date: Date = Date(), calendar: Calendar = .current) -> Puzzle? {
+        rotated(minis, for: date, calendar: calendar)
+    }
+
+    private func rotated(_ pool: [Puzzle], for date: Date, calendar: Calendar) -> Puzzle? {
+        guard !pool.isEmpty else { return nil }
         let startToday = calendar.startOfDay(for: date)
         let startEpoch = calendar.startOfDay(for: epoch)
         let days = calendar.dateComponents([.day], from: startEpoch, to: startToday).day ?? 0
-        let index = ((days % puzzles.count) + puzzles.count) % puzzles.count
-        return puzzles[index]
+        let index = ((days % pool.count) + pool.count) % pool.count
+        return pool[index]
     }
 
     func puzzle(id: String) -> Puzzle? {
-        puzzles.first { $0.id == id }
+        (puzzles + minis).first { $0.id == id }
     }
 }

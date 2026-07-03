@@ -265,9 +265,13 @@ struct CrosswordGameView: View {
 
         // Update achievement stats before evaluating unlocks. Best time updates on
         // every solve; the once-per-puzzle stats only on the first completion.
-        profile.bestSolveSeconds = min(profile.bestSolveSeconds ?? .max, seconds)
+        // Minis count toward totals and the streak, but a 7×7 can't earn the
+        // fast-solve or no-hint achievements meant for full puzzles.
+        if !puzzle.isMini {
+            profile.bestSolveSeconds = min(profile.bestSolveSeconds ?? .max, seconds)
+        }
         if firstCompletion {
-            if !rec.usedHint { profile.noHintSolves += 1 }
+            if !rec.usedHint && !puzzle.isMini { profile.noHintSolves += 1 }
             if puzzle.difficulty == .hard { profile.hardCompleted += 1 }
         }
 

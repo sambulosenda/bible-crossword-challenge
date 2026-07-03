@@ -23,6 +23,7 @@ struct HomeView: View {
     @Query private var records: [PuzzleRecord]
 
     private var dailyPuzzle: Puzzle? { puzzleProvider.dailyPuzzle() }
+    private var dailyMini: Puzzle? { puzzleProvider.dailyMini() }
 
     /// True when a streak freeze was spent today, so the streak card can show a
     /// one-time reassurance instead of the idle freeze count.
@@ -36,6 +37,8 @@ struct HomeView: View {
         // card derives from the puzzle so it never spoils today's answer.
         let daily = dailyPuzzle
         let record = daily.flatMap { d in records.first { $0.puzzleID == d.id } }
+        let mini = dailyMini
+        let miniRecord = mini.flatMap { m in records.first { $0.puzzleID == m.id } }
 
         return NavigationStack {
             ScrollView {
@@ -49,6 +52,14 @@ struct HomeView: View {
                         )
                     } else {
                         emptyDailyCard
+                    }
+
+                    if let mini {
+                        MiniPuzzleCard(
+                            puzzle: mini,
+                            status: PuzzleStatus(record: miniRecord),
+                            solveSeconds: miniRecord?.isCompleted == true ? miniRecord?.elapsedSeconds : nil
+                        )
                     }
 
                     StreakCard(
@@ -376,5 +387,71 @@ private struct UpgradeCard: View {
             .accessibilityHint("Remove ads, unlimited hints, and full puzzle archive")
         }
         .buttonStyle(.plain)
+    }
+}
+
+// MARK: - Daily Mini card
+//
+// A compact companion to the hero card: the quick 7×7 for days (or moments)
+// the full puzzle is too big. Kept visually lighter than the daily so it
+// reads as the second course, not a competing headline.
+
+private struct MiniPuzzleCard: View {
+    let puzzle: Puzzle
+    let status: PuzzleStatus
+    var solveSeconds: Int? = nil
+
+    var body: some View {
+        NavigationLink(value: puzzle) {
+            HStack(spacing: Theme.Spacing.m) {
+                Image(systemName: status == .completed ? "checkmark.circle.fill" : "bolt.circle.fill")
+                    .font(.title)
+                    .foregroundStyle(status == .completed ? .green : Theme.accent)
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Label("DAILY MINI", systemImage: "square.grid.3x3").kicker()
+                    Text(puzzle.title)
+                        .font(.headline)
+                        .foregroundStyle(.primary)
+                        .lineLimit(1)
+                    Text(subtitle)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                Spacer(minLength: 0)
+                Image(systemName: "chevron.right")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(.secondary)
+            }
+            .padding(Theme.Spacing.l)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .elevatedCard()
+        }
+        .buttonStyle(.plain)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(accessibilityLabel)
+    }
+
+    private var subtitle: String {
+        switch status {
+        case .completed:
+            if let secs = solveSeconds, secs > 0 {
+                return "Solved in \(TimeFormat.clock(secs))"
+            }
+            return "Solved"
+        case .inProgress:
+            return "In progress · \(puzzle.size)×\(puzzle.size)"
+        case .start:
+            return "\(puzzle.size)×\(puzzle.size) · A quick two-minute puzzle"
+        }
+    }
+
+    private var accessibilityLabel: String {
+        switch status {
+        case .completed: return "Daily mini. \(puzzle.title). \(subtitle)."
+        case .inProgress: return "Daily mini. \(puzzle.title). In progress."
+        case .start: return "Daily mini. \(puzzle.title). A quick two-minute puzzle."
+        }
     }
 }

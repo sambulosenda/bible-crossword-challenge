@@ -42,6 +42,14 @@ struct GridPos: Hashable, Codable {
     var storageKey: String { "\(row),\(col)" }
 }
 
+// MARK: - Kind
+
+/// Full-size daily crossword vs the quick 7×7 Mini. Absent in older JSON, so
+/// it decodes as optional and defaults to `.daily`.
+enum PuzzleKind: String, Codable, Hashable {
+    case daily, mini
+}
+
 // MARK: - Puzzle (decoded from JSON)
 
 struct Puzzle: Codable, Identifiable, Hashable {
@@ -54,8 +62,10 @@ struct Puzzle: Codable, Identifiable, Hashable {
     let size: Int
     let grid: [String]
     let clues: [ClueData]
+    var kind: PuzzleKind? = nil
 
     var clueCount: Int { clues.count }
+    var isMini: Bool { kind == .mini }
 }
 
 struct ClueData: Codable, Hashable {

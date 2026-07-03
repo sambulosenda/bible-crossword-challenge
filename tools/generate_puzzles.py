@@ -7,11 +7,19 @@ Output (argv[2]): puzzles.json — array of Puzzle objects the Swift app decodes
 Grids are generated with the verified no-accidental-words constraint, then
 padded+centered to the nearest PRD size (10/12/15) so all shipped puzzles use a
 PRD-valid grid size.
+
+Specs with "kind": "mini" build 7x7 quick puzzles (words 3-7 letters, 5+
+placed) with ids "mini-NNN" and their own publishDate sequence. Daily specs
+are processed exactly as before, so growing the mini bank never perturbs the
+daily output.
 """
 import json, random, re, sys
 
 ALLOWED_SIZES = [10, 12, 15]
 CANVAS = 15
+
+MINI_SIZES = [7]
+MINI_CANVAS = 7
 
 class Grid:
     def __init__(self, n):
@@ -93,10 +101,10 @@ def tight(g):
         grid[r - minr][c - minc] = ch
     return grid
 
-def pad_center(grid):
+def pad_center(grid, allowed_sizes=ALLOWED_SIZES):
     h, w = len(grid), len(grid[0])
     need = max(h, w)
-    target = next((s for s in ALLOWED_SIZES if s >= need), need)
+    target = next((s for s in allowed_sizes if s >= need), need)
     out = [['.'] * target for _ in range(target)]
     roff, coff = (target - h) // 2, (target - w) // 2
     for r in range(h):
@@ -143,29 +151,30 @@ def accidents(grid, size, intended):
         if len(run) >= 2: runs.append(run)
     return [w for w in runs if w not in intended]
 
-def clean_words(words):
+def clean_words(words, max_len=9):
     seen = set(); out = []
     for w in words:
         ans = re.sub(r'[^A-Z]', '', (w.get('answer') or '').upper())
         clue = (w.get('clue') or '').strip()
-        if len(ans) < 3 or len(ans) > 9 or not clue: continue
+        if len(ans) < 3 or len(ans) > max_len or not clue: continue
         if ans in seen: continue
         seen.add(ans)
         out.append((ans, clue))
     return out
 
-def build(spec, min_words=10):
-    entries = clean_words(spec.get('words', []))
+def build(spec, min_words=10, max_words=20, canvas=CANVAS, allowed_sizes=ALLOWED_SIZES, max_word_len=9):
+    entries = clean_words(spec.get('words', []), max_len=max_word_len)
     clue_map = {a: c for (a, c) in entries}
     words = [a for (a, c) in entries]
     if len(words) < min_words:
         return None, f"only {len(words)} clean words"
     best = None
     for seed in range(2500):
-        g, placed = generate(words, CANVAS, seed)
+        g, placed = generate(words, canvas, seed)
         pw = [p[0] for p in placed]
-        if not (min_words <= len(pw) <= 20): continue
-        grid, size = pad_center(tight(g))
+        if not (min_words <= len(pw) <= max_words): continue
+        grid, size = pad_center(tight(g), allowed_sizes)
+        if size > max(allowed_sizes): continue
         if accidents(grid, size, set(words)): continue
         slots = number_and_slots(grid, size)
         if len(slots) != len(pw): continue
@@ -192,38 +201,36 @@ def build(spec, min_words=10):
         "clues": clues,
     }, None
 
-def id_num(pid):
-    m = re.match(r"daily-(\d+)$", pid or "")
+def id_num(pid, prefix="daily"):
+    m = re.match(rf"{prefix}-(\d+)$", pid or "")
     return int(m.group(1)) if m else 0
 
-def main():
+def process(specs, out, fails, prefix, build_kwargs, extra_fields=None):
+    """Builds one kind of puzzle. IDs are content-stable: a spec's explicit
+    "id" is the permanent link to a user's saved PuzzleRecord, so it must NOT
+    change when the bank grows. Specs without an id (newly authored) get the
+    next free {prefix}-NNN above the current maximum, never renumbering
+    existing puzzles."""
     import datetime
-    specs = json.load(open(sys.argv[1]))
-    out = []
-    fails = []
-    idx = 0
     # deterministic order by difficulty then title for stable daily rotation
     order = {"easy": 0, "medium": 1, "hard": 2}
     specs.sort(key=lambda s: (order.get(s.get("difficulty"), 1), s.get("title", "")))
 
-    # IDs are content-stable: a spec's explicit "id" is the permanent link to a
-    # user's saved PuzzleRecord, so it must NOT change when the bank grows.
-    # Specs without an id (newly authored) get the next free daily-NNN above the
-    # current maximum, never renumbering existing puzzles.
     reserved = {s["id"] for s in specs if s.get("id")}
-    next_free = max((id_num(i) for i in reserved), default=0) + 1
+    next_free = max((id_num(i, prefix) for i in reserved), default=0) + 1
 
+    idx = 0
     for spec in specs:
-        puzzle, err = build(spec)
+        puzzle, err = build(spec, **build_kwargs)
         if err:
             fails.append((spec.get("title"), err))
             continue
         idx += 1
         pid = spec.get("id")
         if not pid:
-            while f"daily-{next_free:03d}" in reserved:
+            while f"{prefix}-{next_free:03d}" in reserved:
                 next_free += 1
-            pid = f"daily-{next_free:03d}"
+            pid = f"{prefix}-{next_free:03d}"
             reserved.add(pid)
             next_free += 1
         puzzle["id"] = pid
@@ -231,19 +238,36 @@ def main():
         d = datetime.date(2026, 7, 1) + datetime.timedelta(days=idx - 1)
         puzzle["publishDate"] = d.isoformat()
         # reorder keys for readability
-        out.append({
+        entry = {
             "id": puzzle["id"], "title": puzzle["title"], "difficulty": puzzle["difficulty"],
             "verse": puzzle["verse"], "reference": puzzle["reference"],
             "publishDate": puzzle["publishDate"], "size": puzzle["size"],
             "grid": puzzle["grid"], "clues": puzzle["clues"],
-        })
+        }
+        if extra_fields:
+            entry.update(extra_fields)
+        out.append(entry)
+
+def main():
+    specs = json.load(open(sys.argv[1]))
+    out = []
+    fails = []
+    # Dailies are processed first with unchanged parameters so their output is
+    # byte-identical however many minis are added after them.
+    dailies = [s for s in specs if s.get("kind") != "mini"]
+    minis = [s for s in specs if s.get("kind") == "mini"]
+    process(dailies, out, fails, "daily", {})
+    process(minis, out, fails, "mini", {
+        "min_words": 5, "max_words": 10,
+        "canvas": MINI_CANVAS, "allowed_sizes": MINI_SIZES, "max_word_len": 7,
+    }, extra_fields={"kind": "mini"})
     json.dump(out, open(sys.argv[2], "w"), indent=2)
     sizes = {}
     diffs = {}
     for p in out:
         sizes[p["size"]] = sizes.get(p["size"], 0) + 1
         diffs[p["difficulty"]] = diffs.get(p["difficulty"], 0) + 1
-    print(f"Built {len(out)} puzzles. Sizes: {sizes}. Difficulty: {diffs}", file=sys.stderr)
+    print(f"Built {len(out)} puzzles ({len(minis) and sum(1 for p in out if p.get('kind') == 'mini')} minis). Sizes: {sizes}. Difficulty: {diffs}", file=sys.stderr)
     print(f"Clue counts: min={min(len(p['clues']) for p in out)}, max={max(len(p['clues']) for p in out)}", file=sys.stderr)
     if fails:
         print(f"Dropped {len(fails)}:", file=sys.stderr)

@@ -23,6 +23,7 @@ struct ArchiveView: View {
     @State private var showPaywall = false
 
     private var puzzles: [Puzzle] { puzzleProvider.puzzles }
+    private var minis: [Puzzle] { puzzleProvider.minis }
 
     /// One lookup built per body pass, reused by filtering and rows instead of
     /// scanning `records` for every puzzle. `puzzleID` is unique, so this is safe.
@@ -35,11 +36,23 @@ struct ArchiveView: View {
     }
 
     private var filtered: [Puzzle] {
-        puzzles.filter { puzzle in
-            (query.isEmpty || puzzle.title.localizedCaseInsensitiveContains(query))
-                && (difficulty == nil || puzzle.difficulty == difficulty)
-                && statusMatches(puzzle)
+        puzzles.filter(matches)
+    }
+
+    /// Minis honour the search and status filters; the difficulty filter only
+    /// narrows the full-size list (minis are all quick and easy by design).
+    private var filteredMinis: [Puzzle] {
+        guard difficulty == nil else { return [] }
+        return minis.filter { mini in
+            (query.isEmpty || mini.title.localizedCaseInsensitiveContains(query))
+                && statusMatches(mini)
         }
+    }
+
+    private func matches(_ puzzle: Puzzle) -> Bool {
+        (query.isEmpty || puzzle.title.localizedCaseInsensitiveContains(query))
+            && (difficulty == nil || puzzle.difficulty == difficulty)
+            && statusMatches(puzzle)
     }
 
     private func statusMatches(_ puzzle: Puzzle) -> Bool {
@@ -100,11 +113,21 @@ struct ArchiveView: View {
             } header: {
                 Text("\(completedCount) of \(puzzles.count) completed")
             }
+
+            if !filteredMinis.isEmpty {
+                Section {
+                    ForEach(filteredMinis) { mini in
+                        row(mini)
+                    }
+                } header: {
+                    Text("Minis")
+                }
+            }
         }
         .searchable(text: $query, prompt: "Search puzzles")
         .toolbar { filterMenu }
         .overlay {
-            if filtered.isEmpty {
+            if filtered.isEmpty && filteredMinis.isEmpty {
                 if query.isEmpty {
                     ContentUnavailableView(
                         "No Puzzles",
@@ -217,7 +240,7 @@ struct ArchiveView: View {
             Label("Premium Feature", systemImage: "crown.fill")
                 .foregroundStyle(.yellow)
         } description: {
-            Text("Unlock the full archive of \(puzzles.count) puzzles to browse and replay any day's challenge.")
+            Text("Unlock the full archive of \(puzzles.count) puzzles and every past Mini to browse and replay any day's challenge.")
         } actions: {
             Button {
                 showPaywall = true

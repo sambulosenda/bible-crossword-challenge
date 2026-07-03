@@ -48,3 +48,10 @@ rotation order and `publishDate` are cosmetic and may shift; ids must not.)
 `PuzzleProvider.dailyPuzzle(for:)` shows `puzzles[(daysSinceEpoch) % count]`,
 epoch = 2026-07-01. With 82 puzzles the daily puzzle is unique for ~82 days
 before repeating.
+
+## Minis
+Specs with `"kind": "mini"` build the Daily Mini pool: 7x7 grids, words 3-7
+letters, 5+ placed. Ids are `mini-NNN` (same permanence rule as dailies — never
+edit or reuse) with their own publishDate sequence. Dailies are processed first
+with unchanged parameters, so adding minis never changes the daily output —
+verify with `git diff` showing only added lines in puzzles.json.
