@@ -19,10 +19,10 @@ struct CompletionView: View {
     var totalCompleted: Int = 0
     let onHome: () -> Void
 
-    @State private var appeared = false
     @State private var shareImage: Image?
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.displayScale) private var displayScale
+    @Environment(\.gameCenter) private var gameCenter
     @Environment(\.requestReview) private var requestReview
     /// Highest completion milestone we've already asked a review at, so each
     /// milestone prompts at most once across sessions.
@@ -41,8 +41,6 @@ struct CompletionView: View {
             VStack(spacing: Theme.Spacing.l) {
                 header
 
-                statRow
-
                 verseCard
 
                 if earnedFreeze {
@@ -53,22 +51,23 @@ struct CompletionView: View {
                     achievementsCard
                 }
 
-                nextPuzzleCard
-
-                actions
+                nextPuzzleFooter
             }
             .padding(Theme.Spacing.l)
             .frame(maxWidth: 520)
             .frame(maxWidth: .infinity)
         }
         .background(Color(.systemGroupedBackground))
+        .safeAreaInset(edge: .bottom) {
+            actions
+                .padding(.horizontal, Theme.Spacing.l)
+                .padding(.vertical, Theme.Spacing.s)
+                .frame(maxWidth: 520)
+                .frame(maxWidth: .infinity)
+                .background(.bar)
+        }
         .onAppear {
             renderShareCard()
-            if reduceMotion {
-                appeared = true
-            } else {
-                withAnimation(.spring(duration: 0.5)) { appeared = true }
-            }
             maybeRequestReview()
         }
     }
@@ -80,24 +79,64 @@ struct CompletionView: View {
             Text("Puzzle Completed!")
                 .font(.largeTitle.bold())
                 .multilineTextAlignment(.center)
+
+            statLine
         }
-        .padding(.top, Theme.Spacing.xl)
+        .padding(.top, Theme.Spacing.m)
     }
 
     /// Celebratory completion mark. Plays the branded Lottie burst once;
     /// falls back to the static seal when Reduce Motion is on.
+    ///
+    /// The badge fills only ~30% of the Lottie canvas (the rest is room for
+    /// the confetti burst), so the animation renders in an oversized overlay
+    /// while the layout box stays a fixed 120pt — confetti overflows
+    /// decoratively without inflating the header.
     @ViewBuilder private var celebration: some View {
         if reduceMotion {
             Image(systemName: "checkmark.seal.fill")
-                .font(.system(size: 72))
+                .font(.system(size: 64))
                 .foregroundStyle(.green)
+                .frame(height: 120)
         } else {
-            LottieView(animation: .named("puzzle_complete"))
-                .configure { $0.contentMode = .scaleAspectFit }
-                .playing(loopMode: .playOnce)
-                .frame(width: 180, height: 180)
+            Color.clear
+                .frame(width: 120, height: 120)
+                .overlay {
+                    LottieView(animation: .named("puzzle_complete"))
+                        .configure { $0.contentMode = .scaleAspectFit }
+                        .playing(loopMode: .playOnce)
+                        .frame(width: 300, height: 300)
+                }
+                .allowsHitTesting(false)
                 .accessibilityHidden(true)
         }
+    }
+
+    /// Time and streak inline under the title — two small numbers don't
+    /// warrant cards of their own.
+    private var statLine: some View {
+        HStack(spacing: Theme.Spacing.s) {
+            Label {
+                Text(TimeFormat.clock(seconds)).monospacedDigit()
+            } icon: {
+                Image(systemName: "timer")
+            }
+
+            if streak > 0 {
+                Text("·")
+                    .foregroundStyle(.tertiary)
+                    .accessibilityHidden(true)
+
+                Label {
+                    Text("\(streak)-day streak")
+                } icon: {
+                    Image(systemName: "flame.fill")
+                        .foregroundStyle(.orange)
+                }
+            }
+        }
+        .font(.subheadline.weight(.semibold))
+        .foregroundStyle(.secondary)
     }
 
     /// Snowflake mark for the streak-freeze card.
@@ -130,35 +169,12 @@ struct CompletionView: View {
         }
     }
 
-    private var statRow: some View {
-        HStack(spacing: Theme.Spacing.m) {
-            stat(title: "Time", value: TimeFormat.clock(seconds), symbol: "timer")
-            stat(title: "Streak", value: "\(streak)", symbol: "flame.fill")
-        }
-    }
-
-    private func stat(title: String, value: String, symbol: String) -> some View {
-        VStack(spacing: Theme.Spacing.xs) {
-            Image(systemName: symbol)
-                .font(.title2)
-                .foregroundStyle(Theme.accent)
-            Text(value)
-                .font(.title2.bold())
-                .monospacedDigit()
-            Text(title)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-        }
-        .frame(maxWidth: .infinity)
-        .padding(Theme.Spacing.m)
-        .background(Color(.secondarySystemGroupedBackground), in: .rect(cornerRadius: Theme.cornerRadius))
-    }
-
+    /// The verse is the emotional payoff of the solve — the one card that gets
+    /// special treatment (accent wash) while everything else recedes.
     private var verseCard: some View {
         VStack(spacing: Theme.Spacing.s) {
             Text("Today's Verse")
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(.secondary)
+                .kicker()
             Text("“\(puzzle.verse)”")
                 .font(.title3)
                 .italic()
@@ -169,7 +185,7 @@ struct CompletionView: View {
         }
         .padding(Theme.Spacing.l)
         .frame(maxWidth: .infinity)
-        .background(Color(.secondarySystemGroupedBackground), in: .rect(cornerRadius: Theme.cornerRadius))
+        .background(Theme.accent.opacity(0.1), in: .rect(cornerRadius: Theme.cornerRadius, style: .continuous))
     }
 
     private var freezeCard: some View {
@@ -214,29 +230,13 @@ struct CompletionView: View {
         .background(Color(.secondarySystemGroupedBackground), in: .rect(cornerRadius: Theme.cornerRadius))
     }
 
-    /// Tomorrow hook: live countdown to the next daily puzzle, framed around
-    /// the streak that's now at stake.
-    private var nextPuzzleCard: some View {
-        VStack(spacing: Theme.Spacing.xs) {
-            Text("Next puzzle in")
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(.secondary)
-            Text(timerInterval: Date()...nextMidnight, countsDown: true)
-                .font(.title2.bold())
-                .monospacedDigit()
-                .foregroundStyle(Theme.accent)
-            Text(
-                streak > 0
-                    ? "Come back tomorrow to keep your \(streak)-day streak going."
-                    : "Come back tomorrow for a fresh challenge."
-            )
-            .font(.caption)
+    /// Tomorrow hook, demoted to a quiet footer line — the streak already
+    /// carries the retention message up in the stat line.
+    private var nextPuzzleFooter: some View {
+        Text("Next puzzle in \(Text(timerInterval: Date()...nextMidnight, countsDown: true).monospacedDigit())")
+            .font(.footnote.weight(.medium))
             .foregroundStyle(.secondary)
-            .multilineTextAlignment(.center)
-        }
-        .padding(Theme.Spacing.l)
-        .frame(maxWidth: .infinity)
-        .background(Color(.secondarySystemGroupedBackground), in: .rect(cornerRadius: Theme.cornerRadius))
+            .frame(maxWidth: .infinity)
     }
 
     private var nextMidnight: Date {
@@ -278,16 +278,29 @@ struct CompletionView: View {
             .buttonStyle(.borderedProminent)
             .controlSize(.large)
 
+            // Minis race the clock against everyone — surface this week's
+            // standings while the solve is fresh. Hidden when the player
+            // isn't signed in to Game Center.
+            if puzzle.isMini && gameCenter.isAuthenticated {
+                Button {
+                    gameCenter.showWeeklyMiniLeaderboard()
+                } label: {
+                    Label("Weekly Leaderboard", systemImage: "trophy")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.bordered)
+                .controlSize(.large)
+            }
+
             Button {
                 onHome()
             } label: {
                 Text("Home")
                     .frame(maxWidth: .infinity)
             }
-            .buttonStyle(.bordered)
+            .buttonStyle(.borderless)
             .controlSize(.large)
         }
-        .padding(.top, Theme.Spacing.s)
     }
 
     private var shareLabel: some View {
