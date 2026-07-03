@@ -15,18 +15,22 @@
 <!-- Open Graph / social -->
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://biblecrosswordchallenge.com/" />
-<meta property="og:title" content="Bible Crossword Challenge" />
+<meta property="og:title" content="Bible Crossword Challenge — a daily Bible crossword for iOS" />
 <meta property="og:description" content="Know the Word, one square at a time. A fresh Bible crossword every day, free on iOS." />
-<meta property="og:image" content="https://biblecrosswordchallenge.com/assets/shot-today.png" />
-<meta property="og:image:alt" content="The Today screen of Bible Crossword Challenge: daily puzzle, streak, and Verse of the Day" />
+<meta property="og:image" content="https://biblecrosswordchallenge.com/assets/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Bible Crossword Challenge — a daily Bible crossword for iPhone, free on the App Store" />
 <meta property="og:site_name" content="Bible Crossword Challenge" />
 <meta property="og:locale" content="en_US" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Bible Crossword Challenge" />
+<meta name="twitter:title" content="Bible Crossword Challenge — a daily Bible crossword for iOS" />
 <meta name="twitter:description" content="Know the Word, one square at a time. A fresh Bible crossword every day, free on iOS." />
-<meta name="twitter:image" content="https://biblecrosswordchallenge.com/assets/shot-today.png" />
+<meta name="twitter:image" content="https://biblecrosswordchallenge.com/assets/og-image.png" />
+<meta name="twitter:image:alt" content="Bible Crossword Challenge — a daily Bible crossword for iPhone, free on the App Store" />
 
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23141416'/%3E%3Crect x='24' y='8' width='16' height='48' rx='2' fill='%23fff'/%3E%3Crect x='8' y='24' width='48' height='16' rx='2' fill='%23fff'/%3E%3Crect x='24' y='24' width='16' height='16' fill='%230B7BFF'/%3E%3C/svg%3E" />
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -50,7 +54,77 @@
     "priceCurrency": "USD",
     "url": "https://apps.apple.com/app/bible-crossword-challenge/id6783034270"
   },
+  "screenshot": [
+    "https://biblecrosswordchallenge.com/assets/shot-today.png",
+    "https://biblecrosswordchallenge.com/assets/shot-puzzle.png",
+    "https://biblecrosswordchallenge.com/assets/shot-profile.png"
+  ],
   "description": "A fresh Bible crossword every day. Solve scripture-themed puzzles, build a daily streak, and learn the Word as you play."
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is Bible Crossword Challenge free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes — download and play the daily puzzle for free. Premium unlocks the full archive and extras."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is there a new Bible crossword puzzle every day?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. A fresh daily Bible crossword arrives at midnight, and the archive holds 80+ hand-crafted puzzles across the whole Bible — from Noah's Ark to Easter morning."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How difficult are the puzzles?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "They are made for everyone — lifelong believers and casual solvers alike. If a clue has you stuck, smart hints nudge you along without spoiling the answer."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need an account?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. The app works fully offline and your progress is saved on your device — and synced privately through iCloud if you play on more than one."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which Bible translation do the verses use?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "All verses are drawn from the King James Version (KJV)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does it work on iPad?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes — Bible Crossword Challenge runs on both iPhone and iPad, and your progress syncs between them through iCloud."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is there an Android version?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Bible Crossword Challenge is on iOS today. If you'd like it on Android, tell us — it genuinely helps us decide."
+      }
+    }
+  ]
 }
 </script>
 
@@ -242,6 +316,13 @@
   .screen-cap p{margin:0; font-size:15px; color:var(--ink-soft)}
   .screen-cap p strong{display:block; font-family:var(--display); font-weight:400; font-size:18px; color:var(--ink); margin-bottom:2px}
 
+  /* ---------- Prose ---------- */
+  .prose{max-width:62ch; margin-top:34px}
+  .prose p{font-size:17px; color:var(--ink-soft); margin:0 0 18px}
+  .prose p:last-child{margin-bottom:0}
+  .prose a{color:var(--blue); border-bottom:1px solid transparent}
+  .prose a:hover{border-bottom-color:var(--blue)}
+
   /* ---------- FAQ ---------- */
   .faq{max-width:680px; margin-top:40px}
   .faq details{border-bottom:1px solid var(--line); padding:20px 4px}
@@ -398,26 +479,39 @@
 
     <div class="screens">
       <figure class="screen-card" style="margin:0">
-        <div class="device"><img src="assets/shot-today.png" alt="The Today screen: streak counter, today's puzzle, Verse of the Day, and next achievement" loading="lazy" width="1206" height="2622"></div>
+        <div class="device"><img src="assets/shot-today.webp" alt="The Today screen: streak counter, today's puzzle, Verse of the Day, and next achievement" loading="lazy" width="720" height="1566"></div>
         <figcaption class="screen-cap">
           <span class="clue-n">1</span>
           <p><strong>Begin the day</strong>Your streak, today&rsquo;s puzzle, and the Verse of the Day in one quiet screen.</p>
         </figcaption>
       </figure>
       <figure class="screen-card" style="margin:0">
-        <div class="device"><img src="assets/shot-puzzle.png" alt="The crossword grid mid-solve, with the clue “Black bird that fed the prophet Elijah”" loading="lazy" width="1206" height="2622"></div>
+        <div class="device"><img src="assets/shot-puzzle.webp" alt="The crossword grid mid-solve, with the clue “Black bird that fed the prophet Elijah”" loading="lazy" width="720" height="1566"></div>
         <figcaption class="screen-cap">
           <span class="clue-n">2</span>
           <p><strong>Solve the grid</strong>Clues like &ldquo;Black bird that fed the prophet Elijah&rdquo; teach as you type.</p>
         </figcaption>
       </figure>
       <figure class="screen-card" style="margin:0">
-        <div class="device"><img src="assets/shot-profile.png" alt="The Profile screen with puzzles completed, streaks, and achievements" loading="lazy" width="1206" height="2622"></div>
+        <div class="device"><img src="assets/shot-profile.webp" alt="The Profile screen with puzzles completed, streaks, and achievements" loading="lazy" width="720" height="1566"></div>
         <figcaption class="screen-cap">
           <span class="clue-n">3</span>
           <p><strong>Watch it grow</strong>Puzzles completed, best streaks, and achievements earned along the way.</p>
         </figcaption>
       </figure>
+    </div>
+  </div>
+</section>
+
+<!-- WHY A BIBLE CROSSWORD -->
+<section class="section" id="about">
+  <div class="wrap">
+    <p class="sec-eyebrow">Why a Bible crossword</p>
+    <h2 class="sec-title">A daily Bible crossword that plants Scripture in your memory.</h2>
+    <div class="prose">
+      <p>Bible Crossword Challenge is a Christian word game built around one simple habit: a daily Bible crossword puzzle you can finish with your morning coffee. Every clue is rooted in Scripture — the people, places, miracles, and verses of the King James Version — so each grid you solve leaves a little more of the Word with you.</p>
+      <p>Beyond the daily puzzle, an archive of 80+ hand-crafted Bible crosswords covers the whole story: Noah&rsquo;s Ark, David &amp; Goliath, the Exodus, the Parables, the Christmas Story, Easter and the Resurrection, and many more. Puzzles work fully offline on iPhone and iPad, sync through iCloud, and every one ends on the verse behind its theme.</p>
+      <p>Whether you love Scripture, love crosswords, or both, <a href="https://apps.apple.com/app/bible-crossword-challenge/id6783034270" rel="noopener">download Bible Crossword Challenge free on the App Store</a> and start today&rsquo;s puzzle.</p>
     </div>
   </div>
 </section>
@@ -429,16 +523,28 @@
     <h2 class="sec-title">Before you ask.</h2>
     <div class="faq">
       <details>
-        <summary>Is it free?</summary>
+        <summary>Is Bible Crossword Challenge free?</summary>
         <p>Yes — download and play the daily puzzle for free. Premium unlocks the full archive and extras.</p>
+      </details>
+      <details>
+        <summary>Is there a new Bible crossword puzzle every day?</summary>
+        <p>Yes. A fresh daily Bible crossword arrives at midnight, and the archive holds 80+ hand-crafted puzzles across the whole Bible — from Noah&rsquo;s Ark to Easter morning.</p>
+      </details>
+      <details>
+        <summary>How difficult are the puzzles?</summary>
+        <p>They are made for everyone — lifelong believers and casual solvers alike. If a clue has you stuck, smart hints nudge you along without spoiling the answer.</p>
       </details>
       <details>
         <summary>Do I need an account?</summary>
         <p>No. The app works fully offline and your progress is saved on your device — and synced privately through iCloud if you play on more than one.</p>
       </details>
       <details>
-        <summary>Which translation do the verses use?</summary>
+        <summary>Which Bible translation do the verses use?</summary>
         <p>All verses are drawn from the King James Version (KJV).</p>
+      </details>
+      <details>
+        <summary>Does it work on iPad?</summary>
+        <p>Yes — Bible Crossword Challenge runs on both iPhone and iPad, and your progress syncs between them through iCloud.</p>
       </details>
       <details>
         <summary>Is there an Android version?</summary>
