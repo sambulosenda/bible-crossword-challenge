@@ -41,6 +41,7 @@ struct RootView: View {
             let profile = ensureProfile()
             Streaks.normalize(profile)
             try? context.save()
+            WidgetBridge.publish(profile)
             analytics.log(.appOpen)
             await notifications.reschedule(for: profile, enabled: remindersEnabled, minutes: reminderMinutes)
         }
@@ -49,6 +50,7 @@ struct RootView: View {
             // elsewhere — recompute streak-aware copy from the latest state.
             guard phase == .active, let profile = profiles.first else { return }
             mergeSyncDuplicates()
+            WidgetBridge.publish(profile)
             Task {
                 await notifications.reschedule(for: profile, enabled: remindersEnabled, minutes: reminderMinutes)
             }

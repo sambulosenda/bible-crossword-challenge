@@ -284,6 +284,7 @@ struct CrosswordGameView: View {
         rec.entries = vm.snapshot()
         rec.updatedAt = Date()
         try? context.save()
+        WidgetBridge.publish(profile)
 
         // Today's puzzle is now solved — drop today's reminder and refresh copy.
         Task {

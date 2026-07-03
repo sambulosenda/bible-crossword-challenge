@@ -1,6 +1,10 @@
 Thanks for playing Bible Crossword Challenge! This update includes:
 
-• Improved VoiceOver support, so the puzzle is easier to play with assistive technology
-• Larger Text support on the on-screen keyboard
-• Smoother animations and a more polished solving experience
-• Bug fixes and performance improvements
+• iCloud sync — your progress, streaks and achievements now follow you across all your devices
+• A beautiful new game screen with a floating grid and streak flame
+• Playful solve animations — letters pop, completed words cascade, and finishing a puzzle sets off a wave
+• Smarter typing: the cursor auto-advances past filled squares, and hardware keyboards are now fully supported
+• Share your solve as a spoiler-free emoji grid
+• A countdown to tomorrow's puzzle after you finish today's
+• An optional evening reminder when your streak is at risk
+• Fixed the solve timer running while the puzzle wasn't on screen
