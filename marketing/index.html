@@ -170,11 +170,14 @@
   .brand{display:flex; align-items:center; gap:11px}
   .brand svg{display:block}
   .brand-name{font-family:var(--display); font-size:19px; letter-spacing:.01em}
+  .nav-links{display:flex; align-items:center; gap:22px}
   .nav-link{
-    font-size:15px; font-weight:600; color:var(--blue);
+    font-size:15px; font-weight:600; color:var(--ink-soft);
     padding:8px 2px; border-bottom:2px solid transparent;
   }
-  .nav-link:hover{border-bottom-color:var(--blue)}
+  .nav-link:hover{border-bottom-color:var(--ink)}
+  .nav-link.primary{color:var(--blue)}
+  .nav-link.primary:hover{border-bottom-color:var(--blue)}
 
   /* ---------- Hero ---------- */
   .hero{padding:76px 0 84px; border-bottom:1px solid var(--line)}
@@ -361,6 +364,9 @@
     .section{padding:64px 0}
   }
 
+  @media (max-width:640px){
+    .nav-link.secondary{display:none}
+  }
   @media (max-width:420px){
     .brand-name{font-size:16px}
     .nav-link{white-space:nowrap}
@@ -387,7 +393,11 @@
       </svg>
       <span class="brand-name">Bible Crossword Challenge</span>
     </a>
-    <a class="nav-link" href="https://apps.apple.com/app/bible-crossword-challenge/id6783034270" rel="noopener">Get the app</a>
+    <nav class="nav-links" aria-label="Main">
+      <a class="nav-link secondary" href="/puzzles/">Puzzles</a>
+      <a class="nav-link secondary" href="/how-to-play.html">How to play</a>
+      <a class="nav-link primary" href="https://apps.apple.com/app/bible-crossword-challenge/id6783034270" rel="noopener">Get the app</a>
+    </nav>
   </div>
 </header>
 
@@ -510,7 +520,7 @@
     <h2 class="sec-title">A daily Bible crossword that plants Scripture in your memory.</h2>
     <div class="prose">
       <p>Bible Crossword Challenge is a Christian word game built around one simple habit: a daily Bible crossword puzzle you can finish with your morning coffee. Every clue is rooted in Scripture — the people, places, miracles, and verses of the King James Version — so each grid you solve leaves a little more of the Word with you.</p>
-      <p>Beyond the daily puzzle, an archive of 80+ hand-crafted Bible crosswords covers the whole story: Noah&rsquo;s Ark, David &amp; Goliath, the Exodus, the Parables, the Christmas Story, Easter and the Resurrection, and many more. Puzzles work fully offline on iPhone and iPad, sync through iCloud, and every one ends on the verse behind its theme.</p>
+      <p>Beyond the daily puzzle, an <a href="/puzzles/">archive of 80+ hand-crafted Bible crosswords</a> covers the whole story: <a href="/puzzles/noahs-ark.html">Noah&rsquo;s Ark</a>, <a href="/puzzles/david-and-goliath.html">David &amp; Goliath</a>, the Exodus, the Parables, <a href="/puzzles/christmas.html">the Christmas Story</a>, <a href="/puzzles/easter.html">Easter and the Resurrection</a>, and many more. Puzzles work fully offline on iPhone and iPad, sync through iCloud, and every one ends on the verse behind its theme.</p>
       <p>Whether you love Scripture, love crosswords, or both, <a href="https://apps.apple.com/app/bible-crossword-challenge/id6783034270" rel="noopener">download Bible Crossword Challenge free on the App Store</a> and start today&rsquo;s puzzle.</p>
     </div>
   </div>
@@ -573,6 +583,8 @@
   <div class="wrap foot-inner">
     <div>© <span id="yr"></span> Bible Crossword Challenge</div>
     <nav class="foot-links" aria-label="Footer">
+      <a href="/puzzles/">Puzzles</a>
+      <a href="/how-to-play.html">How to play</a>
       <a href="privacy.html">Privacy</a>
       <a href="mailto:sambulosendas@gmail.com">Support</a>
     </nav>
