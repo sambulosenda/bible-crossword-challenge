@@ -90,8 +90,9 @@ private struct PressableCardBody: View {
         configuration.label
             .scaleEffect(reduceMotion ? 1 : (configuration.isPressed ? 0.98 : 1))
             .opacity(configuration.isPressed ? 0.9 : 1)
-            // No bounce: a navigation press should feel decisive, not springy.
-            .animation(.spring(duration: 0.16, bounce: 0), value: configuration.isPressed)
+            // Asymmetric: depress lands instantly (nil on press-in), release
+            // settles over a short bounce-free spring — decisive, not springy.
+            .animation(configuration.isPressed ? nil : .spring(duration: 0.2, bounce: 0), value: configuration.isPressed)
     }
 }
 

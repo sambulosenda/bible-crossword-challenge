@@ -82,8 +82,10 @@ private struct KeyButtonStyle: ButtonStyle {
                 in: .rect(cornerRadius: 8)
             )
             .scaleEffect(configuration.isPressed ? 0.96 : 1.0)
-            // No bounce: a key is pressed 100+ times a session, so press feedback
-            // must be crisp and dead-flat, not springy. Fast, non-overshooting.
-            .animation(.spring(duration: 0.12, bounce: 0), value: configuration.isPressed)
+            // Asymmetric: the depress lands instantly (nil animation on press-in —
+            // the frame the user is watching most), the release settles over a
+            // short, bounce-free spring. A key is pressed 100+ times a session,
+            // so the down-state must never lag.
+            .animation(configuration.isPressed ? nil : .spring(duration: 0.18, bounce: 0), value: configuration.isPressed)
     }
 }
