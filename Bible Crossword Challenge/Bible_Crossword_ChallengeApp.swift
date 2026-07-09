@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 import FirebaseCore
+import os
 
 @main
 struct Bible_Crossword_ChallengeApp: App {
@@ -33,7 +34,16 @@ struct Bible_Crossword_ChallengeApp: App {
                     configurations: ModelConfiguration(cloudKitDatabase: .none)
                 )
             } catch {
-                fatalError("Failed to create the model container: \(error)")
+                // Last resort: run in-memory rather than crash at launch. The
+                // player can still solve today's puzzle; progress just won't
+                // persist this session. In-memory can only fail on a schema
+                // programming error, which the two attempts above would have
+                // hit identically first.
+                Log.persistence.critical("Model container failed twice, running in-memory: \(error, privacy: .public)")
+                container = try! ModelContainer(
+                    for: PlayerProfile.self, PuzzleRecord.self,
+                    configurations: ModelConfiguration(isStoredInMemoryOnly: true)
+                )
             }
         }
     }

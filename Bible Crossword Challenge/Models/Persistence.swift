@@ -12,6 +12,28 @@
 
 import Foundation
 import SwiftData
+import os
+
+/// App-wide loggers. Persistence failures especially must never be silent —
+/// a dropped save is invisible progress loss, so it at least lands in the
+/// unified log (visible in Console.app and sysdiagnose) in all builds.
+enum Log {
+    private static let subsystem = Bundle.main.bundleIdentifier ?? "BibleCrossword"
+    static let persistence = Logger(subsystem: subsystem, category: "persistence")
+}
+
+extension ModelContext {
+    /// Save that shields the caller from throwing but records the failure —
+    /// used where there is no meaningful recovery UI (backgrounding, launch
+    /// normalisation) and the old `try?` pattern was hiding data loss.
+    func saveLogged(_ what: StaticString) {
+        do {
+            try save()
+        } catch {
+            Log.persistence.error("Save failed (\(what, privacy: .public)): \(error, privacy: .public)")
+        }
+    }
+}
 
 // MARK: - Player profile (single row)
 
@@ -185,7 +207,13 @@ enum SyncMerge {
     /// Sweeps the whole store for duplicate puzzle records — run on launch
     /// and when returning to the foreground, after sync may have landed.
     static func mergeDuplicateRecords(in context: ModelContext) {
-        guard let all = try? context.fetch(FetchDescriptor<PuzzleRecord>()) else { return }
+        let all: [PuzzleRecord]
+        do {
+            all = try context.fetch(FetchDescriptor<PuzzleRecord>())
+        } catch {
+            Log.persistence.error("Duplicate-record sweep fetch failed: \(error, privacy: .public)")
+            return
+        }
         for (_, dupes) in Dictionary(grouping: all, by: \.puzzleID) where dupes.count > 1 {
             mergeRecords(dupes, context: context)
         }
