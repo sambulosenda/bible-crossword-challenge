@@ -90,7 +90,8 @@ private struct PressableCardBody: View {
         configuration.label
             .scaleEffect(reduceMotion ? 1 : (configuration.isPressed ? 0.98 : 1))
             .opacity(configuration.isPressed ? 0.9 : 1)
-            .animation(.spring(duration: 0.2, bounce: 0.1), value: configuration.isPressed)
+            // No bounce: a navigation press should feel decisive, not springy.
+            .animation(.spring(duration: 0.16, bounce: 0), value: configuration.isPressed)
     }
 }
 
