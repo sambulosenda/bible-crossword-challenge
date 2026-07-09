@@ -37,24 +37,32 @@ struct ProfileView: View {
         NavigationStack {
             Form {
                 Section {
-                    HStack {
-                        Image(systemName: "person.crop.circle.fill")
-                            .font(.system(size: 44))
-                            .foregroundStyle(Theme.accent)
-                            .accessibilityHidden(true)
-                        TextField("Your name", text: $profile.username)
-                            .font(.title3.weight(.semibold))
-                            .textInputAutocapitalization(.words)
+                    VStack(spacing: Theme.Spacing.m) {
+                        HStack {
+                            Image(systemName: "person.crop.circle.fill")
+                                .font(.largeTitle)
+                                .imageScale(.large)
+                                .foregroundStyle(Theme.accent)
+                                .accessibilityHidden(true)
+                            TextField("Your name", text: $profile.username)
+                                .font(.title2.weight(.bold))
+                                .textInputAutocapitalization(.words)
+                        }
+
+                        HStack(spacing: 0) {
+                            heroStat(value: "\(profile.currentStreak)", label: "Day Streak", symbol: "flame.fill", tint: .orange)
+                            Divider().frame(height: 44)
+                            heroStat(value: "\(profile.totalPuzzlesCompleted)", label: "Solved", symbol: "checkmark.circle.fill", tint: .green)
+                            Divider().frame(height: 44)
+                            heroStat(value: "\(profile.bestStreak)", label: "Best", symbol: "trophy.fill", tint: .yellow)
+                        }
                     }
                     .padding(.vertical, Theme.Spacing.xs)
                 }
 
                 Section("Stats") {
-                    stat("Puzzles Completed", value: "\(profile.totalPuzzlesCompleted)", symbol: "checkmark.circle")
-                    stat("Current Streak", value: "\(profile.currentStreak)", symbol: "flame")
-                    stat("Best Streak", value: "\(profile.bestStreak)", symbol: "trophy")
-                    stat("Streak Freezes", value: "\(profile.streakFreezes)", symbol: "snowflake")
-                    stat("Achievements", value: "\(unlockedCount)/\(Achievements.all.count)", symbol: "star")
+                    stat("Streak Freezes", value: "\(profile.streakFreezes)", symbol: "snowflake", tint: .cyan)
+                    stat("Achievements", value: "\(unlockedCount)/\(Achievements.all.count)", symbol: "star.fill", tint: .indigo)
                 }
 
                 Section("Appearance") {
@@ -91,8 +99,11 @@ struct ProfileView: View {
 
                 Section("Premium") {
                     if store.isPremium {
-                        Label("Premium unlocked", systemImage: "crown.fill")
-                            .foregroundStyle(.yellow)
+                        Label {
+                            Text("Premium unlocked")
+                        } icon: {
+                            Image(systemName: "crown.fill").foregroundStyle(.yellow)
+                        }
                         Button("Manage Subscription") {
                             showManageSubscriptions = true
                         }
@@ -130,6 +141,7 @@ struct ProfileView: View {
                 PaywallView()
             }
             .manageSubscriptionsSheet(isPresented: $showManageSubscriptions)
+            .purchaseNoticeAlert(store)
             .task { await notifications.refreshStatus() }
         }
     }
@@ -172,11 +184,34 @@ struct ProfileView: View {
         }
     }
 
-    private func stat(_ title: String, value: String, symbol: String) -> some View {
+    private func heroStat(value: String, label: String, symbol: String, tint: Color) -> some View {
+        VStack(spacing: Theme.Spacing.xs) {
+            Image(systemName: symbol)
+                .font(.title3)
+                .foregroundStyle(tint)
+            Text(value)
+                .font(.title.weight(.bold))
+                .monospacedDigit()
+                .contentTransition(.numericText())
+            Text(label)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+        .frame(maxWidth: .infinity)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(label)
+        .accessibilityValue(value)
+    }
+
+    private func stat(_ title: String, value: String, symbol: String, tint: Color) -> some View {
         LabeledContent {
             Text(value).monospacedDigit().fontWeight(.semibold)
         } label: {
-            Label(title, systemImage: symbol)
+            Label {
+                Text(title)
+            } icon: {
+                Image(systemName: symbol).foregroundStyle(tint)
+            }
         }
     }
 
