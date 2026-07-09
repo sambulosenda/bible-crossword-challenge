@@ -61,8 +61,8 @@
 		AA0000010000000000000004 /* Exceptions for "Bible Crossword Challenge" folder in "Bible Crossword Challenge" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Products.storekit,
 				Info.plist,
+				Products.storekit,
 			);
 			target = 4F1A3C3D2FE8883C005B59F2 /* Bible Crossword Challenge */;
 		};
