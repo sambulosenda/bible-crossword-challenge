@@ -9,11 +9,19 @@
 import SwiftUI
 import SwiftData
 
+/// The main tab bar's selectable tabs.
+enum RootTab: Hashable {
+    case today, archive, achievements, profile
+}
+
 struct RootView: View {
     @Environment(\.modelContext) private var context
     @Environment(\.analytics) private var analytics
     @Environment(\.notifications) private var notifications
+    @Environment(\.gameCenter) private var gameCenter
+    @Environment(\.readerRouter) private var readerRouter
     @Environment(\.scenePhase) private var scenePhase
+    @State private var selectedTab: RootTab = .today
     // Sorted so `first` is the oldest profile — the survivor SyncMerge keeps
     // when CloudKit sync delivers a duplicate from another device.
     @Query(sort: \PlayerProfile.createdAt) private var profiles: [PlayerProfile]
@@ -26,7 +34,7 @@ struct RootView: View {
             if let profile = profiles.first {
                 if !hasOnboarded {
                     OnboardingView(profile: profile) {
-                        try? context.save()
+                        context.saveLogged("onboarding finish")
                         withAnimation { hasOnboarded = true }
                     }
                 } else {
@@ -40,8 +48,9 @@ struct RootView: View {
             mergeSyncDuplicates()
             let profile = ensureProfile()
             Streaks.normalize(profile)
-            try? context.save()
+            context.saveLogged("launch normalise")
             WidgetBridge.publish(profile)
+            gameCenter.authenticate()
             analytics.log(.appOpen)
             await notifications.reschedule(for: profile, enabled: remindersEnabled, minutes: reminderMinutes)
         }
@@ -64,23 +73,29 @@ struct RootView: View {
             SyncMerge.mergeProfiles(profiles, context: context)
         }
         SyncMerge.mergeDuplicateRecords(in: context)
-        try? context.save()
+        context.saveLogged("sync merge")
     }
 
     private func mainTabs(_ profile: PlayerProfile) -> some View {
-        TabView {
-            Tab("Today", systemImage: "calendar") {
+        @Bindable var router = readerRouter
+        return TabView(selection: $selectedTab) {
+            Tab("Today", systemImage: "calendar", value: RootTab.today) {
                 HomeView(profile: profile)
             }
-            Tab("Archive", systemImage: "books.vertical") {
+            Tab("Archive", systemImage: "books.vertical", value: RootTab.archive) {
                 ArchiveView(profile: profile)
             }
-            Tab("Achievements", systemImage: "trophy") {
+            Tab("Achievements", systemImage: "trophy", value: RootTab.achievements) {
                 AchievementsView(profile: profile)
             }
-            Tab("Profile", systemImage: "person") {
+            Tab("Profile", systemImage: "person", value: RootTab.profile) {
                 ProfileView(profile: profile)
             }
+        }
+        // The reader is a deep-link target only — a puzzle's verse reference sets
+        // the router target and we present it modally over the current tab.
+        .fullScreenCover(item: $router.target) { target in
+            ReaderModal(target: target)
         }
     }
 
@@ -88,7 +103,30 @@ struct RootView: View {
         if let existing = profiles.first { return existing }
         let profile = PlayerProfile()
         context.insert(profile)
-        try? context.save()
+        context.saveLogged("create profile")
         return profile
+    }
+}
+
+/// Modal host for a deep-linked passage. Opens straight to the chapter reader
+/// (browsing is reachable from the reader's own "Jump to"); a Close button
+/// dismisses back to the tab the reference was tapped from.
+private struct ReaderModal: View {
+    let target: ReaderRouter.Target
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        NavigationStack {
+            ChapterReaderView(
+                startBook: target.book,
+                startChapter: target.chapter,
+                highlightVerse: target.verse
+            )
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button("Close") { dismiss() }
+                }
+            }
+        }
     }
 }

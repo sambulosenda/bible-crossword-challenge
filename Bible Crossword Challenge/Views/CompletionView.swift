@@ -26,6 +26,7 @@ struct CompletionView: View {
     @Environment(\.gameCenter) private var gameCenter
     @Environment(\.requestReview) private var requestReview
     @Environment(\.puzzleProvider) private var puzzleProvider
+    @Environment(\.readerRouter) private var readerRouter
     @Environment(\.analytics) private var analytics
     @Environment(StoreService.self) private var store
     /// Highest completion milestone we've already asked a review at, so each
@@ -233,6 +234,18 @@ struct CompletionView: View {
             Text(puzzle.reference)
                 .font(.headline)
                 .foregroundStyle(Theme.accent)
+
+            Button {
+                readerRouter.open(reference: puzzle.reference)
+                onHome()
+            } label: {
+                Label("Read the passage", systemImage: "book")
+                    .font(.subheadline.weight(.semibold))
+            }
+            .buttonStyle(.bordered)
+            .tint(Theme.accent)
+            .padding(.top, Theme.Spacing.xs)
+            .accessibilityHint("Closes this screen and opens the passage in the reader")
         }
         .padding(Theme.Spacing.l)
         .frame(maxWidth: .infinity)

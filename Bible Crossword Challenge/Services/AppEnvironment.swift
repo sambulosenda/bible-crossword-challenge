@@ -13,4 +13,7 @@ extension EnvironmentValues {
     @Entry var ads: any AdProvider = NoOpAdProvider.shared
     @Entry var puzzleProvider: PuzzleProvider = PuzzleProvider.shared
     @Entry var notifications: NotificationService = .shared
+    @Entry var gameCenter: GameCenterService = .shared
+    @Entry var scripture: ScriptureProvider = .shared
+    @Entry var readerRouter: ReaderRouter = .shared
 }

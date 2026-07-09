@@ -271,6 +271,8 @@ private struct DailyPuzzleCard: View {
 private struct VerseCard: View {
     let puzzle: Puzzle
 
+    @Environment(\.readerRouter) private var readerRouter
+
     var body: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.s) {
             Label("VERSE OF THE DAY", systemImage: "book.closed").kicker()
@@ -278,15 +280,27 @@ private struct VerseCard: View {
                 .font(.callout)
                 .foregroundStyle(.primary)
                 .fixedSize(horizontal: false, vertical: true)
-            Text(puzzle.reference)
-                .font(.subheadline.weight(.semibold))
+            Button {
+                readerRouter.open(reference: puzzle.reference)
+            } label: {
+                HStack(spacing: 4) {
+                    Text(puzzle.reference)
+                        .font(.subheadline.weight(.semibold))
+                    Image(systemName: "chevron.right")
+                        .font(.caption2.weight(.bold))
+                }
                 .foregroundStyle(Theme.accent)
+            }
+            .buttonStyle(.plain)
         }
         .padding(Theme.Spacing.l)
         .frame(maxWidth: .infinity, alignment: .leading)
         .elevatedCard()
         .accessibilityElement(children: .ignore)
+        .accessibilityAddTraits(.isButton)
         .accessibilityLabel("Verse of the day. \(puzzle.verse). \(puzzle.reference)")
+        .accessibilityHint("Opens this passage in the reader")
+        .accessibilityAction { readerRouter.open(reference: puzzle.reference) }
     }
 }
 
