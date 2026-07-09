@@ -65,6 +65,11 @@ struct PaywallView: View {
                             .font(.headline)
                             .foregroundStyle(.green)
                             .padding(.top, Theme.Spacing.m)
+                    } else if store.products.isEmpty {
+                        // Products haven't arrived (offline, App Store hiccup):
+                        // never show an empty plan list with a dead button.
+                        productsPlaceholder
+                        restoreButton
                     } else {
                         plans
                         purchaseSection
@@ -89,7 +94,38 @@ struct PaywallView: View {
                     selectedID = first.id
                 }
             }
+            .task {
+                if store.products.isEmpty { await store.refresh() }
+            }
+            .onChange(of: store.products.count) { _, _ in
+                if selectedProduct == nil, let first = store.products.first {
+                    selectedID = first.id
+                }
+            }
+            .purchaseNoticeAlert(store)
         }
+    }
+
+    /// Loading spinner while products fetch; a retry card if the fetch failed.
+    @ViewBuilder private var productsPlaceholder: some View {
+        VStack(spacing: Theme.Spacing.m) {
+            if store.productsLoadFailed {
+                Label("Couldn't load plans", systemImage: "wifi.exclamationmark")
+                    .font(.headline)
+                Text("Check your connection and try again.")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                Button("Retry") {
+                    Task { await store.refresh() }
+                }
+                .buttonStyle(.bordered)
+            } else {
+                ProgressView("Loading plans…")
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .padding(Theme.Spacing.xl)
+        .background(Color(.secondarySystemGroupedBackground), in: .rect(cornerRadius: Theme.cornerRadius))
     }
 
     private var benefitsCard: some View {
@@ -122,6 +158,8 @@ struct PaywallView: View {
                 planRow(product)
             }
         }
+        // Spring the selection ring/radio between plans instead of snapping.
+        .animation(.snappy(duration: 0.2), value: selectedID)
     }
 
     private func planRow(_ product: Product) -> some View {
@@ -202,12 +240,26 @@ struct PaywallView: View {
             .controlSize(.extraLarge)
             .disabled(store.purchaseInFlight || selectedProduct == nil)
 
-            Button("Restore Purchase") {
-                Task { await store.restore() }
+            // Restate what happens right at the commit point — purchase anxiety
+            // peaks here, and the trial/price detail otherwise only lives in the
+            // plan row above.
+            if let subtext = ctaSubtext {
+                Text(subtext)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
             }
-            .font(.subheadline)
-            .disabled(store.purchaseInFlight)
+
+            restoreButton
         }
+    }
+
+    private var restoreButton: some View {
+        Button("Restore Purchase") {
+            Task { await store.restore() }
+        }
+        .font(.subheadline)
+        .disabled(store.purchaseInFlight)
     }
 
     private var ctaTitle: String {
@@ -215,6 +267,19 @@ struct PaywallView: View {
         if store.introOfferText(for: product) != nil { return "Start Free Trial" }
         if store.periodText(for: product) != nil { return "Subscribe" }
         return "Unlock Lifetime"
+    }
+
+    /// One-line reassurance shown under the CTA: what the user is committing to.
+    private var ctaSubtext: String? {
+        guard let product = selectedProduct else { return nil }
+        let period = store.periodText(for: product) ?? ""
+        if let trial = store.introOfferText(for: product) {
+            return "\(trial), then \(product.displayPrice)\(period). Cancel anytime."
+        }
+        if !period.isEmpty {
+            return "Auto-renews at \(product.displayPrice)\(period). Cancel anytime."
+        }
+        return "One-time purchase — yours forever."
     }
 
     // MARK: - Legal
@@ -230,6 +295,25 @@ struct PaywallView: View {
         }
         .font(.caption2)
         .foregroundStyle(.secondary)
+    }
+}
+
+extension View {
+    /// Presents the store's pending `PurchaseNotice` (purchase failure, Ask to
+    /// Buy pending, restore outcome) as an alert and clears it on dismiss.
+    /// Attach to every screen that can start a purchase or restore.
+    func purchaseNoticeAlert(_ store: StoreService) -> some View {
+        alert(
+            store.purchaseNotice?.title ?? "",
+            isPresented: Binding(
+                get: { store.purchaseNotice != nil },
+                set: { if !$0 { store.purchaseNotice = nil } }
+            )
+        ) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(store.purchaseNotice?.message ?? "")
+        }
     }
 }
 
