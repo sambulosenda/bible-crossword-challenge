@@ -186,6 +186,7 @@ struct MediumStreakView: View {
                     .foregroundStyle(entry.flameColor)
                 Text("\(entry.streak)")
                     .font(.system(.largeTitle, design: .rounded, weight: .bold))
+                    .contentTransition(.numericText())
                 Text(entry.streak == 1 ? "day" : "days")
                     .font(.caption)
                     .foregroundStyle(.secondary)

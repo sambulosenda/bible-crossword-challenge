@@ -14,15 +14,23 @@ struct ClueListView: View {
 
     var body: some View {
         NavigationStack {
-            List {
-                section(title: "Across", slots: vm.acrossSlots)
-                section(title: "Down", slots: vm.downSlots)
-            }
-            .navigationTitle("Clues")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Done") { dismiss() }
+            ScrollViewReader { proxy in
+                List {
+                    section(title: "Across", slots: vm.acrossSlots)
+                    section(title: "Down", slots: vm.downSlots)
+                }
+                .navigationTitle("Clues")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Done") { dismiss() }
+                    }
+                }
+                .onAppear {
+                    // Land on the clue you were working — the list can be long.
+                    if let active = vm.activeSlot {
+                        proxy.scrollTo(active.id, anchor: .center)
+                    }
                 }
             }
         }
@@ -31,6 +39,7 @@ struct ClueListView: View {
     private func section(title: String, slots: [Slot]) -> some View {
         Section {
             ForEach(slots) { slot in
+                let isActive = slot.id == vm.activeSlot?.id
                 Button {
                     vm.select(slot: slot)
                     dismiss()
@@ -51,6 +60,9 @@ struct ClueListView: View {
                         }
                     }
                 }
+                .id(slot.id)
+                .listRowBackground(isActive ? Theme.accent.opacity(0.12) : nil)
+                .accessibilityAddTraits(isActive ? [.isSelected] : [])
             }
         } header: {
             Text(title)

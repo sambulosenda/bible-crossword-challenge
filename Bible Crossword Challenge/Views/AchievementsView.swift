@@ -54,6 +54,11 @@ struct AchievementsView: View {
                 Image(systemName: "checkmark.seal.fill")
                     .foregroundStyle(.green)
                     .font(.title3)
+            } else {
+                Text(achievement.progressText(for: profile))
+                    .font(.caption.weight(.semibold))
+                    .monospacedDigit()
+                    .foregroundStyle(.secondary)
             }
         }
         .padding(Theme.Spacing.l)

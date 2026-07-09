@@ -59,7 +59,9 @@ struct ChapterReaderView: View {
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
                     Button { fontSize = min(fontSize + 2, 30) } label: { Label("Larger text", systemImage: "textformat.size.larger") }
+                        .disabled(fontSize >= 30)
                     Button { fontSize = max(fontSize - 2, 14) } label: { Label("Smaller text", systemImage: "textformat.size.smaller") }
+                        .disabled(fontSize <= 14)
                 } label: {
                     Image(systemName: "textformat.size")
                 }
