@@ -192,7 +192,7 @@ struct PaywallView: View {
                     .strokeBorder(selected ? Theme.accent : .clear, lineWidth: 2)
             }
         }
-        .buttonStyle(.plain)
+        .buttonStyle(PressableCardStyle())
         .accessibilityElement(children: .combine)
         .accessibilityAddTraits(selected ? [.isButton, .isSelected] : .isButton)
     }

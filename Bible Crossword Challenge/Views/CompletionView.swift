@@ -118,7 +118,7 @@ struct CompletionView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(Theme.accent.opacity(0.10), in: .rect(cornerRadius: Theme.cornerRadius, style: .continuous))
         }
-        .buttonStyle(.plain)
+        .buttonStyle(PressableCardStyle())
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("Enjoyed that? \(pastMiniCount) more Minis are waiting in Premium.")
         .accessibilityHint("Opens Premium upgrade options")
