@@ -12,9 +12,14 @@ end
 
 platform :ios do
   desc "Push title/subtitle/keywords for all locales. Shows an HTML preview and asks " \
-       "for confirmation before uploading. No binary, no screenshots, no submission."
+       "for confirmation before uploading. No binary, no screenshots, no submission. " \
+       "Pass version:X.Y to create/select that editable version in App Store Connect."
   lane :push_metadata do |options|
-    deliver(api_key: asc_api_key, force: options.fetch(:force, false))
+    deliver(
+      api_key: asc_api_key,
+      force: options.fetch(:force, false),
+      app_version: options[:version],
+    )
   end
 
   desc "Upload App Store screenshots for all locales (no metadata, no binary, no " \
