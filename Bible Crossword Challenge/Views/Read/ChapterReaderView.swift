@@ -154,10 +154,10 @@ private struct ChapterPage: View {
     private func verseRow(_ verse: BibleVerse) -> some View {
         let number = Text("\(verse.number) ")
             .font(.system(size: fontSize * 0.68, weight: .bold))
-            .foregroundColor(Theme.accent)
+            .foregroundStyle(Theme.accent)
         let body = Text(verse.text)
             .font(.system(size: fontSize))
-            .foregroundColor(.primary)
+            .foregroundStyle(.primary)
 
         return (number + body)
             .lineSpacing(5)
