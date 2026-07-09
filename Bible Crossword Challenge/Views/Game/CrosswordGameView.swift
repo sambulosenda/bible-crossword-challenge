@@ -8,6 +8,7 @@
 
 import SwiftUI
 import SwiftData
+import os
 
 struct CrosswordGameView: View {
     let puzzle: Puzzle
@@ -17,6 +18,7 @@ struct CrosswordGameView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.analytics) private var analytics
     @Environment(\.notifications) private var notifications
+    @Environment(\.gameCenter) private var gameCenter
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(StoreService.self) private var store
@@ -31,6 +33,9 @@ struct CrosswordGameView: View {
     @State private var newlyUnlocked: [Achievement] = []
     /// Whether this solve crossed a streak milestone that granted a freeze.
     @State private var earnedFreeze = false
+    /// Grid is full but at least one letter is wrong — nudge instead of leaving
+    /// the player stranded wondering why the completion screen didn't appear.
+    @State private var showFullMissAlert = false
     /// Keeps the screen focused so a hardware keyboard can type into the grid.
     @FocusState private var gridFocused: Bool
 
@@ -108,6 +113,16 @@ struct CrosswordGameView: View {
             )
         }
         .sensoryFeedback(.success, trigger: vm.isComplete)
+        .sensoryFeedback(.warning, trigger: vm.gridFullWithErrorsTick)
+        .onChange(of: vm.gridFullWithErrorsTick) { _, _ in
+            showFullMissAlert = true
+        }
+        .alert("Almost There", isPresented: $showFullMissAlert) {
+            Button("Check Answers") { vm.showErrors = true }
+            Button("Keep Trying", role: .cancel) {}
+        } message: {
+            Text("Every square is filled, but at least one letter isn't right.")
+        }
         .task {
             gridFocused = true
             vm.onComplete = { seconds in handleCompletion(seconds: seconds) }
@@ -287,8 +302,14 @@ struct CrosswordGameView: View {
         rec.elapsedSeconds = seconds
         rec.entries = vm.snapshot()
         rec.updatedAt = Date()
-        try? context.save()
+        context.saveLogged("puzzle completion")
         WidgetBridge.publish(profile)
+
+        // Post the Mini time to the weekly Game Center board. First completion
+        // only: a replay knows the answers and would post an unbeatable time.
+        if firstCompletion && puzzle.isMini {
+            gameCenter.submitWeeklyMiniTime(seconds: seconds)
+        }
 
         // Today's puzzle is now solved — drop today's reminder and refresh copy.
         Task {
@@ -311,9 +332,14 @@ struct CrosswordGameView: View {
         let descriptor = FetchDescriptor<PuzzleRecord>(predicate: #Predicate { $0.puzzleID == id })
         // CloudKit sync may have delivered a duplicate for this puzzle from
         // another device — merge instead of blindly taking the first match.
-        if let matches = try? context.fetch(descriptor),
-           let existing = SyncMerge.mergeRecords(matches, context: context) {
-            return existing
+        do {
+            if let existing = SyncMerge.mergeRecords(try context.fetch(descriptor), context: context) {
+                return existing
+            }
+        } catch {
+            // A failed fetch means a fresh record may shadow an existing one
+            // (SyncMerge collapses them later) — worth a trace if it happens.
+            Log.persistence.error("PuzzleRecord fetch failed for \(id, privacy: .public): \(error, privacy: .public)")
         }
         let rec = PuzzleRecord(puzzleID: id)
         context.insert(rec)
@@ -327,7 +353,7 @@ struct CrosswordGameView: View {
         rec.entries = vm.snapshot()
         rec.elapsedSeconds = vm.elapsed()
         rec.updatedAt = Date()
-        try? context.save()
+        context.saveLogged("puzzle progress")
     }
 }
 

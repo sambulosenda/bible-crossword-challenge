@@ -70,6 +70,12 @@ final class GameViewModel {
     /// toolbar streak-flame pulse.
     private(set) var wordSolveTick = 0
 
+    /// Increments each time the grid transitions into "every square filled but
+    /// at least one letter wrong" — the moment a player would otherwise sit
+    /// stranded wondering why nothing happened. The view reacts with a nudge.
+    private(set) var gridFullWithErrorsTick = 0
+    private var wasFullWithErrors = false
+
     init(puzzle: Puzzle, now: Date = Date()) {
         self.puzzle = puzzle
         self.size = puzzle.size
@@ -241,7 +247,12 @@ final class GameViewModel {
         }
         showErrors = false
         onEntryChanged?()
-        if let cleared { refreshSolvedSlots(around: [cleared]) }
+        if let cleared {
+            refreshSolvedSlots(around: [cleared])
+            // The grid is no longer full, so the next fill-with-errors moment
+            // should announce again (checkCompletion isn't run on deletes).
+            wasFullWithErrors = false
+        }
     }
 
     private func advanceWithinWord() {
@@ -382,12 +393,26 @@ final class GameViewModel {
         showErrors.toggle()
     }
 
-    /// True when every playable cell holds the correct letter.
-    func checkCompletion() {
+    /// Completes the puzzle when every playable cell holds the correct letter.
+    /// Also watches for the "grid full but wrong" moment, announced via
+    /// `gridFullWithErrorsTick` on the transition into that state. Pass
+    /// `announceFullMiss: false` when restoring, so resuming a full-but-wrong
+    /// grid seeds the bookkeeping without greeting the player with an alert.
+    func checkCompletion(announceFullMiss: Bool = true) {
+        var full = true
+        var correct = true
         for row in grid {
             for cell in row where !cell.isBlock {
-                if cell.entry != cell.solution { return }
+                if cell.entry == nil { full = false }
+                if cell.entry != cell.solution { correct = false }
             }
+        }
+        guard correct else {
+            if full, !wasFullWithErrors, announceFullMiss {
+                gridFullWithErrorsTick += 1
+            }
+            wasFullWithErrors = full
+            return
         }
         guard !isComplete else { return }
         isComplete = true
@@ -520,7 +545,7 @@ final class GameViewModel {
             grid[r][c].entry = letter
             grid[r][c].isRevealed = raw.isLowercase
         }
-        checkCompletion()
+        checkCompletion(announceFullMiss: false)
         seedSolvedSlots()
     }
 }
