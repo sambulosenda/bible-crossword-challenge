@@ -20,8 +20,12 @@ struct RootView: View {
     @Environment(\.notifications) private var notifications
     @Environment(\.gameCenter) private var gameCenter
     @Environment(\.readerRouter) private var readerRouter
+    @Environment(\.puzzleProvider) private var puzzleProvider
     @Environment(\.scenePhase) private var scenePhase
     @State private var selectedTab: RootTab = .today
+    /// Navigation stack for the Today tab. Held here so a widget deep-link can
+    /// push the daily puzzle onto it.
+    @State private var todayPath: [Puzzle] = []
     // Sorted so `first` is the oldest profile — the survivor SyncMerge keeps
     // when CloudKit sync delivers a duplicate from another device.
     @Query(sort: \PlayerProfile.createdAt) private var profiles: [PlayerProfile]
@@ -64,6 +68,21 @@ struct RootView: View {
                 await notifications.reschedule(for: profile, enabled: remindersEnabled, minutes: reminderMinutes)
             }
         }
+        .onOpenURL { url in
+            handleDeepLink(url)
+        }
+    }
+
+    /// Widget taps land here (see `StreakEntry.deepLinkURL`). `play-daily` jumps
+    /// straight into today's puzzle; any other target just surfaces the Today tab.
+    private func handleDeepLink(_ url: URL) {
+        guard url.scheme == "biblecrossword", hasOnboarded else { return }
+        selectedTab = .today
+        if url.host() == "play-daily", let daily = puzzleProvider.dailyPuzzle() {
+            todayPath = [daily]
+        } else {
+            todayPath.removeAll()
+        }
     }
 
     /// CloudKit sync can land duplicate profiles/records created on another
@@ -80,7 +99,7 @@ struct RootView: View {
         @Bindable var router = readerRouter
         return TabView(selection: $selectedTab) {
             Tab("Today", systemImage: "calendar", value: RootTab.today) {
-                HomeView(profile: profile)
+                HomeView(profile: profile, path: $todayPath)
             }
             Tab("Archive", systemImage: "books.vertical", value: RootTab.archive) {
                 ArchiveView(profile: profile)

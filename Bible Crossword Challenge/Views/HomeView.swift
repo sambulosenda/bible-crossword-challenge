@@ -16,6 +16,8 @@ import SwiftData
 
 struct HomeView: View {
     let profile: PlayerProfile
+    /// Owned by RootView so a widget deep-link can push the daily puzzle here.
+    @Binding var path: [Puzzle]
 
     @Environment(\.puzzleProvider) private var puzzleProvider
     @Environment(\.ads) private var ads
@@ -40,7 +42,7 @@ struct HomeView: View {
         let mini = dailyMini
         let miniRecord = mini.flatMap { m in records.first { $0.puzzleID == m.id } }
 
-        return NavigationStack {
+        return NavigationStack(path: $path) {
             ScrollView {
                 VStack(spacing: Theme.Spacing.l) {
                     if let daily {

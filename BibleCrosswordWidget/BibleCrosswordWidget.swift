@@ -135,6 +135,15 @@ extension StreakEntry {
         case .fresh: "Start a new streak"
         }
     }
+
+    /// Tap target. When there's a puzzle to play, jump straight into it;
+    /// once solved, just open the app. Handled by RootView's `onOpenURL`.
+    var deepLinkURL: URL {
+        switch state {
+        case .solvedToday: URL(string: "biblecrossword://today")!
+        case .streakAtStake, .fresh: URL(string: "biblecrossword://play-daily")!
+        }
+    }
 }
 
 // MARK: - Home Screen views
@@ -289,6 +298,7 @@ struct BibleCrosswordStreakWidget: Widget {
         StaticConfiguration(kind: kind, provider: StreakProvider()) { entry in
             StreakWidgetEntryView(entry: entry)
                 .containerBackground(.fill.tertiary, for: .widget)
+                .widgetURL(entry.deepLinkURL)
         }
         .configurationDisplayName("Daily Streak")
         .description("Your streak flame and today's puzzle at a glance.")
