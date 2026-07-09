@@ -20,6 +20,13 @@ import Foundation
 import StoreKit
 import Observation
 
+/// A user-facing alert for a purchase/restore outcome the player must know
+/// about (failure, pending approval, restore result). Nil means nothing to say.
+struct PurchaseNotice: Equatable {
+    let title: String
+    let message: String
+}
+
 @Observable
 final class StoreService {
     static let monthlyID = "com.sambulosendas1.biblecrossword.premium.monthly"
@@ -31,6 +38,13 @@ final class StoreService {
     private(set) var isPremium = false
     private(set) var products: [Product] = []
     private(set) var purchaseInFlight = false
+    /// True when the last product load ended with nothing to show — drives the
+    /// paywall's "couldn't load plans / retry" state instead of a blank screen.
+    private(set) var productsLoadFailed = false
+    /// Set whenever a purchase or restore ends in a way the player would
+    /// otherwise only discover by nothing happening. Views present it as an
+    /// alert and clear it back to nil.
+    var purchaseNotice: PurchaseNotice?
 
     var yearly: Product? { products.first { $0.id == Self.yearlyID } }
     var monthly: Product? { products.first { $0.id == Self.monthlyID } }
@@ -67,7 +81,11 @@ final class StoreService {
             let loaded = try await Product.products(for: Self.allProductIDs)
             // Keep a stable display order: yearly, monthly, lifetime.
             products = Self.allProductIDs.compactMap { id in loaded.first { $0.id == id } }
+            productsLoadFailed = products.isEmpty
         } catch {
+            // Keep any previously loaded products; only flag failure when the
+            // paywall would otherwise have nothing to sell.
+            productsLoadFailed = products.isEmpty
             #if DEBUG
             print("⚠️ StoreKit: failed to load products — \(error)")
             #endif
@@ -88,12 +106,24 @@ final class StoreService {
                 await updateEntitlement()
                 await transaction.finish()
                 return isPremium
-            case .userCancelled, .pending:
+            case .userCancelled:
+                return false
+            case .pending:
+                // Ask to Buy / deferred payment — without this the player sees
+                // the button reset and assumes the purchase silently failed.
+                purchaseNotice = PurchaseNotice(
+                    title: "Purchase Pending",
+                    message: "Your purchase is waiting for approval. Premium unlocks automatically once it's approved."
+                )
                 return false
             @unknown default:
                 return false
             }
         } catch {
+            purchaseNotice = PurchaseNotice(
+                title: "Purchase Failed",
+                message: "The purchase didn't go through — you haven't been charged. Please try again.\n\n\(error.localizedDescription)"
+            )
             #if DEBUG
             print("⚠️ StoreKit: purchase failed — \(error)")
             #endif
@@ -102,9 +132,25 @@ final class StoreService {
     }
 
     /// Restore prior purchases (StoreKit refreshes entitlements from the store).
+    /// Always ends in a `purchaseNotice` telling the player what happened,
+    /// unless they cancelled the App Store sign-in themselves.
     func restore() async {
-        try? await AppStore.sync()
-        await updateEntitlement()
+        do {
+            try await AppStore.sync()
+            await updateEntitlement()
+            purchaseNotice = isPremium
+                ? PurchaseNotice(title: "Purchases Restored", message: "Welcome back — Premium is active.")
+                : PurchaseNotice(title: "Nothing to Restore", message: "No previous purchases were found for this Apple Account.")
+        } catch StoreKitError.userCancelled {
+            // Player dismissed the App Store sign-in — not an error.
+            await updateEntitlement()
+        } catch {
+            await updateEntitlement()
+            purchaseNotice = PurchaseNotice(
+                title: "Restore Failed",
+                message: "Couldn't reach the App Store. Check your connection and try again."
+            )
+        }
     }
 
     private func updateEntitlement() async {
