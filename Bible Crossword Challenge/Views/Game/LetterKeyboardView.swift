@@ -49,10 +49,8 @@ struct LetterKeyboardView: View {
             Text(String(letter))
                 .font(.system(.title3, design: .rounded).weight(.semibold))
                 .frame(maxWidth: .infinity, minHeight: keyHeight)
-                .background(Color(.secondarySystemBackground), in: .rect(cornerRadius: 8))
         }
-        .buttonStyle(.plain)
-        .foregroundStyle(.primary)
+        .buttonStyle(KeyButtonStyle())
         .accessibilityLabel(String(letter))
     }
 
@@ -64,10 +62,26 @@ struct LetterKeyboardView: View {
             Image(systemName: "delete.left")
                 .font(.title3)
                 .frame(maxWidth: .infinity, minHeight: keyHeight)
-                .background(Color(.secondarySystemBackground), in: .rect(cornerRadius: 8))
         }
-        .buttonStyle(.plain)
-        .foregroundStyle(.primary)
+        .buttonStyle(KeyButtonStyle())
         .accessibilityLabel("Delete")
+    }
+}
+
+/// Key styling with an instant pressed state. A real keyboard key highlights the
+/// moment a finger touches it (Apple's first fluid-interface rule: respond on
+/// pointer-down, not on release) — `.plain` gave no visual feedback at all, so
+/// only the haptic fired. `isPressed` flips on touch-down, so the darken + slight
+/// depress now land on the same event as the finger, in harmony with the haptic.
+private struct KeyButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .foregroundStyle(.primary)
+            .background(
+                configuration.isPressed ? Color(.systemGray3) : Color(.secondarySystemBackground),
+                in: .rect(cornerRadius: 8)
+            )
+            .scaleEffect(configuration.isPressed ? 0.96 : 1.0)
+            .animation(.spring(duration: 0.15, bounce: 0.1), value: configuration.isPressed)
     }
 }
