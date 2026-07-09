@@ -400,7 +400,7 @@ private struct UpgradeCard: View {
             .accessibilityLabel("Go Premium")
             .accessibilityHint("Remove ads, unlimited hints, and full puzzle archive")
         }
-        .buttonStyle(.plain)
+        .buttonStyle(PressableCardStyle())
     }
 }
 
@@ -442,7 +442,7 @@ private struct MiniPuzzleCard: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .elevatedCard()
         }
-        .buttonStyle(.plain)
+        .buttonStyle(PressableCardStyle())
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(accessibilityLabel)
     }

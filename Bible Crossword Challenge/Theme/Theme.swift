@@ -71,6 +71,29 @@ private struct ElevatedCard: ViewModifier {
     }
 }
 
+/// Press feedback for whole-card tap targets (navigation cards, upsell rows).
+/// `.plain` leaves them dead on touch — Apple's first fluid-interface rule is to
+/// respond on pointer-down, so a card should subtly depress and dim the instant
+/// a finger lands, not only navigate on release. Scale is dropped under Reduce
+/// Motion; the dim stays as a non-vestibular press cue.
+struct PressableCardStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        PressableCardBody(configuration: configuration)
+    }
+}
+
+private struct PressableCardBody: View {
+    let configuration: ButtonStyleConfiguration
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    var body: some View {
+        configuration.label
+            .scaleEffect(reduceMotion ? 1 : (configuration.isPressed ? 0.98 : 1))
+            .opacity(configuration.isPressed ? 0.9 : 1)
+            .animation(.spring(duration: 0.2, bounce: 0.1), value: configuration.isPressed)
+    }
+}
+
 extension View {
     /// Applies the standard card treatment: a rounded grouped-background fill.
     func elevatedCard(fill: Color = Theme.surface, cornerRadius: CGFloat = Theme.cornerRadius) -> some View {
