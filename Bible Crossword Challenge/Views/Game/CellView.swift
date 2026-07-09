@@ -94,8 +94,10 @@ struct CellView: View, Equatable {
                 .overlay(
                     Rectangle().strokeBorder(CellPalette.border, lineWidth: 0.5)
                 )
-                // Pops each typed letter in with a small spring bounce.
-                .animation(reduceMotion ? nil : .spring(duration: 0.22, bounce: 0.55), value: cell.entry)
+                // Pops each typed letter in with a restrained spring. This fires
+                // on every keystroke (100+ a session), so the overshoot stays
+                // subtle — a big bounce here reads as motion-noise, not feedback.
+                .animation(reduceMotion ? nil : .spring(duration: 0.22, bounce: 0.2), value: cell.entry)
             }
             .buttonStyle(.plain)
             .accessibilityLabel(accessibilityLabel)
