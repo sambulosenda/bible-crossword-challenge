@@ -59,6 +59,12 @@ struct OnboardingView: View {
             .ignoresSafeArea()
         )
         .sensoryFeedback(.selection, trigger: page)
+        // Swiping off the name page shouldn't leave the keyboard floating over
+        // the next page — dismiss it whenever we leave.
+        .onChange(of: page) { _, newPage in
+            if newPage != 2 { nameFocused = false }
+        }
+        .purchaseNoticeAlert(store)
     }
 
     // MARK: - Pages
@@ -207,7 +213,9 @@ struct OnboardingView: View {
             .scaleEffect(active || reduceMotion ? 1 : 0.7)
             .opacity(active ? 1 : 0)
             .animation(reduceMotion ? .easeOut(duration: 0.3) : .spring(duration: 0.55, bounce: 0.45), value: active)
-            .symbolEffect(.bounce, value: active)
+            // Hold the trigger constant under Reduce Motion so the bounce never
+            // fires — the scale/opacity entrance above is already gated.
+            .symbolEffect(.bounce, value: active && !reduceMotion)
     }
 
     private func feature(_ icon: String, _ title: String, _ detail: String, _ tint: Color) -> some View {
@@ -272,8 +280,13 @@ struct OnboardingView: View {
                     Task {
                         if let yearly = store.yearly, await store.purchase(yearly) {
                             analytics.log(.premiumPurchased(plan: "yearly"))
+                            finish()
+                        } else if store.purchaseNotice == nil {
+                            // Cancelled — nothing to explain, continue on in.
+                            finish()
                         }
-                        finish()
+                        // Failure/pending: stay here so the notice alert can
+                        // present; the free-puzzle button below still exits.
                     }
                 } label: {
                     Group {
