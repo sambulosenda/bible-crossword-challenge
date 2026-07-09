@@ -16,6 +16,9 @@ xcuserdata/
 *.pyc
 __pycache__/
 
+# Claude Code local config
+.claude/
+
 # fastlane secrets
 fastlane/api_key.json
 fastlane/report.xml
