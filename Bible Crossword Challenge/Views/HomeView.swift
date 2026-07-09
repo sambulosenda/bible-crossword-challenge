@@ -17,7 +17,7 @@ import SwiftData
 struct HomeView: View {
     let profile: PlayerProfile
     /// Owned by RootView so a widget deep-link can push the daily puzzle here.
-    @Binding var path: [Puzzle]
+    @Binding var path: NavigationPath
 
     @Environment(\.puzzleProvider) private var puzzleProvider
     @Environment(\.ads) private var ads
@@ -26,6 +26,18 @@ struct HomeView: View {
 
     private var dailyPuzzle: Puzzle? { puzzleProvider.dailyPuzzle() }
     private var dailyMini: Puzzle? { puzzleProvider.dailyMini() }
+
+    /// Packs available today (seasonal ones only surface in-window), seasonal
+    /// first so a timely pack leads the carousel.
+    private var collectionPacks: [PuzzlePack] {
+        let available = puzzleProvider.availablePacks()
+        return available.filter(\.isSeasonal) + available.filter { !$0.isSeasonal }
+    }
+
+    /// Shared record lookup for pack-progress calculation in the carousel.
+    private var recordsByID: [String: PuzzleRecord] {
+        Dictionary(records.map { ($0.puzzleID, $0) }, uniquingKeysWith: { a, _ in a })
+    }
 
     /// True when a streak freeze was spent today, so the streak card can show a
     /// one-time reassurance instead of the idle freeze count.
@@ -71,6 +83,14 @@ struct HomeView: View {
                         savedRecently: freezeSavedToday
                     )
 
+                    if !collectionPacks.isEmpty {
+                        CollectionsCarousel(
+                            packs: collectionPacks,
+                            recordsByID: recordsByID,
+                            isPremium: store.isPremium
+                        )
+                    }
+
                     if let verse = verseOfTheDay(excluding: daily) {
                         VerseCard(puzzle: verse)
                     }
@@ -90,6 +110,9 @@ struct HomeView: View {
             .navigationBarTitleDisplayMode(.large)
             .navigationDestination(for: Puzzle.self) { puzzle in
                 CrosswordGameView(puzzle: puzzle, profile: profile)
+            }
+            .navigationDestination(for: PuzzlePack.self) { pack in
+                PackDetailView(pack: pack, profile: profile)
             }
             .safeAreaInset(edge: .bottom) {
                 if !store.isPremium && ads.isLive {
@@ -265,6 +288,105 @@ private struct DailyPuzzleCard: View {
         case .start:
             return "Daily puzzle. \(puzzle.title). \(puzzle.difficulty.label) difficulty. \(puzzle.clueCount) clues, \(puzzle.size) by \(puzzle.size) grid."
         }
+    }
+}
+
+// MARK: - Collections carousel
+//
+// A horizontal strip of themed packs, so collections are discoverable from the
+// daily feed rather than only via the Packs tab. Each tile pushes the pack's
+// detail onto the Today stack.
+
+private struct CollectionsCarousel: View {
+    let packs: [PuzzlePack]
+    let recordsByID: [String: PuzzleRecord]
+    let isPremium: Bool
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: Theme.Spacing.s) {
+            Label("COLLECTIONS", systemImage: "square.stack.3d.up").kicker()
+                .padding(.horizontal, Theme.Spacing.xs)
+
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: Theme.Spacing.m) {
+                    ForEach(packs) { pack in
+                        NavigationLink(value: pack) {
+                            PackTile(
+                                pack: pack,
+                                progress: PackProgress(pack: pack, recordsByID: recordsByID),
+                                isLocked: pack.isPremium && !isPremium
+                            )
+                        }
+                        .buttonStyle(PressableCardStyle())
+                    }
+                }
+                .padding(.horizontal, Theme.Spacing.xs)
+                // Give the row breathing room so the last tile's shadow/press
+                // scale isn't clipped by the ScrollView edge.
+                .padding(.vertical, 2)
+            }
+        }
+    }
+}
+
+/// A compact, fixed-width pack card sized for the horizontal carousel.
+private struct PackTile: View {
+    let pack: PuzzlePack
+    let progress: PackProgress
+    let isLocked: Bool
+
+    @ScaledMetric(relativeTo: .title) private var coverSize = 44
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: Theme.Spacing.s) {
+            HStack {
+                Image(systemName: pack.coverSymbol)
+                    .font(.title3)
+                    .foregroundStyle(pack.accent)
+                    .frame(width: coverSize, height: coverSize)
+                    .background(pack.accent.opacity(0.14), in: .rect(cornerRadius: 12, style: .continuous))
+                Spacer(minLength: 0)
+                if isLocked {
+                    Image(systemName: "crown.fill")
+                        .font(.caption)
+                        .foregroundStyle(.yellow)
+                }
+            }
+
+            Text(pack.title)
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(.primary)
+                .lineLimit(2)
+                .fixedSize(horizontal: false, vertical: true)
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+            Spacer(minLength: 0)
+
+            if progress.isComplete {
+                Label("Complete", systemImage: "checkmark.seal.fill")
+                    .font(.caption2.weight(.semibold))
+                    .foregroundStyle(.green)
+            } else {
+                ProgressView(value: progress.fraction).tint(pack.accent)
+                Text("\(progress.solved)/\(progress.total)")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+                    .monospacedDigit()
+            }
+        }
+        .padding(Theme.Spacing.m)
+        .frame(width: 160, height: 150, alignment: .topLeading)
+        .elevatedCard()
+        .accessibilityElement(children: .ignore)
+        .accessibilityAddTraits(.isButton)
+        .accessibilityLabel(accessibilityLabel)
+    }
+
+    private var accessibilityLabel: String {
+        var parts = [pack.title]
+        if isLocked { parts.append("Premium") }
+        parts.append(progress.isComplete ? "Complete" : "\(progress.solved) of \(progress.total) solved")
+        return parts.joined(separator: ". ")
     }
 }
 

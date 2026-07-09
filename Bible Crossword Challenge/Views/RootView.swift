@@ -24,8 +24,9 @@ struct RootView: View {
     @Environment(\.scenePhase) private var scenePhase
     @State private var selectedTab: RootTab = .today
     /// Navigation stack for the Today tab. Held here so a widget deep-link can
-    /// push the daily puzzle onto it.
-    @State private var todayPath: [Puzzle] = []
+    /// push the daily puzzle onto it. Type-erased so the Today feed can push both
+    /// puzzles and pack details.
+    @State private var todayPath = NavigationPath()
     // Sorted so `first` is the oldest profile — the survivor SyncMerge keeps
     // when CloudKit sync delivers a duplicate from another device.
     @Query(sort: \PlayerProfile.createdAt) private var profiles: [PlayerProfile]
@@ -79,9 +80,9 @@ struct RootView: View {
         guard url.scheme == "biblecrossword", hasOnboarded else { return }
         selectedTab = .today
         if url.host() == "play-daily", let daily = puzzleProvider.dailyPuzzle() {
-            todayPath = [daily]
+            todayPath = NavigationPath([daily])
         } else {
-            todayPath.removeAll()
+            todayPath = NavigationPath()
         }
     }
 
