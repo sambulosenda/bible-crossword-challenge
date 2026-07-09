@@ -17,14 +17,33 @@ final class PuzzleProvider {
     let puzzles: [Puzzle]
     /// Quick 7×7 minis with their own daily rotation.
     let minis: [Puzzle]
+    /// Curated collections, in display order, decoded from `packs.json`. Empty
+    /// when the bundle omits the file, so the feature degrades to absent.
+    let packs: [PuzzlePack]
 
     /// Reference date that maps day-index 0 to the first puzzle.
     private let epoch: Date
+
+    /// puzzleID -> owning packID. First pack that lists a puzzle wins, so a
+    /// puzzle shared across packs still resolves to a single "primary" pack for
+    /// the in-game "next in pack" affordance.
+    private let packByPuzzleID: [String: String]
 
     init(bundle: Bundle = .main) {
         let all = Self.loadBundledPuzzles(bundle: bundle)
         self.puzzles = all.filter { !$0.isMini }
         self.minis = all.filter(\.isMini)
+        let loadedPacks = Self.loadBundledPacks(bundle: bundle)
+        self.packs = loadedPacks
+
+        var reverse: [String: String] = [:]
+        for pack in loadedPacks {
+            for pid in pack.puzzleIDs where reverse[pid] == nil {
+                reverse[pid] = pack.id
+            }
+        }
+        self.packByPuzzleID = reverse
+
         var components = DateComponents()
         components.year = 2026
         components.month = 7
@@ -42,6 +61,21 @@ final class PuzzleProvider {
             return try JSONDecoder().decode([Puzzle].self, from: data)
         } catch {
             assertionFailure("Failed to decode puzzles.json: \(error)")
+            return []
+        }
+    }
+
+    /// Loads `packs.json` if present. A missing file is not an error — the packs
+    /// feature simply stays absent (the app predates it).
+    private static func loadBundledPacks(bundle: Bundle) -> [PuzzlePack] {
+        guard let url = bundle.url(forResource: "packs", withExtension: "json") else {
+            return []
+        }
+        do {
+            let data = try Data(contentsOf: url)
+            return try JSONDecoder().decode([PuzzlePack].self, from: data)
+        } catch {
+            assertionFailure("Failed to decode packs.json: \(error)")
             return []
         }
     }
@@ -67,5 +101,35 @@ final class PuzzleProvider {
 
     func puzzle(id: String) -> Puzzle? {
         (puzzles + minis).first { $0.id == id }
+    }
+
+    // MARK: - Packs
+
+    func pack(id: String) -> PuzzlePack? {
+        packs.first { $0.id == id }
+    }
+
+    /// The pack a puzzle primarily belongs to, or `nil` if it's in none. Drives
+    /// the in-game "next in pack" affordance.
+    func pack(forPuzzle id: String) -> PuzzlePack? {
+        packByPuzzleID[id].flatMap(pack(id:))
+    }
+
+    /// A pack's puzzles resolved in authored order. Unknown ids are dropped (a
+    /// DEBUG assertion flags authoring typos) so a stale reference never crashes.
+    func puzzles(in pack: PuzzlePack) -> [Puzzle] {
+        pack.puzzleIDs.compactMap { id in
+            guard let puzzle = puzzle(id: id) else {
+                assertionFailure("Pack \(pack.id) references missing puzzle \(id)")
+                return nil
+            }
+            return puzzle
+        }
+    }
+
+    /// Packs whose seasonal window includes `date` (non-seasonal always shown),
+    /// preserving display order.
+    func availablePacks(on date: Date = Date()) -> [PuzzlePack] {
+        packs.filter { $0.isAvailable(on: date) }
     }
 }

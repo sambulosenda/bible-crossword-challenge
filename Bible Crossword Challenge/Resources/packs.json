@@ -1,0 +1,46 @@
+[
+  {
+    "id": "first-steps",
+    "title": "First Steps",
+    "blurb": "A gentle five-puzzle warm-up to learn the ropes.",
+    "coverSymbol": "figure.walk",
+    "accentHex": null,
+    "isPremium": false,
+    "puzzleIDs": ["daily-001", "daily-010", "mini-001", "daily-014", "mini-003"],
+    "availableFrom": null,
+    "availableTo": null
+  },
+  {
+    "id": "life-of-david",
+    "title": "The Life of David",
+    "blurb": "From the sheepfold to the throne of Israel.",
+    "coverSymbol": "crown",
+    "accentHex": "#8A6D3B",
+    "isPremium": true,
+    "puzzleIDs": ["daily-004", "daily-013", "daily-022", "daily-035"],
+    "availableFrom": null,
+    "availableTo": null
+  },
+  {
+    "id": "parables-of-jesus",
+    "title": "Parables of Jesus",
+    "blurb": "The stories that carry the kingdom.",
+    "coverSymbol": "text.book.closed",
+    "accentHex": null,
+    "isPremium": true,
+    "puzzleIDs": ["daily-021", "daily-024", "daily-038", "daily-056"],
+    "availableFrom": null,
+    "availableTo": null
+  },
+  {
+    "id": "advent",
+    "title": "Advent",
+    "blurb": "Count down to Christmas, one puzzle at a time.",
+    "coverSymbol": "sparkles",
+    "accentHex": "#1F6F54",
+    "isPremium": true,
+    "puzzleIDs": ["daily-019", "daily-028"],
+    "availableFrom": "2026-12-01",
+    "availableTo": "2026-12-26"
+  }
+]

@@ -11,7 +11,7 @@ import SwiftData
 
 /// The main tab bar's selectable tabs.
 enum RootTab: Hashable {
-    case today, archive, achievements, profile
+    case today, packs, archive, achievements, profile
 }
 
 struct RootView: View {
@@ -100,6 +100,9 @@ struct RootView: View {
         return TabView(selection: $selectedTab) {
             Tab("Today", systemImage: "calendar", value: RootTab.today) {
                 HomeView(profile: profile, path: $todayPath)
+            }
+            Tab("Packs", systemImage: "square.stack.3d.up", value: RootTab.packs) {
+                PacksView(profile: profile)
             }
             Tab("Archive", systemImage: "books.vertical", value: RootTab.archive) {
                 ArchiveView(profile: profile)

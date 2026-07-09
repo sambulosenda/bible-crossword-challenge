@@ -20,6 +20,8 @@ enum AnalyticsEvent {
     case paywallOpened(source: String)
     case notificationPermission(granted: Bool)
     case reminderSettingChanged(enabled: Bool)
+    case packOpened(id: String)
+    case packCompleted(id: String)
 
     var name: String {
         switch self {
@@ -33,6 +35,8 @@ enum AnalyticsEvent {
         case .paywallOpened: return "paywall_opened"
         case .notificationPermission: return "notification_permission"
         case .reminderSettingChanged: return "reminder_setting_changed"
+        case .packOpened: return "pack_opened"
+        case .packCompleted: return "pack_completed"
         }
     }
 
@@ -58,6 +62,10 @@ enum AnalyticsEvent {
             return ["granted": granted]
         case .reminderSettingChanged(let enabled):
             return ["enabled": enabled]
+        case .packOpened(let id):
+            return ["pack_id": id]
+        case .packCompleted(let id):
+            return ["pack_id": id]
         }
     }
 }
