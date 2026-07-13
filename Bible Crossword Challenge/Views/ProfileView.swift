@@ -15,6 +15,7 @@ struct ProfileView: View {
     @Environment(StoreService.self) private var store
     @Environment(\.analytics) private var analytics
     @Environment(\.notifications) private var notifications
+    @Environment(\.gameCenter) private var gameCenter
     @Environment(\.openURL) private var openURL
     @AppStorage("appTheme") private var appTheme: AppTheme = .system
     @AppStorage("remindersEnabled") private var remindersEnabled = false
@@ -63,6 +64,21 @@ struct ProfileView: View {
                 Section("Stats") {
                     stat("Streak Freezes", value: "\(profile.streakFreezes)", symbol: "snowflake", tint: .cyan)
                     stat("Achievements", value: "\(unlockedCount)/\(Achievements.all.count)", symbol: "star.fill", tint: .indigo)
+                    // Persistent way back to this week's Mini standings — the
+                    // only other entry point is the post-solve completion screen.
+                    // Hidden when the player isn't signed in to Game Center.
+                    if gameCenter.isAuthenticated {
+                        Button {
+                            gameCenter.showWeeklyMiniLeaderboard()
+                        } label: {
+                            Label {
+                                Text("Weekly Leaderboard")
+                            } icon: {
+                                Image(systemName: "trophy.fill").foregroundStyle(.yellow)
+                            }
+                        }
+                        .accessibilityHint("Opens this week's fastest Mini times")
+                    }
                 }
 
                 Section("Appearance") {
