@@ -2,39 +2,47 @@
 //  PaywallView.swift
 //  Bible Crossword Challenge
 //
-//  Premium upgrade screen. A dark, immersive paywall: a gold-glow hero, a clean
-//  benefit checklist, stacked plan cards (yearly with a free trial + savings
-//  badge, monthly, and a one-time lifetime unlock) and a prominent gradient CTA.
-//  Purchase/restore go through StoreService (StoreKit 2). The screen forces a
-//  dark scheme and paints its own colours so it reads the same in light or dark.
+//  Premium upgrade screen. A warm, immersive paywall: a deep espresso/charcoal
+//  ground, a gold-glow crown mark, a clean benefit checklist, stacked plan cards
+//  (yearly with a free trial + savings badge, monthly, and a one-time lifetime
+//  unlock) and a prominent gold CTA. Purchase/restore go through StoreService
+//  (StoreKit 2). The screen forces a dark scheme and paints its own colours so it
+//  reads the same regardless of the app appearance setting.
 //
 
 import SwiftUI
 import StoreKit
 
-/// Self-contained palette for the paywall's immersive dark look. Kept local so
-/// the rest of the app's native, system-coloured language is untouched.
+/// Self-contained palette for the paywall's warm espresso-and-gold look. Kept
+/// local so the rest of the app's native, system-coloured language is untouched.
 private enum Pay {
-    static let gold = Color(red: 0.96, green: 0.80, blue: 0.42)
-    static let ink = Color(red: 0.05, green: 0.06, blue: 0.12)
+    /// Bright gold for text/borders/kicker — the premium accent on the dark ground.
+    static let gold = Color(red: 0.95, green: 0.78, blue: 0.42)
+    /// Warm near-black used for labels on gold surfaces (CTA, checks, badge).
+    static let ink = Color(red: 0.12, green: 0.09, blue: 0.05)
+    /// Warm off-white for primary text on the espresso ground.
+    static let textPrimary = Color(red: 0.98, green: 0.96, blue: 0.93)
 
-    static let card = Color.white.opacity(0.06)
-    static let cardSelected = gold.opacity(0.14)
+    static let card = Color(red: 1.0, green: 0.96, blue: 0.90).opacity(0.06)  // warm veil
+    static let cardSelected = gold.opacity(0.15)
     static let hairline = Color.white.opacity(0.12)
-    static let textSecondary = Color.white.opacity(0.64)
+    static let textSecondary = Color.white.opacity(0.62)
+    static let cardShadow = Color.black.opacity(0.22)
 
     static let cornerRadius: CGFloat = 18
 
+    /// Vivid gold for the crown, checks, badge and CTA — the premium accent.
     static let goldGradient = LinearGradient(
-        colors: [Color(red: 0.99, green: 0.87, blue: 0.53), Color(red: 0.90, green: 0.70, blue: 0.31)],
+        colors: [Color(red: 0.99, green: 0.85, blue: 0.48), Color(red: 0.88, green: 0.66, blue: 0.26)],
         startPoint: .top, endPoint: .bottom
     )
 
+    /// Deep espresso → warm near-black. Warmer and more "scripture" than navy.
     static let background = LinearGradient(
         colors: [
-            Color(red: 0.11, green: 0.13, blue: 0.28),
-            Color(red: 0.06, green: 0.07, blue: 0.16),
-            Color(red: 0.03, green: 0.035, blue: 0.08),
+            Color(red: 0.22, green: 0.16, blue: 0.12),
+            Color(red: 0.13, green: 0.10, blue: 0.08),
+            Color(red: 0.07, green: 0.055, blue: 0.045),
         ],
         startPoint: .top, endPoint: .bottom
     )
@@ -48,10 +56,9 @@ struct PaywallView: View {
     @State private var selectedID = StoreService.yearlyID
 
     private let benefits: [String] = [
-        "Remove all ads",
-        "Unlimited hints",
-        "Full puzzle archive",
+        "All 100+ puzzles, back to day one",
         "Every future pack included",
+        "Unlimited hints",
     ]
 
     private var selectedProduct: Product? {
@@ -145,7 +152,7 @@ struct PaywallView: View {
                 .kicker(Pay.gold)
             Text("Unlock Premium")
                 .font(.largeTitle.bold())
-                .foregroundStyle(.white)
+                .foregroundStyle(Pay.textPrimary)
                 .multilineTextAlignment(.center)
         }
     }
@@ -179,7 +186,7 @@ struct PaywallView: View {
                         .background(Pay.goldGradient, in: .circle)
                     Text(title)
                         .font(.body.weight(.semibold))
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Pay.textPrimary)
                     Spacer(minLength: 0)
                 }
                 .accessibilityElement(children: .combine)
@@ -202,7 +209,7 @@ struct PaywallView: View {
             if store.productsLoadFailed {
                 Label("Couldn't load plans", systemImage: "wifi.exclamationmark")
                     .font(.headline)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Pay.textPrimary)
                 Text("Check your connection and try again.")
                     .font(.subheadline)
                     .foregroundStyle(Pay.textSecondary)
@@ -246,7 +253,7 @@ struct PaywallView: View {
                     HStack(spacing: Theme.Spacing.s) {
                         Text(planTitle(product))
                             .font(.headline)
-                            .foregroundStyle(.white)
+                            .foregroundStyle(Pay.textPrimary)
                         if let badge = badgeText(product) {
                             Text(badge)
                                 .font(.caption2.weight(.bold))
@@ -271,6 +278,7 @@ struct PaywallView: View {
                 RoundedRectangle(cornerRadius: Pay.cornerRadius, style: .continuous)
                     .strokeBorder(selected ? Pay.gold : Pay.hairline, lineWidth: selected ? 2 : 1)
             }
+            .shadow(color: Pay.cardShadow, radius: 6, x: 0, y: 3)
         }
         .buttonStyle(PressableCardStyle())
         .accessibilityElement(children: .combine)
@@ -393,7 +401,7 @@ struct PaywallView: View {
 
     private var legal: some View {
         VStack(spacing: Theme.Spacing.s) {
-            Text("Subscriptions auto-renew unless cancelled at least 24 hours before the end of the period. Manage or cancel anytime in Settings. Payment is charged to your Apple Account.")
+            Text("Auto-renews until cancelled. Cancel anytime in Settings.")
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.white.opacity(0.45))
             HStack(spacing: Theme.Spacing.m) {
