@@ -1,0 +1,14 @@
+---
+import Brand from './Brand.astro';
+import { APP_STORE_URL } from '../consts';
+---
+<header class="nav">
+  <div class="wrap nav-inner">
+    <Brand />
+    <nav class="nav-links" aria-label="Main">
+      <a class="nav-link secondary" href="/puzzles/">Puzzles</a>
+      <a class="nav-link secondary" href="/how-to-play/">How to play</a>
+      <a class="nav-link primary" href={APP_STORE_URL} rel="noopener">Get the app</a>
+    </nav>
+  </div>
+</header>

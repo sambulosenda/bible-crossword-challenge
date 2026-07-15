@@ -1,0 +1,67 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Brand from '../../components/Brand.astro';
+import { APP_STORE_URL } from '../../consts';
+
+const title = 'A Bible Crossword Challenge for you';
+const description =
+  'A friend challenged you to a Bible crossword. Beat their time on iOS — free on the App Store.';
+---
+<Layout title={title} description={description} path="/challenge/" robots="noindex, follow" chrome={false}>
+  <main class="challenge-wrap">
+    <article class="challenge-card">
+      <div class="challenge-mark"><Brand size={44} /></div>
+      <p class="eyebrow" style="justify-content:center">You've been challenged</p>
+      <h1><span id="name">A friend</span> beat this puzzle</h1>
+      <p class="challenge-time" id="time" hidden>Their time: <b id="timeval"></b></p>
+      <p class="lede" style="margin:0 auto 28px; text-align:center">
+        Think you can go faster? Get Bible Crossword Challenge — a fresh Scripture crossword every day — and prove it.
+      </p>
+      <a class="btn-store" href={APP_STORE_URL} id="cta" rel="noopener">
+        <span><small>Download on the</small><strong>App Store</strong></span>
+      </a>
+      <p class="challenge-note" id="reopen" hidden></p>
+      <p class="challenge-foot"><a href="/">biblecrosswordchallenge.com</a></p>
+    </article>
+  </main>
+</Layout>
+
+<style is:global>
+  .challenge-wrap { min-height: 100vh; display: grid; place-items: center; padding: 28px; }
+  .challenge-card {
+    width: 100%; max-width: 440px; text-align: center;
+    border: 1px solid var(--line); border-radius: 22px; background: #fff;
+    padding: 40px 30px 30px; box-shadow: var(--shadow-lift);
+  }
+  .challenge-mark { display: flex; justify-content: center; margin-bottom: 20px; }
+  .challenge-mark .brand-name { display: none; }
+  .challenge-card h1 { font-size: clamp(28px, 7vw, 40px); text-align: center; }
+  .challenge-card .btn-store { justify-content: center; }
+  .challenge-time {
+    font-family: var(--mono); font-size: 15px; color: var(--ink-soft);
+    background: var(--paper-2); border-radius: 999px; padding: 8px 16px;
+    display: inline-block; margin: 4px 0 24px;
+  }
+  [hidden] { display: none !important; }
+  .challenge-time b { color: var(--ink); font-weight: 600; }
+  .challenge-note { font-size: 14px; color: var(--muted); margin: 24px auto 0; max-width: 36ch; }
+  .challenge-foot { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-top: 26px; }
+  .challenge-foot a:hover { color: var(--ink); }
+</style>
+
+<script>
+  const q = new URLSearchParams(location.search);
+  const rawName = (q.get('n') || '').trim().slice(0, 20);
+  if (rawName) document.getElementById('name')!.textContent = rawName;
+  const secs = parseInt(q.get('t') || '', 10);
+  if (!isNaN(secs) && secs > 0 && secs < 86400) {
+    const m = Math.floor(secs / 60);
+    const s = secs % 60;
+    document.getElementById('timeval')!.textContent = m + ':' + (s < 10 ? '0' : '') + s;
+    document.getElementById('time')!.hidden = false;
+  }
+  const who = rawName || 'your friend';
+  const reopen = document.getElementById('reopen')!;
+  reopen.textContent = 'Already have the app? Ask ' + who + " to send the link again — it'll open your challenge.";
+  reopen.hidden = false;
+</script>

@@ -1,0 +1,15 @@
+---
+import { SUPPORT_EMAIL } from '../consts';
+const year = new Date().getFullYear();
+---
+<footer>
+  <div class="wrap foot-inner">
+    <div>© {year} Bible Crossword Challenge</div>
+    <nav class="foot-links" aria-label="Footer">
+      <a href="/puzzles/">Puzzles</a>
+      <a href="/how-to-play/">How to play</a>
+      <a href="/privacy/">Privacy</a>
+      <a href={`mailto:${SUPPORT_EMAIL}`}>Support</a>
+    </nav>
+  </div>
+</footer>

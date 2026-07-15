@@ -1,0 +1,14 @@
+---
+// The app-icon mark + wordmark, used in the nav and footer.
+interface Props { size?: number; }
+const { size = 30 } = Astro.props;
+---
+<a class="brand" href="/" aria-label="Bible Crossword Challenge home">
+  <svg width={size} height={size} viewBox="0 0 64 64" aria-hidden="true">
+    <rect width="64" height="64" rx="14" fill="#141416" />
+    <rect x="24" y="8" width="16" height="48" rx="2" fill="#fff" />
+    <rect x="8" y="24" width="48" height="16" rx="2" fill="#fff" />
+    <rect x="24" y="24" width="16" height="16" fill="#0B7BFF" />
+  </svg>
+  <span class="brand-name">Bible Crossword Challenge</span>
+</a>

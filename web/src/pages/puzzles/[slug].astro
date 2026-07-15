@@ -1,0 +1,82 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import AppStoreButton from '../../components/AppStoreButton.astro';
+import { SITE } from '../../consts';
+
+export async function getStaticPaths() {
+  const puzzles = await getCollection('puzzles');
+  return puzzles.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const p = entry.data;
+const path = `/puzzles/${entry.id}/`;
+
+const breadcrumbLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE}/` },
+    { '@type': 'ListItem', position: 2, name: 'Puzzles', item: `${SITE}/puzzles/` },
+    { '@type': 'ListItem', position: 3, name: p.reference, item: `${SITE}${path}` },
+  ],
+};
+---
+<Layout title={p.title} description={p.description} path={path}>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(breadcrumbLd)} />
+  </Fragment>
+
+  <main class="page">
+    <div class="wrap">
+      <p class="crumbs"><a href="/">Home</a><span>/</span><a href="/puzzles/">Puzzles</a><span>/</span><span set:html={p.reference} /></p>
+      <article>
+        <p class="eyebrow">{p.reference}</p>
+        <h1 set:html={p.heading} />
+        <p class="meta-chips">{p.meta}</p>
+        <div class="prose">
+          {p.prose.map((para) => <p set:html={para} />)}
+        </div>
+
+        <div class="content-section">
+          <h2>Clues from the puzzle</h2>
+          <div class="clue-samples">
+            {p.clues.map((c) => (
+              <div class="clue">
+                <div class="clue-q"><span class="clue-n">{c.n}</span><span class="clue-text">{c.text} <span class="enum">{c.enum}</span></span></div>
+                <div class="tiles" aria-label={`${c.len}-letter answer, solved in the app`}>
+                  {Array.from({ length: c.len }).map(() => <span class="tile" />)}
+                </div>
+              </div>
+            ))}
+          </div>
+          <p class="clues-foot">The answers are waiting in the app — every clue can be solved from the story itself, and fair hints help when you're stuck.</p>
+
+          <div style="margin-top:34px"><AppStoreButton /></div>
+        </div>
+      </article>
+    </div>
+  </main>
+
+  <section class="verse-band">
+    <div class="wrap">
+      <span class="orn" aria-hidden="true">✦ ✦ ✦</span>
+      <blockquote set:html={`&ldquo;${p.verseText}&rdquo;`} />
+      <cite>{p.verseCite}</cite>
+    </div>
+  </section>
+
+  <section class="wrap" style="padding-bottom:20px">
+    <h2 style="margin-top:0">More Bible crossword themes</h2>
+    <div class="theme-grid">
+      {p.related.map((t) => (
+        <a class="theme-card" href={t.href}>
+          <span class="t-eyebrow" set:html={t.eyebrow} />
+          <span class="t-name">{t.name}</span>
+          <span class="t-sub">{t.sub}</span>
+        </a>
+      ))}
+    </div>
+  </section>
+</Layout>

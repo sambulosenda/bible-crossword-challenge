@@ -1,0 +1,29 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  path?: string;
+  robots?: string;
+  /** Set false for standalone pages (e.g. the challenge landing) that supply
+      their own chrome. */
+  chrome?: boolean;
+}
+const { title, description, path, robots, chrome = true } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={title} description={description} path={path} robots={robots} />
+    <slot name="head" />
+  </head>
+  <body>
+    {chrome && <Nav />}
+    <slot />
+    {chrome && <Footer />}
+  </body>
+</html>

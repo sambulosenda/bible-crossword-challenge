@@ -1,0 +1,67 @@
+---
+import Layout from '../layouts/Layout.astro';
+import AppStoreButton from '../components/AppStoreButton.astro';
+
+const title = 'How to play — Bible Crossword Challenge';
+const description =
+  'How to play Bible Crossword Challenge: tap a square, read the clue, type the answer. Five tips for solving Bible crosswords, plus hints without spoilers.';
+
+const themes = [
+  { href: '/puzzles/noahs-ark/', eyebrow: 'Genesis 6–9', name: "Noah's Ark", sub: 'Easy · Bible crossword' },
+  { href: '/puzzles/david-and-goliath/', eyebrow: '1 Samuel 17', name: 'David and Goliath', sub: 'Easy · Bible crossword' },
+  { href: '/puzzles/psalm-23/', eyebrow: "The Shepherd's Psalm", name: 'Psalm 23', sub: 'Easy · Bible crossword' },
+  { href: '/puzzles/', eyebrow: 'The full archive', name: 'All puzzle themes', sub: '80+ puzzles, Genesis to Revelation' },
+];
+---
+<Layout title={title} description={description} path="/how-to-play/">
+  <main class="page">
+    <div class="wrap">
+      <p class="crumbs"><a href="/">Home</a><span>/</span>How to play</p>
+      <p class="eyebrow">The rules, in brief</p>
+      <h1>How to play</h1>
+      <div class="prose">
+        <p>If you've ever solved a crossword, you already know how to play Bible Crossword Challenge. Every answer comes from Scripture — the people, places, miracles, and verses of the King James Version — and every puzzle ends on the verse behind its theme.</p>
+      </div>
+
+      <div class="content-section">
+        <h2>The basics</h2>
+        <div class="prose">
+          <p><strong>Tap a square, read the clue, type the answer.</strong> Tapping a square highlights the word it belongs to and shows its clue; tapping again switches between Across and Down. Filled letters that cross your word are already working for you — a single right answer unlocks letters in every word it touches.</p>
+          <p><strong>The number in parentheses is the answer's length.</strong> A clue like <em>“Bird sent out that returned with an olive leaf (4)”</em> wants a four-letter answer. When the whole grid is right, it flashes green and the closing verse appears.</p>
+        </div>
+
+        <h2>Hints, without spoilers</h2>
+        <div class="prose">
+          <p>Stuck squares don't have to stay stuck. Hints work in steps — check a letter, reveal a letter, or reveal a word — so you can get exactly as much help as you want and no more. There's no timer and no penalty: the puzzle is a quiet moment, not a race.</p>
+        </div>
+
+        <h2>Streaks and achievements</h2>
+        <div class="prose">
+          <p>A fresh puzzle arrives every midnight. Finish it and your streak grows by one; achievements mark the milestones from <em>Bible Beginner</em> all the way to <em>Apostle</em>. Progress saves on your device and syncs privately through iCloud, so an iPad evening continues an iPhone morning.</p>
+        </div>
+
+        <h2>Five tips for Bible crosswords</h2>
+        <div class="prose">
+          <p><strong>1. Think KJV.</strong> Answers follow the King James Version — <em>Saviour</em>, <em>honour</em>, <em>armour</em>. If an answer looks one letter too long, it's probably the spelling.</p>
+          <p><strong>2. Start with what you know.</strong> Sweep the clues and fill the certainties first — every letter you place makes its crossing words easier.</p>
+          <p><strong>3. Short words are friends.</strong> Three- and four-letter Bible answers repeat across puzzles: <em>ark</em>, <em>Eden</em>, <em>Ruth</em>, <em>Job</em>, <em>law</em>, <em>lamb</em>.</p>
+          <p><strong>4. Let the theme guide you.</strong> Every puzzle tells one story. In <a href="/puzzles/noahs-ark/">Noah's Ark</a>, think flood; in <a href="/puzzles/christmas/">the Christmas story</a>, think Luke 2.</p>
+          <p><strong>5. Re-read the verse.</strong> The chapter under the puzzle title is the best hint in the game — the closing verse is drawn straight from it.</p>
+        </div>
+
+        <h2>Try a theme</h2>
+        <div class="theme-grid">
+          {themes.map((t) => (
+            <a class="theme-card" href={t.href}>
+              <span class="t-eyebrow" set:html={t.eyebrow} />
+              <span class="t-name">{t.name}</span>
+              <span class="t-sub">{t.sub}</span>
+            </a>
+          ))}
+        </div>
+
+        <div style="margin-top:34px"><AppStoreButton /></div>
+      </div>
+    </div>
+  </main>
+</Layout>

@@ -1,0 +1,48 @@
+---
+import { SITE, APP_STORE_ID } from '../consts';
+interface Props {
+  title: string;
+  description: string;
+  /** Absolute path for the canonical URL, e.g. "/how-to-play/". */
+  path?: string;
+  robots?: string;
+  ogImage?: string;
+}
+const {
+  title,
+  description,
+  path = new URL(Astro.request.url).pathname,
+  robots = 'index, follow',
+  ogImage = `${SITE}/assets/og-image.png`,
+} = Astro.props;
+const canonical = new URL(path, SITE).href;
+---
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+<meta name="robots" content={robots} />
+<meta name="theme-color" content="#FBFAF6" />
+<meta name="apple-itunes-app" content={`app-id=${APP_STORE_ID}`} />
+
+<meta property="og:type" content="website" />
+<meta property="og:url" content={canonical} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:site_name" content="Bible Crossword Challenge" />
+<meta property="og:locale" content="en_US" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23141416'/%3E%3Crect x='24' y='8' width='16' height='48' rx='2' fill='%23fff'/%3E%3Crect x='8' y='24' width='48' height='16' rx='2' fill='%23fff'/%3E%3Crect x='24' y='24' width='16' height='16' fill='%230B7BFF'/%3E%3C/svg%3E" />
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital@0;1&display=swap" rel="stylesheet" />

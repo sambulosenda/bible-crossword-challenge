@@ -1,0 +1,15 @@
+# 301 the old .html URLs (from the previous Hostinger site) to the clean paths,
+# so existing inbound links and search results keep working after the migration.
+/how-to-play.html                 /how-to-play/                 301
+/privacy.html                     /privacy/                     301
+/index.html                       /                             301
+
+# Themed puzzle pages
+/puzzles/animals-of-the-bible.html   /puzzles/animals-of-the-bible/   301
+/puzzles/books-of-the-bible.html     /puzzles/books-of-the-bible/     301
+/puzzles/christmas.html              /puzzles/christmas/              301
+/puzzles/david-and-goliath.html      /puzzles/david-and-goliath/      301
+/puzzles/easter.html                 /puzzles/easter/                 301
+/puzzles/noahs-ark.html              /puzzles/noahs-ark/              301
+/puzzles/psalm-23.html               /puzzles/psalm-23/               301
+/puzzles/ten-commandments.html       /puzzles/ten-commandments/       301

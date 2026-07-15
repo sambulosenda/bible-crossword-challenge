@@ -1,0 +1,51 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { SUPPORT_EMAIL } from '../consts';
+
+const title = 'Privacy Policy — Bible Crossword Challenge';
+const description =
+  'Bible Crossword Challenge privacy policy. The app is offline-first: no account required, no personal data collected — only anonymous usage and crash analytics.';
+---
+<Layout title={title} description={description} path="/privacy/">
+  <main class="page">
+    <div class="wrap" style="max-width:720px">
+      <p class="crumbs"><a href="/">Home</a><span>/</span>Privacy</p>
+      <p class="eyebrow">Privacy</p>
+      <h1>Privacy Policy</h1>
+      <p class="updated">Last updated: 22 June 2026</p>
+
+      <div class="content-section prose" style="max-width:none">
+        <h2>The short version</h2>
+        <p>Bible Crossword Challenge is offline-first. You don't need an account, and your puzzle progress, streaks, and achievements are stored only on your device.</p>
+
+        <h2>Information we collect</h2>
+        <p>We do not collect personal information such as your name, email, or contacts. We use anonymous analytics and crash reporting (via Google Firebase) to understand how the app is used and to fix problems. This may include:</p>
+        <ul>
+          <li>Anonymous usage events (e.g. a puzzle was opened or completed)</li>
+          <li>Device type, OS version, and app version</li>
+          <li>Crash and performance diagnostics</li>
+        </ul>
+        <p>This data is not used to personally identify you.</p>
+
+        <h2>Purchases</h2>
+        <p>Premium is sold through Apple's App Store using StoreKit. Apple processes all payments — we never receive your payment details. We only learn whether your purchase succeeded.</p>
+
+        <h2>Third-party services</h2>
+        <p>We use Google Firebase (Analytics) and Apple (App Store / StoreKit). Their handling of data is governed by their own privacy policies:</p>
+        <ul>
+          <li><a href="https://firebase.google.com/support/privacy" target="_blank" rel="noopener">Firebase Privacy</a></li>
+          <li><a href="https://www.apple.com/legal/privacy/" target="_blank" rel="noopener">Apple Privacy</a></li>
+        </ul>
+
+        <h2>Children</h2>
+        <p>The app does not knowingly collect personal information from children. No personal data is required to use it.</p>
+
+        <h2>Changes</h2>
+        <p>We may update this policy from time to time. Material changes will be reflected on this page with a new “last updated” date.</p>
+
+        <h2>Contact</h2>
+        <p>Questions? Email <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>.</p>
+      </div>
+    </div>
+  </main>
+</Layout>

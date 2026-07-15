@@ -1,0 +1,393 @@
+---
+import Layout from '../layouts/Layout.astro';
+import AppStoreButton from '../components/AppStoreButton.astro';
+import { SITE, APP_STORE_URL } from '../consts';
+
+const title = 'Bible Crossword Challenge — a daily Bible crossword for iOS';
+const description =
+  'A fresh Bible crossword every day. Clues rooted in Scripture, from Genesis to Revelation. Build a streak, earn achievements, and end every puzzle on a verse. Free on iOS.';
+
+const features = {
+  across: [
+    { n: '2A', answer: 'DAILY', enum: '(5)', text: 'A new hand-crafted puzzle waiting every morning' },
+    { n: '4A', answer: 'STREAK', enum: '(6)', text: 'Played today, and yesterday, and the day before' },
+    { n: '6A', answer: 'VERSE', enum: '(5)', text: 'What every finished puzzle ends on — KJV, chapter and all' },
+  ],
+  down: [
+    { n: '1D', answer: 'HINTS', enum: '(5)', text: 'Fair nudges that unstick you without spoiling it' },
+    { n: '3D', answer: 'ARCHIVE', enum: '(7)', text: "Where 80+ puzzles live, from Noah's Ark to Easter morning" },
+    { n: '5D', answer: 'OFFLINE', enum: '(7)', text: 'Works on a plane, in the pew, or anywhere else' },
+  ],
+};
+
+const screens = [
+  { img: 'shot-today', alt: "The Today screen: streak counter, today's puzzle, Verse of the Day, and next achievement", cap: 'Begin the day', body: "Your streak, today's puzzle, and the Verse of the Day in one quiet screen." },
+  { img: 'shot-puzzle', alt: 'The crossword grid mid-solve, with the clue “Black bird that fed the prophet Elijah”', cap: 'Solve the grid', body: 'Clues like “Black bird that fed the prophet Elijah” teach as you type.' },
+  { img: 'shot-profile', alt: 'The Profile screen with puzzles completed, streaks, and achievements', cap: 'Watch it grow', body: 'Puzzles completed, best streaks, and achievements earned along the way.' },
+];
+
+const faqs = [
+  { q: 'Is Bible Crossword Challenge free?', a: 'Yes — download and play the daily puzzle for free. Premium unlocks the full archive and extras.' },
+  { q: 'Is there a new Bible crossword puzzle every day?', a: "Yes. A fresh daily Bible crossword arrives at midnight, and the archive holds 80+ hand-crafted puzzles across the whole Bible — from Noah's Ark to Easter morning." },
+  { q: 'How difficult are the puzzles?', a: 'They are made for everyone — lifelong believers and casual solvers alike. If a clue has you stuck, smart hints nudge you along without spoiling the answer.' },
+  { q: 'Do I need an account?', a: 'No. The app works fully offline and your progress is saved on your device — and synced privately through iCloud if you play on more than one.' },
+  { q: 'Which Bible translation do the verses use?', a: 'All verses are drawn from the King James Version (KJV).' },
+  { q: 'Does it work on iPad?', a: 'Yes — Bible Crossword Challenge runs on both iPhone and iPad, and your progress syncs between them through iCloud.' },
+  { q: 'Is there an Android version?', a: "Bible Crossword Challenge is on iOS today. If you'd like it on Android, tell us — it genuinely helps us decide." },
+];
+
+const softwareLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'Bible Crossword Challenge',
+  url: `${SITE}/`,
+  installUrl: APP_STORE_URL,
+  operatingSystem: 'iOS',
+  applicationCategory: 'GameApplication',
+  applicationSubCategory: 'Word',
+  author: { '@type': 'Person', name: 'Sambulo Senda' },
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD', url: APP_STORE_URL },
+  screenshot: screens.map((s) => `${SITE}/assets/${s.img}.png`),
+  description: 'A fresh Bible crossword every day. Solve scripture-themed puzzles, build a daily streak, and learn the Word as you play.',
+};
+const faqLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+---
+<Layout title={title} description={description} path="/">
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(softwareLd)} />
+    <script type="application/ld+json" set:html={JSON.stringify(faqLd)} />
+  </Fragment>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow rise">A daily Bible crossword for iPhone</p>
+        <h1 class="rise d1">Know the Word, one square at a time.</h1>
+        <p class="lede rise d2">A fresh crossword every day, with clues rooted in Scripture — from Genesis to Revelation. Build a streak, earn achievements, and end every puzzle on a verse.</p>
+        <div class="rise d3"><AppStoreButton /></div>
+      </div>
+
+      <div class="xw-wrap" aria-label="Animated example crossword solving the words faith, grace, daily and streak">
+        <div class="xw" id="xw" aria-hidden="true"></div>
+        <div class="xw-clue" id="xw-clue" aria-hidden="true">
+          <span class="xw-clue-num" id="xw-clue-num">&nbsp;</span>
+          <span class="xw-clue-text" id="xw-clue-text">&nbsp;</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES AS A CLUE LIST -->
+  <section class="section" id="features">
+    <div class="wrap">
+      <p class="eyebrow">What's inside</p>
+      <h2>Everything, in so many words.</h2>
+      <p class="sec-sub">The features, written the only way a crossword app should write them.</p>
+
+      <div class="clues">
+        <div class="clue-col">
+          <h3>Across</h3>
+          {features.across.map((c) => (
+            <div class="clue" data-answer={c.answer}>
+              <div class="clue-q"><span class="clue-n">{c.n}</span><span class="clue-text">{c.text} <span class="enum">{c.enum}</span></span></div>
+              <div class="tiles" aria-label={`Answer: ${c.answer.toLowerCase()}`}></div>
+            </div>
+          ))}
+        </div>
+        <div class="clue-col">
+          <h3>Down</h3>
+          {features.down.map((c) => (
+            <div class="clue" data-answer={c.answer}>
+              <div class="clue-q"><span class="clue-n">{c.n}</span><span class="clue-text">{c.text} <span class="enum">{c.enum}</span></span></div>
+              <div class="tiles" aria-label={`Answer: ${c.answer.toLowerCase()}`}></div>
+            </div>
+          ))}
+        </div>
+        <p class="clues-foot"><strong>Also in the box:</strong> achievements from Bible Beginner to Apostle, iCloud sync across your devices, light &amp; dark mode, and not a single ad between you and the Word.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- VERSE BAND -->
+  <section class="verse-band">
+    <div class="wrap">
+      <span class="orn" aria-hidden="true">✦ ✦ ✦</span>
+      <blockquote>“Thy word have I hid in mine heart, that I might not sin against thee.”</blockquote>
+      <cite>Psalm 119 : 11 · KJV</cite>
+      <p class="verse-note">Every puzzle closes with the verse behind its theme — so each day's play plants a little more Scripture in your memory.</p>
+    </div>
+  </section>
+
+  <!-- SCREENS -->
+  <section class="section">
+    <div class="wrap">
+      <p class="eyebrow">A look inside</p>
+      <h2>Calm, focused, and made for iOS.</h2>
+      <p class="sec-sub">No clutter, no pressure — just you, a grid, and the Word.</p>
+      <div class="screens">
+        {screens.map((s, i) => (
+          <figure class="screen-card">
+            <div class="device"><img src={`/assets/${s.img}.webp`} alt={s.alt} loading="lazy" width="720" height="1566" /></div>
+            <figcaption class="screen-cap">
+              <span class="clue-n">{i + 1}</span>
+              <p><strong>{s.cap}</strong>{s.body}</p>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY -->
+  <section class="section" id="about">
+    <div class="wrap">
+      <p class="eyebrow">Why a Bible crossword</p>
+      <h2>A daily Bible crossword that plants Scripture in your memory.</h2>
+      <div class="prose">
+        <p>Bible Crossword Challenge is a Christian word game built around one simple habit: a daily Bible crossword puzzle you can finish with your morning coffee. Every clue is rooted in Scripture — the people, places, miracles, and verses of the King James Version — so each grid you solve leaves a little more of the Word with you.</p>
+        <p>Beyond the daily puzzle, an <a href="/puzzles/">archive of 80+ hand-crafted Bible crosswords</a> covers the whole story: <a href="/puzzles/noahs-ark/">Noah's Ark</a>, <a href="/puzzles/david-and-goliath/">David &amp; Goliath</a>, the Exodus, the Parables, <a href="/puzzles/christmas/">the Christmas Story</a>, <a href="/puzzles/easter/">Easter and the Resurrection</a>, and many more. Puzzles work fully offline on iPhone and iPad, sync through iCloud, and every one ends on the verse behind its theme.</p>
+        <p>Whether you love Scripture, love crosswords, or both, <a href={APP_STORE_URL} rel="noopener">download Bible Crossword Challenge free on the App Store</a> and start today's puzzle.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section" id="faq">
+    <div class="wrap">
+      <p class="eyebrow">Questions</p>
+      <h2>Before you ask.</h2>
+      <div class="faq">
+        {faqs.map((f) => (
+          <details>
+            <summary>{f.q}</summary>
+            <p>{f.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="final" id="get">
+    <div class="wrap">
+      <p class="eyebrow" style="justify-content:center">Today's puzzle is waiting</p>
+      <h2>Start your streak today.</h2>
+      <p class="sec-sub">Free on the App Store. Tomorrow's puzzle will be there too.</p>
+      <div class="final-cta"><AppStoreButton note={false} /></div>
+    </div>
+  </section>
+</Layout>
+
+<style is:global>
+  /* Home-only styles. Global (not scoped) because the hero crossword builds its
+     cells in JS, and scoped styles wouldn't reach those runtime elements. */
+  .hero { padding: clamp(56px, 8vw, 88px) 0; border-bottom: 1px solid var(--line); }
+  .hero-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 56px; align-items: center; }
+  .hero-copy h1 { max-width: 13ch; }
+  .hero-copy .lede { margin: 0 0 30px; }
+
+  .xw-wrap { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+  .xw {
+    --cellsize: clamp(36px, 6.2vw, 52px);
+    background: var(--ink); border-radius: 18px;
+    padding: calc(var(--cellsize) * .18);
+    box-shadow: var(--shadow-lift);
+    display: grid;
+    grid-template-columns: repeat(7, var(--cellsize));
+    grid-template-rows: repeat(7, var(--cellsize));
+    gap: 2px;
+  }
+  .xw-cell { background: var(--cell); border-radius: 3px; position: relative; display: grid; place-items: center; font-weight: 700; font-size: calc(var(--cellsize) * .52); transition: background .25s ease; }
+  .xw-cell .num { position: absolute; top: 2px; left: 4px; font-family: var(--mono); font-size: calc(var(--cellsize) * .21); font-weight: 500; color: var(--muted); }
+  .xw-cell.inword { background: var(--blue-wash); }
+  .xw-cell .ltr { display: block; }
+  .xw-cell .ltr.pop { animation: pop .28s cubic-bezier(.34, 1.56, .64, 1); }
+  @keyframes pop { 0% { transform: scale(.4); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+  .xw.solved .xw-cell { background: var(--green-wash); }
+  .xw-clue { min-height: 48px; text-align: center; max-width: 34ch; display: flex; flex-direction: column; gap: 3px; align-items: center; opacity: 1; transition: opacity .25s ease; }
+  .xw-clue.fade { opacity: 0; }
+  .xw-clue .xw-clue-num { font-family: var(--mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--blue); }
+  .xw-clue .xw-clue-text { font-family: var(--serif); font-style: italic; font-size: 16.5px; color: var(--ink-soft); }
+
+  .section { padding: clamp(64px, 9vw, 92px) 0; }
+
+  /* Feature clue list is a 2-column layout; base .clue/.tile styling is shared
+     in global.css. Only the layout + the animated letter tiles live here, the
+     tiles scoped to #features so puzzle-page tiles stay static. */
+  .clues { display: grid; grid-template-columns: 1fr 1fr; gap: 0 64px; margin-top: 48px; }
+  .clue-col h3 { font-family: var(--mono); font-weight: 600; font-size: 13px; letter-spacing: .18em; text-transform: uppercase; margin: 0 0 6px; padding-bottom: 10px; border-bottom: 2px solid var(--ink); }
+  #features .tile { width: 30px; height: 30px; font-size: 15px; }
+  #features .tile span { opacity: 0; transform: scale(.5); }
+  #features .tile.on span { opacity: 1; transform: scale(1); transition: opacity .2s ease, transform .25s cubic-bezier(.34, 1.56, .64, 1); }
+  #features .clues-foot { grid-column: 1 / -1; margin-top: 26px; }
+
+  .screens { display: grid; grid-template-columns: repeat(3, 1fr); gap: 36px; margin-top: 52px; }
+  .screen-card { display: flex; flex-direction: column; gap: 16px; margin: 0; }
+  .device { border-radius: 34px; border: 1px solid var(--line); background: #fff; padding: 9px; box-shadow: var(--shadow-card); transition: transform .18s ease, box-shadow .18s ease; }
+  .screen-card:hover .device { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
+  .device img { border-radius: 26px; width: 100%; height: auto; }
+  .screen-cap { display: flex; gap: 12px; align-items: baseline; padding: 0 6px; }
+  .screen-cap .clue-n { min-width: auto; color: var(--blue); }
+  .screen-cap p { margin: 0; font-size: 15px; color: var(--ink-soft); }
+  .screen-cap p strong { display: block; font-family: var(--display); font-weight: 400; font-size: 18px; color: var(--ink); margin-bottom: 2px; }
+
+  #about .prose { margin-top: 30px; }
+
+  .faq { max-width: 680px; margin-top: 34px; }
+  .faq details { border-bottom: 1px solid var(--line); padding: 20px 4px; }
+  .faq details:first-child { border-top: 2px solid var(--ink); }
+  .faq summary { font-weight: 600; font-size: 17px; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: "+"; font-family: var(--mono); font-size: 20px; color: var(--gilt); flex-shrink: 0; }
+  .faq details[open] summary::after { content: "–"; }
+  .faq details p { color: var(--ink-soft); font-size: 16px; margin: 12px 0 0; max-width: 56ch; }
+
+  .final { padding: clamp(72px, 10vw, 104px) 0; text-align: center; border-top: 1px solid var(--line); }
+  .final h2 { max-width: 20ch; margin-inline: auto; }
+  .final .sec-sub { margin: 4px auto 34px; }
+  .final-cta { display: flex; justify-content: center; }
+
+  @media (max-width: 900px) {
+    .hero-grid { grid-template-columns: 1fr; gap: 48px; }
+    .hero-copy { text-align: center; }
+    .hero-copy h1, .hero-copy .lede { margin-inline: auto; }
+    .hero-copy .cta-row { justify-content: center; }
+    .clues { grid-template-columns: 1fr; gap: 0; }
+    .clue-col + .clue-col h3 { margin-top: 36px; }
+    .screens { grid-template-columns: 1fr; max-width: 340px; margin-inline: auto; }
+  }
+</style>
+
+<script>
+  // ── Hero crossword: a mini grid that solves itself on a loop ──────────────
+  (function () {
+    const SIZE = 7;
+    const WORDS = [
+      { num: 1, dir: 'Down', ans: 'FAITH', clue: 'The substance of things hoped for — Hebrews 11:1', cells: [[0, 2], [1, 2], [2, 2], [3, 2], [4, 2]] },
+      { num: 2, dir: 'Across', ans: 'GRACE', clue: '“By ___ are ye saved through faith” — Ephesians 2:8', cells: [[1, 0], [1, 1], [1, 2], [1, 3], [1, 4]] },
+      { num: 3, dir: 'Down', ans: 'DAILY', clue: 'How often a fresh puzzle arrives', cells: [[2, 5], [3, 5], [4, 5], [5, 5], [6, 5]] },
+      { num: 4, dir: 'Across', ans: 'STREAK', clue: 'What grows when you play every day', cells: [[3, 1], [3, 2], [3, 3], [3, 4], [3, 5], [3, 6]] },
+    ];
+    const grid = document.getElementById('xw');
+    const clueNum = document.getElementById('xw-clue-num');
+    const clueText = document.getElementById('xw-clue-text');
+    const clueBox = document.getElementById('xw-clue');
+    if (!grid || !clueNum || !clueText || !clueBox) return;
+
+    const isCell: Record<string, boolean> = {};
+    WORDS.forEach((w) => w.cells.forEach((rc) => { isCell[rc[0] + ',' + rc[1]] = true; }));
+    const cellEls: Record<string, HTMLElement> = {};
+    for (let r = 0; r < SIZE; r++) {
+      for (let c = 0; c < SIZE; c++) {
+        const key = r + ',' + c;
+        if (isCell[key]) {
+          const el = document.createElement('div');
+          el.className = 'xw-cell';
+          el.style.gridRow = String(r + 1);
+          el.style.gridColumn = String(c + 1);
+          cellEls[key] = el;
+          grid.appendChild(el);
+        }
+      }
+    }
+    WORDS.forEach((w) => {
+      const start = cellEls[w.cells[0][0] + ',' + w.cells[0][1]];
+      if (!start.querySelector('.num')) {
+        const n = document.createElement('span');
+        n.className = 'num';
+        n.textContent = String(w.num);
+        start.appendChild(n);
+      }
+    });
+    function setLetter(key: string, ltr: string, pop: boolean) {
+      const el = cellEls[key];
+      const old = el.querySelector('.ltr');
+      if (old) old.remove();
+      if (!ltr) return;
+      const s = document.createElement('span');
+      s.className = 'ltr' + (pop ? ' pop' : '');
+      s.textContent = ltr;
+      el.appendChild(s);
+    }
+    function clearAll() { Object.keys(cellEls).forEach((k) => setLetter(k, '', false)); grid!.classList.remove('solved'); }
+    function showClue(w: (typeof WORDS)[number] | null) {
+      clueNum!.textContent = w ? w.num + ' ' + w.dir : ' ';
+      clueText!.textContent = w ? w.clue : ' ';
+    }
+    function fillAll() { WORDS.forEach((w) => w.cells.forEach((rc, i) => setLetter(rc[0] + ',' + rc[1], w.ans[i], false))); }
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) { fillAll(); showClue(WORDS[0]); return; }
+
+    let visible = true;
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver((entries) => { visible = entries[0].isIntersecting; }, { threshold: 0.1 }).observe(grid);
+    }
+    const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms));
+    const waitVisible = () => new Promise<void>((res) => {
+      (function check() { if (visible && !document.hidden) return res(); setTimeout(check, 250); })();
+    });
+    (async function run() {
+      for (;;) {
+        clearAll();
+        showClue(null);
+        await sleep(700);
+        for (const w of WORDS) {
+          await waitVisible();
+          clueBox!.classList.add('fade');
+          await sleep(220);
+          showClue(w);
+          clueBox!.classList.remove('fade');
+          w.cells.forEach((rc) => cellEls[rc[0] + ',' + rc[1]].classList.add('inword'));
+          await sleep(650);
+          for (let j = 0; j < w.ans.length; j++) {
+            setLetter(w.cells[j][0] + ',' + w.cells[j][1], w.ans[j], true);
+            await sleep(170);
+          }
+          await sleep(750);
+          w.cells.forEach((rc) => cellEls[rc[0] + ',' + rc[1]].classList.remove('inword'));
+        }
+        grid!.classList.add('solved');
+        clueBox!.classList.add('fade');
+        await sleep(220);
+        clueNum!.textContent = 'Solved';
+        clueText!.textContent = 'Tomorrow’s puzzle arrives at midnight.';
+        clueBox!.classList.remove('fade');
+        await sleep(3400);
+        clueBox!.classList.add('fade');
+        await sleep(300);
+        clueBox!.classList.remove('fade');
+      }
+    })();
+  })();
+
+  // ── Feature clue tiles fill in when scrolled into view ───────────────────
+  (function () {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    document.querySelectorAll<HTMLElement>('.clue').forEach((clue) => {
+      const word = clue.getAttribute('data-answer') || '';
+      const tiles = clue.querySelector('.tiles');
+      if (!tiles) return;
+      word.split('').forEach((ch) => {
+        const t = document.createElement('span');
+        t.className = 'tile';
+        const inner = document.createElement('span');
+        inner.textContent = ch;
+        t.appendChild(inner);
+        tiles.appendChild(t);
+      });
+      const els = tiles.querySelectorAll('.tile');
+      const reveal = () => els.forEach((t, i) => setTimeout(() => t.classList.add('on'), reduceMotion ? 0 : 90 * i));
+      if (reduceMotion || !('IntersectionObserver' in window)) { reveal(); return; }
+      const io = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) { reveal(); io.disconnect(); }
+      }, { threshold: 0.4 });
+      io.observe(clue);
+    });
+  })();
+</script>

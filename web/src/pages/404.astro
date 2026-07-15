@@ -1,0 +1,20 @@
+---
+import Layout from '../layouts/Layout.astro';
+import AppStoreButton from '../components/AppStoreButton.astro';
+
+const title = 'Page not found — Bible Crossword Challenge';
+const description = "That page has wandered off. Head back to the daily Bible crossword.";
+---
+<Layout title={title} description={description} path="/404.html" robots="noindex, follow">
+  <main class="page">
+    <div class="wrap" style="text-align:center; padding:clamp(48px,10vw,96px) 0">
+      <p class="eyebrow" style="justify-content:center">Error 404</p>
+      <h1 style="margin-inline:auto; max-width:16ch">This square is empty.</h1>
+      <p class="lede" style="margin:0 auto 30px">The page you were looking for isn't here — but today's puzzle is only a tap away.</p>
+      <div style="display:flex; justify-content:center; gap:18px; flex-wrap:wrap">
+        <a class="nav-link primary" href="/" style="align-self:center">← Back home</a>
+        <AppStoreButton note={false} />
+      </div>
+    </div>
+  </main>
+</Layout>

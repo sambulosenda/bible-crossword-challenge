@@ -1,0 +1,11 @@
+# Cloudflare Pages response headers.
+
+# Apple's App Site Association must be served as JSON, 200, no redirect —
+# universal links (biblecrosswordchallenge.com/challenge*) depend on it.
+/.well-known/apple-app-site-association
+  Content-Type: application/json
+  Cache-Control: public, max-age=3600
+
+# Long-cache immutable static assets (screenshots, icons, og image).
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
