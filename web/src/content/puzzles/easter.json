@@ -1,0 +1,65 @@
+{
+  "title": "Easter Bible Crossword Puzzle — He Is Risen",
+  "heading": "The Easter Bible Crossword",
+  "reference": "Matthew 28",
+  "meta": "15×15 grid · Easy · Ends on Matthew 28:6",
+  "description": "An Easter Bible crossword from Matthew 28: the empty tomb, the angel at the grave, and resurrection morning. Play Holy Week puzzles free on iPhone and iPad.",
+  "prose": [
+    "An angel at the grave, linen cloths lying folded, and a tomb that could not hold Him — <em>He Is Risen</em> turns resurrection morning into a crossword you can solve in one sitting. Every clue points back to Matthew 28: Peter running to the tomb, the garden nearby, the victory over death.",
+    "The archive carries the whole arc of Holy Week: <em>The Last Supper</em>, <em>The Garden of Gethsemane</em>, <em>The Crucifixion</em>, and <em>The Road to Emmaus</em> — a puzzle for each day leading to the empty tomb."
+  ],
+  "clues": [
+    {
+      "n": "1D",
+      "text": "Apostle who ran to the empty tomb",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "2A",
+      "text": "Shining messenger at the grave",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "3D",
+      "text": "Place near where the tomb was set",
+      "enum": "(6)",
+      "len": 6
+    },
+    {
+      "n": "4D",
+      "text": "Cloths left lying in the tomb",
+      "enum": "(5)",
+      "len": 5
+    }
+  ],
+  "verseText": "He is not here: for he is risen, as he said. Come, see the place where the Lord lay.",
+  "verseCite": "Matthew 28:6 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/christmas/",
+      "eyebrow": "Luke 2 · Matthew 2",
+      "name": "Christmas",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/david-and-goliath/",
+      "eyebrow": "1 Samuel 17",
+      "name": "David and Goliath",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/ten-commandments/",
+      "eyebrow": "Exodus 20",
+      "name": "Ten Commandments",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

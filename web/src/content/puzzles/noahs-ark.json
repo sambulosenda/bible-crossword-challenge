@@ -1,0 +1,65 @@
+{
+  "title": "Noah's Ark Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Noah’s Ark Bible Crossword",
+  "reference": "Genesis 6–9",
+  "meta": "15×15 grid · Easy · Ends on Genesis 7:1",
+  "description": "Solve a Noah's Ark Bible crossword: the flood, the dove, and the ark of Genesis 6–9 in a 15×15 grid of KJV-rooted clues. Free daily puzzles on iPhone and iPad.",
+  "prose": [
+    "Forty days of rain, an ark of gopher wood, and a dove carrying an olive leaf — the flood story is one of the most vivid in all of Scripture, and it makes a wonderful crossword. In <em>Noah and the Flood</em>, every clue comes straight from Genesis 6–9: the animals gathered two by two, the single door in the ark's side, the waters that covered the earth for a hundred and fifty days.",
+    "It's one of 80+ hand-crafted puzzles in Bible Crossword Challenge, and if you're short on time, the archive also holds a quick 7×7 mini on the same story. Finish the grid and it closes the way every puzzle does — on the verse behind the theme."
+  ],
+  "clues": [
+    {
+      "n": "1D",
+      "text": "Bird sent out that returned with an olive leaf",
+      "enum": "(4)",
+      "len": 4
+    },
+    {
+      "n": "2A",
+      "text": "The great waters that covered the earth",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "3A",
+      "text": "Gopher material from which the ark was made",
+      "enum": "(4)",
+      "len": 4
+    },
+    {
+      "n": "4D",
+      "text": "The single opening in the side of the ark",
+      "enum": "(4)",
+      "len": 4
+    }
+  ],
+  "verseText": "And the LORD said unto Noah, Come thou and all thy house into the ark.",
+  "verseCite": "Genesis 7:1 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/david-and-goliath/",
+      "eyebrow": "1 Samuel 17",
+      "name": "David and Goliath",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/ten-commandments/",
+      "eyebrow": "Exodus 20",
+      "name": "Ten Commandments",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/books-of-the-bible/",
+      "eyebrow": "Genesis to Revelation",
+      "name": "Books of the Bible",
+      "sub": "Hard · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

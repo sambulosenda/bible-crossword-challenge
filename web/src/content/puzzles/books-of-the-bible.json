@@ -1,0 +1,65 @@
+{
+  "title": "Books of the Bible Crossword Puzzles — OT & NT",
+  "heading": "The Books of the Bible Crosswords",
+  "reference": "Genesis to Revelation",
+  "meta": "Two 15×15 grids · Hard · Old & New Testament",
+  "description": "Two Books of the Bible crosswords — Old Testament and New Testament. Learn the 66 books through clues, from Genesis to Revelation. Free on iPhone and iPad.",
+  "prose": [
+    "Can you place all 66? <em>Books of the Old Testament</em> and <em>Books of the New Testament</em> are a matched pair of harder puzzles where every answer is a book of the Bible — and every clue tells you what makes that book itself. The book of one hundred fifty songs. The shortest of the four gospels. The letter describing the armour of God.",
+    "They're two of the most satisfying grids in the archive, and a genuinely good way to learn your way around Scripture — solve them once and you'll never lose Habakkuk again. Both sit in the Hard section, with fair hints if a minor prophet escapes you."
+  ],
+  "clues": [
+    {
+      "n": "1D",
+      "text": "Book of one hundred fifty songs and prayers",
+      "enum": "(6)",
+      "len": 6
+    },
+    {
+      "n": "2A",
+      "text": "Prophet who spoke of locusts and the Spirit poured out",
+      "enum": "(4)",
+      "len": 4
+    },
+    {
+      "n": "1A",
+      "text": "Paul's pastoral letter to a young minister",
+      "enum": "(7)",
+      "len": 7
+    },
+    {
+      "n": "2D",
+      "text": "Shortest of the four gospels",
+      "enum": "(4)",
+      "len": 4
+    }
+  ],
+  "verseText": "In the beginning God created the heaven and the earth.",
+  "verseCite": "Genesis 1:1 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/ten-commandments/",
+      "eyebrow": "Exodus 20",
+      "name": "Ten Commandments",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/noahs-ark/",
+      "eyebrow": "Genesis 6–9",
+      "name": "Noah's Ark",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/christmas/",
+      "eyebrow": "Luke 2 · Matthew 2",
+      "name": "Christmas",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

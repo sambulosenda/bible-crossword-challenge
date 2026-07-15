@@ -1,0 +1,65 @@
+{
+  "title": "Ten Commandments Crossword Puzzle — Bible Crossword",
+  "heading": "The Ten Commandments Crossword",
+  "reference": "Exodus 20",
+  "meta": "15×15 grid · Easy · Ends on Exodus 20:12",
+  "description": "A Ten Commandments Bible crossword from Exodus 20: two tablets of stone, Mount Sinai, and the law of the LORD. Play free on iPhone and iPad.",
+  "prose": [
+    "Two tablets of stone, carried down from Sinai — the Ten Commandments are the backbone of the law, and this puzzle sets them into a grid. Clues cover the commands themselves and the story around them: the graven image not to be worshipped, what it means to covet, the One who gave the commands.",
+    "It pairs naturally with the mini <em>Written in Stone</em>, and with <em>Out of Egypt</em> and <em>The Ten Plagues</em> for the wider Exodus story. Solve it and the grid closes on the commandment with a promise — honour thy father and thy mother."
+  ],
+  "clues": [
+    {
+      "n": "1D",
+      "text": "Graven image not to be worshipped",
+      "enum": "(4)",
+      "len": 4
+    },
+    {
+      "n": "2A",
+      "text": "The One who gave the commands",
+      "enum": "(4)",
+      "len": 4
+    },
+    {
+      "n": "3D",
+      "text": "To keep the commandments faithfully",
+      "enum": "(4)",
+      "len": 4
+    },
+    {
+      "n": "4D",
+      "text": "Material of the two tablets",
+      "enum": "(5)",
+      "len": 5
+    }
+  ],
+  "verseText": "Honour thy father and thy mother: that thy days may be long upon the land which the LORD thy God giveth thee.",
+  "verseCite": "Exodus 20:12 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/noahs-ark/",
+      "eyebrow": "Genesis 6–9",
+      "name": "Noah's Ark",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/books-of-the-bible/",
+      "eyebrow": "Genesis to Revelation",
+      "name": "Books of the Bible",
+      "sub": "Hard · Bible crossword"
+    },
+    {
+      "href": "/puzzles/psalm-23/",
+      "eyebrow": "The Shepherd’s Psalm",
+      "name": "Psalm 23",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- NOTE: regenerate (or switch to @astrojs/sitemap) once the remaining 6 puzzle
-     pages are ported, so their URLs are listed here too. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://biblecrosswordchallenge.com/</loc><changefreq>daily</changefreq><priority>1.0</priority></url>
   <url><loc>https://biblecrosswordchallenge.com/puzzles/</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
   <url><loc>https://biblecrosswordchallenge.com/how-to-play/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://biblecrosswordchallenge.com/puzzles/books-of-the-bible/</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://biblecrosswordchallenge.com/puzzles/christmas/</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://biblecrosswordchallenge.com/puzzles/david-and-goliath/</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://biblecrosswordchallenge.com/puzzles/easter/</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://biblecrosswordchallenge.com/puzzles/noahs-ark/</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://biblecrosswordchallenge.com/puzzles/psalm-23/</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://biblecrosswordchallenge.com/puzzles/ten-commandments/</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://biblecrosswordchallenge.com/privacy/</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
 </urlset>

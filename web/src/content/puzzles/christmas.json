@@ -1,0 +1,65 @@
+{
+  "title": "Christmas Bible Crossword Puzzle — the Nativity Story",
+  "heading": "The Christmas Bible Crossword",
+  "reference": "Luke 2 · Matthew 2",
+  "meta": "15×15 grid · Easy · Ends on Luke 2:7",
+  "description": "A Christmas Bible crossword from Luke 2 and Matthew 2: the manger, the shepherds, the star, and the wise men. Play the nativity story free on iPhone and iPad.",
+  "prose": [
+    "A stable in Bethlehem, swaddling clothes, a manger for a crib — the Christmas story fits a crossword grid as naturally as it fits a carol. <em>The Christmas Story</em> draws its clues from Luke 2 and Matthew 2: Mary and Joseph, the heavenly host, peace on earth, and the star in the east.",
+    "The nativity runs deeper in the archive too: <em>Wise Men from the East</em> follows the magi, while the minis <em>Born in Bethlehem</em> and <em>Heavenly Host</em> make a two-minute Advent habit. Every one closes on a verse from the story it tells."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "Animal shelter where the birth took place",
+      "enum": "(6)",
+      "len": 6
+    },
+    {
+      "n": "1D",
+      "text": "Wrapping bands around the infant",
+      "enum": "(9)",
+      "len": 9
+    },
+    {
+      "n": "2D",
+      "text": "Feeding trough used as a crib",
+      "enum": "(6)",
+      "len": 6
+    },
+    {
+      "n": "3D",
+      "text": "Mother of the Christ child",
+      "enum": "(4)",
+      "len": 4
+    }
+  ],
+  "verseText": "And she brought forth her firstborn son, and wrapped him in swaddling clothes, and laid him in a manger; because there was no room for them in the inn.",
+  "verseCite": "Luke 2:7 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/easter/",
+      "eyebrow": "Matthew 28",
+      "name": "Easter",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/psalm-23/",
+      "eyebrow": "The Shepherd’s Psalm",
+      "name": "Psalm 23",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/books-of-the-bible/",
+      "eyebrow": "Genesis to Revelation",
+      "name": "Books of the Bible",
+      "sub": "Hard · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

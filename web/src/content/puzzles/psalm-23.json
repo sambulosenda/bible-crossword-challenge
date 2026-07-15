@@ -1,0 +1,65 @@
+{
+  "title": "Psalm 23 Crossword Puzzle — The Lord Is My Shepherd",
+  "heading": "The Psalm 23 Crossword",
+  "reference": "The Shepherd’s Psalm",
+  "meta": "15×15 grid · Easy · Ends on Psalm 23:1",
+  "description": "A Psalm 23 Bible crossword: green pastures, still waters, and the valley of the shadow. Solve the Shepherd's Psalm in a crossword, free on iPhone and iPad.",
+  "prose": [
+    "Green pastures, still waters, a table spread in the presence of foes — Psalm 23 may be the best-loved chapter in the Bible, and <em>The Lord Is My Shepherd</em> turns its images into clues. If you know the psalm, the answers will rise up line by line as you read the grid.",
+    "For more from David's pen there's <em>King David</em> and the mini <em>The Shepherd's Psalm</em>; <em>The Good Shepherd</em> carries the image into John 10. Like every puzzle, it ends on the verse itself: <em>The LORD is my shepherd; I shall not want.</em>"
+  ],
+  "clues": [
+    {
+      "n": "1D",
+      "text": "What anoints the head in the psalm",
+      "enum": "(3)",
+      "len": 3
+    },
+    {
+      "n": "2D",
+      "text": "What the soul-restoring streams are made of",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "3D",
+      "text": "Low place of the shadow of death",
+      "enum": "(6)",
+      "len": 6
+    },
+    {
+      "n": "4A",
+      "text": "Spread before me in the presence of foes",
+      "enum": "(5)",
+      "len": 5
+    }
+  ],
+  "verseText": "The LORD is my shepherd; I shall not want",
+  "verseCite": "Psalm 23:1 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/david-and-goliath/",
+      "eyebrow": "1 Samuel 17",
+      "name": "David and Goliath",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/easter/",
+      "eyebrow": "Matthew 28",
+      "name": "Easter",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/christmas/",
+      "eyebrow": "Luke 2 · Matthew 2",
+      "name": "Christmas",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}
