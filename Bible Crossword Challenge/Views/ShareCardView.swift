@@ -108,10 +108,10 @@ struct ShareCardView: View {
     }
 }
 
-/// Share configuration. `storeURL` is appended to the share caption once the app
-/// is published — leave nil until an App Store / marketing link exists.
+/// Share configuration. `storeURL` is appended to share captions so recipients
+/// have a tappable path to the App Store listing.
 enum ShareConfig {
-    static let storeURL: URL? = nil
+    static let storeURL: URL? = URL(string: "https://apps.apple.com/app/id6783034270")
 }
 
 #Preview {

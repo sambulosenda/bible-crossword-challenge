@@ -201,7 +201,10 @@ struct CompletionView: View {
         guard let url = challengeService.challengeURL(
             puzzleID: puzzle.id, seconds: seconds, name: profile.username
         ) else { return }
-        let caption = "Can you beat me? I solved \"\(puzzle.title)\" in \(TimeFormat.clock(seconds)) — Bible Crossword"
+        var caption = "Can you beat me? I solved \"\(puzzle.title)\" in \(TimeFormat.clock(seconds)) — Bible Crossword"
+        // The custom-scheme link only opens for installed recipients; the store
+        // link gives everyone else a tappable way in.
+        if let store = ShareConfig.storeURL { caption += "\n\(store.absoluteString)" }
         challengeShare = ChallengeShare(url: url, caption: caption)
         analytics.log(rematch ? .challengeRematchSent(puzzleID: puzzle.id)
                               : .challengeSent(puzzleID: puzzle.id))
