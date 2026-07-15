@@ -12,6 +12,7 @@ import Lottie
 
 struct CompletionView: View {
     let puzzle: Puzzle
+    let profile: PlayerProfile
     let seconds: Int
     let streak: Int
     let newAchievements: [Achievement]
@@ -21,6 +22,17 @@ struct CompletionView: View {
 
     @State private var shareImage: Image?
     @State private var showPaywall = false
+    /// A friend's challenge for this puzzle, captured on appear so consuming it
+    /// doesn't make the result card vanish mid-view. Nil = a plain solve.
+    @State private var challenge: ChallengeService.Challenge?
+    @State private var didProcessChallenge = false
+    /// Set to present the system share sheet for an outgoing challenge link.
+    @State private var challengeShare: ChallengeShare?
+    /// First outgoing challenge needs a display name — collected inline. The
+    /// intent (fresh challenge vs. rematch) is stashed across the prompt.
+    @State private var showNamePrompt = false
+    @State private var draftName = ""
+    @State private var pendingRematchIntent = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.displayScale) private var displayScale
     @Environment(\.gameCenter) private var gameCenter
@@ -28,6 +40,8 @@ struct CompletionView: View {
     @Environment(\.puzzleProvider) private var puzzleProvider
     @Environment(\.readerRouter) private var readerRouter
     @Environment(\.analytics) private var analytics
+    @Environment(\.challengeService) private var challengeService
+    @Environment(\.modelContext) private var context
     @Environment(StoreService.self) private var store
     /// Highest completion milestone we've already asked a review at, so each
     /// milestone prompts at most once across sessions.
@@ -45,6 +59,10 @@ struct CompletionView: View {
         ScrollView {
             VStack(spacing: Theme.Spacing.l) {
                 header
+
+                if let challenge {
+                    resultCard(challenge)
+                }
 
                 verseCard
 
@@ -78,10 +96,123 @@ struct CompletionView: View {
         .onAppear {
             renderShareCard()
             maybeRequestReview()
+            processIncomingChallenge()
         }
         .sheet(isPresented: $showPaywall) {
             PaywallView()
         }
+        .sheet(item: $challengeShare) { share in
+            ShareSheet(items: [share.caption, share.url])
+        }
+        .alert("What should we call you?", isPresented: $showNamePrompt) {
+            TextField("Your name", text: $draftName)
+            Button("Save") { saveNameAndSend() }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("We'll show this name to friends you challenge.")
+        }
+    }
+
+    // MARK: - Friend challenge
+
+    /// Capture any incoming challenge once, record the head-to-head, and clear it
+    /// from the pending store so a replay won't re-show the comparison.
+    private func processIncomingChallenge() {
+        guard !didProcessChallenge else { return }
+        didProcessChallenge = true
+        guard let incoming = challengeService.pending(for: puzzle.id) else { return }
+        challenge = incoming
+        analytics.log(.challengeCompleted(
+            puzzleID: puzzle.id,
+            won: seconds < incoming.seconds,
+            deltaSeconds: incoming.seconds - seconds
+        ))
+        challengeService.consume(puzzleID: puzzle.id)
+    }
+
+    /// The head-to-head against a friend's time, crowning the screen above the
+    /// verse. Its primary action is the rematch — send *your* time back.
+    private func resultCard(_ challenge: ChallengeService.Challenge) -> some View {
+        let won = seconds < challenge.seconds
+        let tied = seconds == challenge.seconds
+        let title = tied ? "Dead heat with \(challenge.challengerName)!"
+            : won ? "You beat \(challenge.challengerName)!"
+            : "\(challenge.challengerName) still leads"
+
+        return VStack(spacing: Theme.Spacing.m) {
+            Image(systemName: won ? "crown.fill" : tied ? "equal.circle.fill" : "flag.checkered")
+                .font(.system(size: 40))
+                .foregroundStyle(won ? .yellow : Theme.accent)
+
+            Text(title)
+                .font(.title3.weight(.bold))
+                .multilineTextAlignment(.center)
+
+            HStack(spacing: Theme.Spacing.l) {
+                comparisonStat(label: "You", value: seconds, highlight: won || tied)
+                comparisonStat(label: challenge.challengerName, value: challenge.seconds, highlight: !won && !tied)
+            }
+
+            Button {
+                sendChallenge(rematch: true)
+            } label: {
+                Label("Send Result Back", systemImage: "arrow.uturn.left")
+                    .font(.subheadline.weight(.semibold))
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.borderedProminent)
+            .controlSize(.large)
+            .tint(Theme.accent)
+        }
+        .padding(Theme.Spacing.l)
+        .frame(maxWidth: .infinity)
+        .background(Theme.accent.opacity(0.1), in: .rect(cornerRadius: Theme.cornerRadius, style: .continuous))
+    }
+
+    private func comparisonStat(label: String, value: Int, highlight: Bool) -> some View {
+        VStack(spacing: 2) {
+            Text(TimeFormat.clock(value))
+                .font(.title2.weight(.bold))
+                .monospacedDigit()
+                .foregroundStyle(highlight ? Theme.accent : .primary)
+            Text(label)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .lineLimit(1)
+        }
+        .frame(maxWidth: .infinity)
+    }
+
+    /// True once the player has set a display name (the default counts as unset).
+    private var hasChosenName: Bool {
+        let name = profile.username.trimmingCharacters(in: .whitespacesAndNewlines)
+        return !name.isEmpty && name != ChallengeService.placeholderName
+    }
+
+    /// Share a challenge carrying this solve's time. Prompts for a name first if
+    /// the player hasn't set one — this is the highest-motivation moment to ask.
+    private func sendChallenge(rematch: Bool) {
+        guard hasChosenName else {
+            pendingRematchIntent = rematch
+            draftName = ""
+            showNamePrompt = true
+            return
+        }
+        guard let url = challengeService.challengeURL(
+            puzzleID: puzzle.id, seconds: seconds, name: profile.username
+        ) else { return }
+        let caption = "Can you beat me? I solved \"\(puzzle.title)\" in \(TimeFormat.clock(seconds)) — Bible Crossword"
+        challengeShare = ChallengeShare(url: url, caption: caption)
+        analytics.log(rematch ? .challengeRematchSent(puzzleID: puzzle.id)
+                              : .challengeSent(puzzleID: puzzle.id))
+    }
+
+    private func saveNameAndSend() {
+        let name = draftName.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !name.isEmpty else { return }
+        profile.username = String(name.prefix(20))
+        context.saveLogged("challenge name")
+        sendChallenge(rematch: pendingRematchIntent)
     }
 
     // MARK: - Mini upsell
@@ -342,6 +473,19 @@ struct CompletionView: View {
             .buttonStyle(.borderedProminent)
             .controlSize(.large)
 
+            // A challenge that arrived for this puzzle already offers "Send
+            // Result Back" in the result card — don't double up the CTA.
+            if challenge == nil {
+                Button {
+                    sendChallenge(rematch: false)
+                } label: {
+                    Label("Challenge a Friend", systemImage: "flag.checkered")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.bordered)
+                .controlSize(.large)
+            }
+
             // Minis race the clock against everyone — surface this week's
             // standings while the solve is fresh. Hidden when the player
             // isn't signed in to Game Center.
@@ -372,6 +516,14 @@ struct CompletionView: View {
             .frame(maxWidth: .infinity)
     }
 
+    /// An outgoing challenge to hand to the share sheet. Identifiable so it can
+    /// drive `.sheet(item:)`; a fresh id each time forces re-presentation.
+    private struct ChallengeShare: Identifiable {
+        let id = UUID()
+        let url: URL
+        let caption: String
+    }
+
     /// Rasterise the spoiler-free result card so it can be shared as an image.
     /// `ImageRenderer.uiImage` is synchronous, so the image is ready before the
     /// user can reach the Share button.
@@ -390,4 +542,17 @@ struct CompletionView: View {
             shareImage = Image(uiImage: ui)
         }
     }
+}
+
+/// A thin `UIActivityViewController` wrapper for imperative sharing — used for
+/// the challenge link, which is built after an optional name prompt and so can't
+/// be a declarative `ShareLink`.
+private struct ShareSheet: UIViewControllerRepresentable {
+    let items: [Any]
+
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        UIActivityViewController(activityItems: items, applicationActivities: nil)
+    }
+
+    func updateUIViewController(_ controller: UIActivityViewController, context: Context) {}
 }

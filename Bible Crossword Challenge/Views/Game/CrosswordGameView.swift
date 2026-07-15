@@ -19,6 +19,7 @@ struct CrosswordGameView: View {
     @Environment(\.analytics) private var analytics
     @Environment(\.notifications) private var notifications
     @Environment(\.gameCenter) private var gameCenter
+    @Environment(\.challengeService) private var challengeService
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(StoreService.self) private var store
@@ -36,6 +37,12 @@ struct CrosswordGameView: View {
     /// Grid is full but at least one letter is wrong — nudge instead of leaving
     /// the player stranded wondering why the completion screen didn't appear.
     @State private var showFullMissAlert = false
+    /// A friend's "beat my time" for this puzzle, captured on entry so the
+    /// target chip and result comparison stay stable even after it's consumed.
+    @State private var incomingChallenge: ChallengeService.Challenge?
+    /// When entering a challenge for an already-solved puzzle, the time to show
+    /// on the (immediate) completion screen — the prior solve, not a fresh 0.
+    @State private var challengeReplaySeconds: Int?
     /// Keeps the screen focused so a hardware keyboard can type into the grid.
     @FocusState private var gridFocused: Bool
 
@@ -47,6 +54,11 @@ struct CrosswordGameView: View {
 
     var body: some View {
         VStack(spacing: 0) {
+            if let challenge = incomingChallenge {
+                ChallengeTargetChip(name: challenge.challengerName, seconds: challenge.seconds)
+                    .padding(.top, Theme.Spacing.xs)
+            }
+
             CrosswordGridView(vm: vm)
                 .padding(Theme.Spacing.m)
                 .frame(maxHeight: .infinity)
@@ -101,7 +113,8 @@ struct CrosswordGameView: View {
         .fullScreenCover(isPresented: $showCompletion) {
             CompletionView(
                 puzzle: puzzle,
-                seconds: vm.completionSeconds,
+                profile: profile,
+                seconds: challengeReplaySeconds ?? vm.completionSeconds,
                 streak: profile.currentStreak,
                 newAchievements: newlyUnlocked,
                 earnedFreeze: earnedFreeze,
@@ -127,7 +140,14 @@ struct CrosswordGameView: View {
             gridFocused = true
             vm.onComplete = { seconds in handleCompletion(seconds: seconds) }
             let rec = loadOrCreateRecord()
-            if !rec.isCompleted {
+            incomingChallenge = challengeService.pending(for: puzzle.id)
+            if rec.isCompleted, incomingChallenge != nil {
+                // Already solved this puzzle — jump straight to the comparison
+                // rather than replaying (a replay knows the answers and would
+                // post a bogus winning time).
+                challengeReplaySeconds = rec.elapsedSeconds
+                showCompletion = true
+            } else if !rec.isCompleted {
                 // Seed accumulated time before restoring, since restoring a
                 // fully-filled grid can trigger completion.
                 vm.seedElapsed(rec.elapsedSeconds)
@@ -383,6 +403,28 @@ private struct StreakFlameView: View {
         }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("Current streak: \(streak) days")
+    }
+}
+
+/// A friend's target time to beat, shown above the grid while playing a puzzle
+/// opened from a challenge link.
+private struct ChallengeTargetChip: View {
+    let name: String
+    let seconds: Int
+
+    var body: some View {
+        HStack(spacing: 6) {
+            Image(systemName: "flag.checkered")
+            Text("Beat \(name): \(TimeFormat.clock(seconds))")
+                .monospacedDigit()
+        }
+        .font(.caption.weight(.semibold))
+        .padding(.horizontal, 12)
+        .padding(.vertical, 6)
+        .foregroundStyle(Theme.accent)
+        .background(Theme.accent.opacity(0.15), in: .capsule)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Challenge from \(name): beat \(TimeFormat.clock(seconds))")
     }
 }
 

@@ -22,6 +22,10 @@ enum AnalyticsEvent {
     case reminderSettingChanged(enabled: Bool)
     case packOpened(id: String)
     case packCompleted(id: String)
+    case challengeSent(puzzleID: String)
+    case challengeOpened(puzzleID: String)
+    case challengeCompleted(puzzleID: String, won: Bool, deltaSeconds: Int)
+    case challengeRematchSent(puzzleID: String)
 
     var name: String {
         switch self {
@@ -37,6 +41,10 @@ enum AnalyticsEvent {
         case .reminderSettingChanged: return "reminder_setting_changed"
         case .packOpened: return "pack_opened"
         case .packCompleted: return "pack_completed"
+        case .challengeSent: return "challenge_sent"
+        case .challengeOpened: return "challenge_opened"
+        case .challengeCompleted: return "challenge_completed"
+        case .challengeRematchSent: return "challenge_rematch_sent"
         }
     }
 
@@ -66,6 +74,14 @@ enum AnalyticsEvent {
             return ["pack_id": id]
         case .packCompleted(let id):
             return ["pack_id": id]
+        case .challengeSent(let id):
+            return ["puzzle_id": id]
+        case .challengeOpened(let id):
+            return ["puzzle_id": id]
+        case .challengeCompleted(let id, let won, let delta):
+            return ["puzzle_id": id, "won": won, "delta_seconds": delta]
+        case .challengeRematchSent(let id):
+            return ["puzzle_id": id]
         }
     }
 }

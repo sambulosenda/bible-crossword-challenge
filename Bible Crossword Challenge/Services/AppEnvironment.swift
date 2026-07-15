@@ -16,4 +16,5 @@ extension EnvironmentValues {
     @Entry var gameCenter: GameCenterService = .shared
     @Entry var scripture: ScriptureProvider = .shared
     @Entry var readerRouter: ReaderRouter = .shared
+    @Entry var challengeService: ChallengeService = .shared
 }

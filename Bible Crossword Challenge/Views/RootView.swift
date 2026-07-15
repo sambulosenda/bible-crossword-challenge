@@ -21,8 +21,14 @@ struct RootView: View {
     @Environment(\.gameCenter) private var gameCenter
     @Environment(\.readerRouter) private var readerRouter
     @Environment(\.puzzleProvider) private var puzzleProvider
+    @Environment(\.challengeService) private var challengeService
     @Environment(\.scenePhase) private var scenePhase
     @State private var selectedTab: RootTab = .today
+    /// A challenge accepted before onboarding finished — opened once the player
+    /// is set up (see the onboarding-finish closure).
+    @State private var pendingNavChallenge: ChallengeService.Challenge?
+    /// A challenge link from a newer app version or for an unknown puzzle.
+    @State private var showChallengeUpdateAlert = false
     /// Navigation stack for the Today tab. Held here so a widget deep-link can
     /// push the daily puzzle onto it. Type-erased so the Today feed can push both
     /// puzzles and pack details.
@@ -41,6 +47,12 @@ struct RootView: View {
                     OnboardingView(profile: profile) {
                         context.saveLogged("onboarding finish")
                         withAnimation { hasOnboarded = true }
+                        // A challenge link that arrived mid-onboarding was stashed;
+                        // now that the tabs exist, jump into it.
+                        if let challenge = pendingNavChallenge {
+                            pendingNavChallenge = nil
+                            openChallenge(challenge)
+                        }
                     }
                 } else {
                     mainTabs(profile)
@@ -72,18 +84,55 @@ struct RootView: View {
         .onOpenURL { url in
             handleDeepLink(url)
         }
+        .alert("Update Needed", isPresented: $showChallengeUpdateAlert) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text("This challenge was made with a newer version of the app. Update to play it.")
+        }
     }
 
-    /// Widget taps land here (see `StreakEntry.deepLinkURL`). `play-daily` jumps
-    /// straight into today's puzzle; any other target just surfaces the Today tab.
+    /// Deep-link entry: friend challenges (`challenge`) and widget taps
+    /// (`play-daily`, see `StreakEntry.deepLinkURL`).
     private func handleDeepLink(_ url: URL) {
-        guard url.scheme == "biblecrossword", hasOnboarded else { return }
+        guard url.scheme == "biblecrossword" else { return }
+
+        // Friend challenge. Accept the payload even before onboarding completes
+        // so an invite that prompts a fresh install still lands afterwards.
+        if url.host() == "challenge" {
+            switch challengeService.parse(url) {
+            case .valid(let challenge):
+                challengeService.accept(challenge)
+                analytics.log(.challengeOpened(puzzleID: challenge.puzzleID))
+                if hasOnboarded {
+                    openChallenge(challenge)
+                } else {
+                    pendingNavChallenge = challenge
+                }
+            case .needsUpdate:
+                showChallengeUpdateAlert = true
+            case .notAChallenge:
+                break
+            }
+            return
+        }
+
+        // Widget targets require a set-up player.
+        guard hasOnboarded else { return }
         selectedTab = .today
         if url.host() == "play-daily", let daily = puzzleProvider.dailyPuzzle() {
             todayPath = NavigationPath([daily])
         } else {
             todayPath = NavigationPath()
         }
+    }
+
+    /// Push the challenged puzzle onto the Today stack. Pushing the `Puzzle`
+    /// directly plays it via `HomeView`'s destination — bypassing the Archive
+    /// gate, so a free player can always take a friend's single challenge.
+    private func openChallenge(_ challenge: ChallengeService.Challenge) {
+        guard let puzzle = puzzleProvider.puzzle(id: challenge.puzzleID) else { return }
+        selectedTab = .today
+        todayPath = NavigationPath([puzzle])
     }
 
     /// CloudKit sync can land duplicate profiles/records created on another
