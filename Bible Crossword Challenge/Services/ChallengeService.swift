@@ -48,6 +48,11 @@ final class ChallengeService {
     static let currentVersion = 1
     static let scheme = "biblecrossword"
     static let host = "challenge"
+    /// Universal-link host and path. Shared links use this https form (tappable
+    /// everywhere and, for non-installed recipients, routed to the web landing
+    /// page); the custom scheme above stays a parseable fallback.
+    static let webHost = "biblecrosswordchallenge.com"
+    static let webPath = "/challenge/"
     /// The default profile name — treated as "no name chosen yet" so we prompt
     /// once before the first outgoing challenge rather than shipping "Friend".
     static let placeholderName = "Friend"
@@ -78,12 +83,20 @@ final class ChallengeService {
     // MARK: - Parsing
 
     /// Validate an incoming URL. Structural checks first (cheap, no I/O), then
-    /// the puzzle-existence check that decides valid-vs-needsUpdate.
+    /// the puzzle-existence check that decides valid-vs-needsUpdate. Accepts both
+    /// the custom scheme and the https universal link — the query is identical.
     func parse(_ url: URL) -> ParseOutcome {
-        guard url.scheme == Self.scheme,
-              url.host() == Self.host,
-              let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
-        else { return .notAChallenge }
+        guard let components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
+            return .notAChallenge
+        }
+
+        let isCustom = url.scheme == Self.scheme && url.host() == Self.host
+        // Match the apex and any subdomain (www) of the web host.
+        let host = url.host() ?? ""
+        let isUniversal = url.scheme == "https"
+            && (host == Self.webHost || host.hasSuffix("." + Self.webHost))
+            && components.path.hasPrefix("/challenge")
+        guard isCustom || isUniversal else { return .notAChallenge }
 
         var query: [String: String] = [:]
         for item in components.queryItems ?? [] where item.value != nil {
@@ -119,19 +132,35 @@ final class ChallengeService {
 
     // MARK: - Building outgoing links
 
-    /// A challenge link carrying this solve's time. `URLComponents` percent-
-    /// encodes the name, so any display name is safe to pass through.
+    /// The https universal link to share. Tappable in any messaging app; opens
+    /// the app for installed recipients and the web landing page for everyone
+    /// else. This is the link players actually send.
+    func challengeWebURL(puzzleID: String, seconds: Int, name: String) -> URL? {
+        var components = URLComponents()
+        components.scheme = "https"
+        components.host = Self.webHost
+        components.path = Self.webPath
+        components.queryItems = queryItems(puzzleID: puzzleID, seconds: seconds, name: name)
+        return components.url
+    }
+
+    /// The custom-scheme equivalent — kept as a parseable fallback (e.g. tests,
+    /// or a channel that strips https link previews).
     func challengeURL(puzzleID: String, seconds: Int, name: String) -> URL? {
         var components = URLComponents()
         components.scheme = Self.scheme
         components.host = Self.host
-        components.queryItems = [
+        components.queryItems = queryItems(puzzleID: puzzleID, seconds: seconds, name: name)
+        return components.url
+    }
+
+    private func queryItems(puzzleID: String, seconds: Int, name: String) -> [URLQueryItem] {
+        [
             URLQueryItem(name: "v", value: String(Self.currentVersion)),
             URLQueryItem(name: "p", value: puzzleID),
             URLQueryItem(name: "t", value: String(seconds)),
             URLQueryItem(name: "n", value: String(name.prefix(Self.maxNameLength))),
         ]
-        return components.url
     }
 
     // MARK: - Pending store

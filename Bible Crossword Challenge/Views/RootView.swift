@@ -84,6 +84,11 @@ struct RootView: View {
         .onOpenURL { url in
             handleDeepLink(url)
         }
+        // Universal links (https://biblecrosswordchallenge.com/challenge/…)
+        // arrive as a web-browsing activity rather than through onOpenURL.
+        .onContinueUserActivity(NSUserActivityTypeBrowsingWeb) { activity in
+            if let url = activity.webpageURL { handleDeepLink(url) }
+        }
         .alert("Update Needed", isPresented: $showChallengeUpdateAlert) {
             Button("OK", role: .cancel) {}
         } message: {

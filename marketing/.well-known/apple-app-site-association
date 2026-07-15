@@ -1,0 +1,15 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["Y53KNKBDS8.com.sambulosendas1.Bible-Crossword-Challenge"],
+        "components": [
+          {
+            "/": "/challenge*",
+            "comment": "Friend challenge deep links"
+          }
+        ]
+      }
+    ]
+  }
+}

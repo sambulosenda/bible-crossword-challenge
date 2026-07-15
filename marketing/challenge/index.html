@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>A Bible Crossword Challenge for you</title>
+<meta name="description" content="A friend challenged you to a Bible crossword. Beat their time on iOS — free on the App Store." />
+<meta name="robots" content="noindex, follow" />
+<meta name="theme-color" content="#FBFAF6" />
+<!-- If the app is installed, iOS opens it before this page loads (universal link). -->
+<meta name="apple-itunes-app" content="app-id=6783034270" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23141416'/%3E%3Crect x='24' y='8' width='16' height='48' rx='2' fill='%23fff'/%3E%3Crect x='8' y='24' width='48' height='16' rx='2' fill='%23fff'/%3E%3Crect x='24' y='24' width='16' height='16' fill='%230B7BFF'/%3E%3C/svg%3E" />
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBFAF6; --ink:#141416; --ink-soft:#3D3D40; --muted:#6E6D68;
+    --line:#E7E4DC; --blue:#0B7BFF; --blue-press:#0063D6; --gilt:#B8922E;
+    --display:"Libre Caslon Display", Georgia, "Times New Roman", serif;
+    --serif:"Libre Caslon Text", Georgia, serif;
+    --sans:-apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --mono:ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  *{box-sizing:border-box}
+  /* Author display rules below would otherwise beat the UA [hidden] rule. */
+  [hidden]{display:none !important}
+  html,body{margin:0}
+  body{
+    background:var(--paper); color:var(--ink); font-family:var(--sans);
+    line-height:1.55; font-size:17px;
+    min-height:100vh; display:grid; place-items:center; padding:28px;
+  }
+  .card{
+    width:100%; max-width:440px; text-align:center;
+    border:1px solid var(--line); border-radius:20px; background:#fff;
+    padding:40px 30px 34px; box-shadow:0 1px 0 var(--line), 0 24px 60px -30px rgba(20,20,22,.28);
+  }
+  .mark{width:56px; height:56px; margin:0 auto 22px; display:block}
+  .eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--gilt); margin:0 0 14px}
+  h1{font-family:var(--display); font-weight:400; font-size:clamp(28px,7vw,38px); line-height:1.12; margin:0 0 8px}
+  .name{color:var(--ink)}
+  .time{
+    font-family:var(--mono); font-size:15px; letter-spacing:.02em; color:var(--ink-soft);
+    background:#F2F0E9; border-radius:999px; padding:8px 16px; display:inline-block; margin:6px 0 24px;
+  }
+  .time b{color:var(--ink); font-weight:600}
+  p.lede{color:var(--ink-soft); margin:0 0 28px; max-width:34ch; margin-inline:auto}
+  .cta{
+    display:inline-flex; align-items:center; gap:10px;
+    background:var(--blue); color:#fff; font-weight:600; font-size:17px;
+    padding:15px 26px; border-radius:14px; text-decoration:none;
+    transition:background .15s ease;
+  }
+  .cta:hover,.cta:active{background:var(--blue-press)}
+  .note{font-size:14px; color:var(--muted); margin:24px auto 0; max-width:36ch}
+  .foot{font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-top:26px}
+  .foot a{color:var(--muted)}
+  .foot a:hover{color:var(--ink)}
+</style>
+</head>
+<body>
+  <main class="card">
+    <svg class="mark" viewBox="0 0 64 64" aria-hidden="true">
+      <rect width="64" height="64" rx="14" fill="#141416"/>
+      <rect x="24" y="8" width="16" height="48" rx="2" fill="#fff"/>
+      <rect x="8" y="24" width="48" height="16" rx="2" fill="#fff"/>
+      <rect x="24" y="24" width="16" height="16" fill="#0B7BFF"/>
+    </svg>
+    <p class="eyebrow">You've been challenged</p>
+    <h1><span class="name" id="name">A friend</span> beat this puzzle</h1>
+    <p class="time" id="time" hidden>Their time: <b id="timeval"></b></p>
+    <p class="lede">Think you can go faster? Get Bible Crossword Challenge — a fresh Scripture crossword every day — and prove it.</p>
+    <a class="cta" href="https://apps.apple.com/app/id6783034270" id="cta">
+      Get it on the App Store
+    </a>
+    <p class="note" id="reopen" hidden></p>
+    <p class="foot"><a href="/">biblecrosswordchallenge.com</a></p>
+  </main>
+  <script>
+    (function () {
+      var q = new URLSearchParams(location.search);
+      // Name — set via textContent so a crafted link can't inject markup.
+      var rawName = (q.get("n") || "").trim().slice(0, 20);
+      if (rawName) document.getElementById("name").textContent = rawName;
+      // Time — seconds -> m:ss, only if it's a sane number.
+      var secs = parseInt(q.get("t"), 10);
+      if (!isNaN(secs) && secs > 0 && secs < 86400) {
+        var m = Math.floor(secs / 60), s = secs % 60;
+        document.getElementById("timeval").textContent = m + ":" + (s < 10 ? "0" : "") + s;
+        document.getElementById("time").hidden = false;
+      }
+      // If they already have the app, this page still showed — the tap didn't
+      // trigger the install, so tell them how to actually open the challenge.
+      var who = rawName || "your friend";
+      var reopen = document.getElementById("reopen");
+      reopen.textContent = "Already have the app? Ask " + who + " to send the link again — it'll open your challenge.";
+      reopen.hidden = false;
+    })();
+  </script>
+</body>
+</html>
