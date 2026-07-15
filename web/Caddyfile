@@ -1,0 +1,47 @@
+# Serves the static Astro build on Railway. Reproduces what public/_headers and
+# public/_redirects do on Cloudflare/Netlify (which Railway ignores): the AASA
+# JSON content-type, the old-URL 301s, asset caching, clean URLs, and 404.
+{
+	admin off
+	persist_config off
+	auto_https off
+}
+
+:{$PORT:8080} {
+	root * /srv
+	encode gzip zstd
+
+	# Apple App Site Association must be served as JSON for universal links.
+	@aasa path /.well-known/apple-app-site-association
+	header @aasa Content-Type application/json
+	header @aasa Cache-Control "public, max-age=3600"
+
+	# Long-cache fingerprinted assets (images + Astro's hashed JS/CSS).
+	@assets path /assets/* /_astro/*
+	header @assets Cache-Control "public, max-age=31536000, immutable"
+
+	# Don't expose the static-host control files (harmless, but not meant to be public).
+	@ctl path /_headers /_redirects
+	respond @ctl 404
+
+	# Old .html URLs from the previous site → clean paths (301).
+	redir /index.html / permanent
+	redir /how-to-play.html /how-to-play/ permanent
+	redir /privacy.html /privacy/ permanent
+	redir /puzzles/books-of-the-bible.html /puzzles/books-of-the-bible/ permanent
+	redir /puzzles/christmas.html /puzzles/christmas/ permanent
+	redir /puzzles/david-and-goliath.html /puzzles/david-and-goliath/ permanent
+	redir /puzzles/easter.html /puzzles/easter/ permanent
+	redir /puzzles/noahs-ark.html /puzzles/noahs-ark/ permanent
+	redir /puzzles/psalm-23.html /puzzles/psalm-23/ permanent
+	redir /puzzles/ten-commandments.html /puzzles/ten-commandments/ permanent
+
+	# file_server serves directory index.html and canonical-redirects /path → /path/.
+	file_server
+
+	handle_errors {
+		@404 expr `{err.status_code} == 404`
+		rewrite @404 /404.html
+		file_server
+	}
+}
