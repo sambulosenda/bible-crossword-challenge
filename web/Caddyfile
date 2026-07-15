@@ -39,9 +39,11 @@
 	# file_server serves directory index.html and canonical-redirects /path → /path/.
 	file_server
 
+	# Serve the branded 404 page for any not-found. Kept to the lowest-common
+	# form (no `expr` matcher, no subdirectives) so it parses on any Caddy 2.x.
+	# (Serves 404.html with a 200; the real 404 status can be restored later.)
 	handle_errors {
-		@404 expr `{err.status_code} == 404`
-		rewrite @404 /404.html
+		rewrite * /404.html
 		file_server
 	}
 }
