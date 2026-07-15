@@ -5,7 +5,11 @@
 FROM node:22-alpine AS build
 WORKDIR /app
 COPY package.json package-lock.json ./
-RUN npm ci
+# `npm install` (not `npm ci`): Astro pulls typescript as an optional dep that
+# different npm versions lock differently, which makes the strict `npm ci`
+# fail on this image's npm. `install` resolves it cleanly and deterministically
+# enough for a static build.
+RUN npm install --no-audit --no-fund
 COPY . .
 RUN npm run build
 
