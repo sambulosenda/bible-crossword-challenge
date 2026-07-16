@@ -47,12 +47,10 @@ struct PackDetailView: View {
         .navigationTitle(pack.title)
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $showPaywall) { PaywallView() }
+        // packCompleted is logged where it happens — the game screen's
+        // completion hook — so it fires exactly once, even if this view is
+        // never revisited.
         .task { analytics.log(.packOpened(id: pack.id)) }
-        .onChange(of: progress.isComplete) { wasComplete, isComplete in
-            if isComplete && !wasComplete {
-                analytics.log(.packCompleted(id: pack.id))
-            }
-        }
     }
 
     // MARK: - Header

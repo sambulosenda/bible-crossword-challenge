@@ -53,6 +53,10 @@ final class PlayerProfile {
     var noHintSolves: Int = 0
     /// Count of hard puzzles completed (first completion only).
     var hardCompleted: Int = 0
+    /// Packs the player has fully solved, by pack id. Recorded at the moment
+    /// the last member puzzle completes (and reconciled on launch for solves
+    /// that predate this field) — drives the pack achievements.
+    var completedPackIDs: [String] = []
     /// Streak freezes on hand — each auto-forgives a single missed day. Every
     /// player starts with one; more are earned at streak milestones.
     var streakFreezes: Int = 1
@@ -72,6 +76,7 @@ final class PlayerProfile {
         bestSolveSeconds: Int? = nil,
         noHintSolves: Int = 0,
         hardCompleted: Int = 0,
+        completedPackIDs: [String] = [],
         streakFreezes: Int = 1,
         lastFreezeUsedDate: Date? = nil,
         createdAt: Date = Date()
@@ -87,6 +92,7 @@ final class PlayerProfile {
         self.bestSolveSeconds = bestSolveSeconds
         self.noHintSolves = noHintSolves
         self.hardCompleted = hardCompleted
+        self.completedPackIDs = completedPackIDs
         self.streakFreezes = streakFreezes
         self.lastFreezeUsedDate = lastFreezeUsedDate
         self.createdAt = createdAt
@@ -167,6 +173,9 @@ enum SyncMerge {
             }
             for id in other.unlockedAchievementIDs where !primary.unlockedAchievementIDs.contains(id) {
                 primary.unlockedAchievementIDs.append(id)
+            }
+            for id in other.completedPackIDs where !primary.completedPackIDs.contains(id) {
+                primary.completedPackIDs.append(id)
             }
             if let best = other.bestSolveSeconds, best < (primary.bestSolveSeconds ?? .max) {
                 primary.bestSolveSeconds = best
@@ -320,6 +329,7 @@ struct Achievement: Identifiable, Hashable {
         case fastSolve(maxSeconds: Int)
         case noHints(Int)
         case difficulty(PuzzleDifficulty, Int)
+        case packsCompleted(Int)
     }
 
     let id: String
@@ -346,6 +356,8 @@ struct Achievement: Identifiable, Hashable {
             return min(1.0, Double(p.noHintSolves) / Double(target))
         case .difficulty(let diff, let target):
             return min(1.0, Double(count(of: diff, in: p)) / Double(target))
+        case .packsCompleted(let target):
+            return min(1.0, Double(p.completedPackIDs.count) / Double(target))
         }
     }
 
@@ -362,6 +374,8 @@ struct Achievement: Identifiable, Hashable {
             return "\(min(p.noHintSolves, target)) / \(target)"
         case .difficulty(let diff, let target):
             return "\(min(count(of: diff, in: p), target)) / \(target)"
+        case .packsCompleted(let target):
+            return "\(min(p.completedPackIDs.count, target)) / \(target)"
         }
     }
 
@@ -383,6 +397,8 @@ enum Achievements {
         Achievement(id: "scholar", title: "Scholar", detail: "Complete 100 puzzles", symbol: "graduationcap", goal: .puzzles(100)),
         Achievement(id: "evangelist", title: "Evangelist", detail: "Reach a 30 day streak", symbol: "flame", goal: .streak(30)),
         Achievement(id: "apostle", title: "Apostle", detail: "Reach a 100 day streak", symbol: "crown", goal: .streak(100)),
+        Achievement(id: "pathfinder", title: "Pathfinder", detail: "Complete a puzzle pack", symbol: "square.stack.3d.up.fill", goal: .packsCompleted(1)),
+        Achievement(id: "collector", title: "Collector", detail: "Complete 3 puzzle packs", symbol: "books.vertical.fill", goal: .packsCompleted(3)),
     ]
 
     /// Returns achievement IDs newly satisfied that aren't already recorded.

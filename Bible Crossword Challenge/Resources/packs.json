@@ -33,6 +33,17 @@
     "availableTo": null
   },
   {
+    "id": "psalm-23",
+    "title": "The Shepherd's Psalm",
+    "blurb": "Walk Psalm 23 verse by verse, from green pastures to the house of the LORD.",
+    "coverSymbol": "water.waves",
+    "accentHex": "#2E6E8E",
+    "isPremium": true,
+    "puzzleIDs": ["pack-psalm-23-001", "pack-psalm-23-002", "pack-psalm-23-003", "pack-psalm-23-004", "pack-psalm-23-005"],
+    "availableFrom": null,
+    "availableTo": null
+  },
+  {
     "id": "advent",
     "title": "Advent",
     "blurb": "Count down to Christmas, one puzzle at a time.",

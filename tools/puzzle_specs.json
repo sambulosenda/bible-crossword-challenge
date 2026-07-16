@@ -8886,5 +8886,368 @@
         "clue": "The flock knows the shepherd's"
       }
     ]
+  },
+  {
+    "id": "pack-psalm-23-001",
+    "pack": "psalm-23",
+    "title": "The Shepherd's Care",
+    "theme": "Psalm 23:1 — The LORD is my shepherd",
+    "difficulty": "easy",
+    "verse": "The LORD is my shepherd; I shall not want.",
+    "reference": "Psalm 23:1",
+    "words": [
+      {
+        "answer": "SHEPHERD",
+        "clue": "David's name for the LORD, who tends His flock"
+      },
+      {
+        "answer": "SHEEP",
+        "clue": "The flock's members, prone to wander without a keeper"
+      },
+      {
+        "answer": "LORD",
+        "clue": "Whom David calls his shepherd in this psalm"
+      },
+      {
+        "answer": "FLOCK",
+        "clue": "The whole company a good keeper watches over"
+      },
+      {
+        "answer": "LAMB",
+        "clue": "The youngest of the fold, carried close"
+      },
+      {
+        "answer": "WANT",
+        "clue": "What the psalmist shall not know, with such a keeper"
+      },
+      {
+        "answer": "FOLD",
+        "clue": "The sheep's safe enclosure"
+      },
+      {
+        "answer": "CARE",
+        "clue": "What the Shepherd shows His every sheep"
+      },
+      {
+        "answer": "TEND",
+        "clue": "To watch over and feed the flock"
+      },
+      {
+        "answer": "GUIDE",
+        "clue": "To go before and show the way"
+      },
+      {
+        "answer": "DAVID",
+        "clue": "The shepherd boy who wrote this psalm"
+      },
+      {
+        "answer": "PSALM",
+        "clue": "A sacred song of Israel, such as this twenty-third"
+      },
+      {
+        "answer": "KEEPER",
+        "clue": "One charged with the flock's safety"
+      },
+      {
+        "answer": "NEED",
+        "clue": "The Shepherd supplies every one"
+      },
+      {
+        "answer": "PROVIDE",
+        "clue": "What the LORD does, so His own shall not lack"
+      }
+    ]
+  },
+  {
+    "id": "pack-psalm-23-002",
+    "pack": "psalm-23",
+    "title": "Green Pastures",
+    "theme": "Psalm 23:2 — still waters and rest",
+    "difficulty": "easy",
+    "verse": "He maketh me to lie down in green pastures: he leadeth me beside the still waters.",
+    "reference": "Psalm 23:2",
+    "words": [
+      {
+        "answer": "PASTURES",
+        "clue": "The green resting places where He makes me lie down"
+      },
+      {
+        "answer": "WATERS",
+        "clue": "The still ones He leads me beside"
+      },
+      {
+        "answer": "GREEN",
+        "clue": "The colour of the pastures in verse two"
+      },
+      {
+        "answer": "STILL",
+        "clue": "How the waters are — hushed and calm"
+      },
+      {
+        "answer": "REST",
+        "clue": "What the flock finds lying down"
+      },
+      {
+        "answer": "LEAD",
+        "clue": "What the Shepherd does, gently going before"
+      },
+      {
+        "answer": "PEACE",
+        "clue": "The quiet gift of still waters"
+      },
+      {
+        "answer": "QUIET",
+        "clue": "Hushed, like the brook He leads beside"
+      },
+      {
+        "answer": "BROOK",
+        "clue": "A small stream for a thirsty flock"
+      },
+      {
+        "answer": "MEADOW",
+        "clue": "A grassy field for grazing"
+      },
+      {
+        "answer": "GRASS",
+        "clue": "What the flock grazes on"
+      },
+      {
+        "answer": "CALM",
+        "clue": "Untroubled, like the waters He chooses"
+      },
+      {
+        "answer": "BESIDE",
+        "clue": "Where He leads me — right ___ the still waters"
+      },
+      {
+        "answer": "DRINK",
+        "clue": "What sheep do at the water's edge"
+      },
+      {
+        "answer": "LIE",
+        "clue": "'He maketh me to ___ down in green pastures'"
+      }
+    ]
+  },
+  {
+    "id": "pack-psalm-23-003",
+    "pack": "psalm-23",
+    "title": "He Restoreth My Soul",
+    "theme": "Psalm 23:3 — paths of righteousness",
+    "difficulty": "medium",
+    "verse": "He restoreth my soul: he leadeth me in the paths of righteousness for his name's sake.",
+    "reference": "Psalm 23:3",
+    "words": [
+      {
+        "answer": "SOUL",
+        "clue": "What He restoreth"
+      },
+      {
+        "answer": "RESTORE",
+        "clue": "To make whole again, as He does my soul"
+      },
+      {
+        "answer": "PATHS",
+        "clue": "Of righteousness — the ways He leads me in"
+      },
+      {
+        "answer": "NAME",
+        "clue": "For whose sake He leads: His own ___"
+      },
+      {
+        "answer": "SAKE",
+        "clue": "'For his name's ___'"
+      },
+      {
+        "answer": "RENEW",
+        "clue": "To make fresh again"
+      },
+      {
+        "answer": "RIGHTEOUS",
+        "clue": "Upright before God — the kind of paths He chooses"
+      },
+      {
+        "answer": "WALK",
+        "clue": "To go along the path, step by step"
+      },
+      {
+        "answer": "SPIRIT",
+        "clue": "The inner life He revives"
+      },
+      {
+        "answer": "HOLY",
+        "clue": "Set apart, as God's name is"
+      },
+      {
+        "answer": "WAY",
+        "clue": "A path; Jesus said He is the ___"
+      },
+      {
+        "answer": "TRUTH",
+        "clue": "What upright paths are laid in"
+      },
+      {
+        "answer": "STRENGTH",
+        "clue": "What a restored soul gets back"
+      },
+      {
+        "answer": "REVIVE",
+        "clue": "To bring back to life and vigour"
+      },
+      {
+        "answer": "GLORY",
+        "clue": "The honour of His name"
+      }
+    ]
+  },
+  {
+    "id": "pack-psalm-23-004",
+    "pack": "psalm-23",
+    "title": "Through the Valley",
+    "theme": "Psalm 23:4 — fear no evil",
+    "difficulty": "medium",
+    "verse": "Yea, though I walk through the valley of the shadow of death, I will fear no evil: for thou art with me; thy rod and thy staff they comfort me.",
+    "reference": "Psalm 23:4",
+    "words": [
+      {
+        "answer": "VALLEY",
+        "clue": "The low place of the shadow I walk through"
+      },
+      {
+        "answer": "SHADOW",
+        "clue": "Of death — what darkens the valley"
+      },
+      {
+        "answer": "DEATH",
+        "clue": "The valley bears its shadow"
+      },
+      {
+        "answer": "FEAR",
+        "clue": "'I will ___ no evil'"
+      },
+      {
+        "answer": "EVIL",
+        "clue": "I will fear none of it, for Thou art with me"
+      },
+      {
+        "answer": "ROD",
+        "clue": "With the staff, it comforts me"
+      },
+      {
+        "answer": "STAFF",
+        "clue": "The shepherd's crook at my side"
+      },
+      {
+        "answer": "COMFORT",
+        "clue": "What the rod and staff bring"
+      },
+      {
+        "answer": "WALK",
+        "clue": "'Yea, though I ___ through the valley'"
+      },
+      {
+        "answer": "PRESENCE",
+        "clue": "'Thou art with me' — His nearness in the dark"
+      },
+      {
+        "answer": "THOU",
+        "clue": "'For ___ art with me'"
+      },
+      {
+        "answer": "DARKNESS",
+        "clue": "What fills the valley floor"
+      },
+      {
+        "answer": "COURAGE",
+        "clue": "Boldness to pass through the shadows"
+      },
+      {
+        "answer": "PROTECT",
+        "clue": "What the shepherd's crook is for"
+      },
+      {
+        "answer": "NEAR",
+        "clue": "How close God stays in the valley"
+      }
+    ]
+  },
+  {
+    "id": "pack-psalm-23-005",
+    "pack": "psalm-23",
+    "title": "Goodness and Mercy",
+    "theme": "Psalm 23:5-6 — a table before me",
+    "difficulty": "hard",
+    "verse": "Surely goodness and mercy shall follow me all the days of my life: and I will dwell in the house of the LORD for ever.",
+    "reference": "Psalm 23:6",
+    "words": [
+      {
+        "answer": "TABLE",
+        "clue": "Prepared before me in the presence of mine enemies"
+      },
+      {
+        "answer": "ENEMIES",
+        "clue": "In whose presence the table is spread"
+      },
+      {
+        "answer": "ANOINT",
+        "clue": "To pour oil upon the head in blessing"
+      },
+      {
+        "answer": "OIL",
+        "clue": "What Thou anointest my head with"
+      },
+      {
+        "answer": "CUP",
+        "clue": "Mine runneth over"
+      },
+      {
+        "answer": "HEAD",
+        "clue": "Anointed with oil"
+      },
+      {
+        "answer": "GOODNESS",
+        "clue": "With mercy, it shall follow me all my days"
+      },
+      {
+        "answer": "MERCY",
+        "clue": "Goodness's companion, following all my days"
+      },
+      {
+        "answer": "FOLLOW",
+        "clue": "What goodness and mercy shall do, all the days of my life"
+      },
+      {
+        "answer": "DWELL",
+        "clue": "What I will do in the house of the LORD for ever"
+      },
+      {
+        "answer": "HOUSE",
+        "clue": "Of the LORD — my home for ever"
+      },
+      {
+        "answer": "FOREVER",
+        "clue": "How long I will dwell in the LORD's house"
+      },
+      {
+        "answer": "SURELY",
+        "clue": "The confident word that opens the psalm's last verse"
+      },
+      {
+        "answer": "FEAST",
+        "clue": "A banquet spread by a generous host"
+      },
+      {
+        "answer": "RUNNETH",
+        "clue": "What my cup does — over"
+      },
+      {
+        "answer": "DAYS",
+        "clue": "All of them, of my life"
+      },
+      {
+        "answer": "LIFE",
+        "clue": "'All the days of my ___'"
+      }
+    ]
   }
 ]

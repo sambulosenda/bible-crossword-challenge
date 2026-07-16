@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import SwiftData
 import StoreKit
 import Lottie
 
@@ -28,6 +29,9 @@ struct CompletionView: View {
     @State private var didProcessChallenge = false
     /// Set to present the system share sheet for an outgoing challenge link.
     @State private var challengeShare: ChallengeShare?
+    /// The solved puzzle's pack, if any, with progress and the next unsolved
+    /// puzzle — computed once on appear so the card doesn't shift mid-view.
+    @State private var packContext: PackContext?
     /// First outgoing challenge needs a display name — collected inline. The
     /// intent (fresh challenge vs. rematch) is stashed across the prompt.
     @State private var showNamePrompt = false
@@ -35,6 +39,7 @@ struct CompletionView: View {
     @State private var pendingRematchIntent = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.displayScale) private var displayScale
+    @Environment(\.openURL) private var openURL
     @Environment(\.gameCenter) private var gameCenter
     @Environment(\.requestReview) private var requestReview
     @Environment(\.puzzleProvider) private var puzzleProvider
@@ -65,6 +70,10 @@ struct CompletionView: View {
                 }
 
                 verseCard
+
+                if let packContext {
+                    packCard(packContext)
+                }
 
                 if earnedFreeze {
                     freezeCard
@@ -97,6 +106,7 @@ struct CompletionView: View {
             renderShareCard()
             maybeRequestReview()
             processIncomingChallenge()
+            loadPackContext()
         }
         .sheet(isPresented: $showPaywall) {
             PaywallView()
@@ -215,6 +225,94 @@ struct CompletionView: View {
         profile.username = String(name.prefix(20))
         context.saveLogged("challenge name")
         sendChallenge(rematch: pendingRematchIntent)
+    }
+
+    // MARK: - Pack continuation
+
+    /// The solved puzzle's place in its pack: overall progress plus the next
+    /// unsolved puzzle in authored order (nil once the pack is finished).
+    private struct PackContext {
+        let pack: PuzzlePack
+        let progress: PackProgress
+        let next: Puzzle?
+    }
+
+    private func loadPackContext() {
+        guard let pack = puzzleProvider.pack(forPuzzle: puzzle.id) else { return }
+        let records = (try? context.fetch(FetchDescriptor<PuzzleRecord>())) ?? []
+        let recordsByID = Dictionary(records.map { ($0.puzzleID, $0) }, uniquingKeysWith: { a, _ in a })
+        let next = puzzleProvider.puzzles(in: pack).first {
+            $0.id != puzzle.id && recordsByID[$0.id]?.isCompleted != true
+        }
+        packContext = PackContext(
+            pack: pack,
+            progress: PackProgress(pack: pack, recordsByID: recordsByID),
+            next: next
+        )
+    }
+
+    /// Where this solve sits in its pack. Finished → a celebratory seal; more
+    /// to go → one tap into the next puzzle (or the paywall when the pack is
+    /// premium and the player isn't — a natural discovery moment for overlay
+    /// puzzles reached via the daily feed).
+    @ViewBuilder
+    private func packCard(_ ctx: PackContext) -> some View {
+        if ctx.progress.isComplete {
+            HStack(spacing: Theme.Spacing.m) {
+                Image(systemName: "checkmark.seal.fill")
+                    .font(.title)
+                    .foregroundStyle(ctx.pack.accent)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("\(ctx.pack.title) complete!")
+                        .font(.subheadline.weight(.semibold))
+                    Text("Every puzzle in the pack is solved.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                Spacer(minLength: 0)
+            }
+            .padding(Theme.Spacing.l)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(ctx.pack.accent.opacity(0.12), in: .rect(cornerRadius: Theme.cornerRadius, style: .continuous))
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel("\(ctx.pack.title) complete. Every puzzle in the pack is solved.")
+        } else if let next = ctx.next {
+            let locked = ctx.pack.isPremium && !store.isPremium
+            Button {
+                if locked {
+                    analytics.log(.paywallOpened(source: "pack_completion"))
+                    showPaywall = true
+                } else if let url = URL(string: "biblecrossword://puzzle?id=\(next.id)") {
+                    openURL(url)
+                    onHome()
+                }
+            } label: {
+                HStack(spacing: Theme.Spacing.m) {
+                    Image(systemName: locked ? "crown.fill" : ctx.pack.coverSymbol)
+                        .font(.title)
+                        .foregroundStyle(locked ? .yellow : ctx.pack.accent)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("\(ctx.pack.title) · \(ctx.progress.solved) of \(ctx.progress.total)")
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(.primary)
+                        Text(locked ? "Unlock Premium to keep going" : "Next: \(next.title)")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    Spacer(minLength: 0)
+                    Image(systemName: "chevron.right")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.secondary)
+                }
+                .padding(Theme.Spacing.l)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(ctx.pack.accent.opacity(0.12), in: .rect(cornerRadius: Theme.cornerRadius, style: .continuous))
+            }
+            .buttonStyle(PressableCardStyle())
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel("\(ctx.pack.title), \(ctx.progress.solved) of \(ctx.progress.total) solved.")
+            .accessibilityHint(locked ? "Opens Premium upgrade options" : "Plays the next puzzle, \(next.title)")
+        }
     }
 
     // MARK: - Mini upsell

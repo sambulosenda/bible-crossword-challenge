@@ -78,6 +78,31 @@ struct PackProgress: Hashable {
     }
 }
 
+// MARK: - Completion recording
+
+/// Marks packs as completed on the player's profile the moment their last
+/// member puzzle is solved. Separated from the views so the same rule runs at
+/// solve time (game screen) and on launch (reconciling solves that predate
+/// `completedPackIDs`, or that finished a pack from another device).
+enum PackCompletion {
+    /// Appends any of `packs` whose every puzzle satisfies `isSolved` and that
+    /// aren't already on the profile. Returns the newly completed packs.
+    @discardableResult
+    static func record(
+        packs: [PuzzlePack],
+        profile: PlayerProfile,
+        isSolved: (String) -> Bool
+    ) -> [PuzzlePack] {
+        let finished = packs.filter { pack in
+            !profile.completedPackIDs.contains(pack.id)
+                && !pack.puzzleIDs.isEmpty
+                && pack.puzzleIDs.allSatisfy(isSolved)
+        }
+        profile.completedPackIDs.append(contentsOf: finished.map(\.id))
+        return finished
+    }
+}
+
 // MARK: - Hex colour
 
 extension Color {

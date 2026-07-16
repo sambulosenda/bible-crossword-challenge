@@ -16988,5 +16988,761 @@
       }
     ],
     "kind": "mini"
+  },
+  {
+    "id": "pack-psalm-23-002",
+    "title": "Green Pastures",
+    "difficulty": "easy",
+    "verse": "He maketh me to lie down in green pastures: he leadeth me beside the still waters.",
+    "reference": "Psalm 23:2",
+    "publishDate": "2026-07-01",
+    "size": 15,
+    "grid": [
+      "...............",
+      "...............",
+      "....P..........",
+      "...BESIDE..M...",
+      "..L.A....GREEN.",
+      "..E.C......A...",
+      ".WATERS..G.D...",
+      "..D..E..BROOK..",
+      "...C.S.D.A.W...",
+      "..PASTURES.....",
+      "...L...I.STILL.",
+      "...M...N....I..",
+      ".......K.QUIET.",
+      "...............",
+      "..............."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 2,
+        "col": 4,
+        "text": "The quiet gift of still waters",
+        "answer": "PEACE"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 3,
+        "col": 3,
+        "text": "Where He leads me \u2014 right ___ the still waters",
+        "answer": "BESIDE"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 3,
+        "col": 11,
+        "text": "A grassy field for grazing",
+        "answer": "MEADOW"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 4,
+        "col": 2,
+        "text": "What the Shepherd does, gently going before",
+        "answer": "LEAD"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 4,
+        "col": 9,
+        "text": "The colour of the pastures in verse two",
+        "answer": "GREEN"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 6,
+        "col": 1,
+        "text": "The still ones He leads me beside",
+        "answer": "WATERS"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 6,
+        "col": 5,
+        "text": "What the flock finds lying down",
+        "answer": "REST"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 6,
+        "col": 9,
+        "text": "What the flock grazes on",
+        "answer": "GRASS"
+      },
+      {
+        "number": 9,
+        "direction": "across",
+        "row": 7,
+        "col": 8,
+        "text": "A small stream for a thirsty flock",
+        "answer": "BROOK"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 8,
+        "col": 3,
+        "text": "Untroubled, like the waters He chooses",
+        "answer": "CALM"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 8,
+        "col": 7,
+        "text": "What sheep do at the water's edge",
+        "answer": "DRINK"
+      },
+      {
+        "number": 12,
+        "direction": "across",
+        "row": 9,
+        "col": 2,
+        "text": "The green resting places where He makes me lie down",
+        "answer": "PASTURES"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 10,
+        "col": 9,
+        "text": "How the waters are \u2014 hushed and calm",
+        "answer": "STILL"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 10,
+        "col": 12,
+        "text": "'He maketh me to ___ down in green pastures'",
+        "answer": "LIE"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 12,
+        "col": 9,
+        "text": "Hushed, like the brook He leads beside",
+        "answer": "QUIET"
+      }
+    ]
+  },
+  {
+    "id": "pack-psalm-23-001",
+    "title": "The Shepherd's Care",
+    "difficulty": "easy",
+    "verse": "The LORD is my shepherd; I shall not want.",
+    "reference": "Psalm 23:1",
+    "publishDate": "2026-07-02",
+    "size": 15,
+    "grid": [
+      "..P............",
+      "..S............",
+      "..A............",
+      ".FLOCK...G.....",
+      "..M.A....U.....",
+      "....R..T.I.....",
+      "..SHEPHERD.....",
+      "W.H..R.N.E.....",
+      "A.E.FOLD.......",
+      "NEED.V.........",
+      "T.P..I...LAMB..",
+      ".....D...O.....",
+      "....KEEPER.....",
+      ".........DAVID.",
+      "..............."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 2,
+        "text": "A sacred song of Israel, such as this twenty-third",
+        "answer": "PSALM"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 3,
+        "col": 1,
+        "text": "The whole company a good keeper watches over",
+        "answer": "FLOCK"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 3,
+        "col": 4,
+        "text": "What the Shepherd shows His every sheep",
+        "answer": "CARE"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 3,
+        "col": 9,
+        "text": "To go before and show the way",
+        "answer": "GUIDE"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 5,
+        "col": 7,
+        "text": "To watch over and feed the flock",
+        "answer": "TEND"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 6,
+        "col": 2,
+        "text": "David's name for the LORD, who tends His flock",
+        "answer": "SHEPHERD"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 6,
+        "col": 2,
+        "text": "The flock's members, prone to wander without a keeper",
+        "answer": "SHEEP"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 6,
+        "col": 5,
+        "text": "What the LORD does, so His own shall not lack",
+        "answer": "PROVIDE"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 7,
+        "col": 0,
+        "text": "What the psalmist shall not know, with such a keeper",
+        "answer": "WANT"
+      },
+      {
+        "number": 9,
+        "direction": "across",
+        "row": 8,
+        "col": 4,
+        "text": "The sheep's safe enclosure",
+        "answer": "FOLD"
+      },
+      {
+        "number": 10,
+        "direction": "across",
+        "row": 9,
+        "col": 0,
+        "text": "The Shepherd supplies every one",
+        "answer": "NEED"
+      },
+      {
+        "number": 11,
+        "direction": "across",
+        "row": 10,
+        "col": 9,
+        "text": "The youngest of the fold, carried close",
+        "answer": "LAMB"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 10,
+        "col": 9,
+        "text": "Whom David calls his shepherd in this psalm",
+        "answer": "LORD"
+      },
+      {
+        "number": 12,
+        "direction": "across",
+        "row": 12,
+        "col": 4,
+        "text": "One charged with the flock's safety",
+        "answer": "KEEPER"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 13,
+        "col": 9,
+        "text": "The shepherd boy who wrote this psalm",
+        "answer": "DAVID"
+      }
+    ]
+  },
+  {
+    "id": "pack-psalm-23-003",
+    "title": "He Restoreth My Soul",
+    "difficulty": "medium",
+    "verse": "He restoreth my soul: he leadeth me in the paths of righteousness for his name's sake.",
+    "reference": "Psalm 23:3",
+    "publishDate": "2026-07-03",
+    "size": 15,
+    "grid": [
+      "......SPIRIT...",
+      "......T........",
+      "......R........",
+      "......E....P.S.",
+      "......N.N..A.O.",
+      "......G.A..T.U.",
+      "......T.M..HOLY",
+      ".W.RIGHTEOUS...",
+      "SAKE.L.........",
+      ".L.V.O.........",
+      ".K.I.RESTORE...",
+      "...V.Y..R......",
+      "RENEW...U......",
+      "....A...T......",
+      "....Y...H......"
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 6,
+        "text": "The inner life He revives",
+        "answer": "SPIRIT"
+      },
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 6,
+        "text": "What a restored soul gets back",
+        "answer": "STRENGTH"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 3,
+        "col": 11,
+        "text": "Of righteousness \u2014 the ways He leads me in",
+        "answer": "PATHS"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 3,
+        "col": 13,
+        "text": "What He restoreth",
+        "answer": "SOUL"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 4,
+        "col": 8,
+        "text": "For whose sake He leads: His own ___",
+        "answer": "NAME"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 6,
+        "col": 11,
+        "text": "Set apart, as God's name is",
+        "answer": "HOLY"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 7,
+        "col": 1,
+        "text": "To go along the path, step by step",
+        "answer": "WALK"
+      },
+      {
+        "number": 7,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "Upright before God \u2014 the kind of paths He chooses",
+        "answer": "RIGHTEOUS"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 7,
+        "col": 3,
+        "text": "To bring back to life and vigour",
+        "answer": "REVIVE"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 7,
+        "col": 5,
+        "text": "The honour of His name",
+        "answer": "GLORY"
+      },
+      {
+        "number": 9,
+        "direction": "across",
+        "row": 8,
+        "col": 0,
+        "text": "'For his name's ___'",
+        "answer": "SAKE"
+      },
+      {
+        "number": 10,
+        "direction": "across",
+        "row": 10,
+        "col": 5,
+        "text": "To make whole again, as He does my soul",
+        "answer": "RESTORE"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 10,
+        "col": 8,
+        "text": "What upright paths are laid in",
+        "answer": "TRUTH"
+      },
+      {
+        "number": 12,
+        "direction": "across",
+        "row": 12,
+        "col": 0,
+        "text": "To make fresh again",
+        "answer": "RENEW"
+      },
+      {
+        "number": 13,
+        "direction": "down",
+        "row": 12,
+        "col": 4,
+        "text": "A path; Jesus said He is the ___",
+        "answer": "WAY"
+      }
+    ]
+  },
+  {
+    "id": "pack-psalm-23-004",
+    "title": "Through the Valley",
+    "difficulty": "medium",
+    "verse": "Yea, though I walk through the valley of the shadow of death, I will fear no evil: for thou art with me; thy rod and thy staff they comfort me.",
+    "reference": "Psalm 23:4",
+    "publishDate": "2026-07-04",
+    "size": 15,
+    "grid": [
+      "...............",
+      ".........W.....",
+      ".........A.....",
+      ".......V.L.....",
+      "....N.DARKNESS.",
+      "C...E..L....H..",
+      "O...A..L....A..",
+      "M..PRESENCE.D..",
+      "FEAR.V.Y.O.ROD.",
+      "O..O.I...U..W..",
+      "R..T.L...R.T...",
+      "T..E...DEATH...",
+      "...C.....G.O...",
+      "..STAFF..E.U...",
+      "..............."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 1,
+        "col": 9,
+        "text": "'Yea, though I ___ through the valley'",
+        "answer": "WALK"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 3,
+        "col": 7,
+        "text": "The low place of the shadow I walk through",
+        "answer": "VALLEY"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 4,
+        "col": 4,
+        "text": "How close God stays in the valley",
+        "answer": "NEAR"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 4,
+        "col": 6,
+        "text": "What fills the valley floor",
+        "answer": "DARKNESS"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 4,
+        "col": 12,
+        "text": "Of death \u2014 what darkens the valley",
+        "answer": "SHADOW"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 5,
+        "col": 0,
+        "text": "What the rod and staff bring",
+        "answer": "COMFORT"
+      },
+      {
+        "number": 7,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "'Thou art with me' \u2014 His nearness in the dark",
+        "answer": "PRESENCE"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 7,
+        "col": 3,
+        "text": "What the shepherd's crook is for",
+        "answer": "PROTECT"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 7,
+        "col": 5,
+        "text": "I will fear none of it, for Thou art with me",
+        "answer": "EVIL"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 7,
+        "col": 9,
+        "text": "Boldness to pass through the shadows",
+        "answer": "COURAGE"
+      },
+      {
+        "number": 10,
+        "direction": "across",
+        "row": 8,
+        "col": 0,
+        "text": "'I will ___ no evil'",
+        "answer": "FEAR"
+      },
+      {
+        "number": 11,
+        "direction": "across",
+        "row": 8,
+        "col": 11,
+        "text": "With the staff, it comforts me",
+        "answer": "ROD"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 10,
+        "col": 11,
+        "text": "'For ___ art with me'",
+        "answer": "THOU"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 11,
+        "col": 7,
+        "text": "The valley bears its shadow",
+        "answer": "DEATH"
+      },
+      {
+        "number": 14,
+        "direction": "across",
+        "row": 13,
+        "col": 2,
+        "text": "The shepherd's crook at my side",
+        "answer": "STAFF"
+      }
+    ]
+  },
+  {
+    "id": "pack-psalm-23-005",
+    "title": "Goodness and Mercy",
+    "difficulty": "hard",
+    "verse": "Surely goodness and mercy shall follow me all the days of my life: and I will dwell in the house of the LORD for ever.",
+    "reference": "Psalm 23:6",
+    "publishDate": "2026-07-05",
+    "size": 15,
+    "grid": [
+      "...H......T....",
+      "...OIL....A.A..",
+      "L..U......B.N..",
+      "I..S....FOLLOW.",
+      "FOREVER.E.E.I..",
+      "E.....U.A...N..",
+      "..GOODNESS..T..",
+      ".M....N.T......",
+      ".ENEMIES.......",
+      ".R....T.D...D..",
+      ".CUP..HEAD..W..",
+      ".Y......Y...E..",
+      "........SURELY.",
+      "............L..",
+      "..............."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 3,
+        "text": "Of the LORD \u2014 my home for ever",
+        "answer": "HOUSE"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 10,
+        "text": "Prepared before me in the presence of mine enemies",
+        "answer": "TABLE"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 1,
+        "col": 3,
+        "text": "What Thou anointest my head with",
+        "answer": "OIL"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 1,
+        "col": 12,
+        "text": "To pour oil upon the head in blessing",
+        "answer": "ANOINT"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 2,
+        "col": 0,
+        "text": "'All the days of my ___'",
+        "answer": "LIFE"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 3,
+        "col": 8,
+        "text": "What goodness and mercy shall do, all the days of my life",
+        "answer": "FOLLOW"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 3,
+        "col": 8,
+        "text": "A banquet spread by a generous host",
+        "answer": "FEAST"
+      },
+      {
+        "number": 7,
+        "direction": "across",
+        "row": 4,
+        "col": 0,
+        "text": "How long I will dwell in the LORD's house",
+        "answer": "FOREVER"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 4,
+        "col": 6,
+        "text": "What my cup does \u2014 over",
+        "answer": "RUNNETH"
+      },
+      {
+        "number": 9,
+        "direction": "across",
+        "row": 6,
+        "col": 2,
+        "text": "With mercy, it shall follow me all my days",
+        "answer": "GOODNESS"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 7,
+        "col": 1,
+        "text": "Goodness's companion, following all my days",
+        "answer": "MERCY"
+      },
+      {
+        "number": 11,
+        "direction": "across",
+        "row": 8,
+        "col": 1,
+        "text": "In whose presence the table is spread",
+        "answer": "ENEMIES"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 9,
+        "col": 8,
+        "text": "All of them, of my life",
+        "answer": "DAYS"
+      },
+      {
+        "number": 13,
+        "direction": "down",
+        "row": 9,
+        "col": 12,
+        "text": "What I will do in the house of the LORD for ever",
+        "answer": "DWELL"
+      },
+      {
+        "number": 14,
+        "direction": "across",
+        "row": 10,
+        "col": 1,
+        "text": "Mine runneth over",
+        "answer": "CUP"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 10,
+        "col": 6,
+        "text": "Anointed with oil",
+        "answer": "HEAD"
+      },
+      {
+        "number": 16,
+        "direction": "across",
+        "row": 12,
+        "col": 8,
+        "text": "The confident word that opens the psalm's last verse",
+        "answer": "SURELY"
+      }
+    ]
   }
 ]

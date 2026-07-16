@@ -26,11 +26,16 @@ Curate the existing 112 puzzles into themed sets. Titles are already thematic
 - Those puzzles stay in daily rotation + Archive AND appear in their pack.
 - New Collections UI + provider methods only.
 
-### Phase 2 — Dedicated packs (as content grows)
+### Phase 2 — Dedicated packs (SHIPPED 2026-07-15)
 Author *new* puzzles that live only inside a pack (never daily-rotated).
-- specs.json entries carry `"pack": "<slug>"` → generator emits `pack-<slug>-NN`
+- specs.json entries carry `"pack": "<slug>"` → generator emits `pack-<slug>-NNN`
   ids and the provider excludes `pack-` prefixed puzzles from the daily/archive pool.
 - Same `packs.json` + UI. Real added content ⇒ strongest Premium hook.
+- Shipped with: "The Shepherd's Psalm" (5 dedicated puzzles, `pack-psalm-23-*`),
+  `.packsCompleted` achievements (Pathfinder ×1, Collector ×3) backed by
+  `PlayerProfile.completedPackIDs` (solve-time recording + launch reconcile),
+  and a completion-screen pack card with "Next in pack" via
+  `biblecrossword://puzzle?id=…`. Pack specs carry explicit `"id"` fields.
 
 Prefix convention already exists (`daily-`, `mini-`), so `pack-` is consistent and
 keeps pool separation explicit without a new `Puzzle` field.

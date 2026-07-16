@@ -17,6 +17,7 @@ struct CrosswordGameView: View {
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
     @Environment(\.analytics) private var analytics
+    @Environment(\.puzzleProvider) private var puzzleProvider
     @Environment(\.notifications) private var notifications
     @Environment(\.gameCenter) private var gameCenter
     @Environment(\.challengeService) private var challengeService
@@ -308,6 +309,12 @@ struct CrosswordGameView: View {
         if firstCompletion {
             if !rec.usedHint && !puzzle.isMini { profile.noHintSolves += 1 }
             if puzzle.difficulty == .hard { profile.hardCompleted += 1 }
+            // This solve may have finished one or more packs — record them
+            // before evaluating achievements so a pack unlock lands on this
+            // completion screen, not the next one.
+            for pack in recordPackCompletions() {
+                analytics.log(.packCompleted(id: pack.id))
+            }
         }
 
         let unlocked = Achievements.newlyUnlocked(for: profile)
@@ -342,6 +349,26 @@ struct CrosswordGameView: View {
         Task { @MainActor in
             try? await Task.sleep(for: .milliseconds(waveMillis))
             showCompletion = true
+        }
+    }
+
+    /// Packs this puzzle just finished. Runs before `rec.isCompleted` is
+    /// written, so the current puzzle counts as solved explicitly.
+    private func recordPackCompletions() -> [PuzzlePack] {
+        let candidates = puzzleProvider.packs(containing: puzzle.id)
+        guard !candidates.isEmpty else { return [] }
+        let solvedIDs: Set<String>
+        do {
+            let records = try context.fetch(FetchDescriptor<PuzzleRecord>())
+            solvedIDs = Set(records.filter(\.isCompleted).map(\.puzzleID))
+        } catch {
+            // Fetch failure just defers credit — launch reconciliation will
+            // record the completed pack next time the store is readable.
+            Log.persistence.error("Pack completion fetch failed: \(error, privacy: .public)")
+            return []
+        }
+        return PackCompletion.record(packs: candidates, profile: profile) { id in
+            id == puzzle.id || solvedIDs.contains(id)
         }
     }
 

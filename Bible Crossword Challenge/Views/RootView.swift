@@ -8,6 +8,7 @@
 
 import SwiftUI
 import SwiftData
+import os
 
 /// The main tab bar's selectable tabs.
 enum RootTab: Hashable {
@@ -65,6 +66,7 @@ struct RootView: View {
             mergeSyncDuplicates()
             let profile = ensureProfile()
             Streaks.normalize(profile)
+            reconcilePackCompletions(profile)
             context.saveLogged("launch normalise")
             WidgetBridge.publish(profile)
             gameCenter.authenticate()
@@ -123,6 +125,18 @@ struct RootView: View {
 
         // Widget targets require a set-up player.
         guard hasOnboarded else { return }
+
+        // A specific puzzle (`biblecrossword://puzzle?id=…`) — used by the
+        // completion screen's "next in pack" to jump straight into play.
+        if url.host() == "puzzle",
+           let id = URLComponents(url: url, resolvingAgainstBaseURL: false)?
+               .queryItems?.first(where: { $0.name == "id" })?.value,
+           let puzzle = puzzleProvider.puzzle(id: id) {
+            selectedTab = .today
+            todayPath = NavigationPath([puzzle])
+            return
+        }
+
         selectedTab = .today
         if url.host() == "play-daily", let daily = puzzleProvider.dailyPuzzle() {
             todayPath = NavigationPath([daily])
@@ -138,6 +152,21 @@ struct RootView: View {
         guard let puzzle = puzzleProvider.puzzle(id: challenge.puzzleID) else { return }
         selectedTab = .today
         todayPath = NavigationPath([puzzle])
+    }
+
+    /// Credits any fully-solved packs not yet on the profile — solves that
+    /// predate `completedPackIDs`, or that finished a pack on another device.
+    private func reconcilePackCompletions(_ profile: PlayerProfile) {
+        guard !puzzleProvider.packs.isEmpty else { return }
+        do {
+            let records = try context.fetch(FetchDescriptor<PuzzleRecord>())
+            let solvedIDs = Set(records.filter(\.isCompleted).map(\.puzzleID))
+            PackCompletion.record(packs: puzzleProvider.packs, profile: profile) {
+                solvedIDs.contains($0)
+            }
+        } catch {
+            Log.persistence.error("Pack reconciliation fetch failed: \(error, privacy: .public)")
+        }
     }
 
     /// CloudKit sync can land duplicate profiles/records created on another

@@ -13,13 +13,19 @@ final class PuzzleProvider {
     static let shared = PuzzleProvider()
 
     /// Full-size daily puzzles only — the pool the daily rotation and archive
-    /// list draw from, unchanged by however many minis the bundle gains.
+    /// list draw from, unchanged by however many minis or pack-exclusive
+    /// puzzles the bundle gains.
     let puzzles: [Puzzle]
     /// Quick 7×7 minis with their own daily rotation.
     let minis: [Puzzle]
     /// Curated collections, in display order, decoded from `packs.json`. Empty
     /// when the bundle omits the file, so the feature degrades to absent.
     let packs: [PuzzlePack]
+
+    /// Everything in the bundle, including `pack-` exclusives that never enter
+    /// the daily or Archive pools but must still resolve by id (pack rows,
+    /// challenge links, deep links).
+    private let allPuzzles: [Puzzle]
 
     /// Reference date that maps day-index 0 to the first puzzle.
     private let epoch: Date
@@ -31,7 +37,11 @@ final class PuzzleProvider {
 
     init(bundle: Bundle = .main) {
         let all = Self.loadBundledPuzzles(bundle: bundle)
-        self.puzzles = all.filter { !$0.isMini }
+        self.allPuzzles = all
+        // Pack-exclusive puzzles ("pack-" ids) live only inside their pack:
+        // keeping them out of this pool preserves the daily-rotation index for
+        // every existing player (ids here are content-stable).
+        self.puzzles = all.filter { !$0.isMini && !$0.id.hasPrefix("pack-") }
         self.minis = all.filter(\.isMini)
         let loadedPacks = Self.loadBundledPacks(bundle: bundle)
         self.packs = loadedPacks
@@ -100,7 +110,7 @@ final class PuzzleProvider {
     }
 
     func puzzle(id: String) -> Puzzle? {
-        (puzzles + minis).first { $0.id == id }
+        allPuzzles.first { $0.id == id }
     }
 
     // MARK: - Packs
@@ -113,6 +123,12 @@ final class PuzzleProvider {
     /// the in-game "next in pack" affordance.
     func pack(forPuzzle id: String) -> PuzzlePack? {
         packByPuzzleID[id].flatMap(pack(id:))
+    }
+
+    /// Every pack that lists this puzzle — a shared puzzle can complete more
+    /// than one pack at once, so completion detection checks them all.
+    func packs(containing puzzleID: String) -> [PuzzlePack] {
+        packs.filter { $0.puzzleIDs.contains(puzzleID) }
     }
 
     /// A pack's puzzles resolved in authored order. Unknown ids are dropped (a

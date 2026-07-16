@@ -9,6 +9,7 @@
 import Testing
 import Foundation
 import SwiftUI
+import SwiftData
 @testable import Bible_Crossword_Challenge
 
 private let utc: Calendar = {
@@ -127,6 +128,90 @@ struct PacksTests {
         #expect(PackProgress(pack: pack, recordsByID: byID).isComplete)
     }
 
+    // MARK: - Pack-exclusive puzzles (Phase 2)
+
+    /// The daily and mini pools must never contain a pack-exclusive puzzle —
+    /// their membership drives the rotation index, which is content-stable.
+    @Test func poolsExcludePackExclusives() {
+        let provider = PuzzleProvider.shared
+        #expect(provider.puzzles.allSatisfy { $0.id.hasPrefix("daily-") })
+        #expect(provider.minis.allSatisfy { $0.id.hasPrefix("mini-") })
+    }
+
+    @Test func packExclusivesStillResolveByID() {
+        let provider = PuzzleProvider.shared
+        let exclusiveIDs = provider.packs.flatMap(\.puzzleIDs).filter { $0.hasPrefix("pack-") }
+        #expect(exclusiveIDs.isEmpty == false, "expected at least one pack-exclusive puzzle in the bundle")
+        for id in exclusiveIDs {
+            #expect(provider.puzzle(id: id) != nil, "\(id) must resolve even though it's outside the pools")
+        }
+    }
+
+    @Test func packsContainingFindsOwners() {
+        let provider = PuzzleProvider.shared
+        guard let pack = provider.packs.first, let first = pack.puzzleIDs.first else { return }
+        #expect(provider.packs(containing: first).contains(pack))
+        #expect(provider.packs(containing: "no-such-puzzle").isEmpty)
+    }
+
+    // MARK: - Completion recording
+
+    @Test func recordCreditsFullySolvedPack() {
+        let profile = PlayerProfile()
+        let pack = PuzzlePack.fixture(id: "p", puzzleIDs: ["a", "b"])
+        let newly = PackCompletion.record(packs: [pack], profile: profile) { _ in true }
+        #expect(newly.map(\.id) == ["p"])
+        #expect(profile.completedPackIDs == ["p"])
+    }
+
+    @Test func recordSkipsPartialAndAlreadyRecorded() {
+        let profile = PlayerProfile(completedPackIDs: ["done"])
+        let done = PuzzlePack.fixture(id: "done", puzzleIDs: ["a"])
+        let partial = PuzzlePack.fixture(id: "partial", puzzleIDs: ["a", "unsolved"])
+        let newly = PackCompletion.record(packs: [done, partial], profile: profile) { $0 == "a" }
+        #expect(newly.isEmpty)
+        #expect(profile.completedPackIDs == ["done"])
+    }
+
+    @Test func recordIgnoresEmptyPack() {
+        let profile = PlayerProfile()
+        let empty = PuzzlePack.fixture(id: "empty", puzzleIDs: [])
+        #expect(PackCompletion.record(packs: [empty], profile: profile) { _ in true }.isEmpty)
+        #expect(profile.completedPackIDs.isEmpty)
+    }
+
+    // MARK: - Pack achievements
+
+    @Test func packsCompletedAchievementProgress() {
+        let profile = PlayerProfile(completedPackIDs: ["first-steps"])
+        let pathfinder = Achievement(
+            id: "t1", title: "", detail: "", symbol: "", goal: .packsCompleted(1)
+        )
+        let collector = Achievement(
+            id: "t3", title: "", detail: "", symbol: "", goal: .packsCompleted(3)
+        )
+        #expect(pathfinder.isUnlocked(by: profile))
+        #expect(collector.isUnlocked(by: profile) == false)
+        #expect(collector.progressText(for: profile) == "1 / 3")
+    }
+
+    // MARK: - Sync merge
+
+    @Test func profileMergeUnionsCompletedPacks() throws {
+        let container = try ModelContainer(
+            for: PlayerProfile.self, PuzzleRecord.self,
+            configurations: ModelConfiguration(isStoredInMemoryOnly: true)
+        )
+        let context = ModelContext(container)
+        let old = PlayerProfile(completedPackIDs: ["first-steps"], createdAt: day(2026, 6, 1))
+        let new = PlayerProfile(completedPackIDs: ["first-steps", "psalm-23"], createdAt: day(2026, 6, 20))
+        context.insert(old)
+        context.insert(new)
+        let survivor = SyncMerge.mergeProfiles([new, old], context: context)
+        #expect(survivor === old)
+        #expect(Set(old.completedPackIDs) == ["first-steps", "psalm-23"])
+    }
+
     // MARK: - Colour parsing
 
     @Test func hexColourParsing() {
@@ -148,4 +233,11 @@ private extension PuzzlePack {
         id: "e", title: "E", blurb: "", coverSymbol: "star", accentHex: nil,
         isPremium: false, puzzleIDs: ["x"], availableFrom: nil, availableTo: nil
     )
+
+    static func fixture(id: String, puzzleIDs: [String]) -> PuzzlePack {
+        PuzzlePack(
+            id: id, title: id, blurb: "", coverSymbol: "star", accentHex: nil,
+            isPremium: false, puzzleIDs: puzzleIDs, availableFrom: nil, availableTo: nil
+        )
+    }
 }

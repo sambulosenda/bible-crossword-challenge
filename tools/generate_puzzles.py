@@ -12,6 +12,12 @@ Specs with "kind": "mini" build 7x7 quick puzzles (words 3-7 letters, 5+
 placed) with ids "mini-NNN" and their own publishDate sequence. Daily specs
 are processed exactly as before, so growing the mini bank never perturbs the
 daily output.
+
+Specs with "pack": "<slug>" build full-size puzzles that live only inside that
+themed pack: ids "pack-<slug>-NNN", numbered per slug. The app excludes any
+"pack-" prefixed id from the daily rotation and Archive pool, so pack content
+never perturbs the daily index. Pack specs are processed after dailies and
+minis, keeping both of those outputs byte-identical as packs grow.
 """
 import json, random, re, sys
 
@@ -253,14 +259,22 @@ def main():
     out = []
     fails = []
     # Dailies are processed first with unchanged parameters so their output is
-    # byte-identical however many minis are added after them.
-    dailies = [s for s in specs if s.get("kind") != "mini"]
+    # byte-identical however many minis and pack puzzles are added after them.
+    dailies = [s for s in specs if s.get("kind") != "mini" and not s.get("pack")]
     minis = [s for s in specs if s.get("kind") == "mini"]
+    packed = [s for s in specs if s.get("pack") and s.get("kind") != "mini"]
     process(dailies, out, fails, "daily", {})
     process(minis, out, fails, "mini", {
         "min_words": 5, "max_words": 10,
         "canvas": MINI_CANVAS, "allowed_sizes": MINI_SIZES, "max_word_len": 7,
     }, extra_fields={"kind": "mini"})
+    # Pack-exclusive puzzles: full-size build, ids numbered per pack slug so
+    # each pack grows independently. Slugs sorted for deterministic output.
+    by_slug = {}
+    for s in packed:
+        by_slug.setdefault(s["pack"], []).append(s)
+    for slug in sorted(by_slug):
+        process(by_slug[slug], out, fails, f"pack-{slug}", {})
     json.dump(out, open(sys.argv[2], "w"), indent=2)
     sizes = {}
     diffs = {}
