@@ -2,51 +2,16 @@
 //  PaywallView.swift
 //  Bible Crossword Challenge
 //
-//  Premium upgrade screen. A warm, immersive paywall: a deep espresso/charcoal
-//  ground, a gold-glow crown mark, a clean benefit checklist, stacked plan cards
-//  (yearly with a free trial + savings badge, monthly, and a one-time lifetime
-//  unlock) and a prominent gold CTA. Purchase/restore go through StoreService
-//  (StoreKit 2). The screen forces a dark scheme and paints its own colours so it
-//  reads the same regardless of the app appearance setting.
+//  Premium upgrade screen, in the app's native language: grouped background,
+//  surface cards, the system accent for selection and the CTA, and the same
+//  yellow crown mark as onboarding's premium page. Adapts to light/dark with
+//  the rest of the app. Benefit checklist, stacked plan cards (yearly with a
+//  free trial + savings badge, monthly, and a one-time lifetime unlock) and a
+//  prominent CTA. Purchase/restore go through StoreService (StoreKit 2).
 //
 
 import SwiftUI
 import StoreKit
-
-/// Self-contained palette for the paywall's warm espresso-and-gold look. Kept
-/// local so the rest of the app's native, system-coloured language is untouched.
-private enum Pay {
-    /// Bright gold for text/borders/kicker — the premium accent on the dark ground.
-    static let gold = Color(red: 0.95, green: 0.78, blue: 0.42)
-    /// Warm near-black used for labels on gold surfaces (CTA, checks, badge).
-    static let ink = Color(red: 0.12, green: 0.09, blue: 0.05)
-    /// Warm off-white for primary text on the espresso ground.
-    static let textPrimary = Color(red: 0.98, green: 0.96, blue: 0.93)
-
-    static let card = Color(red: 1.0, green: 0.96, blue: 0.90).opacity(0.06)  // warm veil
-    static let cardSelected = gold.opacity(0.15)
-    static let hairline = Color.white.opacity(0.12)
-    static let textSecondary = Color.white.opacity(0.62)
-    static let cardShadow = Color.black.opacity(0.22)
-
-    static let cornerRadius: CGFloat = 18
-
-    /// Vivid gold for the crown, checks, badge and CTA — the premium accent.
-    static let goldGradient = LinearGradient(
-        colors: [Color(red: 0.99, green: 0.85, blue: 0.48), Color(red: 0.88, green: 0.66, blue: 0.26)],
-        startPoint: .top, endPoint: .bottom
-    )
-
-    /// Deep espresso → warm near-black. Warmer and more "scripture" than navy.
-    static let background = LinearGradient(
-        colors: [
-            Color(red: 0.22, green: 0.16, blue: 0.12),
-            Color(red: 0.13, green: 0.10, blue: 0.08),
-            Color(red: 0.07, green: 0.055, blue: 0.045),
-        ],
-        startPoint: .top, endPoint: .bottom
-    )
-}
 
 struct PaywallView: View {
     @Environment(StoreService.self) private var store
@@ -67,7 +32,7 @@ struct PaywallView: View {
 
     var body: some View {
         ZStack(alignment: .top) {
-            Pay.background.ignoresSafeArea()
+            Theme.background.ignoresSafeArea()
 
             ScrollView {
                 VStack(spacing: Theme.Spacing.m) {
@@ -93,8 +58,6 @@ struct PaywallView: View {
 
             topBar
         }
-        .preferredColorScheme(.dark)
-        .tint(Pay.gold)
         .onAppear {
             // Default to the trial plan; fall back to whatever loaded.
             if selectedProduct == nil, let first = store.products.first {
@@ -121,9 +84,9 @@ struct PaywallView: View {
             } label: {
                 Image(systemName: "xmark")
                     .font(.system(size: 15, weight: .bold))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(.secondary)
                     .frame(width: 34, height: 34)
-                    .background(.white.opacity(0.12), in: .circle)
+                    .background(.ultraThinMaterial, in: .circle)
             }
             .accessibilityLabel("Close")
 
@@ -133,10 +96,10 @@ struct PaywallView: View {
                 Task { await store.restore() }
             }
             .font(.subheadline.weight(.medium))
-            .foregroundStyle(.white.opacity(0.9))
+            .foregroundStyle(Theme.accent)
             .padding(.horizontal, 14)
             .frame(height: 34)
-            .background(.white.opacity(0.12), in: .capsule)
+            .background(.ultraThinMaterial, in: .capsule)
             .disabled(store.purchaseInFlight)
         }
         .padding(.horizontal, Theme.Spacing.l)
@@ -149,27 +112,22 @@ struct PaywallView: View {
         VStack(spacing: Theme.Spacing.s) {
             crownMark
             Text("Bible Crossword")
-                .kicker(Pay.gold)
+                .kicker()
             Text("Unlock Premium")
                 .font(.largeTitle.bold())
-                .foregroundStyle(Pay.textPrimary)
                 .multilineTextAlignment(.center)
         }
     }
 
-    /// Compact premium mark above the title — a small gold crown on a soft halo.
-    /// Kept small so the plans and CTA fit without scrolling.
+    /// Compact premium mark above the title — the onboarding premium page's
+    /// yellow crown, sized down so the plans and CTA fit without scrolling.
     private var crownMark: some View {
         Image(systemName: "crown.fill")
             .font(.system(size: 34))
-            .foregroundStyle(Pay.goldGradient)
+            .symbolRenderingMode(.hierarchical)
+            .foregroundStyle(.yellow)
             .padding(14)
-            .background {
-                Circle()
-                    .fill(RadialGradient(colors: [Pay.gold.opacity(0.30), .clear],
-                                         center: .center, startRadius: 0, endRadius: 55))
-                    .frame(width: 120, height: 120)
-            }
+            .background(.yellow.opacity(0.12), in: .circle)
             .accessibilityHidden(true)
     }
 
@@ -179,14 +137,11 @@ struct PaywallView: View {
         VStack(spacing: Theme.Spacing.m) {
             ForEach(benefits, id: \.self) { title in
                 HStack(spacing: Theme.Spacing.m) {
-                    Image(systemName: "checkmark")
-                        .font(.system(size: 12, weight: .black))
-                        .foregroundStyle(Pay.ink)
-                        .frame(width: 24, height: 24)
-                        .background(Pay.goldGradient, in: .circle)
+                    Image(systemName: "checkmark.circle.fill")
+                        .font(.title3)
+                        .foregroundStyle(.green)
                     Text(title)
                         .font(.body.weight(.semibold))
-                        .foregroundStyle(Pay.textPrimary)
                     Spacer(minLength: 0)
                 }
                 .accessibilityElement(children: .combine)
@@ -199,7 +154,7 @@ struct PaywallView: View {
     private var premiumBadge: some View {
         Label("You're Premium — thank you!", systemImage: "checkmark.seal.fill")
             .font(.headline)
-            .foregroundStyle(Pay.gold)
+            .foregroundStyle(.green)
             .padding(.vertical, Theme.Spacing.l)
     }
 
@@ -209,26 +164,20 @@ struct PaywallView: View {
             if store.productsLoadFailed {
                 Label("Couldn't load plans", systemImage: "wifi.exclamationmark")
                     .font(.headline)
-                    .foregroundStyle(Pay.textPrimary)
                 Text("Check your connection and try again.")
                     .font(.subheadline)
-                    .foregroundStyle(Pay.textSecondary)
+                    .foregroundStyle(.secondary)
                 Button("Retry") {
                     Task { await store.refresh() }
                 }
-                .font(.headline)
-                .foregroundStyle(Pay.ink)
-                .padding(.horizontal, Theme.Spacing.l)
-                .frame(height: 44)
-                .background(Pay.goldGradient, in: .capsule)
+                .buttonStyle(.borderedProminent)
             } else {
                 ProgressView("Loading plans…")
-                    .foregroundStyle(Pay.textSecondary)
             }
         }
         .frame(maxWidth: .infinity)
         .padding(Theme.Spacing.xl)
-        .background(Pay.card, in: .rect(cornerRadius: Pay.cornerRadius, style: .continuous))
+        .elevatedCard()
     }
 
     // MARK: - Plans
@@ -253,32 +202,32 @@ struct PaywallView: View {
                     HStack(spacing: Theme.Spacing.s) {
                         Text(planTitle(product))
                             .font(.headline)
-                            .foregroundStyle(Pay.textPrimary)
                         if let badge = badgeText(product) {
                             Text(badge)
                                 .font(.caption2.weight(.bold))
-                                .foregroundStyle(Pay.ink)
+                                .foregroundStyle(Theme.accent)
                                 .padding(.horizontal, 8)
                                 .padding(.vertical, 3)
-                                .background(Pay.goldGradient, in: .capsule)
+                                .background(Theme.accent.opacity(0.15), in: .capsule)
                         }
                     }
                     Text(planSubtitle(product))
                         .font(.subheadline)
-                        .foregroundStyle(Pay.textSecondary)
+                        .foregroundStyle(.secondary)
                 }
                 Spacer(minLength: 0)
                 radio(selected: selected)
             }
             .padding(Theme.Spacing.m)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(selected ? Pay.cardSelected : Pay.card,
-                        in: .rect(cornerRadius: Pay.cornerRadius, style: .continuous))
+            .background(selected ? Theme.accent.opacity(0.12) : Theme.surface,
+                        in: .rect(cornerRadius: Theme.cornerRadius, style: .continuous))
             .overlay {
-                RoundedRectangle(cornerRadius: Pay.cornerRadius, style: .continuous)
-                    .strokeBorder(selected ? Pay.gold : Pay.hairline, lineWidth: selected ? 2 : 1)
+                if selected {
+                    RoundedRectangle(cornerRadius: Theme.cornerRadius, style: .continuous)
+                        .strokeBorder(Theme.accent, lineWidth: 2)
+                }
             }
-            .shadow(color: Pay.cardShadow, radius: 6, x: 0, y: 3)
         }
         .buttonStyle(PressableCardStyle())
         .accessibilityElement(children: .combine)
@@ -288,12 +237,12 @@ struct PaywallView: View {
     private func radio(selected: Bool) -> some View {
         ZStack {
             Circle()
-                .strokeBorder(selected ? Color.clear : Pay.hairline, lineWidth: 1.5)
+                .strokeBorder(selected ? Color.clear : Color(.separator), lineWidth: 1.5)
             if selected {
-                Circle().fill(Pay.goldGradient)
+                Circle().fill(Theme.accent)
                 Image(systemName: "checkmark")
                     .font(.system(size: 12, weight: .black))
-                    .foregroundStyle(Pay.ink)
+                    .foregroundStyle(.white)
             }
         }
         .frame(width: 26, height: 26)
@@ -317,8 +266,8 @@ struct PaywallView: View {
         return "\(product.displayPrice) one-time"
     }
 
-    /// Gold pill on the yearly plan — the computed saving vs. paying monthly, or
-    /// a "BEST VALUE" fallback when monthly isn't available to compare against.
+    /// Tinted pill on the yearly plan — the computed saving vs. paying monthly,
+    /// or a "BEST VALUE" fallback when monthly isn't available to compare against.
     private func badgeText(_ product: Product) -> String? {
         guard product.id == StoreService.yearlyID else { return nil }
         if let pct = yearlySavingsPercent { return "SAVE \(pct)%" }
@@ -351,17 +300,15 @@ struct PaywallView: View {
             } label: {
                 Group {
                     if store.purchaseInFlight {
-                        ProgressView().tint(Pay.ink)
+                        ProgressView().tint(.white)
                     } else {
                         Text(ctaTitle).font(.headline)
                     }
                 }
                 .frame(maxWidth: .infinity)
-                .frame(height: 56)
-                .foregroundStyle(Pay.ink)
-                .background(Pay.goldGradient, in: .rect(cornerRadius: 16, style: .continuous))
             }
-            .buttonStyle(PressableCardStyle())
+            .buttonStyle(.borderedProminent)
+            .controlSize(.large)
             .disabled(store.purchaseInFlight || selectedProduct == nil)
 
             // Restate what happens right at the commit point — purchase anxiety
@@ -370,7 +317,7 @@ struct PaywallView: View {
             if let subtext = ctaSubtext {
                 Text(subtext)
                     .font(.footnote)
-                    .foregroundStyle(Pay.textSecondary)
+                    .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
             }
         }
@@ -403,12 +350,12 @@ struct PaywallView: View {
         VStack(spacing: Theme.Spacing.s) {
             Text("Auto-renews until cancelled. Cancel anytime in Settings.")
                 .multilineTextAlignment(.center)
-                .foregroundStyle(.white.opacity(0.45))
+                .foregroundStyle(.tertiary)
             HStack(spacing: Theme.Spacing.m) {
                 Link("Terms of Use", destination: LegalLinks.terms)
                 Link("Privacy Policy", destination: LegalLinks.privacy)
             }
-            .foregroundStyle(Pay.gold.opacity(0.9))
+            .foregroundStyle(Theme.accent)
         }
         .font(.caption2)
     }
