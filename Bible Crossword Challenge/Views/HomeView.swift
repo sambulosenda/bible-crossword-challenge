@@ -46,6 +46,17 @@ struct HomeView: View {
         return Calendar.current.isDateInToday(used)
     }
 
+    /// Weekdays with a completed puzzle in the current week, for the streak
+    /// card's week row.
+    private var completedWeekdaysThisWeek: Set<Int> {
+        let calendar = Calendar.current
+        guard let week = calendar.dateInterval(of: .weekOfYear, for: Date()) else { return [] }
+        return Set(records.compactMap { record in
+            guard record.isCompleted, let date = record.completedDate, week.contains(date) else { return nil }
+            return calendar.component(.weekday, from: date)
+        })
+    }
+
     var body: some View {
         // Resolve the daily puzzle + its record once per body pass; the verse
         // card derives from the puzzle so it never spoils today's answer.
@@ -80,7 +91,8 @@ struct HomeView: View {
                         current: profile.currentStreak,
                         best: profile.bestStreak,
                         freezes: profile.streakFreezes,
-                        savedRecently: freezeSavedToday
+                        savedRecently: freezeSavedToday,
+                        completedWeekdays: completedWeekdaysThisWeek
                     )
 
                     if !collectionPacks.isEmpty {
@@ -128,7 +140,7 @@ struct HomeView: View {
         VStack(alignment: .leading, spacing: Theme.Spacing.s) {
             Label("DAILY PUZZLE", systemImage: "calendar").kicker()
             Text("Today's puzzle is on its way")
-                .font(.title3.weight(.bold))
+                .font(.scripture(.title3, weight: .bold))
             Text("In the meantime, you can replay any puzzle from the Archive.")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
@@ -199,7 +211,7 @@ private struct DailyPuzzleCard: View {
             }
 
             Text(puzzle.title)
-                .font(.title2.weight(.bold))
+                .font(.scripture(.title2, weight: .bold))
                 .fixedSize(horizontal: false, vertical: true)
 
             if status == .completed {
@@ -259,20 +271,16 @@ private struct DailyPuzzleCard: View {
     private var actionButton: some View {
         if status == .completed {
             // Full-width but secondary (tonal) — replay stays available without
-            // out-shouting the prominent CTA used for unsolved puzzles.
+            // out-shouting the ink pill used for unsolved puzzles.
             NavigationLink(value: puzzle) {
                 Label("Play again", systemImage: "arrow.clockwise")
-                    .frame(maxWidth: .infinity)
             }
-            .buttonStyle(.bordered)
-            .controlSize(.large)
+            .buttonStyle(.pillTonal)
         } else {
             NavigationLink(value: puzzle) {
                 Label(status.actionTitle, systemImage: status.actionSymbol)
-                    .frame(maxWidth: .infinity)
             }
-            .buttonStyle(.borderedProminent)
-            .controlSize(.large)
+            .buttonStyle(.pillProminent)
         }
     }
 
@@ -398,10 +406,13 @@ private struct VerseCard: View {
     @Environment(\.readerRouter) private var readerRouter
 
     var body: some View {
-        VStack(alignment: .leading, spacing: Theme.Spacing.s) {
+        VStack(alignment: .leading, spacing: Theme.Spacing.m) {
             Label("VERSE OF THE DAY", systemImage: "book.closed").kicker()
+            // The scripture is the card: serif, a step larger, with open leading
+            // — the YouVersion verse treatment.
             Text(puzzle.verse)
-                .font(.callout)
+                .font(.scripture(.title3))
+                .lineSpacing(4)
                 .foregroundStyle(.primary)
                 .fixedSize(horizontal: false, vertical: true)
             Button {

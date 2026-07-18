@@ -9,32 +9,55 @@ import SwiftUI
 
 // MARK: - Streak summary
 
+/// YouVersion-style streak: flame + big day count, a week row of check-filled
+/// circles, and the best streak kept quiet on the trailing edge.
 struct StreakCard: View {
     let current: Int
     let best: Int
     var freezes: Int = 0
     /// True when a freeze was spent today, to surface a one-time reassurance.
     var savedRecently: Bool = false
+    /// `Calendar` weekday numbers (1 = Sunday) with a completed puzzle this
+    /// week, driving the week row.
+    var completedWeekdays: Set<Int> = []
 
-    @ScaledMetric(relativeTo: .title) private var iconSize = 40
+    @ScaledMetric(relativeTo: .largeTitle) private var iconSize = 48
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @Environment(\.colorScheme) private var scheme
-
-    /// System yellow washes out against the faint tinted circle in light mode,
-    /// so use a deeper gold there. Dark mode reads fine.
-    private var trophyTint: Color {
-        scheme == .light ? Color(red: 0.72, green: 0.52, blue: 0.0) : .yellow
-    }
 
     var body: some View {
         VStack(spacing: Theme.Spacing.m) {
-            HStack(spacing: 0) {
-                metric(value: current, label: "Current Streak", symbol: "flame.fill", tint: .orange)
-                Rectangle()
-                    .fill(Color.primary.opacity(0.08))
-                    .frame(width: 1, height: 48)
-                metric(value: best, label: "Best Streak", symbol: "trophy.fill", tint: trophyTint)
+            HStack(spacing: Theme.Spacing.m) {
+                // The flame stays fire-orange (a blue flame reads as off), while
+                // the week row below carries the accent.
+                Image(systemName: "flame.fill")
+                    .font(.title2)
+                    .foregroundStyle(.orange)
+                    .frame(width: iconSize, height: iconSize)
+                    .background(.orange.opacity(0.12), in: .circle)
+
+                VStack(alignment: .leading, spacing: 0) {
+                    Text("\(current)")
+                        .font(.largeTitle.weight(.bold))
+                        .monospacedDigit()
+                        .contentTransition(reduceMotion ? .identity : .numericText())
+                    Text("day streak")
+                        .font(.caption.weight(.medium))
+                        .foregroundStyle(.secondary)
+                }
+
+                Spacer(minLength: 0)
+
+                VStack(alignment: .trailing, spacing: 0) {
+                    Text("\(best)")
+                        .font(.title3.weight(.bold))
+                        .monospacedDigit()
+                    Text("best")
+                        .font(.caption.weight(.medium))
+                        .foregroundStyle(.secondary)
+                }
             }
+
+            WeekRow(completedWeekdays: completedWeekdays)
 
             if savedRecently {
                 footnote("A freeze saved your streak", symbol: "snowflake", tint: .cyan)
@@ -52,6 +75,9 @@ struct StreakCard: View {
 
     private var accessibilityLabel: String {
         var label = "Current streak \(current) days, best streak \(best) days"
+        if !completedWeekdays.isEmpty {
+            label += ". \(completedWeekdays.count) \(completedWeekdays.count == 1 ? "day" : "days") completed this week"
+        }
         if savedRecently {
             label += ". A freeze saved your streak"
         } else if freezes > 0 {
@@ -72,25 +98,62 @@ struct StreakCard: View {
                     .frame(height: 1)
             }
     }
+}
 
-    private func metric(value: Int, label: String, symbol: String, tint: Color) -> some View {
-        VStack(spacing: Theme.Spacing.s) {
-            Image(systemName: symbol)
-                .font(.headline)
-                .foregroundStyle(tint)
-                .frame(width: iconSize, height: iconSize)
-                .background(tint.opacity(0.15), in: .circle)
-            Text("\(value)")
-                .font(.title.weight(.bold))
-                .monospacedDigit()
-                .lineLimit(1)
-                .minimumScaleFactor(0.6)
-                .contentTransition(reduceMotion ? .identity : .numericText())
-            Text(label)
-                .font(.caption.weight(.medium))
-                .foregroundStyle(.secondary)
+/// The seven-day row inside `StreakCard`: a filled scarlet check for completed
+/// days, an outlined ring for today, and muted letter chips for the rest.
+private struct WeekRow: View {
+    let completedWeekdays: Set<Int>
+
+    @Environment(\.calendar) private var calendar
+    @ScaledMetric(relativeTo: .body) private var daySize = 34
+
+    var body: some View {
+        HStack(spacing: Theme.Spacing.s) {
+            ForEach(orderedWeekdays, id: \.self) { day in
+                dayCircle(day)
+                    .frame(maxWidth: .infinity)
+            }
         }
-        .frame(maxWidth: .infinity)
+        // Decorative recap — the card's combined label already summarises it.
+        .accessibilityHidden(true)
+    }
+
+    /// The week's weekdays in the user's calendar order (respects firstWeekday).
+    private var orderedWeekdays: [Int] {
+        let first = calendar.firstWeekday
+        return (0..<7).map { ((first - 1 + $0) % 7) + 1 }
+    }
+
+    private var today: Int { calendar.component(.weekday, from: Date()) }
+
+    @ViewBuilder
+    private func dayCircle(_ day: Int) -> some View {
+        let done = completedWeekdays.contains(day)
+        let isToday = day == today
+
+        ZStack {
+            if done {
+                Circle().fill(Theme.accent)
+                Image(systemName: "checkmark")
+                    .font(.caption.weight(.bold))
+                    .foregroundStyle(.white)
+            } else {
+                Circle().fill(Color.primary.opacity(0.06))
+                if isToday {
+                    Circle().strokeBorder(Theme.accent, lineWidth: 1.5)
+                }
+                Text(letter(for: day))
+                    .font(.caption.weight(isToday ? .bold : .medium))
+                    .foregroundStyle(isToday ? .primary : .secondary)
+            }
+        }
+        .frame(width: daySize, height: daySize)
+    }
+
+    private func letter(for day: Int) -> String {
+        let symbols = calendar.veryShortStandaloneWeekdaySymbols
+        return symbols.indices.contains(day - 1) ? symbols[day - 1] : ""
     }
 }
 

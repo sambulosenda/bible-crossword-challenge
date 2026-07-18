@@ -162,10 +162,10 @@ struct PackDetailView: View {
                 Button {
                     showPaywall = true
                 } label: {
-                    Text("Unlock Premium").frame(maxWidth: 280)
+                    Text("Unlock Premium")
                 }
-                .buttonStyle(.borderedProminent)
-                .controlSize(.large)
+                .buttonStyle(.pillProminent)
+                .frame(maxWidth: 280)
             }
         }
         .frame(maxWidth: .infinity)

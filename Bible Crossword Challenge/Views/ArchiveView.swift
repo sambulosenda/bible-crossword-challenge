@@ -124,6 +124,9 @@ struct ArchiveView: View {
                 }
             }
         }
+        // Warm paper canvas behind the native list rows (see ProfileView).
+        .scrollContentBackground(.hidden)
+        .background(Theme.background)
         .searchable(text: $query, prompt: "Search puzzles")
         .toolbar { filterMenu }
         .overlay {
@@ -246,10 +249,9 @@ struct ArchiveView: View {
                 showPaywall = true
             } label: {
                 Text("Unlock Premium")
-                    .frame(maxWidth: 280)
             }
-            .buttonStyle(.borderedProminent)
-            .controlSize(.large)
+            .buttonStyle(.pillProminent)
+            .frame(maxWidth: 280)
         }
     }
 }

@@ -258,10 +258,9 @@ struct OnboardingView: View {
                 Button {
                     enableReminders()
                 } label: {
-                    Text("Enable reminders").frame(maxWidth: .infinity)
+                    Text("Enable reminders")
                 }
-                .buttonStyle(.borderedProminent)
-                .controlSize(.large)
+                .buttonStyle(.pillProminent)
 
                 Button("Not now") {
                     withAnimation { page += 1 }
@@ -271,10 +270,9 @@ struct OnboardingView: View {
                 Button {
                     withAnimation { page += 1 }
                 } label: {
-                    Text("Continue").frame(maxWidth: .infinity)
+                    Text("Continue")
                 }
-                .buttonStyle(.borderedProminent)
-                .controlSize(.large)
+                .buttonStyle(.pillProminent)
             } else {
                 Button {
                     Task {
@@ -291,15 +289,13 @@ struct OnboardingView: View {
                 } label: {
                     Group {
                         if store.purchaseInFlight {
-                            ProgressView()
+                            ProgressView().tint(Theme.onInk)
                         } else {
                             Text("Start 7-Day Free Trial")
                         }
                     }
-                    .frame(maxWidth: .infinity)
                 }
-                .buttonStyle(.borderedProminent)
-                .controlSize(.large)
+                .buttonStyle(.pillProminent)
                 .disabled(store.purchaseInFlight || store.yearly == nil)
 
                 Button("Continue with the free daily puzzle") {

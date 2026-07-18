@@ -2,9 +2,10 @@
 //  Theme.swift
 //  Bible Crossword Challenge
 //
-//  Shared design system. Colours stay on the app's native language — the system
-//  accent (blue) plus grouped-background greys. Cards lean on continuous-corner
-//  squircles and soft elevation; hierarchy (not colour) carries emphasis.
+//  Shared design system, inspired by YouVersion's component language: a warm
+//  paper canvas with white cards, solid "ink" pill CTAs, and serif type
+//  reserved for scripture and hero titles — on the app's own blue accent.
+//  Hierarchy (not colour) still carries emphasis.
 //
 
 import SwiftUI
@@ -19,15 +20,49 @@ enum Theme {
         static let xl: CGFloat = 32
     }
 
-    static let cornerRadius: CGFloat = 18
+    static let cornerRadius: CGFloat = 20
 
-    /// The system accent (blue), used app-wide for the grid, links, and accents.
+    /// The system accent (blue) — kept as the brand colour; the YouVersion
+    /// influence lives in the components (paper canvas, ink pills, serif
+    /// scripture, streak week row), not the hue.
     static let accent = Color.accentColor
 
-    // MARK: - Surfaces (match the rest of the app)
+    // MARK: - Surfaces
 
-    static let background = Color(.systemGroupedBackground)
-    static let surface = Color(.secondarySystemGroupedBackground)
+    /// Warm paper canvas instead of the cool system grey.
+    static let background = Color(uiColor: UIColor { trait in
+        trait.userInterfaceStyle == .dark
+            ? UIColor(red: 0.055, green: 0.051, blue: 0.047, alpha: 1) // warm near-black
+            : UIColor(red: 0.969, green: 0.961, blue: 0.949, alpha: 1) // paper #F7F5F2
+    })
+
+    /// Card surface: white on paper in light; a warm elevated grey in dark.
+    static let surface = Color(uiColor: UIColor { trait in
+        trait.userInterfaceStyle == .dark
+            ? UIColor(red: 0.110, green: 0.106, blue: 0.102, alpha: 1) // #1C1B1A
+            : .white
+    })
+
+    /// "Ink" — the solid fill behind the one loud pill CTA per screen
+    /// (black-on-light, white-on-dark, YouVersion's primary-button move).
+    static let ink = Color(uiColor: UIColor { trait in
+        trait.userInterfaceStyle == .dark ? .white : UIColor(white: 0.07, alpha: 1)
+    })
+
+    /// Text/icon colour on an `ink` fill.
+    static let onInk = Color(uiColor: UIColor { trait in
+        trait.userInterfaceStyle == .dark ? UIColor(white: 0.07, alpha: 1) : .white
+    })
+}
+
+// MARK: - Scripture type
+
+extension Font {
+    /// Scripture and hero titles are set in a serif (New York), matching how
+    /// YouVersion renders verse content; UI chrome stays on the default sans.
+    static func scripture(_ style: Font.TextStyle, weight: Font.Weight = .regular) -> Font {
+        .system(style, design: .serif).weight(weight)
+    }
 }
 
 // MARK: - Appearance preference
@@ -64,10 +99,12 @@ private struct ElevatedCard: ViewModifier {
     var cornerRadius: CGFloat
 
     func body(content: Content) -> some View {
-        // Native inset-grouped style: just a rounded fill. No shadow or border —
-        // separation comes from the fill contrasting the grouped background,
-        // exactly like a system grouped List.
-        content.background(fill, in: .rect(cornerRadius: cornerRadius, style: .continuous))
+        // White card on warm paper, lifted by a whisper of shadow (YouVersion
+        // separates cards with soft elevation, not borders). The shadow is
+        // near-invisible in dark mode, where the lighter fill does the work.
+        content
+            .background(fill, in: .rect(cornerRadius: cornerRadius, style: .continuous))
+            .shadow(color: .black.opacity(0.05), radius: 10, y: 3)
     }
 }
 
@@ -96,6 +133,48 @@ private struct PressableCardBody: View {
     }
 }
 
+// MARK: - Pill CTA
+
+/// YouVersion-style capsule CTA. `.primary` is the single loud action on a
+/// screen (solid ink fill); `.tonal` is its quiet sibling for replay/secondary
+/// actions. Same press behaviour as `PressableCardStyle`.
+struct PillButtonStyle: ButtonStyle {
+    enum Emphasis { case primary, tonal }
+    var emphasis: Emphasis = .primary
+
+    func makeBody(configuration: Configuration) -> some View {
+        PillButtonBody(configuration: configuration, emphasis: emphasis)
+    }
+}
+
+private struct PillButtonBody: View {
+    let configuration: ButtonStyleConfiguration
+    let emphasis: PillButtonStyle.Emphasis
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    var body: some View {
+        configuration.label
+            .font(.headline)
+            .foregroundStyle(emphasis == .primary ? Theme.onInk : .primary)
+            .padding(.vertical, 15)
+            .padding(.horizontal, Theme.Spacing.l)
+            .frame(maxWidth: .infinity)
+            .background(fill, in: .capsule)
+            .scaleEffect(reduceMotion ? 1 : (configuration.isPressed ? 0.98 : 1))
+            .opacity(configuration.isPressed ? 0.9 : 1)
+            .animation(configuration.isPressed ? nil : .spring(duration: 0.2, bounce: 0), value: configuration.isPressed)
+    }
+
+    private var fill: Color {
+        emphasis == .primary ? Theme.ink : Color.primary.opacity(0.08)
+    }
+}
+
+extension ButtonStyle where Self == PillButtonStyle {
+    static var pillProminent: PillButtonStyle { PillButtonStyle(emphasis: .primary) }
+    static var pillTonal: PillButtonStyle { PillButtonStyle(emphasis: .tonal) }
+}
+
 extension View {
     /// Applies the standard card treatment: a rounded grouped-background fill.
     func elevatedCard(fill: Color = Theme.surface, cornerRadius: CGFloat = Theme.cornerRadius) -> some View {
@@ -103,7 +182,9 @@ extension View {
     }
 
     /// The shared eyebrow/kicker label style used above every card heading.
-    func kicker(_ color: Color = Theme.accent) -> some View {
+    /// Muted grey by default (as on YouVersion's "VERSE OF THE DAY" label) so
+    /// the scarlet stays reserved for interactive and identity moments.
+    func kicker(_ color: Color = Color.secondary) -> some View {
         self
             .font(.caption.weight(.bold))
             .textCase(.uppercase)

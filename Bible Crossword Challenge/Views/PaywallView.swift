@@ -300,15 +300,13 @@ struct PaywallView: View {
             } label: {
                 Group {
                     if store.purchaseInFlight {
-                        ProgressView().tint(.white)
+                        ProgressView().tint(Theme.onInk)
                     } else {
-                        Text(ctaTitle).font(.headline)
+                        Text(ctaTitle)
                     }
                 }
-                .frame(maxWidth: .infinity)
             }
-            .buttonStyle(.borderedProminent)
-            .controlSize(.large)
+            .buttonStyle(.pillProminent)
             .disabled(store.purchaseInFlight || selectedProduct == nil)
 
             // Restate what happens right at the commit point — purchase anxiety

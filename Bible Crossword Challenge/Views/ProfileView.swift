@@ -152,6 +152,10 @@ struct ProfileView: View {
                 }
                 #endif
             }
+            // Native form rows on the app's warm paper canvas instead of the
+            // cool system-grouped grey, keeping the tabs on one palette.
+            .scrollContentBackground(.hidden)
+            .background(Theme.background)
             .navigationTitle("Profile")
             .sheet(isPresented: $showPaywall) {
                 PaywallView()

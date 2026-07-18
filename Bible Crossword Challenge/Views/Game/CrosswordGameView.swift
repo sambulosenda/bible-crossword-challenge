@@ -72,7 +72,7 @@ struct CrosswordGameView: View {
             )
             .background(Color(.systemBackground))
         }
-        .background(Color(.systemGroupedBackground))
+        .background(Theme.background)
         .background(
             // Ground truth for the solve clock. SwiftUI's lifecycle events are
             // unreliable here: hidden tab content can stay alive (and keep

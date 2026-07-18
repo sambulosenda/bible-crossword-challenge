@@ -93,7 +93,7 @@ struct CompletionView: View {
             .frame(maxWidth: 520)
             .frame(maxWidth: .infinity)
         }
-        .background(Color(.systemGroupedBackground))
+        .background(Theme.background)
         .safeAreaInset(edge: .bottom) {
             actions
                 .padding(.horizontal, Theme.Spacing.l)
@@ -167,12 +167,8 @@ struct CompletionView: View {
                 sendChallenge(rematch: true)
             } label: {
                 Label("Send Result Back", systemImage: "arrow.uturn.left")
-                    .font(.subheadline.weight(.semibold))
-                    .frame(maxWidth: .infinity)
             }
-            .buttonStyle(.borderedProminent)
-            .controlSize(.large)
-            .tint(Theme.accent)
+            .buttonStyle(.pillProminent)
         }
         .padding(Theme.Spacing.l)
         .frame(maxWidth: .infinity)
@@ -459,8 +455,8 @@ struct CompletionView: View {
             Text("Today's Verse")
                 .kicker()
             Text("“\(puzzle.verse)”")
-                .font(.title3)
-                .italic()
+                .font(.scripture(.title3))
+                .lineSpacing(4)
                 .multilineTextAlignment(.center)
             Text(puzzle.reference)
                 .font(.headline)
@@ -570,8 +566,7 @@ struct CompletionView: View {
                     ShareLink(item: shareCaption) { shareLabel }
                 }
             }
-            .buttonStyle(.borderedProminent)
-            .controlSize(.large)
+            .buttonStyle(.pillProminent)
 
             // A challenge that arrived for this puzzle already offers "Send
             // Result Back" in the result card — don't double up the CTA.
@@ -580,10 +575,8 @@ struct CompletionView: View {
                     sendChallenge(rematch: false)
                 } label: {
                     Label("Challenge a Friend", systemImage: "flag.checkered")
-                        .frame(maxWidth: .infinity)
                 }
-                .buttonStyle(.bordered)
-                .controlSize(.large)
+                .buttonStyle(.pillTonal)
             }
 
             // Minis race the clock against everyone — surface this week's
