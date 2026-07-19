@@ -51,7 +51,13 @@ final class ChallengeService {
     /// Universal-link host and path. Shared links use this https form (tappable
     /// everywhere and, for non-installed recipients, routed to the web landing
     /// page); the custom scheme above stays a parseable fallback.
+    /// Incoming links are accepted from `webHost` and any subdomain of it.
     static let webHost = "biblecrosswordchallenge.com"
+    /// Outgoing links are generated on www: the apex DNS still points at the
+    /// old host, which 404s the AASA file — apex links would open Safari, not
+    /// the app. www is served by Railway/Caddy with a correct AASA. Safe to
+    /// fold back to the apex once its DNS moves to the same deployment.
+    static let outgoingWebHost = "www.biblecrosswordchallenge.com"
     static let webPath = "/challenge/"
     /// The default profile name — treated as "no name chosen yet" so we prompt
     /// once before the first outgoing challenge rather than shipping "Friend".
@@ -138,7 +144,7 @@ final class ChallengeService {
     func challengeWebURL(puzzleID: String, seconds: Int, name: String) -> URL? {
         var components = URLComponents()
         components.scheme = "https"
-        components.host = Self.webHost
+        components.host = Self.outgoingWebHost
         components.path = Self.webPath
         components.queryItems = queryItems(puzzleID: puzzleID, seconds: seconds, name: name)
         return components.url
