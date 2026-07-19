@@ -158,7 +158,7 @@ struct ProfileView: View {
             .background(Theme.background)
             .navigationTitle("Profile")
             .sheet(isPresented: $showPaywall) {
-                PaywallView()
+                PaywallView(source: "profile")
             }
             .manageSubscriptionsSheet(isPresented: $showManageSubscriptions)
             .purchaseNoticeAlert(store)

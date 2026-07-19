@@ -23,6 +23,12 @@ struct CompletionView: View {
 
     @State private var shareImage: Image?
     @State private var showPaywall = false
+    /// Which entry point opened the paywall — set right before `showPaywall`
+    /// so `paywall_opened` / `premium_purchased` attribute correctly.
+    @State private var paywallSource = "completion"
+    /// True once this appearance scheduled the system review prompt — the
+    /// auto paywall stands down rather than stacking sheets.
+    @State private var didRequestReview = false
     /// A friend's challenge for this puzzle, captured on appear so consuming it
     /// doesn't make the result card vanish mid-view. Nil = a plain solve.
     @State private var challenge: ChallengeService.Challenge?
@@ -51,6 +57,11 @@ struct CompletionView: View {
     /// Highest completion milestone we've already asked a review at, so each
     /// milestone prompts at most once across sessions.
     @AppStorage("reviewPromptMilestone") private var reviewPromptMilestone = 0
+    /// One-shot flags for the auto-shown paywall moments (first-ever solve,
+    /// 3-day streak) plus a daily cap so at most one auto paywall fires per day.
+    @AppStorage("firstCompletionPaywallShown") private var firstCompletionPaywallShown = false
+    @AppStorage("streakPaywallShown") private var streakPaywallShown = false
+    @AppStorage("autoPaywallLastDay") private var autoPaywallLastDay = 0.0
 
     private var shareCaption: String {
         var text = "I solved “\(puzzle.title)” in \(TimeFormat.clock(seconds)) — \(streak)-day streak 🔥"
@@ -107,9 +118,10 @@ struct CompletionView: View {
             maybeRequestReview()
             processIncomingChallenge()
             loadPackContext()
+            maybeAutoShowPaywall()
         }
         .sheet(isPresented: $showPaywall) {
-            PaywallView()
+            PaywallView(source: paywallSource)
         }
         .sheet(item: $challengeShare) { share in
             ShareSheet(items: [share.caption, share.url])
@@ -276,7 +288,7 @@ struct CompletionView: View {
             let locked = ctx.pack.isPremium && !store.isPremium
             Button {
                 if locked {
-                    analytics.log(.paywallOpened(source: "pack_completion"))
+                    paywallSource = "pack_completion"
                     showPaywall = true
                 } else if let url = URL(string: "biblecrossword://puzzle?id=\(next.id)") {
                     openURL(url)
@@ -321,7 +333,7 @@ struct CompletionView: View {
     /// celebration stays the hero.
     private var miniUpsellCard: some View {
         Button {
-            analytics.log(.paywallOpened(source: "mini_completion"))
+            paywallSource = "mini_completion"
             showPaywall = true
         } label: {
             HStack(spacing: Theme.Spacing.m) {
@@ -545,10 +557,44 @@ struct CompletionView: View {
               milestone > reviewPromptMilestone
         else { return }
         reviewPromptMilestone = milestone
+        didRequestReview = true
         Task {
             // Let the celebration land before the system sheet appears.
             try? await Task.sleep(for: .seconds(2))
             requestReview()
+        }
+    }
+
+    /// Auto-present the paywall at the two highest-intent free-user moments:
+    /// the first-ever solve ("first_completion") and reaching a 3-day streak
+    /// ("streak_3"). Each fires once ever, at most one auto paywall per day,
+    /// and never over a challenge result, the mini upsell card, or a review
+    /// prompt — the celebration stays the hero, the ask follows it.
+    private func maybeAutoShowPaywall() {
+        guard !store.isPremium, challenge == nil, !didRequestReview else { return }
+        // The mini upsell card already makes this screen's ask — don't stack.
+        if puzzle.isMini && pastMiniCount > 0 { return }
+
+        let today = Calendar.current.startOfDay(for: Date()).timeIntervalSinceReferenceDate
+        guard autoPaywallLastDay != today else { return }
+
+        let source: String
+        if totalCompleted == 1 && !firstCompletionPaywallShown {
+            source = "first_completion"
+            firstCompletionPaywallShown = true
+        } else if streak >= 3 && !streakPaywallShown {
+            source = "streak_3"
+            streakPaywallShown = true
+        } else {
+            return
+        }
+
+        autoPaywallLastDay = today
+        Task {
+            // Let the completion celebration land before the sheet slides up.
+            try? await Task.sleep(for: .seconds(1.5))
+            paywallSource = source
+            showPaywall = true
         }
     }
 

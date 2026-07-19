@@ -2,9 +2,9 @@
 //  Analytics.swift
 //  Bible Crossword Challenge
 //
-//  Analytics abstraction. The console implementation is used by default; a
-//  FirebaseAnalyticsService can conform to `AnalyticsService` and forward
-//  `event.name` / `event.parameters` to Firebase once the SDK is added.
+//  Analytics abstraction. `FirebaseAnalyticsService` is the production backend
+//  (the environment default — see AppEnvironment). `ConsoleAnalyticsService`
+//  remains for previews/tests that want no network side effects.
 //
 
 import Foundation
@@ -16,7 +16,7 @@ enum AnalyticsEvent {
     case hintUsed(type: String)
     case streakUpdated(streak: Int)
     case achievementUnlocked(id: String)
-    case premiumPurchased(plan: String)
+    case premiumPurchased(plan: String, source: String)
     case paywallOpened(source: String)
     case notificationPermission(granted: Bool)
     case reminderSettingChanged(enabled: Bool)
@@ -52,8 +52,8 @@ enum AnalyticsEvent {
         switch self {
         case .appOpen:
             return [:]
-        case .premiumPurchased(let plan):
-            return ["plan": plan]
+        case .premiumPurchased(let plan, let source):
+            return ["plan": plan, "source": source]
         case .paywallOpened(let source):
             return ["source": source]
         case .dailyPuzzleStarted(let id):

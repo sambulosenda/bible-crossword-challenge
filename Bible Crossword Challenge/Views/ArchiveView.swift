@@ -91,7 +91,7 @@ struct ArchiveView: View {
                 CrosswordGameView(puzzle: puzzle, profile: profile)
             }
             .sheet(isPresented: $showPaywall) {
-                PaywallView()
+                PaywallView(source: "archive")
             }
         }
     }

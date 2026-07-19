@@ -109,7 +109,7 @@ struct CrosswordGameView: View {
             ClueListView(vm: vm)
         }
         .sheet(isPresented: $showPaywall) {
-            PaywallView()
+            PaywallView(source: "hint_limit")
         }
         .fullScreenCover(isPresented: $showCompletion) {
             CompletionView(

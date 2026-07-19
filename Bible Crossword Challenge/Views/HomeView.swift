@@ -507,7 +507,7 @@ private struct UpgradeCard: View {
 
     var body: some View {
         NavigationLink {
-            PaywallView()
+            PaywallView(source: "home_card")
         } label: {
             HStack(spacing: Theme.Spacing.m) {
                 Image(systemName: "crown.fill")

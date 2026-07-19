@@ -14,11 +14,17 @@ import SwiftUI
 import StoreKit
 
 struct PaywallView: View {
+    /// Where this paywall was opened from (e.g. "archive", "hint_limit").
+    /// Attributed on both `paywall_opened` and `premium_purchased` so each
+    /// entry point's view → purchase conversion can be compared.
+    let source: String
+
     @Environment(StoreService.self) private var store
     @Environment(\.analytics) private var analytics
     @Environment(\.dismiss) private var dismiss
 
     @State private var selectedID = StoreService.yearlyID
+    @State private var didLogOpen = false
 
     private let benefits: [String] = [
         "All 100+ puzzles, back to day one",
@@ -59,6 +65,11 @@ struct PaywallView: View {
             topBar
         }
         .onAppear {
+            // Every presentation logs exactly once, whatever the entry point.
+            if !didLogOpen {
+                didLogOpen = true
+                analytics.log(.paywallOpened(source: source))
+            }
             // Default to the trial plan; fall back to whatever loaded.
             if selectedProduct == nil, let first = store.products.first {
                 selectedID = first.id
@@ -294,7 +305,7 @@ struct PaywallView: View {
                 guard let product = selectedProduct else { return }
                 Task {
                     if await store.purchase(product) {
-                        analytics.log(.premiumPurchased(plan: planTitle(product).lowercased()))
+                        analytics.log(.premiumPurchased(plan: planTitle(product).lowercased(), source: source))
                     }
                 }
             } label: {

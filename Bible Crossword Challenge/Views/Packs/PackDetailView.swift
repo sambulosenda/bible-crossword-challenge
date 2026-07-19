@@ -46,7 +46,7 @@ struct PackDetailView: View {
         .background(Theme.background)
         .navigationTitle(pack.title)
         .navigationBarTitleDisplayMode(.inline)
-        .sheet(isPresented: $showPaywall) { PaywallView() }
+        .sheet(isPresented: $showPaywall) { PaywallView(source: "pack_locked") }
         // packCompleted is logged where it happens — the game screen's
         // completion hook — so it fires exactly once, even if this view is
         // never revisited.

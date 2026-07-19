@@ -26,6 +26,7 @@ struct OnboardingView: View {
     @AppStorage("reminderMinutes") private var reminderMinutes = ReminderTime.defaultMinutes
 
     @State private var page = 0
+    @State private var didLogPaywallOpen = false
     @FocusState private var nameFocused: Bool
 
     private let lastPage = 4
@@ -63,6 +64,12 @@ struct OnboardingView: View {
         // the next page — dismiss it whenever we leave.
         .onChange(of: page) { _, newPage in
             if newPage != 2 { nameFocused = false }
+            // The premium page is a paywall view like any other — count it so
+            // onboarding conversion can be compared against in-app sources.
+            if newPage == lastPage && !didLogPaywallOpen {
+                didLogPaywallOpen = true
+                analytics.log(.paywallOpened(source: "onboarding"))
+            }
         }
         .purchaseNoticeAlert(store)
     }
@@ -277,7 +284,7 @@ struct OnboardingView: View {
                 Button {
                     Task {
                         if let yearly = store.yearly, await store.purchase(yearly) {
-                            analytics.log(.premiumPurchased(plan: "yearly"))
+                            analytics.log(.premiumPurchased(plan: "yearly", source: "onboarding"))
                             finish()
                         } else if store.purchaseNotice == nil {
                             // Cancelled — nothing to explain, continue on in.
