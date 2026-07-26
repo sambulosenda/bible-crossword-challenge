@@ -1,7 +1,8 @@
 Thanks for playing Bible Crossword Challenge! This update includes:
 
-• Challenge a friend — share your solve time with a "beat my time" link and go head-to-head
-• Challenge links work for everyone: friends without the app land on a page that helps them join in
-• New pack-exclusive puzzles — and two new achievements, Pathfinder and Collector, for completing packs
-• Weekly Mini leaderboard — see how your 7×7 times stack up, right from your Profile
-• A warm new look across the app — calmer colors, cleaner cards, easier reading
+• A new welcome — solve a clue in the first ten seconds, and read the verse behind the answer
+• Today has a new look: the verse of the day at the top, your puzzle right under it
+• Every puzzle card now shows its own grid, so no two look the same
+• The Archive is now the Library — with a progress bar and a look inside before you unlock it
+• Premium now shows what a year works out to per month
+• Fits better if you use larger text, or play on a smaller iPhone
