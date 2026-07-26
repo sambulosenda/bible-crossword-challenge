@@ -106,13 +106,11 @@ private struct WeekRow: View {
     let completedWeekdays: Set<Int>
 
     @Environment(\.calendar) private var calendar
-    @ScaledMetric(relativeTo: .body) private var daySize = 34
 
     var body: some View {
         HStack(spacing: Theme.Spacing.s) {
             ForEach(orderedWeekdays, id: \.self) { day in
                 dayCircle(day)
-                    .frame(maxWidth: .infinity)
             }
         }
         // Decorative recap — the card's combined label already summarises it.
@@ -148,7 +146,14 @@ private struct WeekRow: View {
                     .foregroundStyle(isToday ? .primary : .secondary)
             }
         }
-        .frame(width: daySize, height: daySize)
+        // Seven circles divide the width they're given rather than each taking a
+        // Dynamic-Type-scaled size: at accessibility sizes a fixed metric grew
+        // the row past the screen and dragged every card on Today out with it.
+        // The glyph still scales, and shrinks to fit once the circle can't.
+        .frame(maxWidth: .infinity)
+        .aspectRatio(1, contentMode: .fit)
+        .lineLimit(1)
+        .minimumScaleFactor(0.5)
     }
 
     private func letter(for day: Int) -> String {
