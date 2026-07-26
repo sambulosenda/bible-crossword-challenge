@@ -12,7 +12,7 @@ import os
 
 /// The main tab bar's selectable tabs.
 enum RootTab: Hashable {
-    case today, packs, archive, achievements, profile
+    case today, packs, library, achievements, profile
 }
 
 struct RootView: View {
@@ -188,8 +188,8 @@ struct RootView: View {
             Tab("Packs", systemImage: "square.stack.3d.up", value: RootTab.packs) {
                 PacksView(profile: profile)
             }
-            Tab("Archive", systemImage: "books.vertical", value: RootTab.archive) {
-                ArchiveView(profile: profile)
+            Tab("Library", systemImage: "books.vertical", value: RootTab.library) {
+                LibraryView(profile: profile)
             }
             Tab("Achievements", systemImage: "trophy", value: RootTab.achievements) {
                 AchievementsView(profile: profile)

@@ -1,16 +1,21 @@
 //
-//  ArchiveView.swift
+//  LibraryView.swift
 //  Bible Crossword Challenge
 //
 //  Premium-only library of every puzzle — searchable, filterable by difficulty
 //  and completion status, with a one-tap jump to the next unsolved puzzle. Free
 //  users see a locked state that routes to the paywall.
 //
+//  Called a library, not an archive, because that is what it is: the daily
+//  puzzle rotates with `days % pool.count` (see PuzzleProvider.rotated), so
+//  every puzzle recurs every 82 days and none of them belongs to a date. Copy
+//  here promises a collection to browse, never a day to go back to.
+//
 
 import SwiftUI
 import SwiftData
 
-struct ArchiveView: View {
+struct LibraryView: View {
     let profile: PlayerProfile
 
     @Environment(\.puzzleProvider) private var puzzleProvider
@@ -86,11 +91,14 @@ struct ArchiveView: View {
                     lockedState
                 }
             }
-            .navigationTitle("Archive")
+            .navigationTitle("Library")
             .navigationDestination(for: Puzzle.self) { puzzle in
                 CrosswordGameView(puzzle: puzzle, profile: profile)
             }
             .sheet(isPresented: $showPaywall) {
+                // Source stays "archive" even though the screen is now called
+                // Library — renaming it would split this entry point's
+                // conversion history in Firebase at an arbitrary point.
                 PaywallView(source: "archive")
             }
         }
@@ -111,7 +119,7 @@ struct ArchiveView: View {
                     row(puzzle)
                 }
             } header: {
-                Text("\(completedCount) of \(puzzles.count) completed")
+                progressHeader
             }
 
             if !filteredMinis.isEmpty {
@@ -142,6 +150,31 @@ struct ArchiveView: View {
                 }
             }
         }
+    }
+
+    /// Completion as a bar, not a sentence. This is the one screen whose whole
+    /// subject is how much of the collection you've finished, and it was
+    /// stating that in a grey section header.
+    private var progressHeader: some View {
+        VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
+            HStack {
+                Text("\(completedCount) of \(puzzles.count) solved")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(.primary)
+                Spacer(minLength: 0)
+                if completedCount > 0 {
+                    Text("\(Int((Double(completedCount) / Double(max(puzzles.count, 1)) * 100).rounded()))%")
+                        .font(.subheadline.weight(.semibold))
+                        .monospacedDigit()
+                        .foregroundStyle(.secondary)
+                }
+            }
+            ProgressView(value: Double(completedCount), total: Double(max(puzzles.count, 1)))
+                .tint(Theme.accent)
+        }
+        .textCase(nil)          // section headers upper-case by default
+        .padding(.bottom, Theme.Spacing.xs)
+        .accessibilityElement(children: .combine)
     }
 
     @ToolbarContentBuilder
@@ -196,6 +229,12 @@ struct ArchiveView: View {
 
         return NavigationLink(value: puzzle) {
             HStack(spacing: Theme.Spacing.m) {
+                // Each puzzle's own grid shape. Eighty-two rows of title-plus-
+                // badge are indistinguishable at a glance; the shape is what
+                // makes one scannable from the next, and it's real data.
+                GridThumbnail(grid: puzzle.grid, tint: thumbnailTint(for: status))
+                    .frame(width: 34, height: 34)
+
                 VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
                     Text(puzzle.title)
                         .font(.headline)
@@ -211,6 +250,14 @@ struct ArchiveView: View {
             }
             .padding(.vertical, 2)
         }
+    }
+
+    /// Solved grids sit back; unsolved ones keep the accent, so scrolling the
+    /// list shows at a glance how far through the collection you are.
+    private func thumbnailTint(for status: PuzzleStatus) -> Color {
+        status == .completed
+            ? Color.primary.opacity(0.18)
+            : Theme.accent.opacity(0.40)
     }
 
     @ViewBuilder
@@ -238,21 +285,76 @@ struct ArchiveView: View {
 
     // MARK: - Locked state
 
+    /// The half most people see. It used to be a `ContentUnavailableView` with
+    /// a yellow crown and the headline "Premium Feature" — the name of a
+    /// business model rather than a benefit, set in system yellow on paper at
+    /// 1.39:1, which fails every contrast threshold including large text.
+    ///
+    /// Now it shows the collection it's withholding: real titles, real grids,
+    /// locked. Same device as the paywall's pack strip.
     private var lockedState: some View {
-        ContentUnavailableView {
-            Label("Premium Feature", systemImage: "crown.fill")
-                .foregroundStyle(.yellow)
-        } description: {
-            Text("Unlock the full archive of \(puzzles.count) puzzles and every past Mini to browse and replay any day's challenge.")
-        } actions: {
-            Button {
-                showPaywall = true
-            } label: {
-                Text("Unlock Premium")
+        ScrollView {
+            VStack(alignment: .leading, spacing: Theme.Spacing.l) {
+                VStack(alignment: .leading, spacing: Theme.Spacing.s) {
+                    Text("Premium")
+                        .kicker()
+                    Text("Every puzzle,\nwhenever you like.")
+                        .font(.scripture(.largeTitle, weight: .semibold))
+                        .fixedSize(horizontal: false, vertical: true)
+                    // Scoped to what this screen actually holds. The paywall's
+                    // 117 counts pack exclusives and Minis too; quoting a bare
+                    // total in both places would look like two different claims.
+                    Text("All \(puzzles.count) daily puzzles and every Mini, to play and replay as often as you want.")
+                        .font(.body)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+
+                lockedPreview
+
+                Button {
+                    showPaywall = true
+                } label: {
+                    Text("Unlock Premium")
+                }
+                .buttonStyle(.pillProminent)
             }
-            .buttonStyle(.pillProminent)
-            .frame(maxWidth: 280)
+            .padding(Theme.Spacing.l)
+            .frame(maxWidth: 520)
+            .frame(maxWidth: .infinity)
         }
+        .background(Theme.background)
+    }
+
+    /// Four real rows from the collection, dimmed and locked.
+    private var lockedPreview: some View {
+        VStack(spacing: 0) {
+            ForEach(Array(puzzles.prefix(4)), id: \.id) { puzzle in
+                HStack(spacing: Theme.Spacing.m) {
+                    GridThumbnail(grid: puzzle.grid, tint: Color.primary.opacity(0.18))
+                        .frame(width: 34, height: 34)
+                    Text(puzzle.title)
+                        .font(.headline)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                    Spacer(minLength: 0)
+                    Image(systemName: "lock.fill")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                }
+                .padding(Theme.Spacing.m)
+
+                if puzzle.id != puzzles.prefix(4).last?.id {
+                    Rectangle()
+                        .fill(Color.primary.opacity(0.06))
+                        .frame(height: 1)
+                        .padding(.leading, Theme.Spacing.m)
+                }
+            }
+        }
+        .elevatedCard()
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Locked preview of \(puzzles.count) puzzles")
     }
 }
 
