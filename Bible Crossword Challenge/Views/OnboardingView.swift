@@ -2,16 +2,24 @@
 //  OnboardingView.swift
 //  Bible Crossword Challenge
 //
-//  First-run experience: value props, name capture, and a soft premium pitch.
-//  Shown once (gated by @AppStorage in RootView). The free daily puzzle is
-//  always available — the premium page is a dismissible upsell.
+//  First-run experience. Five pages, but only the first two are "intro" — the
+//  rest are setup asks, each one earned by what came before:
+//
+//    0  Welcome     the brand, in the app's own vocabulary (a crossword)
+//    1  First solve two letters, then a verse — the whole product in ten seconds
+//    2  Name        asked once the player has something to be named for
+//    3  Reminders   primed with what the notification will actually look like
+//    4  Premium     the upsell, dismissible; the daily puzzle is always free
+//
+//  Everything sits on the app's paper canvas with serif hero titles, so the
+//  first screen a player sees is the same app as the hundredth.
 //
 //  Each page's content animates in (staggered fade + rise) when it becomes
-//  active, hero symbols react with a bounce, and all motion respects the
-//  Reduce Motion accessibility setting.
+//  active, and all motion respects the Reduce Motion accessibility setting.
 //
 
 import SwiftUI
+import StoreKit
 
 struct OnboardingView: View {
     @Bindable var profile: PlayerProfile
@@ -29,6 +37,17 @@ struct OnboardingView: View {
     @State private var didLogPaywallOpen = false
     @FocusState private var nameFocused: Bool
 
+    /// Typed separately from `profile.username` so the field can start empty:
+    /// a new profile is created with the placeholder name "Friend", and showing
+    /// that as prefilled text makes the player delete it before they can type.
+    @State private var name = ""
+
+    // First-solve state.
+    @State private var entries: [MiniPoint: Character] = [:]
+    @State private var focus: MiniPoint? = MiniCrossword.firstSolveBlanks.first
+    @State private var solved = false
+    @State private var wrongAttempts = 0
+
     private let lastPage = 4
 
     private var reminderTime: Binding<Date> {
@@ -40,9 +59,11 @@ struct OnboardingView: View {
 
     var body: some View {
         VStack(spacing: 0) {
+            progressBar
+
             TabView(selection: $page) {
                 welcomePage.tag(0)
-                featuresPage.tag(1)
+                firstSolvePage.tag(1)
                 namePage.tag(2)
                 remindersPage.tag(3)
                 premiumPage.tag(4)
@@ -52,18 +73,22 @@ struct OnboardingView: View {
 
             controls
         }
-        .background(
-            LinearGradient(
-                colors: [Color(.systemBackground), Theme.accent.opacity(0.10)],
-                startPoint: .top, endPoint: .bottom
-            )
-            .ignoresSafeArea()
-        )
+        .background(canvas)
         .sensoryFeedback(.selection, trigger: page)
+        .sensoryFeedback(.success, trigger: solved)
+        .sensoryFeedback(.error, trigger: wrongAttempts)
         // Swiping off the name page shouldn't leave the keyboard floating over
         // the next page — dismiss it whenever we leave.
         .onChange(of: page) { _, newPage in
             if newPage != 2 { nameFocused = false }
+            // Raising the keyboard mid-transition fights the page animation, so
+            // wait for the slide to settle before taking focus.
+            if newPage == 2 {
+                Task {
+                    try? await Task.sleep(for: .milliseconds(450))
+                    if page == 2 { nameFocused = true }
+                }
+            }
             // The premium page is a paywall view like any other — count it so
             // onboarding conversion can be compared against in-app sources.
             if newPage == lastPage && !didLogPaywallOpen {
@@ -71,255 +96,491 @@ struct OnboardingView: View {
                 analytics.log(.paywallOpened(source: "onboarding"))
             }
         }
+        .onAppear {
+            if profile.username != "Friend" { name = profile.username }
+        }
         .purchaseNoticeAlert(store)
+    }
+
+    /// Paper, lit from the top by a wash of the page's own colour — accent for
+    /// the four setup pages, gold as the premium page arrives.
+    private var canvas: some View {
+        ZStack(alignment: .top) {
+            Theme.background
+            RadialGradient(
+                colors: [(page == lastPage ? Theme.badgeRim : Theme.accent).opacity(0.10), .clear],
+                center: .top,
+                startRadius: 0,
+                endRadius: 380
+            )
+            .animation(.easeInOut(duration: 0.5), value: page)
+        }
+        .ignoresSafeArea()
+    }
+
+    /// Five ink segments instead of dots: it reads as progress rather than
+    /// decoration, and it tells the player up front how short this is.
+    private var progressBar: some View {
+        HStack(spacing: 5) {
+            ForEach(0...lastPage, id: \.self) { i in
+                Capsule()
+                    .fill(i <= page ? Theme.ink : Color.primary.opacity(0.10))
+                    .frame(height: 4)
+            }
+        }
+        .padding(.horizontal, Theme.Spacing.l)
+        .padding(.top, Theme.Spacing.s)
+        .animation(.spring(duration: 0.35), value: page)
+        .accessibilityElement()
+        .accessibilityLabel("Step \(page + 1) of \(lastPage + 1)")
     }
 
     // MARK: - Pages
 
     private var welcomePage: some View {
         let active = page == 0
-        return VStack(spacing: Theme.Spacing.l) {
-            Spacer()
-            heroIcon("book.pages", tint: Theme.accent, active: active)
+        return pageFrame(spacing: Theme.Spacing.xl) {
+            MiniCrossword(layout: MiniCrossword.faithHopeLove)
+                .padding(.bottom, Theme.Spacing.s)
+
             VStack(spacing: Theme.Spacing.m) {
-                Text("Bible Crossword\nChallenge")
-                    .font(.largeTitle.bold())
+                Text("Bible Crossword")
+                    .kicker()
+                    .entrance(active: active, delay: 0.30, reduceMotion: reduceMotion)
+                Text("Know the Word,\none clue at a time.")
+                    .font(.scripture(.largeTitle, weight: .semibold))
                     .multilineTextAlignment(.center)
-                    .entrance(active: active, delay: 0.10, reduceMotion: reduceMotion)
-                Text("Learn and remember Scripture — one puzzle a day.")
-                    .font(.title3)
+                    .entrance(active: active, delay: 0.36, reduceMotion: reduceMotion)
+                Text("A fresh Scripture crossword every day — with the verse behind every answer.")
+                    .font(.body)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
-                    .entrance(active: active, delay: 0.18, reduceMotion: reduceMotion)
+                    .padding(.horizontal, Theme.Spacing.s)
+                    .entrance(active: active, delay: 0.44, reduceMotion: reduceMotion)
             }
-            Spacer()
-            Spacer()
         }
-        .padding(Theme.Spacing.xl)
     }
 
-    private var featuresPage: some View {
+    private var firstSolvePage: some View {
         let active = page == 1
-        let rows: [(String, String, String, Color)] = [
-            ("calendar", "Daily Puzzles", "A fresh Bible crossword every day.", .blue),
-            ("flame.fill", "Build a Streak", "Play each day and watch your streak grow.", .orange),
-            ("book.closed.fill", "Discover Verses", "Unlock a Scripture verse with every puzzle.", .purple),
-            ("trophy.fill", "Earn Achievements", "From Bible Beginner to Apostle.", .yellow),
-        ]
-        return VStack(alignment: .leading, spacing: Theme.Spacing.xl) {
-            Spacer()
-            Text("A daily habit\nfor your faith")
-                .font(.largeTitle.bold())
-                .entrance(active: active, delay: 0.05, reduceMotion: reduceMotion)
-            VStack(alignment: .leading, spacing: Theme.Spacing.l) {
-                ForEach(Array(rows.enumerated()), id: \.offset) { i, r in
-                    feature(r.0, r.1, r.2, r.3)
-                        .entrance(active: active, delay: 0.12 + Double(i) * 0.08, reduceMotion: reduceMotion)
-                }
+        return pageFrame(spacing: Theme.Spacing.l) {
+            // Paired with the spacer below the grid: the clue and grid settle
+            // into the space above the keypad instead of hugging the top edge.
+            Spacer(minLength: 0)
+
+            VStack(spacing: Theme.Spacing.xs) {
+                Text(solved ? "1 Across · Solved" : "1 Across")
+                    .kicker()
+                Text("Noah built one to save his family")
+                    .font(.scripture(.title2, weight: .semibold))
+                    .multilineTextAlignment(.center)
             }
-            Spacer()
-            Spacer()
+            .entrance(active: active, delay: 0.05, reduceMotion: reduceMotion)
+            .animation(.easeInOut, value: solved)
+
+            MiniCrossword(
+                layout: MiniCrossword.firstSolve,
+                entries: entries,
+                focus: solved ? nil : focus,
+                celebrated: solved ? MiniCrossword.firstSolveWord : [],
+                numbers: [MiniPoint(row: 2, col: 0): 1],
+                // Already assembled by the time the page slides in — the page's
+                // own entrance carries it, so the cascade would double up.
+                animatesIn: false
+            ) { tapped in
+                focus = tapped
+            }
+            .modifier(Shake(travel: CGFloat(wrongAttempts)))
+            .entrance(active: active, delay: 0.12, reduceMotion: reduceMotion)
+
+            // Keeps the keypad — and the verse that replaces it — down by the
+            // thumb rather than floating in the middle of the page.
+            Spacer(minLength: Theme.Spacing.l)
+
+            if solved {
+                verseReveal
+                    .transition(
+                        reduceMotion
+                            ? .opacity
+                            : .asymmetric(
+                                insertion: .move(edge: .bottom).combined(with: .opacity),
+                                removal: .opacity
+                            )
+                    )
+            } else {
+                LetterKeyboardView(onLetter: type(_:), onDelete: deleteLetter)
+                    .transition(.opacity)
+            }
         }
-        .padding(Theme.Spacing.xl)
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .animation(reduceMotion ? .easeInOut(duration: 0.3) : .spring(duration: 0.55, bounce: 0.15), value: solved)
+    }
+
+    /// The payoff. Same shape as the verse card on the completion screen, so a
+    /// player meets the app's one moment of ceremony before their first puzzle.
+    private var verseReveal: some View {
+        VStack(spacing: Theme.Spacing.s) {
+            CelebrationBadge(systemImage: "checkmark", confetti: "puzzle_complete", size: 64)
+
+            Text("That’s the whole game.")
+                .font(.headline)
+
+            Text("“By faith Noah, when warned about things not yet seen, in godly fear built an ark to save his family.”")
+                .font(.scripture(.subheadline))
+                .lineSpacing(3)
+                .multilineTextAlignment(.center)
+
+            // Headline weight, not footnote: the accent only clears the
+            // contrast bar on paper at large-text sizes.
+            Text("Hebrews 11:7")
+                .font(.headline)
+                .foregroundStyle(Theme.accent)
+        }
+        .padding(Theme.Spacing.l)
+        .frame(maxWidth: .infinity)
+        .background(Theme.accent.opacity(0.10), in: .rect(cornerRadius: Theme.cornerRadius, style: .continuous))
     }
 
     private var namePage: some View {
         let active = page == 2
-        return VStack(spacing: Theme.Spacing.l) {
-            Spacer()
-            heroIcon("person.crop.circle", tint: Theme.accent, active: active)
-            Text("What should we\ncall you?")
-                .font(.largeTitle.bold())
-                .multilineTextAlignment(.center)
-                .entrance(active: active, delay: 0.10, reduceMotion: reduceMotion)
-            TextField("Your name", text: $profile.username)
-                .font(.title2)
-                .multilineTextAlignment(.center)
-                .textInputAutocapitalization(.words)
-                .submitLabel(.done)
-                .focused($nameFocused)
-                .padding(Theme.Spacing.m)
-                .background(Color(.secondarySystemBackground), in: .rect(cornerRadius: Theme.cornerRadius))
-                .padding(.horizontal, Theme.Spacing.l)
-                .onSubmit { nameFocused = false }
-                .entrance(active: active, delay: 0.18, reduceMotion: reduceMotion)
-            Text("You can change this any time in your profile.")
-                .font(.footnote)
-                .foregroundStyle(.secondary)
-                .entrance(active: active, delay: 0.24, reduceMotion: reduceMotion)
-            Spacer()
-            Spacer()
+        return pageFrame(spacing: Theme.Spacing.l) {
+            VStack(spacing: Theme.Spacing.m) {
+                Text("Nice solve")
+                    .kicker()
+                    .entrance(active: active, delay: 0.05, reduceMotion: reduceMotion)
+                Text("What should we\ncall you?")
+                    .font(.scripture(.largeTitle, weight: .semibold))
+                    .multilineTextAlignment(.center)
+                    .entrance(active: active, delay: 0.10, reduceMotion: reduceMotion)
+            }
+
+            VStack(spacing: Theme.Spacing.s) {
+                TextField("Your name", text: $name)
+                    .font(.title3)
+                    .multilineTextAlignment(.center)
+                    .textInputAutocapitalization(.words)
+                    .autocorrectionDisabled()
+                    .submitLabel(.done)
+                    .focused($nameFocused)
+                    .padding(Theme.Spacing.m)
+                    .elevatedCard()
+
+                Text("Used to greet you and to sign the puzzles you share. Change it any time in your profile.")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+            }
+            .onSubmit { nameFocused = false }
+            .entrance(active: active, delay: 0.18, reduceMotion: reduceMotion)
         }
-        .padding(Theme.Spacing.xl)
     }
 
     private var remindersPage: some View {
         let active = page == 3
-        return VStack(spacing: Theme.Spacing.l) {
-            Spacer()
-            heroIcon("bell.badge.fill", tint: Theme.accent, active: active)
-            Text("Never miss\na day")
-                .font(.largeTitle.bold())
-                .multilineTextAlignment(.center)
-                .entrance(active: active, delay: 0.10, reduceMotion: reduceMotion)
-            Text("A gentle daily reminder keeps your streak alive and the habit strong.")
-                .font(.title3)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
+        return pageFrame(spacing: Theme.Spacing.l) {
+            VStack(spacing: Theme.Spacing.m) {
+                Text("Keep the streak")
+                    .kicker()
+                    .entrance(active: active, delay: 0.05, reduceMotion: reduceMotion)
+                Text("One nudge a day.\nThat’s all it takes.")
+                    .font(.scripture(.largeTitle, weight: .semibold))
+                    .multilineTextAlignment(.center)
+                    .entrance(active: active, delay: 0.10, reduceMotion: reduceMotion)
+            }
+
+            // Showing the actual notification is the priming: the player agrees
+            // to a thing they have already seen, not to "notifications".
+            notificationPreview
                 .entrance(active: active, delay: 0.18, reduceMotion: reduceMotion)
-            DatePicker(
-                "Remind me at",
-                selection: reminderTime,
-                displayedComponents: .hourAndMinute
-            )
-            .datePickerStyle(.compact)
-            .padding(Theme.Spacing.m)
-            .background(Color(.secondarySystemBackground), in: .rect(cornerRadius: Theme.cornerRadius))
-            .padding(.horizontal, Theme.Spacing.l)
+
+            HStack {
+                Text("Remind me at")
+                    .font(.body)
+                Spacer()
+                DatePicker("Remind me at", selection: reminderTime, displayedComponents: .hourAndMinute)
+                    .labelsHidden()
+            }
+            .padding(.horizontal, Theme.Spacing.m)
+            .padding(.vertical, Theme.Spacing.s)
+            .elevatedCard()
             .entrance(active: active, delay: 0.24, reduceMotion: reduceMotion)
-            Spacer()
-            Spacer()
         }
-        .padding(Theme.Spacing.xl)
     }
 
     private var premiumPage: some View {
         let active = page == 4
-        return VStack(spacing: Theme.Spacing.l) {
-            Spacer()
-            heroIcon("crown.fill", tint: .yellow, active: active)
-            Text("Go Premium")
-                .font(.largeTitle.bold())
-                .entrance(active: active, delay: 0.10, reduceMotion: reduceMotion)
+        return pageFrame(spacing: Theme.Spacing.l) {
+            VStack(spacing: Theme.Spacing.m) {
+                Text("Premium")
+                    .kicker()
+                    .entrance(active: active, delay: 0.05, reduceMotion: reduceMotion)
+                Text("Play the whole\nlibrary.")
+                    .font(.scripture(.largeTitle, weight: .semibold))
+                    .multilineTextAlignment(.center)
+                    .entrance(active: active, delay: 0.10, reduceMotion: reduceMotion)
+            }
+
             VStack(alignment: .leading, spacing: Theme.Spacing.m) {
-                benefit("Remove all ads")
-                benefit("Unlimited hints")
-                benefit("Full puzzle archive")
-                benefit("Future puzzle packs included")
+                benefit("book.pages", "Every puzzle pack", "117 puzzles today, and every pack we add.")
+                benefit("clock.arrow.circlepath", "The full archive", "Play any day you’ve missed.")
+                benefit("lightbulb.max", "Unlimited hints", "Never stuck on one clue.")
+                benefit("nosign", "No ads, ever", "Just you and the grid.")
             }
             .padding(Theme.Spacing.l)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(Color(.secondarySystemBackground), in: .rect(cornerRadius: Theme.cornerRadius))
-            .padding(.horizontal, Theme.Spacing.s)
+            .elevatedCard()
             .entrance(active: active, delay: 0.18, reduceMotion: reduceMotion)
-            Spacer()
         }
-        .padding(Theme.Spacing.xl)
     }
 
     // MARK: - Building blocks
 
-    private func heroIcon(_ name: String, tint: Color, active: Bool) -> some View {
-        Image(systemName: name)
-            .font(.system(size: 88))
-            .symbolRenderingMode(.hierarchical)
-            .foregroundStyle(tint)
-            .padding(Theme.Spacing.l)
-            .background(tint.opacity(0.12), in: .circle)
-            .scaleEffect(active || reduceMotion ? 1 : 0.7)
-            .opacity(active ? 1 : 0)
-            .animation(reduceMotion ? .easeOut(duration: 0.3) : .spring(duration: 0.55, bounce: 0.45), value: active)
-            // Hold the trigger constant under Reduce Motion so the bounce never
-            // fires — the scale/opacity entrance above is already gated.
-            .symbolEffect(.bounce, value: active && !reduceMotion)
-    }
-
-    private func feature(_ icon: String, _ title: String, _ detail: String, _ tint: Color) -> some View {
-        HStack(spacing: Theme.Spacing.m) {
-            Image(systemName: icon)
-                .font(.title2)
-                .foregroundStyle(tint)
-                .frame(width: 44, height: 44)
-                .background(tint.opacity(0.15), in: .circle)
-            VStack(alignment: .leading, spacing: 2) {
-                Text(title).font(.headline)
-                Text(detail).font(.subheadline).foregroundStyle(.secondary)
+    /// Every page shares one frame: scrollable (so a long clue or a large text
+    /// size can never clip), centred, with the same gutters.
+    private func pageFrame<Content: View>(
+        spacing: CGFloat,
+        @ViewBuilder content: () -> Content
+    ) -> some View {
+        // Centred when it fits, scrollable when it doesn't — which is what
+        // keeps a long clue, a large text size or a small phone from clipping.
+        // Built up front: GeometryReader's closure escapes, so the non-escaping
+        // content builder can't be called inside it.
+        let stack = VStack(spacing: spacing, content: content)
+        return GeometryReader { geo in
+            ScrollView {
+                stack
+                    .frame(maxWidth: .infinity)
+                    .padding(.horizontal, Theme.Spacing.l)
+                    .padding(.vertical, Theme.Spacing.l)
+                    .frame(minHeight: geo.size.height)
             }
+            .scrollBounceBehavior(.basedOnSize)
+            .scrollIndicators(.hidden)
         }
     }
 
-    private func benefit(_ text: String) -> some View {
-        Label(text, systemImage: "checkmark.circle.fill")
-            .font(.body)
-            .foregroundStyle(.primary)
-            .labelStyle(.titleAndIcon)
-            .tint(.green)
+    private func benefit(_ icon: String, _ title: String, _ detail: String) -> some View {
+        HStack(alignment: .top, spacing: Theme.Spacing.m) {
+            Image(systemName: icon)
+                .font(.system(size: 17, weight: .semibold))
+                .foregroundStyle(Theme.accent)
+                .frame(width: 34, height: 34)
+                .background(Theme.accent.opacity(0.12), in: .circle)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title).font(.headline)
+                Text(detail)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            Spacer(minLength: 0)
+        }
+    }
+
+    /// A mock of the reminder the player is being asked to allow.
+    private var notificationPreview: some View {
+        HStack(spacing: Theme.Spacing.m) {
+            RoundedRectangle(cornerRadius: 9, style: .continuous)
+                .fill(LinearGradient(
+                    colors: [Color(red: 0.29, green: 0.47, blue: 0.96),
+                             Color(red: 0.13, green: 0.25, blue: 0.78)],
+                    startPoint: .topLeading, endPoint: .bottomTrailing
+                ))
+                .frame(width: 38, height: 38)
+                .overlay {
+                    Image(systemName: "book.closed.fill")
+                        .font(.system(size: 17, weight: .semibold))
+                        .foregroundStyle(.white)
+                }
+
+            VStack(alignment: .leading, spacing: 1) {
+                Text("Bible Crossword")
+                    .font(.footnote.weight(.semibold))
+                Text("Today’s puzzle is ready — keep your streak alive.")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+
+            Spacer(minLength: 0)
+
+            Text("now")
+                .font(.caption2)
+                .foregroundStyle(.tertiary)
+        }
+        .padding(Theme.Spacing.m)
+        .elevatedCard(cornerRadius: 18)
     }
 
     // MARK: - Controls
 
     private var controls: some View {
-        VStack(spacing: Theme.Spacing.m) {
-            HStack(spacing: Theme.Spacing.s) {
-                ForEach(0...lastPage, id: \.self) { i in
-                    Capsule()
-                        .fill(i == page ? Theme.accent : Color(.tertiaryLabel))
-                        .frame(width: i == page ? 22 : 8, height: 8)
-                        .animation(.spring(duration: 0.3), value: page)
+        VStack(spacing: Theme.Spacing.s) {
+            switch page {
+            case 0:
+                Button("Get started") { advance() }
+                    .buttonStyle(.pillProminent)
+
+            case 1:
+                if solved {
+                    Button("Continue") { advance() }
+                        .buttonStyle(.pillProminent)
+                } else {
+                    // Never trap a player on a puzzle. The quiet treatment keeps
+                    // the nudge without the wall.
+                    Button("Skip for now") { advance() }
+                        .font(.subheadline.weight(.semibold))
+                        .tint(.secondary)
+                        .padding(.vertical, Theme.Spacing.m)
                 }
+
+            case 3:
+                Button("Enable reminders") { enableReminders() }
+                    .buttonStyle(.pillProminent)
+                Button("Not now") { advance() }
+                    .font(.subheadline.weight(.semibold))
+                    .tint(.secondary)
+                    .padding(.top, Theme.Spacing.xs)
+
+            case lastPage:
+                premiumControls
+
+            default:
+                Button("Continue") { advance() }
+                    .buttonStyle(.pillProminent)
             }
-            .accessibilityHidden(true)
+        }
+        .padding(.horizontal, Theme.Spacing.l)
+        .padding(.top, Theme.Spacing.m)
+        .padding(.bottom, Theme.Spacing.s)
+        .animation(.easeInOut, value: page)
+        .animation(.easeInOut, value: solved)
+    }
 
-            if page == 3 {
-                Button {
-                    enableReminders()
-                } label: {
-                    Text("Enable reminders")
-                }
-                .buttonStyle(.pillProminent)
-
-                Button("Not now") {
-                    withAnimation { page += 1 }
-                }
-                .font(.subheadline)
-            } else if page < lastPage {
-                Button {
-                    withAnimation { page += 1 }
-                } label: {
-                    Text("Continue")
-                }
-                .buttonStyle(.pillProminent)
-            } else {
-                Button {
-                    Task {
-                        if let yearly = store.yearly, await store.purchase(yearly) {
-                            analytics.log(.premiumPurchased(plan: "yearly", source: "onboarding"))
-                            finish()
-                        } else if store.purchaseNotice == nil {
-                            // Cancelled — nothing to explain, continue on in.
-                            finish()
-                        }
-                        // Failure/pending: stay here so the notice alert can
-                        // present; the free-puzzle button below still exits.
-                    }
-                } label: {
-                    Group {
-                        if store.purchaseInFlight {
-                            ProgressView().tint(Theme.onInk)
-                        } else {
-                            Text("Start 7-Day Free Trial")
-                        }
-                    }
-                }
-                .buttonStyle(.pillProminent)
-                .disabled(store.purchaseInFlight || store.yearly == nil)
-
-                Button("Continue with the free daily puzzle") {
-                    finish()
-                }
-                .font(.subheadline)
-
-                if store.yearly != nil {
-                    Text("7-day free trial, then \(store.yearlyPriceText)/year. Cancel anytime.")
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
-                        .multilineTextAlignment(.center)
+    @ViewBuilder
+    private var premiumControls: some View {
+        Button {
+            buyYearly()
+        } label: {
+            Group {
+                if store.purchaseInFlight {
+                    ProgressView().tint(Theme.onInk)
+                } else {
+                    Text(trialText == nil ? "Unlock Premium" : "Start Free Trial")
                 }
             }
         }
-        .padding(Theme.Spacing.l)
-        .animation(.easeInOut, value: page)
+        .buttonStyle(.pillProminent)
+        .disabled(store.purchaseInFlight || store.yearly == nil)
+
+        Text(priceLine)
+            .font(.caption)
+            .foregroundStyle(.secondary)
+            .multilineTextAlignment(.center)
+
+        // Quiet, but never hidden: the daily puzzle really is free, and a
+        // paywall whose exit is hard to find is a rejection risk.
+        Button("Continue with the free daily puzzle") { finish() }
+            .font(.subheadline.weight(.semibold))
+            .tint(.primary)
+            .padding(.top, Theme.Spacing.xs)
+
+        // Restore and the legal links are App Store review requirements
+        // wherever a purchase can start — including here.
+        HStack(spacing: Theme.Spacing.m) {
+            Button("Restore") { Task { await store.restore() } }
+            Link("Terms", destination: LegalLinks.terms)
+            Link("Privacy", destination: LegalLinks.privacy)
+        }
+        .font(.caption)
+        .tint(.secondary)
+        .padding(.top, Theme.Spacing.xs)
+    }
+
+    private var trialText: String? {
+        guard let yearly = store.yearly else { return nil }
+        return store.introOfferText(for: yearly)
+    }
+
+    private var priceLine: String {
+        guard let yearly = store.yearly else { return "" }
+        let period = store.periodText(for: yearly) ?? ""
+        if let trialText {
+            return "\(trialText), then \(yearly.displayPrice)\(period). Cancel anytime."
+        }
+        return "\(yearly.displayPrice)\(period). Cancel anytime."
+    }
+
+    // MARK: - First solve
+
+    private func type(_ letter: Character) {
+        guard let target = focus ?? nextBlank() else { return }
+        entries[target] = letter
+        focus = nextBlank(after: target)
+        check()
+    }
+
+    private func deleteLetter() {
+        // Backspace clears the focused cell if it holds a letter, otherwise it
+        // steps back — the same rule the real grid uses.
+        if let focus, entries[focus] != nil {
+            entries[focus] = nil
+            return
+        }
+        if let previous = MiniCrossword.firstSolveBlanks.last(where: { entries[$0] != nil }) {
+            entries[previous] = nil
+            focus = previous
+        }
+    }
+
+    private func nextBlank(after point: MiniPoint? = nil) -> MiniPoint? {
+        let blanks = MiniCrossword.firstSolveBlanks
+        if let point, let i = blanks.firstIndex(of: point), i + 1 < blanks.count {
+            return blanks[i + 1]
+        }
+        return blanks.first { entries[$0] == nil }
+    }
+
+    private func check() {
+        let blanks = MiniCrossword.firstSolveBlanks
+        guard blanks.allSatisfy({ entries[$0] != nil }) else { return }
+
+        let correct = blanks.allSatisfy { point in
+            if case .blank(let answer) = MiniCrossword.firstSolve[point.row][point.col] {
+                return entries[point] == answer
+            }
+            return false
+        }
+
+        if correct {
+            solved = true
+            focus = nil
+        } else {
+            withAnimation(.spring(duration: 0.4, bounce: 0.5)) { wrongAttempts += 1 }
+            // Clear and hand the first cell back rather than leaving the player
+            // to work out which letter was wrong on a two-letter word.
+            entries.removeAll()
+            focus = blanks.first
+        }
+    }
+
+    // MARK: - Flow
+
+    private func advance() {
+        withAnimation { page += 1 }
+    }
+
+    private func buyYearly() {
+        Task {
+            if let yearly = store.yearly, await store.purchase(yearly) {
+                analytics.log(.premiumPurchased(plan: "yearly", source: "onboarding"))
+                finish()
+            } else if store.purchaseNotice == nil {
+                // Cancelled — nothing to explain, continue on in.
+                finish()
+            }
+            // Failure/pending: stay here so the notice alert can present; the
+            // free-puzzle button below still exits.
+        }
     }
 
     private func enableReminders() {
@@ -331,15 +592,14 @@ struct OnboardingView: View {
                 analytics.log(.reminderSettingChanged(enabled: true))
                 await notifications.reschedule(for: profile, enabled: true, minutes: reminderMinutes)
             }
-            withAnimation { page += 1 }
+            advance()
         }
     }
 
     private func finish() {
         nameFocused = false
-        if profile.username.trimmingCharacters(in: .whitespaces).isEmpty {
-            profile.username = "Friend"
-        }
+        let trimmed = name.trimmingCharacters(in: .whitespaces)
+        profile.username = trimmed.isEmpty ? "Friend" : trimmed
         onFinish()
     }
 }
@@ -367,5 +627,23 @@ private struct Entrance: ViewModifier {
 private extension View {
     func entrance(active: Bool, delay: Double = 0, reduceMotion: Bool) -> some View {
         modifier(Entrance(active: active, delay: delay, reduceMotion: reduceMotion))
+    }
+}
+
+// MARK: - Wrong-answer shake
+
+/// A single damped wobble, driven by an incrementing attempt count so repeated
+/// wrong answers each get their own shake.
+private struct Shake: GeometryEffect {
+    var travel: CGFloat
+    var animatableData: CGFloat {
+        get { travel }
+        set { travel = newValue }
+    }
+
+    func effectValue(size: CGSize) -> ProjectionTransform {
+        ProjectionTransform(
+            CGAffineTransform(translationX: 9 * sin(travel * .pi * 3), y: 0)
+        )
     }
 }
