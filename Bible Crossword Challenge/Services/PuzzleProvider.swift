@@ -27,6 +27,11 @@ final class PuzzleProvider {
     /// challenge links, deep links).
     private let allPuzzles: [Puzzle]
 
+    /// Everything a Premium player can play: dailies, minis and pack
+    /// exclusives. `puzzles` is only the daily/Archive pool, so it understates
+    /// the library by the packs and minis when used in upgrade copy.
+    var totalPuzzleCount: Int { allPuzzles.count }
+
     /// Reference date that maps day-index 0 to the first puzzle.
     private let epoch: Date
 
