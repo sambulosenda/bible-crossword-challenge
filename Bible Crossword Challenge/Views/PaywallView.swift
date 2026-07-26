@@ -51,7 +51,7 @@ struct PaywallView: View {
     /// undersell the library by every mini and pack exclusive.
     private var benefits: [String] {
         [
-            "The whole archive — never miss a day",
+            "Every puzzle in the library, to replay any time",
             "Every pack, the four below and every one after",
             "No ads and no hint limits, ever",
         ]

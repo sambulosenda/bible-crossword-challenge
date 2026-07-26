@@ -335,7 +335,7 @@ struct OnboardingView: View {
 
             VStack(alignment: .leading, spacing: Theme.Spacing.m) {
                 benefit("book.pages", "Every puzzle pack", "117 puzzles today, and every pack we add.")
-                benefit("clock.arrow.circlepath", "The full archive", "Play any day you’ve missed.")
+                benefit("books.vertical", "The whole library", "Replay any puzzle, as often as you like.")
                 benefit("lightbulb.max", "Unlimited hints", "Never stuck on one clue.")
                 benefit("nosign", "No ads, ever", "Just you and the grid.")
             }
