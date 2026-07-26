@@ -578,10 +578,15 @@ private struct NextAchievementCard: View {
 
 private struct UpgradeCard: View {
     @ScaledMetric(relativeTo: .title) private var iconSize = 44
+    @State private var showPaywall = false
 
     var body: some View {
-        NavigationLink {
-            PaywallView(source: "home_card")
+        // A sheet, as every other entry point presents it. Pushed onto the
+        // Today stack instead, the paywall arrived with a navigation back
+        // button colliding with its own close button and the tab bar sitting
+        // over its legal text.
+        Button {
+            showPaywall = true
         } label: {
             HStack(spacing: Theme.Spacing.m) {
                 Image(systemName: "crown.fill")
@@ -613,6 +618,9 @@ private struct UpgradeCard: View {
             .accessibilityHint("Remove ads, unlimited hints, and full puzzle archive")
         }
         .buttonStyle(PressableCardStyle())
+        .sheet(isPresented: $showPaywall) {
+            PaywallView(source: "home_card")
+        }
     }
 }
 
