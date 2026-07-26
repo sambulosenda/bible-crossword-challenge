@@ -2,9 +2,11 @@
 //  HomeView.swift
 //  Bible Crossword Challenge
 //
-//  The "Today" tab: a time-based greeting and date, the daily puzzle card,
-//  streak summary, verse of the day, next achievement, an upgrade prompt for
-//  free users, and a bottom banner placeholder.
+//  The "Today" tab. The screen opens like a page rather than a dashboard: a
+//  greeting and the date, the day's verse set in serif on the bare paper, and
+//  only then the daily puzzle — the one card that carries a tint, so the hero
+//  is unmistakable among the white cards below it (mini, streak, collections,
+//  next achievement, upgrade, and a bottom banner placeholder).
 //
 //  Each card is its own `View` type with narrow VALUE inputs so SwiftUI can
 //  skip re-evaluating cards whose inputs didn't change (e.g. the verse card
@@ -68,6 +70,11 @@ struct HomeView: View {
         return NavigationStack(path: $path) {
             ScrollView {
                 VStack(spacing: Theme.Spacing.l) {
+                    TodayHeader(
+                        name: displayName,
+                        verse: verseOfTheDay(excluding: daily)
+                    )
+
                     if let daily {
                         DailyPuzzleCard(
                             puzzle: daily,
@@ -103,10 +110,6 @@ struct HomeView: View {
                         )
                     }
 
-                    if let verse = verseOfTheDay(excluding: daily) {
-                        VerseCard(puzzle: verse)
-                    }
-
                     NextAchievementCard(profile: profile)
 
                     if !store.isPremium {
@@ -118,8 +121,10 @@ struct HomeView: View {
                 .frame(maxWidth: .infinity)
             }
             .background(Theme.background)
+            // Inline, because the greeting below is the screen's real title —
+            // a large "Today" on top of it would be two headings for one page.
             .navigationTitle("Today")
-            .navigationBarTitleDisplayMode(.large)
+            .navigationBarTitleDisplayMode(.inline)
             .navigationDestination(for: Puzzle.self) { puzzle in
                 CrosswordGameView(puzzle: puzzle, profile: profile)
             }
@@ -151,6 +156,14 @@ struct HomeView: View {
         .accessibilityElement(children: .combine)
     }
 
+    /// The player's name for the greeting, or nil while it's still the
+    /// placeholder a fresh profile is created with — "Good evening, Friend"
+    /// reads like a form letter.
+    private var displayName: String? {
+        let trimmed = profile.username.trimmingCharacters(in: .whitespaces)
+        return (trimmed.isEmpty || trimmed == "Friend") ? nil : trimmed
+    }
+
     // MARK: - Derived state
 
     /// Fraction of playable cells filled, or nil when the puzzle isn't mid-solve.
@@ -171,12 +184,98 @@ struct HomeView: View {
     }
 }
 
+// MARK: - Today header
+//
+// The page's opening: date, greeting, and the day's verse set on the bare paper
+// rather than in a card. Scripture is the one thing here that isn't a module,
+// and taking the white box away is what says so — a card would file it
+// alongside "Next Achievement".
+
+private struct TodayHeader: View {
+    /// Nil when the player hasn't named themselves; the greeting stands alone.
+    let name: String?
+    /// Nil only if the bundled puzzle set is missing.
+    let verse: Puzzle?
+
+    @Environment(\.readerRouter) private var readerRouter
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: Theme.Spacing.l) {
+            VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
+                Text(Date.now.formatted(.dateTime.weekday(.wide).day().month(.wide)))
+                    .kicker()
+                // Sans, not serif. A salutation is chrome, not content, and
+                // keeping the serif for scripture alone is what lets the verse
+                // below stand apart without a rule or a box drawn around it.
+                // Smaller than the daily card's title too: the puzzle is what
+                // you came for, so it keeps the largest type on the page.
+                Text(greeting)
+                    .font(.title2.weight(.semibold))
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .accessibilityElement(children: .combine)
+
+            if let verse {
+                scripture(verse)
+            }
+        }
+        .padding(.horizontal, Theme.Spacing.xs)
+        .padding(.top, Theme.Spacing.s)
+    }
+
+    private var greeting: String {
+        let stem: String
+        switch Calendar.current.component(.hour, from: Date()) {
+        case 0..<12: stem = "Good morning"
+        case 12..<17: stem = "Good afternoon"
+        default: stem = "Good evening"
+        }
+        return name.map { "\(stem), \($0)" } ?? stem
+    }
+
+    /// Scripture, set plainly. No rule, no box, no quote glyph: the serif is
+    /// the only serif in the header, and that is the whole signal. An ornament
+    /// here would be decoration standing in for a typographic distinction that
+    /// the type is already making.
+    private func scripture(_ verse: Puzzle) -> some View {
+        Button {
+            readerRouter.open(reference: verse.reference)
+        } label: {
+            VStack(alignment: .leading, spacing: Theme.Spacing.m) {
+                Text(verse.verse)
+                    .font(.scripture(.title3))
+                    .lineSpacing(6)
+                    .foregroundStyle(.primary)
+                    .multilineTextAlignment(.leading)
+                    .fixedSize(horizontal: false, vertical: true)
+
+                HStack(spacing: 4) {
+                    Text(verse.reference)
+                        .font(.headline)
+                    Image(systemName: "chevron.right")
+                        .font(.caption.weight(.bold))
+                }
+                .foregroundStyle(Theme.accent)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .buttonStyle(.plain)
+        .accessibilityElement(children: .ignore)
+        .accessibilityAddTraits(.isButton)
+        .accessibilityLabel("Verse of the day. \(verse.verse). \(verse.reference)")
+        .accessibilityHint("Opens this passage in the reader")
+    }
+}
+
 // MARK: - Daily puzzle card
 //
-// The hero of the screen — it earns focus through hierarchy (a large serif
-// title, the accent kicker, a prominent CTA), not a saturated colour block, and
-// shares the same elevated surface as every other card. When solved it becomes
-// a quiet win moment (the time you earned) rather than a dead "done" tile.
+// The hero of the screen. It is the only tinted card on Today — every other
+// module is white — so the eye lands here first without any of them shouting.
+// A larger serif title and roomier padding carry the rest; the accent wash is
+// the same device the completion screen uses to mark its one important card.
+// When solved it becomes a quiet win moment (the time you earned) rather than
+// a dead "done" tile.
 
 private struct DailyPuzzleCard: View {
     let puzzle: Puzzle
@@ -185,16 +284,17 @@ private struct DailyPuzzleCard: View {
     var progress: Double? = nil
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.dynamicTypeSize) private var typeSize
     @State private var celebrate = false
 
     var body: some View {
-        VStack(alignment: .leading, spacing: Theme.Spacing.m) {
+        VStack(alignment: .leading, spacing: Theme.Spacing.l) {
             info
             actionButton
         }
-        .padding(Theme.Spacing.l)
+        .padding(Theme.Spacing.xl)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .elevatedCard()
+        .elevatedCard(fill: Theme.accent.opacity(0.10))
         .onAppear {
             if status == .completed && !reduceMotion { celebrate.toggle() }
         }
@@ -210,17 +310,32 @@ private struct DailyPuzzleCard: View {
                 DifficultyBadge(difficulty: puzzle.difficulty)
             }
 
-            Text(puzzle.title)
-                .font(.scripture(.title2, weight: .bold))
-                .fixedSize(horizontal: false, vertical: true)
+            HStack(alignment: .top, spacing: Theme.Spacing.m) {
+                VStack(alignment: .leading, spacing: Theme.Spacing.m) {
+                    Text(puzzle.title)
+                        .font(.scripture(.title, weight: .bold))
+                        .fixedSize(horizontal: false, vertical: true)
 
-            if status == .completed {
-                solvedReward
-            } else {
-                metaRow
-                if let progress {
-                    ProgressView(value: progress)
-                        .tint(Theme.accent)
+                    if status == .completed {
+                        solvedReward
+                    } else {
+                        metaRow
+                        if let progress {
+                            ProgressView(value: progress)
+                                .tint(Theme.accent)
+                        }
+                    }
+                }
+
+                Spacer(minLength: 0)
+
+                // Today's actual grid shape, in miniature. Ornament that happens
+                // to be true — and the first thing that makes one day's card
+                // look different from the next. Dropped at accessibility sizes,
+                // where the title needs the whole width.
+                if !typeSize.isAccessibilitySize {
+                    GridThumbnail(grid: puzzle.grid)
+                        .frame(width: 72, height: 72)
                 }
             }
         }
@@ -296,6 +411,46 @@ private struct DailyPuzzleCard: View {
         case .start:
             return "Daily puzzle. \(puzzle.title). \(puzzle.difficulty.label) difficulty. \(puzzle.clueCount) clues, \(puzzle.size) by \(puzzle.size) grid."
         }
+    }
+}
+
+// MARK: - Grid thumbnail
+
+/// A miniature of a puzzle's grid: one dot per playable cell, nothing where the
+/// blocks are. Drawn in a `Canvas` because a 15×15 grid is 225 cells and this
+/// sits inside a scrolling feed.
+private struct GridThumbnail: View {
+    /// Rows of the puzzle grid; "." marks a block.
+    let grid: [String]
+
+    var body: some View {
+        Canvas { context, size in
+            let rows = grid.count
+            let columns = grid.map(\.count).max() ?? 0
+            guard rows > 0, columns > 0 else { return }
+
+            let cell = min(size.width / CGFloat(columns), size.height / CGFloat(rows))
+            // Centre the drawing: most grids are square, but a mini in a square
+            // box would otherwise sit against the top-left corner.
+            let originX = (size.width - cell * CGFloat(columns)) / 2
+            let originY = (size.height - cell * CGFloat(rows)) / 2
+            let dot = max(1, cell - 1)
+            let tint = Color.accentColor.opacity(0.35)
+
+            for (row, line) in grid.enumerated() {
+                for (column, character) in line.enumerated() where character != "." {
+                    let rect = CGRect(
+                        x: originX + CGFloat(column) * cell,
+                        y: originY + CGFloat(row) * cell,
+                        width: dot,
+                        height: dot
+                    )
+                    context.fill(Path(roundedRect: rect, cornerRadius: dot / 4), with: .color(tint))
+                }
+            }
+        }
+        // The clue count and grid size next to it say this in words.
+        .accessibilityHidden(true)
     }
 }
 
@@ -398,47 +553,6 @@ private struct PackTile: View {
     }
 }
 
-// MARK: - Verse of the day card
-
-private struct VerseCard: View {
-    let puzzle: Puzzle
-
-    @Environment(\.readerRouter) private var readerRouter
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: Theme.Spacing.m) {
-            Label("VERSE OF THE DAY", systemImage: "book.closed").kicker()
-            // The scripture is the card: serif, a step larger, with open leading
-            // — the YouVersion verse treatment.
-            Text(puzzle.verse)
-                .font(.scripture(.title3))
-                .lineSpacing(4)
-                .foregroundStyle(.primary)
-                .fixedSize(horizontal: false, vertical: true)
-            Button {
-                readerRouter.open(reference: puzzle.reference)
-            } label: {
-                HStack(spacing: 4) {
-                    Text(puzzle.reference)
-                        .font(.subheadline.weight(.semibold))
-                    Image(systemName: "chevron.right")
-                        .font(.caption2.weight(.bold))
-                }
-                .foregroundStyle(Theme.accent)
-            }
-            .buttonStyle(.plain)
-        }
-        .padding(Theme.Spacing.l)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .elevatedCard()
-        .accessibilityElement(children: .ignore)
-        .accessibilityAddTraits(.isButton)
-        .accessibilityLabel("Verse of the day. \(puzzle.verse). \(puzzle.reference)")
-        .accessibilityHint("Opens this passage in the reader")
-        .accessibilityAction { readerRouter.open(reference: puzzle.reference) }
-    }
-}
-
 // MARK: - Next achievement card
 
 private struct NextAchievementCard: View {
@@ -512,9 +626,9 @@ private struct UpgradeCard: View {
             HStack(spacing: Theme.Spacing.m) {
                 Image(systemName: "crown.fill")
                     .font(.title3)
-                    .foregroundStyle(Theme.accent)
+                    .foregroundStyle(.secondary)
                     .frame(width: iconSize, height: iconSize)
-                    .background(Theme.accent.opacity(0.16), in: .circle)
+                    .background(Color.primary.opacity(0.06), in: .circle)
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Go Premium")
                         .font(.headline.weight(.bold))
@@ -530,7 +644,10 @@ private struct UpgradeCard: View {
             }
             .padding(Theme.Spacing.l)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .elevatedCard(fill: Theme.accent.opacity(0.10))
+            // Plain white like every other module: the upsell was the only
+            // tinted card on the screen, which made it louder than the puzzle.
+            // That tint now belongs to the daily card.
+            .elevatedCard()
             .accessibilityElement(children: .ignore)
             .accessibilityLabel("Go Premium")
             .accessibilityHint("Remove ads, unlimited hints, and full puzzle archive")
