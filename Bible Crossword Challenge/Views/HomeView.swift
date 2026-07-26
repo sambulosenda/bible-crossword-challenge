@@ -251,9 +251,15 @@ private struct TodayHeader: View {
                 VStack(alignment: .leading, spacing: Theme.Spacing.s) {
                     Text("Verse of the Day")
                         .kicker()
+                    // Three lines, then truncate. Verses run from one line to
+                    // six, and an unbounded header pushed the daily card's CTA
+                    // below the fold on a 667pt screen while landing it in a
+                    // different place every day. The reference below is the
+                    // affordance for reading the whole passage.
                     Text(verse.verse)
                         .font(.scripture(.title3))
                         .lineSpacing(6)
+                        .lineLimit(3)
                         .foregroundStyle(.primary)
                         .multilineTextAlignment(.leading)
                         .fixedSize(horizontal: false, vertical: true)
