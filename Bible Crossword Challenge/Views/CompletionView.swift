@@ -9,7 +9,6 @@
 import SwiftUI
 import SwiftData
 import StoreKit
-import Lottie
 
 struct CompletionView: View {
     let puzzle: Puzzle
@@ -43,7 +42,6 @@ struct CompletionView: View {
     @State private var showNamePrompt = false
     @State private var draftName = ""
     @State private var pendingRematchIntent = false
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.displayScale) private var displayScale
     @Environment(\.openURL) private var openURL
     @Environment(\.gameCenter) private var gameCenter
@@ -105,6 +103,7 @@ struct CompletionView: View {
             .frame(maxWidth: .infinity)
         }
         .background(Theme.background)
+        .softTopScrollEdge()
         .safeAreaInset(edge: .bottom) {
             actions
                 .padding(.horizontal, Theme.Spacing.l)
@@ -376,31 +375,10 @@ struct CompletionView: View {
         .padding(.top, Theme.Spacing.m)
     }
 
-    /// Celebratory completion mark. Plays the branded Lottie burst once;
-    /// falls back to the static seal when Reduce Motion is on.
-    ///
-    /// The badge fills only ~30% of the Lottie canvas (the rest is room for
-    /// the confetti burst), so the animation renders in an oversized overlay
-    /// while the layout box stays a fixed 120pt — confetti overflows
-    /// decoratively without inflating the header.
-    @ViewBuilder private var celebration: some View {
-        if reduceMotion {
-            Image(systemName: "checkmark.seal.fill")
-                .font(.system(size: 64))
-                .foregroundStyle(.green)
-                .frame(height: 120)
-        } else {
-            Color.clear
-                .frame(width: 120, height: 120)
-                .overlay {
-                    LottieView(animation: .named("puzzle_complete"))
-                        .configure { $0.contentMode = .scaleAspectFit }
-                        .playing(loopMode: .playOnce)
-                        .frame(width: 300, height: 300)
-                }
-                .allowsHitTesting(false)
-                .accessibilityHidden(true)
-        }
+    /// Celebratory completion mark. The disc is drawn natively so it tracks the
+    /// accent and survives Reduce Motion intact; the Lottie adds only confetti.
+    private var celebration: some View {
+        CelebrationBadge(systemImage: "checkmark", confetti: "puzzle_complete")
     }
 
     /// Time and streak inline under the title — two small numbers don't
@@ -430,34 +408,20 @@ struct CompletionView: View {
         .foregroundStyle(.secondary)
     }
 
-    /// Snowflake mark for the streak-freeze card.
-    @ViewBuilder private var freezeMark: some View {
-        if reduceMotion {
-            Image(systemName: "snowflake")
-                .font(.title2)
-                .foregroundStyle(.cyan)
-        } else {
-            LottieView(animation: .named("streak_freeze"))
-                .configure { $0.contentMode = .scaleAspectFit }
-                .playing(loopMode: .playOnce)
-                .frame(width: 72, height: 72)
-                .accessibilityHidden(true)
-        }
+    /// Snowflake mark for the streak-freeze card. Cyan carries the meaning; the
+    /// gold rim keeps it in the same family as the solve and achievement badges.
+    private var freezeMark: some View {
+        CelebrationBadge(systemImage: "snowflake",
+                         confetti: "streak_freeze",
+                         tint: .cyan,
+                         size: 72)
     }
 
-    /// Star-burst mark crowning the new-achievements card.
-    @ViewBuilder private var achievementMark: some View {
-        if reduceMotion {
-            Image(systemName: "star.fill")
-                .font(.system(size: 44))
-                .foregroundStyle(.yellow)
-        } else {
-            LottieView(animation: .named("achievement_unlock"))
-                .configure { $0.contentMode = .scaleAspectFit }
-                .playing(loopMode: .playOnce)
-                .frame(width: 112, height: 112)
-                .accessibilityHidden(true)
-        }
+    /// Star mark crowning the new-achievements card.
+    private var achievementMark: some View {
+        CelebrationBadge(systemImage: "star.fill",
+                         confetti: "achievement_unlock",
+                         size: 112)
     }
 
     /// The verse is the emotional payoff of the solve — the one card that gets
@@ -694,4 +658,29 @@ private struct ShareSheet: UIViewControllerRepresentable {
     }
 
     func updateUIViewController(_ controller: UIActivityViewController, context: Context) {}
+}
+
+// MARK: - Scroll edge
+
+private extension View {
+    /// This screen is full-bleed with no navigation bar, so scrolled content
+    /// runs straight into the clock and Dynamic Island. iOS 26's scroll edge
+    /// effect needs a bar to blur into and there isn't one here, so cap the
+    /// status area with the same `.bar` material the actions row already uses.
+    ///
+    /// The cap is a zero-height view pinned to the top of the safe area; letting
+    /// it ignore the top edge stretches it up over exactly the inset, whatever
+    /// the device.
+    func softTopScrollEdge() -> some View {
+        overlay(alignment: .top) {
+            Color.clear
+                .frame(height: 0)
+                .background {
+                    Rectangle()
+                        .fill(.bar)
+                        .ignoresSafeArea(edges: .top)
+                }
+                .allowsHitTesting(false)
+        }
+    }
 }

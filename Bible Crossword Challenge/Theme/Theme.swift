@@ -27,6 +27,15 @@ enum Theme {
     /// scripture, streak week row), not the hue.
     static let accent = Color.accentColor
 
+    /// The rim on celebration badges (solve, achievement, freeze). One token so
+    /// the three badges can't drift apart, and darker on paper so the gold still
+    /// reads against a light background.
+    static let badgeRim = Color(uiColor: UIColor { trait in
+        trait.userInterfaceStyle == .dark
+            ? UIColor(red: 0.976, green: 0.800, blue: 0.298, alpha: 1) // #F9CC4C
+            : UIColor(red: 0.804, green: 0.596, blue: 0.106, alpha: 1) // #CD981B
+    })
+
     // MARK: - Surfaces
 
     /// Warm paper canvas instead of the cool system grey.
