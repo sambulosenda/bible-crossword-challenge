@@ -125,16 +125,23 @@ struct EngineTests {
     @Test func restoredWordsDoNotFlashOnNextKeystroke() {
         let vm = GameViewModel(puzzle: makePuzzle())
         vm.restore(["0,0": "C", "0,1": "A", "0,2": "T"])  // CAT already solved
-        var fired = false
-        vm.onWordCompleted = { _ in fired = true }
-        vm.select(GridPos(row: 1, col: 0))  // down COD: C filled, O/D empty
-        vm.enter("O"); vm.enter("D")        // finishes COD; CAT was seeded silently
-        #expect(fired == true)  // COD fires
-        // CAT must not re-fire — only one event total.
         var count = 0
         vm.onWordCompleted = { _ in count += 1 }
+        vm.select(GridPos(row: 1, col: 0))  // down COD: C filled, O/D empty
+        vm.enter("O"); vm.enter("D")        // finishes COD; CAT was seeded silently
+
+        // This fixture only has two words, so COD is also the last one: it
+        // defers to onComplete rather than firing a word flash, which
+        // `finalWordDoesNotDoubleFireWithCompletion` pins down. `isComplete`
+        // is what proves the keystrokes landed at all.
+        #expect(vm.isComplete)
+        #expect(count == 0)
+
+        // The real subject of this test. Retyping a letter that is already
+        // correct touches both CAT and COD; if `restore` hadn't seeded CAT as
+        // solved, it would be announced here as though it had just been solved.
         vm.select(GridPos(row: 0, col: 0))
-        vm.enter("C")  // retyping an already-correct, already-tracked letter
+        vm.enter("C")
         #expect(count == 0)
     }
 
