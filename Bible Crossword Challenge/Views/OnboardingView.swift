@@ -183,7 +183,7 @@ struct OnboardingView: View {
             Spacer(minLength: 0)
 
             VStack(spacing: Theme.Spacing.xs) {
-                Text(solved ? "1 Across · Solved" : "1 Across")
+                Text(solved ? "1 Down · Solved" : "1 Down")
                     .kicker()
                 Text("Noah built one to save his family")
                     .font(.scripture(.title2, weight: .semibold))
@@ -197,7 +197,7 @@ struct OnboardingView: View {
                 entries: entries,
                 focus: solved ? nil : focus,
                 celebrated: solved ? MiniCrossword.firstSolveWord : [],
-                numbers: [MiniPoint(row: 2, col: 0): 1],
+                numbers: [MiniPoint(row: 0, col: 2): 1],
                 // Already assembled by the time the page slides in — the page's
                 // own entrance carries it, so the cascade would double up.
                 animatesIn: false

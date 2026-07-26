@@ -177,22 +177,25 @@ extension MiniCrossword {
         [.block,      .given("L"), .given("O"), .given("V"), .given("E")],
     ]
 
-    /// GRACE already filled down the side, ARK to be typed across it. Two
-    /// letters is the whole ask: enough to feel the mechanic, too short to
-    /// stall on.
+    /// GRACE already filled across the top, ARK to be typed down through its
+    /// A. Two letters is the whole ask: enough to feel the mechanic, too short
+    /// to stall on.
+    ///
+    /// Laid out wide rather than tall on purpose. The same fragment with GRACE
+    /// running down was five rows — about 254pt — which pushed the keypad off
+    /// the bottom of a 667pt screen, so an iPhone SE player had to scroll to
+    /// type. Three rows is ~150pt and clears it.
     static let firstSolve: [[MiniTile]] = [
-        [.given("G"), .block,      .block],
-        [.given("R"), .block,      .block],
-        [.given("A"), .blank("R"), .blank("K")],
-        [.given("C"), .block,      .block],
-        [.given("E"), .block,      .block],
+        [.given("G"), .given("R"), .given("A"), .given("C"), .given("E")],
+        [.block,      .block,      .blank("R"), .block,      .block],
+        [.block,      .block,      .blank("K"), .block,      .block],
     ]
 
     /// The blanks of `firstSolve`, in reading order.
-    static let firstSolveBlanks = [MiniPoint(row: 2, col: 1), MiniPoint(row: 2, col: 2)]
+    static let firstSolveBlanks = [MiniPoint(row: 1, col: 2), MiniPoint(row: 2, col: 2)]
 
-    /// Every cell of 1 Across, for the gold rim when it lands.
+    /// Every cell of 1 Down, for the gold rim when it lands.
     static let firstSolveWord: Set<MiniPoint> = [
-        MiniPoint(row: 2, col: 0), MiniPoint(row: 2, col: 1), MiniPoint(row: 2, col: 2),
+        MiniPoint(row: 0, col: 2), MiniPoint(row: 1, col: 2), MiniPoint(row: 2, col: 2),
     ]
 }
