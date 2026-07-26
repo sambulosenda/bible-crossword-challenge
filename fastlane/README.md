@@ -21,7 +21,7 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 [bundle exec] fastlane ios push_metadata
 ```
 
-Push title/subtitle/keywords for all locales. Shows an HTML preview and asks for confirmation before uploading. No binary, no screenshots, no submission.
+Push title/subtitle/keywords for all locales. Shows an HTML preview and asks for confirmation before uploading. No binary, no screenshots, no submission. Pass version:X.Y to create/select that editable version in App Store Connect.
 
 ### ios upload_screenshots
 
