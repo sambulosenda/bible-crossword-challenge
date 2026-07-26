@@ -79,7 +79,6 @@ struct PaywallView: View {
                     } else {
                         lockedPacks
                         plans
-                        purchaseSection
                         legal
                     }
                 }
@@ -90,6 +89,11 @@ struct PaywallView: View {
                 .frame(maxWidth: .infinity)
             }
             .background(Theme.background)
+            // Pinned, not scrolled. Every addition to this page pushed the CTA
+            // further down; on a 667pt screen it had fallen below the fold,
+            // which means scrolling to find the primary action. Anchoring it
+            // also means the page above can grow later without re-checking.
+            .safeAreaInset(edge: .bottom) { pinnedPurchaseBar }
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button {
@@ -405,6 +409,28 @@ struct PaywallView: View {
     }
 
     // MARK: - Purchase
+
+    /// The purchase bar as it sits in the bottom safe area. Empty in the two
+    /// states that have nothing to buy, so the inset collapses rather than
+    /// leaving a floating strip.
+    @ViewBuilder private var pinnedPurchaseBar: some View {
+        if !store.isPremium && !store.products.isEmpty {
+            purchaseSection
+                .padding(.horizontal, Theme.Spacing.l)
+                .padding(.top, Theme.Spacing.m)
+                .padding(.bottom, Theme.Spacing.s)
+                // The fill matches the canvas, so the bar reads continuous with
+                // the page below it without needing to bleed into the safe area.
+                .background(Theme.background)
+                .overlay(alignment: .top) {
+                    // A hairline, because content scrolls underneath and the
+                    // bar needs an edge to read as a separate layer.
+                    Rectangle()
+                        .fill(Color.primary.opacity(0.08))
+                        .frame(height: 1)
+                }
+        }
+    }
 
     private var purchaseSection: some View {
         VStack(spacing: Theme.Spacing.m) {
