@@ -11,6 +11,13 @@ import Foundation
 
 enum AnalyticsEvent {
     case appOpen
+    // First-run funnel. `onboardingStep` fires on every entry to a page, so
+    // count distinct users per step rather than raw events; the other two fire
+    // once each. Together they answer the question the redesign was a bet on:
+    // does solving a clue up front make people finish onboarding?
+    case onboardingStep(index: Int, name: String)
+    case onboardingFirstSolve(solved: Bool, attempts: Int)
+    case onboardingCompleted(solvedFirstClue: Bool)
     case dailyPuzzleStarted(puzzleID: String)
     case dailyPuzzleCompleted(puzzleID: String, seconds: Int)
     case hintUsed(type: String)
@@ -30,6 +37,9 @@ enum AnalyticsEvent {
     var name: String {
         switch self {
         case .appOpen: return "app_open"
+        case .onboardingStep: return "onboarding_step"
+        case .onboardingFirstSolve: return "onboarding_first_solve"
+        case .onboardingCompleted: return "onboarding_completed"
         case .dailyPuzzleStarted: return "daily_puzzle_started"
         case .dailyPuzzleCompleted: return "daily_puzzle_completed"
         case .hintUsed: return "hint_used"
@@ -52,6 +62,12 @@ enum AnalyticsEvent {
         switch self {
         case .appOpen:
             return [:]
+        case .onboardingStep(let index, let name):
+            return ["step_index": index, "step_name": name]
+        case .onboardingFirstSolve(let solved, let attempts):
+            return ["solved": solved, "attempts": attempts]
+        case .onboardingCompleted(let solvedFirstClue):
+            return ["solved_first_clue": solvedFirstClue]
         case .premiumPurchased(let plan, let source):
             return ["plan": plan, "source": source]
         case .paywallOpened(let source):

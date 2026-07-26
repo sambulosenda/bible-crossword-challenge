@@ -35,6 +35,7 @@ struct OnboardingView: View {
 
     @State private var page = 0
     @State private var didLogPaywallOpen = false
+    @State private var didLogFirstSolve = false
     @FocusState private var nameFocused: Bool
 
     /// Typed separately from `profile.username` so the field can start empty:
@@ -49,6 +50,9 @@ struct OnboardingView: View {
     @State private var wrongAttempts = 0
 
     private let lastPage = 4
+
+    /// Analytics labels for the five pages, indexed by page number.
+    private let stepNames = ["welcome", "first_solve", "name", "reminders", "premium"]
 
     private var reminderTime: Binding<Date> {
         Binding(
@@ -79,7 +83,16 @@ struct OnboardingView: View {
         .sensoryFeedback(.error, trigger: wrongAttempts)
         // Swiping off the name page shouldn't leave the keyboard floating over
         // the next page — dismiss it whenever we leave.
-        .onChange(of: page) { _, newPage in
+        .onChange(of: page) { oldPage, newPage in
+            // Logged on the way out of the solve page, not on solving, so a
+            // skip is recorded too — the two outcomes are the comparison.
+            // Before the step event, so the stream reads in the order it
+            // happened rather than the order the handler is written.
+            if oldPage == 1 && !didLogFirstSolve {
+                didLogFirstSolve = true
+                analytics.log(.onboardingFirstSolve(solved: solved, attempts: wrongAttempts))
+            }
+            logStep(newPage)
             if newPage != 2 { nameFocused = false }
             // Raising the keyboard mid-transition fights the page animation, so
             // wait for the slide to settle before taking focus.
@@ -98,6 +111,7 @@ struct OnboardingView: View {
         }
         .onAppear {
             if profile.username != "Friend" { name = profile.username }
+            logStep(page)
         }
         .purchaseNoticeAlert(store)
     }
@@ -596,10 +610,18 @@ struct OnboardingView: View {
         }
     }
 
+    private func logStep(_ index: Int) {
+        guard stepNames.indices.contains(index) else { return }
+        analytics.log(.onboardingStep(index: index, name: stepNames[index]))
+    }
+
     private func finish() {
         nameFocused = false
         let trimmed = name.trimmingCharacters(in: .whitespaces)
         profile.username = trimmed.isEmpty ? "Friend" : trimmed
+        // Carries the solve outcome so completion can be split by it without
+        // joining two events downstream.
+        analytics.log(.onboardingCompleted(solvedFirstClue: solved))
         onFinish()
     }
 }
