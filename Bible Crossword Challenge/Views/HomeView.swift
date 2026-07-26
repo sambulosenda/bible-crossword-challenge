@@ -238,17 +238,26 @@ private struct TodayHeader: View {
     /// the only serif in the header, and that is the whole signal. An ornament
     /// here would be decoration standing in for a typographic distinction that
     /// the type is already making.
+    ///
+    /// It is labelled, though. Removing the card removed the kicker with it,
+    /// which left an unexplained quotation under the greeting — the VoiceOver
+    /// label named it all along, so only sighted readers lost the answer to
+    /// "what is this?".
     private func scripture(_ verse: Puzzle) -> some View {
         Button {
             readerRouter.open(reference: verse.reference)
         } label: {
             VStack(alignment: .leading, spacing: Theme.Spacing.m) {
-                Text(verse.verse)
-                    .font(.scripture(.title3))
-                    .lineSpacing(6)
-                    .foregroundStyle(.primary)
-                    .multilineTextAlignment(.leading)
-                    .fixedSize(horizontal: false, vertical: true)
+                VStack(alignment: .leading, spacing: Theme.Spacing.s) {
+                    Text("Verse of the Day")
+                        .kicker()
+                    Text(verse.verse)
+                        .font(.scripture(.title3))
+                        .lineSpacing(6)
+                        .foregroundStyle(.primary)
+                        .multilineTextAlignment(.leading)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
 
                 HStack(spacing: 4) {
                     Text(verse.reference)
