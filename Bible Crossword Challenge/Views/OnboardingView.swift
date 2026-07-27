@@ -585,12 +585,24 @@ struct OnboardingView: View {
 
     private func buyYearly() {
         Task {
-            if let yearly = store.yearly, await store.purchase(yearly) {
-                analytics.log(.premiumPurchased(plan: "yearly", source: "onboarding"))
+            guard let yearly = store.yearly else { return finish() }
+            switch await store.purchase(yearly) {
+            case .purchased(let isTrial):
+                analytics.log(.premiumPurchased(
+                    plan: "yearly",
+                    source: "onboarding",
+                    isTrial: isTrial,
+                    price: yearly.price,
+                    currency: yearly.priceFormatStyle.currencyCode
+                ))
                 finish()
-            } else if store.purchaseNotice == nil {
-                // Cancelled — nothing to explain, continue on in.
+            case .cancelled:
+                // Nothing to explain, continue on in.
                 finish()
+            case .failed(let reason):
+                analytics.log(.purchaseFailed(plan: "yearly", source: "onboarding", reason: reason))
+            case .pending:
+                break
             }
             // Failure/pending: stay here so the notice alert can present; the
             // free-puzzle button below still exits.

@@ -437,8 +437,20 @@ struct PaywallView: View {
             Button {
                 guard let product = selectedProduct else { return }
                 Task {
-                    if await store.purchase(product) {
-                        analytics.log(.premiumPurchased(plan: planTitle(product).lowercased(), source: source))
+                    let plan = planTitle(product).lowercased()
+                    switch await store.purchase(product) {
+                    case .purchased(let isTrial):
+                        analytics.log(.premiumPurchased(
+                            plan: plan,
+                            source: source,
+                            isTrial: isTrial,
+                            price: product.price,
+                            currency: product.priceFormatStyle.currencyCode
+                        ))
+                    case .failed(let reason):
+                        analytics.log(.purchaseFailed(plan: plan, source: source, reason: reason))
+                    case .cancelled, .pending:
+                        break
                     }
                 }
             } label: {

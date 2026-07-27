@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		AA0000010000000000000003 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */ = {isa = PBXBuildFile; productRef = AA0000010000000000000002 /* FirebaseAnalyticsWithoutAdIdSupport */; };
 		AB0000010000000000000001 /* BibleCrosswordWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AB0000010000000000000003 /* BibleCrosswordWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		AC0000010000000000000003 /* PostHog in Frameworks */ = {isa = PBXBuildFile; productRef = AC0000010000000000000002 /* PostHog */; };
 		E6B29C08521CBEF2D95113D0 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 42F868B83D5BFCA01AFC66C8 /* Lottie */; };
 /* End PBXBuildFile section */
 
@@ -110,6 +111,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA0000010000000000000003 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */,
+				AC0000010000000000000003 /* PostHog in Frameworks */,
 				E6B29C08521CBEF2D95113D0 /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -183,6 +185,7 @@
 			name = "Bible Crossword Challenge";
 			packageProductDependencies = (
 				AA0000010000000000000002 /* FirebaseAnalyticsWithoutAdIdSupport */,
+				AC0000010000000000000002 /* PostHog */,
 				42F868B83D5BFCA01AFC66C8 /* Lottie */,
 			);
 			productName = "Bible Crossword Challenge";
@@ -290,6 +293,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				AA0000010000000000000001 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				AC0000010000000000000001 /* XCRemoteSwiftPackageReference "posthog-ios" */,
 				F6D385BEF7023C5038BB08CF /* XCRemoteSwiftPackageReference "lottie-ios" */,
 			);
 			preferredProjectObjectVersion = 77;
@@ -774,6 +778,14 @@
 				minimumVersion = 11.0.0;
 			};
 		};
+		AC0000010000000000000001 /* XCRemoteSwiftPackageReference "posthog-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/PostHog/posthog-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.68.0;
+			};
+		};
 		F6D385BEF7023C5038BB08CF /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/airbnb/lottie-ios";
@@ -794,6 +806,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = AA0000010000000000000001 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseAnalyticsWithoutAdIdSupport;
+		};
+		AC0000010000000000000002 /* PostHog */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AC0000010000000000000001 /* XCRemoteSwiftPackageReference "posthog-ios" */;
+			productName = PostHog;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

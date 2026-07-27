@@ -19,6 +19,7 @@ struct Bible_Crossword_ChallengeApp: App {
 
     init() {
         FirebaseApp.configure()
+        PostHogAnalyticsService.configure()
         do {
             container = try ModelContainer(
                 for: PlayerProfile.self, PuzzleRecord.self,

@@ -23,7 +23,15 @@ enum AnalyticsEvent {
     case hintUsed(type: String)
     case streakUpdated(streak: Int)
     case achievementUnlocked(id: String)
-    case premiumPurchased(plan: String, source: String)
+    // Purchases. `isTrial` is what StoreKit actually applied, so a trial start
+    // and a paid conversion are never counted as the same thing — the yearly
+    // plan carries a free trial and is the default selection, so without this
+    // nearly every "purchase" is really a trial that may still churn.
+    case premiumPurchased(plan: String, source: String, isTrial: Bool, price: Decimal, currency: String)
+    /// Fires when a purchase attempt ends without an entitlement for a reason
+    /// other than the player simply cancelling, so "opened the paywall and
+    /// didn't buy" can be split from "tried to buy and it broke".
+    case purchaseFailed(plan: String, source: String, reason: String)
     case paywallOpened(source: String)
     case notificationPermission(granted: Bool)
     case reminderSettingChanged(enabled: Bool)
@@ -46,6 +54,7 @@ enum AnalyticsEvent {
         case .streakUpdated: return "streak_updated"
         case .achievementUnlocked: return "achievement_unlocked"
         case .premiumPurchased: return "premium_purchased"
+        case .purchaseFailed: return "purchase_failed"
         case .paywallOpened: return "paywall_opened"
         case .notificationPermission: return "notification_permission"
         case .reminderSettingChanged: return "reminder_setting_changed"
@@ -68,8 +77,20 @@ enum AnalyticsEvent {
             return ["solved": solved, "attempts": attempts]
         case .onboardingCompleted(let solvedFirstClue):
             return ["solved_first_clue": solvedFirstClue]
-        case .premiumPurchased(let plan, let source):
-            return ["plan": plan, "source": source]
+        case .premiumPurchased(let plan, let source, let isTrial, let price, let currency):
+            return [
+                "plan": plan,
+                "source": source,
+                "is_trial": isTrial,
+                // The plan's list price, always — what the player will pay.
+                "price": NSDecimalNumber(decimal: price).doubleValue,
+                // What was charged *now*, so summing this across a source gives
+                // real money rather than the notional value of free trials.
+                "revenue": isTrial ? 0 : NSDecimalNumber(decimal: price).doubleValue,
+                "currency": currency,
+            ]
+        case .purchaseFailed(let plan, let source, let reason):
+            return ["plan": plan, "source": source, "reason": reason]
         case .paywallOpened(let source):
             return ["source": source]
         case .dailyPuzzleStarted(let id):
@@ -114,4 +135,32 @@ struct ConsoleAnalyticsService: AnalyticsService {
         print("📊 \(event.name) \(event.parameters)")
         #endif
     }
+}
+
+/// Sends each event to every backend. Order is the order given; a slow or
+/// misconfigured backend can't stop the others, because none of them throw.
+struct MultiAnalyticsService: AnalyticsService {
+    let services: [any AnalyticsService]
+
+    init(_ services: [any AnalyticsService]) {
+        self.services = services
+    }
+
+    func log(_ event: AnalyticsEvent) {
+        for service in services {
+            service.log(event)
+        }
+    }
+}
+
+extension MultiAnalyticsService {
+    /// The production sink for the Firebase → PostHog overlap. Both backends
+    /// collect everything so the two can be reconciled before Firebase is
+    /// dropped; the Firebase half exists to keep the paywall-source history
+    /// that started on 2026-07-19 continuous through the switch.
+    static let production = MultiAnalyticsService([
+        ConsoleAnalyticsService.shared,
+        FirebaseAnalyticsService.shared,
+        PostHogAnalyticsService.shared,
+    ])
 }

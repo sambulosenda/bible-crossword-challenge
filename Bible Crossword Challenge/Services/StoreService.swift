@@ -27,6 +27,22 @@ struct PurchaseNotice: Equatable {
     let message: String
 }
 
+/// How a purchase attempt ended. A plain `Bool` collapsed "cancelled",
+/// "awaiting approval", and "the payment failed" into one value, which made
+/// `premium_purchased` the only thing analytics could ever see — every
+/// non-purchase looked identical to never having tapped Buy.
+enum PurchaseOutcome: Equatable {
+    /// Premium is now owned. `isTrial` reflects what StoreKit actually applied
+    /// to the transaction, not what the product advertises: a player who has
+    /// already used the introductory offer is charged immediately, and their
+    /// purchase must not be counted as a trial start.
+    case purchased(isTrial: Bool)
+    case cancelled
+    /// Ask to Buy / deferred payment — no entitlement yet, may arrive later.
+    case pending
+    case failed(reason: String)
+}
+
 @Observable
 final class StoreService {
     static let monthlyID = "com.sambulosendas1.biblecrossword.premium.monthly"
@@ -92,9 +108,9 @@ final class StoreService {
         }
     }
 
-    /// Start a purchase for a specific plan. Returns true when premium is owned.
+    /// Start a purchase for a specific plan.
     @discardableResult
-    func purchase(_ product: Product) async -> Bool {
+    func purchase(_ product: Product) async -> PurchaseOutcome {
         purchaseInFlight = true
         defer { purchaseInFlight = false }
 
@@ -103,11 +119,17 @@ final class StoreService {
             switch result {
             case .success(let verification):
                 let transaction = try checkVerified(verification)
+                let isTrial = transaction.offer?.type == .introductory
                 await updateEntitlement()
                 await transaction.finish()
+                // `isPremium` can still be false if the entitlement didn't land
+                // (a revoked or superseded transaction), so report the failure
+                // rather than claiming a sale.
                 return isPremium
+                    ? .purchased(isTrial: isTrial)
+                    : .failed(reason: "entitlement_not_granted")
             case .userCancelled:
-                return false
+                return .cancelled
             case .pending:
                 // Ask to Buy / deferred payment — without this the player sees
                 // the button reset and assumes the purchase silently failed.
@@ -115,9 +137,9 @@ final class StoreService {
                     title: "Purchase Pending",
                     message: "Your purchase is waiting for approval. Premium unlocks automatically once it's approved."
                 )
-                return false
+                return .pending
             @unknown default:
-                return false
+                return .failed(reason: "unknown_result")
             }
         } catch {
             purchaseNotice = PurchaseNotice(
@@ -127,7 +149,41 @@ final class StoreService {
             #if DEBUG
             print("⚠️ StoreKit: purchase failed — \(error)")
             #endif
-            return false
+            return .failed(reason: Self.failureSlug(for: error))
+        }
+    }
+
+    /// A stable, low-cardinality label for a purchase failure. Never the raw
+    /// error text: that is localised and unbounded, so it would fragment into
+    /// thousands of distinct analytics values that can't be grouped.
+    private static func failureSlug(for error: Error) -> String {
+        switch error {
+        case is VerificationResult<Transaction>.VerificationError:
+            return "verification_failed"
+        case let storeKitError as StoreKitError:
+            switch storeKitError {
+            case .networkError: return "network"
+            case .systemError: return "system"
+            case .userCancelled: return "cancelled"
+            case .notAvailableInStorefront: return "not_in_storefront"
+            case .notEntitled: return "not_entitled"
+            case .unknown: return "unknown"
+            @unknown default: return "unknown"
+            }
+        case let purchaseError as Product.PurchaseError:
+            switch purchaseError {
+            case .invalidQuantity: return "invalid_quantity"
+            case .productUnavailable: return "product_unavailable"
+            case .purchaseNotAllowed: return "not_allowed"
+            case .ineligibleForOffer: return "ineligible_for_offer"
+            case .invalidOfferIdentifier: return "invalid_offer_id"
+            case .invalidOfferPrice: return "invalid_offer_price"
+            case .invalidOfferSignature: return "invalid_offer_signature"
+            case .missingOfferParameters: return "missing_offer_params"
+            @unknown default: return "purchase_error"
+            }
+        default:
+            return "other"
         }
     }
 

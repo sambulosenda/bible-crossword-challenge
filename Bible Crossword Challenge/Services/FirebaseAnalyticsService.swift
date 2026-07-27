@@ -4,8 +4,10 @@
 //
 //  Production analytics backend. Forwards each `AnalyticsEvent`'s name and
 //  parameters to Firebase Analytics. `FirebaseApp.configure()` must run first
-//  (see Bible_Crossword_ChallengeApp.init). In DEBUG it also mirrors to the
-//  console so events are visible while developing.
+//  (see Bible_Crossword_ChallengeApp.init). The DEBUG console mirror now lives
+//  in `ConsoleAnalyticsService`, which `MultiAnalyticsService.production`
+//  composes alongside this one — otherwise every event printed twice once
+//  PostHog joined the fan-out.
 //
 
 import Foundation
@@ -15,9 +17,6 @@ struct FirebaseAnalyticsService: AnalyticsService {
     static let shared = FirebaseAnalyticsService()
 
     func log(_ event: AnalyticsEvent) {
-        #if DEBUG
-        print("📊 \(event.name) \(event.parameters)")
-        #endif
         Analytics.logEvent(event.name, parameters: event.parameters)
     }
 }
