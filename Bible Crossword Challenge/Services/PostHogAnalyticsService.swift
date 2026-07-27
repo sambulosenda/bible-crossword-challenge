@@ -50,6 +50,12 @@ struct PostHogAnalyticsService: AnalyticsService {
         // Off deliberately: replay burns event quota fast and tells us little
         // about a crossword grid. Revisit only for a specific stuck-user question.
         config.sessionReplay = false
+        // On by default, and wrong for this app: it flags 3 taps landing within
+        // 30pt and 1s of each other as `$rageclick`. On a grid whose cells are
+        // smaller than that threshold, filling three neighbouring squares at a
+        // normal solving pace trips it. Frustration and fluency would be
+        // indistinguishable, and every fast solver would look furious.
+        config.rageClickConfig.enabled = false
 
         #if DEBUG
         // Logs each batch and its HTTP result, which is the only way to tell a
