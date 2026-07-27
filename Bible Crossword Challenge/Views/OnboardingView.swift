@@ -592,8 +592,7 @@ struct OnboardingView: View {
                     plan: "yearly",
                     source: "onboarding",
                     isTrial: isTrial,
-                    price: yearly.price,
-                    currency: yearly.priceFormatStyle.currencyCode
+                    amount: store.amount(for: yearly)
                 ))
                 finish()
             case .cancelled:

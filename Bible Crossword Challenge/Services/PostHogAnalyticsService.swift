@@ -34,10 +34,18 @@ struct PostHogAnalyticsService: AnalyticsService {
         guard isConfigured else { return }
 
         let config = PostHogConfig(apiKey: apiKey, host: host)
-        // We already send our own `app_open`, and SwiftUI screen views here are
-        // noise — one grid, one paywall, a handful of sheets. Autocapture would
-        // mostly spend quota restating what the explicit events already say.
-        config.captureApplicationLifecycleEvents = false
+        // Lifecycle capture stays on for `Application Installed` and
+        // `Application Updated`: our own `app_open` fires on every launch and
+        // so can't tell a first-ever open from the hundredth, which is exactly
+        // what activation and new-vs-returning analysis need. `Application
+        // Updated` carries previous_version/previous_build, which is how a
+        // release's effect gets separated from the one before it. These are a
+        // handful of events per install — the quota argument doesn't apply.
+        // (It duplicates `app_open` slightly; that stays only for Firebase
+        // parity during the overlap and can go once Firebase does.)
+        config.captureApplicationLifecycleEvents = true
+        // Screen views do stay off: one grid, one paywall and a few sheets
+        // produce noise that restates what the explicit events already say.
         config.captureScreenViews = false
         // Off deliberately: replay burns event quota fast and tells us little
         // about a crossword grid. Revisit only for a specific stuck-user question.

@@ -27,7 +27,7 @@ enum AnalyticsEvent {
     // and a paid conversion are never counted as the same thing — the yearly
     // plan carries a free trial and is the default selection, so without this
     // nearly every "purchase" is really a trial that may still churn.
-    case premiumPurchased(plan: String, source: String, isTrial: Bool, price: Decimal, currency: String)
+    case premiumPurchased(plan: String, source: String, isTrial: Bool, amount: StoreService.PurchaseAmount)
     /// Fires when a purchase attempt ends without an entitlement for a reason
     /// other than the player simply cancelling, so "opened the paywall and
     /// didn't buy" can be split from "tried to buy and it broke".
@@ -77,17 +77,20 @@ enum AnalyticsEvent {
             return ["solved": solved, "attempts": attempts]
         case .onboardingCompleted(let solvedFirstClue):
             return ["solved_first_clue": solvedFirstClue]
-        case .premiumPurchased(let plan, let source, let isTrial, let price, let currency):
+        case .premiumPurchased(let plan, let source, let isTrial, let amount):
             return [
                 "plan": plan,
                 "source": source,
                 "is_trial": isTrial,
-                // The plan's list price, always — what the player will pay.
-                "price": NSDecimalNumber(decimal: price).doubleValue,
-                // What was charged *now*, so summing this across a source gives
-                // real money rather than the notional value of free trials.
-                "revenue": isTrial ? 0 : NSDecimalNumber(decimal: price).doubleValue,
-                "currency": currency,
+                // Money travels in whole minor units (2999 = $29.99) — the
+                // `_minor_units` suffix is deliberate, so nobody later reads a
+                // 2999 as a price. Point PostHog's Revenue tab at
+                // `revenue_minor_units` + `currency`.
+                "price_minor_units": amount.minorUnits,
+                // What was charged *now*: zero for a trial start, so summing
+                // per source gives real money rather than notional value.
+                "revenue_minor_units": isTrial ? 0 : amount.minorUnits,
+                "currency": amount.currencyCode,
             ]
         case .purchaseFailed(let plan, let source, let reason):
             return ["plan": plan, "source": source, "reason": reason]

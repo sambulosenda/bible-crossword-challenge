@@ -233,6 +233,54 @@ final class StoreService {
         }
     }
 
+    // MARK: - Analytics helpers
+
+    /// A price in the form analytics should carry money: a whole number of the
+    /// currency's minor unit. Never a `Double` — StoreKit hands us an exact
+    /// `Decimal`, and converting to binary floating point at the last step
+    /// reintroduces the drift that summing thousands of prices would compound.
+    struct PurchaseAmount: Equatable {
+        /// 2999 for $29.99, 500 for ¥500, 29990 for 29.990 KWD.
+        let minorUnits: Int
+        /// ISO 4217, e.g. "USD".
+        let currencyCode: String
+    }
+
+    func amount(for product: Product) -> PurchaseAmount {
+        let code = product.priceFormatStyle.currencyCode
+        return PurchaseAmount(
+            minorUnits: Self.minorUnits(of: product.price, currencyCode: code),
+            currencyCode: code
+        )
+    }
+
+    /// Scales a decimal price into whole minor units.
+    ///
+    /// The exponent is per-currency and *not* always 2: JPY and KRW have none,
+    /// KWD and BHD have three. Hardcoding ×100 would inflate a ¥500 sale to
+    /// ¥50,000 and understate a Kuwaiti one tenfold, so the count comes from
+    /// ICU via `NumberFormatter` rather than an assumption.
+    static func minorUnits(of price: Decimal, currencyCode: String) -> Int {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.currencyCode = currencyCode
+        let exponent = Int16(formatter.maximumFractionDigits)
+
+        // All-decimal arithmetic: multiply then round half-up to a whole unit.
+        let rounding = NSDecimalNumberHandler(
+            roundingMode: .plain,
+            scale: 0,
+            raiseOnExactness: false,
+            raiseOnOverflow: false,
+            raiseOnUnderflow: false,
+            raiseOnDivideByZero: false
+        )
+        return NSDecimalNumber(decimal: price)
+            .multiplying(byPowerOf10: exponent)
+            .rounding(accordingToBehavior: rounding)
+            .intValue
+    }
+
     // MARK: - Display helpers
 
     /// e.g. "7-day free trial" when the product has a free introductory offer.

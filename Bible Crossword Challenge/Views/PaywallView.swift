@@ -444,8 +444,7 @@ struct PaywallView: View {
                             plan: plan,
                             source: source,
                             isTrial: isTrial,
-                            price: product.price,
-                            currency: product.priceFormatStyle.currencyCode
+                            amount: store.amount(for: product)
                         ))
                     case .failed(let reason):
                         analytics.log(.purchaseFailed(plan: plan, source: source, reason: reason))
