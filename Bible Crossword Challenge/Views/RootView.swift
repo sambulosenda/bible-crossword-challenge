@@ -65,6 +65,14 @@ struct RootView: View {
         .task {
             mergeSyncDuplicates()
             let profile = ensureProfile()
+            #if DEBUG
+            // Screenshot helper, same family as -uiFillSolved / -uiAutoSolve in
+            // CrosswordGameView. Runs before normalize, which is then a no-op
+            // because the seed dates the last solve to today.
+            if ProcessInfo.processInfo.arguments.contains("-uiSeedShowcase") {
+                seedShowcase(profile)
+            }
+            #endif
             Streaks.normalize(profile)
             reconcilePackCompletions(profile)
             context.saveLogged("launch normalise")
@@ -212,6 +220,55 @@ struct RootView: View {
         context.saveLogged("create profile")
         return profile
     }
+
+    #if DEBUG
+    /// Development-only: fill a fresh install with the history of someone who
+    /// has been playing for a few weeks, so App Store captures don't advertise
+    /// an abandoned app. A real first launch shows `0 day streak`, `0/5` on
+    /// every pack and `0/5` on the next achievement, which reads as "nobody
+    /// uses this" in a screenshot — the numbers below are ordinary for a
+    /// returning player, not a flex.
+    ///
+    /// Idempotent: keyed off `totalPuzzlesCompleted`, so relaunching with the
+    /// flag doesn't stack records. Wipe the app to reseed from scratch.
+    private func seedShowcase(_ p: PlayerProfile) {
+        guard p.totalPuzzlesCompleted == 0 else { return }
+        let calendar = Calendar.current
+        let now = Date()
+
+        p.currentStreak = 12
+        p.bestStreak = 21
+        p.totalPuzzlesCompleted = 47
+        // Today, so `Streaks.normalize` treats the streak as current and the
+        // weekday row marks today rather than resetting the whole thing to 0.
+        p.lastCompletedDate = now
+        p.bestSolveSeconds = 214
+        p.noHintSolves = 9
+        p.hardCompleted = 6
+        p.streakFreezes = 2
+        // Earned, not everything — a full trophy case leaves the Achievements
+        // screen with nothing left to show as in-progress.
+        p.unlockedAchievementIDs = ["bible-beginner", "disciple", "unaided", "quick-wit", "pathfinder"]
+        p.completedPackIDs = ["first-steps"]
+
+        // Back-dated records: the last 12 days for the streak's weekday row,
+        // plus First Steps' own puzzles so that pack reads 5/5 and The Life of
+        // David sits part-done at 2/4 — a finished pack and a live one.
+        var ids = (1...12).map { String(format: "daily-%03d", $0) }
+        ids += ["mini-001", "mini-003", "daily-014", "daily-004", "daily-013"]
+        for (offset, id) in ids.enumerated() {
+            let day = calendar.date(byAdding: .day, value: -offset, to: now) ?? now
+            let record = PuzzleRecord(puzzleID: id)
+            record.isCompleted = true
+            record.completedDate = day
+            record.elapsedSeconds = 230 + (offset * 17) % 400
+            record.usedHint = offset % 3 == 0
+            record.updatedAt = day
+            context.insert(record)
+        }
+        context.saveLogged("seed showcase")
+    }
+    #endif
 }
 
 /// Modal host for a deep-linked passage. Opens straight to the chapter reader
