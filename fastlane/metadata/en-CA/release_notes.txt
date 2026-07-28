@@ -1,8 +1,5 @@
 Thanks for playing Bible Crossword Challenge! This update includes:
 
-• A new welcome — solve a clue in the first ten seconds, and read the verse behind the answer
-• Today has a new look: the verse of the day at the top, your puzzle right under it
-• Every puzzle card now shows its own grid, so no two look the same
-• The Archive is now the Library — with a progress bar and a look inside before you unlock it
-• Premium now shows what a year works out to per month
-• Fits better if you use larger text, or play on a smaller iPhone
+• A new opening — the icon puts itself together a square at a time, then opens into the app
+• Today starts on the verse now, with your puzzle a little higher up the screen
+• The welcome puzzle fits the keyboard on smaller iPhones — no scrolling to type your first answer
