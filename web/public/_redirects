@@ -1,3 +1,10 @@
+# NOTE: Pages matches these rules on path only — a full-URL "from" (to catch the
+# bare *.pages.dev hostname) is silently ignored, verified against a live
+# deployment. The production pages.dev host is left indexable by Cloudflare, so
+# if it ever starts ranking, add a Redirect Rule in the dashboard on
+# `http.host eq "bible-crossword-challenge.pages.dev"`. Every page already
+# canonicalises to the apex, which is what keeps it out of the index today.
+
 # 301 the old .html URLs (from the previous Hostinger site) to the clean paths,
 # so existing inbound links and search results keep working after the migration.
 /how-to-play.html                 /how-to-play/                 301
