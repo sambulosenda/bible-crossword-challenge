@@ -22,10 +22,12 @@ const features = {
   ],
 };
 
+// Captions describe what is actually on each screenshot — when the app's
+// screens change, refresh the images and this copy together.
 const screens = [
-  { img: 'shot-today', alt: "The Today screen: streak counter, today's puzzle, Verse of the Day, and next achievement", cap: 'Begin the day', body: "Your streak, today's puzzle, and the Verse of the Day in one quiet screen." },
-  { img: 'shot-puzzle', alt: 'The crossword grid mid-solve, with the clue “Black bird that fed the prophet Elijah”', cap: 'Solve the grid', body: 'Clues like “Black bird that fed the prophet Elijah” teach as you type.' },
-  { img: 'shot-profile', alt: 'The Profile screen with puzzles completed, streaks, and achievements', cap: 'Watch it grow', body: 'Puzzles completed, best streaks, and achievements earned along the way.' },
+  { img: 'shot-today', alt: "The Today screen: the Verse of the Day from John 10:11, today's puzzle “Wise Men from the East”, and the Daily Mini", cap: 'Begin the day', body: "The Verse of the Day, today's puzzle, and a two-minute Mini in one quiet screen." },
+  { img: 'shot-puzzle', alt: 'The crossword grid part-solved — JOY, GOLD and EAST filled in — showing the clue “Direction the visitors came from”', cap: 'Solve the grid', body: 'Clues like “Direction the visitors came from” teach as you type.' },
+  { img: 'shot-achievements', alt: 'The Achievements screen listing Bible Beginner, Unaided, Quick Wit, Disciple and Lightning Round, each with its goal and progress', cap: 'Watch it grow', body: 'Twelve achievements to work through, from Bible Beginner to Apostle.' },
 ];
 
 const faqs = [
@@ -152,7 +154,7 @@ const faqLd = {
         <div class="screens">
           {screens.map((s, i) => (
             <figure class="screen-card reveal" data-delay={i * 110}>
-              <div class="device"><img src={`/assets/${s.img}.webp`} alt={s.alt} loading="lazy" width="720" height="1566" /></div>
+              <div class="device"><img src={`/assets/${s.img}.webp`} alt={s.alt} loading="lazy" width="720" height="1565" /></div>
               <figcaption class="screen-cap">
                 <span class="clue-n">{i + 1}</span>
                 <p><strong>{s.cap}</strong>{s.body}</p>
