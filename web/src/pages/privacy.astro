@@ -12,28 +12,30 @@ const description =
       <p class="crumbs"><a href="/">Home</a><span>/</span>Privacy</p>
       <p class="eyebrow">Privacy</p>
       <h1>Privacy Policy</h1>
-      <p class="updated">Last updated: 22 June 2026</p>
+      <p class="updated">Last updated: 28 July 2026</p>
 
       <div class="content-section prose" style="max-width:none">
         <h2>The short version</h2>
         <p>Bible Crossword Challenge is offline-first. You don't need an account, and your puzzle progress, streaks, and achievements are stored only on your device.</p>
 
         <h2>Information we collect</h2>
-        <p>We do not collect personal information such as your name, email, or contacts. We use anonymous analytics and crash reporting (via Google Firebase) to understand how the app is used and to fix problems. This may include:</p>
+        <p>We do not collect personal information such as your name, email, or contacts. We use anonymous analytics and crash reporting (via Google Firebase and PostHog) to understand how the app is used and to fix problems. This may include:</p>
         <ul>
           <li>Anonymous usage events (e.g. a puzzle was opened or completed)</li>
           <li>Device type, OS version, and app version</li>
           <li>Crash and performance diagnostics</li>
+          <li>Whether a launch is a first install or an update, so we can tell new players from returning ones</li>
         </ul>
-        <p>This data is not used to personally identify you.</p>
+        <p>These events are tied to a random identifier, not to you. We do not record your screen, and we do not track you across other apps or websites.</p>
 
         <h2>Purchases</h2>
-        <p>Premium is sold through Apple's App Store using StoreKit. Apple processes all payments — we never receive your payment details. We only learn whether your purchase succeeded.</p>
+        <p>Premium is sold through Apple's App Store using StoreKit. Apple processes all payments — we never receive your card or billing details. We record which plan was bought, its price, and whether it started as a free trial, so we can tell trials apart from paid subscriptions.</p>
 
         <h2>Third-party services</h2>
-        <p>We use Google Firebase (Analytics) and Apple (App Store / StoreKit). Their handling of data is governed by their own privacy policies:</p>
+        <p>We use Google Firebase (Analytics), PostHog (product analytics), and Apple (App Store / StoreKit). PostHog data is processed on their EU cloud. Their handling of data is governed by their own privacy policies:</p>
         <ul>
           <li><a href="https://firebase.google.com/support/privacy" target="_blank" rel="noopener">Firebase Privacy</a></li>
+          <li><a href="https://posthog.com/privacy" target="_blank" rel="noopener">PostHog Privacy</a></li>
           <li><a href="https://www.apple.com/legal/privacy/" target="_blank" rel="noopener">Apple Privacy</a></li>
         </ul>
 
