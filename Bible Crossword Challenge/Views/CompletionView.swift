@@ -439,6 +439,7 @@ struct CompletionView: View {
                 .foregroundStyle(Theme.accent)
 
             Button {
+                analytics.log(.scriptureOpened(reference: puzzle.reference, source: "puzzle_completion"))
                 readerRouter.open(reference: puzzle.reference)
                 onHome()
             } label: {

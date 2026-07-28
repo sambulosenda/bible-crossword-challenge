@@ -41,6 +41,13 @@ enum AnalyticsEvent {
     case challengeOpened(puzzleID: String)
     case challengeCompleted(puzzleID: String, won: Bool, deltaSeconds: Int)
     case challengeRematchSent(puzzleID: String)
+    /// Someone opened a passage in the reader. `source` separates the two ways
+    /// in — the Verse of the Day at the top of Today, and the closing verse
+    /// after a solve — because they answer different questions: the first is
+    /// whether the verse earns its place above the daily puzzle card, the
+    /// second whether finishing a puzzle actually sends anyone to Scripture.
+    /// Both were unmeasured, so any claim about either was a guess.
+    case scriptureOpened(reference: String, source: String)
 
     var name: String {
         switch self {
@@ -64,6 +71,7 @@ enum AnalyticsEvent {
         case .challengeOpened: return "challenge_opened"
         case .challengeCompleted: return "challenge_completed"
         case .challengeRematchSent: return "challenge_rematch_sent"
+        case .scriptureOpened: return "scripture_opened"
         }
     }
 
@@ -122,6 +130,8 @@ enum AnalyticsEvent {
             return ["puzzle_id": id, "won": won, "delta_seconds": delta]
         case .challengeRematchSent(let id):
             return ["puzzle_id": id]
+        case .scriptureOpened(let reference, let source):
+            return ["reference": reference, "source": source]
         }
     }
 }

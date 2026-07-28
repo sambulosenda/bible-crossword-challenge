@@ -198,6 +198,7 @@ private struct TodayHeader: View {
     let verse: Puzzle?
 
     @Environment(\.readerRouter) private var readerRouter
+    @Environment(\.analytics) private var analytics
 
     var body: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.l) {
@@ -245,6 +246,7 @@ private struct TodayHeader: View {
     /// "what is this?".
     private func scripture(_ verse: Puzzle) -> some View {
         Button {
+            analytics.log(.scriptureOpened(reference: verse.reference, source: "verse_of_the_day"))
             readerRouter.open(reference: verse.reference)
         } label: {
             VStack(alignment: .leading, spacing: Theme.Spacing.m) {
