@@ -8,9 +8,8 @@
 //  Order: promise, the player's own progress, benefits, then the named packs
 //  they can't open yet — showing the content withheld rather than only the
 //  content on offer. Then stacked plan cards (yearly with any free trial +
-//  savings badge, monthly, and a one-time lifetime unlock), the CTA, and a
-//  plain reminder that the daily puzzle stays free. Purchase/restore go
-//  through StoreService (StoreKit 2).
+//  savings badge, monthly, and a one-time lifetime unlock), then the CTA and
+//  its subtext. Purchase/restore go through StoreService (StoreKit 2).
 //
 //  Always presented as a sheet. Pushed onto a navigation stack it collides
 //  with the back button and the tab bar.
@@ -473,13 +472,6 @@ struct PaywallView: View {
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
             }
-
-            // Said plainly, because it's true and because a paywall that looks
-            // like it's taking something away breeds resentment. Nothing here
-            // removes the free daily puzzle.
-            Text("The daily puzzle stays free — always.")
-                .font(.footnote.weight(.semibold))
-                .multilineTextAlignment(.center)
         }
         .padding(.top, Theme.Spacing.s)
     }
