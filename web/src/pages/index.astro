@@ -7,6 +7,8 @@ const title = 'Bible Crossword Challenge — a daily Bible crossword for iOS';
 const description =
   'A fresh Bible crossword every day. Clues rooted in Scripture, from Genesis to Revelation. Build a streak, earn achievements, and end every puzzle on a verse. Free on iOS.';
 
+// The feature list is written as crossword entries, because that is how this
+// product talks. The answers double as the tiles that fill in on scroll.
 const features = {
   across: [
     { n: '2A', answer: 'DAILY', enum: '(5)', text: 'A new hand-crafted puzzle waiting every morning' },
@@ -56,215 +58,343 @@ const faqLd = {
   mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
 };
 ---
-<Layout title={title} description={description} path="/">
+<Layout title={title} description={description} path="/" overHero>
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify(softwareLd)} />
     <script type="application/ld+json" set:html={JSON.stringify(faqLd)} />
   </Fragment>
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="wrap hero-grid">
-      <div class="hero-copy">
-        <p class="eyebrow rise">A daily Bible crossword for iPhone</p>
-        <h1 class="rise d1">Know the Word, one square at a time.</h1>
-        <p class="lede rise d2">A fresh crossword every day, with clues rooted in Scripture — from Genesis to Revelation. Build a streak, earn achievements, and end every puzzle on a verse.</p>
-        <div class="rise d3"><AppStoreButton /></div>
-      </div>
+  <main id="main">
+    <!-- ════ 1. HERO — ink ════════════════════════════════════════════════ -->
+    <section class="band band-ink hero">
+      <div class="grid-field" aria-hidden="true"></div>
+      <div class="wrap hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow rise">A daily Bible crossword for iPhone</p>
+          {/* Spaces flank each <br> so the line still reads as a sentence on
+              narrow screens, where the breaks are hidden. */}
+          <h1 class="rise d1">Know the Word, <br />one square <br />at a time.</h1>
+          <p class="lede rise d2">
+            A fresh crossword every day, with clues rooted in Scripture — from Genesis to
+            Revelation. Build a streak, earn achievements, and end every puzzle on a verse.
+          </p>
+          <div class="rise d3"><AppStoreButton /></div>
+        </div>
 
-      <div class="xw-wrap" aria-label="Animated example crossword solving the words faith, grace, daily and streak">
-        <div class="xw" id="xw" aria-hidden="true"></div>
-        <div class="xw-clue" id="xw-clue" aria-hidden="true">
-          <span class="xw-clue-num" id="xw-clue-num">&nbsp;</span>
-          <span class="xw-clue-text" id="xw-clue-text">&nbsp;</span>
+        <div class="xw-wrap rise d4" aria-label="An example crossword solving the words faith, grace, daily and streak">
+          <div class="xw" id="xw" aria-hidden="true"></div>
+          <div class="xw-clue" id="xw-clue" aria-hidden="true">
+            <span class="xw-clue-num" id="xw-clue-num">&nbsp;</span>
+            <span class="xw-clue-text" id="xw-clue-text">&nbsp;</span>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- FEATURES AS A CLUE LIST -->
-  <section class="section" id="features">
-    <div class="wrap">
-      <p class="eyebrow">What's inside</p>
-      <h2>Everything, in so many words.</h2>
-      <p class="sec-sub">The features, written the only way a crossword app should write them.</p>
+    <!-- ════ 2. FEATURES AS A CLUE LIST — paper ═══════════════════════════ -->
+    <section class="band band-paper" id="features">
+      <div class="wrap">
+        <div class="reveal">
+          <p class="eyebrow">What's inside</p>
+          <h2>Everything, in so many words.</h2>
+          <p class="sec-sub">The features, written the only way a crossword app should write them.</p>
+        </div>
 
-      <div class="clues">
-        <div class="clue-col">
-          <h3>Across</h3>
-          {features.across.map((c) => (
-            <div class="clue" data-answer={c.answer}>
-              <div class="clue-q"><span class="clue-n">{c.n}</span><span class="clue-text">{c.text} <span class="enum">{c.enum}</span></span></div>
-              <div class="tiles" aria-label={`Answer: ${c.answer.toLowerCase()}`}></div>
-            </div>
+        <div class="clues">
+          <div class="clue-col reveal">
+            <h3>Across</h3>
+            {features.across.map((c) => (
+              <div class="clue" data-answer={c.answer}>
+                <div class="clue-q"><span class="clue-n">{c.n}</span><span class="clue-text">{c.text} <span class="enum">{c.enum}</span></span></div>
+                <div class="tiles" aria-label={`Answer: ${c.answer.toLowerCase()}`}></div>
+              </div>
+            ))}
+          </div>
+          <div class="clue-col reveal" data-delay="120">
+            <h3>Down</h3>
+            {features.down.map((c) => (
+              <div class="clue" data-answer={c.answer}>
+                <div class="clue-q"><span class="clue-n">{c.n}</span><span class="clue-text">{c.text} <span class="enum">{c.enum}</span></span></div>
+                <div class="tiles" aria-label={`Answer: ${c.answer.toLowerCase()}`}></div>
+              </div>
+            ))}
+          </div>
+          <p class="clues-foot reveal">
+            <strong>Also in the box:</strong> achievements from Bible Beginner to Apostle, iCloud
+            sync across your devices, light &amp; dark mode, and not a single ad between you and
+            the Word.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════ 3. VERSE — ink ═══════════════════════════════════════════════ -->
+    <section class="band band-ink verse-band">
+      <div class="wrap reveal">
+        <span class="orn" aria-hidden="true">✦ ✦ ✦</span>
+        <blockquote>“Thy word have I hid in mine heart, that I might not sin against thee.”</blockquote>
+        <cite>Psalm 119 : 11 · KJV</cite>
+        <p class="verse-note">
+          Every puzzle closes with the verse behind its theme — so each day's play plants a little
+          more Scripture in your memory.
+        </p>
+      </div>
+    </section>
+
+    <!-- ════ 4. SCREENS — paper ═══════════════════════════════════════════ -->
+    <section class="band band-paper">
+      <div class="wrap">
+        <div class="reveal">
+          <p class="eyebrow">A look inside</p>
+          <h2>Calm, focused, and made for iOS.</h2>
+          <p class="sec-sub">No clutter, no pressure — just you, a grid, and the Word.</p>
+        </div>
+        <div class="screens">
+          {screens.map((s, i) => (
+            <figure class="screen-card reveal" data-delay={i * 110}>
+              <div class="device"><img src={`/assets/${s.img}.webp`} alt={s.alt} loading="lazy" width="720" height="1566" /></div>
+              <figcaption class="screen-cap">
+                <span class="clue-n">{i + 1}</span>
+                <p><strong>{s.cap}</strong>{s.body}</p>
+              </figcaption>
+            </figure>
           ))}
         </div>
-        <div class="clue-col">
-          <h3>Down</h3>
-          {features.down.map((c) => (
-            <div class="clue" data-answer={c.answer}>
-              <div class="clue-q"><span class="clue-n">{c.n}</span><span class="clue-text">{c.text} <span class="enum">{c.enum}</span></span></div>
-              <div class="tiles" aria-label={`Answer: ${c.answer.toLowerCase()}`}></div>
-            </div>
+      </div>
+    </section>
+
+    <!-- ════ 5. WHY — ink ═════════════════════════════════════════════════ -->
+    <section class="band band-ink" id="about">
+      <div class="wrap why-grid">
+        <div class="reveal">
+          <p class="eyebrow">Why a Bible crossword</p>
+          <h2>A daily habit that plants Scripture in your memory.</h2>
+        </div>
+        <div class="prose reveal" data-delay="120">
+          <p>Bible Crossword Challenge is a Christian word game built around one simple habit: a daily Bible crossword you can finish with your morning coffee. Every clue is rooted in Scripture — the people, places, miracles, and verses of the King James Version — so each grid you solve leaves a little more of the Word with you.</p>
+          <p>Beyond the daily puzzle, an <a href="/puzzles/">archive of 80+ hand-crafted Bible crosswords</a> covers the whole story: <a href="/puzzles/noahs-ark/">Noah's Ark</a>, <a href="/puzzles/david-and-goliath/">David &amp; Goliath</a>, the Exodus, the Parables, <a href="/puzzles/christmas/">the Christmas Story</a>, <a href="/puzzles/easter/">Easter and the Resurrection</a>, and many more. Puzzles work fully offline on iPhone and iPad, sync through iCloud, and every one ends on the verse behind its theme.</p>
+          <p>Whether you love Scripture, love crosswords, or both, <a href={APP_STORE_URL} rel="noopener">download Bible Crossword Challenge free on the App Store</a> and start today's puzzle.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════ 6. FAQ — paper ═══════════════════════════════════════════════ -->
+    <section class="band band-paper" id="faq">
+      <div class="wrap faq-grid">
+        <div class="reveal">
+          <p class="eyebrow">Questions</p>
+          <h2>Before you ask.</h2>
+        </div>
+        <div class="faq reveal" data-delay="120">
+          {faqs.map((f) => (
+            <details>
+              <summary>{f.q}</summary>
+              <p>{f.a}</p>
+            </details>
           ))}
         </div>
-        <p class="clues-foot"><strong>Also in the box:</strong> achievements from Bible Beginner to Apostle, iCloud sync across your devices, light &amp; dark mode, and not a single ad between you and the Word.</p>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- VERSE BAND -->
-  <section class="verse-band">
-    <div class="wrap">
-      <span class="orn" aria-hidden="true">✦ ✦ ✦</span>
-      <blockquote>“Thy word have I hid in mine heart, that I might not sin against thee.”</blockquote>
-      <cite>Psalm 119 : 11 · KJV</cite>
-      <p class="verse-note">Every puzzle closes with the verse behind its theme — so each day's play plants a little more Scripture in your memory.</p>
-    </div>
-  </section>
-
-  <!-- SCREENS -->
-  <section class="section">
-    <div class="wrap">
-      <p class="eyebrow">A look inside</p>
-      <h2>Calm, focused, and made for iOS.</h2>
-      <p class="sec-sub">No clutter, no pressure — just you, a grid, and the Word.</p>
-      <div class="screens">
-        {screens.map((s, i) => (
-          <figure class="screen-card">
-            <div class="device"><img src={`/assets/${s.img}.webp`} alt={s.alt} loading="lazy" width="720" height="1566" /></div>
-            <figcaption class="screen-cap">
-              <span class="clue-n">{i + 1}</span>
-              <p><strong>{s.cap}</strong>{s.body}</p>
-            </figcaption>
-          </figure>
-        ))}
+    <!-- ════ 7. CLOSE — ink (runs straight into the ink footer) ═══════════ -->
+    <section class="band band-ink final" id="get">
+      <div class="grid-field" aria-hidden="true"></div>
+      <div class="wrap reveal">
+        <p class="eyebrow">Today's puzzle is waiting</p>
+        <h2>Start your streak today.</h2>
+        <p class="sec-sub">Free on the App Store. Tomorrow's puzzle will be there too.</p>
+        <div class="final-cta"><AppStoreButton note={false} /></div>
       </div>
-    </div>
-  </section>
-
-  <!-- WHY -->
-  <section class="section" id="about">
-    <div class="wrap">
-      <p class="eyebrow">Why a Bible crossword</p>
-      <h2>A daily Bible crossword that plants Scripture in your memory.</h2>
-      <div class="prose">
-        <p>Bible Crossword Challenge is a Christian word game built around one simple habit: a daily Bible crossword puzzle you can finish with your morning coffee. Every clue is rooted in Scripture — the people, places, miracles, and verses of the King James Version — so each grid you solve leaves a little more of the Word with you.</p>
-        <p>Beyond the daily puzzle, an <a href="/puzzles/">archive of 80+ hand-crafted Bible crosswords</a> covers the whole story: <a href="/puzzles/noahs-ark/">Noah's Ark</a>, <a href="/puzzles/david-and-goliath/">David &amp; Goliath</a>, the Exodus, the Parables, <a href="/puzzles/christmas/">the Christmas Story</a>, <a href="/puzzles/easter/">Easter and the Resurrection</a>, and many more. Puzzles work fully offline on iPhone and iPad, sync through iCloud, and every one ends on the verse behind its theme.</p>
-        <p>Whether you love Scripture, love crosswords, or both, <a href={APP_STORE_URL} rel="noopener">download Bible Crossword Challenge free on the App Store</a> and start today's puzzle.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- FAQ -->
-  <section class="section" id="faq">
-    <div class="wrap">
-      <p class="eyebrow">Questions</p>
-      <h2>Before you ask.</h2>
-      <div class="faq">
-        {faqs.map((f) => (
-          <details>
-            <summary>{f.q}</summary>
-            <p>{f.a}</p>
-          </details>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- FINAL CTA -->
-  <section class="final" id="get">
-    <div class="wrap">
-      <p class="eyebrow" style="justify-content:center">Today's puzzle is waiting</p>
-      <h2>Start your streak today.</h2>
-      <p class="sec-sub">Free on the App Store. Tomorrow's puzzle will be there too.</p>
-      <div class="final-cta"><AppStoreButton note={false} /></div>
-    </div>
-  </section>
+    </section>
+  </main>
 </Layout>
 
 <style is:global>
-  /* Home-only styles. Global (not scoped) because the hero crossword builds its
-     cells in JS, and scoped styles wouldn't reach those runtime elements. */
-  .hero { padding: clamp(56px, 8vw, 88px) 0; border-bottom: 1px solid var(--line); }
-  .hero-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 56px; align-items: center; }
-  .hero-copy h1 { max-width: 13ch; }
-  .hero-copy .lede { margin: 0 0 30px; }
+  /* Home-page composition. Declared global (not scoped) because the hero grid
+     and the feature tiles build their elements in JS, and scoped styles would
+     not reach runtime-created nodes. */
 
-  .xw-wrap { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+  /* The nav sits over the ink hero, so the page behind it must be ink too —
+     otherwise the sticky bar renders as a paper strip above the hero. */
+  html.over-hero body { background: var(--ink); }
+
+  /* ── ambient lattice ────────────────────────────────────────────────────
+     A faint crossword grid across the ink bands. Masked to a soft pool so it
+     reads as texture, never as a table. */
+  .grid-field {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(to right, rgba(236, 234, 228, .05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(236, 234, 228, .05) 1px, transparent 1px);
+    background-size: 56px 56px;
+    -webkit-mask-image: radial-gradient(120% 90% at 50% 0%, #000 10%, transparent 72%);
+    mask-image: radial-gradient(120% 90% at 50% 0%, #000 10%, transparent 72%);
+  }
+  .band-ink > .wrap { position: relative; z-index: 1; }
+
+  /* ── 1. hero ──────────────────────────────────────────────────────────── */
+  .hero {
+    min-height: calc(100svh - 72px);
+    display: flex;
+    align-items: center;
+    padding-block: var(--s-8);
+    overflow: hidden;
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.02fr .98fr;
+    gap: var(--s-8);
+    align-items: center;
+    width: 100%;
+  }
+  /* The three hard breaks are the intended setting; no measure constraint, or
+     the last line reflows and orphans. Breaks are dropped again on narrow
+     screens, where the headline wraps on its own. */
+  .hero-copy h1 { max-width: none; }
+  .hero-copy .lede { margin: 0 0 var(--s-4); }
+
+  /* ── the signature: a grid that solves itself ─────────────────────────── */
+  .xw-wrap { display: flex; flex-direction: column; align-items: center; gap: var(--s-3); }
   .xw {
-    --cellsize: clamp(36px, 6.2vw, 52px);
-    background: var(--ink); border-radius: 18px;
-    padding: calc(var(--cellsize) * .18);
+    --cellsize: clamp(40px, 5.6vw, 66px);
+    background: var(--bg-sunk);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-lg);
+    padding: calc(var(--cellsize) * .22);
     box-shadow: var(--shadow-lift);
     display: grid;
     grid-template-columns: repeat(7, var(--cellsize));
     grid-template-rows: repeat(7, var(--cellsize));
-    gap: 2px;
+    gap: 3px;
   }
-  .xw-cell { background: var(--cell); border-radius: 3px; position: relative; display: grid; place-items: center; font-weight: 700; font-size: calc(var(--cellsize) * .52); transition: background .25s ease; }
-  .xw-cell .num { position: absolute; top: 2px; left: 4px; font-family: var(--mono); font-size: calc(var(--cellsize) * .21); font-weight: 500; color: var(--muted); }
+  .xw-cell {
+    background: #FFFFFF;
+    color: #12151C;
+    border-radius: 4px;
+    position: relative;
+    display: grid;
+    place-items: center;
+    font-weight: 700;
+    font-size: calc(var(--cellsize) * .5);
+    transition: background .3s ease;
+  }
+  .xw-cell .num {
+    position: absolute; top: 3px; left: 5px;
+    font-family: var(--mono); font-size: calc(var(--cellsize) * .2);
+    font-weight: 500; color: #6B7280;
+  }
   .xw-cell.inword { background: var(--blue-wash); }
   .xw-cell .ltr { display: block; }
-  .xw-cell .ltr.pop { animation: pop .28s cubic-bezier(.34, 1.56, .64, 1); }
-  @keyframes pop { 0% { transform: scale(.4); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+  .xw-cell .ltr.pop { animation: pop .3s cubic-bezier(.34, 1.56, .64, 1); }
+  @keyframes pop { from { transform: scale(.4); opacity: 0; } to { transform: scale(1); opacity: 1; } }
   .xw.solved .xw-cell { background: var(--green-wash); }
-  .xw-clue { min-height: 48px; text-align: center; max-width: 34ch; display: flex; flex-direction: column; gap: 3px; align-items: center; opacity: 1; transition: opacity .25s ease; }
+
+  .xw-clue {
+    min-height: 52px; text-align: center; max-width: 34ch;
+    display: flex; flex-direction: column; gap: 5px; align-items: center;
+    opacity: 1; transition: opacity .25s ease;
+  }
   .xw-clue.fade { opacity: 0; }
-  .xw-clue .xw-clue-num { font-family: var(--mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--blue); }
-  .xw-clue .xw-clue-text { font-family: var(--serif); font-style: italic; font-size: 16.5px; color: var(--ink-soft); }
+  .xw-clue-num {
+    font-family: var(--mono); font-size: 11.5px; letter-spacing: .2em;
+    text-transform: uppercase; color: var(--accent);
+  }
+  .xw-clue-text {
+    font-family: var(--scripture); font-style: italic; font-size: 17px;
+    line-height: 1.4; color: var(--fg-soft);
+  }
 
-  .section { padding: clamp(64px, 9vw, 92px) 0; }
-
-  /* Feature clue list is a 2-column layout; base .clue/.tile styling is shared
-     in global.css. Only the layout + the animated letter tiles live here, the
-     tiles scoped to #features so puzzle-page tiles stay static. */
-  .clues { display: grid; grid-template-columns: 1fr 1fr; gap: 0 64px; margin-top: 48px; }
-  .clue-col h3 { font-family: var(--mono); font-weight: 600; font-size: 13px; letter-spacing: .18em; text-transform: uppercase; margin: 0 0 6px; padding-bottom: 10px; border-bottom: 2px solid var(--ink); }
+  /* ── 2. feature clue list ─────────────────────────────────────────────── */
+  .clues { display: grid; grid-template-columns: 1fr 1fr; gap: 0 var(--s-8); margin-top: var(--s-6); }
   #features .tile { width: 30px; height: 30px; font-size: 15px; }
   #features .tile span { opacity: 0; transform: scale(.5); }
-  #features .tile.on span { opacity: 1; transform: scale(1); transition: opacity .2s ease, transform .25s cubic-bezier(.34, 1.56, .64, 1); }
-  #features .clues-foot { grid-column: 1 / -1; margin-top: 26px; }
+  #features .tile.on span {
+    opacity: 1; transform: scale(1);
+    transition: opacity .2s ease, transform .28s cubic-bezier(.34, 1.56, .64, 1);
+  }
+  #features .clues-foot { grid-column: 1 / -1; margin-top: var(--s-4); }
 
-  .screens { display: grid; grid-template-columns: repeat(3, 1fr); gap: 36px; margin-top: 52px; }
-  .screen-card { display: flex; flex-direction: column; gap: 16px; margin: 0; }
-  .device { border-radius: 34px; border: 1px solid var(--line); background: #fff; padding: 9px; box-shadow: var(--shadow-card); transition: transform .18s ease, box-shadow .18s ease; }
-  .screen-card:hover .device { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
-  .device img { border-radius: 26px; width: 100%; height: auto; }
-  .screen-cap { display: flex; gap: 12px; align-items: baseline; padding: 0 6px; }
-  .screen-cap .clue-n { min-width: auto; color: var(--blue); }
-  .screen-cap p { margin: 0; font-size: 15px; color: var(--ink-soft); }
-  .screen-cap p strong { display: block; font-family: var(--display); font-weight: 400; font-size: 18px; color: var(--ink); margin-bottom: 2px; }
+  /* ── 4. screens ───────────────────────────────────────────────────────── */
+  .screens { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s-6); margin-top: var(--s-6); align-items: start; }
+  /* Stagger the middle phone so the row reads as a considered arrangement
+     rather than three items in a line. */
+  .screens > :nth-child(2) { transform: translateY(var(--s-6)); }
+  .js .screens > :nth-child(2).reveal { transform: translateY(calc(var(--s-6) + 18px)); }
+  .js .screens > :nth-child(2).reveal.in { transform: translateY(var(--s-6)); }
 
-  #about .prose { margin-top: 30px; }
+  .screen-card { display: flex; flex-direction: column; gap: var(--s-2); margin: 0; }
+  .device {
+    border-radius: 36px; border: 1px solid var(--rule); background: var(--bg-raised);
+    padding: 9px; box-shadow: var(--shadow-card);
+    transition: transform .22s cubic-bezier(.22, 1, .36, 1), box-shadow .22s ease;
+  }
+  .screen-card:hover .device { transform: translateY(-6px); box-shadow: var(--shadow-lift); }
+  .device img { border-radius: 28px; width: 100%; height: auto; }
+  .screen-cap { display: flex; gap: var(--s-2); align-items: baseline; padding: 0 6px; }
+  .screen-cap .clue-n { min-width: auto; color: var(--gilt); }
+  .screen-cap p { margin: 0; font-size: 15px; color: var(--fg-mute); }
+  .screen-cap p strong {
+    display: block; font-family: var(--display); font-weight: 500; font-size: 19px;
+    font-variation-settings: "opsz" 30, "SOFT" 14;
+    color: var(--fg); margin-bottom: 3px;
+  }
 
-  .faq { max-width: 680px; margin-top: 34px; }
-  .faq details { border-bottom: 1px solid var(--line); padding: 20px 4px; }
-  .faq details:first-child { border-top: 2px solid var(--ink); }
-  .faq summary { font-weight: 600; font-size: 17px; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+  /* ── 5 & 6. two-column reading sections ───────────────────────────────── */
+  .why-grid, .faq-grid { display: grid; grid-template-columns: .85fr 1.15fr; gap: var(--s-6) var(--s-8); align-items: start; }
+  .why-grid h2, .faq-grid h2 { max-width: 15ch; }
+
+  /* ── FAQ ──────────────────────────────────────────────────────────────── */
+  .faq { max-width: 680px; }
+  .faq details { border-bottom: 1px solid var(--rule); padding: var(--s-2) 4px; }
+  .faq details:first-child { border-top: 2px solid var(--fg); }
+  .faq summary {
+    font-weight: 600; font-size: 17px; cursor: pointer; list-style: none;
+    display: flex; justify-content: space-between; align-items: center; gap: var(--s-2);
+  }
   .faq summary::-webkit-details-marker { display: none; }
   .faq summary::after { content: "+"; font-family: var(--mono); font-size: 20px; color: var(--gilt); flex-shrink: 0; }
   .faq details[open] summary::after { content: "–"; }
-  .faq details p { color: var(--ink-soft); font-size: 16px; margin: 12px 0 0; max-width: 56ch; }
+  .faq details p {
+    font-family: var(--scripture); color: var(--fg-soft); font-size: 17px;
+    line-height: 1.6; margin: var(--s-1) 0 0; max-width: 58ch;
+  }
 
-  .final { padding: clamp(72px, 10vw, 104px) 0; text-align: center; border-top: 1px solid var(--line); }
+  /* ── 7. close ─────────────────────────────────────────────────────────── */
+  .final { text-align: center; overflow: hidden; }
+  .final .eyebrow { justify-content: center; }
   .final h2 { max-width: 20ch; margin-inline: auto; }
-  .final .sec-sub { margin: 4px auto 34px; }
+  .final .sec-sub { margin: var(--s-1) auto var(--s-4); }
   .final-cta { display: flex; justify-content: center; }
+  .final .grid-field {
+    -webkit-mask-image: radial-gradient(100% 80% at 50% 100%, #000 10%, transparent 70%);
+    mask-image: radial-gradient(100% 80% at 50% 100%, #000 10%, transparent 70%);
+  }
 
-  @media (max-width: 900px) {
-    .hero-grid { grid-template-columns: 1fr; gap: 48px; }
+  /* ── responsive ───────────────────────────────────────────────────────── */
+  @media (max-width: 980px) {
+    .hero { min-height: 0; }
+    .hero-grid { grid-template-columns: 1fr; gap: var(--s-6); }
     .hero-copy { text-align: center; }
     .hero-copy h1, .hero-copy .lede { margin-inline: auto; }
+    .hero-copy h1 br { display: none; }
     .hero-copy .cta-row { justify-content: center; }
+    .why-grid, .faq-grid { grid-template-columns: 1fr; gap: var(--s-3); }
+    .why-grid h2, .faq-grid h2 { max-width: 20ch; }
+  }
+  @media (max-width: 820px) {
     .clues { grid-template-columns: 1fr; gap: 0; }
-    .clue-col + .clue-col h3 { margin-top: 36px; }
-    .screens { grid-template-columns: 1fr; max-width: 340px; margin-inline: auto; }
+    .clue-col + .clue-col h3 { margin-top: var(--s-4); }
+    .screens { grid-template-columns: 1fr; max-width: 330px; margin-inline: auto; gap: var(--s-4); }
+    .screens > :nth-child(2),
+    .js .screens > :nth-child(2).reveal,
+    .js .screens > :nth-child(2).reveal.in { transform: none; }
   }
 </style>
 
 <script>
-  // ── Hero crossword: a mini grid that solves itself on a loop ──────────────
+  // ── Hero crossword: a mini grid that solves itself on a loop ─────────────
   (function () {
     const SIZE = 7;
     const WORDS = [
@@ -322,7 +452,7 @@ const faqLd = {
     function fillAll() { WORDS.forEach((w) => w.cells.forEach((rc, i) => setLetter(rc[0] + ',' + rc[1], w.ans[i], false))); }
 
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduceMotion) { fillAll(); showClue(WORDS[0]); return; }
+    if (reduceMotion) { fillAll(); grid.classList.add('solved'); showClue(WORDS[0]); return; }
 
     let visible = true;
     if ('IntersectionObserver' in window) {

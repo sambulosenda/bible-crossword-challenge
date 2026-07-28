@@ -1,8 +1,15 @@
 ---
 import Brand from './Brand.astro';
 import { APP_STORE_URL } from '../consts';
+
+interface Props {
+  /** True when the page opens on an ink band — the nav then starts as
+      transparent chrome and condenses onto paper on scroll. */
+  overHero?: boolean;
+}
+const { overHero = false } = Astro.props;
 ---
-<header class="nav">
+<header class="nav" data-mode={overHero ? 'over' : 'stuck'} data-overhero={String(overHero)}>
   <div class="wrap nav-inner">
     <Brand />
     <nav class="nav-links" aria-label="Main">

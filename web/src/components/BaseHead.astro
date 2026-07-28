@@ -23,7 +23,8 @@ const canonical = new URL(path, SITE).href;
 <meta name="description" content={description} />
 <link rel="canonical" href={canonical} />
 <meta name="robots" content={robots} />
-<meta name="theme-color" content="#FBFAF6" />
+<meta name="theme-color" content="#0D1017" media="(prefers-color-scheme: dark)" />
+<meta name="theme-color" content="#F7F4EC" media="(prefers-color-scheme: light)" />
 <meta name="apple-itunes-app" content={`app-id=${APP_STORE_ID}`} />
 
 <meta property="og:type" content="website" />
@@ -45,4 +46,7 @@ const canonical = new URL(path, SITE).href;
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital@0;1&display=swap" rel="stylesheet" />
+<!-- Fraunces carries the display voice (its opsz/SOFT/WONK axes give the
+     headings their character); Newsreader sets scripture and long copy. Both
+     are variable, so the two files cover every weight the page uses. -->
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..600&family=Newsreader:ital,opsz,wght@0,6..72,300..500;1,6..72,300..400&display=swap" rel="stylesheet" />

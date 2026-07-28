@@ -28,7 +28,7 @@ const breadcrumbLd = {
     <script type="application/ld+json" set:html={JSON.stringify(breadcrumbLd)} />
   </Fragment>
 
-  <main class="page">
+  <main id="main" class="page">
     <div class="wrap">
       <p class="crumbs"><a href="/">Home</a><span>/</span><a href="/puzzles/">Puzzles</a><span>/</span><span set:html={p.reference} /></p>
       <article>
@@ -59,7 +59,7 @@ const breadcrumbLd = {
     </div>
   </main>
 
-  <section class="verse-band">
+  <section class="band band-ink verse-band">
     <div class="wrap">
       <span class="orn" aria-hidden="true">✦ ✦ ✦</span>
       <blockquote set:html={`&ldquo;${p.verseText}&rdquo;`} />
@@ -67,16 +67,18 @@ const breadcrumbLd = {
     </div>
   </section>
 
-  <section class="wrap" style="padding-bottom:20px">
-    <h2 style="margin-top:0">More Bible crossword themes</h2>
-    <div class="theme-grid">
-      {p.related.map((t) => (
-        <a class="theme-card" href={t.href}>
-          <span class="t-eyebrow" set:html={t.eyebrow} />
-          <span class="t-name">{t.name}</span>
-          <span class="t-sub">{t.sub}</span>
-        </a>
-      ))}
+  <section class="band band-tight band-paper">
+    <div class="wrap">
+      <h2>More Bible crossword themes</h2>
+      <div class="theme-grid">
+        {p.related.map((t) => (
+          <a class="theme-card" href={t.href}>
+            <span class="t-eyebrow" set:html={t.eyebrow} />
+            <span class="t-name">{t.name}</span>
+            <span class="t-sub">{t.sub}</span>
+          </a>
+        ))}
+      </div>
     </div>
   </section>
 </Layout>

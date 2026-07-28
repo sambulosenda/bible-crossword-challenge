@@ -12,18 +12,73 @@ interface Props {
   /** Set false for standalone pages (e.g. the challenge landing) that supply
       their own chrome. */
   chrome?: boolean;
+  /** True on pages that open with a full-bleed ink band, so the nav starts as
+      transparent chrome over it and only condenses onto paper once scrolled. */
+  overHero?: boolean;
 }
-const { title, description, path, robots, chrome = true } = Astro.props;
+const { title, description, path, robots, chrome = true, overHero = false } = Astro.props;
 ---
 <!doctype html>
-<html lang="en">
+<html lang="en" class={overHero ? 'over-hero' : undefined}>
   <head>
     <BaseHead title={title} description={description} path={path} robots={robots} />
     <slot name="head" />
+    <script is:inline>
+      // Mark JS up front so scroll-reveal starts hidden without a flash. CSS
+      // keys the hidden state off `.js`, so no-JS visitors get everything.
+      document.documentElement.classList.add('js');
+    </script>
   </head>
   <body>
-    {chrome && <Nav />}
+    <a class="skip" href="#main">Skip to content</a>
+    {chrome && <Nav overHero={overHero} />}
+    {/* Each page supplies its own <main id="main"> landmark. */}
     <slot />
     {chrome && <Footer />}
+
+    <script>
+      // ── Nav: transparent over an ink hero, condensed once past it ─────────
+      (function () {
+        const nav = document.querySelector<HTMLElement>('.nav');
+        if (!nav || nav.dataset.overhero !== 'true') return;
+        // Watch a sentinel the height of the nav so the swap happens exactly as
+        // the hero's bottom edge passes under it.
+        const probe = document.createElement('div');
+        probe.style.cssText = 'position:absolute;top:0;height:80vh;width:1px;pointer-events:none';
+        document.body.prepend(probe);
+        const io = new IntersectionObserver(
+          ([e]) => { nav.dataset.mode = e.isIntersecting ? 'over' : 'stuck'; },
+          { threshold: 0 }
+        );
+        io.observe(probe);
+      })();
+
+      // ── Scroll reveal ────────────────────────────────────────────────────
+      (function () {
+        const els = document.querySelectorAll<HTMLElement>('.reveal');
+        if (!els.length) return;
+        if (
+          window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+          !('IntersectionObserver' in window)
+        ) {
+          els.forEach((el) => el.classList.add('in'));
+          return;
+        }
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (!entry.isIntersecting) return;
+              const el = entry.target as HTMLElement;
+              // Stagger siblings so a row of cards arrives as one gesture.
+              const delay = Number(el.dataset.delay || 0);
+              setTimeout(() => el.classList.add('in'), delay);
+              io.unobserve(el);
+            });
+          },
+          { threshold: 0.15, rootMargin: '0px 0px -8% 0px' }
+        );
+        els.forEach((el) => io.observe(el));
+      })();
+    </script>
   </body>
 </html>
