@@ -13,19 +13,60 @@ const { entry } = Astro.props;
 const p = entry.data;
 const path = `/puzzles/${entry.id}/`;
 
+// Strip the inline HTML the content files allow (<em>, &amp;, curly quotes) —
+// structured data takes plain text, never markup.
+const plain = (s: string) =>
+  s
+    .replace(/<[^>]+>/g, '')
+    .replace(/&amp;/g, '&')
+    .replace(/&ndash;/g, '–')
+    .replace(/&mdash;/g, '—')
+    .replace(/&rsquo;/g, '’')
+    .replace(/&lsquo;/g, '‘')
+    .replace(/&nbsp;/g, ' ')
+    .trim();
+
+const heading = plain(p.heading);
+// The difficulty is carried in the meta chip line, e.g. "15×15 grid · Easy · …".
+const difficulty = plain(p.meta).split('·').map((s) => s.trim()).find((s) => /^(Easy|Medium|Hard)$/.test(s));
+
 const breadcrumbLd = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE}/` },
     { '@type': 'ListItem', position: 2, name: 'Puzzles', item: `${SITE}/puzzles/` },
-    { '@type': 'ListItem', position: 3, name: p.reference, item: `${SITE}${path}` },
+    { '@type': 'ListItem', position: 3, name: heading, item: `${SITE}${path}` },
   ],
+};
+
+// The puzzle itself as an entity, so "the Easter Bible crossword" is something a
+// search or answer engine can resolve, rather than a page that merely mentions it.
+const gameLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Game',
+  '@id': `${SITE}${path}#game`,
+  name: heading,
+  url: `${SITE}${path}`,
+  description: p.description,
+  genre: ['Crossword', 'Word game', 'Bible trivia'],
+  about: `${p.reference} (King James Version)`,
+  inLanguage: 'en',
+  gamePlatform: ['iPhone', 'iPad'],
+  numberOfPlayers: { '@type': 'QuantitativeValue', value: 1 },
+  isPartOf: {
+    '@type': 'VideoGameSeries',
+    name: 'Bible Crossword Challenge',
+    url: `${SITE}/`,
+  },
+  ...(difficulty ? { additionalProperty: [{ '@type': 'PropertyValue', name: 'Difficulty', value: difficulty }] } : {}),
+  citation: `${plain(p.verseCite)}: “${plain(p.verseText)}”`,
 };
 ---
 <Layout title={p.title} description={p.description} path={path}>
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify(breadcrumbLd)} />
+    <script type="application/ld+json" set:html={JSON.stringify(gameLd)} />
   </Fragment>
 
   <main id="main" class="page">

@@ -1,10 +1,62 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import AppStoreButton from '../components/AppStoreButton.astro';
+import { SITE } from '../consts';
 
 const title = 'How to play — Bible Crossword Challenge';
 const description =
   'How to play Bible Crossword Challenge: tap a square, read the clue, type the answer. Five tips for solving Bible crosswords, plus hints without spoilers.';
+
+const path = '/how-to-play/';
+
+const breadcrumbLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE}/` },
+    { '@type': 'ListItem', position: 2, name: 'How to play', item: `${SITE}${path}` },
+  ],
+};
+
+// This page is literally a how-to, so it says so in the markup. The steps
+// mirror the prose below — when one changes, change both.
+const howToLd = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to play a Bible crossword in Bible Crossword Challenge',
+  description:
+    'Solve a Bible crossword: tap a square to see its clue, type the answer, and use stepped hints when a square will not come.',
+  url: `${SITE}${path}`,
+  totalTime: 'PT10M',
+  tool: [{ '@type': 'HowToTool', name: 'Bible Crossword Challenge for iPhone or iPad' }],
+  step: [
+    {
+      '@type': 'HowToStep',
+      name: 'Tap a square to see its clue',
+      text: 'Tapping a square highlights the word it belongs to and shows its clue. Tapping the same square again switches between Across and Down.',
+    },
+    {
+      '@type': 'HowToStep',
+      name: 'Read the length in parentheses',
+      text: 'The number after each clue is the answer length — “Bird sent out that returned with an olive leaf (4)” wants a four-letter answer.',
+    },
+    {
+      '@type': 'HowToStep',
+      name: 'Type the answer and let crossings help',
+      text: 'Letters from words that cross yours are already filled in, so a single right answer unlocks letters in every word it touches.',
+    },
+    {
+      '@type': 'HowToStep',
+      name: 'Use a hint if a square will not come',
+      text: 'Hints work in steps — check a letter, reveal a letter, or reveal a word — so you take exactly as much help as you want. There is no timer and no penalty.',
+    },
+    {
+      '@type': 'HowToStep',
+      name: 'Finish the grid and read the closing verse',
+      text: 'When every square is right the grid flashes green and the King James Version verse behind the puzzle theme appears.',
+    },
+  ],
+};
 
 const themes = [
   { href: '/puzzles/noahs-ark/', eyebrow: 'Genesis 6–9', name: "Noah's Ark", sub: 'Easy · Bible crossword' },
@@ -13,7 +65,12 @@ const themes = [
   { href: '/puzzles/', eyebrow: 'The full archive', name: 'All puzzle themes', sub: '80+ puzzles, Genesis to Revelation' },
 ];
 ---
-<Layout title={title} description={description} path="/how-to-play/">
+<Layout title={title} description={description} path={path}>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(breadcrumbLd)} />
+    <script type="application/ld+json" set:html={JSON.stringify(howToLd)} />
+  </Fragment>
+
   <main id="main" class="page">
     <div class="wrap">
       <p class="crumbs"><a href="/">Home</a><span>/</span>How to play</p>

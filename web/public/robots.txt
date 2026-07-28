@@ -1,4 +1,65 @@
+# Bible Crossword Challenge — https://biblecrosswordchallenge.com
+#
+# Cloudflare's managed robots.txt is ON for this zone, so what visitors actually
+# receive is Cloudflare's block PREPENDED to this file. Cloudflare sets
+# `Content-Signal: ai-train=no` and disallows the training crawlers (GPTBot,
+# ClaudeBot, Google-Extended, Applebot-Extended, CCBot, Amazonbot, Bytespider,
+# meta-externalagent).
+#
+# Those crawlers are deliberately NOT named below. Listing them here with
+# `Allow: /` would put two contradicting groups in one file for the same agent,
+# and parsers disagree on which wins — an ambiguous file is worse than either
+# policy on its own. Silence leaves Cloudflare's rule to stand cleanly.
+#
+# What is named below is everything Cloudflare permits: the search engines, and
+# the AI assistants that fetch a page at answer time rather than for training.
+# Those are the ones that can surface and cite the app today, so they are made
+# explicit — a future blanket rule can never silently drop them.
+#
+# To allow training as well, turn the managed setting off first (Security →
+# Settings → Bot traffic), then add the training agents back here. Changing only
+# this file will not do it.
+
 User-agent: *
+Allow: /
+
+# ── Search engines ──────────────────────────────────────────────────────────
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+# ── AI assistants that fetch at answer time ─────────────────────────────────
+# These retrieve a page when a user asks about it, rather than harvesting it for
+# training — so they are how the app gets recommended and cited in AI answers.
+
+# OpenAI — OAI-SearchBot indexes for ChatGPT search; ChatGPT-User fetches a page
+# when a user asks about it. (GPTBot, which trains, is governed by Cloudflare.)
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+# Anthropic — the search and user-initiated fetchers, not the training crawler.
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+# Perplexity
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
 Allow: /
 
 Sitemap: https://biblecrosswordchallenge.com/sitemap.xml

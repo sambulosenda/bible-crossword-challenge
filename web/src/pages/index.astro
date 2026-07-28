@@ -42,21 +42,52 @@ const faqs = [
 
 const softwareLd = {
   '@context': 'https://schema.org',
-  '@type': 'SoftwareApplication',
+  '@type': ['SoftwareApplication', 'MobileApplication'],
+  '@id': `${SITE}/#app`,
   name: 'Bible Crossword Challenge',
+  alternateName: 'Bible Crossword',
   url: `${SITE}/`,
   installUrl: APP_STORE_URL,
-  operatingSystem: 'iOS',
+  downloadUrl: APP_STORE_URL,
+  operatingSystem: 'iOS 18.0 or later',
   applicationCategory: 'GameApplication',
   applicationSubCategory: 'Word',
+  // Named explicitly because it is the single most common question an answer
+  // engine is asked about an app, and "free with an optional purchase" is the
+  // honest shape of it.
+  isAccessibleForFree: true,
+  inLanguage: 'en',
   author: { '@type': 'Person', name: 'Sambulo Senda' },
-  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD', url: APP_STORE_URL },
-  screenshot: screens.map((s) => `${SITE}/assets/${s.img}.png`),
-  description: 'A fresh Bible crossword every day. Solve scripture-themed puzzles, build a daily streak, and learn the Word as you play.',
+  publisher: { '@id': `${SITE}/#publisher` },
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'USD',
+    url: APP_STORE_URL,
+    availability: 'https://schema.org/InStock',
+    category: 'Free download with optional in-app purchase',
+  },
+  featureList: [
+    'A new hand-crafted Bible crossword every day at midnight',
+    'Archive of 80+ themed puzzles, from Genesis to Revelation',
+    'Every puzzle closes on the King James Version verse behind its theme',
+    'Stepped hints — check a letter, reveal a letter, reveal a word',
+    'Daily streaks and twelve achievements',
+    'Works fully offline; progress syncs privately through iCloud',
+    'No ads and no account required',
+  ],
+  screenshot: screens.map((s) => ({
+    '@type': 'ImageObject',
+    url: `${SITE}/assets/${s.img}.png`,
+    caption: s.alt,
+  })),
+  description:
+    'A fresh Bible crossword every day. Solve scripture-themed puzzles, build a daily streak, and learn the Word as you play.',
 };
 const faqLd = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
+  '@id': `${SITE}/#faq`,
   mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
 };
 ---
