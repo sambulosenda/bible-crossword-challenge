@@ -130,6 +130,31 @@ protocol AnalyticsService {
     func log(_ event: AnalyticsEvent)
 }
 
+enum AnalyticsEnvironment {
+    /// Simulator runs are development, never real usage, so no production
+    /// backend should hear about them. Both PostHog and Firebase can filter
+    /// them server-side after the fact — PostHog's SDK even stamps
+    /// `$is_emulator` for exactly that — but those rules are query-time: the
+    /// events are ingested, billed and counted first, and raw SQL or an
+    /// un-toggled insight still sees them. Every simulator reinstall also mints
+    /// a fresh anonymous id, which inflates unique-user counts wherever the
+    /// filter isn't applied. Dropping at the source is the one place that can't
+    /// be forgotten.
+    ///
+    /// Pass `-analyticsAllowSimulator` in the scheme's launch arguments to
+    /// report anyway; that is the only way to confirm a newly added event
+    /// actually reaches a backend without building to a device.
+    /// `ConsoleAnalyticsService` still prints every event in DEBUG regardless,
+    /// so day-to-day work on the simulator loses nothing.
+    static var isSuppressedSimulatorRun: Bool {
+        #if targetEnvironment(simulator)
+        return !ProcessInfo.processInfo.arguments.contains("-analyticsAllowSimulator")
+        #else
+        return false
+        #endif
+    }
+}
+
 struct ConsoleAnalyticsService: AnalyticsService {
     static let shared = ConsoleAnalyticsService()
 

@@ -9,7 +9,8 @@
 //
 //  `configure()` must run before any `log`, and is a no-op until `apiKey` is a
 //  real project key — so the app builds and runs fine before the PostHog
-//  project exists, it just doesn't send anything.
+//  project exists, it just doesn't send anything. It is also a no-op on the
+//  simulator (see `isEnabled`).
 //
 
 import Foundation
@@ -28,10 +29,12 @@ struct PostHogAnalyticsService: AnalyticsService {
     /// fails silently, so these two travel together.
     private static let host = "https://eu.i.posthog.com"
 
-    private static var isConfigured: Bool { apiKey.hasPrefix("phc_") }
+    private static var isEnabled: Bool {
+        apiKey.hasPrefix("phc_") && !AnalyticsEnvironment.isSuppressedSimulatorRun
+    }
 
     static func configure() {
-        guard isConfigured else { return }
+        guard isEnabled else { return }
 
         let config = PostHogConfig(apiKey: apiKey, host: host)
         // Lifecycle capture stays on for `Application Installed` and
@@ -66,9 +69,11 @@ struct PostHogAnalyticsService: AnalyticsService {
         PostHogSDK.shared.setup(config)
 
         #if DEBUG
-        // Stamps every dev/simulator event so a "filter internal and test
-        // users" rule on `build_type` can exclude them. The rule has to be
-        // added in project settings — this only supplies the property.
+        // Simulator runs no longer get this far, so what's left is a debug
+        // build on a real device — our own phones. Stamped so a "filter
+        // internal and test users" rule on `build_type` can exclude them. The
+        // rule has to be added in project settings; this only supplies the
+        // property.
         PostHogSDK.shared.register(["build_type": "debug"])
         #endif
 
@@ -79,7 +84,7 @@ struct PostHogAnalyticsService: AnalyticsService {
     }
 
     func log(_ event: AnalyticsEvent) {
-        guard Self.isConfigured else { return }
+        guard Self.isEnabled else { return }
         PostHogSDK.shared.capture(event.name, properties: event.parameters)
     }
 }
