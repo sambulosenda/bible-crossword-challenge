@@ -70,10 +70,7 @@ struct HomeView: View {
         return NavigationStack(path: $path) {
             ScrollView {
                 VStack(spacing: Theme.Spacing.l) {
-                    TodayHeader(
-                        name: displayName,
-                        verse: verseOfTheDay(excluding: daily)
-                    )
+                    TodayHeader(verse: verseOfTheDay(excluding: daily))
 
                     if let daily {
                         DailyPuzzleCard(
@@ -156,14 +153,6 @@ struct HomeView: View {
         .accessibilityElement(children: .combine)
     }
 
-    /// The player's name for the greeting, or nil while it's still the
-    /// placeholder a fresh profile is created with — "Good evening, Friend"
-    /// reads like a form letter.
-    private var displayName: String? {
-        let trimmed = profile.username.trimmingCharacters(in: .whitespaces)
-        return (trimmed.isEmpty || trimmed == "Friend") ? nil : trimmed
-    }
-
     // MARK: - Derived state
 
     /// Fraction of playable cells filled, or nil when the puzzle isn't mid-solve.
@@ -186,14 +175,19 @@ struct HomeView: View {
 
 // MARK: - Today header
 //
-// The page's opening: date, greeting, and the day's verse set on the bare paper
-// rather than in a card. Scripture is the one thing here that isn't a module,
-// and taking the white box away is what says so — a card would file it
-// alongside "Next Achievement".
+// The page's opening: the day's verse, set on the bare paper rather than in a
+// card. Scripture is the one thing here that isn't a module, and taking the
+// white box away is what says so — a card would file it alongside "Next
+// Achievement".
+//
+// The date and the "Good afternoon" salutation that used to sit above it are
+// gone. Between them they cost about 70pt — a kicker, a title2 line and the
+// spacing under it — to say nothing a returning player needs: the navigation
+// title already reads "Today", and a fresh puzzle below says the rest. The
+// verse keeps its place at the top, which is a positioning decision rather
+// than a layout one, so the space came out of the chrome around it instead.
 
 private struct TodayHeader: View {
-    /// Nil when the player hasn't named themselves; the greeting stands alone.
-    let name: String?
     /// Nil only if the bundled puzzle set is missing.
     let verse: Puzzle?
 
@@ -202,37 +196,12 @@ private struct TodayHeader: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.l) {
-            VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
-                Text(Date.now.formatted(.dateTime.weekday(.wide).day().month(.wide)))
-                    .kicker()
-                // Sans, not serif. A salutation is chrome, not content, and
-                // keeping the serif for scripture alone is what lets the verse
-                // below stand apart without a rule or a box drawn around it.
-                // Smaller than the daily card's title too: the puzzle is what
-                // you came for, so it keeps the largest type on the page.
-                Text(greeting)
-                    .font(.title2.weight(.semibold))
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .accessibilityElement(children: .combine)
-
             if let verse {
                 scripture(verse)
             }
         }
         .padding(.horizontal, Theme.Spacing.xs)
         .padding(.top, Theme.Spacing.s)
-    }
-
-    private var greeting: String {
-        let stem: String
-        switch Calendar.current.component(.hour, from: Date()) {
-        case 0..<12: stem = "Good morning"
-        case 12..<17: stem = "Good afternoon"
-        default: stem = "Good evening"
-        }
-        return name.map { "\(stem), \($0)" } ?? stem
     }
 
     /// Scripture, set plainly. No rule, no box, no quote glyph: the serif is
