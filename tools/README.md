@@ -52,6 +52,13 @@ before repeating.
 ## Minis
 Specs with `"kind": "mini"` build the Daily Mini pool: 7x7 grids, words 3-7
 letters, 5+ placed. Ids are `mini-NNN` (same permanence rule as dailies — never
-edit or reuse) with their own publishDate sequence. Dailies are processed first
+edit or reuse) with their own publishDate sequence.
+
+Mini specs carry explicit `id`s for the same reason dailies do. They did not
+until the bank grew past the original 30: ids were auto-assigned in
+(difficulty, title) order, so inserting a mini whose title sorted early
+renumbered every mini after it and silently reassigned players' saved progress.
+New mini specs still go in **without** an `id` — the generator assigns the next
+free one — but an id, once shipped, must be written back into its spec. Dailies are processed first
 with unchanged parameters, so adding minis never changes the daily output —
 verify with `git diff` showing only added lines in puzzles.json.

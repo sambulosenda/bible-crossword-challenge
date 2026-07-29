@@ -15072,12 +15072,73 @@
     ]
   },
   {
+    "id": "mini-031",
+    "title": "A Bride for Isaac",
+    "difficulty": "easy",
+    "verse": "And Isaac brought her into his mother Sarah's tent, and took Rebekah, and she became his wife; and he loved her.",
+    "reference": "Genesis 24:67",
+    "publishDate": "2026-07-01",
+    "size": 7,
+    "grid": [
+      "...WELL",
+      "...A...",
+      "B..T.N.",
+      "REBEKAH",
+      "I..R.H.",
+      "D....O.",
+      "E....R."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 3,
+        "text": "Where the servant waited at evening",
+        "answer": "WELL"
+      },
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 3,
+        "text": "She drew it for the camels also",
+        "answer": "WATER"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 2,
+        "col": 0,
+        "text": "What Rebekah became",
+        "answer": "BRIDE"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 2,
+        "col": 5,
+        "text": "City of Abraham's brother, the servant's destination",
+        "answer": "NAHOR"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "Maiden who came out with her pitcher",
+        "answer": "REBEKAH"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
     "id": "mini-001",
     "title": "A Chosen Vessel",
     "difficulty": "easy",
     "verse": "Go thy way: for he is a chosen vessel unto me, to bear my name before the Gentiles, and kings, and the children of Israel.",
     "reference": "Acts 9:15",
-    "publishDate": "2026-07-01",
+    "publishDate": "2026-07-02",
     "size": 7,
     "grid": [
       "G......",
@@ -15133,12 +15194,73 @@
     "kind": "mini"
   },
   {
+    "id": "mini-032",
+    "title": "A Still Small Voice",
+    "difficulty": "easy",
+    "verse": "And after the fire a still small voice.",
+    "reference": "1 Kings 19:12",
+    "publishDate": "2026-07-03",
+    "size": 7,
+    "grid": [
+      "CAKE...",
+      "A...Q..",
+      "V.W.U..",
+      "ELIJAH.",
+      "..N.K..",
+      "..D.E..",
+      "......."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 0,
+        "text": "It was baked on the coals at his head",
+        "answer": "CAKE"
+      },
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 0,
+        "text": "Where he lodged in the mount",
+        "answer": "CAVE"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 1,
+        "col": 4,
+        "text": "The earth did this, but the LORD was not in it",
+        "answer": "QUAKE"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 2,
+        "col": 2,
+        "text": "Great and strong, but the LORD was not in it",
+        "answer": "WIND"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "He fled a day's journey into the wilderness",
+        "answer": "ELIJAH"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
     "id": "mini-002",
     "title": "Alpha and Omega",
     "difficulty": "easy",
     "verse": "I am Alpha and Omega, the beginning and the ending, saith the Lord.",
     "reference": "Revelation 1:8",
-    "publishDate": "2026-07-02",
+    "publishDate": "2026-07-04",
     "size": 7,
     "grid": [
       "...L.O.",
@@ -15199,7 +15321,7 @@
     "difficulty": "easy",
     "verse": "Ask, and it shall be given you; seek, and ye shall find; knock, and it shall be opened unto you.",
     "reference": "Matthew 7:7",
-    "publishDate": "2026-07-03",
+    "publishDate": "2026-07-05",
     "size": 7,
     "grid": [
       "..SEEK.",
@@ -15255,12 +15377,81 @@
     "kind": "mini"
   },
   {
+    "id": "mini-033",
+    "title": "Balaam's Donkey",
+    "difficulty": "easy",
+    "verse": "And the LORD opened the mouth of the ass, and she said unto Balaam, What have I done unto thee?",
+    "reference": "Numbers 22:28",
+    "publishDate": "2026-07-06",
+    "size": 7,
+    "grid": [
+      ".ASS...",
+      "...PATH",
+      ".B.E...",
+      "BALAAM.",
+      ".L.K.O.",
+      ".A...A.",
+      ".K...B."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 1,
+        "text": "Animal whose mouth the LORD opened",
+        "answer": "ASS"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 3,
+        "text": "What the ass was given to do",
+        "answer": "SPEAK"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 1,
+        "col": 3,
+        "text": "Narrow way between the walls of the vineyards",
+        "answer": "PATH"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 2,
+        "col": 1,
+        "text": "King who sought a curse on Israel",
+        "answer": "BALAK"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "Prophet whose beast rebuked him",
+        "answer": "BALAAM"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 3,
+        "col": 5,
+        "text": "Land whose king sent for the prophet",
+        "answer": "MOAB"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
     "id": "mini-004",
     "title": "Blessed Are They",
     "difficulty": "easy",
     "verse": "Blessed are the meek: for they shall inherit the earth.",
     "reference": "Matthew 5:5",
-    "publishDate": "2026-07-04",
+    "publishDate": "2026-07-07",
     "size": 7,
     "grid": [
       ".....M.",
@@ -15316,12 +15507,81 @@
     "kind": "mini"
   },
   {
+    "id": "mini-034",
+    "title": "Blessed Are They That Have Not Seen",
+    "difficulty": "easy",
+    "verse": "Blessed are they that have not seen, and yet have believed.",
+    "reference": "John 20:29",
+    "publishDate": "2026-07-08",
+    "size": 7,
+    "grid": [
+      "HANDS.U",
+      "..A...P",
+      "..I.P.P",
+      "BELIEVE",
+      "..S.A.R",
+      "....C..",
+      ".SIDE.."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 0,
+        "text": "He was bidden to behold them",
+        "answer": "HANDS"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 2,
+        "text": "He sought the print of them",
+        "answer": "NAILS"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 0,
+        "col": 6,
+        "text": "Kind of room where the doors were shut",
+        "answer": "UPPER"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 2,
+        "col": 4,
+        "text": "Word spoken as Jesus stood in the midst",
+        "answer": "PEACE"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "What the blessed do without seeing",
+        "answer": "BELIEVE"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 6,
+        "col": 1,
+        "text": "He was told to thrust his hand into it",
+        "answer": "SIDE"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
     "id": "mini-005",
     "title": "Born in Bethlehem",
     "difficulty": "easy",
     "verse": "For unto you is born this day in the city of David a Saviour, which is Christ the Lord.",
     "reference": "Luke 2:11",
-    "publishDate": "2026-07-05",
+    "publishDate": "2026-07-09",
     "size": 7,
     "grid": [
       "....B..",
@@ -15377,12 +15637,516 @@
     "kind": "mini"
   },
   {
+    "id": "mini-035",
+    "title": "Bread from Heaven",
+    "difficulty": "easy",
+    "verse": "This is the bread which the LORD hath given you to eat.",
+    "reference": "Exodus 16:15",
+    "publishDate": "2026-07-10",
+    "size": 7,
+    "grid": [
+      "...POT.",
+      "..M.M..",
+      "..O.E..",
+      "DESERT.",
+      "E.E....",
+      "W.SIXTH",
+      "......."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 3,
+        "text": "Vessel in which some was kept for a memorial",
+        "answer": "POT"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 4,
+        "text": "Measure gathered for every man",
+        "answer": "OMER"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 1,
+        "col": 2,
+        "text": "He told them what the bread was",
+        "answer": "MOSES"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "Wilderness of Sin, where they murmured",
+        "answer": "DESERT"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 3,
+        "col": 0,
+        "text": "It lay round about the host in the morning",
+        "answer": "DEW"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 5,
+        "col": 2,
+        "text": "Day on which they gathered twice as much",
+        "answer": "SIXTH"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-036",
+    "title": "Building the Wall",
+    "difficulty": "easy",
+    "verse": "So the wall was finished in the fifty and second day of the month Elul.",
+    "reference": "Nehemiah 6:15",
+    "publishDate": "2026-07-11",
+    "size": 7,
+    "grid": [
+      "S......",
+      "WALL...",
+      "O...F..",
+      "RUBBISH",
+      "D...F..",
+      "..WATCH",
+      "....Y.."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 0,
+        "text": "Girded by his side as he built",
+        "answer": "SWORD"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 1,
+        "col": 0,
+        "text": "What was finished in fifty-two days",
+        "answer": "WALL"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 2,
+        "col": 4,
+        "text": "With 'two', the number of days it took",
+        "answer": "FIFTY"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "Heaps of it lay among the stones",
+        "answer": "RUBBISH"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 5,
+        "col": 2,
+        "text": "It was set against the enemy day and night",
+        "answer": "WATCH"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-037",
+    "title": "By Faith",
+    "difficulty": "easy",
+    "verse": "Now faith is the substance of things hoped for, the evidence of things not seen.",
+    "reference": "Hebrews 11:1",
+    "publishDate": "2026-07-12",
+    "size": 7,
+    "grid": [
+      "..SEEN.",
+      ".....O.",
+      ".....A.",
+      ".FAITH.",
+      "..B....",
+      "..E....",
+      ".CLOUD."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 2,
+        "text": "Faith is the evidence of things not this",
+        "answer": "SEEN"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 5,
+        "text": "By faith he prepared an ark",
+        "answer": "NOAH"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 3,
+        "col": 1,
+        "text": "The substance of things hoped for",
+        "answer": "FAITH"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 3,
+        "col": 2,
+        "text": "By faith he offered a more excellent sacrifice",
+        "answer": "ABEL"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 6,
+        "col": 1,
+        "text": "So great a one of witnesses compasses us",
+        "answer": "CLOUD"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-038",
+    "title": "By His Stripes",
+    "difficulty": "easy",
+    "verse": "But he was wounded for our transgressions, he was bruised for our iniquities: and with his stripes we are healed.",
+    "reference": "Isaiah 53:5",
+    "publishDate": "2026-07-13",
+    "size": 7,
+    "grid": [
+      ".R.....",
+      "BORNE..",
+      ".O...P.",
+      "STRIPES",
+      ".....A.",
+      ".....C.",
+      "..SHEEP"
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 1,
+        "text": "He grew up as one out of a dry ground",
+        "answer": "ROOT"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 1,
+        "col": 0,
+        "text": "What he has done with our griefs",
+        "answer": "BORNE"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 2,
+        "col": 5,
+        "text": "Its chastisement was upon him",
+        "answer": "PEACE"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "By them we are healed",
+        "answer": "STRIPES"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 6,
+        "col": 2,
+        "text": "We all like them have gone astray",
+        "answer": "SHEEP"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-039",
+    "title": "Cain and Abel",
+    "difficulty": "easy",
+    "verse": "Am I my brother's keeper?",
+    "reference": "Genesis 4:9",
+    "publishDate": "2026-07-14",
+    "size": 7,
+    "grid": [
+      "M......",
+      "A.ADAM.",
+      "R...B..",
+      "KEEPER.",
+      ".V..L..",
+      "SETH...",
+      "......."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 0,
+        "text": "Sign set upon Cain to protect him",
+        "answer": "MARK"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 1,
+        "col": 2,
+        "text": "Father of both brothers",
+        "answer": "ADAM"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 1,
+        "col": 4,
+        "text": "Keeper of sheep whose offering was accepted",
+        "answer": "ABEL"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "What Cain asked if he was of his brother",
+        "answer": "KEEPER"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 3,
+        "col": 1,
+        "text": "Mother of all living",
+        "answer": "EVE"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 5,
+        "col": 0,
+        "text": "Son appointed to Eve in Abel's place",
+        "answer": "SETH"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-040",
+    "title": "Confusion of Tongues",
+    "difficulty": "easy",
+    "verse": "Therefore is the name of it called Babel; because the LORD did there confound the language of all the earth.",
+    "reference": "Genesis 11:9",
+    "publishDate": "2026-07-15",
+    "size": 7,
+    "grid": [
+      ".....N.",
+      ".SHINAR",
+      "..E..M.",
+      "SCATTER",
+      "..V....",
+      "..E....",
+      "TONGUE."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 5,
+        "text": "What they sought to make for themselves",
+        "answer": "NAME"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 1,
+        "col": 1,
+        "text": "Land whose plain they settled in",
+        "answer": "SHINAR"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 1,
+        "col": 2,
+        "text": "Where they meant the top to reach",
+        "answer": "HEAVEN"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "What the LORD did to them abroad",
+        "answer": "SCATTER"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 6,
+        "col": 0,
+        "text": "Speech that the LORD confounded",
+        "answer": "TONGUE"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-041",
+    "title": "Create in Me a Clean Heart",
+    "difficulty": "easy",
+    "verse": "Create in me a clean heart, O God; and renew a right spirit within me.",
+    "reference": "Psalm 51:10",
+    "publishDate": "2026-07-16",
+    "size": 7,
+    "grid": [
+      "...H...",
+      "H.RENEW",
+      "Y..A...",
+      "SPIRIT.",
+      "S..T...",
+      "O......",
+      "PSALM.."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 3,
+        "text": "Create in me a clean one",
+        "answer": "HEART"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 1,
+        "col": 0,
+        "text": "Purge me with it, and I shall be clean",
+        "answer": "HYSSOP"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 1,
+        "col": 2,
+        "text": "What is asked of the right spirit",
+        "answer": "RENEW"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "A right one, to be renewed within",
+        "answer": "SPIRIT"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 6,
+        "col": 0,
+        "text": "What this song of David is",
+        "answer": "PSALM"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-042",
+    "title": "Crossing the Jordan",
+    "difficulty": "easy",
+    "verse": "The priests that bare the ark of the covenant of the LORD stood firm on dry ground in the midst of Jordan.",
+    "reference": "Joshua 3:17",
+    "publishDate": "2026-07-17",
+    "size": 7,
+    "grid": [
+      ".....B.",
+      ".S..ARK",
+      ".T.A.I.",
+      "JORDAN.",
+      ".N.A.K.",
+      ".E.M...",
+      ".S....."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 5,
+        "text": "Edge of the water where the priests' feet dipped",
+        "answer": "BRINK"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 1,
+        "col": 1,
+        "text": "Twelve of them taken up as a memorial",
+        "answer": "STONES"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 1,
+        "col": 4,
+        "text": "The priests bore it into the river",
+        "answer": "ARK"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 2,
+        "col": 3,
+        "text": "City by which the waters rose up upon a heap",
+        "answer": "ADAM"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "River that stood in a heap",
+        "answer": "JORDAN"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
     "id": "mini-006",
     "title": "Daily Bread",
     "difficulty": "easy",
     "verse": "Man did eat angels' food: he sent them meat to the full.",
     "reference": "Psalm 78:25",
-    "publishDate": "2026-07-06",
+    "publishDate": "2026-07-18",
     "size": 7,
     "grid": [
       ".FISH..",
@@ -15446,12 +16210,264 @@
     "kind": "mini"
   },
   {
+    "id": "mini-043",
+    "title": "Deborah the Judge",
+    "difficulty": "easy",
+    "verse": "And Deborah, a prophetess, the wife of Lapidoth, she judged Israel at that time.",
+    "reference": "Judges 4:4",
+    "publishDate": "2026-07-19",
+    "size": 7,
+    "grid": [
+      ".......",
+      "JAEL...",
+      "U....N.",
+      "DEBORAH",
+      "G....I.",
+      "E..PALM",
+      "......."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 1,
+        "col": 0,
+        "text": "Woman of the tent who slew Sisera",
+        "answer": "JAEL"
+      },
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 1,
+        "col": 0,
+        "text": "What Deborah was to Israel",
+        "answer": "JUDGE"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 2,
+        "col": 5,
+        "text": "Jael's weapon, with a hammer",
+        "answer": "NAIL"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "Prophetess who judged Israel",
+        "answer": "DEBORAH"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 5,
+        "col": 3,
+        "text": "Tree she dwelt under, where Israel came for judgment",
+        "answer": "PALM"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-044",
+    "title": "Escaped All Safe to Land",
+    "difficulty": "easy",
+    "verse": "And so it came to pass, that they escaped all safe to land.",
+    "reference": "Acts 27:44",
+    "publishDate": "2026-07-20",
+    "size": 7,
+    "grid": [
+      ".ANCHOR",
+      ".N.....",
+      ".G.V.S.",
+      "MELITA.",
+      ".L.P.F.",
+      "...E.E.",
+      ".FIRE.."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 1,
+        "text": "Four were cast out of the stern",
+        "answer": "ANCHOR"
+      },
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 1,
+        "text": "He stood by Paul in the night, saying Fear not",
+        "answer": "ANGEL"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 2,
+        "col": 3,
+        "text": "It came out of the heat and fastened on Paul's hand",
+        "answer": "VIPER"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 2,
+        "col": 5,
+        "text": "How they all escaped to land",
+        "answer": "SAFE"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "Island they landed on, now called Malta",
+        "answer": "MELITA"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 6,
+        "col": 1,
+        "text": "The barbarous people kindled it for them",
+        "answer": "FIRE"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-045",
+    "title": "Faith, Hope, and Charity",
+    "difficulty": "easy",
+    "verse": "And now abideth faith, hope, charity, these three; but the greatest of these is charity.",
+    "reference": "1 Corinthians 13:13",
+    "publishDate": "2026-07-21",
+    "size": 7,
+    "grid": [
+      ".TONGUE",
+      "......N",
+      "....K.V",
+      "CHARITY",
+      ".O..N..",
+      ".P..D..",
+      ".E....."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 1,
+        "text": "Though I speak with those of men and of angels",
+        "answer": "TONGUE"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 6,
+        "text": "Charity does not do it",
+        "answer": "ENVY"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 2,
+        "col": 4,
+        "text": "Charity suffereth long, and is this",
+        "answer": "KIND"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "The greatest of these",
+        "answer": "CHARITY"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 3,
+        "col": 1,
+        "text": "Second of the three that abide",
+        "answer": "HOPE"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-046",
+    "title": "Fire on Mount Carmel",
+    "difficulty": "easy",
+    "verse": "Then the fire of the LORD fell, and consumed the burnt sacrifice.",
+    "reference": "1 Kings 18:38",
+    "publishDate": "2026-07-22",
+    "size": 7,
+    "grid": [
+      ".....F.",
+      ".C.RAIN",
+      ".A...R.",
+      "PROPHET",
+      ".M.....",
+      ".ELIJAH",
+      ".L....."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 5,
+        "text": "It fell and consumed the sacrifice",
+        "answer": "FIRE"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 1,
+        "col": 1,
+        "text": "Mount where the contest was held",
+        "answer": "CARMEL"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 1,
+        "col": 3,
+        "text": "There was a sound of its abundance",
+        "answer": "RAIN"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "What Elijah was, alone against many",
+        "answer": "PROPHET"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 5,
+        "col": 1,
+        "text": "Prophet who called down the fire",
+        "answer": "ELIJAH"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
     "id": "mini-007",
     "title": "For Such a Time",
     "difficulty": "easy",
     "verse": "And who knoweth whether thou art come to the kingdom for such a time as this?",
     "reference": "Esther 4:14",
-    "publishDate": "2026-07-07",
+    "publishDate": "2026-07-23",
     "size": 7,
     "grid": [
       "Q.G....",
@@ -15512,7 +16528,7 @@
     "difficulty": "easy",
     "verse": "But the fruit of the Spirit is love, joy, peace, longsuffering, gentleness, goodness, faith.",
     "reference": "Galatians 5:22",
-    "publishDate": "2026-07-08",
+    "publishDate": "2026-07-24",
     "size": 7,
     "grid": [
       ".....G.",
@@ -15576,12 +16592,203 @@
     "kind": "mini"
   },
   {
+    "id": "mini-047",
+    "title": "Go Ye Therefore",
+    "difficulty": "easy",
+    "verse": "Go ye therefore, and teach all nations, baptizing them in the name of the Father, and of the Son, and of the Holy Ghost.",
+    "reference": "Matthew 28:19",
+    "publishDate": "2026-07-25",
+    "size": 7,
+    "grid": [
+      "NAME..G",
+      ".L....H",
+      ".W..P.O",
+      "NATIONS",
+      ".Y..W.T",
+      "....E..",
+      "..WORLD"
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 0,
+        "text": "They were to baptize in it",
+        "answer": "NAME"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 1,
+        "text": "Lo, I am with you ---, even unto the end",
+        "answer": "ALWAY"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 0,
+        "col": 6,
+        "text": "The Holy one, third named",
+        "answer": "GHOST"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 2,
+        "col": 4,
+        "text": "All of it in heaven and earth was given him",
+        "answer": "POWER"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "All of them were to be taught",
+        "answer": "NATIONS"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 6,
+        "col": 2,
+        "text": "He is with us unto the end of it",
+        "answer": "WORLD"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-048",
+    "title": "Good and Faithful Servant",
+    "difficulty": "easy",
+    "verse": "Well done, thou good and faithful servant.",
+    "reference": "Matthew 25:21",
+    "publishDate": "2026-07-26",
+    "size": 7,
+    "grid": [
+      ".F....E",
+      ".I....A",
+      ".V..G.R",
+      "SERVANT",
+      "....I.H",
+      "TALENT.",
+      "......."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 1,
+        "text": "Number of talents given to the first",
+        "answer": "FIVE"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 6,
+        "text": "The slothful servant digged in it",
+        "answer": "EARTH"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 2,
+        "col": 4,
+        "text": "What the faithful servants made",
+        "answer": "GAIN"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "Called good and faithful",
+        "answer": "SERVANT"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 5,
+        "col": 0,
+        "text": "What was delivered to each servant",
+        "answer": "TALENT"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-049",
+    "title": "Hannah's Prayer",
+    "difficulty": "easy",
+    "verse": "For this child I prayed; and the LORD hath given me my petition which I asked of him.",
+    "reference": "1 Samuel 1:27",
+    "publishDate": "2026-07-27",
+    "size": 7,
+    "grid": [
+      "TEMPLE.",
+      "...R..C",
+      "ELKANAH",
+      "L..Y..I",
+      "I..E..L",
+      "...R..D",
+      "......."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 0,
+        "text": "By its post Eli sat upon a seat",
+        "answer": "TEMPLE"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 3,
+        "text": "She poured out her soul in it",
+        "answer": "PRAYER"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 1,
+        "col": 6,
+        "text": "The one she prayed for",
+        "answer": "CHILD"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 2,
+        "col": 0,
+        "text": "Her husband, of mount Ephraim",
+        "answer": "ELKANAH"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 2,
+        "col": 0,
+        "text": "Priest who thought she was drunken",
+        "answer": "ELI"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
     "id": "mini-009",
     "title": "He Is Risen",
     "difficulty": "easy",
     "verse": "He is not here: for he is risen, as he said. Come, see the place where the Lord lay.",
     "reference": "Matthew 28:6",
-    "publishDate": "2026-07-09",
+    "publishDate": "2026-07-28",
     "size": 7,
     "grid": [
       "..RISEN",
@@ -15642,7 +16849,7 @@
     "difficulty": "easy",
     "verse": "And he spake many things unto them in parables, saying, Behold, a sower went forth to sow.",
     "reference": "Matthew 13:3",
-    "publishDate": "2026-07-10",
+    "publishDate": "2026-07-29",
     "size": 7,
     "grid": [
       "...S...",
@@ -15703,7 +16910,7 @@
     "difficulty": "easy",
     "verse": "And suddenly there was with the angel a multitude of the heavenly host praising God.",
     "reference": "Luke 2:13",
-    "publishDate": "2026-07-11",
+    "publishDate": "2026-07-30",
     "size": 7,
     "grid": [
       "W..F...",
@@ -15759,12 +16966,73 @@
     "kind": "mini"
   },
   {
+    "id": "mini-050",
+    "title": "Here Am I; Send Me",
+    "difficulty": "easy",
+    "verse": "Here am I; send me.",
+    "reference": "Isaiah 6:8",
+    "publishDate": "2026-07-31",
+    "size": 7,
+    "grid": [
+      "COAL...",
+      "..L....",
+      "L.T....",
+      "ISAIAH.",
+      "P.R..O.",
+      "S....L.",
+      ".....Y."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 0,
+        "text": "Live one taken from the altar with tongs",
+        "answer": "COAL"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 2,
+        "text": "Where the coal came from",
+        "answer": "ALTAR"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 2,
+        "col": 0,
+        "text": "They were unclean, and then purged",
+        "answer": "LIPS"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "Prophet who saw the LORD in the temple",
+        "answer": "ISAIAH"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 3,
+        "col": 5,
+        "text": "Word cried three times",
+        "answer": "HOLY"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
     "id": "mini-012",
     "title": "House of the LORD",
     "difficulty": "easy",
     "verse": "I was glad when they said unto me, Let us go into the house of the LORD.",
     "reference": "Psalm 122:1",
-    "publishDate": "2026-07-12",
+    "publishDate": "2026-08-01",
     "size": 7,
     "grid": [
       "...LAMP",
@@ -15828,12 +17096,81 @@
     "kind": "mini"
   },
   {
+    "id": "mini-051",
+    "title": "I Will Lift Up Mine Eyes",
+    "difficulty": "easy",
+    "verse": "I will lift up mine eyes unto the hills, from whence cometh my help.",
+    "reference": "Psalm 121:1",
+    "publishDate": "2026-08-02",
+    "size": 7,
+    "grid": [
+      "..SHADE",
+      ".S.E...",
+      ".L.L...",
+      "KEEPER.",
+      ".E..Y..",
+      ".P..E..",
+      "....SUN"
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 2,
+        "text": "The LORD is this upon thy right hand",
+        "answer": "SHADE"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 3,
+        "text": "It cometh from the LORD",
+        "answer": "HELP"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 1,
+        "col": 1,
+        "text": "He that keepeth thee shall not do it",
+        "answer": "SLEEP"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "What the LORD is to thee",
+        "answer": "KEEPER"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 3,
+        "col": 4,
+        "text": "They are lifted up unto the hills",
+        "answer": "EYES"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 6,
+        "col": 4,
+        "text": "It shall not smite thee by day",
+        "answer": "SUN"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
     "id": "mini-013",
     "title": "In the Garden",
     "difficulty": "easy",
     "verse": "And the LORD God planted a garden eastward in Eden; and there he put the man whom he had formed.",
     "reference": "Genesis 2:8",
-    "publishDate": "2026-07-13",
+    "publishDate": "2026-08-03",
     "size": 7,
     "grid": [
       ".T....D",
@@ -15910,7 +17247,7 @@
     "difficulty": "easy",
     "verse": "My God hath sent his angel, and hath shut the lions' mouths, that they have not hurt me.",
     "reference": "Daniel 6:22",
-    "publishDate": "2026-07-14",
+    "publishDate": "2026-08-04",
     "size": 7,
     "grid": [
       ".DEN...",
@@ -15966,12 +17303,142 @@
     "kind": "mini"
   },
   {
+    "id": "mini-052",
+    "title": "Joseph in Egypt",
+    "difficulty": "easy",
+    "verse": "See, I have set thee over all the land of Egypt.",
+    "reference": "Genesis 41:41",
+    "publishDate": "2026-08-05",
+    "size": 7,
+    "grid": [
+      "E......",
+      "GRAIN..",
+      "Y....C.",
+      "PHARAOH",
+      "T..I.R.",
+      "...N.N.",
+      "...G..."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 0,
+        "text": "Land he was set over",
+        "answer": "EGYPT"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 1,
+        "col": 0,
+        "text": "It was laid up in the cities",
+        "answer": "GRAIN"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 2,
+        "col": 5,
+        "text": "Seven ears of it grew on one stalk",
+        "answer": "CORN"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "Ruler troubled by two dreams",
+        "answer": "PHARAOH"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 3,
+        "col": 3,
+        "text": "Pharaoh took it off and put it on Joseph's hand",
+        "answer": "RING"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-053",
+    "title": "Knit in Soul",
+    "difficulty": "easy",
+    "verse": "The soul of Jonathan was knit with the soul of David, and Jonathan loved him as his own soul.",
+    "reference": "1 Samuel 18:1",
+    "publishDate": "2026-08-06",
+    "size": 7,
+    "grid": [
+      "...R...",
+      "..SOUL.",
+      ".A.B.A.",
+      "FRIEND.",
+      ".R.....",
+      "LOVE...",
+      ".W....."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 3,
+        "text": "Jonathan stripped himself of it as a gift",
+        "answer": "ROBE"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 1,
+        "col": 2,
+        "text": "Jonathan's was knit with David's",
+        "answer": "SOUL"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 1,
+        "col": 5,
+        "text": "Boy sent to find the arrows",
+        "answer": "LAD"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 2,
+        "col": 1,
+        "text": "Three were shot as a secret sign in the field",
+        "answer": "ARROW"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "What Jonathan was to David",
+        "answer": "FRIEND"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 5,
+        "col": 0,
+        "text": "It passed the love of women",
+        "answer": "LOVE"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
     "id": "mini-015",
     "title": "Living Waters",
     "difficulty": "easy",
     "verse": "But let judgment run down as waters, and righteousness as a mighty stream.",
     "reference": "Amos 5:24",
-    "publishDate": "2026-07-15",
+    "publishDate": "2026-08-07",
     "size": 7,
     "grid": [
       "..RAIN.",
@@ -16035,12 +17502,256 @@
     "kind": "mini"
   },
   {
+    "id": "mini-054",
+    "title": "Lot and the Cities of the Plain",
+    "difficulty": "easy",
+    "verse": "But his wife looked back from behind him, and she became a pillar of salt.",
+    "reference": "Genesis 19:26",
+    "publishDate": "2026-08-08",
+    "size": 7,
+    "grid": [
+      ".....Z.",
+      "....LOT",
+      ".F.F.A.",
+      "PILLAR.",
+      ".R.E...",
+      ".E.E...",
+      "......."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 5,
+        "text": "Little city Lot fled to",
+        "answer": "ZOAR"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 1,
+        "col": 4,
+        "text": "Righteous man led out of the city",
+        "answer": "LOT"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 2,
+        "col": 1,
+        "text": "It rained down with brimstone",
+        "answer": "FIRE"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 2,
+        "col": 3,
+        "text": "What they were told to do without looking back",
+        "answer": "FLEE"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "Form she was turned into",
+        "answer": "PILLAR"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-055",
+    "title": "Mary and Martha",
+    "difficulty": "easy",
+    "verse": "But one thing is needful: and Mary hath chosen that good part, which shall not be taken away from her.",
+    "reference": "Luke 10:42",
+    "publishDate": "2026-08-09",
+    "size": 7,
+    "grid": [
+      "......M",
+      "......A",
+      ".S..P.R",
+      "BETHANY",
+      ".R..R..",
+      ".V..T..",
+      "FEET..."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 6,
+        "text": "She sat at Jesus' feet and heard his word",
+        "answer": "MARY"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 2,
+        "col": 1,
+        "text": "What Martha was busy to do",
+        "answer": "SERVE"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 2,
+        "col": 4,
+        "text": "The good one, not to be taken away",
+        "answer": "PART"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "Village where the sisters lived",
+        "answer": "BETHANY"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 6,
+        "col": 0,
+        "text": "Where Mary sat",
+        "answer": "FEET"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-056",
+    "title": "Naaman at the Jordan",
+    "difficulty": "easy",
+    "verse": "And his flesh came again like unto the flesh of a little child, and he was clean.",
+    "reference": "2 Kings 5:14",
+    "publishDate": "2026-08-10",
+    "size": 7,
+    "grid": [
+      ".WASH..",
+      "F..Y...",
+      "LEPROSY",
+      "E..I...",
+      "S.MAID.",
+      "H......",
+      "......."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 1,
+        "text": "What the message told him to do",
+        "answer": "WASH"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 3,
+        "text": "Land whose captain he was",
+        "answer": "SYRIA"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 1,
+        "col": 0,
+        "text": "It came again like a little child's",
+        "answer": "FLESH"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 2,
+        "col": 0,
+        "text": "Disease he was cleansed of",
+        "answer": "LEPROSY"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 4,
+        "col": 2,
+        "text": "Little one who spoke of the prophet in Samaria",
+        "answer": "MAID"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-057",
+    "title": "Nicodemus by Night",
+    "difficulty": "easy",
+    "verse": "Except a man be born again, he cannot see the kingdom of God.",
+    "reference": "John 3:3",
+    "publishDate": "2026-08-11",
+    "size": 7,
+    "grid": [
+      "....N..",
+      "W.A.I.B",
+      "A.G.G.O",
+      "TEACHER",
+      "E.I.T.N",
+      "R.N....",
+      "......."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 4,
+        "text": "When Nicodemus came to Jesus",
+        "answer": "NIGHT"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 1,
+        "col": 0,
+        "text": "Born of it and of the Spirit",
+        "answer": "WATER"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 1,
+        "col": 2,
+        "text": "How a man must be born",
+        "answer": "AGAIN"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 1,
+        "col": 6,
+        "text": "A man must be this again",
+        "answer": "BORN"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "What Nicodemus called him: a --- come from God",
+        "answer": "TEACHER"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
     "id": "mini-016",
     "title": "Noah and the Flood",
     "difficulty": "easy",
     "verse": "And the rain was upon the earth forty days and forty nights.",
     "reference": "Genesis 7:12",
-    "publishDate": "2026-07-16",
+    "publishDate": "2026-08-12",
     "size": 7,
     "grid": [
       ".FLOOD.",
@@ -16101,7 +17812,7 @@
     "difficulty": "easy",
     "verse": "Come now therefore, and I will send thee unto Pharaoh, that thou mayest bring forth my people the children of Israel out of Egypt.",
     "reference": "Exodus 3:10",
-    "publishDate": "2026-07-17",
+    "publishDate": "2026-08-13",
     "size": 7,
     "grid": [
       "E..LAMB",
@@ -16165,12 +17876,325 @@
     "kind": "mini"
   },
   {
+    "id": "mini-058",
+    "title": "Paul and Silas in Prison",
+    "difficulty": "easy",
+    "verse": "And at midnight Paul and Silas prayed, and sang praises unto God.",
+    "reference": "Acts 16:25",
+    "publishDate": "2026-08-14",
+    "size": 7,
+    "grid": [
+      "SILAS..",
+      "..Y..B.",
+      "..D..A.",
+      "PRISON.",
+      "A.A..D.",
+      "U....S.",
+      "L......"
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 0,
+        "text": "His companion in the inner prison",
+        "answer": "SILAS"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 2,
+        "text": "Seller of purple whose heart was opened",
+        "answer": "LYDIA"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 1,
+        "col": 5,
+        "text": "Every one's were loosed",
+        "answer": "BANDS"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "Its foundations were shaken",
+        "answer": "PRISON"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 3,
+        "col": 0,
+        "text": "He sang praises with Silas",
+        "answer": "PAUL"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-059",
+    "title": "Philip and the Ethiopian",
+    "difficulty": "easy",
+    "verse": "See, here is water; what doth hinder me to be baptized?",
+    "reference": "Acts 8:36",
+    "publishDate": "2026-08-15",
+    "size": 7,
+    "grid": [
+      "GUIDE..",
+      "..S..J.",
+      "CHARIOT",
+      "..I..Y.",
+      ".GAZA..",
+      "..H....",
+      "......."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 0,
+        "text": "How should I, except some man should do this to me?",
+        "answer": "GUIDE"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 2,
+        "text": "Prophet whose scroll he was reading",
+        "answer": "ISAIAH"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 1,
+        "col": 5,
+        "text": "He went on his way with it",
+        "answer": "JOY"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 2,
+        "col": 0,
+        "text": "Where the eunuch sat reading",
+        "answer": "CHARIOT"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 4,
+        "col": 1,
+        "text": "The way from Jerusalem toward it, which is desert",
+        "answer": "GAZA"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-060",
+    "title": "Salt and Light",
+    "difficulty": "easy",
+    "verse": "Ye are the salt of the earth.",
+    "reference": "Matthew 5:13",
+    "publishDate": "2026-08-16",
+    "size": 7,
+    "grid": [
+      "..M.HID",
+      "..E.I..",
+      "CANDLE.",
+      "I...L..",
+      "TROD...",
+      "Y......",
+      "......."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 2,
+        "text": "Let your light so shine before them",
+        "answer": "MEN"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 0,
+        "col": 4,
+        "text": "A city set on a hill cannot be it",
+        "answer": "HID"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 4,
+        "text": "Where the city is set",
+        "answer": "HILL"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 2,
+        "col": 0,
+        "text": "Men light it and set it on a candlestick",
+        "answer": "CANDLE"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 2,
+        "col": 0,
+        "text": "Set on a hill, it cannot be hid",
+        "answer": "CITY"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 4,
+        "col": 0,
+        "text": "Savourless salt is cast out and --- under foot",
+        "answer": "TROD"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-061",
+    "title": "Samson's Strength",
+    "difficulty": "easy",
+    "verse": "If I be shaven, then my strength will go from me.",
+    "reference": "Judges 16:17",
+    "publishDate": "2026-08-17",
+    "size": 7,
+    "grid": [
+      ".H.....",
+      "VOW....",
+      ".N.L.G.",
+      "DELILAH",
+      ".Y.O.Z.",
+      "...N.A.",
+      "......."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 1,
+        "text": "He found it in the carcase",
+        "answer": "HONEY"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 1,
+        "col": 0,
+        "text": "The Nazarite one he was born under",
+        "answer": "VOW"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 2,
+        "col": 3,
+        "text": "He rent it as he would a kid",
+        "answer": "LION"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 2,
+        "col": 5,
+        "text": "City whose gates he carried away",
+        "answer": "GAZA"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "Woman of the valley of Sorek",
+        "answer": "DELILAH"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-062",
+    "title": "Seven Days Around Jericho",
+    "difficulty": "easy",
+    "verse": "The wall fell down flat, so that the people went up into the city.",
+    "reference": "Joshua 6:20",
+    "publishDate": "2026-08-18",
+    "size": 7,
+    "grid": [
+      ".SEVEN.",
+      ".P....S",
+      ".I....H",
+      "JERICHO",
+      ".S..O.U",
+      "....R.T",
+      "....D.."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 1,
+        "text": "Number of times they marched on the last day",
+        "answer": "SEVEN"
+      },
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 1,
+        "text": "Two men sent ahead to view the land",
+        "answer": "SPIES"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 1,
+        "col": 6,
+        "text": "Great cry raised before the wall fell",
+        "answer": "SHOUT"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "Walled city that fell after seven days",
+        "answer": "JERICHO"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 3,
+        "col": 4,
+        "text": "Scarlet line hung in the window",
+        "answer": "CORD"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
     "id": "mini-018",
     "title": "Signs and Wonders",
     "difficulty": "easy",
     "verse": "This beginning of miracles did Jesus in Cana of Galilee, and manifested forth his glory.",
     "reference": "John 2:11",
-    "publishDate": "2026-07-18",
+    "publishDate": "2026-08-19",
     "size": 7,
     "grid": [
       "...FISH",
@@ -16226,12 +18250,73 @@
     "kind": "mini"
   },
   {
+    "id": "mini-063",
+    "title": "Stephen the Martyr",
+    "difficulty": "easy",
+    "verse": "Lord, lay not this sin to their charge.",
+    "reference": "Acts 7:60",
+    "publishDate": "2026-08-20",
+    "size": 7,
+    "grid": [
+      "..F...C",
+      "..A...O",
+      "..C...U",
+      "STEPHEN",
+      "A.....C",
+      "U.....I",
+      "L.KNEEL"
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 2,
+        "text": "It was as it had been an angel's",
+        "answer": "FACE"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 6,
+        "text": "All that sat in it looked stedfastly on him",
+        "answer": "COUNCIL"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "Man full of faith and of the Holy Ghost",
+        "answer": "STEPHEN"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 3,
+        "col": 0,
+        "text": "The witnesses laid their clothes at his feet",
+        "answer": "SAUL"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 6,
+        "col": 2,
+        "text": "What he did down before he cried out",
+        "answer": "KNEEL"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
     "id": "mini-019",
     "title": "Swallowed by the Sea",
     "difficulty": "easy",
     "verse": "Now the LORD had prepared a great fish to swallow up Jonah. And Jonah was in the belly of the fish three days and three nights.",
     "reference": "Jonah 1:17",
-    "publishDate": "2026-07-19",
+    "publishDate": "2026-08-21",
     "size": 7,
     "grid": [
       "..STORM",
@@ -16287,12 +18372,203 @@
     "kind": "mini"
   },
   {
+    "id": "mini-064",
+    "title": "The Bread of Life",
+    "difficulty": "easy",
+    "verse": "I am the bread of life: he that cometh to me shall never hunger.",
+    "reference": "John 6:35",
+    "publishDate": "2026-08-22",
+    "size": 7,
+    "grid": [
+      "FIVE...",
+      "I......",
+      "S....C.",
+      "HUNGER.",
+      "E....O.",
+      "S....W.",
+      ".BREAD."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 0,
+        "text": "Number of the barley loaves",
+        "answer": "FIVE"
+      },
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 0,
+        "text": "Two small ones, brought by a lad",
+        "answer": "FISHES"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 2,
+        "col": 5,
+        "text": "Multitude that followed him for the loaves",
+        "answer": "CROWD"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "He that cometh shall never do it",
+        "answer": "HUNGER"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 6,
+        "col": 1,
+        "text": "What he declared himself to be, of life",
+        "answer": "BREAD"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-065",
+    "title": "The Call of Abram",
+    "difficulty": "easy",
+    "verse": "Get thee out of thy country, and from thy kindred, and from thy father's house, unto a land that I will shew thee.",
+    "reference": "Genesis 12:1",
+    "publishDate": "2026-08-23",
+    "size": 7,
+    "grid": [
+      "HARAN..",
+      ".L...T.",
+      ".T.S.E.",
+      "CANAAN.",
+      ".R.R.T.",
+      "...A...",
+      "NATION."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 0,
+        "text": "Place he departed from",
+        "answer": "HARAN"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 1,
+        "text": "What he built unto the LORD",
+        "answer": "ALTAR"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 1,
+        "col": 5,
+        "text": "Dwelling he pitched along the way",
+        "answer": "TENT"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 2,
+        "col": 3,
+        "text": "His wife, who went with him",
+        "answer": "SARAI"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "Land he journeyed into",
+        "answer": "CANAAN"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 6,
+        "col": 0,
+        "text": "Great one he was promised to become",
+        "answer": "NATION"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-066",
+    "title": "The Dream at Bethel",
+    "difficulty": "easy",
+    "verse": "And he dreamed, and behold a ladder set up on the earth, and the top of it reached to heaven.",
+    "reference": "Genesis 28:12",
+    "publishDate": "2026-08-24",
+    "size": 7,
+    "grid": [
+      "..ESAU.",
+      "....N..",
+      ".J..G..",
+      "LADDER.",
+      ".C..L..",
+      "VOW.S..",
+      ".B....."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 2,
+        "text": "Brother he was fleeing from",
+        "answer": "ESAU"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 4,
+        "text": "They ascended and descended",
+        "answer": "ANGELS"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 2,
+        "col": 1,
+        "text": "Dreamer who slept with a stone for a pillow",
+        "answer": "JACOB"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "It was set up on the earth, reaching heaven",
+        "answer": "LADDER"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 5,
+        "col": 0,
+        "text": "Promise he made when he awoke",
+        "answer": "VOW"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
     "id": "mini-020",
     "title": "The Dreamer",
     "difficulty": "easy",
     "verse": "Now Israel loved Joseph more than all his children, because he was the son of his old age: and he made him a coat of many colours.",
     "reference": "Genesis 37:3",
-    "publishDate": "2026-07-20",
+    "publishDate": "2026-08-25",
     "size": 7,
     "grid": [
       "J..C.D.",
@@ -16348,12 +18624,195 @@
     "kind": "mini"
   },
   {
+    "id": "mini-067",
+    "title": "The Fleece and the Lamps",
+    "difficulty": "easy",
+    "verse": "The sword of the LORD, and of Gideon.",
+    "reference": "Judges 7:20",
+    "publishDate": "2026-08-26",
+    "size": 7,
+    "grid": [
+      ".....A.",
+      ".T.L.N.",
+      ".H.A.G.",
+      "TRUMPET",
+      ".E.P.L.",
+      "DEW....",
+      "......."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 5,
+        "text": "He sat under the oak and called him a mighty man",
+        "answer": "ANGEL"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 1,
+        "col": 1,
+        "text": "With 'hundred,' the size of his band",
+        "answer": "THREE"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 1,
+        "col": 3,
+        "text": "Light carried within the pitcher",
+        "answer": "LAMP"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "Each of the three hundred held one",
+        "answer": "TRUMPET"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 5,
+        "col": 0,
+        "text": "It was on the fleece but not the ground",
+        "answer": "DEW"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-068",
+    "title": "The Form of the Fourth",
+    "difficulty": "easy",
+    "verse": "And the form of the fourth is like the Son of God.",
+    "reference": "Daniel 3:25",
+    "publishDate": "2026-08-27",
+    "size": 7,
+    "grid": [
+      "...B..F",
+      "...O..I",
+      ".M.U..R",
+      "FURNACE",
+      ".S.D...",
+      ".I.....",
+      ".COATS."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 3,
+        "text": "How the three were cast in",
+        "answer": "BOUND"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 6,
+        "text": "It had no power upon their bodies",
+        "answer": "FIRE"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 2,
+        "col": 1,
+        "text": "At its sound all were to fall down",
+        "answer": "MUSIC"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "It was heated seven times hotter",
+        "answer": "FURNACE"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 6,
+        "col": 1,
+        "text": "Their garments, untouched by the flame",
+        "answer": "COATS"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-069",
+    "title": "The Golden Calf",
+    "difficulty": "easy",
+    "verse": "And he saw the calf, and the dancing: and Moses' anger waxed hot, and he cast the tables out of his hands.",
+    "reference": "Exodus 32:19",
+    "publishDate": "2026-08-28",
+    "size": 7,
+    "grid": [
+      "..SINAI",
+      "...D...",
+      ".D.O...",
+      "TABLES.",
+      ".N.....",
+      ".CALF..",
+      ".E....."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 2,
+        "text": "Mount where Moses had been",
+        "answer": "SINAI"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 3,
+        "text": "What the calf was",
+        "answer": "IDOL"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 2,
+        "col": 1,
+        "text": "What Moses saw along with the calf",
+        "answer": "DANCE"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "Written by the finger of God, and broken",
+        "answer": "TABLES"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 5,
+        "col": 1,
+        "text": "Molten image fashioned with a graving tool",
+        "answer": "CALF"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
     "id": "mini-021",
     "title": "The Good Shepherd",
     "difficulty": "easy",
     "verse": "I am the good shepherd: the good shepherd giveth his life for the sheep.",
     "reference": "John 10:11",
-    "publishDate": "2026-07-21",
+    "publishDate": "2026-08-29",
     "size": 7,
     "grid": [
       "......G",
@@ -16409,12 +18868,325 @@
     "kind": "mini"
   },
   {
+    "id": "mini-070",
+    "title": "The Grain of Mustard Seed",
+    "difficulty": "easy",
+    "verse": "Which indeed is the least of all seeds: but when it is grown, it is the greatest among herbs, and becometh a tree.",
+    "reference": "Matthew 13:32",
+    "publishDate": "2026-08-30",
+    "size": 7,
+    "grid": [
+      "BRANCH.",
+      ".....E.",
+      "MUSTARD",
+      "..E..B.",
+      "..E..S.",
+      "LODGE..",
+      "......."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 0,
+        "text": "Where the birds come to lodge",
+        "answer": "BRANCH"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 5,
+        "text": "It is greatest among them when grown",
+        "answer": "HERBS"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 2,
+        "col": 0,
+        "text": "Its grain is the least of all seeds",
+        "answer": "MUSTARD"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 2,
+        "col": 2,
+        "text": "A man took it and sowed it in his field",
+        "answer": "SEED"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 5,
+        "col": 0,
+        "text": "What the birds do in the branches",
+        "answer": "LODGE"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-071",
+    "title": "The House of Cedar",
+    "difficulty": "easy",
+    "verse": "The glory of the LORD had filled the house of the LORD.",
+    "reference": "1 Kings 8:11",
+    "publishDate": "2026-08-31",
+    "size": 7,
+    "grid": [
+      "ARK....",
+      "L....S.",
+      "TEMPLE.",
+      "A....V.",
+      "R....E.",
+      "..STONE",
+      "......."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 0,
+        "text": "It was brought into the most holy place",
+        "answer": "ARK"
+      },
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 0,
+        "text": "Solomon stood before it and spread his hands",
+        "answer": "ALTAR"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 1,
+        "col": 5,
+        "text": "Years the building took",
+        "answer": "SEVEN"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 2,
+        "col": 0,
+        "text": "The house built in Jerusalem",
+        "answer": "TEMPLE"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 5,
+        "col": 2,
+        "text": "It was made ready before it was brought",
+        "answer": "STONE"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-072",
+    "title": "The Lost Sheep",
+    "difficulty": "easy",
+    "verse": "What man of you, having an hundred sheep, if he lose one of them, doth not leave the ninety and nine in the wilderness, and go after that which is lost?",
+    "reference": "Luke 15:4",
+    "publishDate": "2026-09-01",
+    "size": 7,
+    "grid": [
+      "FOLD...",
+      "O....J.",
+      "U..S.O.",
+      "NINETY.",
+      "D..E...",
+      "...K...",
+      "......."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 0,
+        "text": "Where the flock is kept",
+        "answer": "FOLD"
+      },
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 0,
+        "text": "What it was when he laid it on his shoulders",
+        "answer": "FOUND"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 1,
+        "col": 5,
+        "text": "There is more of it in heaven over one that repenteth",
+        "answer": "JOY"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 2,
+        "col": 3,
+        "text": "What the shepherd goes to do",
+        "answer": "SEEK"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "With 'and nine', those left in the wilderness",
+        "answer": "NINETY"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-073",
+    "title": "The New Jerusalem",
+    "difficulty": "easy",
+    "verse": "And God shall wipe away all tears from their eyes; and there shall be no more death.",
+    "reference": "Revelation 21:4",
+    "publishDate": "2026-09-02",
+    "size": 7,
+    "grid": [
+      ".BRIDE.",
+      "G.I....",
+      "A.V..P.",
+      "TWELVE.",
+      "E.R..A.",
+      "S....R.",
+      "...GOLD"
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 1,
+        "text": "The holy city was prepared as one adorned",
+        "answer": "BRIDE"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 2,
+        "text": "Of water of life, clear as crystal",
+        "answer": "RIVER"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 1,
+        "col": 0,
+        "text": "Twelve of them, each one a pearl",
+        "answer": "GATES"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 2,
+        "col": 5,
+        "text": "Every several gate was one",
+        "answer": "PEARL"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "Number of the gates, and of the foundations",
+        "answer": "TWELVE"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 6,
+        "col": 3,
+        "text": "The street of the city was pure, as it were clear glass",
+        "answer": "GOLD"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-074",
+    "title": "The Passover",
+    "difficulty": "easy",
+    "verse": "And when I see the blood, I will pass over you.",
+    "reference": "Exodus 12:13",
+    "publishDate": "2026-09-03",
+    "size": 7,
+    "grid": [
+      "N......",
+      "I.HERBS",
+      "G.A....",
+      "HYSSOP.",
+      "T.T....",
+      "..EGYPT",
+      "......."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 0,
+        "text": "When the LORD passed through the land",
+        "answer": "NIGHT"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 1,
+        "col": 2,
+        "text": "They were bitter, eaten with the lamb",
+        "answer": "HERBS"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 1,
+        "col": 2,
+        "text": "How they were to eat it, loins girded",
+        "answer": "HASTE"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "Bunch used to strike the lintel",
+        "answer": "HYSSOP"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 5,
+        "col": 2,
+        "text": "Land they were delivered from",
+        "answer": "EGYPT"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
     "id": "mini-022",
     "title": "The Patience of Job",
     "difficulty": "easy",
     "verse": "The LORD gave, and the LORD hath taken away; blessed be the name of the LORD.",
     "reference": "Job 1:21",
-    "publishDate": "2026-07-22",
+    "publishDate": "2026-09-04",
     "size": 7,
     "grid": [
       "..JOB..",
@@ -16470,12 +19242,195 @@
     "kind": "mini"
   },
   {
+    "id": "mini-075",
+    "title": "The Plagues of Egypt",
+    "difficulty": "easy",
+    "verse": "I will smite all thy borders with frogs.",
+    "reference": "Exodus 8:2",
+    "publishDate": "2026-09-05",
+    "size": 7,
+    "grid": [
+      "FLIES..",
+      ".O...B.",
+      ".C.F.O.",
+      "MURRAIN",
+      ".S.O.L.",
+      ".T.G.S.",
+      "...S..."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 0,
+        "text": "Swarms that filled the houses",
+        "answer": "FLIES"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 1,
+        "text": "It ate every herb the hail had left",
+        "answer": "LOCUST"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 1,
+        "col": 5,
+        "text": "Breaking forth with blains upon man and beast",
+        "answer": "BOILS"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 2,
+        "col": 3,
+        "text": "They came up and covered the land",
+        "answer": "FROGS"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "Grievous plague upon the cattle",
+        "answer": "MURRAIN"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-076",
+    "title": "The Queen of Sheba",
+    "difficulty": "easy",
+    "verse": "And when the queen of Sheba heard of the fame of Solomon, she came to prove him with hard questions.",
+    "reference": "1 Kings 10:1",
+    "publishDate": "2026-09-06",
+    "size": 7,
+    "grid": [
+      "W.GIFTS",
+      "I.O.A..",
+      "SOLOMON",
+      "D.D.E..",
+      "O......",
+      "M......",
+      "......."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 0,
+        "text": "What she came to prove, and found exceeded",
+        "answer": "WISDOM"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 0,
+        "col": 2,
+        "text": "What she and the king exchanged",
+        "answer": "GIFTS"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 2,
+        "text": "She gave a hundred and twenty talents of it",
+        "answer": "GOLD"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 0,
+        "col": 4,
+        "text": "What drew her to come",
+        "answer": "FAME"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 2,
+        "col": 0,
+        "text": "King whose fame she had heard",
+        "answer": "SOLOMON"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-077",
+    "title": "The Rod That Budded",
+    "difficulty": "easy",
+    "verse": "The rod of Aaron for the house of Levi was budded, and brought forth buds, and bloomed blossoms, and yielded almonds.",
+    "reference": "Numbers 17:8",
+    "publishDate": "2026-09-07",
+    "size": 7,
+    "grid": [
+      ".....B.",
+      "...T.U.",
+      "ALMOND.",
+      ".E.K.S.",
+      ".V.E...",
+      "SIGN...",
+      "......."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 5,
+        "text": "They came forth on the rod",
+        "answer": "BUDS"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 1,
+        "col": 3,
+        "text": "The rod was kept as one against the rebels",
+        "answer": "TOKEN"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 2,
+        "col": 0,
+        "text": "Fruit the budded rod yielded",
+        "answer": "ALMOND"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 2,
+        "col": 1,
+        "text": "House whose rod was chosen",
+        "answer": "LEVI"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 5,
+        "col": 0,
+        "text": "What the budding was meant to be",
+        "answer": "SIGN"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
     "id": "mini-023",
     "title": "The Shepherd and the Giant",
     "difficulty": "easy",
     "verse": "So David prevailed over the Philistine with a sling and with a stone.",
     "reference": "1 Samuel 17:50",
-    "publishDate": "2026-07-23",
+    "publishDate": "2026-09-08",
     "size": 7,
     "grid": [
       "JESSE..",
@@ -16536,7 +19491,7 @@
     "difficulty": "easy",
     "verse": "The LORD is my shepherd; I shall not want.",
     "reference": "Psalm 23:1",
-    "publishDate": "2026-07-24",
+    "publishDate": "2026-09-09",
     "size": 7,
     "grid": [
       "..PSALM",
@@ -16592,12 +19547,81 @@
     "kind": "mini"
   },
   {
+    "id": "mini-078",
+    "title": "The Tent of Meeting",
+    "difficulty": "easy",
+    "verse": "Then a cloud covered the tent of the congregation, and the glory of the LORD filled the tabernacle.",
+    "reference": "Exodus 40:34",
+    "publishDate": "2026-09-10",
+    "size": 7,
+    "grid": [
+      ".GOLD..",
+      ".L.I.A.",
+      ".O.N.L.",
+      "PRIEST.",
+      ".Y.N.A.",
+      "....ARK",
+      "......."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 1,
+        "text": "The mercy seat was made of it, pure",
+        "answer": "GOLD"
+      },
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 1,
+        "text": "It filled the tabernacle",
+        "answer": "GLORY"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 3,
+        "text": "Fine twined material of the hangings",
+        "answer": "LINEN"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 1,
+        "col": 5,
+        "text": "Place of burnt offering at the door",
+        "answer": "ALTAR"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "Aaron and his sons served as this",
+        "answer": "PRIEST"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 5,
+        "col": 4,
+        "text": "It was set within, behind the veil",
+        "answer": "ARK"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
     "id": "mini-025",
     "title": "The Twelve",
     "difficulty": "easy",
     "verse": "And he ordained twelve, that they should be with him, and that he might send them forth to preach.",
     "reference": "Mark 3:14",
-    "publishDate": "2026-07-25",
+    "publishDate": "2026-09-11",
     "size": 7,
     "grid": [
       "T....J.",
@@ -16653,12 +19677,195 @@
     "kind": "mini"
   },
   {
+    "id": "mini-079",
+    "title": "The Twelve Spies",
+    "difficulty": "easy",
+    "verse": "Let us go up at once, and possess it; for we are well able to overcome it.",
+    "reference": "Numbers 13:30",
+    "publishDate": "2026-09-12",
+    "size": 7,
+    "grid": [
+      ".R...C.",
+      ".E.ANAK",
+      ".P...N.",
+      "JOSHUA.",
+      ".R...A.",
+      ".T.LAND",
+      "......."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 1,
+        "text": "The evil one ten of them brought back",
+        "answer": "REPORT"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 5,
+        "text": "Land they were sent to search",
+        "answer": "CANAAN"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 1,
+        "col": 3,
+        "text": "Whose sons were the giants they saw",
+        "answer": "ANAK"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "The other spy who brought a good report",
+        "answer": "JOSHUA"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 5,
+        "col": 3,
+        "text": "What they were sent to search out",
+        "answer": "LAND"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-080",
+    "title": "The Valley of Dry Bones",
+    "difficulty": "easy",
+    "verse": "O ye dry bones, hear the word of the LORD.",
+    "reference": "Ezekiel 37:4",
+    "publishDate": "2026-09-13",
+    "size": 7,
+    "grid": [
+      "G...S..",
+      "R..WIND",
+      "A.F.N..",
+      "VALLEY.",
+      "E.E.W..",
+      "..S.S..",
+      "..H...."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 0,
+        "text": "He promised to open them and bring his people up",
+        "answer": "GRAVE"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 4,
+        "text": "They came up upon the bones",
+        "answer": "SINEWS"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 1,
+        "col": 3,
+        "text": "It was prophesied to from the four winds",
+        "answer": "WIND"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 2,
+        "col": 2,
+        "text": "It came up, and skin covered them above",
+        "answer": "FLESH"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "Where the prophet was set down",
+        "answer": "VALLEY"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-081",
+    "title": "The Vine and the Branches",
+    "difficulty": "easy",
+    "verse": "I am the vine, ye are the branches: He that abideth in me, and I in him, the same bringeth forth much fruit.",
+    "reference": "John 15:5",
+    "publishDate": "2026-09-14",
+    "size": 7,
+    "grid": [
+      "...P.W.",
+      "..FRUIT",
+      "A..U.T.",
+      "BRANCH.",
+      "I..E.E.",
+      "D....R.",
+      "E......"
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 3,
+        "text": "What the husbandman does to the fruitful branch",
+        "answer": "PRUNE"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 5,
+        "text": "What the branch cast forth does",
+        "answer": "WITHER"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 1,
+        "col": 2,
+        "text": "Much of it is brought forth by abiding",
+        "answer": "FRUIT"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 2,
+        "col": 0,
+        "text": "What the branch must do in the vine",
+        "answer": "ABIDE"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "What his disciples are",
+        "answer": "BRANCH"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
     "id": "mini-026",
     "title": "The Whole Armour",
     "difficulty": "easy",
     "verse": "Put on the whole armour of God, that ye may be able to stand against the wiles of the devil.",
     "reference": "Ephesians 6:11",
-    "publishDate": "2026-07-26",
+    "publishDate": "2026-09-15",
     "size": 7,
     "grid": [
       "...FEET",
@@ -16722,12 +19929,203 @@
     "kind": "mini"
   },
   {
+    "id": "mini-082",
+    "title": "The Wise and Foolish Virgins",
+    "difficulty": "easy",
+    "verse": "But the wise took oil in their vessels with their lamps.",
+    "reference": "Matthew 25:4",
+    "publishDate": "2026-09-16",
+    "size": 7,
+    "grid": [
+      "..D....",
+      "..O...W",
+      "..O.N.I",
+      "VIRGINS",
+      "....G.E",
+      "WATCH..",
+      "....TEN"
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 2,
+        "text": "It was shut when they returned",
+        "answer": "DOOR"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 1,
+        "col": 6,
+        "text": "Five of them were this",
+        "answer": "WISE"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 2,
+        "col": 4,
+        "text": "At mid- of it, the cry was made",
+        "answer": "NIGHT"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "Ten who took their lamps to meet the bridegroom",
+        "answer": "VIRGINS"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 5,
+        "col": 0,
+        "text": "What we are told to do, knowing neither day nor hour",
+        "answer": "WATCH"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 6,
+        "col": 4,
+        "text": "How many virgins there were",
+        "answer": "TEN"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-083",
+    "title": "The Woman at the Well",
+    "difficulty": "easy",
+    "verse": "But whosoever drinketh of the water that I shall give him shall never thirst.",
+    "reference": "John 4:14",
+    "publishDate": "2026-09-17",
+    "size": 7,
+    "grid": [
+      ".TRUTH.",
+      "....H..",
+      ".J..I.W",
+      "SAMARIA",
+      ".C..S.T",
+      ".O..T.E",
+      ".B....R"
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 1,
+        "text": "True worshippers worship in spirit and this",
+        "answer": "TRUTH"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 4,
+        "text": "Whoever drinks the living water shall never do it",
+        "answer": "THIRST"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 2,
+        "col": 1,
+        "text": "Whose well it was",
+        "answer": "JACOB"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 2,
+        "col": 6,
+        "text": "The living kind that was offered",
+        "answer": "WATER"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "Region he must needs go through",
+        "answer": "SAMARIA"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-084",
+    "title": "The Writing on the Wall",
+    "difficulty": "easy",
+    "verse": "MENE, MENE, TEKEL, UPHARSIN.",
+    "reference": "Daniel 5:25",
+    "publishDate": "2026-09-18",
+    "size": 7,
+    "grid": [
+      "H......",
+      "A.M....",
+      "N.E.T..",
+      "DANIEL.",
+      "..E.K..",
+      "....E..",
+      ".SCALES"
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 0,
+        "text": "Fingers of it wrote on the plaister",
+        "answer": "HAND"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 1,
+        "col": 2,
+        "text": "First word written, repeated",
+        "answer": "MENE"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 2,
+        "col": 4,
+        "text": "Word meaning weighed in the balances",
+        "answer": "TEKEL"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "He alone could read the writing",
+        "answer": "DANIEL"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 6,
+        "col": 1,
+        "text": "Balances in which he was found wanting",
+        "answer": "SCALES"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
     "id": "mini-027",
     "title": "Thrones of Israel",
     "difficulty": "easy",
     "verse": "Give therefore thy servant an understanding heart to judge thy people, that I may discern between good and bad.",
     "reference": "1 Kings 3:9",
-    "publishDate": "2026-07-27",
+    "publishDate": "2026-09-19",
     "size": 7,
     "grid": [
       "...T...",
@@ -16783,12 +20181,134 @@
     "kind": "mini"
   },
   {
+    "id": "mini-085",
+    "title": "Through the Red Sea",
+    "difficulty": "easy",
+    "verse": "And the LORD caused the sea to go back by a strong east wind all that night, and made the sea dry land, and the waters were divided.",
+    "reference": "Exodus 14:21",
+    "publishDate": "2026-09-20",
+    "size": 7,
+    "grid": [
+      "......H",
+      "......O",
+      "..W.W.S",
+      "CHARIOT",
+      "..L.N..",
+      "..L.DRY",
+      "......."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 6,
+        "text": "Pharaoh's whole army",
+        "answer": "HOST"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 2,
+        "col": 2,
+        "text": "What the waters were to them on either hand",
+        "answer": "WALL"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 2,
+        "col": 4,
+        "text": "Strong east one that drove the sea back",
+        "answer": "WIND"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "Pharaoh's, which pursued into the sea",
+        "answer": "CHARIOT"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 5,
+        "col": 4,
+        "text": "Kind of land the sea became",
+        "answer": "DRY"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-086",
+    "title": "Thy Faith Hath Made Thee Whole",
+    "difficulty": "easy",
+    "verse": "Go thy way; thy faith hath made thee whole.",
+    "reference": "Mark 10:52",
+    "publishDate": "2026-09-21",
+    "size": 7,
+    "grid": [
+      "....M..",
+      "GARMENT",
+      "....R..",
+      "JERICHO",
+      "..O.Y..",
+      ".WAY...",
+      "..D...."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 4,
+        "text": "What he cried out for",
+        "answer": "MERCY"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 1,
+        "col": 0,
+        "text": "He cast it away and rose",
+        "answer": "GARMENT"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "City he sat outside of",
+        "answer": "JERICHO"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 3,
+        "col": 2,
+        "text": "The highway side where he sat begging",
+        "answer": "ROAD"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 5,
+        "col": 1,
+        "text": "Go thy ---",
+        "answer": "WAY"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
     "id": "mini-028",
     "title": "Virtuous Women",
     "difficulty": "easy",
     "verse": "Who can find a virtuous woman? for her price is far above rubies.",
     "reference": "Proverbs 31:10",
-    "publishDate": "2026-07-28",
+    "publishDate": "2026-09-22",
     "size": 7,
     "grid": [
       "..MARY.",
@@ -16852,12 +20372,134 @@
     "kind": "mini"
   },
   {
+    "id": "mini-087",
+    "title": "Water from the Rock",
+    "difficulty": "easy",
+    "verse": "Thou shalt smite the rock, and there shall come water out of it, that the people may drink.",
+    "reference": "Exodus 17:6",
+    "publishDate": "2026-09-23",
+    "size": 7,
+    "grid": [
+      ".H.....",
+      "ROCK...",
+      ".R...W.",
+      "MERIBAH",
+      ".B...T.",
+      ".....E.",
+      ".ELDERS"
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 1,
+        "text": "Mount where the LORD stood upon the rock",
+        "answer": "HOREB"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 1,
+        "col": 0,
+        "text": "It was smitten and gave water",
+        "answer": "ROCK"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 2,
+        "col": 5,
+        "text": "What came out for the people",
+        "answer": "WATER"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "Name of the place, meaning chiding",
+        "answer": "MERIBAH"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 6,
+        "col": 1,
+        "text": "They went before the people as witnesses",
+        "answer": "ELDERS"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-088",
+    "title": "Where Are the Nine?",
+    "difficulty": "easy",
+    "verse": "Were there not ten cleansed? but where are the nine?",
+    "reference": "Luke 17:17",
+    "publishDate": "2026-09-24",
+    "size": 7,
+    "grid": [
+      "...C...",
+      ".T.L...",
+      ".H.E.N.",
+      "SAMARIA",
+      ".N.N.N.",
+      ".K..TEN",
+      ".S....."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 3,
+        "text": "What they became as they went",
+        "answer": "CLEAN"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 1,
+        "col": 1,
+        "text": "What the one returned to give",
+        "answer": "THANKS"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 2,
+        "col": 5,
+        "text": "How many did not return",
+        "answer": "NINE"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "Region he passed through, with Galilee",
+        "answer": "SAMARIA"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 5,
+        "col": 4,
+        "text": "How many were cleansed",
+        "answer": "TEN"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
     "id": "mini-029",
     "title": "Whither Thou Goest",
     "difficulty": "easy",
     "verse": "Whither thou goest, I will go; and where thou lodgest, I will lodge: thy people shall be my people, and thy God my God.",
     "reference": "Ruth 1:16",
-    "publishDate": "2026-07-29",
+    "publishDate": "2026-09-25",
     "size": 7,
     "grid": [
       "M......",
@@ -16921,12 +20563,81 @@
     "kind": "mini"
   },
   {
+    "id": "mini-089",
+    "title": "Wrestling at Peniel",
+    "difficulty": "easy",
+    "verse": "Thy name shall be called no more Jacob, but Israel: for as a prince hast thou power with God and with men, and hast prevailed.",
+    "reference": "Genesis 32:28",
+    "publishDate": "2026-09-26",
+    "size": 7,
+    "grid": [
+      "...NAME",
+      "..F.N..",
+      "N.O.G..",
+      "ISRAEL.",
+      "G.D.L..",
+      "H......",
+      "THIGH.."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 3,
+        "text": "What was changed at the river",
+        "answer": "NAME"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 4,
+        "text": "The one who strove with him till dawn",
+        "answer": "ANGEL"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 1,
+        "col": 2,
+        "text": "Crossing of Jabbok he passed over",
+        "answer": "FORD"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 2,
+        "col": 0,
+        "text": "When the struggle took place",
+        "answer": "NIGHT"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "New name given to the wrestler",
+        "answer": "ISRAEL"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 6,
+        "col": 0,
+        "text": "It was touched and put out of joint",
+        "answer": "THIGH"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
     "id": "mini-030",
     "title": "Written in Stone",
     "difficulty": "easy",
     "verse": "Thou shalt have no other gods before me.",
     "reference": "Exodus 20:3",
-    "publishDate": "2026-07-30",
+    "publishDate": "2026-09-27",
     "size": 7,
     "grid": [
       "..SINAI",
@@ -16985,6 +20696,67 @@
         "col": 4,
         "text": "It was given by Moses",
         "answer": "LAW"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-090",
+    "title": "Zacchaeus in the Tree",
+    "difficulty": "easy",
+    "verse": "Zacchaeus, make haste, and come down; for to day I must abide at thy house.",
+    "reference": "Luke 19:5",
+    "publishDate": "2026-09-28",
+    "size": 7,
+    "grid": [
+      ".SHORT.",
+      ".E....H",
+      "JERICHO",
+      ".K....U",
+      "......S",
+      "RESTORE",
+      "......."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 1,
+        "text": "Why he could not see for the press",
+        "answer": "SHORT"
+      },
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 1,
+        "text": "The Son of man came to do this, and to save",
+        "answer": "SEEK"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 1,
+        "col": 6,
+        "text": "Where salvation came that day",
+        "answer": "HOUSE"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 2,
+        "col": 0,
+        "text": "City he passed through",
+        "answer": "JERICHO"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 5,
+        "col": 0,
+        "text": "What he promised to do fourfold",
+        "answer": "RESTORE"
       }
     ],
     "kind": "mini"
