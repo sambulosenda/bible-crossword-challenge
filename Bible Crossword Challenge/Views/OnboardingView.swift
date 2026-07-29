@@ -28,6 +28,7 @@ struct OnboardingView: View {
     @Environment(StoreService.self) private var store
     @Environment(\.analytics) private var analytics
     @Environment(\.notifications) private var notifications
+    @Environment(\.puzzleProvider) private var puzzleProvider
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     @AppStorage("remindersEnabled") private var remindersEnabled = false
@@ -334,7 +335,9 @@ struct OnboardingView: View {
             }
 
             VStack(alignment: .leading, spacing: Theme.Spacing.m) {
-                benefit("book.pages", "Every puzzle pack", "117 puzzles today, and every pack we add.")
+                // Counted from the bundle, like the main paywall: a written
+                // number goes stale the moment the puzzle bank grows.
+                benefit("book.pages", "Every puzzle pack", "\(puzzleProvider.totalPuzzleCount) puzzles today, and every pack we add.")
                 benefit("books.vertical", "The whole library", "Replay any puzzle, as often as you like.")
                 benefit("lightbulb.max", "Unlimited hints", "Never stuck on one clue.")
                 benefit("nosign", "No ads, ever", "Just you and the grid.")
