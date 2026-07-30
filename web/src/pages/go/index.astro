@@ -1,0 +1,116 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Brand from '../../components/Brand.astro';
+import { APP_STORE_URL } from '../../consts';
+
+// Bio-link landing for social profiles (TikTok, Instagram, YouTube). One page,
+// many sources: /go?s=tiktok, /go?s=reels, /go?s=shorts. The source becomes the
+// App Store campaign token (`ct`), which surfaces in App Store Connect →
+// App Analytics → Acquisition → Campaigns. That is the only install
+// attribution available without an SDK, and it is enough to tell the channels
+// apart.
+//
+// noindex: this is a routing page, not a destination. It is also absent from
+// sitemap.xml (which is an explicit allowlist), so nothing needs doing there.
+const title = 'Get Bible Crossword Challenge';
+const description =
+  'A new Bible crossword every day, free on iPhone and iPad.';
+---
+<Layout title={title} description={description} path="/go/" robots="noindex, follow" chrome={false}>
+  <main id="main" class="go-wrap">
+    <article class="go-card">
+      <div class="go-mark"><Brand size={56} /></div>
+      <h1>Bible Crossword Challenge</h1>
+      <p class="go-lede">A new Scripture crossword every day. Free to play, no account, works offline.</p>
+
+      <a class="btn-store" href={APP_STORE_URL} id="cta" rel="noopener">
+        <svg width="26" height="30" viewBox="0 0 24 29" fill="#fff" aria-hidden="true"
+          ><path d="M19.7 15.3c0-3.3 2.7-4.9 2.8-5-1.5-2.2-3.9-2.6-4.7-2.6-2-.2-3.9 1.2-4.9 1.2-1 0-2.6-1.2-4.3-1.1-2.2 0-4.2 1.3-5.3 3.2-2.3 4-.6 9.8 1.6 13 1.1 1.6 2.4 3.3 4.1 3.3 1.6-.1 2.3-1.1 4.2-1.1 2 0 2.5 1.1 4.3 1 1.8 0 2.9-1.6 4-3.2 1.3-1.8 1.8-3.6 1.8-3.7-.1 0-3.5-1.4-3.6-5zM16.4 5.2c.9-1.1 1.5-2.6 1.3-4.2-1.3.1-2.9.9-3.8 2-.8 1-1.6 2.5-1.4 4 1.5.1 3-.7 3.9-1.8z"
+          /></svg>
+        <span><small>Download on the</small><strong>App Store</strong></span>
+      </a>
+
+      <p class="go-note" id="note" hidden></p>
+
+      <p class="go-foot"><a href="/">biblecrosswordchallenge.com</a></p>
+    </article>
+  </main>
+</Layout>
+
+<style is:global>
+  .go-wrap { min-height: 100vh; display: grid; place-items: center; padding: var(--s-3); }
+  .go-card {
+    width: 100%; max-width: 420px; text-align: center;
+    border: 1px solid var(--rule); border-radius: var(--radius-lg);
+    background: var(--bg-raised);
+    padding: var(--s-6) var(--s-4) var(--s-4);
+    box-shadow: var(--shadow-lift);
+  }
+  .go-mark { display: flex; justify-content: center; margin-bottom: var(--s-3); }
+  .go-mark .brand-name { display: none; }
+  .go-card h1 {
+    font-family: var(--display);
+    font-size: clamp(26px, 6.5vw, 34px);
+    line-height: 1.15; letter-spacing: -.02em;
+    margin: 0 0 var(--s-2);
+  }
+  .go-lede {
+    font-family: var(--scripture);
+    font-size: 17px; line-height: 1.55; color: var(--fg-soft);
+    max-width: 30ch; margin: 0 auto var(--s-4);
+  }
+  .go-card .btn-store { justify-content: center; }
+  .go-note {
+    font-size: 14px; color: var(--fg-mute);
+    margin: var(--s-3) auto 0; max-width: 34ch; min-height: 1.4em;
+  }
+  .go-foot {
+    font-family: var(--mono); font-size: 11px; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--fg-mute); margin-top: var(--s-4);
+  }
+  .go-foot a:hover { color: var(--fg); }
+  [hidden] { display: none !important; }
+</style>
+
+<script>
+  // ── Campaign token ───────────────────────────────────────────────────────
+  // ?s=tiktok → ct=tiktok. Defaults to the neutral `bio` rather than `tiktok`,
+  // so a link that lost its param reports as unattributed instead of quietly
+  // inflating one channel's numbers. Sanitised hard: this value goes straight
+  // into an outbound URL, so anything that isn't a plain slug is discarded.
+  const FALLBACK = 'bio';
+  const raw = new URLSearchParams(location.search).get('s') || FALLBACK;
+  const source = /^[a-z0-9_-]{1,24}$/i.test(raw) ? raw.toLowerCase() : FALLBACK;
+
+  const cta = document.getElementById('cta') as HTMLAnchorElement;
+  const url = new URL(cta.href);
+  url.searchParams.set('ct', source);
+  cta.href = url.href;
+
+  // ── Platform ─────────────────────────────────────────────────────────────
+  // iPadOS 13+ reports as "Macintosh", so a touch-capable Mac is really an iPad.
+  const ua = navigator.userAgent;
+  const isIOS =
+    /iPad|iPhone|iPod/.test(ua) ||
+    (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+
+  const note = document.getElementById('note')!;
+
+  if (isIOS) {
+    // Send them on, but only after the card has painted — a redirect fired
+    // before first paint reads as a hijack and loses the brand impression that
+    // makes the install feel deliberate. `replace` keeps the back button
+    // pointing at TikTok instead of bouncing through here again.
+    note.textContent = 'Opening the App Store…';
+    note.hidden = false;
+    let cancelled = false;
+    // Any tap means they got there first; don't yank the page out from under.
+    cta.addEventListener('click', () => { cancelled = true; });
+    setTimeout(() => { if (!cancelled) location.replace(cta.href); }, 600);
+  } else {
+    // iOS-only app. Saying so is better than dropping an Android or desktop
+    // visitor onto an App Store page they can't act on.
+    note.textContent = 'iPhone and iPad only. Open this link on your phone to install.';
+    note.hidden = false;
+  }
+</script>
