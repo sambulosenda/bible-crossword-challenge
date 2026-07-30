@@ -242,7 +242,12 @@ h3 {
 
 .brand { display: flex; align-items: center; gap: 11px; color: inherit; }
 .brand-name { font-family: var(--display); font-weight: 500; font-size: 19px; letter-spacing: -.01em; font-variation-settings: "opsz" 30, "SOFT" 14; }
-.brand-mark { border-radius: 8px; display: block; }
+/* The mark is the real App Store icon, shipped full-bleed square because iOS
+   masks its own corners. 22.4% approximates Apple's superellipse and, being
+   proportional, holds at every size Brand.astro is called at (30 in the nav and
+   footer, 44 on /challenge, 56 on /go) — a fixed radius reads too tight the
+   larger it gets. */
+.brand-mark { border-radius: 22.4%; display: block; }
 
 .nav-links { display: flex; align-items: center; gap: var(--s-3); }
 .nav-link {

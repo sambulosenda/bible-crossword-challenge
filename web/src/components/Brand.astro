@@ -1,24 +1,29 @@
 ---
-// The app-icon mark + wordmark, used in the nav and footer. The mark stays the
-// icon people tap on the App Store — on ink bands it keeps its dark plate and
-// gains a hairline ring so the silhouette still reads, rather than inverting
-// into a different-looking logo.
+// The app-icon mark + wordmark, used in the nav, footer, and the standalone
+// /challenge and /go cards. This is the *actual* App Store icon, not a
+// stand-in: every one of these surfaces is a step towards the store, and the
+// handoff only reads as one product if the mark someone taps matches the icon
+// they land on.
+//
+// The source PNG is full-bleed square (iOS masks its own corners), so the
+// rounding is applied here. 22.4% approximates Apple's superellipse and, being
+// proportional, holds at every `size` the callers pass — 30 in the nav and
+// footer, 44 on /challenge, 56 on /go.
+//
+// No ink-band treatment: the icon is bright blue on every band, so unlike the
+// old dark mark it needs no hairline ring to keep its silhouette.
 interface Props { size?: number; }
 const { size = 30 } = Astro.props;
 ---
 <a class="brand" href="/" aria-label="Bible Crossword Challenge home">
-  <svg class="brand-mark" width={size} height={size} viewBox="0 0 64 64" aria-hidden="true">
-    <rect width="64" height="64" rx="14" fill="#141416" />
-    <rect x="24" y="8" width="16" height="48" rx="2" fill="#fff" />
-    <rect x="8" y="24" width="48" height="16" rx="2" fill="#fff" />
-    <rect x="24" y="24" width="16" height="16" fill="#0B7BFF" />
-    <rect class="brand-ring" x=".75" y=".75" width="62.5" height="62.5" rx="13.5" fill="none" stroke-width="1.5" />
-  </svg>
+  <img
+    class="brand-mark"
+    src="/assets/icon-192.png"
+    width={size}
+    height={size}
+    alt=""
+    aria-hidden="true"
+    decoding="async"
+  />
   <span class="brand-name">Bible Crossword Challenge</span>
 </a>
-
-<style is:global>
-  .brand-ring { stroke: transparent; }
-  .band-ink .brand-ring,
-  .nav[data-mode="over"] .brand-ring { stroke: rgba(236, 234, 228, .22); }
-</style>

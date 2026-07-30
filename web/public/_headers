@@ -7,6 +7,12 @@
   Cache-Control: public, max-age=3600
 
 # Long-cache immutable static assets (screenshots, icons, og image).
+#
+# `immutable` means exactly that: never overwrite a file here in place. The edge
+# holds it for a year and returning browsers never revalidate, so a replaced
+# icon or screenshot keeps serving the old bytes long after the deploy. Ship
+# changed art at a NEW path instead — that is why the icons carry their size
+# (icon-48/180/192.png) rather than a bare apple-touch-icon.png.
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
 

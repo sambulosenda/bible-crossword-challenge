@@ -27,7 +27,7 @@ const entityLd = {
       '@id': `${SITE}/#publisher`,
       name: 'Bible Crossword Challenge',
       url: `${SITE}/`,
-      logo: { '@type': 'ImageObject', url: `${SITE}/assets/apple-touch-icon.png`, width: 180, height: 180 },
+      logo: { '@type': 'ImageObject', url: `${SITE}/assets/icon-180.png`, width: 180, height: 180 },
       founder: { '@type': 'Person', name: 'Sambulo Senda' },
       sameAs: [APP_STORE_URL],
     },
@@ -80,8 +80,15 @@ const entityLd = {
 <meta name="twitter:image" content={ogImage} />
 <meta name="twitter:image:alt" content="Bible Crossword Challenge — a daily Bible crossword for iPhone and iPad" />
 
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23141416'/%3E%3Crect x='24' y='8' width='16' height='48' rx='2' fill='%23fff'/%3E%3Crect x='8' y='24' width='48' height='16' rx='2' fill='%23fff'/%3E%3Crect x='24' y='24' width='16' height='16' fill='%230B7BFF'/%3E%3C/svg%3E" />
-<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
+<!-- The real App Store icon, not a stand-in — the tab, the home-screen bookmark
+     and the store listing should all be recognisably the same object. It costs
+     one small cached request where the old inline SVG cost none; worth it.
+
+     Size in the filename, never overwritten: /assets/* is served immutable for
+     a year (public/_headers), so a changed icon MUST arrive at a new path or
+     the edge and every returning browser keep the old bytes. -->
+<link rel="icon" type="image/png" sizes="48x48" href="/assets/icon-48.png" />
+<link rel="apple-touch-icon" href="/assets/icon-180.png" />
 <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
