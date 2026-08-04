@@ -43,6 +43,9 @@ struct RootView: View {
     /// Set the first time the day-2 reminder prompt is shown, whatever the
     /// answer. One second ask is a nudge; a recurring one is nagging.
     @AppStorage("didAskReminderAgain") private var didAskReminderAgain = false
+    /// Set by ProfileView when it hands the player to Settings to allow
+    /// notifications; cleared here once they come back with an answer.
+    @AppStorage("pendingReminderOptIn") private var pendingReminderOptIn = false
     @State private var showReminderPrompt = false
 
     var body: some View {
@@ -97,6 +100,14 @@ struct RootView: View {
             mergeSyncDuplicates()
             WidgetBridge.publish(profile)
             Task {
+                // Unconditionally, and before anything reads it. Notification
+                // permission is the one setting that can change while the app
+                // is in the background, and `reschedule` only refreshes after
+                // its own `enabled` guard — so a player who allowed
+                // notifications in Settings came back to a cached `.denied`,
+                // and the Profile toggle sent them straight back to Settings.
+                await notifications.refreshStatus()
+                completePendingReminderOptIn()
                 await notifications.reschedule(for: profile, enabled: remindersEnabled, minutes: reminderMinutes)
             }
         }
@@ -123,6 +134,30 @@ struct RootView: View {
                     showReminderPrompt = false
                 }
             }
+        }
+    }
+
+    /// Finishes an opt-in that was interrupted by a trip to Settings.
+    ///
+    /// The player asked for a reminder, the switch went back off because
+    /// permission was missing, and they were handed to Settings. If they come
+    /// back having allowed notifications, honouring what they already asked for
+    /// is the whole point of sending them; making them flip the switch a second
+    /// time reads as the app having ignored them.
+    private func completePendingReminderOptIn() {
+        guard pendingReminderOptIn else { return }
+        switch notifications.authorizationStatus {
+        case .authorized, .provisional, .ephemeral:
+            pendingReminderOptIn = false
+            remindersEnabled = true
+            analytics.log(.reminderSettingChanged(enabled: true))
+        case .denied:
+            // They looked at Settings and left notifications off. That's an
+            // answer; stop waiting for one.
+            pendingReminderOptIn = false
+        default:
+            // Still undetermined — Settings may not have been opened yet.
+            break
         }
     }
 

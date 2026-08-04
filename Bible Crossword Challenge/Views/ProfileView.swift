@@ -19,6 +19,9 @@ struct ProfileView: View {
     @Environment(\.openURL) private var openURL
     @AppStorage("appTheme") private var appTheme: AppTheme = .system
     @AppStorage("remindersEnabled") private var remindersEnabled = false
+    /// Set when the player is sent to Settings to allow notifications; RootView
+    /// finishes the opt-in if they come back having allowed them.
+    @AppStorage("pendingReminderOptIn") private var pendingReminderOptIn = false
     @AppStorage("reminderMinutes") private var reminderMinutes = ReminderTime.defaultMinutes
     @State private var showPaywall = false
     @State private var showManageSubscriptions = false
@@ -188,6 +191,12 @@ struct ProfileView: View {
             case .denied:
                 // Can't grant from inside the app — bounce to Settings, leave off.
                 remindersEnabled = false
+                // Remember that turning it on was the intent. The switch above
+                // is off because permission is missing, not because the player
+                // changed their mind, and without this they come back from
+                // Settings having allowed notifications only to find the toggle
+                // still off and have to ask a second time.
+                pendingReminderOptIn = true
                 if let url = URL(string: UIApplication.openSettingsURLString) {
                     openURL(url)
                 }
