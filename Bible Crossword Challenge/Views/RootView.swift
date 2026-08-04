@@ -40,6 +40,10 @@ struct RootView: View {
     @AppStorage("hasOnboarded") private var hasOnboarded = false
     @AppStorage("remindersEnabled") private var remindersEnabled = false
     @AppStorage("reminderMinutes") private var reminderMinutes = ReminderTime.defaultMinutes
+    /// Set the first time the day-2 reminder prompt is shown, whatever the
+    /// answer. One second ask is a nudge; a recurring one is nagging.
+    @AppStorage("didAskReminderAgain") private var didAskReminderAgain = false
+    @State private var showReminderPrompt = false
 
     var body: some View {
         Group {
@@ -80,6 +84,11 @@ struct RootView: View {
             gameCenter.authenticate()
             analytics.log(.appOpen)
             await notifications.reschedule(for: profile, enabled: remindersEnabled, minutes: reminderMinutes)
+            // Status has to be read before deciding, because the whole point of
+            // the second ask is that it only makes sense while the system
+            // prompt is still unspent.
+            await notifications.refreshStatus()
+            showReminderPrompt = shouldAskAgain(profile)
         }
         .onChange(of: scenePhase) { _, phase in
             // Returning to the foreground may cross midnight or land after a solve
@@ -104,6 +113,41 @@ struct RootView: View {
         } message: {
             Text("This challenge was made with a newer version of the app. Update to play it.")
         }
+        .sheet(isPresented: $showReminderPrompt) {
+            if let profile = profiles.first {
+                DailyReminderPrompt(profile: profile) {
+                    // Marked on the way out rather than on the way in, so a
+                    // launch that never finished presenting doesn't burn the
+                    // single ask this player gets.
+                    didAskReminderAgain = true
+                    showReminderPrompt = false
+                }
+            }
+        }
+    }
+
+    /// Whether to make the second reminder ask on this launch.
+    ///
+    /// Every condition is a reason the ask would otherwise be wasted or unwanted:
+    /// they already have a reminder; they already answered the system dialog, so
+    /// a prompt would show nothing (Settings is the only route left, and that is
+    /// a separate job); they've been asked a second time already; or they're
+    /// still on the day they installed, which is not a return visit.
+    private func shouldAskAgain(_ profile: PlayerProfile) -> Bool {
+        guard hasOnboarded,
+              !remindersEnabled,
+              !didAskReminderAgain,
+              notifications.authorizationStatus == .notDetermined,
+              // A challenge link is taking them somewhere; don't interrupt it.
+              pendingNavChallenge == nil
+        else { return false }
+        #if DEBUG
+        // Same family as -uiSeedShowcase. The day-2 clause is otherwise only
+        // reachable by waiting a day or moving the device clock, which makes
+        // the one screen a player sees least the one hardest to look at.
+        if ProcessInfo.processInfo.arguments.contains("-uiForceReminderPrompt") { return true }
+        #endif
+        return !Calendar.current.isDateInToday(profile.createdAt)
     }
 
     /// Deep-link entry: friend challenges (`challenge`) and widget taps

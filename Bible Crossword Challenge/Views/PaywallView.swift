@@ -39,25 +39,35 @@ struct PaywallView: View {
     @State private var didLogOpen = false
 
     @ScaledMetric(relativeTo: .body) private var checkSize: CGFloat = 22
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
-    /// Outcome first, proof second. The previous list was an inventory ("All
-    /// 117 puzzles / The full archive / Unlimited hints") — accurate, but it
-    /// described the box rather than what the box does for you.
+    private var benefits: [PremiumBenefit] {
+        PremiumBenefit.all(
+            puzzleCount: puzzleProvider.totalPuzzleCount,
+            packCount: premiumPackCount
+        )
+    }
+
+    /// The trial as a headline rather than a footnote. When the yearly plan
+    /// carries an introductory offer, the strongest thing this screen can say
+    /// is that today costs nothing — so it goes directly under the promise
+    /// instead of waiting until the plan row or the CTA subtext.
     ///
-    /// Counts come from the bundle rather than a written "100+", so the claim
-    /// can't drift out of date as packs are added. `totalPuzzleCount`, not
-    /// `puzzles.count` — the latter is the daily/Archive pool only and would
-    /// undersell the library by every mini and pack exclusive.
-    private var benefits: [String] {
-        [
-            "Every puzzle in the library, to replay any time",
-            "Every pack, the four below and every one after",
-            "No ads and no hint limits, ever",
-        ]
+    /// Nil when no offer is configured or the player has already used theirs,
+    /// in which case the page silently reads as a straight subscription pitch.
+    private var trialHeadline: String? {
+        guard let yearly = store.products.first(where: { $0.id == StoreService.yearlyID }),
+              let trial = store.introOfferText(for: yearly)
+        else { return nil }
+        return trial
     }
 
     private var selectedProduct: Product? {
         store.products.first { $0.id == selectedID }
+    }
+
+    private var premiumPackCount: Int {
+        puzzleProvider.packs.filter(\.isPremium).count
     }
 
     var body: some View {
@@ -76,9 +86,7 @@ struct PaywallView: View {
                     } else if store.products.isEmpty {
                         productsPlaceholder
                     } else {
-                        lockedPacks
                         plans
-                        legal
                     }
                 }
                 .padding(.horizontal, Theme.Spacing.l)
@@ -104,12 +112,10 @@ struct PaywallView: View {
                     .tint(.secondary)
                     .accessibilityLabel("Close")
                 }
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("Restore") {
-                        Task { await store.restore() }
-                    }
-                    .disabled(store.purchaseInFlight)
-                }
+                // No Restore up here any more: it lives in the pinned footer
+                // with the other housekeeping links, which never scrolls away,
+                // so a second copy was only competing with the close button for
+                // the top of the screen.
             }
             // Opaque, and in the page's own colour: the bar is transparent by
             // default, which put the serif hero underneath the close button as
@@ -143,12 +149,24 @@ struct PaywallView: View {
 
     private var headline: some View {
         VStack(spacing: Theme.Spacing.s) {
+            // The eyebrow carries the fact, the headline carries the reason.
+            // Putting a number in both just says the same thing twice.
             Text("Premium · \(puzzleProvider.totalPuzzleCount) puzzles")
                 .kicker()
-            // Same line as onboarding's premium page: one promise, worded once.
-            Text("Play the whole library.")
+            Text(headlineText)
                 .font(.scripture(.largeTitle, weight: .semibold))
                 .multilineTextAlignment(.center)
+
+            if let trial = trialHeadline {
+                // "Free" carries the accent on its own so the offer survives a
+                // glance, the way a coloured word in a headline does — without
+                // tinting the whole line, which would read as a warning.
+                (Text("Start with a ")
+                    + Text(trial).foregroundColor(Theme.accent).bold()
+                    + Text(" — pay nothing today"))
+                    .font(.subheadline.weight(.medium))
+                    .multilineTextAlignment(.center)
+            }
 
             if let progress = progressLine {
                 Text(progress)
@@ -159,12 +177,68 @@ struct PaywallView: View {
         }
     }
 
+    /// The entry points that get their own promise. Deliberately a failable
+    /// `init(rawValue:)` rather than a match on bare strings: a source that is
+    /// renamed, added, or mistyped falls through to the default line instead of
+    /// leaving the largest text on the screen blank.
+    private enum Entry: String {
+        case hintLimit = "hint_limit"
+        case completion
+        case packCompletion = "pack_completion"
+        case packLocked = "pack_locked"
+        case homeCard = "home_card"
+        case archive
+    }
+
+    /// Said once, in the app's own register rather than its product spec.
+    /// "Library" described the container; this describes what you'd be doing
+    /// with it, which is the only part a player was ever buying.
+    private static let defaultHeadline = "Time in the Word, one clue at a time."
+
+    /// The promise, chosen by where the player came from. Someone who just hit
+    /// a hint wall and someone browsing from their profile are asking different
+    /// questions, and `source` is already threaded through for attribution — so
+    /// the copy can follow it without any new plumbing, and `premium_purchased`
+    /// already carries the same value to judge it by later.
+    private var headlineText: String {
+        switch Entry(rawValue: source) {
+        case .hintLimit:
+            return "Never stuck for long."
+        case .completion:
+            return solvedTally ?? Self.defaultHeadline
+        case .packCompletion:
+            return "The rest of the pack is waiting."
+        case .packLocked:
+            return "The collections are waiting."
+        case .homeCard:
+            return "Make it part of the morning."
+        case .archive:
+            return "Every puzzle, back to the first."
+        // `profile`, onboarding, and anything added later. A player who hasn't
+        // hit a wall needs telling what the app is for, not what it withholds.
+        case nil:
+            return Self.defaultHeadline
+        }
+    }
+
+    /// "12 down. 165 to go." — the player's own two numbers, on the one screen
+    /// where they've just finished something and the next one is the question.
+    private var solvedTally: String? {
+        let solved = completedRecords.count
+        let remaining = puzzleProvider.totalPuzzleCount - solved
+        guard solved > 0, remaining > 0 else { return nil }
+        return "\(solved) down. \(remaining) to go."
+    }
+
     /// The player's own gap, stated as a fact and nothing more. A personal
     /// number is a stronger reason to act now than a generic claim, and unlike
     /// social proof it's something the app can honestly know.
     ///
     /// Hidden at zero: "You've solved 0" is a discouragement, not a nudge.
     private var progressLine: String? {
+        // Suppressed when the headline is already the tally — the two lines
+        // carry identical numbers and reading them in sequence stutters.
+        if Entry(rawValue: source) == .completion, solvedTally != nil { return nil }
         let solved = completedRecords.count
         guard solved > 0 else { return nil }
         return "You've solved \(solved) of \(puzzleProvider.totalPuzzleCount)."
@@ -172,86 +246,41 @@ struct PaywallView: View {
 
     // MARK: - Benefits
 
+    /// The benefits, grouped into one surface rather than floating on the page.
+    /// Four two-line rows loose on the canvas read as an unbroken wall of text;
+    /// bounding them makes the list a single object the eye can skip past on
+    /// the way to the price, and separates it from the locked packs below.
     private var featureList: some View {
         VStack(spacing: Theme.Spacing.m) {
-            ForEach(benefits, id: \.self) { title in
-                HStack(spacing: Theme.Spacing.m) {
+            ForEach(benefits) { benefit in
+                HStack(alignment: .top, spacing: Theme.Spacing.m) {
                     // Accent, not green: green means "solved" everywhere else
                     // in the app, and it shouldn't also mean "included".
                     // The disc scales with the label: at a fixed 22pt the glyph
                     // outgrew it at accessibility sizes and spilled over the edge.
-                    Image(systemName: "checkmark")
-                        .font(.footnote.weight(.black))
+                    Image(systemName: benefit.icon)
+                        .font(.footnote.weight(.bold))
                         .foregroundStyle(Theme.accent)
                         .frame(width: checkSize, height: checkSize)
                         .background(Theme.accent.opacity(0.12), in: .circle)
-                    Text(title)
-                        .font(.body.weight(.medium))
-                        .fixedSize(horizontal: false, vertical: true)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(benefit.title)
+                            .font(.body.weight(.semibold))
+                            .fixedSize(horizontal: false, vertical: true)
+                        Text(benefit.detail)
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
                     Spacer(minLength: 0)
                 }
                 .accessibilityElement(children: .combine)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.vertical, Theme.Spacing.s)
-    }
-
-    // MARK: - Locked packs
-    //
-    // Named, countable things the player can't open yet. The library band at the
-    // top shows what's on offer; this shows it withheld, which is the half a
-    // paywall usually forgets. Real packs from the bundle, so it can't describe
-    // content that doesn't exist.
-
-    @ViewBuilder private var lockedPacks: some View {
-        let packs = puzzleProvider.packs.filter(\.isPremium)
-        if !packs.isEmpty {
-            VStack(alignment: .leading, spacing: Theme.Spacing.s) {
-                Text("Locked right now")
-                    .kicker()
-                HStack(alignment: .top, spacing: Theme.Spacing.s) {
-                    ForEach(packs) { pack in
-                        lockedPackTile(pack)
-                    }
-                }
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.vertical, Theme.Spacing.xs)
-        }
-    }
-
-    private func lockedPackTile(_ pack: PuzzlePack) -> some View {
-        VStack(spacing: 6) {
-            // Tiles divide the width they're given rather than taking a fixed
-            // size, so four of them can't overflow a narrow screen.
-            RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .fill(pack.accent.opacity(0.12))
-                .aspectRatio(1, contentMode: .fit)
-                .overlay {
-                    Image(systemName: pack.coverSymbol)
-                        .font(.title3)
-                        .foregroundStyle(pack.accent.opacity(0.5))
-                }
-                .overlay(alignment: .bottomTrailing) {
-                    Image(systemName: "lock.fill")
-                        .font(.caption2.weight(.bold))
-                        .foregroundStyle(Theme.onInk)
-                        .padding(4)
-                        .background(Theme.ink.opacity(0.85), in: .circle)
-                        .padding(4)
-                }
-
-            Text(pack.title)
-                .font(.caption2)
-                .foregroundStyle(.secondary)
-                .lineLimit(2)
-                .minimumScaleFactor(0.8)
-                .multilineTextAlignment(.center)
-                .frame(maxWidth: .infinity)
-        }
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel("\(pack.title), locked. \(pack.puzzleIDs.count) puzzles.")
+        .padding(Theme.Spacing.m)
+        .background(Theme.surface,
+                    in: .rect(cornerRadius: Theme.cornerRadius, style: .continuous))
     }
 
     private var premiumBadge: some View {
@@ -285,48 +314,72 @@ struct PaywallView: View {
 
     // MARK: - Plans
 
+    /// The two subscriptions side by side, with the lifetime unlock demoted to
+    /// a line beneath them.
+    ///
+    /// Three equal-weight rows made the player rank three things before they
+    /// could do anything, and pushed the price itself below the fold. Two
+    /// columns turn it into one comparison — which is the only question most
+    /// people are actually asking — and lifetime stays reachable for the few
+    /// who want it without competing for the same attention.
     private var plans: some View {
         VStack(spacing: Theme.Spacing.s) {
-            ForEach(store.products, id: \.id) { product in
-                planRow(product)
+            // Two columns can't hold a price and a per-month figure once the
+            // text gets large, so the same cards stack at accessibility sizes.
+            // AnyLayout rather than a branch on the view itself, so selection
+            // keeps its identity (and its animation) across the switch.
+            let layout = dynamicTypeSize.isAccessibilitySize
+                ? AnyLayout(VStackLayout(spacing: Theme.Spacing.s))
+                : AnyLayout(HStackLayout(alignment: .top, spacing: Theme.Spacing.s))
+            layout {
+                ForEach(subscriptionProducts, id: \.id) { product in
+                    planCard(product)
+                }
+            }
+            if let lifetime = store.products.first(where: { $0.id == StoreService.lifetimeID }) {
+                lifetimeRow(lifetime)
             }
         }
-        // Spring the selection ring/radio between plans instead of snapping.
+        // Spring the selection between plans instead of snapping.
         .animation(.snappy(duration: 0.2), value: selectedID)
     }
 
-    private func planRow(_ product: Product) -> some View {
+    /// Yearly and monthly, in that order — never lifetime, which has its own row.
+    private var subscriptionProducts: [Product] {
+        store.products.filter { $0.id != StoreService.lifetimeID }
+    }
+
+    private func planCard(_ product: Product) -> some View {
         let selected = product.id == selectedID
         return Button {
             selectedID = product.id
         } label: {
-            HStack(spacing: Theme.Spacing.m) {
-                VStack(alignment: .leading, spacing: 3) {
-                    HStack(spacing: Theme.Spacing.s) {
-                        Text(planTitle(product))
-                            .font(.headline)
-                        if let badge = badgeText(product) {
-                            // Ink fill rather than a tinted wash: accent on
-                            // accent-15% is about 2.8:1, well under AA for
-                            // caption text, and this is the one label on the
-                            // screen that should be impossible to miss.
-                            Text(badge)
-                                .font(.caption2.weight(.bold))
-                                .foregroundStyle(Theme.onInk)
-                                .padding(.horizontal, 8)
-                                .padding(.vertical, 3)
-                                .background(Theme.ink, in: .capsule)
-                        }
-                    }
-                    Text(planSubtitle(product))
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                }
-                Spacer(minLength: 0)
-                radio(selected: selected)
+            VStack(alignment: .leading, spacing: 4) {
+                // The badge slot is always laid out, hidden when there's
+                // nothing to say, so the two cards keep a common baseline
+                // instead of one sitting a pill's height lower than the other.
+                Text(badgeText(product) ?? "")
+                    .font(.caption2.weight(.bold))
+                    .foregroundStyle(Theme.onInk)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 3)
+                    .background(Theme.ink, in: .capsule)
+                    .opacity(badgeText(product) == nil ? 0 : 1)
+                    .accessibilityHidden(badgeText(product) == nil)
+
+                Text(planTitle(product))
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(.secondary)
+                Text(planPrice(product))
+                    .font(.title3.weight(.semibold))
+                    .fixedSize(horizontal: false, vertical: true)
+                Text(planFootnote(product))
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
             }
-            .padding(Theme.Spacing.m)
             .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(Theme.Spacing.m)
             .background(selected ? Theme.accent.opacity(0.12) : Theme.surface,
                         in: .rect(cornerRadius: Theme.cornerRadius, style: .continuous))
             .overlay {
@@ -335,24 +388,52 @@ struct PaywallView: View {
                         .strokeBorder(Theme.accent, lineWidth: 2)
                 }
             }
+            // Without this the card only answers to taps that land on the
+            // glyphs themselves: a SwiftUI button's hit area is its content,
+            // and neither the padding nor the background extends it. Most of a
+            // card this size is padding, so most of it was dead to the touch.
+            .contentShape(.rect(cornerRadius: Theme.cornerRadius, style: .continuous))
         }
         .buttonStyle(PressableCardStyle())
         .accessibilityElement(children: .combine)
         .accessibilityAddTraits(selected ? [.isButton, .isSelected] : .isButton)
     }
 
-    private func radio(selected: Bool) -> some View {
-        ZStack {
-            Circle()
-                .strokeBorder(selected ? Color.clear : Color(.separator), lineWidth: 1.5)
-            if selected {
-                Circle().fill(Theme.accent)
-                Image(systemName: "checkmark")
-                    .font(.system(size: 12, weight: .black))
-                    .foregroundStyle(.white)
+    /// Lifetime, priced against the subscription rather than presented as a
+    /// peer of it. At roughly two years of the yearly plan it's a real choice,
+    /// not a decoy — so it stays selectable and keeps its own price.
+    private func lifetimeRow(_ product: Product) -> some View {
+        let selected = product.id == selectedID
+        return Button {
+            selectedID = product.id
+        } label: {
+            HStack(spacing: Theme.Spacing.s) {
+                Image(systemName: selected ? "checkmark.circle.fill" : "circle")
+                    .font(.subheadline)
+                    .foregroundStyle(selected ? Theme.accent : Color(.separator))
+                Text("Or pay once — \(product.displayPrice) forever")
+                    .font(.subheadline.weight(selected ? .semibold : .regular))
+                    .fixedSize(horizontal: false, vertical: true)
+                Spacer(minLength: 0)
             }
+            .padding(.horizontal, Theme.Spacing.m)
+            .padding(.vertical, Theme.Spacing.s)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(selected ? Theme.accent.opacity(0.12) : .clear,
+                        in: .rect(cornerRadius: Theme.cornerRadius, style: .continuous))
+            .overlay {
+                if selected {
+                    RoundedRectangle(cornerRadius: Theme.cornerRadius, style: .continuous)
+                        .strokeBorder(Theme.accent, lineWidth: 2)
+                }
+            }
+            // As on the cards above — and it matters more here, because this
+            // row is mostly empty space to the right of a short label.
+            .contentShape(.rect(cornerRadius: Theme.cornerRadius, style: .continuous))
         }
-        .frame(width: 26, height: 26)
+        .buttonStyle(PressableCardStyle())
+        .accessibilityElement(children: .combine)
+        .accessibilityAddTraits(selected ? [.isButton, .isSelected] : .isButton)
     }
 
     private func planTitle(_ product: Product) -> String {
@@ -363,19 +444,33 @@ struct PaywallView: View {
         }
     }
 
-    private func planSubtitle(_ product: Product) -> String {
-        if let trial = store.introOfferText(for: product) {
-            return "\(trial), then \(product.displayPrice)\(store.periodText(for: product) ?? "")"
+    /// The headline figure on a card: what leaves the account, and how often.
+    private func planPrice(_ product: Product) -> String {
+        product.displayPrice + (store.periodText(for: product) ?? "")
+    }
+
+    /// The line under the price, carrying whichever comparison makes that card
+    /// legible on its own: the trial when there is one, the per-month figure on
+    /// yearly, and on monthly the annual total — so the saving is a subtraction
+    /// the reader can see rather than a percentage they have to trust.
+    private func planFootnote(_ product: Product) -> String {
+        if let trial = store.introOfferText(for: product) { return trial }
+        switch product.id {
+        case StoreService.yearlyID:
+            return yearlyPerMonthText.map { "\($0)/month" } ?? ""
+        case StoreService.monthlyID:
+            return monthlyPerYearText.map { "\($0) a year" } ?? ""
+        default:
+            return "one-time"
         }
-        if let period = store.periodText(for: product) {
-            // The yearly price also gets a per-month figure — otherwise the
-            // reader has to divide in their head to compare it with monthly.
-            if product.id == StoreService.yearlyID, let monthly = yearlyPerMonthText {
-                return "\(product.displayPrice)\(period) · \(monthly)/month"
-            }
-            return "\(product.displayPrice)\(period)"
-        }
-        return "\(product.displayPrice) one-time"
+    }
+
+    /// The monthly plan's price over twelve months, in the product's own
+    /// currency — the number the yearly plan is quietly being compared against.
+    private var monthlyPerYearText: String? {
+        guard let monthly = store.products.first(where: { $0.id == StoreService.monthlyID })
+        else { return nil }
+        return (monthly.price * 12).formatted(monthly.priceFormatStyle)
     }
 
     /// The yearly plan's price divided by twelve, formatted in the product's
@@ -409,25 +504,34 @@ struct PaywallView: View {
 
     // MARK: - Purchase
 
-    /// The purchase bar as it sits in the bottom safe area. Empty in the two
-    /// states that have nothing to buy, so the inset collapses rather than
-    /// leaving a floating strip.
-    @ViewBuilder private var pinnedPurchaseBar: some View {
-        if !store.isPremium && !store.products.isEmpty {
-            purchaseSection
-                .padding(.horizontal, Theme.Spacing.l)
-                .padding(.top, Theme.Spacing.m)
-                .padding(.bottom, Theme.Spacing.s)
-                // The fill matches the canvas, so the bar reads continuous with
-                // the page below it without needing to bleed into the safe area.
-                .background(Theme.background)
-                .overlay(alignment: .top) {
-                    // A hairline, because content scrolls underneath and the
-                    // bar needs an edge to read as a separate layer.
-                    Rectangle()
-                        .fill(Color.primary.opacity(0.08))
-                        .frame(height: 1)
-                }
+    /// The purchase bar as it sits in the bottom safe area: the CTA, the terms
+    /// it commits you to, and the housekeeping links, in that order.
+    ///
+    /// The legal row is deliberately *outside* the "is there anything to buy"
+    /// check. It carries Restore, and the state where that matters most is the
+    /// one where products failed to load — a player who has already paid, on a
+    /// bad connection, looking at a retry card. Gating it on a successful
+    /// product fetch would take Restore away from exactly the person who needs
+    /// it, and it is the only copy now that the toolbar button is gone.
+    private var pinnedPurchaseBar: some View {
+        VStack(spacing: Theme.Spacing.s) {
+            if !store.isPremium && !store.products.isEmpty {
+                purchaseSection
+            }
+            legal
+        }
+        .padding(.horizontal, Theme.Spacing.l)
+        .padding(.top, Theme.Spacing.m)
+        .padding(.bottom, Theme.Spacing.s)
+        // The fill matches the canvas, so the bar reads continuous with
+        // the page below it without needing to bleed into the safe area.
+        .background(Theme.background)
+        .overlay(alignment: .top) {
+            // A hairline, because content scrolls underneath and the
+            // bar needs an edge to read as a separate layer.
+            Rectangle()
+                .fill(Color.primary.opacity(0.08))
+                .frame(height: 1)
         }
     }
 
@@ -437,14 +541,12 @@ struct PaywallView: View {
                 guard let product = selectedProduct else { return }
                 Task {
                     let plan = planTitle(product).lowercased()
-                    switch await store.purchase(product) {
-                    case .purchased(let isTrial):
-                        analytics.log(.premiumPurchased(
-                            plan: plan,
-                            source: source,
-                            isTrial: isTrial,
-                            amount: store.amount(for: product)
-                        ))
+                    // `premium_purchased` is emitted by StoreService, which sees
+                    // every grant rather than only the ones that finish inside
+                    // this call. Logging it here as well would double-count.
+                    switch await store.purchase(product, source: source) {
+                    case .purchased:
+                        break
                     case .failed(let reason):
                         analytics.log(.purchaseFailed(plan: plan, source: source, reason: reason))
                     case .cancelled, .pending:
@@ -476,10 +578,18 @@ struct PaywallView: View {
         .padding(.top, Theme.Spacing.s)
     }
 
+    /// Names the thing being started, never the transaction. "Subscribe"
+    /// describes what the player gives up; the trial length and the puzzle
+    /// count describe what they get, and the renewal terms are stated in full
+    /// directly underneath either way.
     private var ctaTitle: String {
         guard let product = selectedProduct else { return "Continue" }
-        if store.introOfferText(for: product) != nil { return "Start Free Trial" }
-        if store.periodText(for: product) != nil { return "Subscribe" }
+        // "Start 7-day free trial", not a generic "Start Free Trial" — the
+        // length is the most persuasive part and it's already to hand.
+        if let trial = store.introOfferText(for: product) { return "Start \(trial)" }
+        if store.periodText(for: product) != nil {
+            return "Unlock \(puzzleProvider.totalPuzzleCount) puzzles"
+        }
         return "Unlock Lifetime"
     }
 
@@ -488,7 +598,9 @@ struct PaywallView: View {
         guard let product = selectedProduct else { return nil }
         let period = store.periodText(for: product) ?? ""
         if let trial = store.introOfferText(for: product) {
-            return "\(trial), then \(product.displayPrice)\(period). Cancel anytime."
+            // Says when money starts, not just that a trial exists — the
+            // question a trial-sceptic is actually asking at this point.
+            return "Free for \(trial.replacingOccurrences(of: " free trial", with: "")), then \(product.displayPrice)\(period), renewing until cancelled. Cancel anytime."
         }
         if !period.isEmpty {
             return "Auto-renews at \(product.displayPrice)\(period) until cancelled. Cancel anytime in Settings."
@@ -505,6 +617,11 @@ struct PaywallView: View {
         HStack(spacing: Theme.Spacing.m) {
             Link("Terms of Use", destination: LegalLinks.terms)
             Link("Privacy Policy", destination: LegalLinks.privacy)
+            // The only Restore on the screen since the toolbar copy went. A
+            // player who can't find it reads the app as having charged them
+            // twice, so it stays pinned rather than living in scrolled content.
+            Button("Restore") { Task { await store.restore() } }
+                .disabled(store.purchaseInFlight)
         }
         .font(.caption)
         .foregroundStyle(Theme.accent)
@@ -527,6 +644,57 @@ extension View {
         } message: {
             Text(store.purchaseNotice?.message ?? "")
         }
+    }
+}
+
+/// A premium benefit: what you get, then what that actually means.
+///
+/// The single-line version couldn't carry both, so each row had to choose
+/// between being specific and being scannable. Splitting them means the bold
+/// line reads on its own at a glance and the detail is there for anyone who
+/// slows down.
+struct PremiumBenefit: Identifiable {
+    let icon: String
+    let title: String
+    let detail: String
+    var id: String { title }
+
+    /// The promise, written once for both places that make it.
+    ///
+    /// Onboarding's premium page and the paywall are the same offer at two
+    /// moments, and while each kept its own copy they drifted: the paywall was
+    /// rewritten to three outcome-led rows while onboarding still advertised
+    /// four, including a "No ads, ever" the app can't really honour and a
+    /// "whole library" that repeated the row above it. A player who saw both
+    /// was reading two different products.
+    ///
+    /// Counts are passed in from the bundle rather than written as "100+" or
+    /// "four", so no claim here can go stale as puzzles and packs are added.
+    ///
+    /// Hint limits get their own row rather than sharing one with ads: they're
+    /// the most-hit paywall trigger in the app, and pairing the strongest
+    /// reason to subscribe with the weakest one buried it. "No ads" is gone
+    /// entirely — `AdProvider` defaults to `NoOpAdProvider`, so the free tier
+    /// shows a placeholder banner rather than real advertising. Worth adding
+    /// back only if AdMob is ever actually wired up.
+    static func all(puzzleCount: Int, packCount: Int) -> [PremiumBenefit] {
+        [
+            PremiumBenefit(
+                icon: "square.grid.3x3.fill",
+                title: "All \(puzzleCount) puzzles, unlocked",
+                detail: "Every daily, mini and themed pack — replay any of them, any time."
+            ),
+            PremiumBenefit(
+                icon: "lightbulb.fill",
+                title: "No hint limits",
+                detail: "Every hint on every puzzle, for the moments you're properly stuck."
+            ),
+            PremiumBenefit(
+                icon: "rectangle.stack.fill",
+                title: "Every pack, now and later",
+                detail: "\(packCount) themed collections today, plus every new one added after."
+            ),
+        ]
     }
 }
 

@@ -27,7 +27,26 @@ enum AnalyticsEvent {
     // and a paid conversion are never counted as the same thing — the yearly
     // plan carries a free trial and is the default selection, so without this
     // nearly every "purchase" is really a trial that may still churn.
-    case premiumPurchased(plan: String, source: String, isTrial: Bool, amount: StoreService.PurchaseAmount)
+    //
+    // `acquisition` records which path granted the entitlement. Until 2026-08-04
+    // this event was emitted by the two paywall views, so it only ever saw a
+    // purchase that began *and* finished inside one uninterrupted call — an Ask
+    // to Buy approval, a purchase made on another device, and a trial that
+    // converted while the app was closed all landed silently. `StoreService`
+    // now owns the event, keyed on the transaction, so every grant is counted
+    // once; `acquisition` is how a self-serve tap is told apart from the rest.
+    case premiumPurchased(
+        plan: String,
+        source: String,
+        isTrial: Bool,
+        amount: StoreService.PurchaseAmount,
+        acquisition: String
+    )
+    /// A subscription billing period that renewed. Deliberately *not*
+    /// `premium_purchased`: a renewal is real revenue but not a new customer,
+    /// and folding the two together would make the purchase count drift away
+    /// from anything App Store Connect reports.
+    case subscriptionRenewed(plan: String, isTrial: Bool, amount: StoreService.PurchaseAmount)
     /// Fires when a purchase attempt ends without an entitlement for a reason
     /// other than the player simply cancelling, so "opened the paywall and
     /// didn't buy" can be split from "tried to buy and it broke".
@@ -61,6 +80,7 @@ enum AnalyticsEvent {
         case .streakUpdated: return "streak_updated"
         case .achievementUnlocked: return "achievement_unlocked"
         case .premiumPurchased: return "premium_purchased"
+        case .subscriptionRenewed: return "subscription_renewed"
         case .purchaseFailed: return "purchase_failed"
         case .paywallOpened: return "paywall_opened"
         case .notificationPermission: return "notification_permission"
@@ -85,11 +105,12 @@ enum AnalyticsEvent {
             return ["solved": solved, "attempts": attempts]
         case .onboardingCompleted(let solvedFirstClue):
             return ["solved_first_clue": solvedFirstClue]
-        case .premiumPurchased(let plan, let source, let isTrial, let amount):
+        case .premiumPurchased(let plan, let source, let isTrial, let amount, let acquisition):
             return [
                 "plan": plan,
                 "source": source,
                 "is_trial": isTrial,
+                "acquisition": acquisition,
                 // Money travels in whole minor units (2999 = $29.99) — the
                 // `_minor_units` suffix is deliberate, so nobody later reads a
                 // 2999 as a price. Point PostHog's Revenue tab at
@@ -97,6 +118,14 @@ enum AnalyticsEvent {
                 "price_minor_units": amount.minorUnits,
                 // What was charged *now*: zero for a trial start, so summing
                 // per source gives real money rather than notional value.
+                "revenue_minor_units": isTrial ? 0 : amount.minorUnits,
+                "currency": amount.currencyCode,
+            ]
+        case .subscriptionRenewed(let plan, let isTrial, let amount):
+            return [
+                "plan": plan,
+                "is_trial": isTrial,
+                "price_minor_units": amount.minorUnits,
                 "revenue_minor_units": isTrial ? 0 : amount.minorUnits,
                 "currency": amount.currencyCode,
             ]

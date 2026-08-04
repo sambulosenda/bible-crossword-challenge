@@ -74,7 +74,30 @@ final class StoreService {
 
     private var updatesTask: Task<Void, Never>?
 
-    init() {
+    private let analytics: any AnalyticsService
+
+    /// Where the player was when they last tapped Buy. StoreKit knows nothing
+    /// about paywalls, so a grant that arrives minutes later — Ask to Buy, or a
+    /// sheet finished after the app was backgrounded — would otherwise lose the
+    /// attribution the whole paywall-source analysis rests on.
+    private var pendingSource: String?
+
+    /// Transactions already reported. StoreKit deliberately hands the same
+    /// transaction to both `Product.purchase()` and `Transaction.updates`, and
+    /// re-delivers anything left unfinished on the next launch, so without this
+    /// a single sale is counted two or three times.
+    private var reportedTransactionIDs: Set<UInt64>
+
+    private static let reportedIDsKey = "storekit.reportedTransactionIDs"
+    /// Enough to cover any plausible backlog of unfinished transactions without
+    /// letting the list grow for the lifetime of the install.
+    private static let reportedIDsLimit = 100
+
+    init(analytics: any AnalyticsService = MultiAnalyticsService.production) {
+        self.analytics = analytics
+        let stored = UserDefaults.standard.array(forKey: Self.reportedIDsKey) as? [NSNumber] ?? []
+        self.reportedTransactionIDs = Set(stored.map { $0.uint64Value })
+
         // Reflect entitlement changes that happen outside an explicit purchase.
         updatesTask = Task { [weak self] in
             for await update in Transaction.updates {
@@ -108,10 +131,13 @@ final class StoreService {
         }
     }
 
-    /// Start a purchase for a specific plan.
+    /// Start a purchase for a specific plan. `source` is the paywall the tap
+    /// came from; it is remembered for the whole attempt so a grant that lands
+    /// out-of-band later is still attributed to the right entry point.
     @discardableResult
-    func purchase(_ product: Product) async -> PurchaseOutcome {
+    func purchase(_ product: Product, source: String) async -> PurchaseOutcome {
         purchaseInFlight = true
+        pendingSource = source
         defer { purchaseInFlight = false }
 
         do {
@@ -121,6 +147,10 @@ final class StoreService {
                 let transaction = try checkVerified(verification)
                 let isTrial = transaction.offer?.type == .introductory
                 await updateEntitlement()
+                // Report before finishing: a crash between the two would
+                // otherwise drop the sale entirely, whereas re-delivery of an
+                // unfinished transaction is caught by the reported-ID set.
+                report(transaction, acquisition: "in_app")
                 await transaction.finish()
                 // `isPremium` can still be false if the entitlement didn't land
                 // (a revoked or superseded transaction), so report the failure
@@ -129,19 +159,26 @@ final class StoreService {
                     ? .purchased(isTrial: isTrial)
                     : .failed(reason: "entitlement_not_granted")
             case .userCancelled:
+                // Nothing is coming, so drop the attribution rather than let it
+                // sit and mislabel whatever grant happens to arrive next.
+                pendingSource = nil
                 return .cancelled
             case .pending:
                 // Ask to Buy / deferred payment — without this the player sees
                 // the button reset and assumes the purchase silently failed.
+                // `pendingSource` deliberately survives: approval can be days
+                // away, and this is the only record of where it started.
                 purchaseNotice = PurchaseNotice(
                     title: "Purchase Pending",
                     message: "Your purchase is waiting for approval. Premium unlocks automatically once it's approved."
                 )
                 return .pending
             @unknown default:
+                pendingSource = nil
                 return .failed(reason: "unknown_result")
             }
         } catch {
+            pendingSource = nil
             purchaseNotice = PurchaseNotice(
                 title: "Purchase Failed",
                 message: "The purchase didn't go through — you haven't been charged. Please try again.\n\n\(error.localizedDescription)"
@@ -223,7 +260,82 @@ final class StoreService {
     private func handle(_ result: VerificationResult<Transaction>) async {
         guard let transaction = try? checkVerified(result) else { return }
         await updateEntitlement()
+        // Everything StoreKit grants without an in-app tap arrives here:
+        // renewals, Ask to Buy approvals, family sharing, purchases made on
+        // another device, and any sheet that finished while the app was away.
+        report(transaction, acquisition: "external")
         await transaction.finish()
+    }
+
+    // MARK: - Purchase reporting
+
+    /// Emit exactly one analytics event for a verified transaction, whichever
+    /// path delivered it.
+    ///
+    /// This is the single choke point on purpose. The event used to be logged
+    /// by the paywall views, which could only see purchases that completed
+    /// inside one uninterrupted `await` — so renewals, deferred approvals and
+    /// cross-device purchases were invisible, and PostHog disagreed with App
+    /// Store Connect by an order of magnitude.
+    private func report(_ transaction: Transaction, acquisition: String) {
+        guard Self.allProductIDs.contains(transaction.productID) else { return }
+        guard !reportedTransactionIDs.contains(transaction.id) else { return }
+        markReported(transaction.id)
+
+        let plan = Self.planName(for: transaction.productID)
+        let isTrial = transaction.offer?.type == .introductory
+        let amount = Self.amount(for: transaction)
+
+        // A renewal is revenue but not a new customer. Keeping it out of
+        // `premium_purchased` is what lets that event stay comparable to the
+        // App Store Connect purchase count.
+        if transaction.reason == .renewal {
+            analytics.log(.subscriptionRenewed(plan: plan, isTrial: isTrial, amount: amount))
+        } else {
+            analytics.log(.premiumPurchased(
+                plan: plan,
+                // An out-of-band grant has no live paywall behind it; fall back
+                // to the last one seen rather than inventing an entry point.
+                source: pendingSource ?? acquisition,
+                isTrial: isTrial,
+                amount: amount,
+                acquisition: acquisition
+            ))
+            pendingSource = nil
+        }
+    }
+
+    private func markReported(_ id: UInt64) {
+        reportedTransactionIDs.insert(id)
+        var trimmed = Array(reportedTransactionIDs)
+        if trimmed.count > Self.reportedIDsLimit {
+            // Highest ids are the most recent, and only recent transactions can
+            // still be re-delivered, so the oldest are safe to forget.
+            trimmed = Array(trimmed.sorted(by: >).prefix(Self.reportedIDsLimit))
+            reportedTransactionIDs = Set(trimmed)
+        }
+        UserDefaults.standard.set(trimmed.map { NSNumber(value: $0) }, forKey: Self.reportedIDsKey)
+    }
+
+    private static func planName(for productID: String) -> String {
+        switch productID {
+        case yearlyID: return "yearly"
+        case monthlyID: return "monthly"
+        case lifetimeID: return "lifetime"
+        default: return "unknown"
+        }
+    }
+
+    /// Price straight off the transaction. A renewal can arrive when no
+    /// `Product` has been loaded — and at a price that has since changed — so
+    /// the transaction is the only trustworthy source for what was charged.
+    private static func amount(for transaction: Transaction) -> PurchaseAmount {
+        let code = transaction.currency?.identifier ?? "USD"
+        let price = transaction.price ?? 0
+        return PurchaseAmount(
+            minorUnits: minorUnits(of: price, currencyCode: code),
+            currencyCode: code
+        )
     }
 
     private func checkVerified<T>(_ result: VerificationResult<T>) throws -> T {
@@ -244,14 +356,6 @@ final class StoreService {
         let minorUnits: Int
         /// ISO 4217, e.g. "USD".
         let currencyCode: String
-    }
-
-    func amount(for product: Product) -> PurchaseAmount {
-        let code = product.priceFormatStyle.currencyCode
-        return PurchaseAmount(
-            minorUnits: Self.minorUnits(of: product.price, currencyCode: code),
-            currencyCode: code
-        )
     }
 
     /// Scales a decimal price into whole minor units.

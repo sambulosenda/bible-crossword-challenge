@@ -55,6 +55,14 @@ struct OnboardingView: View {
     /// Analytics labels for the five pages, indexed by page number.
     private let stepNames = ["welcome", "first_solve", "name", "reminders", "premium"]
 
+    /// The reminder hour as the player's own locale writes it — 12-hour with
+    /// am/pm, 24-hour, or otherwise, decided by their settings rather than by a
+    /// hardcoded format string.
+    private var reminderTimeText: String {
+        ReminderTime.date(fromMinutes: reminderMinutes)
+            .formatted(date: .omitted, time: .shortened)
+    }
+
     private var reminderTime: Binding<Date> {
         Binding(
             get: { ReminderTime.date(fromMinutes: reminderMinutes) },
@@ -304,14 +312,16 @@ struct OnboardingView: View {
 
             // Showing the actual notification is the priming: the player agrees
             // to a thing they have already seen, not to "notifications".
-            notificationPreview
+            NotificationPreviewCard()
                 .entrance(active: active, delay: 0.18, reduceMotion: reduceMotion)
 
             HStack {
-                Text("Remind me at")
+                // "Every day at", because the button below now says "Remind me
+                // at …" — the row sets the schedule, the button is the promise.
+                Text("Every day at")
                     .font(.body)
                 Spacer()
-                DatePicker("Remind me at", selection: reminderTime, displayedComponents: .hourAndMinute)
+                DatePicker("Reminder time", selection: reminderTime, displayedComponents: .hourAndMinute)
                     .labelsHidden()
             }
             .padding(.horizontal, Theme.Spacing.m)
@@ -328,19 +338,25 @@ struct OnboardingView: View {
                 Text("Premium")
                     .kicker()
                     .entrance(active: active, delay: 0.05, reduceMotion: reduceMotion)
-                Text("Play the whole\nlibrary.")
+                // Kept in step with `PaywallView.defaultHeadline` — this is the
+                // same promise at a different moment, and a player who sees one
+                // wording here and another on the paywall reads two offers.
+                Text("Time in the Word,\none clue at a time.")
                     .font(.scripture(.largeTitle, weight: .semibold))
                     .multilineTextAlignment(.center)
                     .entrance(active: active, delay: 0.10, reduceMotion: reduceMotion)
             }
 
             VStack(alignment: .leading, spacing: Theme.Spacing.m) {
-                // Counted from the bundle, like the main paywall: a written
-                // number goes stale the moment the puzzle bank grows.
-                benefit("book.pages", "Every puzzle pack", "\(puzzleProvider.totalPuzzleCount) puzzles today, and every pack we add.")
-                benefit("books.vertical", "The whole library", "Replay any puzzle, as often as you like.")
-                benefit("lightbulb.max", "Unlimited hints", "Never stuck on one clue.")
-                benefit("nosign", "No ads, ever", "Just you and the grid.")
+                // Shared with the paywall rather than restated here — see
+                // `PremiumBenefit.all`. The two screens sell the same thing and
+                // had already drifted apart once.
+                ForEach(PremiumBenefit.all(
+                    puzzleCount: puzzleProvider.totalPuzzleCount,
+                    packCount: puzzleProvider.packs.filter(\.isPremium).count
+                )) { item in
+                    benefit(item.icon, item.title, item.detail)
+                }
             }
             .padding(Theme.Spacing.l)
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -393,41 +409,6 @@ struct OnboardingView: View {
         }
     }
 
-    /// A mock of the reminder the player is being asked to allow.
-    private var notificationPreview: some View {
-        HStack(spacing: Theme.Spacing.m) {
-            RoundedRectangle(cornerRadius: 9, style: .continuous)
-                .fill(LinearGradient(
-                    colors: [Color(red: 0.29, green: 0.47, blue: 0.96),
-                             Color(red: 0.13, green: 0.25, blue: 0.78)],
-                    startPoint: .topLeading, endPoint: .bottomTrailing
-                ))
-                .frame(width: 38, height: 38)
-                .overlay {
-                    Image(systemName: "book.closed.fill")
-                        .font(.system(size: 17, weight: .semibold))
-                        .foregroundStyle(.white)
-                }
-
-            VStack(alignment: .leading, spacing: 1) {
-                Text("Bible Crossword")
-                    .font(.footnote.weight(.semibold))
-                Text("Today’s puzzle is ready — keep your streak alive.")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-
-            Spacer(minLength: 0)
-
-            Text("now")
-                .font(.caption2)
-                .foregroundStyle(.tertiary)
-        }
-        .padding(Theme.Spacing.m)
-        .elevatedCard(cornerRadius: 18)
-    }
-
     // MARK: - Controls
 
     private var controls: some View {
@@ -451,7 +432,12 @@ struct OnboardingView: View {
                 }
 
             case 3:
-                Button("Enable reminders") { enableReminders() }
+                // The chosen time, not "Enable reminders". Agreeing to a
+                // specific thing at a specific hour is a smaller, clearer step
+                // than granting a capability, and the time is already sitting
+                // in the picker above — restating it here turns the button into
+                // the sentence the player is actually agreeing to.
+                Button("Remind me at \(reminderTimeText)") { enableReminders() }
                     .buttonStyle(.pillProminent)
                 Button("Not now") { advance() }
                     .font(.subheadline.weight(.semibold))
@@ -589,14 +575,10 @@ struct OnboardingView: View {
     private func buyYearly() {
         Task {
             guard let yearly = store.yearly else { return finish() }
-            switch await store.purchase(yearly) {
-            case .purchased(let isTrial):
-                analytics.log(.premiumPurchased(
-                    plan: "yearly",
-                    source: "onboarding",
-                    isTrial: isTrial,
-                    amount: store.amount(for: yearly)
-                ))
+            // StoreService emits `premium_purchased` for every grant, including
+            // ones that land after this screen is gone — see its `report`.
+            switch await store.purchase(yearly, source: "onboarding") {
+            case .purchased:
                 finish()
             case .cancelled:
                 // Nothing to explain, continue on in.
