@@ -338,10 +338,11 @@ struct OnboardingView: View {
                 Text("Premium")
                     .kicker()
                     .entrance(active: active, delay: 0.05, reduceMotion: reduceMotion)
-                // Kept in step with `PaywallView.defaultHeadline` — this is the
-                // same promise at a different moment, and a player who sees one
-                // wording here and another on the paywall reads two offers.
-                Text("Time in the Word,\none clue at a time.")
+                // Shared with the paywall rather than restated — see
+                // `PremiumCopy.promise`. The explicit line break went with it:
+                // the sentence wraps to the same two lines at this width, and a
+                // hardcoded break is what stops shared copy staying shared.
+                Text(PremiumCopy.promise)
                     .font(.scripture(.largeTitle, weight: .semibold))
                     .multilineTextAlignment(.center)
                     .entrance(active: active, delay: 0.10, reduceMotion: reduceMotion)

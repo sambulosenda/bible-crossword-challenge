@@ -190,10 +190,7 @@ struct PaywallView: View {
         case archive
     }
 
-    /// Said once, in the app's own register rather than its product spec.
-    /// "Library" described the container; this describes what you'd be doing
-    /// with it, which is the only part a player was ever buying.
-    private static let defaultHeadline = "Time in the Word, one clue at a time."
+    private static let defaultHeadline = PremiumCopy.promise
 
     /// The promise, chosen by where the player came from. Someone who just hit
     /// a hint wall and someone browsing from their profile are asking different
@@ -213,7 +210,7 @@ struct PaywallView: View {
         case .homeCard:
             return "Make it part of the morning."
         case .archive:
-            return "Every puzzle, back to the first."
+            return PremiumCopy.archive
         // `profile`, onboarding, and anything added later. A player who hasn't
         // hit a wall needs telling what the app is for, not what it withholds.
         case nil:
@@ -653,6 +650,23 @@ extension View {
             Text(store.purchaseNotice?.message ?? "")
         }
     }
+}
+
+/// Premium headlines that more than one screen makes.
+///
+/// Each of these was written twice before, in the two places that say it, and
+/// the copies drifted — the app ended up making four different promises for one
+/// product. A player who sees two of them reads two offers.
+enum PremiumCopy {
+    /// The promise itself, in the app's own register: what you'd be doing with
+    /// the library rather than what's in it. Said by onboarding's premium page
+    /// and by the paywall wherever the entry point has nothing more specific.
+    static let promise = "Time in the Word, one clue at a time."
+
+    /// The archive's promise. Shared because the Library locked state and the
+    /// paywall it opens (`source: "archive"`) are one tap apart — a different
+    /// headline on each made a single journey look like two pitches.
+    static let archive = "Every puzzle, back to the first."
 }
 
 /// A premium benefit: what you get, then what that actually means.

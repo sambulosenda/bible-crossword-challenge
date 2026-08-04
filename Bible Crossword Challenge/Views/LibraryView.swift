@@ -298,7 +298,10 @@ struct LibraryView: View {
                 VStack(alignment: .leading, spacing: Theme.Spacing.s) {
                     Text("Premium")
                         .kicker()
-                    Text("Every puzzle,\nwhenever you like.")
+                    // The same line the paywall shows when the button below is
+                    // tapped — see `PremiumCopy.archive`. Two headlines one tap
+                    // apart made a single journey read as two separate pitches.
+                    Text(PremiumCopy.archive)
                         .font(.scripture(.largeTitle, weight: .semibold))
                         .fixedSize(horizontal: false, vertical: true)
                     // Both numbers, deliberately. This used to quote only the
