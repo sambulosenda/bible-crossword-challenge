@@ -301,10 +301,15 @@ struct LibraryView: View {
                     Text("Every puzzle,\nwhenever you like.")
                         .font(.scripture(.largeTitle, weight: .semibold))
                         .fixedSize(horizontal: false, vertical: true)
-                    // Scoped to what this screen actually holds. The paywall's
-                    // 117 counts pack exclusives and Minis too; quoting a bare
-                    // total in both places would look like two different claims.
-                    Text("All \(puzzles.count) daily puzzles and every Mini, to play and replay as often as you want.")
+                    // Both numbers, deliberately. This used to quote only the
+                    // archive's own count to avoid looking like a different
+                    // claim from the paywall's — but the reader meets the two
+                    // totals anyway, on Today and in onboarding, and a screen
+                    // that says 82 while everything else says 177 reads as a
+                    // contradiction rather than as scoping. Naming the whole
+                    // library *and* this screen's share of it settles that in
+                    // one sentence, and sells the larger thing while it's at it.
+                    Text("All \(puzzleProvider.totalPuzzleCount) puzzles, including every one of the \(puzzles.count) dailies in this archive — play and replay as often as you want.")
                         .font(.body)
                         .foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
@@ -354,7 +359,9 @@ struct LibraryView: View {
         }
         .elevatedCard()
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("Locked preview of \(puzzles.count) puzzles")
+        // Four rows are shown; the label describes the archive they stand for,
+        // which is the daily pool rather than the whole library.
+        .accessibilityLabel("Locked preview of the \(puzzles.count) daily puzzles in this archive")
     }
 }
 
