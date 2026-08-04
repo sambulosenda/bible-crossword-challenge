@@ -110,7 +110,10 @@ struct HomeView: View {
                     NextAchievementCard(profile: profile)
 
                     if !store.isPremium {
-                        UpgradeCard()
+                        UpgradeCard(
+                            totalPuzzles: puzzleProvider.totalPuzzleCount,
+                            solvedPuzzles: records.count { $0.isCompleted }
+                        )
                     }
                 }
                 .padding(Theme.Spacing.m)
@@ -563,8 +566,27 @@ private struct NextAchievementCard: View {
 // MARK: - Upgrade card
 
 private struct UpgradeCard: View {
+    /// How many puzzles exist, and how many this player has finished. Both are
+    /// passed in rather than queried here: the counts already sit in HomeView,
+    /// and a second `@Query` for a number would re-fetch every record on a
+    /// screen that has them in hand.
+    let totalPuzzles: Int
+    let solvedPuzzles: Int
+
     @ScaledMetric(relativeTo: .title) private var iconSize = 44
     @State private var showPaywall = false
+
+    /// The player's own progress when they have some, and what's behind the
+    /// wall when they don't.
+    ///
+    /// "You've solved 0" is a discouragement rather than a nudge — the same
+    /// reason the paywall hides its progress line at zero.
+    private var subtitle: String {
+        guard solvedPuzzles > 0 else {
+            return "No hint limits, and every themed pack."
+        }
+        return "You've solved \(solvedPuzzles) — the rest are waiting."
+    }
 
     var body: some View {
         // A sheet, as every other entry point presents it. Pushed onto the
@@ -575,23 +597,43 @@ private struct UpgradeCard: View {
             showPaywall = true
         } label: {
             HStack(spacing: Theme.Spacing.m) {
+                // Accent, not secondary grey. A greyed-out crown on a grey disc
+                // reads as a disabled control rather than an invitation, which
+                // is a poor look on the one card asking for money.
                 Image(systemName: "crown.fill")
                     .font(.title3)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Theme.accent)
                     .frame(width: iconSize, height: iconSize)
-                    .background(Color.primary.opacity(0.06), in: .circle)
+                    .background(Theme.accent.opacity(0.14), in: .circle)
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("Go Premium")
+                    // Was "Go Premium": the app's own word for its SKU, which
+                    // says nothing about what the player gets. The count comes
+                    // from the bundle so it can't go stale as puzzles are added.
+                    Text("Unlock all \(totalPuzzles) puzzles")
                         .font(.headline.weight(.bold))
                         .foregroundStyle(.primary)
-                    Text("Remove ads · Unlimited hints · Archive")
+                    Text(subtitle)
                         .font(.caption.weight(.medium))
                         .foregroundStyle(.secondary)
                 }
                 Spacer(minLength: 0)
-                Image(systemName: "chevron.right")
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(.secondary)
+                // A pill, not a chevron. The chevron is this screen's "tap to
+                // see more" — shared with Collections and Next Achievement — so
+                // the one card asking for money read as another navigation row.
+                // A filled pill is the app's own language for an action (Start
+                // Puzzle, the paywall CTA, Library's unlock button), at a size
+                // that can't outshout the daily card.
+                //
+                // "See plans", not "Unlock": this opens the paywall, it doesn't
+                // buy anything, and a button that overstates what it does is
+                // how a tap becomes a back-out.
+                Text("See plans")
+                    .font(.caption.weight(.bold))
+                    .foregroundStyle(Theme.onInk)
+                    .padding(.horizontal, Theme.Spacing.m)
+                    .padding(.vertical, Theme.Spacing.s)
+                    .background(Theme.ink, in: .capsule)
+                    .fixedSize()
             }
             .padding(Theme.Spacing.l)
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -600,8 +642,8 @@ private struct UpgradeCard: View {
             // That tint now belongs to the daily card.
             .elevatedCard()
             .accessibilityElement(children: .ignore)
-            .accessibilityLabel("Go Premium")
-            .accessibilityHint("Remove ads, unlimited hints, and full puzzle archive")
+            .accessibilityLabel("Unlock all \(totalPuzzles) puzzles")
+            .accessibilityHint(subtitle)
         }
         .buttonStyle(PressableCardStyle())
         .sheet(isPresented: $showPaywall) {
