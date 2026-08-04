@@ -52,6 +52,19 @@ enum AnalyticsEvent {
     /// didn't buy" can be split from "tried to buy and it broke".
     case purchaseFailed(plan: String, source: String, reason: String)
     case paywallOpened(source: String)
+    /// The moment someone commits — the buy button, before StoreKit takes over.
+    ///
+    /// Without it, "read the paywall and closed it" and "tried to buy and
+    /// backed out at the sheet" are the same shape in the data: no purchase,
+    /// no failure, nothing. They are completely different problems — the first
+    /// is the offer, the second is price shock or friction at the till — and
+    /// the fix for one does nothing for the other.
+    ///
+    /// A cancel is the tap with no `premium_purchased` and no `purchase_failed`
+    /// after it. Filter the purchase to `acquisition = in_app` when deriving
+    /// that: a renewal or a cross-device grant arrives with no tap in front of
+    /// it and would otherwise cancel one out.
+    case paywallCTATapped(plan: String, source: String, offersTrial: Bool)
     case notificationPermission(granted: Bool)
     case reminderSettingChanged(enabled: Bool)
     case packOpened(id: String)
@@ -83,6 +96,7 @@ enum AnalyticsEvent {
         case .subscriptionRenewed: return "subscription_renewed"
         case .purchaseFailed: return "purchase_failed"
         case .paywallOpened: return "paywall_opened"
+        case .paywallCTATapped: return "paywall_cta_tapped"
         case .notificationPermission: return "notification_permission"
         case .reminderSettingChanged: return "reminder_setting_changed"
         case .packOpened: return "pack_opened"
@@ -133,6 +147,17 @@ enum AnalyticsEvent {
             return ["plan": plan, "source": source, "reason": reason]
         case .paywallOpened(let source):
             return ["source": source]
+        case .paywallCTATapped(let plan, let source, let offersTrial):
+            return [
+                "plan": plan,
+                "source": source,
+                // Deliberately not `is_trial`. That property, on
+                // `premium_purchased`, is what StoreKit actually applied. This
+                // is what the button was advertising when it was pressed —
+                // which is the thing to compare tap rates against once a trial
+                // is configured, and would be a different number.
+                "offers_trial": offersTrial,
+            ]
         case .dailyPuzzleStarted(let id):
             return ["puzzle_id": id]
         case .dailyPuzzleCompleted(let id, let seconds):

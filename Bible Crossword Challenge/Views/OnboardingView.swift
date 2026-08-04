@@ -575,6 +575,15 @@ struct OnboardingView: View {
     private func buyYearly() {
         Task {
             guard let yearly = store.yearly else { return finish() }
+            // Logged here as well as on the paywall, because this screen is
+            // where roughly nine in ten players meet the offer — measuring the
+            // commit rate everywhere except the busiest surface would answer
+            // the question for almost nobody.
+            analytics.log(.paywallCTATapped(
+                plan: "yearly",
+                source: "onboarding",
+                offersTrial: store.introOfferText(for: yearly) != nil
+            ))
             // StoreService emits `premium_purchased` for every grant, including
             // ones that land after this screen is gone — see its `report`.
             switch await store.purchase(yearly, source: "onboarding") {

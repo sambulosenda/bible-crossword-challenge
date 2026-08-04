@@ -541,6 +541,14 @@ struct PaywallView: View {
                 guard let product = selectedProduct else { return }
                 Task {
                     let plan = planTitle(product).lowercased()
+                    // Before the sheet, not after: this is the only record that
+                    // survives a player who backs out of Apple's dialog, which
+                    // reports nothing at all.
+                    analytics.log(.paywallCTATapped(
+                        plan: plan,
+                        source: source,
+                        offersTrial: store.introOfferText(for: product) != nil
+                    ))
                     // `premium_purchased` is emitted by StoreService, which sees
                     // every grant rather than only the ones that finish inside
                     // this call. Logging it here as well would double-count.
