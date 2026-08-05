@@ -1,5 +1,6 @@
 Thanks for playing Bible Crossword Challenge! This update includes:
 
-• A new opening — the icon puts itself together a square at a time, then opens into the app
-• Today starts on the verse now, with your puzzle a little higher up the screen
-• The welcome puzzle fits the keyboard on smaller iPhones — no scrolling to type your first answer
+• Solved clues in the First Steps pack now name the passage they come from — tap the reference to read it
+• 60 new Mini puzzles, taking the Mini bank to 90
+• Rebuilt Premium screens that say exactly what you get, with honest counts
+• Daily reminders now finish switching on after a trip to Settings
