@@ -2,8 +2,9 @@
 
 Show a player where a clue's answer comes from, **after they solve it**.
 
-Status: sketch, not built. Written 2026-08-04. Should not start until the
-current build has shipped and a conversion baseline exists — see "Sequencing".
+Status: built 2026-08-04, first batch only. Written the same day; the
+"Sequencing" advice below to wait for a conversion baseline was overridden — see
+"What was built".
 
 ## Why
 
@@ -151,3 +152,33 @@ Then scope it to **one pack first** — 4–5 puzzles, ~100 clues. Ship, and wat
 Writing all 2,149 up front to find out is the mistake to avoid. In a Bible app a
 wrong citation is a credibility problem, not a typo, so every one needs
 verifying — which is exactly why the sample should come first.
+
+## What was built
+
+Three things came out differently from the sketch above.
+
+**The first batch is First Steps, not a `pack:` pack.** The only puzzles with
+their own pack specs are `psalm-23`, and that pack is `isPremium: true`. Putting
+the entire pilot behind the paywall would have made the one thing it exists to
+measure — tap rate — unmeasurable, and its citations would nearly all have read
+"Psalm 23:x", which the completion screen already shows. First Steps is the free
+onboarding pack every new player meets: 5 puzzles, 68 referenced clues, drawn
+from Genesis, Acts, the Gospels and the Epistles, so a reference actually tells
+you something you didn't know.
+
+**The clue list presents the reader itself.** `readerRouter.open(reference:)`
+does not work from inside a sheet: the router's cover hangs off the tab bar, and
+UIKit silently drops the request while the clue sheet is on top — the tap
+appeared to do nothing. `ClueListView` now owns a `ReaderModal` of its own
+(extracted from `RootView`). Closing it returns to the clue list rather than the
+grid, which is the better loop anyway.
+
+**Every citation is validated twice.** `generate_puzzles.py` refuses to build if
+a reference doesn't resolve against the bundled `bsb.json` — right book
+spelling, chapter and verse that exist — and warns when one falls outside a
+spec's own `theme`. `ClueReferenceTests` re-checks the shipped `puzzles.json`,
+since that file can be hand-edited after generation.
+
+Sequencing was overridden deliberately: this ships alongside the unshipped
+commits rather than after them. The measurement question is unchanged — watch
+`scripture_opened` with `source = clue` before writing the other ~2,000.

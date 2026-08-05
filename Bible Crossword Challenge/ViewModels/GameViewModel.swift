@@ -90,7 +90,8 @@ final class GameViewModel {
                 direction: clue.direction,
                 clue: clue.text,
                 answer: clue.answer.uppercased(),
-                positions: clue.positions
+                positions: clue.positions,
+                reference: clue.reference
             )
             if clue.direction == .across { across.append(slot) } else { down.append(slot) }
         }

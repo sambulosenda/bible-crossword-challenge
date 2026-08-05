@@ -31,7 +31,8 @@
         "row": 1,
         "col": 4,
         "text": "Great sea creature linked to Jonah",
-        "answer": "WHALE"
+        "answer": "WHALE",
+        "reference": "Jonah 1:17"
       },
       {
         "number": 2,
@@ -39,7 +40,8 @@
         "row": 2,
         "col": 6,
         "text": "Spotted big cat named in Isaiah's peaceable kingdom",
-        "answer": "LEOPARD"
+        "answer": "LEOPARD",
+        "reference": "Isaiah 11:6"
       },
       {
         "number": 3,
@@ -47,7 +49,8 @@
         "row": 2,
         "col": 13,
         "text": "Animal of war ridden by riders in Revelation",
-        "answer": "HORSE"
+        "answer": "HORSE",
+        "reference": "Revelation 6:2"
       },
       {
         "number": 4,
@@ -55,7 +58,8 @@
         "row": 3,
         "col": 3,
         "text": "Black bird that fed the prophet Elijah",
-        "answer": "RAVEN"
+        "answer": "RAVEN",
+        "reference": "1 Kings 17:6"
       },
       {
         "number": 5,
@@ -63,7 +67,8 @@
         "row": 3,
         "col": 11,
         "text": "Roaring beast Daniel faced in the den",
-        "answer": "LION"
+        "answer": "LION",
+        "reference": "Daniel 6:16"
       },
       {
         "number": 6,
@@ -71,7 +76,8 @@
         "row": 4,
         "col": 10,
         "text": "Animal often paired with sheep at the judgment",
-        "answer": "GOAT"
+        "answer": "GOAT",
+        "reference": "Matthew 25:32"
       },
       {
         "number": 7,
@@ -79,7 +85,8 @@
         "row": 5,
         "col": 0,
         "text": "Unclean herd the prodigal son fed",
-        "answer": "SWINE"
+        "answer": "SWINE",
+        "reference": "Luke 15:15"
       },
       {
         "number": 8,
@@ -87,7 +94,8 @@
         "row": 5,
         "col": 1,
         "text": "Predator that scatters the sheep",
-        "answer": "WOLF"
+        "answer": "WOLF",
+        "reference": "John 10:12"
       },
       {
         "number": 9,
@@ -95,7 +103,8 @@
         "row": 5,
         "col": 9,
         "text": "Insect of a great plague upon Egypt",
-        "answer": "LOCUST"
+        "answer": "LOCUST",
+        "reference": "Exodus 10:14"
       },
       {
         "number": 10,
@@ -103,7 +112,8 @@
         "row": 7,
         "col": 4,
         "text": "Crafty creature that tempted Eve",
-        "answer": "SERPENT"
+        "answer": "SERPENT",
+        "reference": "Genesis 3:1"
       },
       {
         "number": 10,
@@ -111,7 +121,8 @@
         "row": 7,
         "col": 4,
         "text": "Flock animals the good shepherd tends",
-        "answer": "SHEEP"
+        "answer": "SHEEP",
+        "reference": "John 10:11"
       },
       {
         "number": 11,
@@ -119,7 +130,8 @@
         "row": 7,
         "col": 8,
         "text": "Soaring bird whose strength renews the faithful",
-        "answer": "EAGLE"
+        "answer": "EAGLE",
+        "reference": "Isaiah 40:31"
       },
       {
         "number": 12,
@@ -127,7 +139,8 @@
         "row": 8,
         "col": 1,
         "text": "Creature multiplied with loaves to feed thousands",
-        "answer": "FISH"
+        "answer": "FISH",
+        "reference": "Matthew 14:19"
       },
       {
         "number": 13,
@@ -135,7 +148,8 @@
         "row": 10,
         "col": 1,
         "text": "Bird that returned to the ark with an olive leaf",
-        "answer": "DOVE"
+        "answer": "DOVE",
+        "reference": "Genesis 8:11"
       },
       {
         "number": 14,
@@ -151,7 +165,8 @@
         "row": 10,
         "col": 8,
         "text": "Young sheep, a symbol of Christ's sacrifice",
-        "answer": "LAMB"
+        "answer": "LAMB",
+        "reference": "John 1:29"
       },
       {
         "number": 16,
@@ -159,7 +174,8 @@
         "row": 10,
         "col": 11,
         "text": "Beast David fought while guarding his flock",
-        "answer": "BEAR"
+        "answer": "BEAR",
+        "reference": "1 Samuel 17:34"
       },
       {
         "number": 17,
@@ -167,7 +183,8 @@
         "row": 12,
         "col": 10,
         "text": "Desert beast easier through a needle than a rich man",
-        "answer": "CAMEL"
+        "answer": "CAMEL",
+        "reference": "Matthew 19:24"
       },
       {
         "number": 18,
@@ -175,7 +192,8 @@
         "row": 13,
         "col": 0,
         "text": "Animal, called an ass in scripture, that Jesus rode into Jerusalem",
-        "answer": "DONKEY"
+        "answer": "DONKEY",
+        "reference": "Matthew 21:7"
       }
     ]
   },
@@ -1691,7 +1709,8 @@
         "row": 0,
         "col": 3,
         "text": "What God did on the seventh day after His work",
-        "answer": "REST"
+        "answer": "REST",
+        "reference": "Genesis 2:2"
       },
       {
         "number": 2,
@@ -1699,7 +1718,8 @@
         "row": 0,
         "col": 5,
         "text": "Of God, it moved upon the face of the waters",
-        "answer": "SPIRIT"
+        "answer": "SPIRIT",
+        "reference": "Genesis 1:2"
       },
       {
         "number": 3,
@@ -1707,7 +1727,8 @@
         "row": 1,
         "col": 2,
         "text": "Name given to the firmament above",
-        "answer": "HEAVEN"
+        "answer": "HEAVEN",
+        "reference": "Genesis 1:8"
       },
       {
         "number": 4,
@@ -1715,7 +1736,8 @@
         "row": 2,
         "col": 4,
         "text": "What God made on the first day, dividing it from darkness",
-        "answer": "LIGHT"
+        "answer": "LIGHT",
+        "reference": "Genesis 1:3"
       },
       {
         "number": 5,
@@ -1723,7 +1745,8 @@
         "row": 3,
         "col": 1,
         "text": "The light was called this by God",
-        "answer": "DAY"
+        "answer": "DAY",
+        "reference": "Genesis 1:5"
       },
       {
         "number": 6,
@@ -1731,7 +1754,8 @@
         "row": 5,
         "col": 1,
         "text": "Living creature of the field that God made",
-        "answer": "BEAST"
+        "answer": "BEAST",
+        "reference": "Genesis 1:25"
       },
       {
         "number": 7,
@@ -1739,7 +1763,8 @@
         "row": 5,
         "col": 4,
         "text": "Lights set in the firmament for signs and seasons",
-        "answer": "STARS"
+        "answer": "STARS",
+        "reference": "Genesis 1:16"
       },
       {
         "number": 8,
@@ -1747,7 +1772,8 @@
         "row": 5,
         "col": 11,
         "text": "The dry land God formed, gathered from the waters",
-        "answer": "EARTH"
+        "answer": "EARTH",
+        "reference": "Genesis 1:10"
       },
       {
         "number": 9,
@@ -1755,7 +1781,8 @@
         "row": 6,
         "col": 6,
         "text": "What yielding herbs and trees bear after their kind",
-        "answer": "SEED"
+        "answer": "SEED",
+        "reference": "Genesis 1:11"
       },
       {
         "number": 10,
@@ -1763,7 +1790,8 @@
         "row": 6,
         "col": 9,
         "text": "Green growth the earth brought forth on the third day",
-        "answer": "GRASS"
+        "answer": "GRASS",
+        "reference": "Genesis 1:11"
       },
       {
         "number": 11,
@@ -1771,7 +1799,8 @@
         "row": 7,
         "col": 1,
         "text": "Substance of the ground used to form man",
-        "answer": "DUST"
+        "answer": "DUST",
+        "reference": "Genesis 2:7"
       },
       {
         "number": 12,
@@ -1779,7 +1808,8 @@
         "row": 7,
         "col": 3,
         "text": "The deep that the Spirit of God moved upon",
-        "answer": "WATERS"
+        "answer": "WATERS",
+        "reference": "Genesis 1:2"
       },
       {
         "number": 13,
@@ -1787,7 +1817,8 @@
         "row": 7,
         "col": 8,
         "text": "The greater light made to rule the day",
-        "answer": "SUN"
+        "answer": "SUN",
+        "reference": "Genesis 1:16"
       },
       {
         "number": 14,
@@ -1795,7 +1826,8 @@
         "row": 9,
         "col": 1,
         "text": "Name God gave to the gathered waters",
-        "answer": "SEAS"
+        "answer": "SEAS",
+        "reference": "Genesis 1:10"
       },
       {
         "number": 15,
@@ -1803,7 +1835,8 @@
         "row": 9,
         "col": 3,
         "text": "The first man God formed of the dust",
-        "answer": "ADAM"
+        "answer": "ADAM",
+        "reference": "Genesis 2:7"
       },
       {
         "number": 16,
@@ -1811,7 +1844,8 @@
         "row": 9,
         "col": 8,
         "text": "What God named the darkness",
-        "answer": "NIGHT"
+        "answer": "NIGHT",
+        "reference": "Genesis 1:5"
       },
       {
         "number": 17,
@@ -1819,7 +1853,8 @@
         "row": 9,
         "col": 10,
         "text": "How God described what He had made",
-        "answer": "GOOD"
+        "answer": "GOOD",
+        "reference": "Genesis 1:31"
       },
       {
         "number": 18,
@@ -1827,7 +1862,8 @@
         "row": 11,
         "col": 5,
         "text": "The earth was without form and this, at first",
-        "answer": "VOID"
+        "answer": "VOID",
+        "reference": "Genesis 1:2"
       },
       {
         "number": 19,
@@ -1835,7 +1871,8 @@
         "row": 11,
         "col": 9,
         "text": "Winged creatures that fly above the earth",
-        "answer": "FOWL"
+        "answer": "FOWL",
+        "reference": "Genesis 1:20"
       },
       {
         "number": 20,
@@ -1843,7 +1880,8 @@
         "row": 12,
         "col": 3,
         "text": "The lesser light made to rule the night",
-        "answer": "MOON"
+        "answer": "MOON",
+        "reference": "Genesis 1:16"
       }
     ]
   },
@@ -2435,7 +2473,8 @@
         "row": 0,
         "col": 2,
         "text": "Bird sent out that returned with an olive leaf",
-        "answer": "DOVE"
+        "answer": "DOVE",
+        "reference": "Genesis 8:11"
       },
       {
         "number": 2,
@@ -2443,7 +2482,8 @@
         "row": 1,
         "col": 0,
         "text": "The great waters that covered the earth",
-        "answer": "FLOOD"
+        "answer": "FLOOD",
+        "reference": "Genesis 7:17"
       },
       {
         "number": 3,
@@ -2451,7 +2491,8 @@
         "row": 1,
         "col": 7,
         "text": "Gopher material from which the ark was made",
-        "answer": "WOOD"
+        "answer": "WOOD",
+        "reference": "Genesis 6:14"
       },
       {
         "number": 4,
@@ -2459,7 +2500,8 @@
         "row": 1,
         "col": 10,
         "text": "The single opening in the side of the ark",
-        "answer": "DOOR"
+        "answer": "DOOR",
+        "reference": "Genesis 6:16"
       },
       {
         "number": 5,
@@ -2467,7 +2509,8 @@
         "row": 3,
         "col": 2,
         "text": "What the waters covered for one hundred fifty days",
-        "answer": "EARTH"
+        "answer": "EARTH",
+        "reference": "Genesis 7:24"
       },
       {
         "number": 6,
@@ -2475,7 +2518,8 @@
         "row": 3,
         "col": 3,
         "text": "Creatures gathered two by two into the ark",
-        "answer": "ANIMALS"
+        "answer": "ANIMALS",
+        "reference": "Genesis 7:9"
       },
       {
         "number": 7,
@@ -2483,7 +2527,8 @@
         "row": 4,
         "col": 7,
         "text": "How the unclean beasts entered, male and female",
-        "answer": "PAIRS"
+        "answer": "PAIRS",
+        "reference": "Genesis 7:2"
       },
       {
         "number": 7,
@@ -2491,7 +2536,8 @@
         "row": 4,
         "col": 7,
         "text": "Substance used to coat the ark within and without",
-        "answer": "PITCH"
+        "answer": "PITCH",
+        "reference": "Genesis 6:14"
       },
       {
         "number": 8,
@@ -2499,7 +2545,8 @@
         "row": 4,
         "col": 14,
         "text": "It prevailed and covered even the high hills",
-        "answer": "WATER"
+        "answer": "WATER",
+        "reference": "Genesis 7:19"
       },
       {
         "number": 9,
@@ -2507,7 +2554,8 @@
         "row": 5,
         "col": 12,
         "text": "The sign of the covenant set in the cloud",
-        "answer": "RAINBOW"
+        "answer": "RAINBOW",
+        "reference": "Genesis 9:13"
       },
       {
         "number": 10,
@@ -2515,7 +2563,8 @@
         "row": 6,
         "col": 3,
         "text": "Ararat, where the vessel came to rest",
-        "answer": "MOUNTAIN"
+        "answer": "MOUNTAIN",
+        "reference": "Genesis 8:4"
       },
       {
         "number": 11,
@@ -2523,7 +2572,8 @@
         "row": 6,
         "col": 10,
         "text": "Righteous man God told to build the great vessel",
-        "answer": "NOAH"
+        "answer": "NOAH",
+        "reference": "Genesis 6:9"
       },
       {
         "number": 12,
@@ -2531,7 +2581,8 @@
         "row": 7,
         "col": 10,
         "text": "Tree whose leaf the dove brought back",
-        "answer": "OLIVE"
+        "answer": "OLIVE",
+        "reference": "Genesis 8:11"
       },
       {
         "number": 13,
@@ -2539,7 +2590,8 @@
         "row": 8,
         "col": 5,
         "text": "Number of clean beasts taken of each kind",
-        "answer": "SEVEN"
+        "answer": "SEVEN",
+        "reference": "Genesis 7:2"
       },
       {
         "number": 14,
@@ -2547,7 +2599,8 @@
         "row": 9,
         "col": 3,
         "text": "One of Noah's three sons",
-        "answer": "SHEM"
+        "answer": "SHEM",
+        "reference": "Genesis 6:10"
       },
       {
         "number": 15,
@@ -2555,7 +2608,8 @@
         "row": 9,
         "col": 8,
         "text": "It fell forty days and forty nights",
-        "answer": "RAIN"
+        "answer": "RAIN",
+        "reference": "Genesis 7:12"
       },
       {
         "number": 16,
@@ -2563,7 +2617,8 @@
         "row": 11,
         "col": 1,
         "text": "The vessel of gopher wood built to escape the flood",
-        "answer": "ARK"
+        "answer": "ARK",
+        "reference": "Genesis 6:14"
       },
       {
         "number": 17,
@@ -2571,7 +2626,8 @@
         "row": 11,
         "col": 7,
         "text": "Opening Noah made in the ark, opened after the flood",
-        "answer": "WINDOW"
+        "answer": "WINDOW",
+        "reference": "Genesis 8:6"
       },
       {
         "number": 18,
@@ -2579,7 +2635,8 @@
         "row": 11,
         "col": 10,
         "text": "How the ground became when the waters receded",
-        "answer": "DRY"
+        "answer": "DRY",
+        "reference": "Genesis 8:13"
       },
       {
         "number": 19,
@@ -2587,7 +2644,8 @@
         "row": 12,
         "col": 1,
         "text": "First bird Noah sent forth from the window",
-        "answer": "RAVEN"
+        "answer": "RAVEN",
+        "reference": "Genesis 8:7"
       }
     ]
   },
@@ -15156,7 +15214,8 @@
         "row": 0,
         "col": 0,
         "text": "My ___ is sufficient for thee",
-        "answer": "GRACE"
+        "answer": "GRACE",
+        "reference": "2 Corinthians 12:9"
       },
       {
         "number": 2,
@@ -15164,7 +15223,8 @@
         "row": 1,
         "col": 3,
         "text": "It was wrecked on the isle called Melita",
-        "answer": "SHIP"
+        "answer": "SHIP",
+        "reference": "Acts 27:41"
       },
       {
         "number": 3,
@@ -15172,7 +15232,8 @@
         "row": 1,
         "col": 6,
         "text": "City with an altar to the unknown god",
-        "answer": "ATHENS"
+        "answer": "ATHENS",
+        "reference": "Acts 17:23"
       },
       {
         "number": 4,
@@ -15180,7 +15241,8 @@
         "row": 3,
         "col": 0,
         "text": "Church that received two epistles",
-        "answer": "CORINTH"
+        "answer": "CORINTH",
+        "reference": "1 Corinthians 1:2"
       },
       {
         "number": 5,
@@ -15188,7 +15250,8 @@
         "row": 6,
         "col": 2,
         "text": "He sang praises with Paul at midnight in prison",
-        "answer": "SILAS"
+        "answer": "SILAS",
+        "reference": "Acts 16:25"
       }
     ],
     "kind": "mini"
@@ -15339,7 +15402,8 @@
         "row": 0,
         "col": 2,
         "text": "Do it, and ye shall find",
-        "answer": "SEEK"
+        "answer": "SEEK",
+        "reference": "Matthew 7:7"
       },
       {
         "number": 2,
@@ -15347,7 +15411,8 @@
         "row": 0,
         "col": 5,
         "text": "Daniel did this three times a day",
-        "answer": "KNEEL"
+        "answer": "KNEEL",
+        "reference": "Daniel 6:10"
       },
       {
         "number": 3,
@@ -15355,7 +15420,8 @@
         "row": 3,
         "col": 0,
         "text": "Enter his courts with it",
-        "answer": "PRAISE"
+        "answer": "PRAISE",
+        "reference": "Psalm 100:4"
       },
       {
         "number": 4,
@@ -15363,7 +15429,8 @@
         "row": 3,
         "col": 2,
         "text": "So be it \u2014 the word that seals a prayer",
-        "answer": "AMEN"
+        "answer": "AMEN",
+        "reference": "1 Corinthians 14:16"
       },
       {
         "number": 5,
@@ -15371,7 +15438,8 @@
         "row": 6,
         "col": 1,
         "text": "Do it, and it shall be opened",
-        "answer": "KNOCK"
+        "answer": "KNOCK",
+        "reference": "Matthew 7:7"
       }
     ],
     "kind": "mini"

@@ -11,83 +11,103 @@
     "words": [
       {
         "answer": "LIGHT",
-        "clue": "What God made on the first day, dividing it from darkness"
+        "clue": "What God made on the first day, dividing it from darkness",
+        "reference": "Genesis 1:3"
       },
       {
         "answer": "EARTH",
-        "clue": "The dry land God formed, gathered from the waters"
+        "clue": "The dry land God formed, gathered from the waters",
+        "reference": "Genesis 1:10"
       },
       {
         "answer": "WATERS",
-        "clue": "The deep that the Spirit of God moved upon"
+        "clue": "The deep that the Spirit of God moved upon",
+        "reference": "Genesis 1:2"
       },
       {
         "answer": "STARS",
-        "clue": "Lights set in the firmament for signs and seasons"
+        "clue": "Lights set in the firmament for signs and seasons",
+        "reference": "Genesis 1:16"
       },
       {
         "answer": "SUN",
-        "clue": "The greater light made to rule the day"
+        "clue": "The greater light made to rule the day",
+        "reference": "Genesis 1:16"
       },
       {
         "answer": "MOON",
-        "clue": "The lesser light made to rule the night"
+        "clue": "The lesser light made to rule the night",
+        "reference": "Genesis 1:16"
       },
       {
         "answer": "SEAS",
-        "clue": "Name God gave to the gathered waters"
+        "clue": "Name God gave to the gathered waters",
+        "reference": "Genesis 1:10"
       },
       {
         "answer": "BEAST",
-        "clue": "Living creature of the field that God made"
+        "clue": "Living creature of the field that God made",
+        "reference": "Genesis 1:25"
       },
       {
         "answer": "FOWL",
-        "clue": "Winged creatures that fly above the earth"
+        "clue": "Winged creatures that fly above the earth",
+        "reference": "Genesis 1:20"
       },
       {
         "answer": "GRASS",
-        "clue": "Green growth the earth brought forth on the third day"
+        "clue": "Green growth the earth brought forth on the third day",
+        "reference": "Genesis 1:11"
       },
       {
         "answer": "SEED",
-        "clue": "What yielding herbs and trees bear after their kind"
+        "clue": "What yielding herbs and trees bear after their kind",
+        "reference": "Genesis 1:11"
       },
       {
         "answer": "REST",
-        "clue": "What God did on the seventh day after His work"
+        "clue": "What God did on the seventh day after His work",
+        "reference": "Genesis 2:2"
       },
       {
         "answer": "GOOD",
-        "clue": "How God described what He had made"
+        "clue": "How God described what He had made",
+        "reference": "Genesis 1:31"
       },
       {
         "answer": "VOID",
-        "clue": "The earth was without form and this, at first"
+        "clue": "The earth was without form and this, at first",
+        "reference": "Genesis 1:2"
       },
       {
         "answer": "SPIRIT",
-        "clue": "Of God, it moved upon the face of the waters"
+        "clue": "Of God, it moved upon the face of the waters",
+        "reference": "Genesis 1:2"
       },
       {
         "answer": "HEAVEN",
-        "clue": "Name given to the firmament above"
+        "clue": "Name given to the firmament above",
+        "reference": "Genesis 1:8"
       },
       {
         "answer": "ADAM",
-        "clue": "The first man God formed of the dust"
+        "clue": "The first man God formed of the dust",
+        "reference": "Genesis 2:7"
       },
       {
         "answer": "DAY",
-        "clue": "The light was called this by God"
+        "clue": "The light was called this by God",
+        "reference": "Genesis 1:5"
       },
       {
         "answer": "NIGHT",
-        "clue": "What God named the darkness"
+        "clue": "What God named the darkness",
+        "reference": "Genesis 1:5"
       },
       {
         "answer": "DUST",
-        "clue": "Substance of the ground used to form man"
+        "clue": "Substance of the ground used to form man",
+        "reference": "Genesis 2:7"
       }
     ]
   },
@@ -195,83 +215,103 @@
     "words": [
       {
         "answer": "NOAH",
-        "clue": "Righteous man God told to build the great vessel"
+        "clue": "Righteous man God told to build the great vessel",
+        "reference": "Genesis 6:9"
       },
       {
         "answer": "ARK",
-        "clue": "The vessel of gopher wood built to escape the flood"
+        "clue": "The vessel of gopher wood built to escape the flood",
+        "reference": "Genesis 6:14"
       },
       {
         "answer": "FLOOD",
-        "clue": "The great waters that covered the earth"
+        "clue": "The great waters that covered the earth",
+        "reference": "Genesis 7:17"
       },
       {
         "answer": "RAIN",
-        "clue": "It fell forty days and forty nights"
+        "clue": "It fell forty days and forty nights",
+        "reference": "Genesis 7:12"
       },
       {
         "answer": "DOVE",
-        "clue": "Bird sent out that returned with an olive leaf"
+        "clue": "Bird sent out that returned with an olive leaf",
+        "reference": "Genesis 8:11"
       },
       {
         "answer": "RAVEN",
-        "clue": "First bird Noah sent forth from the window"
+        "clue": "First bird Noah sent forth from the window",
+        "reference": "Genesis 8:7"
       },
       {
         "answer": "OLIVE",
-        "clue": "Tree whose leaf the dove brought back"
+        "clue": "Tree whose leaf the dove brought back",
+        "reference": "Genesis 8:11"
       },
       {
         "answer": "RAINBOW",
-        "clue": "The sign of the covenant set in the cloud"
+        "clue": "The sign of the covenant set in the cloud",
+        "reference": "Genesis 9:13"
       },
       {
         "answer": "MOUNTAIN",
-        "clue": "Ararat, where the vessel came to rest"
+        "clue": "Ararat, where the vessel came to rest",
+        "reference": "Genesis 8:4"
       },
       {
         "answer": "ANIMALS",
-        "clue": "Creatures gathered two by two into the ark"
+        "clue": "Creatures gathered two by two into the ark",
+        "reference": "Genesis 7:9"
       },
       {
         "answer": "PAIRS",
-        "clue": "How the unclean beasts entered, male and female"
+        "clue": "How the unclean beasts entered, male and female",
+        "reference": "Genesis 7:2"
       },
       {
         "answer": "WATER",
-        "clue": "It prevailed and covered even the high hills"
+        "clue": "It prevailed and covered even the high hills",
+        "reference": "Genesis 7:19"
       },
       {
         "answer": "WOOD",
-        "clue": "Gopher material from which the ark was made"
+        "clue": "Gopher material from which the ark was made",
+        "reference": "Genesis 6:14"
       },
       {
         "answer": "PITCH",
-        "clue": "Substance used to coat the ark within and without"
+        "clue": "Substance used to coat the ark within and without",
+        "reference": "Genesis 6:14"
       },
       {
         "answer": "DRY",
-        "clue": "How the ground became when the waters receded"
+        "clue": "How the ground became when the waters receded",
+        "reference": "Genesis 8:13"
       },
       {
         "answer": "SHEM",
-        "clue": "One of Noah's three sons"
+        "clue": "One of Noah's three sons",
+        "reference": "Genesis 6:10"
       },
       {
         "answer": "WINDOW",
-        "clue": "Opening Noah made in the ark, opened after the flood"
+        "clue": "Opening Noah made in the ark, opened after the flood",
+        "reference": "Genesis 8:6"
       },
       {
         "answer": "SEVEN",
-        "clue": "Number of clean beasts taken of each kind"
+        "clue": "Number of clean beasts taken of each kind",
+        "reference": "Genesis 7:2"
       },
       {
         "answer": "DOOR",
-        "clue": "The single opening in the side of the ark"
+        "clue": "The single opening in the side of the ark",
+        "reference": "Genesis 6:16"
       },
       {
         "answer": "EARTH",
-        "clue": "What the waters covered for one hundred fifty days"
+        "clue": "What the waters covered for one hundred fifty days",
+        "reference": "Genesis 7:24"
       }
     ]
   },
@@ -6729,35 +6769,43 @@
     "words": [
       {
         "answer": "LAMB",
-        "clue": "Young sheep, a symbol of Christ's sacrifice"
+        "clue": "Young sheep, a symbol of Christ's sacrifice",
+        "reference": "John 1:29"
       },
       {
         "answer": "LION",
-        "clue": "Roaring beast Daniel faced in the den"
+        "clue": "Roaring beast Daniel faced in the den",
+        "reference": "Daniel 6:16"
       },
       {
         "answer": "DOVE",
-        "clue": "Bird that returned to the ark with an olive leaf"
+        "clue": "Bird that returned to the ark with an olive leaf",
+        "reference": "Genesis 8:11"
       },
       {
         "answer": "SERPENT",
-        "clue": "Crafty creature that tempted Eve"
+        "clue": "Crafty creature that tempted Eve",
+        "reference": "Genesis 3:1"
       },
       {
         "answer": "SHEEP",
-        "clue": "Flock animals the good shepherd tends"
+        "clue": "Flock animals the good shepherd tends",
+        "reference": "John 10:11"
       },
       {
         "answer": "GOAT",
-        "clue": "Animal often paired with sheep at the judgment"
+        "clue": "Animal often paired with sheep at the judgment",
+        "reference": "Matthew 25:32"
       },
       {
         "answer": "CAMEL",
-        "clue": "Desert beast easier through a needle than a rich man"
+        "clue": "Desert beast easier through a needle than a rich man",
+        "reference": "Matthew 19:24"
       },
       {
         "answer": "DONKEY",
-        "clue": "Animal, called an ass in scripture, that Jesus rode into Jerusalem"
+        "clue": "Animal, called an ass in scripture, that Jesus rode into Jerusalem",
+        "reference": "Matthew 21:7"
       },
       {
         "answer": "OXEN",
@@ -6765,43 +6813,53 @@
       },
       {
         "answer": "RAVEN",
-        "clue": "Black bird that fed the prophet Elijah"
+        "clue": "Black bird that fed the prophet Elijah",
+        "reference": "1 Kings 17:6"
       },
       {
         "answer": "FISH",
-        "clue": "Creature multiplied with loaves to feed thousands"
+        "clue": "Creature multiplied with loaves to feed thousands",
+        "reference": "Matthew 14:19"
       },
       {
         "answer": "EAGLE",
-        "clue": "Soaring bird whose strength renews the faithful"
+        "clue": "Soaring bird whose strength renews the faithful",
+        "reference": "Isaiah 40:31"
       },
       {
         "answer": "WOLF",
-        "clue": "Predator that scatters the sheep"
+        "clue": "Predator that scatters the sheep",
+        "reference": "John 10:12"
       },
       {
         "answer": "BEAR",
-        "clue": "Beast David fought while guarding his flock"
+        "clue": "Beast David fought while guarding his flock",
+        "reference": "1 Samuel 17:34"
       },
       {
         "answer": "LOCUST",
-        "clue": "Insect of a great plague upon Egypt"
+        "clue": "Insect of a great plague upon Egypt",
+        "reference": "Exodus 10:14"
       },
       {
         "answer": "HORSE",
-        "clue": "Animal of war ridden by riders in Revelation"
+        "clue": "Animal of war ridden by riders in Revelation",
+        "reference": "Revelation 6:2"
       },
       {
         "answer": "WHALE",
-        "clue": "Great sea creature linked to Jonah"
+        "clue": "Great sea creature linked to Jonah",
+        "reference": "Jonah 1:17"
       },
       {
         "answer": "LEOPARD",
-        "clue": "Spotted big cat named in Isaiah's peaceable kingdom"
+        "clue": "Spotted big cat named in Isaiah's peaceable kingdom",
+        "reference": "Isaiah 11:6"
       },
       {
         "answer": "SWINE",
-        "clue": "Unclean herd the prodigal son fed"
+        "clue": "Unclean herd the prodigal son fed",
+        "reference": "Luke 15:15"
       }
     ],
     "keep": true,
@@ -8207,39 +8265,48 @@
     "words": [
       {
         "answer": "AMEN",
-        "clue": "So be it — the word that seals a prayer"
+        "clue": "So be it — the word that seals a prayer",
+        "reference": "1 Corinthians 14:16"
       },
       {
         "answer": "KNEEL",
-        "clue": "Daniel did this three times a day"
+        "clue": "Daniel did this three times a day",
+        "reference": "Daniel 6:10"
       },
       {
         "answer": "FAITH",
-        "clue": "Pray with it, nothing wavering"
+        "clue": "Pray with it, nothing wavering",
+        "reference": "James 1:6"
       },
       {
         "answer": "ASK",
-        "clue": "Do it, and it shall be given you"
+        "clue": "Do it, and it shall be given you",
+        "reference": "Matthew 7:7"
       },
       {
         "answer": "SEEK",
-        "clue": "Do it, and ye shall find"
+        "clue": "Do it, and ye shall find",
+        "reference": "Matthew 7:7"
       },
       {
         "answer": "KNOCK",
-        "clue": "Do it, and it shall be opened"
+        "clue": "Do it, and it shall be opened",
+        "reference": "Matthew 7:7"
       },
       {
         "answer": "ALTAR",
-        "clue": "Leave thy gift there and be reconciled first"
+        "clue": "Leave thy gift there and be reconciled first",
+        "reference": "Matthew 5:24"
       },
       {
         "answer": "PRAISE",
-        "clue": "Enter his courts with it"
+        "clue": "Enter his courts with it",
+        "reference": "Psalm 100:4"
       },
       {
         "answer": "CLOSET",
-        "clue": "Enter it, shut the door, pray in secret"
+        "clue": "Enter it, shut the door, pray in secret",
+        "reference": "Matthew 6:6"
       }
     ]
   },
@@ -8442,39 +8509,48 @@
     "words": [
       {
         "answer": "PAUL",
-        "clue": "Saul of Tarsus, after the Damascus road"
+        "clue": "Saul of Tarsus, after the Damascus road",
+        "reference": "Acts 13:9"
       },
       {
         "answer": "ROME",
-        "clue": "The city where he appealed unto Caesar"
+        "clue": "The city where he appealed unto Caesar",
+        "reference": "Acts 25:11"
       },
       {
         "answer": "SILAS",
-        "clue": "He sang praises with Paul at midnight in prison"
+        "clue": "He sang praises with Paul at midnight in prison",
+        "reference": "Acts 16:25"
       },
       {
         "answer": "SHIP",
-        "clue": "It was wrecked on the isle called Melita"
+        "clue": "It was wrecked on the isle called Melita",
+        "reference": "Acts 27:41"
       },
       {
         "answer": "ATHENS",
-        "clue": "City with an altar to the unknown god"
+        "clue": "City with an altar to the unknown god",
+        "reference": "Acts 17:23"
       },
       {
         "answer": "CORINTH",
-        "clue": "Church that received two epistles"
+        "clue": "Church that received two epistles",
+        "reference": "1 Corinthians 1:2"
       },
       {
         "answer": "TENT",
-        "clue": "The apostle's craft was making these"
+        "clue": "The apostle's craft was making these",
+        "reference": "Acts 18:3"
       },
       {
         "answer": "LUKE",
-        "clue": "The beloved physician who travelled with him"
+        "clue": "The beloved physician who travelled with him",
+        "reference": "Colossians 4:14"
       },
       {
         "answer": "GRACE",
-        "clue": "My ___ is sufficient for thee"
+        "clue": "My ___ is sufficient for thee",
+        "reference": "2 Corinthians 12:9"
       }
     ]
   },

@@ -75,6 +75,11 @@ struct ClueData: Codable, Hashable {
     let col: Int
     let text: String
     let answer: String
+    /// Where this clue's answer comes from, e.g. "1 Samuel 9:1". Optional
+    /// because references land pack by pack — a puzzle without them decodes and
+    /// plays exactly as before. Shown only after the clue is solved, never as a
+    /// hint.
+    var reference: String? = nil
 
     var start: GridPos { GridPos(row: row, col: col) }
 
@@ -113,6 +118,9 @@ struct Slot: Identifiable, Hashable {
     let clue: String
     let answer: String
     let positions: [GridPos]
+    /// Carried through from `ClueData` so the clue list can name the passage
+    /// once the word is solved. Nil for clues that aren't drawn from one.
+    let reference: String?
 
     var id: String { "\(number)-\(direction.rawValue)" }
     var length: Int { positions.count }

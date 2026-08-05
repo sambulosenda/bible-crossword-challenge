@@ -349,26 +349,3 @@ struct RootView: View {
     }
     #endif
 }
-
-/// Modal host for a deep-linked passage. Opens straight to the chapter reader
-/// (browsing is reachable from the reader's own "Jump to"); a Close button
-/// dismisses back to the tab the reference was tapped from.
-private struct ReaderModal: View {
-    let target: ReaderRouter.Target
-    @Environment(\.dismiss) private var dismiss
-
-    var body: some View {
-        NavigationStack {
-            ChapterReaderView(
-                startBook: target.book,
-                startChapter: target.chapter,
-                highlightVerse: target.verse
-            )
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button("Close") { dismiss() }
-                }
-            }
-        }
-    }
-}

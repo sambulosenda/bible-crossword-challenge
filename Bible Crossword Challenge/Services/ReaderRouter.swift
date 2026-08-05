@@ -21,6 +21,20 @@ final class ReaderRouter {
         let verse: Int?
 
         var id: String { "\(book)-\(chapter)-\(verse ?? 0)" }
+
+        /// Nil for a reference the bundled Bible can't address, so a citation
+        /// that doesn't resolve shows nothing rather than opening an empty
+        /// reader.
+        init?(reference: String) {
+            guard let ref = ScriptureRef(reference) else { return nil }
+            self.init(book: ref.book, chapter: ref.chapter, verse: ref.verse)
+        }
+
+        init(book: String, chapter: Int, verse: Int?) {
+            self.book = book
+            self.chapter = chapter
+            self.verse = verse
+        }
     }
 
     /// The passage currently requested. Non-nil presents the reader; RootView
@@ -28,8 +42,13 @@ final class ReaderRouter {
     var target: Target?
 
     /// Open a reference string like "Isaiah 11:6" in the modal reader.
+    ///
+    /// Only for references tapped on a screen that isn't itself inside a sheet:
+    /// the cover this drives hangs off the tab bar, and UIKit drops the request
+    /// if something is already presented over it. A sheet should present its own
+    /// `ReaderModal` instead.
     func open(reference: String) {
-        guard let ref = ScriptureRef(reference) else { return }
-        target = Target(book: ref.book, chapter: ref.chapter, verse: ref.verse)
+        guard let target = Target(reference: reference) else { return }
+        self.target = target
     }
 }

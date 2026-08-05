@@ -13,19 +13,103 @@ placed) with ids "mini-NNN" and their own publishDate sequence. Daily specs
 are processed exactly as before, so growing the mini bank never perturbs the
 daily output.
 
+A word may carry a "reference" ("Genesis 1:3") naming the passage its answer
+comes from. It is copied onto that clue and shown in-app only after the clue is
+solved. Every one is validated against the bundled bsb.json before any puzzle is
+built, and the key is omitted rather than nulled when a word has none.
+
 Specs with "pack": "<slug>" build full-size puzzles that live only inside that
 themed pack: ids "pack-<slug>-NNN", numbered per slug. The app excludes any
 "pack-" prefixed id from the daily rotation and Archive pool, so pack content
 never perturbs the daily index. Pack specs are processed after dailies and
 minis, keeping both of those outputs byte-identical as packs grow.
 """
-import json, random, re, sys
+import json, os, random, re, sys
 
 ALLOWED_SIZES = [10, 12, 15]
 CANVAS = 15
 
 MINI_SIZES = [7]
 MINI_CANVAS = 7
+
+# --- Scripture references -----------------------------------------------
+#
+# A clue may name the passage its answer comes from. The app shows it only
+# after the clue is solved, and opens it in the bundled reader — so a citation
+# that doesn't resolve there is worse than none at all. Every reference is
+# checked against bsb.json itself: right book spelling, chapter and verse that
+# actually exist.
+
+BSB = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                   "..", "Bible Crossword Challenge", "Resources", "bsb.json")
+
+_bible = None
+
+def bible():
+    """{book name: {chapter number: verse count}}, loaded once."""
+    global _bible
+    if _bible is None:
+        with open(BSB) as f:
+            data = json.load(f)
+        _bible = {b["name"]: {c["number"]: len(c["verses"]) for c in b["chapters"]}
+                  for b in data["books"]}
+    return _bible
+
+def parse_ref(raw):
+    """Mirrors ScriptureRef.init? in Swift: 'Book C', 'Book C:V', 'Book C:V-W'.
+    The book is everything before the last space, so '1 Samuel 9:1' and 'Song of
+    Solomon 2:1' parse. Returns (book, chapter, verse|None) or None."""
+    s = (raw or "").strip()
+    if " " not in s: return None
+    book, cv = s.rsplit(" ", 1)
+    book = book.strip()
+    parts = cv.split(":", 1)
+    if not book or not parts[0].isdigit(): return None
+    chapter = int(parts[0])
+    verse = None
+    if len(parts) > 1:
+        start = re.split(r"[-–]", parts[1])[0]
+        if not start.isdigit(): return None
+        verse = int(start)
+    return book, chapter, verse
+
+def ref_error(raw):
+    """None if the reference opens in the reader, else why it doesn't."""
+    parsed = parse_ref(raw)
+    if not parsed: return f"unparseable reference {raw!r}"
+    book, chapter, verse = parsed
+    chapters = bible().get(book)
+    if chapters is None:
+        return f"no book named {book!r} in bsb.json (references use 'Psalm', not 'Psalms')"
+    if chapter not in chapters:
+        return f"{book} has no chapter {chapter}"
+    if verse is not None and not (1 <= verse <= chapters[chapter]):
+        return f"{book} {chapter} has {chapters[chapter]} verses, not {verse}"
+    return None
+
+def theme_books(theme):
+    """Book names a spec's theme commits to, e.g. 'The Creation (Genesis 1-2)'
+    -> {'Genesis'}. Empty for themes like 'Prayer', which range freely."""
+    return {name for name in bible() if name in (theme or "")}
+
+def check_references(specs):
+    """Hard errors for citations the reader can't open, warnings for ones that
+    wander outside a spec's own theme. Returns (errors, warnings)."""
+    errors, warnings = [], []
+    for spec in specs:
+        where = spec.get("id") or spec.get("title")
+        books = theme_books(spec.get("theme"))
+        for w in spec.get("words", []):
+            raw = (w.get("reference") or "").strip()
+            if not raw: continue  # absent is valid — never guess one to fill the field
+            err = ref_error(raw)
+            if err:
+                errors.append(f"{where} / {w.get('answer')}: {err}")
+                continue
+            book = parse_ref(raw)[0]
+            if books and book not in books:
+                warnings.append(f"{where} / {w.get('answer')}: {raw} is outside the theme ({', '.join(sorted(books))})")
+    return errors, warnings
 
 class Grid:
     def __init__(self, n):
@@ -162,16 +246,18 @@ def clean_words(words, max_len=9):
     for w in words:
         ans = re.sub(r'[^A-Z]', '', (w.get('answer') or '').upper())
         clue = (w.get('clue') or '').strip()
+        ref = (w.get('reference') or '').strip() or None
         if len(ans) < 3 or len(ans) > max_len or not clue: continue
         if ans in seen: continue
         seen.add(ans)
-        out.append((ans, clue))
+        out.append((ans, clue, ref))
     return out
 
 def build(spec, min_words=10, max_words=20, canvas=CANVAS, allowed_sizes=ALLOWED_SIZES, max_word_len=9):
     entries = clean_words(spec.get('words', []), max_len=max_word_len)
-    clue_map = {a: c for (a, c) in entries}
-    words = [a for (a, c) in entries]
+    clue_map = {a: c for (a, c, r) in entries}
+    ref_map = {a: r for (a, c, r) in entries if r}
+    words = [a for (a, c, r) in entries]
     if len(words) < min_words:
         return None, f"only {len(words)} clean words"
     best = None
@@ -193,10 +279,16 @@ def build(spec, min_words=10, max_words=20, canvas=CANVAS, allowed_sizes=ALLOWED
     _, grid, size, slots = best
     clues = []
     for (number, direction, r, c, answer) in sorted(slots, key=lambda s: (s[0], 0 if s[1] == 'across' else 1)):
-        clues.append({
+        clue = {
             "number": number, "direction": direction,
             "row": r, "col": c, "text": clue_map[answer], "answer": answer,
-        })
+        }
+        # Omitted rather than null when a clue isn't drawn from one passage —
+        # the Swift side decodes the absent key as nil, and the puzzles.json
+        # diff stays limited to clues that gained a citation.
+        if answer in ref_map:
+            clue["reference"] = ref_map[answer]
+        clues.append(clue)
     return {
         "title": spec["title"],
         "difficulty": spec["difficulty"],
@@ -256,6 +348,18 @@ def process(specs, out, fails, prefix, build_kwargs, extra_fields=None):
 
 def main():
     specs = json.load(open(sys.argv[1]))
+
+    # Checked before anything is built: a wrong citation in a Bible app is a
+    # credibility problem, not a typo, so nothing ships until they all resolve.
+    errors, warnings = check_references(specs)
+    for w in warnings:
+        print(f"warning: {w}", file=sys.stderr)
+    if errors:
+        print(f"{len(errors)} bad scripture reference(s):", file=sys.stderr)
+        for e in errors:
+            print(f"  - {e}", file=sys.stderr)
+        sys.exit(1)
+
     out = []
     fails = []
     # Dailies are processed first with unchanged parameters so their output is
