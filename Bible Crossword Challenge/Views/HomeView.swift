@@ -22,7 +22,6 @@ struct HomeView: View {
     @Binding var path: NavigationPath
 
     @Environment(\.puzzleProvider) private var puzzleProvider
-    @Environment(\.ads) private var ads
     @Environment(StoreService.self) private var store
     @Query private var records: [PuzzleRecord]
 
@@ -130,11 +129,6 @@ struct HomeView: View {
             }
             .navigationDestination(for: PuzzlePack.self) { pack in
                 PackDetailView(pack: pack, profile: profile)
-            }
-            .safeAreaInset(edge: .bottom) {
-                if !store.isPremium && ads.isLive {
-                    BannerAdView()
-                }
             }
         }
     }

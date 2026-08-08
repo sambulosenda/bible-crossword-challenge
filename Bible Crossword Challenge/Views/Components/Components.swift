@@ -189,26 +189,3 @@ struct DifficultyBadge: View {
         }
     }
 }
-
-// MARK: - Banner ad placeholder
-
-/// Placeholder banner shown to free users. Swap for a real `GADBannerView`
-/// wrapper once AdMob is configured.
-struct BannerAdView: View {
-    var body: some View {
-        Text("Advertisement")
-            .font(.caption)
-            .foregroundStyle(.secondary)
-            .frame(maxWidth: .infinity)
-            .frame(height: 50)
-            .background(Color(.secondarySystemBackground))
-            .overlay(alignment: .topLeading) {
-                Text("Ad")
-                    .font(.system(size: 9, weight: .bold))
-                    .padding(2)
-                    .background(.yellow.opacity(0.7), in: .rect(cornerRadius: 3))
-                    .padding(4)
-            }
-            .accessibilityHidden(true)
-    }
-}

@@ -696,9 +696,9 @@ struct PremiumBenefit: Identifiable {
     /// Hint limits get their own row rather than sharing one with ads: they're
     /// the most-hit paywall trigger in the app, and pairing the strongest
     /// reason to subscribe with the weakest one buried it. "No ads" is gone
-    /// entirely — `AdProvider` defaults to `NoOpAdProvider`, so the free tier
-    /// shows a placeholder banner rather than real advertising. Worth adding
-    /// back only if AdMob is ever actually wired up.
+    /// entirely, and so is the ad scaffold behind it: the app serves no
+    /// advertising, so there is nothing for Premium to remove. Add the row
+    /// back only alongside a real ad integration.
     static func all(puzzleCount: Int, packCount: Int) -> [PremiumBenefit] {
         [
             PremiumBenefit(
