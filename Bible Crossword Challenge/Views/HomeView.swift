@@ -23,7 +23,16 @@ struct HomeView: View {
 
     @Environment(\.puzzleProvider) private var puzzleProvider
     @Environment(StoreService.self) private var store
+    @Environment(\.analytics) private var analytics
     @Query private var records: [PuzzleRecord]
+
+    /// Written by RootView when a launch breaks the streak; cleared here on
+    /// dismiss, and on the solve that starts the next run.
+    @AppStorage("pendingStreakBreak") private var pendingStreakBreak = 0
+    /// Where the comeback solve came from, read once by the completion that
+    /// logs it. Carried through UserDefaults because the puzzle is opened by
+    /// navigation — there's no call chain between the tap and the solve.
+    @AppStorage("comebackSource") private var comebackSource = ""
 
     private var dailyPuzzle: Puzzle? { puzzleProvider.dailyPuzzle() }
     private var dailyMini: Puzzle? { puzzleProvider.dailyMini() }
@@ -38,6 +47,25 @@ struct HomeView: View {
     /// Shared record lookup for pack-progress calculation in the carousel.
     private var recordsByID: [String: PuzzleRecord] {
         Dictionary(records.map { ($0.puzzleID, $0) }, uniquingKeysWith: { a, _ in a })
+    }
+
+    // MARK: - Comeback
+
+    /// The mini restarts a streak as well as the daily does and asks far less of
+    /// someone who just lost one, so it leads when there is one.
+    private var comebackPuzzle: Puzzle? { dailyMini ?? dailyPuzzle }
+
+    private var comebackPlayLabel: String {
+        dailyMini != nil ? "Play today's Mini" : "Play today's puzzle"
+    }
+
+    /// Opens the comeback puzzle and marks where the attempt came from. The card
+    /// stays until something is actually solved — clearing it on the tap would
+    /// lose the offer for anyone who opens the puzzle and backs out.
+    private func startComeback() {
+        guard let puzzle = comebackPuzzle else { return }
+        comebackSource = "home_card"
+        path.append(puzzle)
     }
 
     /// True when a streak freeze was spent today, so the streak card can show a
@@ -90,13 +118,27 @@ struct HomeView: View {
                         )
                     }
 
-                    StreakCard(
-                        current: profile.currentStreak,
-                        best: profile.bestStreak,
-                        freezes: profile.streakFreezes,
-                        savedRecently: freezeSavedToday,
-                        completedWeekdays: completedWeekdaysThisWeek
-                    )
+                    // Instead of, not above: a comeback card stacked on a flame
+                    // card reading 0 would state the loss twice and answer it
+                    // once. The two are mutually exclusive by construction
+                    // anyway — a freeze save means the streak survived, so it
+                    // can't also have broken.
+                    if pendingStreakBreak > 0 {
+                        ComebackCard(
+                            previousStreak: pendingStreakBreak,
+                            playLabel: comebackPlayLabel,
+                            onPlay: startComeback,
+                            onDismiss: { pendingStreakBreak = 0 }
+                        )
+                    } else {
+                        StreakCard(
+                            current: profile.currentStreak,
+                            best: profile.bestStreak,
+                            freezes: profile.streakFreezes,
+                            savedRecently: freezeSavedToday,
+                            completedWeekdays: completedWeekdaysThisWeek
+                        )
+                    }
 
                     if !collectionPacks.isEmpty {
                         CollectionsCarousel(

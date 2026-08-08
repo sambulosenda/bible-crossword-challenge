@@ -17,6 +17,10 @@ struct CompletionView: View {
     let streak: Int
     let newAchievements: [Achievement]
     var earnedFreeze: Bool = false
+    /// True when this solve restarted a streak that had broken. Only changes how
+    /// the streak reads — a comeback deserves naming, not a second celebration
+    /// competing with achievements and pack completions.
+    var isComeback: Bool = false
     var totalCompleted: Int = 0
     let onHome: () -> Void
 
@@ -403,7 +407,10 @@ struct CompletionView: View {
                     .accessibilityHidden(true)
 
                 Label {
-                    Text("\(streak)-day streak")
+                    // "1-day streak" is a true but bleak thing to show someone
+                    // who just lost a long one. Naming it a new streak says the
+                    // same number and frames it as a start.
+                    Text(isComeback ? "New streak — day \(streak)" : "\(streak)-day streak")
                 } icon: {
                     Image(systemName: "flame.fill")
                         .foregroundStyle(.orange)

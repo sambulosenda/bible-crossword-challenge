@@ -100,6 +100,70 @@ struct StreakCard: View {
     }
 }
 
+// MARK: - Comeback
+
+/// Shown on Today in place of `StreakCard` when a streak has just broken.
+///
+/// A zero on the flame card states the loss and offers nothing — the moment a
+/// long run ends is exactly when a player decides whether to keep the app, and
+/// "0 day streak" is a scoreboard for a game they just lost. This says the same
+/// fact and hands them the next move.
+///
+/// Deliberately quiet: the outline flame rather than the lit one, no celebration
+/// treatment, and a tonal CTA so it can't outshout the daily card's own pill —
+/// Today allows one loud action, and it isn't this one. No guilt, no offer to
+/// sell the streak back; the ticket's product rules rule both out.
+struct ComebackCard: View {
+    /// The run that ended, for naming what was lost rather than glossing it.
+    let previousStreak: Int
+    /// What the primary action opens — the mini when there is one, else the
+    /// daily. Passed in so the button can name the thing it actually plays.
+    let playLabel: String
+    var onPlay: () -> Void
+    var onDismiss: () -> Void
+
+    @ScaledMetric(relativeTo: .largeTitle) private var iconSize = 48
+
+    var body: some View {
+        VStack(spacing: Theme.Spacing.m) {
+            HStack(spacing: Theme.Spacing.m) {
+                // Outline, and grey rather than fire-orange: the streak is out.
+                // A lit flame beside "paused" would contradict itself.
+                Image(systemName: "flame")
+                    .font(.title2)
+                    .foregroundStyle(.secondary)
+                    .frame(width: iconSize, height: iconSize)
+                    .background(Color.primary.opacity(0.06), in: .circle)
+                    .accessibilityHidden(true)
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Streak paused")
+                        .font(.headline)
+                    Text("Your \(previousStreak)-day run ended. One puzzle starts the next.")
+                        .font(.caption.weight(.medium))
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+
+                Spacer(minLength: 0)
+            }
+            // One stop for the fact, so VoiceOver reaches the two actions next
+            // rather than reading the icon and two labels on the way.
+            .accessibilityElement(children: .combine)
+
+            Button(playLabel) { onPlay() }
+                .buttonStyle(.pillTonal)
+
+            Button("Not now") { onDismiss() }
+                .font(.subheadline.weight(.semibold))
+                .tint(.secondary)
+        }
+        .padding(Theme.Spacing.l)
+        .frame(maxWidth: .infinity)
+        .elevatedCard()
+    }
+}
+
 /// The seven-day row inside `StreakCard`: a filled scarlet check for completed
 /// days, an outlined ring for today, and muted letter chips for the rest.
 private struct WeekRow: View {

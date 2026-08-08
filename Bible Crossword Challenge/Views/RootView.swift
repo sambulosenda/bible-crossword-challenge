@@ -46,6 +46,11 @@ struct RootView: View {
     /// Set by ProfileView when it hands the player to Settings to allow
     /// notifications; cleared here once they come back with an answer.
     @AppStorage("pendingReminderOptIn") private var pendingReminderOptIn = false
+    /// The streak length lost on a launch where it broke, or 0 for none —
+    /// what Today's comeback card is keyed on. `UserDefaults` rather than a
+    /// field on `PlayerProfile`: it's a transient piece of UI state, and a new
+    /// synced field would mean a CloudKit schema deploy before this could ship.
+    @AppStorage("pendingStreakBreak") private var pendingStreakBreak = 0
     @State private var showReminderPrompt = false
 
     var body: some View {
@@ -79,8 +84,17 @@ struct RootView: View {
             if ProcessInfo.processInfo.arguments.contains("-uiSeedShowcase") {
                 seedShowcase(profile)
             }
+            if ProcessInfo.processInfo.arguments.contains("-uiSeedStreakBreak") {
+                seedStreakBreak(profile)
+            }
             #endif
-            Streaks.normalize(profile)
+            // A break is announced once, by the pass that causes it — see
+            // `Streaks.Outcome`. A freeze save needs nothing here: the streak
+            // survived, and StreakCard already carries its own reassurance.
+            if case .broken(let previous) = Streaks.normalize(profile) {
+                pendingStreakBreak = previous
+                analytics.log(.streakBroken(previousLength: previous))
+            }
             reconcilePackCompletions(profile)
             context.saveLogged("launch normalise")
             WidgetBridge.publish(profile)
@@ -310,6 +324,18 @@ struct RootView: View {
     ///
     /// Idempotent: keyed off `totalPuzzlesCompleted`, so relaunching with the
     /// flag doesn't stack records. Wipe the app to reseed from scratch.
+    /// Dates a long streak into the past so the next `Streaks.normalize` breaks
+    /// it, which is the only way to reach the comeback card without waiting two
+    /// real days. Runs before normalize, same as `-uiSeedShowcase`.
+    private func seedStreakBreak(_ p: PlayerProfile) {
+        let calendar = Calendar.current
+        p.currentStreak = 14
+        p.bestStreak = max(p.bestStreak, 14)
+        p.streakFreezes = 0     // a freeze would bridge the gap instead
+        p.lastCompletedDate = calendar.date(byAdding: .day, value: -4, to: Date())
+        pendingStreakBreak = 0  // let normalize be the thing that reports it
+    }
+
     private func seedShowcase(_ p: PlayerProfile) {
         guard p.totalPuzzlesCompleted == 0 else { return }
         let calendar = Calendar.current

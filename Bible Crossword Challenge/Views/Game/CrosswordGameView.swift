@@ -35,6 +35,16 @@ struct CrosswordGameView: View {
     @State private var newlyUnlocked: [Achievement] = []
     /// Whether this solve crossed a streak milestone that granted a freeze.
     @State private var earnedFreeze = false
+    /// True when this solve is the one that restarted a broken streak, so the
+    /// completion screen can name it rather than reporting a bare "1-day streak"
+    /// to someone who just lost forty.
+    @State private var isComeback = false
+
+    /// The break the comeback card was offering to end, and where the attempt
+    /// came from. Both are cleared by the solve that ends it — see
+    /// `HomeView.startComeback`.
+    @AppStorage("pendingStreakBreak") private var pendingStreakBreak = 0
+    @AppStorage("comebackSource") private var comebackSource = ""
     /// Grid is full but at least one letter is wrong — nudge instead of leaving
     /// the player stranded wondering why the completion screen didn't appear.
     @State private var showFullMissAlert = false
@@ -119,6 +129,7 @@ struct CrosswordGameView: View {
                 streak: profile.currentStreak,
                 newAchievements: newlyUnlocked,
                 earnedFreeze: earnedFreeze,
+                isComeback: isComeback,
                 totalCompleted: profile.totalPuzzlesCompleted,
                 onHome: {
                     showCompletion = false
@@ -297,6 +308,22 @@ struct CrosswordGameView: View {
         analytics.log(.dailyPuzzleCompleted(puzzleID: puzzle.id, seconds: seconds))
         if advanced {
             analytics.log(.streakUpdated(streak: profile.currentStreak))
+        }
+
+        // The solve that answers a broken streak. Cleared here rather than when
+        // the comeback card is tapped, so opening a puzzle and backing out
+        // doesn't spend the offer — the card is owed until something is solved.
+        //
+        // Any solve counts, not just one launched from the card: a player who
+        // ignores it and plays the daily has still come back, and `source`
+        // records which of the two it was.
+        if pendingStreakBreak > 0, profile.currentStreak > 0 {
+            analytics.log(.streakComebackStarted(
+                source: comebackSource.isEmpty ? "organic" : comebackSource
+            ))
+            isComeback = true
+            pendingStreakBreak = 0
+            comebackSource = ""
         }
 
         // Update achievement stats before evaluating unlocks. Best time updates on
