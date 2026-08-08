@@ -63,7 +63,8 @@ final class NotificationService {
             enabled: enabled,
             minutes: minutes,
             streak: profile.currentStreak,
-            completedToday: completedToday
+            completedToday: completedToday,
+            freezes: profile.streakFreezes
         )
     }
 
@@ -71,7 +72,9 @@ final class NotificationService {
     /// per day for the next `horizonDays` at the chosen time. Today is skipped if
     /// already solved or the time has passed; the next reminder uses streak-saver
     /// copy when a streak is on the line.
-    func reschedule(enabled: Bool, minutes: Int, streak: Int, completedToday: Bool) async {
+    func reschedule(
+        enabled: Bool, minutes: Int, streak: Int, completedToday: Bool, freezes: Int = 0
+    ) async {
         center.removeAllPendingNotificationRequests()
         guard enabled else { return }
         await refreshStatus()
@@ -108,7 +111,7 @@ final class NotificationService {
 
         await scheduleStreakRiskNudge(
             minutes: minutes, streak: streak, completedToday: completedToday,
-            calendar: calendar, now: now
+            freezes: freezes, calendar: calendar, now: now
         )
     }
 
@@ -119,7 +122,8 @@ final class NotificationService {
     /// when there's no streak or the regular reminder already fires at 9 PM
     /// or later.
     private func scheduleStreakRiskNudge(
-        minutes: Int, streak: Int, completedToday: Bool, calendar: Calendar, now: Date
+        minutes: Int, streak: Int, completedToday: Bool, freezes: Int,
+        calendar: Calendar, now: Date
     ) async {
         guard streak > 0, minutes < streakRiskMinutes else { return }
         guard let day = calendar.date(
@@ -131,7 +135,13 @@ final class NotificationService {
 
         let content = UNMutableNotificationContent()
         content.title = "Your \(streak)-day streak ends at midnight ⏰"
-        content.body = "Solve today's Bible puzzle before the day is over to keep it alive."
+        // Name the freeze when there is one. Withholding it to keep the threat
+        // sharp would be a lie by omission about a thing the player earned, and
+        // the app tells them about it everywhere else — the last message before
+        // a streak dies is the wrong place to start being cagey.
+        content.body = freezes > 0
+            ? "Solve today's Bible puzzle to keep it alive — or a freeze will cover you tonight."
+            : "Solve today's Bible puzzle before the day is over to keep it alive."
         content.sound = .default
 
         let components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: fireDate)
