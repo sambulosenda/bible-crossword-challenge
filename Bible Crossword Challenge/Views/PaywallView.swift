@@ -382,16 +382,26 @@ enum PremiumCopy {
     static let freeDailyReassurance = "The daily puzzle stays free either way."
 }
 
-/// A premium benefit: what you get, then what that actually means.
+/// A premium benefit: one line, one claim.
 ///
-/// The single-line version couldn't carry both, so each row had to choose
-/// between being specific and being scannable. Splitting them means the bold
-/// line reads on its own at a glance and the detail is there for anyone who
-/// slows down.
+/// Each row used to carry a bold title *and* an explanatory line beneath it, so
+/// that a row could be both specific and scannable. In practice the details
+/// were the least-read text on the busiest screen in the app: three rows of two
+/// lines each, both of which wrapped, made nine lines of prose standing between
+/// the promise and the price.
+///
+/// They also earned very little. "No hint limits" was followed by "Every hint
+/// on every puzzle" — the same sentence twice. The other two details carried
+/// exactly one fact each that the title didn't, and both were facts the title
+/// could hold: a count, and replay. So the counts moved up and replay became
+/// its own row, which is cheaper than a wrapped line and reads at a glance.
+///
+/// Four short rows, not three long ones. The list is now skimmable in about the
+/// time it takes to decide whether to keep reading, which is all the time it
+/// actually gets.
 struct PremiumBenefit: Identifiable {
     let icon: String
     let title: String
-    let detail: String
     var id: String { title }
 
     /// The promise, written once for both places that make it.
@@ -425,18 +435,23 @@ struct PremiumBenefit: Identifiable {
         [
             PremiumBenefit(
                 icon: "square.grid.3x3.fill",
-                title: "\(puzzleCount) puzzles, not just this week's",
-                detail: "The whole archive, back to the very first — replay any of them, any time."
+                // "today's", not "this week's": the free tier refreshes one
+                // daily and one Mini every day, so today's is exactly what a
+                // free player has. The prose above this has said "today's" all
+                // along — the string had drifted from it.
+                title: "All \(puzzleCount) puzzles, not just today's"
+            ),
+            PremiumBenefit(
+                icon: "arrow.clockwise",
+                title: "Replay any puzzle, any time"
             ),
             PremiumBenefit(
                 icon: "lightbulb.fill",
-                title: "No hint limits",
-                detail: "Every hint on every puzzle, for the moments you're properly stuck."
+                title: "No hint limits"
             ),
             PremiumBenefit(
                 icon: "rectangle.stack.fill",
-                title: "Every pack, now and later",
-                detail: "\(packCount) themed collections today, plus every new one added after."
+                title: "All \(packCount) packs, and every new one"
             ),
         ]
     }

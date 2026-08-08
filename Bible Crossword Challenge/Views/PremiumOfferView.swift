@@ -132,8 +132,12 @@ struct PremiumOfferView: View {
     /// Loose on the canvas they read as an unbroken wall of text; bounding them
     /// makes the list a single object the eye can skip past on the way to the
     /// price.
+    ///
+    /// One line per row — see `PremiumBenefit`. `.top` alignment stays for the
+    /// accessibility sizes where a row does wrap, so the disc sits beside the
+    /// first line rather than floating in the middle of two.
     private var featureList: some View {
-        VStack(spacing: Theme.Spacing.m) {
+        VStack(alignment: .leading, spacing: Theme.Spacing.s) {
             ForEach(PremiumBenefit.all(
                 puzzleCount: puzzleProvider.totalPuzzleCount,
                 packCount: puzzleProvider.packs.filter(\.isPremium).count
@@ -148,15 +152,9 @@ struct PremiumOfferView: View {
                         .foregroundStyle(Theme.accent)
                         .frame(width: checkSize, height: checkSize)
                         .background(Theme.accent.opacity(0.12), in: .circle)
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(benefit.title)
-                            .font(.body.weight(.semibold))
-                            .fixedSize(horizontal: false, vertical: true)
-                        Text(benefit.detail)
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                            .fixedSize(horizontal: false, vertical: true)
-                    }
+                    Text(benefit.title)
+                        .font(.body.weight(.semibold))
+                        .fixedSize(horizontal: false, vertical: true)
                     Spacer(minLength: 0)
                 }
                 .accessibilityElement(children: .combine)
