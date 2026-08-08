@@ -24,6 +24,32 @@
 import SwiftUI
 import StoreKit
 
+private extension View {
+    /// The shared look of a thing you can pick on this page: a tinted, accented
+    /// card when it's the one, an outline on bare paper when it isn't.
+    ///
+    /// Unselected plans used to be filled with `Theme.surface` — the same white
+    /// as the benefits card directly above them. Two blocks in the same material
+    /// read as two blocks of the same kind, so the monthly card looked like more
+    /// information rather than the other half of a choice. Outlining them
+    /// instead leaves exactly one white card on the page (the benefits) and
+    /// makes every bordered thing below it something you can tap.
+    func planChrome(selected: Bool) -> some View {
+        background(selected ? Theme.accent.opacity(0.12) : .clear,
+                   in: .rect(cornerRadius: Theme.cornerRadius, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: Theme.cornerRadius, style: .continuous)
+                    .strokeBorder(selected ? Theme.accent : Color(.separator),
+                                  lineWidth: selected ? 2 : 1)
+            }
+            // Without this the card only answers to taps that land on the
+            // glyphs themselves: a SwiftUI button's hit area is its content,
+            // and neither the padding nor the background extends it. Most of a
+            // card this size is padding, so most of it was dead to the touch.
+            .contentShape(.rect(cornerRadius: Theme.cornerRadius, style: .continuous))
+    }
+}
+
 struct PremiumOfferView: View {
     /// The promise, chosen by the surface presenting it.
     let headline: String
@@ -63,8 +89,16 @@ struct PremiumOfferView: View {
                 productsPlaceholder
             } else {
                 staggered(plans, delay: 0.20)
+                staggered(trialTimeline, delay: 0.26)
             }
         }
+    }
+
+    /// The plan the CTA outside this view would buy. Derived rather than passed
+    /// in: the binding is the caller's, but everything on this page that has to
+    /// describe the selection needs the product, not the id.
+    private var selectedProduct: Product? {
+        store.products.first { $0.id == selectedID }
     }
 
     /// Applies onboarding's entrance treatment when the caller asked for it and
@@ -206,11 +240,9 @@ struct PremiumOfferView: View {
     /// who want it without competing for the same attention.
     private var plans: some View {
         VStack(spacing: Theme.Spacing.s) {
-            // Two columns can't hold a price and a per-month figure once the
-            // text gets large, so the same cards stack at accessibility sizes.
             // AnyLayout rather than a branch on the view itself, so selection
             // keeps its identity (and its animation) across the switch.
-            let layout = dynamicTypeSize.isAccessibilitySize
+            let layout = stacksPlans
                 ? AnyLayout(VStackLayout(spacing: Theme.Spacing.s))
                 : AnyLayout(HStackLayout(alignment: .top, spacing: Theme.Spacing.s))
             layout {
@@ -222,6 +254,11 @@ struct PremiumOfferView: View {
                 lifetimeRow(lifetime)
             }
         }
+        // Room for the savings pill, which straddles the yearly card's top edge
+        // rather than sitting inside it. Without this it would ride up into the
+        // benefits card above. Stacked, the pill is back in the flow and there
+        // is nothing hanging over the edge to make room for.
+        .padding(.top, stacksPlans ? 0 : 10)
         // Spring the selection between plans instead of snapping.
         .animation(.snappy(duration: 0.2), value: selectedID)
     }
@@ -237,21 +274,24 @@ struct PremiumOfferView: View {
             selectedID = product.id
         } label: {
             VStack(alignment: .leading, spacing: 4) {
-                // The badge slot is always laid out, hidden when there's
-                // nothing to say, so the two cards keep a common baseline
-                // instead of one sitting a pill's height lower than the other.
-                Text(badgeText(product) ?? "")
-                    .font(.caption2.weight(.bold))
-                    .foregroundStyle(Theme.onInk)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 3)
-                    .background(Theme.ink, in: .capsule)
-                    .opacity(badgeText(product) == nil ? 0 : 1)
-                    .accessibilityHidden(badgeText(product) == nil)
-
-                Text(planTitle(product))
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(.secondary)
+                // Stacked, the badge is just the card's first line. It costs a
+                // row, but only on the card that has one to show — full-width
+                // cards don't share a baseline, so monthly needs no phantom
+                // copy to stay level with yearly.
+                if stacksPlans, let text = badgeText(product) {
+                    savingsPill(text)
+                }
+                // The same mark the lifetime row below has always used. The two
+                // used to speak different languages — cards signalled selection
+                // with a tint and a border, the row with a radio — so one screen
+                // asked the player to learn "selected" twice.
+                HStack(spacing: 6) {
+                    selectionMark(selected)
+                    Text(planTitle(product))
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.secondary)
+                    Spacer(minLength: 0)
+                }
                 Text(planPrice(product))
                     .font(.title3.weight(.semibold))
                     .fixedSize(horizontal: false, vertical: true)
@@ -262,19 +302,13 @@ struct PremiumOfferView: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(Theme.Spacing.m)
-            .background(selected ? Theme.accent.opacity(0.12) : Theme.surface,
-                        in: .rect(cornerRadius: Theme.cornerRadius, style: .continuous))
-            .overlay {
-                if selected {
-                    RoundedRectangle(cornerRadius: Theme.cornerRadius, style: .continuous)
-                        .strokeBorder(Theme.accent, lineWidth: 2)
-                }
-            }
-            // Without this the card only answers to taps that land on the
-            // glyphs themselves: a SwiftUI button's hit area is its content,
-            // and neither the padding nor the background extends it. Most of a
-            // card this size is padding, so most of it was dead to the touch.
-            .contentShape(.rect(cornerRadius: Theme.cornerRadius, style: .continuous))
+            .planChrome(selected: selected)
+            // The pill straddles the top edge instead of occupying a row inside
+            // the card. As a row it had to be laid out on *both* cards — an
+            // invisible copy on monthly — just to keep their baselines level,
+            // which cost each card a line to say nothing on one of them. On the
+            // border it costs no height at all, and the cards match by default.
+            .overlay(alignment: .top) { straddlingBadge(product) }
         }
         .buttonStyle(PressableCardStyle())
         .accessibilityElement(children: .combine)
@@ -290,32 +324,141 @@ struct PremiumOfferView: View {
             selectedID = product.id
         } label: {
             HStack(spacing: Theme.Spacing.s) {
-                Image(systemName: selected ? "checkmark.circle.fill" : "circle")
-                    .font(.subheadline)
-                    .foregroundStyle(selected ? Theme.accent : Color(.separator))
+                selectionMark(selected)
                 Text("Or pay once — \(product.displayPrice) forever")
                     .font(.subheadline.weight(selected ? .semibold : .regular))
                     .fixedSize(horizontal: false, vertical: true)
                 Spacer(minLength: 0)
             }
             .padding(.horizontal, Theme.Spacing.m)
-            .padding(.vertical, Theme.Spacing.s)
+            .padding(.vertical, Theme.Spacing.m)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(selected ? Theme.accent.opacity(0.12) : .clear,
-                        in: .rect(cornerRadius: Theme.cornerRadius, style: .continuous))
-            .overlay {
-                if selected {
-                    RoundedRectangle(cornerRadius: Theme.cornerRadius, style: .continuous)
-                        .strokeBorder(Theme.accent, lineWidth: 2)
-                }
-            }
-            // As on the cards above — and it matters more here, because this
-            // row is mostly empty space to the right of a short label.
-            .contentShape(.rect(cornerRadius: Theme.cornerRadius, style: .continuous))
+            // Same chrome as the cards above. Unselected it used to be bare
+            // paper with no edge at all, so until you tapped it the third option
+            // read as a caption about the other two rather than a third choice.
+            .planChrome(selected: selected)
         }
         .buttonStyle(PressableCardStyle())
         .accessibilityElement(children: .combine)
         .accessibilityAddTraits(selected ? [.isButton, .isSelected] : .isButton)
+    }
+
+    /// The one mark every option on this page uses to say "this is the one".
+    private func selectionMark(_ selected: Bool) -> some View {
+        Image(systemName: selected ? "checkmark.circle.fill" : "circle")
+            .font(.subheadline)
+            .foregroundStyle(selected ? Theme.accent : Color(.separator))
+    }
+
+    /// The savings pill itself.
+    private func savingsPill(_ text: String) -> some View {
+        Text(text)
+            .font(.caption2.weight(.bold))
+            .foregroundStyle(Theme.onInk)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 3)
+            .background(Theme.ink, in: .capsule)
+    }
+
+    /// The pill straddling the card's top edge — the side-by-side layout only.
+    ///
+    /// Straddling costs the card no height, which is the whole reason the badge
+    /// left the card: side by side, a pill that takes a row has to take one on
+    /// *both* cards (invisibly on monthly) or the two stop lining up.
+    ///
+    /// It can only hang over the edge while it's shorter than the card's own top
+    /// padding, and at accessibility text sizes it isn't: the pill grows with
+    /// the label until its lower half reaches down over "Yearly". Stacked, the
+    /// cards are full width and no longer share a baseline, so nothing is gained
+    /// by keeping the badge out of the flow — see `planCard`.
+    @ViewBuilder
+    private func straddlingBadge(_ product: Product) -> some View {
+        if !stacksPlans, let text = badgeText(product) {
+            savingsPill(text)
+                // Centres the pill *on* the edge rather than below it.
+                .alignmentGuide(.top) { $0[VerticalAlignment.center] }
+        }
+    }
+
+    /// Whether the plans stack instead of sitting side by side. Two columns
+    /// can't hold a price and a per-month figure once the text gets large.
+    private var stacksPlans: Bool { dynamicTypeSize.isAccessibilitySize }
+
+    // MARK: - Trial timeline
+
+    /// What actually happens if they tap the button: access today, money on a
+    /// named day. The trial is stated four times on this page already, but only
+    /// ever as an adjective — "3-day free trial" says how long it lasts, not
+    /// what arrives at the end of it, and the unanswered version of that
+    /// question is the one that stops a purchase.
+    ///
+    /// Two steps, not the three this pattern usually has. The middle step is
+    /// normally "we'll remind you before it ends", and this app cannot honestly
+    /// make that promise: `NotificationService` schedules the daily reminder,
+    /// season openings and the streak nudge, and nothing for a trial — and
+    /// notification permission is optional here, so even once something is
+    /// scheduled the claim would be false for everyone who declined. Add the
+    /// step when there is a real reminder behind it, and only for players who
+    /// granted notifications.
+    ///
+    /// Keyed to the *selected* plan rather than to yearly: monthly carries no
+    /// introductory offer, so leaving a trial timeline on screen while monthly
+    /// is selected would describe an offer the CTA isn't making.
+    @ViewBuilder
+    private var trialTimeline: some View {
+        if let product = selectedProduct, let offer = store.introOffer(for: product) {
+            VStack(alignment: .leading, spacing: 0) {
+                timelineStep(
+                    icon: "lock.open.fill",
+                    title: "Today",
+                    detail: "Full access to all \(puzzleProvider.totalPuzzleCount) puzzles. You pay nothing.",
+                    isLast: false
+                )
+                timelineStep(
+                    icon: "creditcard.fill",
+                    title: "In \(offer.duration)",
+                    // The price and period come from the same product the CTA
+                    // will buy, so this line cannot drift from the button.
+                    detail: "\(product.displayPrice)\(store.periodText(for: product) ?? "") begins, unless you cancel first.",
+                    isLast: true
+                )
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(Theme.Spacing.m)
+            .elevatedCard()
+        }
+    }
+
+    private func timelineStep(icon: String, title: String, detail: String, isLast: Bool) -> some View {
+        HStack(alignment: .top, spacing: Theme.Spacing.m) {
+            // The rail is drawn by the step above it, filling whatever height
+            // the text beside it turns out to need — so it still joins the two
+            // discs when a detail line wraps at large text sizes.
+            VStack(spacing: 4) {
+                Image(systemName: icon)
+                    .font(.footnote.weight(.bold))
+                    .foregroundStyle(Theme.accent)
+                    .frame(width: checkSize, height: checkSize)
+                    .background(Theme.accent.opacity(0.12), in: .circle)
+                if !isLast {
+                    Rectangle()
+                        .fill(Theme.accent.opacity(0.2))
+                        .frame(width: 2)
+                        .frame(maxHeight: .infinity)
+                }
+            }
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                    .font(.subheadline.weight(.semibold))
+                Text(detail)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .padding(.bottom, isLast ? 0 : Theme.Spacing.m)
+            Spacer(minLength: 0)
+        }
+        .accessibilityElement(children: .combine)
     }
 
     // MARK: - Plan copy

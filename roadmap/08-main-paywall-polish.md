@@ -4,7 +4,7 @@
 **Status:** `[ ]`  
 **Type:** eng / copy  
 **Estimate:** M  
-**Files:** `Views/PaywallView.swift`, `Products.storekit`, App Store Connect product copy  
+**Files:** `Views/PremiumOfferView.swift`, `Views/PaywallView.swift`, `Products.storekit`, App Store Connect product copy  
 **Related:** 07 onboarding paywall, Library locked preview, Premium packs
 
 ## Problem
@@ -139,6 +139,79 @@ one for hints, one for packs, rather than row one restating row three.
 
 - [ ] When `source == pack_locked`, prefer highlighting **that** pack first in the strip (if pack id can be passed — may need optional `contextPackID` param; only if cheap)
 - [ ] If passing pack id is invasive, skip — strip of premium packs is enough
+
+---
+
+### T6 — Offer layout + trial timeline
+
+**Status:** `[x]`
+
+Not in the original problem list — this ticket was written about honesty and
+moment-matching, and the layout was the thing actually costing conversions. All
+of it landed in `PremiumOfferView`, so it applies to **both** surfaces; the
+onboarding page is ~91% of paywall views, so this is mostly an onboarding change.
+
+Reference sweep on Mobbin (Babbel, Wolt, Centr, Deezer, Linktree, Open,
+Everyday Rewards; trial timelines from Vocabulary, Mimo, Strava, Nibble,
+Deepstash, Yazio) — the patterns below are where ours disagreed with all of them.
+
+- [x] **Savings pill straddles the yearly card's top border** instead of taking a
+      row inside it. As a row it had to be laid out invisibly on monthly too,
+      purely to keep the two cards' baselines level — a whole line on each card
+      to say nothing on one of them. Both cards got shorter.
+- [x] **One selection language.** Plan cards signalled selection with tint +
+      border, the lifetime row with a radio — the same screen taught "selected"
+      twice. All three now carry the radio/check.
+- [x] **Unselected plans are outlined on paper, not filled white.** They used
+      `Theme.surface`, the same material as the benefits card directly above, so
+      monthly read as more information rather than the other half of a choice.
+      Exactly one white card remains on the page.
+- [x] **Lifetime row shares the plan chrome.** Unselected it had no edge at all,
+      so until you tapped it the third option read as a caption about the other two.
+- [x] **Trial timeline** after the plans: `Today — full access to all N puzzles,
+      you pay nothing` / `In <duration> — <price>/year begins, unless you cancel
+      first`. Price, period and duration all come from the same product the CTA
+      buys, so it cannot drift from the button.
+- [x] Timeline is keyed to the **selected** plan, not to yearly — monthly and
+      lifetime carry no introductory offer, and leaving it up would describe an
+      offer the CTA isn't making.
+
+**Two deliberate omissions**
+
+1. **No "we'll remind you" step.** Every reference has it as the middle step;
+   we don't have the reminder. `NotificationService` schedules the daily
+   reminder, season openings and the streak nudge, and nothing for a trial —
+   and notification permission is optional here, so even once one is scheduled
+   the claim stays false for everyone who declined. Add the step only alongside
+   a real trial reminder, and only for players who granted notifications.
+2. **The dead band returns on monthly/lifetime**, which have no trial and so no
+   timeline. Yearly is preselected so it's the uncommon path, and inventing a
+   timeline for a plan that charges immediately would be a worse trade.
+
+**Bug found in verification**
+
+At accessibility text sizes the plans stack, and the straddling pill grew until
+its lower half came down over the word "Yearly" — it can only hang over the edge
+while it stays shorter than the card's top padding. Stacked, the cards are full
+width and no longer share a baseline, so the badge goes back **in the flow** as
+the card's first row and nothing needs to overhang. Fixed and re-verified.
+
+**Acceptance**
+
+- [x] Yearly and monthly cards are the same height with no phantom rows
+- [x] Every option on the page uses the same selection mark
+- [x] Timeline appears for yearly, disappears for monthly and lifetime
+- [x] Timeline prices match the CTA and the commitment line exactly
+- [x] Verified on the sheet and the onboarding page, default and
+      accessibility-extra-large; onboarding still fits without scrolling
+- [x] VoiceOver: cards combine to e.g. "Yearly, $9.99/year, $0.83/month, SAVE 58%";
+      timeline steps combine to one label each
+- [x] 170 tests pass
+
+> **Note for T1.** The locked-packs strip wanted roughly the space the timeline
+> now occupies. Its natural home is between the benefits card and the plans,
+> which pushes the CTA further down — check SE and large Dynamic Type before
+> committing to that placement.
 
 ---
 
