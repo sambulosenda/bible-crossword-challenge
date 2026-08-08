@@ -25,10 +25,21 @@ struct CompletionView: View {
     let onHome: () -> Void
 
     @State private var shareImage: Image?
-    @State private var showPaywall = false
-    /// Which entry point opened the paywall — set right before `showPaywall`
-    /// so `paywall_opened` / `premium_purchased` attribute correctly.
-    @State private var paywallSource = "completion"
+    /// Which entry point opened the paywall, carried *as* the sheet's item.
+    ///
+    /// This used to be a `Bool` plus a separate `paywallSource` string, set one
+    /// line apart. `.sheet(isPresented:)` builds its content from the body pass
+    /// that flipped the flag, which still held the previous source — so every
+    /// paywall opened from this screen logged `paywall_opened` with the initial
+    /// `"completion"`, whatever had actually triggered it. SwiftUI then
+    /// re-evaluated with the real value, so `paywall_cta_tapped` from the *same*
+    /// sheet carried the correct source: `first_completion` taps existed against
+    /// zero `first_completion` opens, and `streak_3`, `pack_completion` and
+    /// `mini_completion` read as dead triggers for three weeks.
+    ///
+    /// With `.sheet(item:)` the value that presents the sheet is the value the
+    /// sheet is built from, so the two can't drift apart again.
+    @State private var paywallEntry: PaywallEntry?
     /// True once this appearance scheduled the system review prompt — the
     /// auto paywall stands down rather than stacking sheets.
     @State private var didRequestReview = false
@@ -156,8 +167,8 @@ struct CompletionView: View {
             loadPackContext()
             maybeAutoShowPaywall()
         }
-        .sheet(isPresented: $showPaywall) {
-            PaywallView(source: paywallSource)
+        .sheet(item: $paywallEntry) { entry in
+            PaywallView(source: entry.source)
         }
         .sheet(item: $challengeShare) { share in
             // History records the send, not the intent: a share sheet the
@@ -545,8 +556,7 @@ struct CompletionView: View {
             let locked = ctx.pack.isPremium && !store.isPremium
             Button {
                 if locked {
-                    paywallSource = "pack_completion"
-                    showPaywall = true
+                    paywallEntry = PaywallEntry(source: "pack_completion")
                 } else if let url = URL(string: "biblecrossword://puzzle?id=\(next.id)") {
                     openURL(url)
                     onHome()
@@ -596,8 +606,7 @@ struct CompletionView: View {
     /// celebration stays the hero.
     private var miniUpsellCard: some View {
         Button {
-            paywallSource = "mini_completion"
-            showPaywall = true
+            paywallEntry = PaywallEntry(source: "mini_completion")
         } label: {
             HStack(spacing: Theme.Spacing.m) {
                 Image(systemName: "bolt.circle.fill")
@@ -882,8 +891,7 @@ struct CompletionView: View {
         Task {
             // Let the completion celebration land before the sheet slides up.
             try? await Task.sleep(for: .seconds(1.5))
-            paywallSource = source
-            showPaywall = true
+            paywallEntry = PaywallEntry(source: source)
         }
     }
 
@@ -1011,4 +1019,14 @@ private extension View {
                 .allowsHitTesting(false)
         }
     }
+}
+
+/// The paywall's entry point, as a sheet item.
+///
+/// A one-field wrapper exists only so the source can drive `.sheet(item:)`
+/// rather than ride alongside a separate `isPresented` flag — see the comment
+/// on `CompletionView.paywallEntry` for the mis-attribution that cost.
+struct PaywallEntry: Identifiable {
+    let source: String
+    var id: String { source }
 }
