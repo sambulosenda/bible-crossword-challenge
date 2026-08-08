@@ -16,6 +16,7 @@ Ideas not yet full tickets. Promoted → `08`–`12` (and earlier epics).
 - [ ] Content quality tooling (difficulty score, clue spoiler detection)
 - [x] Main paywall polish / ads honesty → **08**, **12**
 - [x] Free archive soft gate → **09**
+- [x] Daily rotation wraps and re-serves solved puzzles → **13**
 
 ## Explicitly defer
 

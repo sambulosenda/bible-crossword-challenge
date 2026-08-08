@@ -10,8 +10,11 @@ Prioritized feature epics for Bible Crossword Challenge. Each file is a grab-abl
 
 ## Priority order
 
+Dated work first — 13 has a hard deadline that the rest do not.
+
 | # | Epic | Goal | File |
 |---|------|------|------|
+| 13 | **Daily rotation wrap** — due **2026-09-21** | Streak-break event | [13-daily-rotation-wrap.md](./13-daily-rotation-wrap.md) |
 | 1 | Seasonal packs + content cadence | Retention + Premium | [01-seasonal-packs-content-cadence.md](./01-seasonal-packs-content-cadence.md) |
 | 2 | Challenge history / family challenge | Growth | [02-challenge-history-family.md](./02-challenge-history-family.md) |
 | 3 | Deeper post-solve scripture loop | Positioning | [03-post-solve-scripture-loop.md](./03-post-solve-scripture-loop.md) |
@@ -24,6 +27,17 @@ Prioritized feature epics for Bible Crossword Challenge. Each file is a grab-abl
 | 10 | Widget deep links | Habit loop | [10-widget-deep-links.md](./10-widget-deep-links.md) |
 | 11 | Streak break / comeback | D1–D7 retention | [11-streak-comeback.md](./11-streak-comeback.md) |
 | 12 | Ads: ship or strip claims | Free-tier $ / honesty | [12-ads-honesty-or-ship.md](./12-ads-honesty-or-ship.md) |
+
+## Dated
+
+The daily and mini pools rotate with `daysSinceEpoch % pool.count` from a
+2026-07-01 epoch, so they wrap and start repeating on fixed dates. Re-record these
+whenever puzzles are added — every daily added moves the first date by one.
+
+| Pool | Size | Wraps |
+|------|------|-------|
+| Dailies | 82 | 2026-09-21 |
+| Minis | 90 | 2026-09-29 |
 
 ## Status legend
 
