@@ -4,6 +4,13 @@
 //
 //  Local profile and settings. No authentication in v1 — everything is on device.
 //
+//  Built as a ScrollView of elevated cards rather than a Form: every other tab
+//  (Today, Packs, Library, Achievements) already speaks that language, and an
+//  inset-grouped Form with its background hidden still reads as a different app
+//  — system separators, its own row metrics, blue-text buttons. The settings
+//  rows below are hand-rolled so they sit on the same white-card-on-paper
+//  surface as the rest of the app.
+//
 
 import SwiftUI
 import UIKit
@@ -25,6 +32,8 @@ struct ProfileView: View {
     @AppStorage("reminderMinutes") private var reminderMinutes = ReminderTime.defaultMinutes
     @State private var showPaywall = false
     @State private var showManageSubscriptions = false
+    @State private var showRename = false
+    @State private var draftName = ""
 
     private var reminderTime: Binding<Date> {
         Binding(
@@ -39,125 +48,22 @@ struct ProfileView: View {
 
     var body: some View {
         NavigationStack {
-            Form {
-                Section {
-                    VStack(spacing: Theme.Spacing.m) {
-                        HStack {
-                            Image(systemName: "person.crop.circle.fill")
-                                .font(.largeTitle)
-                                .imageScale(.large)
-                                .foregroundStyle(Theme.accent)
-                                .accessibilityHidden(true)
-                            TextField("Your name", text: $profile.username)
-                                .font(.title2.weight(.bold))
-                                .textInputAutocapitalization(.words)
-                        }
-
-                        HStack(spacing: 0) {
-                            heroStat(value: "\(profile.currentStreak)", label: "Day Streak", symbol: "flame.fill", tint: .orange)
-                            Divider().frame(height: 44)
-                            heroStat(value: "\(profile.totalPuzzlesCompleted)", label: "Solved", symbol: "checkmark.circle.fill", tint: .green)
-                            Divider().frame(height: 44)
-                            heroStat(value: "\(profile.bestStreak)", label: "Best", symbol: "trophy.fill", tint: .yellow)
-                        }
-                    }
-                    .padding(.vertical, Theme.Spacing.xs)
+            ScrollView {
+                VStack(spacing: Theme.Spacing.l) {
+                    identityCard
+                    statsCard
+                    premiumSection
+                    preferencesSection
+                    remindersSection
+                    aboutSection
+                    #if DEBUG
+                    developerSection
+                    #endif
                 }
-
-                Section("Stats") {
-                    stat("Streak Freezes", value: "\(profile.streakFreezes)", symbol: "snowflake", tint: .cyan)
-                    stat("Achievements", value: "\(unlockedCount)/\(Achievements.all.count)", symbol: "star.fill", tint: .indigo)
-                    // Persistent way back to this week's Mini standings — the
-                    // only other entry point is the post-solve completion screen.
-                    // Hidden when the player isn't signed in to Game Center.
-                    if gameCenter.isAuthenticated {
-                        Button {
-                            gameCenter.showWeeklyMiniLeaderboard()
-                        } label: {
-                            Label {
-                                Text("Weekly Leaderboard")
-                            } icon: {
-                                Image(systemName: "trophy.fill").foregroundStyle(.yellow)
-                            }
-                        }
-                        .accessibilityHint("Opens this week's fastest Mini times")
-                    }
-                }
-
-                Section("Appearance") {
-                    Picker("Appearance", selection: $appTheme) {
-                        ForEach(AppTheme.allCases) { theme in
-                            Text(theme.label).tag(theme)
-                        }
-                    }
-                    .pickerStyle(.segmented)
-                }
-
-                Section {
-                    Toggle("Daily reminder", isOn: $remindersEnabled)
-                        .onChange(of: remindersEnabled) { _, enabled in
-                            handleReminderToggle(enabled)
-                        }
-                    if remindersEnabled && notifications.authorizationStatus == .authorized {
-                        DatePicker(
-                            "Time",
-                            selection: reminderTime,
-                            displayedComponents: .hourAndMinute
-                        )
-                        .onChange(of: reminderMinutes) { _, _ in
-                            rescheduleReminders()
-                        }
-                    }
-                } header: {
-                    Text("Reminders")
-                } footer: {
-                    if notifications.authorizationStatus == .denied {
-                        Text("Notifications are turned off for this app. Enable them in Settings to receive your daily reminder.")
-                    }
-                }
-
-                Section("Premium") {
-                    if store.isPremium {
-                        Label {
-                            Text("Premium unlocked")
-                        } icon: {
-                            Image(systemName: "crown.fill").foregroundStyle(.yellow)
-                        }
-                        Button("Manage Subscription") {
-                            showManageSubscriptions = true
-                        }
-                    } else {
-                        Button {
-                            showPaywall = true
-                        } label: {
-                            Label("Upgrade to Premium", systemImage: "crown")
-                        }
-                        Button("Restore Purchase") {
-                            Task { await store.restore() }
-                        }
-                    }
-                }
-
-                Section {
-                    LabeledContent("Version", value: appVersion)
-                } footer: {
-                    Text("Bible Crossword Challenge — learn Scripture one puzzle a day.")
-                }
-
-                #if DEBUG
-                Section("Developer") {
-                    Button("Grant Premium") {
-                        store.grantForTesting()
-                    }
-                    Button("Reset Premium", role: .destructive) {
-                        store.resetForTesting()
-                    }
-                }
-                #endif
+                .padding(Theme.Spacing.m)
+                .frame(maxWidth: 560)
+                .frame(maxWidth: .infinity)
             }
-            // Native form rows on the app's warm paper canvas instead of the
-            // cool system-grouped grey, keeping the tabs on one palette.
-            .scrollContentBackground(.hidden)
             .background(Theme.background)
             .navigationTitle("Profile")
             .sheet(isPresented: $showPaywall) {
@@ -165,11 +71,272 @@ struct ProfileView: View {
             }
             .manageSubscriptionsSheet(isPresented: $showManageSubscriptions)
             .purchaseNoticeAlert(store)
+            .alert("Your name", isPresented: $showRename) {
+                TextField("Your name", text: $draftName)
+                    .textInputAutocapitalization(.words)
+                Button("Cancel", role: .cancel) {}
+                Button("Save") { commitRename() }
+            } message: {
+                Text("This is only stored on your device.")
+            }
             .task { await notifications.refreshStatus() }
         }
     }
 
+    // MARK: - Identity
+
+    /// Avatar, name, and one quiet line of context. The name was previously a
+    /// bare always-editable `TextField` sitting in a form row, which reads as an
+    /// unfinished field rather than an identity — it's a display line with an
+    /// explicit edit affordance now, and the rename happens in an alert.
+    private var identityCard: some View {
+        VStack(spacing: Theme.Spacing.m) {
+            Avatar(name: profile.username)
+
+            VStack(spacing: 2) {
+                Text(displayName)
+                    // Serif, as the app sets every hero title and scripture line.
+                    .font(.scripture(.title, weight: .semibold))
+                    .multilineTextAlignment(.center)
+                Text(membershipLine)
+                    .font(.caption.weight(.medium))
+                    .foregroundStyle(.secondary)
+            }
+
+            Button {
+                draftName = profile.username
+                showRename = true
+            } label: {
+                Label("Edit name", systemImage: "pencil")
+                    .font(.caption.weight(.semibold))
+                    .padding(.horizontal, Theme.Spacing.m)
+                    .padding(.vertical, Theme.Spacing.s)
+                    .background(Color.primary.opacity(0.06), in: .capsule)
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Edit name")
+            .accessibilityHint("Currently \(displayName)")
+        }
+        .frame(maxWidth: .infinity)
+        .padding(Theme.Spacing.l)
+        .elevatedCard()
+    }
+
+    private var displayName: String {
+        let trimmed = profile.username.trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmed.isEmpty ? "Friend" : trimmed
+    }
+
+    /// Premium status when there is some, otherwise how long they've been here.
+    /// Both come from data already on the profile — no new persistence.
+    private var membershipLine: String {
+        if store.isPremium { return "Premium member" }
+        return "Playing since \(profile.createdAt.formatted(.dateTime.month(.wide).year()))"
+    }
+
+    private func commitRename() {
+        let trimmed = draftName.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+        profile.username = trimmed
+    }
+
+    // MARK: - Stats
+
+    /// One card, two rows. The three headline numbers lead at title size; the
+    /// three supporting ones sit below a divider at a smaller scale. Previously
+    /// three were hero stats and the other two were buried as list rows in a
+    /// separate section, which split one idea across two places.
+    private var statsCard: some View {
+        VStack(spacing: Theme.Spacing.m) {
+            HStack(spacing: 0) {
+                heroStat(value: "\(profile.currentStreak)", label: "Day Streak", symbol: "flame.fill", tint: .orange)
+                heroStat(value: "\(profile.totalPuzzlesCompleted)", label: "Solved", symbol: "checkmark.circle.fill", tint: .green)
+                heroStat(value: "\(profile.bestStreak)", label: "Best Streak", symbol: "trophy.fill", tint: .yellow)
+            }
+
+            Divider()
+
+            HStack(spacing: 0) {
+                minorStat(value: bestTimeValue, label: "Best Time", symbol: "stopwatch.fill", tint: Theme.accent)
+                minorStat(value: "\(profile.streakFreezes)", label: "Freezes", symbol: "snowflake", tint: .cyan)
+                minorStat(value: "\(unlockedCount)/\(Achievements.all.count)", label: "Badges", symbol: "star.fill", tint: .indigo)
+            }
+        }
+        .padding(Theme.Spacing.l)
+        .elevatedCard()
+    }
+
+    /// An em dash until the first solve — "0:00" would read as a real record.
+    private var bestTimeValue: String {
+        guard let seconds = profile.bestSolveSeconds else { return "—" }
+        return TimeFormat.clock(seconds)
+    }
+
+    // MARK: - Premium
+
+    @ViewBuilder
+    private var premiumSection: some View {
+        if store.isPremium {
+            SettingsSection("Premium") {
+                SettingsRow(title: "Premium unlocked", symbol: "crown.fill", tint: .yellow) {
+                    Image(systemName: "checkmark")
+                        .font(.footnote.weight(.bold))
+                        .foregroundStyle(.secondary)
+                }
+                RowDivider()
+                SettingsButtonRow(title: "Manage subscription", symbol: "creditcard.fill", tint: Theme.accent) {
+                    showManageSubscriptions = true
+                }
+            }
+        } else {
+            VStack(spacing: Theme.Spacing.s) {
+                upsellCard
+                Button("Restore purchase") {
+                    Task { await store.restore() }
+                }
+                .font(.footnote.weight(.medium))
+                .foregroundStyle(.secondary)
+            }
+        }
+    }
+
+    /// The one card on this screen asking for money — tinted crown badge and a
+    /// solid ink CTA, the app's own language for an offer.
+    ///
+    /// Stacked rather than the side-by-side row Today uses. That layout leaves
+    /// roughly 110pt for the copy once the badge and a fixed-width pill have
+    /// taken their share, which wraps the headline mid-phrase. Today needs the
+    /// compact row because the card sits under a hero puzzle it mustn't
+    /// outshout; here there is no competing hero, so the offer gets a full-width
+    /// `.pillProminent` — the token Theme already reserves for the single loud
+    /// action on a screen.
+    private var upsellCard: some View {
+        VStack(spacing: Theme.Spacing.m) {
+            Image(systemName: "crown.fill")
+                .font(.title3)
+                .foregroundStyle(Theme.accent)
+                .frame(width: upsellIconSize, height: upsellIconSize)
+                .background(Theme.accent.opacity(0.14), in: .circle)
+
+            VStack(spacing: 4) {
+                Text("Unlock every puzzle")
+                    .font(.headline.weight(.bold))
+                Text("No hint limits, and every themed pack.")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+            .multilineTextAlignment(.center)
+
+            // "See plans", not "Unlock": this opens the paywall, it doesn't buy
+            // anything, and a button that overstates what it does is how a tap
+            // becomes a back-out.
+            Button("See plans") { showPaywall = true }
+                .buttonStyle(.pillProminent)
+        }
+        .padding(Theme.Spacing.l)
+        .frame(maxWidth: .infinity)
+        .elevatedCard()
+    }
+
+    @ScaledMetric(relativeTo: .title) private var upsellIconSize: CGFloat = 44
+
+    // MARK: - Preferences
+
+    private var preferencesSection: some View {
+        SettingsSection("Preferences") {
+            VStack(alignment: .leading, spacing: Theme.Spacing.s) {
+                SettingsRowLabel(title: "Appearance", symbol: "circle.lefthalf.filled", tint: .purple)
+                Picker("Appearance", selection: $appTheme) {
+                    ForEach(AppTheme.allCases) { theme in
+                        Text(theme.label).tag(theme)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .labelsHidden()
+            }
+            .padding(.horizontal, Theme.Spacing.m)
+            .padding(.vertical, Theme.Spacing.s + 2)
+
+            // Persistent way back to this week's Mini standings — the only other
+            // entry point is the post-solve completion screen. Hidden when the
+            // player isn't signed in to Game Center.
+            if gameCenter.isAuthenticated {
+                RowDivider()
+                SettingsButtonRow(
+                    title: "Weekly leaderboard",
+                    symbol: "trophy.fill",
+                    tint: .yellow,
+                    hint: "Opens this week's fastest Mini times"
+                ) {
+                    gameCenter.showWeeklyMiniLeaderboard()
+                }
+            }
+        }
+    }
+
     // MARK: - Reminders
+
+    private var remindersSection: some View {
+        SettingsSection("Reminders") {
+            SettingsRow(title: "Daily reminder", symbol: "bell.fill", tint: .orange) {
+                Toggle("Daily reminder", isOn: $remindersEnabled)
+                    .labelsHidden()
+                    .onChange(of: remindersEnabled) { _, enabled in
+                        handleReminderToggle(enabled)
+                    }
+            }
+
+            if remindersEnabled && notifications.authorizationStatus == .authorized {
+                RowDivider()
+                SettingsRow(title: "Time", symbol: "clock.fill", tint: Theme.accent) {
+                    DatePicker(
+                        "Time",
+                        selection: reminderTime,
+                        displayedComponents: .hourAndMinute
+                    )
+                    .labelsHidden()
+                    .onChange(of: reminderMinutes) { _, _ in
+                        rescheduleReminders()
+                    }
+                }
+            }
+        } footer: {
+            if notifications.authorizationStatus == .denied {
+                Text("Notifications are turned off for this app. Enable them in Settings to receive your daily reminder.")
+            }
+        }
+    }
+
+    // MARK: - About
+
+    private var aboutSection: some View {
+        SettingsSection("About") {
+            SettingsRow(title: "Version", symbol: "info.circle.fill", tint: .secondary) {
+                Text(appVersion)
+                    .font(.subheadline.weight(.semibold))
+                    .monospacedDigit()
+                    .foregroundStyle(.secondary)
+            }
+        } footer: {
+            Text("Bible Crossword Challenge — learn Scripture one puzzle a day.")
+        }
+    }
+
+    #if DEBUG
+    private var developerSection: some View {
+        SettingsSection("Developer") {
+            SettingsButtonRow(title: "Grant premium", symbol: "wand.and.stars", tint: .purple) {
+                store.grantForTesting()
+            }
+            RowDivider()
+            SettingsButtonRow(title: "Reset premium", symbol: "trash.fill", tint: .red) {
+                store.resetForTesting()
+            }
+        }
+    }
+    #endif
+
+    // MARK: - Reminder plumbing
 
     private func handleReminderToggle(_ enabled: Bool) {
         guard enabled else {
@@ -213,6 +380,8 @@ struct ProfileView: View {
         }
     }
 
+    // MARK: - Stat tiles
+
     private func heroStat(value: String, label: String, symbol: String, tint: Color) -> some View {
         VStack(spacing: Theme.Spacing.xs) {
             Image(systemName: symbol)
@@ -225,6 +394,7 @@ struct ProfileView: View {
             Text(label)
                 .font(.caption)
                 .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
         }
         .frame(maxWidth: .infinity)
         .accessibilityElement(children: .ignore)
@@ -232,20 +402,212 @@ struct ProfileView: View {
         .accessibilityValue(value)
     }
 
-    private func stat(_ title: String, value: String, symbol: String, tint: Color) -> some View {
-        LabeledContent {
-            Text(value).monospacedDigit().fontWeight(.semibold)
-        } label: {
+    private func minorStat(value: String, label: String, symbol: String, tint: Color) -> some View {
+        VStack(spacing: Theme.Spacing.xs) {
             Label {
-                Text(title)
+                Text(value)
+                    .font(.subheadline.weight(.bold))
+                    .monospacedDigit()
             } icon: {
-                Image(systemName: symbol).foregroundStyle(tint)
+                Image(systemName: symbol)
+                    .font(.caption)
+                    .foregroundStyle(tint)
             }
+            .labelStyle(.titleAndIcon)
+            Text(label)
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
         }
+        .frame(maxWidth: .infinity)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(label)
+        .accessibilityValue(value)
     }
 
     private var appVersion: String {
         let v = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
         return v
+    }
+}
+
+// MARK: - Avatar
+
+/// The player's initial on an accent disc. A generic SF person glyph said
+/// nothing about whose profile this is; the initial makes it theirs, and falls
+/// back to the glyph only when there's no name to draw from.
+private struct Avatar: View {
+    let name: String
+
+    @ScaledMetric(relativeTo: .largeTitle) private var size: CGFloat = 72
+
+    private var initial: String? {
+        name.trimmingCharacters(in: .whitespacesAndNewlines)
+            .first
+            .map { String($0).uppercased() }
+    }
+
+    var body: some View {
+        ZStack {
+            Circle().fill(Theme.accent.opacity(0.14))
+            if let initial {
+                Text(initial)
+                    .font(.scripture(.largeTitle, weight: .semibold))
+                    .foregroundStyle(Theme.accent)
+            } else {
+                Image(systemName: "person.fill")
+                    .font(.largeTitle)
+                    .foregroundStyle(Theme.accent)
+            }
+        }
+        .frame(width: size, height: size)
+        .accessibilityHidden(true)
+    }
+}
+
+// MARK: - Settings scaffolding
+
+/// A titled group of rows: an uppercase kicker over one white card, matching
+/// the eyebrow/card rhythm the rest of the app already uses.
+private struct SettingsSection<Content: View, Footer: View>: View {
+    let title: LocalizedStringKey
+    @ViewBuilder var content: Content
+    @ViewBuilder var footer: Footer
+
+    init(
+        _ title: LocalizedStringKey,
+        @ViewBuilder content: () -> Content,
+        @ViewBuilder footer: () -> Footer
+    ) {
+        self.title = title
+        self.content = content()
+        self.footer = footer()
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: Theme.Spacing.s) {
+            Text(title).kicker()
+                .padding(.horizontal, Theme.Spacing.xs)
+
+            VStack(spacing: 0) { content }
+                .frame(maxWidth: .infinity)
+                .elevatedCard()
+
+            footer
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .padding(.horizontal, Theme.Spacing.xs)
+        }
+    }
+}
+
+extension SettingsSection where Footer == EmptyView {
+    init(_ title: LocalizedStringKey, @ViewBuilder content: () -> Content) {
+        self.init(title, content: content, footer: { EmptyView() })
+    }
+}
+
+/// Hairline between rows, inset past the icon chip so the chips read as one
+/// column rather than the divider cutting under them.
+private struct RowDivider: View {
+    var body: some View {
+        Rectangle()
+            .fill(Color.primary.opacity(0.08))
+            .frame(height: 1)
+            .padding(.leading, 52)
+    }
+}
+
+/// Tinted rounded-square chip. Circles are the app's idiom for the large hero
+/// badges (streak flame, upgrade crown); at list-row scale a rounded square
+/// holds a small glyph better and keeps the settings rows visually distinct
+/// from those hero moments.
+private struct IconChip: View {
+    let symbol: String
+    let tint: Color
+
+    @ScaledMetric(relativeTo: .body) private var size: CGFloat = 30
+
+    var body: some View {
+        Image(systemName: symbol)
+            .font(.footnote.weight(.semibold))
+            .foregroundStyle(tint)
+            .frame(width: size, height: size)
+            .background(tint.opacity(0.14), in: .rect(cornerRadius: 8, style: .continuous))
+            .accessibilityHidden(true)
+    }
+}
+
+/// Chip + title, the shared leading half of every settings row.
+private struct SettingsRowLabel: View {
+    let title: LocalizedStringKey
+    let symbol: String
+    let tint: Color
+
+    var body: some View {
+        HStack(spacing: Theme.Spacing.s + 4) {
+            IconChip(symbol: symbol, tint: tint)
+            Text(title)
+                .font(.body)
+                .foregroundStyle(.primary)
+        }
+    }
+}
+
+/// A row with a trailing control (toggle, picker, value).
+private struct SettingsRow<Trailing: View>: View {
+    let title: LocalizedStringKey
+    let symbol: String
+    let tint: Color
+    @ViewBuilder var trailing: Trailing
+
+    init(
+        title: LocalizedStringKey,
+        symbol: String,
+        tint: Color,
+        @ViewBuilder trailing: () -> Trailing
+    ) {
+        self.title = title
+        self.symbol = symbol
+        self.tint = tint
+        self.trailing = trailing()
+    }
+
+    var body: some View {
+        HStack(spacing: Theme.Spacing.s) {
+            SettingsRowLabel(title: title, symbol: symbol, tint: tint)
+            Spacer(minLength: Theme.Spacing.s)
+            trailing
+        }
+        .padding(.horizontal, Theme.Spacing.m)
+        .padding(.vertical, Theme.Spacing.s + 2)
+    }
+}
+
+/// A tappable row. Primary-coloured with a chevron rather than blue text — in a
+/// card-based list the blue tint reads as a link, while a chevron is the shared
+/// "this goes somewhere" cue used by every other card in the app.
+private struct SettingsButtonRow: View {
+    let title: LocalizedStringKey
+    let symbol: String
+    let tint: Color
+    var hint: String? = nil
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: Theme.Spacing.s) {
+                SettingsRowLabel(title: title, symbol: symbol, tint: tint)
+                Spacer(minLength: Theme.Spacing.s)
+                Image(systemName: "chevron.right")
+                    .font(.footnote.weight(.semibold))
+                    .foregroundStyle(.tertiary)
+            }
+            .padding(.horizontal, Theme.Spacing.m)
+            .padding(.vertical, Theme.Spacing.s + 2)
+            .contentShape(.rect)
+        }
+        .buttonStyle(.plain)
+        .accessibilityHint(hint ?? "")
     }
 }
