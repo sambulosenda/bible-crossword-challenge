@@ -383,12 +383,24 @@ struct PremiumOfferView: View {
         product.displayPrice + (store.periodText(for: product) ?? "")
     }
 
-    /// The line under the price, carrying whichever comparison makes that card
-    /// legible on its own: the trial when there is one, the per-month figure on
-    /// yearly, and on monthly the annual total — so the saving is a subtraction
-    /// the reader can see rather than a percentage they have to trust.
+    /// The line under the price: the same price read the other way round, so
+    /// each card is legible on its own — the per-month figure on yearly, the
+    /// annual total on monthly. That makes the saving a subtraction the reader
+    /// can see rather than a percentage they have to trust.
+    ///
+    /// The trial does not appear here, and used to be all that did: this
+    /// returned the introductory offer early, so whenever one existed the
+    /// yearly card read "3-day free trial" and the per-month figure appeared
+    /// *nowhere on the screen*. The cheapest way to read this price was the one
+    /// number the page never showed.
+    ///
+    /// The trial is already stated three times — the subhead, the CTA, and the
+    /// commitment line — and it reads as attached to yearly because yearly is
+    /// preselected: choosing monthly changes the CTA away from "Start 3-day
+    /// free trial", which says it more plainly than a fourth caption would.
+    /// Adding it back here only cost the card a second line, and left the two
+    /// plans at visibly different heights.
     private func planFootnote(_ product: Product) -> String {
-        if let trial = store.introOfferText(for: product) { return trial }
         switch product.id {
         case StoreService.yearlyID:
             return yearlyPerMonthText.map { "\($0)/month" } ?? ""
