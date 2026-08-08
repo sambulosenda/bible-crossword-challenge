@@ -1,0 +1,65 @@
+{
+  "title": "John the Baptist Bible Crossword Puzzle — Free on iOS",
+  "heading": "The John the Baptist Bible Crossword",
+  "reference": "Matthew 3",
+  "meta": "15×15 grid · Medium · Ends on Matthew 3:1",
+  "description": "Solve a John the Baptist Bible crossword: the wilderness of Judaea, camel’s hair, locusts and wild honey, and the voice crying. Free KJV puzzles on iOS.",
+  "prose": [
+    "A man in camel's hair with a leathern girdle, eating locusts and wild honey, telling everyone who comes out to him that someone greater is on the way. <em>John the Baptist</em> covers Matthew 3 and what surrounds it — the voice crying in the wilderness, the baptism in Jordan, the axe laid to the root of the trees.",
+    "The clues keep the KJV's plain, hard phrasing, which is most of John's character. The closing verse is the sentence he arrives in."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "Wilderness where he came preaching",
+      "enum": "(6)",
+      "len": 6
+    },
+    {
+      "n": "2D",
+      "text": "River where he baptized",
+      "enum": "(6)",
+      "len": 6
+    },
+    {
+      "n": "3A",
+      "text": "His raiment was of camel’s ___",
+      "enum": "(4)",
+      "len": 4
+    },
+    {
+      "n": "4D",
+      "text": "His meat was locusts and wild ___",
+      "enum": "(5)",
+      "len": 5
+    }
+  ],
+  "verseText": "In those days came John the Baptist, preaching in the wilderness of Judaea,",
+  "verseCite": "Matthew 3:1 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/the-baptism-of-jesus/",
+      "eyebrow": "Mark 1",
+      "name": "The Baptism of Jesus",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/tempted-in-the-desert/",
+      "eyebrow": "Matthew 4",
+      "name": "Tempted in the Desert",
+      "sub": "Hard · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-twelve-disciples/",
+      "eyebrow": "Mark 3",
+      "name": "The Twelve Disciples",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

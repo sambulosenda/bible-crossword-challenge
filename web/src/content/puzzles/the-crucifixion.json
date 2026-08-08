@@ -1,0 +1,65 @@
+{
+  "title": "The Crucifixion Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Crucifixion Bible Crossword",
+  "reference": "Luke 23",
+  "meta": "15×15 grid · Medium · Ends on Luke 23:33",
+  "description": "Solve a Crucifixion Bible crossword: Calvary, the two malefactors, the darkness over the land, and the rent veil. KJV clues from Luke 23, free on iOS.",
+  "prose": [
+    "The place called Calvary, two malefactors, one on the right hand and the other on the left, and a darkness over all the earth from the sixth hour to the ninth. <em>The Crucifixion</em> covers Luke 23 with the other Gospels' details woven in — the crown of thorns, the title written in three languages, the vinegar, the veil of the temple rent in the midst.",
+    "It is a sober puzzle and deliberately a plain one; the clues do not embellish. The closing verse is the sentence that names the place."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "The place where they crucified him",
+      "enum": "(7)",
+      "len": 7
+    },
+    {
+      "n": "2D",
+      "text": "Malefactors crucified with him",
+      "enum": "(3)",
+      "len": 3
+    },
+    {
+      "n": "3A",
+      "text": "Plaited and put on his head",
+      "enum": "(6)",
+      "len": 6
+    },
+    {
+      "n": "4D",
+      "text": "With Greek and Latin, a language of the title",
+      "enum": "(6)",
+      "len": 6
+    }
+  ],
+  "verseText": "And when they were come to the place, which is called Calvary, there they crucified him, and the malefactors, one on the right hand, and the other on the left.",
+  "verseCite": "Luke 23:33 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/the-garden-of-gethsemane/",
+      "eyebrow": "Mark 14",
+      "name": "The Garden of Gethsemane",
+      "sub": "Hard · Bible crossword"
+    },
+    {
+      "href": "/puzzles/easter/",
+      "eyebrow": "Matthew 28",
+      "name": "Easter",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-last-supper/",
+      "eyebrow": "Luke 22",
+      "name": "The Last Supper",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "title": "Isaac and Rebekah Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Isaac and Rebekah Bible Crossword",
+  "reference": "Genesis 24–25",
+  "meta": "15×15 grid · Medium · Ends on Genesis 25:21",
+  "description": "Solve an Isaac and Rebekah Bible crossword: the servant at the well, the camels, the twins, and the birthright. KJV clues from Genesis 24–25, free on iOS.",
+  "prose": [
+    "Abraham sends his eldest servant back to his own country to find a wife for Isaac, and the servant prays for a sign at a well: let her be the one who offers to water the camels too. <em>Isaac and Rebekah</em> covers that errand and what followed — the bracelets, the journey, Isaac meditating in the field at eventide, and the twins that struggled together within her.",
+    "It sits in the Medium tier because the chapter is long and its details are easy to blur. The closing verse is Isaac's prayer, and the answer to it."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "Where the servant waited and prayed for a sign",
+      "enum": "(4)",
+      "len": 4
+    },
+    {
+      "n": "2D",
+      "text": "Beasts Rebekah offered to draw water for",
+      "enum": "(6)",
+      "len": 6
+    },
+    {
+      "n": "3A",
+      "text": "The elder twin, a cunning hunter",
+      "enum": "(4)",
+      "len": 4
+    },
+    {
+      "n": "4D",
+      "text": "What Esau sold for a mess of pottage",
+      "enum": "(10)",
+      "len": 10
+    }
+  ],
+  "verseText": "And Isaac intreated the LORD for his wife, because she was barren: and the LORD was intreated of him, and Rebekah his wife conceived.",
+  "verseCite": "Genesis 25:21 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/father-abraham/",
+      "eyebrow": "Genesis 12–22",
+      "name": "Father Abraham",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/jacobs-ladder/",
+      "eyebrow": "Genesis 28",
+      "name": "Jacob's Ladder",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/joseph-the-dreamer/",
+      "eyebrow": "Genesis 37–45",
+      "name": "Joseph the Dreamer",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "title": "The Book of Revelation Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Book of Revelation Bible Crossword",
+  "reference": "Revelation 1–22",
+  "meta": "15×15 grid · Hard · Ends on Revelation 1:8",
+  "description": "Solve a Revelation Bible crossword: Patmos, the seven churches, the seals and trumpets, the Lamb and the new Jerusalem. Free KJV puzzles on iOS.",
+  "prose": [
+    "An old man on a small island writes down what he is shown: seven letters to seven churches, a door opened in heaven, a book with seven seals that only the Lamb can open, and at the end a city coming down out of heaven with no temple in it and no need of the sun.",
+    "<em>The Book of Revelation</em> is the hardest puzzle in the archive, and the one people most often come back to. The closing verse is the LORD's own name for himself in the first chapter."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "Isle where John was, for the word of God",
+      "enum": "(6)",
+      "len": 6
+    },
+    {
+      "n": "2D",
+      "text": "“I am ___ and Omega”",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "3A",
+      "text": "Churches in Asia, and seals, and trumpets",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "4D",
+      "text": "Only he was found worthy to open the book",
+      "enum": "(4)",
+      "len": 4
+    }
+  ],
+  "verseText": "I am Alpha and Omega, the beginning and the ending, saith the Lord, which is, and which was, and which is to come, the Almighty.",
+  "verseCite": "Revelation 1:8 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/the-major-prophets/",
+      "eyebrow": "Isaiah to Daniel",
+      "name": "The Major Prophets",
+      "sub": "Hard · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-early-church/",
+      "eyebrow": "Acts 2–8",
+      "name": "The Early Church",
+      "sub": "Hard · Bible crossword"
+    },
+    {
+      "href": "/puzzles/books-of-the-bible/",
+      "eyebrow": "Genesis to Revelation",
+      "name": "Books of the Bible",
+      "sub": "Hard · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

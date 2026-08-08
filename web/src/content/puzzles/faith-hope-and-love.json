@@ -1,0 +1,65 @@
+{
+  "title": "Faith, Hope and Love Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Faith, Hope and Love Bible Crossword",
+  "reference": "1 Corinthians 13",
+  "meta": "15×15 grid · Easy · Ends on 1 Corinthians 13:13",
+  "description": "Solve a 1 Corinthians 13 Bible crossword: charity suffereth long, the sounding brass, the glass darkly. KJV clues, free on iPhone and iPad.",
+  "prose": [
+    "The chapter everyone hears at weddings, in the wording most of them do not expect: the King James Version calls it <em>charity</em>, not love, all the way through. <em>Faith, Hope, and Love</em> takes 1 Corinthians 13 clause by clause — sounding brass and a tinkling cymbal, the tongues of men and of angels, the glass darkly, and the three that abide.",
+    "The KJV vocabulary is the whole character of this grid, and it is worth knowing before you start: charity <em>suffereth long</em>, <em>vaunteth not itself</em>, and <em>is not puffed up</em>. The closing verse names the greatest of the three."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "The greatest of the three that abide, in KJV wording",
+      "enum": "(7)",
+      "len": 7
+    },
+    {
+      "n": "2D",
+      "text": "Without it, a man is as sounding brass or a tinkling one",
+      "enum": "(6)",
+      "len": 6
+    },
+    {
+      "n": "3A",
+      "text": "Charity suffereth long, and is ___",
+      "enum": "(4)",
+      "len": 4
+    },
+    {
+      "n": "4D",
+      "text": "How many abide: faith, hope, charity",
+      "enum": "(5)",
+      "len": 5
+    }
+  ],
+  "verseText": "And now abideth faith, hope, charity, these three; but the greatest of these is charity.",
+  "verseCite": "1 Corinthians 13:13 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/fruit-of-the-spirit/",
+      "eyebrow": "Galatians 5",
+      "name": "Fruit of the Spirit",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-beatitudes/",
+      "eyebrow": "Matthew 5",
+      "name": "The Beatitudes",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-lords-prayer/",
+      "eyebrow": "Matthew 6",
+      "name": "The Lord's Prayer",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

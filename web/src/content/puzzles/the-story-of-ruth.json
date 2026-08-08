@@ -1,0 +1,65 @@
+{
+  "title": "The Story of Ruth Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Story of Ruth Bible Crossword",
+  "reference": "Ruth 1–4",
+  "meta": "15×15 grid · Medium · Ends on Ruth 1:16",
+  "description": "Solve a Ruth Bible crossword: Naomi, Moab, the barley harvest, Boaz and the kinsman redeemer. KJV clues, free on iPhone and iPad.",
+  "prose": [
+    "A famine, a journey to Moab, three graves, and two widows on a road back to Bethlehem — one of whom will not go home. <em>The Story of Ruth</em> covers all four chapters: the gleaning in the field, the barley harvest, the threshingfloor at midnight, and the shoe plucked off at the gate to seal a bargain.",
+    "The book is short enough to read in a sitting, and worth reading before you solve. The closing verse is Ruth's answer on the road, which is the finest sentence in it."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "Her mother in law",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "2D",
+      "text": "Country she came out of",
+      "enum": "(4)",
+      "len": 4
+    },
+    {
+      "n": "3A",
+      "text": "Kinsman in whose field she gleaned",
+      "enum": "(4)",
+      "len": 4
+    },
+    {
+      "n": "4D",
+      "text": "Harvest beginning when they came to Bethlehem",
+      "enum": "(6)",
+      "len": 6
+    }
+  ],
+  "verseText": "And Ruth said, Intreat me not to leave thee, or to return from following after thee: for whither thou goest, I will go; and where thou lodgest, I will lodge: thy people shall be my people, and thy God my God:",
+  "verseCite": "Ruth 1:16 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/women-of-the-bible/",
+      "eyebrow": "Proverbs 31",
+      "name": "Women of the Bible",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/king-david/",
+      "eyebrow": "1 &amp; 2 Samuel",
+      "name": "King David",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/father-abraham/",
+      "eyebrow": "Genesis 12–22",
+      "name": "Father Abraham",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

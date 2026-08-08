@@ -1,0 +1,65 @@
+{
+  "title": "Kings of Israel and Judah Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Kings of Israel and Judah Bible Crossword",
+  "reference": "1 &amp; 2 Kings",
+  "meta": "15×15 grid · Hard · Ends on 1 Kings 2:12",
+  "description": "Solve a Bible kings crossword: Solomon, Rehoboam and the divided kingdom, Ahab and Jezebel, Hezekiah and Josiah. Free KJV puzzles on iPhone and iPad.",
+  "prose": [
+    "After Solomon the kingdom splits, and the books of Kings keep two lists running side by side with the same verdict repeated: he did that which was right, or he did that which was evil, in the sight of the LORD. <em>Kings of Israel and Judah</em> asks you to keep both lines straight.",
+    "This is one of the hardest puzzles in the archive, and deliberately so — the names are many and several repeat between the two kingdoms. The closing verse is the establishing of Solomon's throne."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "His father, whose throne he sat upon",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "2D",
+      "text": "King of Israel whose wife was Jezebel",
+      "enum": "(4)",
+      "len": 4
+    },
+    {
+      "n": "3A",
+      "text": "Fifteen years were added to his life",
+      "enum": "(8)",
+      "len": 8
+    },
+    {
+      "n": "4D",
+      "text": "Seven years old when he began to reign",
+      "enum": "(5)",
+      "len": 5
+    }
+  ],
+  "verseText": "Then sat Solomon upon the throne of David his father; and his kingdom was established greatly.",
+  "verseCite": "1 Kings 2:12 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/solomons-wisdom/",
+      "eyebrow": "1 Kings 3–10",
+      "name": "Solomon's Wisdom",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/elijah-and-the-fire/",
+      "eyebrow": "1 Kings 17–19",
+      "name": "Elijah and the Fire",
+      "sub": "Hard · Bible crossword"
+    },
+    {
+      "href": "/puzzles/king-david/",
+      "eyebrow": "1 &amp; 2 Samuel",
+      "name": "King David",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

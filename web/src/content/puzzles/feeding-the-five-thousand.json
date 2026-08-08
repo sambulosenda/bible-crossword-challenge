@@ -1,0 +1,65 @@
+{
+  "title": "Feeding the Five Thousand Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Feeding of the Five Thousand Bible Crossword",
+  "reference": "John 6",
+  "meta": "15×15 grid · Easy · Ends on John 6:9",
+  "description": "Solve a Feeding the Five Thousand Bible crossword: five barley loaves, two small fishes, and twelve baskets of fragments. KJV clues, free on iOS.",
+  "prose": [
+    "A great multitude on a mountain, no food for miles, and a lad with five barley loaves and two small fishes — <em>but what are they among so many?</em> <em>Feeding the Five Thousand</em> makes a grid of John 6: the sitting down on the grass, the giving of thanks, and the twelve baskets filled with what was left over.",
+    "The numbers do most of the work in this puzzle, which makes it a friendly one to solve. The closing verse is the disciple's own doubtful arithmetic, just before it stops applying."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "Grain the loaves were made of",
+      "enum": "(6)",
+      "len": 6
+    },
+    {
+      "n": "2D",
+      "text": "Baskets of fragments taken up afterward",
+      "enum": "(6)",
+      "len": 6
+    },
+    {
+      "n": "3A",
+      "text": "How many loaves the lad had",
+      "enum": "(4)",
+      "len": 4
+    },
+    {
+      "n": "4D",
+      "text": "How many small fishes",
+      "enum": "(3)",
+      "len": 3
+    }
+  ],
+  "verseText": "There is a lad here, which hath five barley loaves, and two small fishes: but what are they among so many?",
+  "verseCite": "John 6:9 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/walking-on-water/",
+      "eyebrow": "Matthew 14",
+      "name": "Walking on Water",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/calming-the-storm/",
+      "eyebrow": "Mark 4",
+      "name": "Calming the Storm",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-twelve-disciples/",
+      "eyebrow": "Mark 3",
+      "name": "The Twelve Disciples",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

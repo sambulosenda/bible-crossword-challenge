@@ -1,0 +1,65 @@
+{
+  "title": "Samuel Hears God Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Samuel Hears God Bible Crossword",
+  "reference": "1 Samuel 3",
+  "meta": "15×15 grid · Easy · Ends on 1 Samuel 3:10",
+  "description": "Solve a Samuel Bible crossword: the child at Shiloh, Eli the priest, and “Speak; for thy servant heareth.” KJV clues, free on iPhone and iPad.",
+  "prose": [
+    "The word of the LORD was precious in those days, and there was no open vision. A child lies down in the temple where the ark is, and a voice calls his name three times before anyone works out who is speaking. <em>Samuel Hears God</em> turns 1 Samuel 3 into a quiet, gentle grid.",
+    "The clues cover Hannah's vow and the linen ephod as well as the night itself. The closing verse is the answer Eli finally taught him to give."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "Child who ministered unto the LORD before Eli",
+      "enum": "(6)",
+      "len": 6
+    },
+    {
+      "n": "2D",
+      "text": "The aged priest whose eyes waxed dim",
+      "enum": "(3)",
+      "len": 3
+    },
+    {
+      "n": "3A",
+      "text": "Where the temple of the LORD then stood",
+      "enum": "(6)",
+      "len": 6
+    },
+    {
+      "n": "4D",
+      "text": "“Speak; for thy servant ___”",
+      "enum": "(7)",
+      "len": 7
+    }
+  ],
+  "verseText": "And the LORD came, and stood, and called as at other times, Samuel, Samuel. Then Samuel answered, Speak; for thy servant heareth.",
+  "verseCite": "1 Samuel 3:10 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/king-saul/",
+      "eyebrow": "1 Samuel 9–31",
+      "name": "King Saul",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/king-david/",
+      "eyebrow": "1 &amp; 2 Samuel",
+      "name": "King David",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/david-and-goliath/",
+      "eyebrow": "1 Samuel 17",
+      "name": "David and Goliath",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

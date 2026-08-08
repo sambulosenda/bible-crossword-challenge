@@ -1,0 +1,65 @@
+{
+  "title": "The Twelve Disciples Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Twelve Disciples Bible Crossword",
+  "reference": "Mark 3",
+  "meta": "15×15 grid · Easy · Ends on Mark 3:14",
+  "description": "Solve a Twelve Disciples Bible crossword: Peter, James and John, Thomas, Matthew the publican and the rest. KJV clues from Mark 3, free on iOS.",
+  "prose": [
+    "He goes up into a mountain, calls whom he would, and ordains twelve that they should be with him. <em>The Twelve Disciples</em> is a grid of names and the details attached to them — the sons of thunder, the fisherman renamed a stone, the publican called from the receipt of custom, the one who wanted to see the print of the nails.",
+    "Names make unusually satisfying crossword answers because they cross well and they stick. The closing verse is the ordaining itself."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "Simon, whom he surnamed a stone",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "2D",
+      "text": "Publican called from the receipt of custom",
+      "enum": "(7)",
+      "len": 7
+    },
+    {
+      "n": "3A",
+      "text": "He would not believe without seeing the print of the nails",
+      "enum": "(6)",
+      "len": 6
+    },
+    {
+      "n": "4D",
+      "text": "With James, surnamed a son of thunder",
+      "enum": "(4)",
+      "len": 4
+    }
+  ],
+  "verseText": "And he ordained twelve, that they should be with him, and that he might send them forth to preach,",
+  "verseCite": "Mark 3:14 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/feeding-the-five-thousand/",
+      "eyebrow": "John 6",
+      "name": "Feeding the Five Thousand",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-beatitudes/",
+      "eyebrow": "Matthew 5",
+      "name": "The Beatitudes",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-good-samaritan/",
+      "eyebrow": "Luke 10",
+      "name": "The Good Samaritan",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

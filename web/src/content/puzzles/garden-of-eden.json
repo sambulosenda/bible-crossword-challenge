@@ -1,0 +1,65 @@
+{
+  "title": "The Garden of Eden Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Garden of Eden Bible Crossword",
+  "reference": "Genesis 2–3",
+  "meta": "15×15 grid · Easy · Ends on Genesis 2:18",
+  "description": "Solve a Garden of Eden Bible crossword: Adam and Eve, the tree of knowledge, the serpent, and the flaming sword. KJV clues from Genesis 2–3, free on iPhone and iPad.",
+  "prose": [
+    "A garden eastward in Eden, a river that parts into four heads, two trees in the midst of it, and one instruction. <em>The Garden of Eden</em> covers Genesis 2 and 3 together — the forming of the man from the dust, the deep sleep and the rib, the naming of every beast, the subtil serpent, and the cherubims set at the east of the garden with a flaming sword.",
+    "The clues stay close to the KJV's own words, which are stranger and better than the retellings: <em>help meet</em>, <em>subtil</em>, <em>coats of skins</em>. The closing verse is the one spoken before Eve appears at all."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "The first man, formed of the dust of the ground",
+      "enum": "(4)",
+      "len": 4
+    },
+    {
+      "n": "2D",
+      "text": "The subtil beast that questioned the woman",
+      "enum": "(7)",
+      "len": 7
+    },
+    {
+      "n": "3A",
+      "text": "Tree of the knowledge of good and ___",
+      "enum": "(4)",
+      "len": 4
+    },
+    {
+      "n": "4D",
+      "text": "Taken from Adam while a deep sleep fell on him",
+      "enum": "(3)",
+      "len": 3
+    }
+  ],
+  "verseText": "And the LORD God said, It is not good that the man should be alone; I will make him an help meet for him.",
+  "verseCite": "Genesis 2:18 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/in-the-beginning/",
+      "eyebrow": "Genesis 1",
+      "name": "In the Beginning",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/noahs-ark/",
+      "eyebrow": "Genesis 6&ndash;9",
+      "name": "Noah's Ark",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/ten-commandments/",
+      "eyebrow": "Exodus 20",
+      "name": "Ten Commandments",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "title": "The Baptism of Jesus Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Baptism of Jesus Bible Crossword",
+  "reference": "Mark 1",
+  "meta": "15×15 grid · Medium · Ends on Mark 1:11",
+  "description": "Solve a Baptism of Jesus Bible crossword: Jordan, the opened heavens, the dove, and the voice from heaven. KJV clues from Mark 1, free on iPhone and iPad.",
+  "prose": [
+    "He comes from Nazareth to a river where his cousin is baptizing, and John tries to talk him out of it. Then the heavens open, the Spirit descends like a dove, and a voice says something short. <em>The Baptism of Jesus</em> puts that scene into a grid.",
+    "It is a compact story, so the puzzle reaches either side of it — the wilderness before and the temptation after. The closing verse is the voice from heaven itself."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "River in which he was baptized",
+      "enum": "(6)",
+      "len": 6
+    },
+    {
+      "n": "2D",
+      "text": "He baptized him",
+      "enum": "(4)",
+      "len": 4
+    },
+    {
+      "n": "3A",
+      "text": "The Spirit descended in this likeness",
+      "enum": "(4)",
+      "len": 4
+    },
+    {
+      "n": "4D",
+      "text": "“Thou art my beloved ___”",
+      "enum": "(3)",
+      "len": 3
+    }
+  ],
+  "verseText": "And there came a voice from heaven, saying, Thou art my beloved Son, in whom I am well pleased.",
+  "verseCite": "Mark 1:11 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/john-the-baptist/",
+      "eyebrow": "Matthew 3",
+      "name": "John the Baptist",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/tempted-in-the-desert/",
+      "eyebrow": "Matthew 4",
+      "name": "Tempted in the Desert",
+      "sub": "Hard · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-transfiguration/",
+      "eyebrow": "Mark 9",
+      "name": "The Transfiguration",
+      "sub": "Hard · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

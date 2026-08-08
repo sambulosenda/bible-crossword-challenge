@@ -1,0 +1,65 @@
+{
+  "title": "Jacob's Ladder Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Jacob&rsquo;s Ladder Bible Crossword",
+  "reference": "Genesis 28",
+  "meta": "15×15 grid · Medium · Ends on Genesis 28:12",
+  "description": "Solve a Jacob's Ladder Bible crossword: the stone pillow, the angels ascending and descending, and Bethel. KJV clues from Genesis 28, free on iPhone and iPad.",
+  "prose": [
+    "Jacob leaves Beersheba with his brother's anger behind him, lights on a certain place at sunset, and takes a stone for a pillow. In the night he sees a ladder set up on the earth with its top reaching to heaven, and the angels of God going up and down on it. <em>Jacob's Ladder</em> makes a grid of Genesis 28.",
+    "The clues take in what he does when he wakes — the stone set up for a pillar, the oil poured on it, and the new name he gives the place. The closing verse is the dream itself."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "Set up on the earth, its top reaching to heaven",
+      "enum": "(6)",
+      "len": 6
+    },
+    {
+      "n": "2D",
+      "text": "They ascended and descended on it",
+      "enum": "(6)",
+      "len": 6
+    },
+    {
+      "n": "3A",
+      "text": "What Jacob took for his pillows",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "4D",
+      "text": "The name he gave the place, meaning house of God",
+      "enum": "(6)",
+      "len": 6
+    }
+  ],
+  "verseText": "And he dreamed, and behold a ladder set up on the earth, and the top of it reached to heaven: and behold the angels of God ascending and descending on it.",
+  "verseCite": "Genesis 28:12 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/isaac-and-rebekah/",
+      "eyebrow": "Genesis 24–25",
+      "name": "Isaac and Rebekah",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/joseph-the-dreamer/",
+      "eyebrow": "Genesis 37–45",
+      "name": "Joseph the Dreamer",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/father-abraham/",
+      "eyebrow": "Genesis 12–22",
+      "name": "Father Abraham",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "title": "The Patience of Job Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Patience of Job Bible Crossword",
+  "reference": "Job 1–42",
+  "meta": "15×15 grid · Medium · Ends on Job 1:21",
+  "description": "Solve a Job Bible crossword: the land of Uz, the three friends, the whirlwind, and “the LORD gave, and the LORD hath taken away.” Free KJV puzzles on iOS.",
+  "prose": [
+    "A perfect and upright man loses everything in an afternoon, sits down in ashes, and says the line the book is remembered for. <em>The Patience of Job</em> covers the whole book — the messengers arriving one after another, the potsherd, the three friends who sit seven days in silence and then talk far too much, and the voice out of the whirlwind that answers a question with questions.",
+    "It's a Medium puzzle with some of the archive's most striking answers, because Job's vocabulary is unlike anything else in Scripture. The closing verse is what he says when the messengers have finished."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "Out of it the LORD answered Job",
+      "enum": "(9)",
+      "len": 9
+    },
+    {
+      "n": "2D",
+      "text": "The Temanite, first of his three friends",
+      "enum": "(7)",
+      "len": 7
+    },
+    {
+      "n": "3A",
+      "text": "He took one to scrape himself withal",
+      "enum": "(8)",
+      "len": 8
+    },
+    {
+      "n": "4D",
+      "text": "“the LORD gave, and the LORD hath ___ away”",
+      "enum": "(5)",
+      "len": 5
+    }
+  ],
+  "verseText": "And said, Naked came I out of my mother’s womb, and naked shall I return thither: the LORD gave, and the LORD hath taken away; blessed be the name of the LORD.",
+  "verseCite": "Job 1:21 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/words-of-the-wise/",
+      "eyebrow": "Proverbs 3",
+      "name": "Words of the Wise",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/promises-of-god/",
+      "eyebrow": "2 Corinthians 1",
+      "name": "Promises of God",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-major-prophets/",
+      "eyebrow": "Isaiah to Daniel",
+      "name": "The Major Prophets",
+      "sub": "Hard · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

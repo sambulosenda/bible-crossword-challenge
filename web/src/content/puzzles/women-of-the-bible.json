@@ -1,0 +1,65 @@
+{
+  "title": "Women of the Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Women of the Bible Crossword",
+  "reference": "Proverbs 31",
+  "meta": "15×15 grid · Medium · Ends on Proverbs 31:25",
+  "description": "Solve a women of the Bible crossword: Eve, Sarah, Miriam, Deborah, Ruth, Esther, Mary and Martha. KJV clues, free on iPhone and iPad.",
+  "prose": [
+    "From the mother of all living to the women at the empty tomb, this puzzle gathers them across both testaments: Sarah laughing in the tent door, Miriam with a timbrel, Deborah judging under her palm tree, Rahab, Ruth, Hannah, Abigail, Esther, Mary, Martha, Lydia, Priscilla.",
+    "<em>Women of the Bible</em> asks you to match the woman to the detail that identifies her, which is a good test of how closely you have read. The closing verse is from the last chapter of Proverbs."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "Mother of all living",
+      "enum": "(3)",
+      "len": 3
+    },
+    {
+      "n": "2D",
+      "text": "She said, “thy people shall be my people”",
+      "enum": "(4)",
+      "len": 4
+    },
+    {
+      "n": "3A",
+      "text": "Sister of Moses, who took a timbrel",
+      "enum": "(6)",
+      "len": 6
+    },
+    {
+      "n": "4D",
+      "text": "Prophetess and judge, under her palm tree",
+      "enum": "(7)",
+      "len": 7
+    }
+  ],
+  "verseText": "Strength and honour are her clothing; and she shall rejoice in time to come.",
+  "verseCite": "Proverbs 31:25 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/the-story-of-ruth/",
+      "eyebrow": "Ruth 1–4",
+      "name": "The Story of Ruth",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/queen-esther/",
+      "eyebrow": "Esther 1–10",
+      "name": "Queen Esther",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/songs-of-praise/",
+      "eyebrow": "Psalm 100",
+      "name": "Songs of Praise",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

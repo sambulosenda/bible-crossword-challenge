@@ -1,0 +1,65 @@
+{
+  "title": "Nehemiah Rebuilds Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Nehemiah Rebuilds Bible Crossword",
+  "reference": "Nehemiah 1–6",
+  "meta": "15×15 grid · Hard · Ends on Nehemiah 2:20",
+  "description": "Solve a Nehemiah Bible crossword: the cupbearer’s request, the night ride round the walls, Sanballat’s mockery, and the sword and trowel. Free on iOS.",
+  "prose": [
+    "A cupbearer in a Persian palace hears that the wall of Jerusalem is broken down and the gates burned, and asks for leave to go and build it. <em>Nehemiah Rebuilds</em> covers the first six chapters — the night ride round the ruins telling no one, the families assigned gate by gate, the mockery from outside, and the builders who worked with one hand and held a weapon with the other.",
+    "It's a Hard puzzle with a great deal of proper nouns, and it rewards reading the chapters first. The closing verse is Nehemiah's answer to the men who tried to stop him."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "King he served as cupbearer",
+      "enum": "(10)",
+      "len": 10
+    },
+    {
+      "n": "2D",
+      "text": "The Horonite who mocked the building",
+      "enum": "(9)",
+      "len": 9
+    },
+    {
+      "n": "3A",
+      "text": "What he came to build again",
+      "enum": "(4)",
+      "len": 4
+    },
+    {
+      "n": "4D",
+      "text": "City whose gates were burned with fire",
+      "enum": "(9)",
+      "len": 9
+    }
+  ],
+  "verseText": "Then answered I them, and said unto them, The God of heaven, he will prosper us; therefore we his servants will arise and build: but ye have no portion, nor right, nor memorial, in Jerusalem.",
+  "verseCite": "Nehemiah 2:20 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/queen-esther/",
+      "eyebrow": "Esther 1–10",
+      "name": "Queen Esther",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/kings-of-israel-and-judah/",
+      "eyebrow": "1 &amp; 2 Kings",
+      "name": "Kings of Israel and Judah",
+      "sub": "Hard · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-major-prophets/",
+      "eyebrow": "Isaiah to Daniel",
+      "name": "The Major Prophets",
+      "sub": "Hard · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

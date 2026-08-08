@@ -1,0 +1,65 @@
+{
+  "title": "The Prodigal Son Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Prodigal Son Bible Crossword",
+  "reference": "Luke 15",
+  "meta": "15×15 grid · Easy · Ends on Luke 15:24",
+  "description": "Solve a Prodigal Son Bible crossword: the far country, the swine, the ring, the fatted calf. KJV-rooted clues from Luke 15, free on iPhone and iPad.",
+  "prose": [
+    "He asks for his inheritance early, spends it in a far country, and ends up envying pigs their husks. Then he comes to himself. <em>The Prodigal Son</em> puts Luke 15 in a grid: the wasted substance, the famine, the long walk home, and a father who sees him a great way off and runs.",
+    "The best clues in this one are the small things the father calls for — a robe, a ring, shoes, the fatted calf — because that is where the parable does its work. There is an elder brother in the grid too, standing outside the music. The closing verse is the father's answer to him."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "Animals he was sent into the fields to feed",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "2D",
+      "text": "Put on his hand the moment he came home",
+      "enum": "(4)",
+      "len": 4
+    },
+    {
+      "n": "3A",
+      "text": "The fatted beast killed for the feast",
+      "enum": "(4)",
+      "len": 4
+    },
+    {
+      "n": "4D",
+      "text": "What the elder brother was, hearing the music",
+      "enum": "(5)",
+      "len": 5
+    }
+  ],
+  "verseText": "For this my son was dead, and is alive again; he was lost, and is found. And they began to be merry.",
+  "verseCite": "Luke 15:24 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/the-good-samaritan/",
+      "eyebrow": "Luke 10",
+      "name": "The Good Samaritan",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-lords-prayer/",
+      "eyebrow": "Matthew 6",
+      "name": "The Lord's Prayer",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-beatitudes/",
+      "eyebrow": "Matthew 5",
+      "name": "The Beatitudes",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

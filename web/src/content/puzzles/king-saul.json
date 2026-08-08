@@ -1,0 +1,65 @@
+{
+  "title": "King Saul Bible Crossword Puzzle — Free on iOS",
+  "heading": "The King Saul Bible Crossword",
+  "reference": "1 Samuel 9–31",
+  "meta": "15×15 grid · Medium · Ends on 1 Samuel 10:24",
+  "description": "Solve a King Saul Bible crossword: the lost asses, the first king of Israel, the evil spirit, and the witch of Endor. KJV clues, free on iPhone and iPad.",
+  "prose": [
+    "He goes out to look for his father's lost asses and comes back anointed king. <em>King Saul</em> follows the whole reign — head and shoulders above the people, hiding among the stuff on the day he is chosen, and then the slow unravelling: the unlawful sacrifice, the spared king of Amalek, the spear thrown at a harpist in his own house.",
+    "It's a Medium puzzle with a long story behind it, and the clues assume the chapters rather than the highlights. The closing verse is the shout on the day Israel first had a king."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "Prophet who anointed him",
+      "enum": "(6)",
+      "len": 6
+    },
+    {
+      "n": "2D",
+      "text": "What he was seeking when Samuel found him",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "3A",
+      "text": "His son, who loved David as his own soul",
+      "enum": "(8)",
+      "len": 8
+    },
+    {
+      "n": "4D",
+      "text": "Where he sought the woman with a familiar spirit",
+      "enum": "(5)",
+      "len": 5
+    }
+  ],
+  "verseText": "And Samuel said to all the people, See ye him whom the LORD hath chosen, that there is none like him among all the people? And all the people shouted, and said, God save the king.",
+  "verseCite": "1 Samuel 10:24 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/king-david/",
+      "eyebrow": "1 &amp; 2 Samuel",
+      "name": "King David",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/samuel-hears-god/",
+      "eyebrow": "1 Samuel 3",
+      "name": "Samuel Hears God",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/david-and-goliath/",
+      "eyebrow": "1 Samuel 17",
+      "name": "David and Goliath",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

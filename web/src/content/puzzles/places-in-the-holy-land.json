@@ -1,0 +1,65 @@
+{
+  "title": "Places in the Holy Land Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Places in the Holy Land Bible Crossword",
+  "reference": "Micah 5",
+  "meta": "15×15 grid · Medium · Ends on Micah 5:2",
+  "description": "Solve a Bible places crossword: Bethlehem, Nazareth, Jerusalem, Olivet and the Jordan. KJV clues from Genesis to Acts, free on iPhone and iPad.",
+  "prose": [
+    "A puzzle made entirely of place names, which is a particular pleasure in a crossword: Bethlehem, little among the thousands of Judah; Nazareth, of which nothing good was expected; Jerusalem, Olivet, Bethany, Capernaum, Emmaus. <em>Places in the Holy Land</em> maps the whole story geographically instead of chronologically.",
+    "It's a good puzzle for anyone who has read the Gospels often but never quite fixed where things happened. The closing verse is Micah's prophecy of the town where it all begins."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "Little among the thousands of Judah",
+      "enum": "(9)",
+      "len": 9
+    },
+    {
+      "n": "2D",
+      "text": "Town where Jesus was brought up",
+      "enum": "(8)",
+      "len": 8
+    },
+    {
+      "n": "3A",
+      "text": "The city of David, and of the temple",
+      "enum": "(9)",
+      "len": 9
+    },
+    {
+      "n": "4D",
+      "text": "Mount from which he ascended",
+      "enum": "(6)",
+      "len": 6
+    }
+  ],
+  "verseText": "But thou, Bethlehem Ephratah, though thou be little among the thousands of Judah, yet out of thee shall he come forth unto me that is to be ruler in Israel; whose goings forth have been from of old, from everlasting.",
+  "verseCite": "Micah 5:2 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/christmas/",
+      "eyebrow": "Luke 2 · Matthew 2",
+      "name": "Christmas",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-ascension/",
+      "eyebrow": "Acts 1",
+      "name": "The Ascension",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-road-to-emmaus/",
+      "eyebrow": "Luke 24",
+      "name": "The Road to Emmaus",
+      "sub": "Hard · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

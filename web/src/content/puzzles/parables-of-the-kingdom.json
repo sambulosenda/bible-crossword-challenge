@@ -1,0 +1,65 @@
+{
+  "title": "Parables of the Kingdom Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Parables of the Kingdom Bible Crossword",
+  "reference": "Matthew 13",
+  "meta": "15×15 grid · Medium · Ends on Matthew 13:44",
+  "description": "Solve a parables Bible crossword: the treasure in the field, the pearl of great price, the mustard seed and the leaven. KJV clues from Matthew 13, free on iOS.",
+  "prose": [
+    "Matthew 13 is a chapter of short, strange comparisons, one after another: the kingdom is like treasure hid in a field, like a merchant man seeking goodly pearls, like a grain of mustard seed, like leaven a woman hid in three measures of meal. <em>Parables of the Kingdom</em> makes a grid of them all.",
+    "Each clue points at one parable's distinguishing object, so solving the puzzle sorts the chapter into its parts. The closing verse is the treasure in the field, and the joy of the man who found it."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "Where the treasure was hid",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "2D",
+      "text": "The least of all seeds, grown into a tree",
+      "enum": "(7)",
+      "len": 7
+    },
+    {
+      "n": "3A",
+      "text": "Hid in three measures of meal",
+      "enum": "(6)",
+      "len": 6
+    },
+    {
+      "n": "4D",
+      "text": "Goodly ones sought by the merchant man",
+      "enum": "(6)",
+      "len": 6
+    }
+  ],
+  "verseText": "Again, the kingdom of heaven is like unto treasure hid in a field; the which when a man hath found, he hideth, and for joy thereof goeth and selleth all that he hath, and buyeth that field.",
+  "verseCite": "Matthew 13:44 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/the-parable-of-the-sower/",
+      "eyebrow": "Matthew 13",
+      "name": "The Parable of the Sower",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-prodigal-son/",
+      "eyebrow": "Luke 15",
+      "name": "The Prodigal Son",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-good-samaritan/",
+      "eyebrow": "Luke 10",
+      "name": "The Good Samaritan",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

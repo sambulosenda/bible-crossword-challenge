@@ -1,0 +1,65 @@
+{
+  "title": "Solomon's Wisdom Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Solomon&rsquo;s Wisdom Bible Crossword",
+  "reference": "1 Kings 3–10",
+  "meta": "15×15 grid · Medium · Ends on Proverbs 1:7",
+  "description": "Solve a Solomon Bible crossword: the dream at Gibeon, the two mothers and the sword, the temple, and the queen of Sheba. Free KJV puzzles on iOS.",
+  "prose": [
+    "Offered anything he asks for, a young king asks for an understanding heart to judge a great people. <em>Solomon's Wisdom</em> covers what that looked like in practice — the two women and the living child, the temple seven years in the building, the throne of ivory, and a queen who came a long way to ask hard questions and went home with no more spirit in her.",
+    "The clues draw on Proverbs as well as Kings, since that is where the wisdom itself is written down. The closing verse is the sentence Proverbs opens with."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "What he asked God for instead of riches",
+      "enum": "(6)",
+      "len": 6
+    },
+    {
+      "n": "2D",
+      "text": "Queen who came to prove him with hard questions",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "3A",
+      "text": "He was seven years in building it",
+      "enum": "(6)",
+      "len": 6
+    },
+    {
+      "n": "4D",
+      "text": "“The fear of the LORD is the beginning of ___”",
+      "enum": "(9)",
+      "len": 9
+    }
+  ],
+  "verseText": "The fear of the LORD is the beginning of knowledge: but fools despise wisdom and instruction.",
+  "verseCite": "Proverbs 1:7 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/words-of-the-wise/",
+      "eyebrow": "Proverbs 3",
+      "name": "Words of the Wise",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/king-david/",
+      "eyebrow": "1 &amp; 2 Samuel",
+      "name": "King David",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/kings-of-israel-and-judah/",
+      "eyebrow": "1 &amp; 2 Kings",
+      "name": "Kings of Israel and Judah",
+      "sub": "Hard · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "title": "The Tower of Babel Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Tower of Babel Bible Crossword",
+  "reference": "Genesis 11",
+  "meta": "15×15 grid · Medium · Ends on Genesis 11:4",
+  "description": "Solve a Tower of Babel Bible crossword: the plain of Shinar, brick and slime, the confounded language. KJV clues from Genesis 11, free on iPhone and iPad.",
+  "prose": [
+    "The whole earth is of one language and one speech, and they journey from the east and find a plain in the land of Shinar. They have brick for stone and slime for morter, and they decide to build something with its top reaching to heaven. <em>The Tower of Babel</em> makes a grid of Genesis 11.",
+    "It is a short chapter and an unusually tidy puzzle, and the KJV's <em>slime for morter</em> is one of the answers people remember afterwards. The closing verse is the decision to build."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "Plain in the land where they dwelt",
+      "enum": "(6)",
+      "len": 6
+    },
+    {
+      "n": "2D",
+      "text": "They had it for morter",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "3A",
+      "text": "The LORD did there confound theirs",
+      "enum": "(8)",
+      "len": 8
+    },
+    {
+      "n": "4D",
+      "text": "Name of the city, so called for the confusion",
+      "enum": "(5)",
+      "len": 5
+    }
+  ],
+  "verseText": "And they said, Go to, let us build us a city and a tower, whose top may reach unto heaven; and let us make us a name, lest we be scattered abroad upon the face of the whole earth.",
+  "verseCite": "Genesis 11:4 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/in-the-beginning/",
+      "eyebrow": "Genesis 1",
+      "name": "In the Beginning",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/noahs-ark/",
+      "eyebrow": "Genesis 6&ndash;9",
+      "name": "Noah's Ark",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/father-abraham/",
+      "eyebrow": "Genesis 12–22",
+      "name": "Father Abraham",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

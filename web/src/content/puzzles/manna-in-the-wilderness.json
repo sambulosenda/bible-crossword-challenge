@@ -1,0 +1,65 @@
+{
+  "title": "Manna in the Wilderness Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Manna in the Wilderness Bible Crossword",
+  "reference": "Exodus 16",
+  "meta": "15×15 grid · Medium · Ends on Exodus 16:14",
+  "description": "Solve a manna Bible crossword: bread from heaven, the quails, the omer, and the day that gathered double. KJV clues from Exodus 16, free on iOS.",
+  "prose": [
+    "A month out of Egypt the people are hungry and say so, loudly. In the evening quails cover the camp; in the morning there is a small round thing on the ground, and nobody knows what it is — which is where the name comes from. <em>Manna in the Wilderness</em> makes a grid of Exodus 16.",
+    "The rules attached to it are the interesting part: an omer for every man, none kept till morning except before the sabbath, and twice as much gathered on the sixth day. The closing verse is the morning it first appears."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "Small round thing, as hoar frost on the ground",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "2D",
+      "text": "They came up and covered the camp at even",
+      "enum": "(6)",
+      "len": 6
+    },
+    {
+      "n": "3A",
+      "text": "Wilderness they had come into",
+      "enum": "(3)",
+      "len": 3
+    },
+    {
+      "n": "4D",
+      "text": "Day on which they gathered twice as much",
+      "enum": "(5)",
+      "len": 5
+    }
+  ],
+  "verseText": "And when the dew that lay was gone up, behold, upon the face of the wilderness there lay a small round thing, as small as the hoar frost on the ground.",
+  "verseCite": "Exodus 16:14 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/crossing-the-red-sea/",
+      "eyebrow": "Exodus 14",
+      "name": "Crossing the Red Sea",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/ten-commandments/",
+      "eyebrow": "Exodus 20",
+      "name": "Ten Commandments",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-burning-bush/",
+      "eyebrow": "Exodus 3",
+      "name": "The Burning Bush",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

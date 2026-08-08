@@ -1,0 +1,65 @@
+{
+  "title": "Queen Esther Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Queen Esther Bible Crossword",
+  "reference": "Esther 1–10",
+  "meta": "15×15 grid · Medium · Ends on Esther 4:14",
+  "description": "Solve a Queen Esther Bible crossword: Ahasuerus, Mordecai, Haman and the gallows, and “for such a time as this.” Free KJV puzzles on iPhone and iPad.",
+  "prose": [
+    "A Jewish orphan becomes queen of Persia without anyone at court knowing what she is, and then a decree goes out to destroy her people. <em>Queen Esther</em> follows the book end to end — the banquet, the sleepless night and the book of records, the gallows fifty cubits high, and the request made at the second feast.",
+    "God is never named in the book of Esther, which is part of what makes it remarkable, and the puzzle keeps to the text as it stands. The closing verse is Mordecai's question, and the line the whole story turns on."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "King whose queen she became",
+      "enum": "(9)",
+      "len": 9
+    },
+    {
+      "n": "2D",
+      "text": "Her cousin, who brought her up",
+      "enum": "(8)",
+      "len": 8
+    },
+    {
+      "n": "3A",
+      "text": "He plotted the destruction of the Jews",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "4D",
+      "text": "“for such a time as ___”",
+      "enum": "(4)",
+      "len": 4
+    }
+  ],
+  "verseText": "For if thou altogether holdest thy peace at this time, then shall there enlargement and deliverance arise to the Jews from another place; but thou and thy father’s house shall be destroyed: and who knoweth whether thou art come to the kingdom for such a time as this?",
+  "verseCite": "Esther 4:14 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/nehemiah-rebuilds/",
+      "eyebrow": "Nehemiah 1–6",
+      "name": "Nehemiah Rebuilds",
+      "sub": "Hard · Bible crossword"
+    },
+    {
+      "href": "/puzzles/daniel-in-the-lions-den/",
+      "eyebrow": "Daniel 6",
+      "name": "Daniel in the Lions' Den",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/women-of-the-bible/",
+      "eyebrow": "Proverbs 31",
+      "name": "Women of the Bible",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "title": "The Transfiguration Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Transfiguration Bible Crossword",
+  "reference": "Mark 9",
+  "meta": "15×15 grid · Hard · Ends on Mark 9:3",
+  "description": "Solve a Transfiguration Bible crossword: the high mountain, the shining raiment, Moses and Elias, and the voice out of the cloud. Free KJV puzzles on iOS.",
+  "prose": [
+    "Six days later he takes Peter, James and John up into a high mountain apart, and is changed in front of them: his raiment shining, exceeding white as snow, so as no fuller on earth could white them. <em>The Transfiguration</em> makes a grid of Mark 9.",
+    "Two men appear talking with him, Peter says something he admits afterwards he did not know how to answer for, and a cloud overshadows them. The closing verse is the description of the raiment itself."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "His raiment became shining, exceeding this",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "2D",
+      "text": "He appeared with Elias, talking with Jesus",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "3A",
+      "text": "Peter would make three of these",
+      "enum": "(11)",
+      "len": 11
+    },
+    {
+      "n": "4D",
+      "text": "With Peter and James, taken up the mountain",
+      "enum": "(4)",
+      "len": 4
+    }
+  ],
+  "verseText": "And his raiment became shining, exceeding white as snow; so as no fuller on earth can white them.",
+  "verseCite": "Mark 9:3 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/the-baptism-of-jesus/",
+      "eyebrow": "Mark 1",
+      "name": "The Baptism of Jesus",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-garden-of-gethsemane/",
+      "eyebrow": "Mark 14",
+      "name": "The Garden of Gethsemane",
+      "sub": "Hard · Bible crossword"
+    },
+    {
+      "href": "/puzzles/elijah-and-the-fire/",
+      "eyebrow": "1 Kings 17–19",
+      "name": "Elijah and the Fire",
+      "sub": "Hard · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

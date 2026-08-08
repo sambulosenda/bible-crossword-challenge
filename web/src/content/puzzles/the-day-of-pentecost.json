@@ -1,0 +1,65 @@
+{
+  "title": "The Day of Pentecost Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Day of Pentecost Bible Crossword",
+  "reference": "Acts 2",
+  "meta": "15×15 grid · Medium · Ends on Acts 2:4",
+  "description": "Solve a Pentecost Bible crossword: the rushing mighty wind, the cloven tongues of fire, and three thousand souls added. Free KJV puzzles on iPhone and iPad.",
+  "prose": [
+    "They are all with one accord in one place when a sound comes from heaven like a rushing mighty wind and fills the house. Cloven tongues like as of fire sit on each of them, and they begin to speak in languages they never learned. <em>The Day of Pentecost</em> makes a grid of Acts 2.",
+    "The crowd's reaction is in the puzzle too — the list of nations, the accusation about new wine, and Peter's answer that it is but the third hour of the day. The closing verse is the filling itself."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "The sound from heaven was as of a rushing mighty one",
+      "enum": "(4)",
+      "len": 4
+    },
+    {
+      "n": "2D",
+      "text": "Cloven tongues sat upon them like as of this",
+      "enum": "(4)",
+      "len": 4
+    },
+    {
+      "n": "3A",
+      "text": "They began to speak with other ones",
+      "enum": "(7)",
+      "len": 7
+    },
+    {
+      "n": "4D",
+      "text": "Apostle who stood up with the eleven and preached",
+      "enum": "(5)",
+      "len": 5
+    }
+  ],
+  "verseText": "And they were all filled with the Holy Ghost, and began to speak with other tongues, as the Spirit gave them utterance.",
+  "verseCite": "Acts 2:4 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/the-early-church/",
+      "eyebrow": "Acts 2–8",
+      "name": "The Early Church",
+      "sub": "Hard · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-ascension/",
+      "eyebrow": "Acts 1",
+      "name": "The Ascension",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/feasts-and-festivals/",
+      "eyebrow": "Leviticus 23 · Acts 2",
+      "name": "Feasts and Festivals",
+      "sub": "Hard · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

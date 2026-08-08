@@ -1,0 +1,65 @@
+{
+  "title": "Songs of Praise Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Songs of Praise Bible Crossword",
+  "reference": "Psalm 100",
+  "meta": "15×15 grid · Medium · Ends on Psalm 100:1",
+  "description": "Solve a Psalms Bible crossword: Psalm 100, the songs of ascents, Miriam’s song and the Magnificat. KJV clues, free on iPhone and iPad.",
+  "prose": [
+    "The Bible's songs are older than its books of law, and they turn up everywhere — Miriam with a timbrel at the sea, Deborah under her palm tree, Hannah in the temple, Mary in Elisabeth's house. <em>Songs of Praise</em> gathers the songs themselves rather than the subject of worship, with the Psalter at its centre.",
+    "It sits in the Medium tier because it asks you to place a song with its singer. The closing verse is the opening line of the shortest and most-sung psalm of them all."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "She took a timbrel and sang after the Red Sea",
+      "enum": "(6)",
+      "len": 6
+    },
+    {
+      "n": "2D",
+      "text": "“Make a joyful noise unto the LORD, all ye ___”",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "3A",
+      "text": "Prophetess who sang under her palm tree",
+      "enum": "(7)",
+      "len": 7
+    },
+    {
+      "n": "4D",
+      "text": "“Serve the LORD with ___”",
+      "enum": "(8)",
+      "len": 8
+    }
+  ],
+  "verseText": "Make a joyful noise unto the LORD, all ye lands.",
+  "verseCite": "Psalm 100:1 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/praise-and-worship/",
+      "eyebrow": "Psalm 95",
+      "name": "Praise and Worship",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/psalm-23/",
+      "eyebrow": "The Shepherd&rsquo;s Psalm",
+      "name": "Psalm 23",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/king-david/",
+      "eyebrow": "1 &amp; 2 Samuel",
+      "name": "King David",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

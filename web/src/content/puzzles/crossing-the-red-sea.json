@@ -1,0 +1,65 @@
+{
+  "title": "Crossing the Red Sea Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Crossing of the Red Sea Bible Crossword",
+  "reference": "Exodus 14",
+  "meta": "15×15 grid · Easy · Ends on Exodus 14:22",
+  "description": "Solve a Red Sea Bible crossword: Moses, the divided waters, Pharaoh’s chariots and the pillar of fire. KJV clues from Exodus 14, free on iPhone and iPad.",
+  "prose": [
+    "Israel is camped by the sea with an army behind them and no road ahead. Then Moses stretches out his hand, a strong east wind blows all night, and the water stands up like a wall on either side. <em>Crossing the Red Sea</em> builds Exodus 14 into a grid — the pillar of cloud that moved behind them, the chariots that followed, the wheels that came off in the morning watch.",
+    "The clues stay with the chapter's own detail rather than the film version, which is what makes the puzzle worth solving: the sea goes back <em>by a strong east wind</em>, and Israel walks on dry ground. The closing verse is the moment the walls of water are named."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "He stretched out his hand over the sea",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "2D",
+      "text": "Pharaoh’s pursuing force, six hundred chosen",
+      "enum": "(8)",
+      "len": 8
+    },
+    {
+      "n": "3A",
+      "text": "Pillar that gave the camp light by night",
+      "enum": "(4)",
+      "len": 4
+    },
+    {
+      "n": "4D",
+      "text": "What the waters were to them on their right hand and left",
+      "enum": "(4)",
+      "len": 4
+    }
+  ],
+  "verseText": "And the children of Israel went into the midst of the sea upon the dry ground: and the waters were a wall unto them on their right hand, and on their left.",
+  "verseCite": "Exodus 14:22 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/the-burning-bush/",
+      "eyebrow": "Exodus 3",
+      "name": "The Burning Bush",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/ten-commandments/",
+      "eyebrow": "Exodus 20",
+      "name": "Ten Commandments",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-walls-of-jericho/",
+      "eyebrow": "Joshua 6",
+      "name": "The Walls of Jericho",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

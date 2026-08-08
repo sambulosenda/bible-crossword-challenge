@@ -1,0 +1,65 @@
+{
+  "title": "The Lord's Prayer Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Lord&rsquo;s Prayer Bible Crossword",
+  "reference": "Matthew 6",
+  "meta": "15×15 grid · Easy · Ends on Matthew 6:9",
+  "description": "Solve a Lord's Prayer Bible crossword: hallowed be thy name, daily bread, and deliverance from evil — the KJV words, clue by clue. Free on iPhone and iPad.",
+  "prose": [
+    "Most people who know one passage of the King James Version by heart know this one. <em>The Lord's Prayer</em> takes Matthew 6 line by line and asks you to put it back together — hallowed, kingdom, will, bread, debts, temptation, deliverance — with the KJV wording intact, debts and all.",
+    "It is a gentle puzzle and an unusually good one for memory: filling a word into a grid fixes it differently than reading does. The closing verse is where the prayer begins, which is a fitting place for the grid to end."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "&ldquo;Our Father which art in ___&rdquo;",
+      "enum": "(6)",
+      "len": 6
+    },
+    {
+      "n": "2D",
+      "text": "&ldquo;Hallowed be thy ___&rdquo;",
+      "enum": "(4)",
+      "len": 4
+    },
+    {
+      "n": "3A",
+      "text": "&ldquo;Give us this day our daily ___&rdquo;",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "4D",
+      "text": "&ldquo;And lead us not into ___&rdquo;",
+      "enum": "(10)",
+      "len": 10
+    }
+  ],
+  "verseText": "After this manner therefore pray ye: Our Father which art in heaven, Hallowed be thy name.",
+  "verseCite": "Matthew 6:9 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/the-beatitudes/",
+      "eyebrow": "Matthew 5",
+      "name": "The Beatitudes",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-good-samaritan/",
+      "eyebrow": "Luke 10",
+      "name": "The Good Samaritan",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/psalm-23/",
+      "eyebrow": "The Shepherd&rsquo;s Psalm",
+      "name": "Psalm 23",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

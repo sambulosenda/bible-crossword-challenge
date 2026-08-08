@@ -1,0 +1,65 @@
+{
+  "title": "The Last Supper Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Last Supper Bible Crossword",
+  "reference": "Luke 22",
+  "meta": "15×15 grid · Medium · Ends on Luke 22:19",
+  "description": "Solve a Last Supper Bible crossword: the passover, the upper room, the broken bread and the cup. KJV clues from Luke 22, free on iPhone and iPad.",
+  "prose": [
+    "A large upper room furnished and prepared, a passover kept with desire, and bread broken with four words attached to it that the church has repeated ever since. <em>The Last Supper</em> covers Luke 22 — the man bearing a pitcher of water who shows them the way, the cup, the betrayer's hand on the table, and the argument about which of them should be greatest.",
+    "The clues stay in the room rather than running ahead to the garden; that is <a href=\"/puzzles/the-garden-of-gethsemane/\">its own puzzle</a>. The closing verse is the breaking of the bread."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "Feast they were keeping",
+      "enum": "(8)",
+      "len": 8
+    },
+    {
+      "n": "2D",
+      "text": "He brake it and gave it unto them",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "3A",
+      "text": "“This do in ___ of me”",
+      "enum": "(11)",
+      "len": 11
+    },
+    {
+      "n": "4D",
+      "text": "Disciple whose hand was with his on the table",
+      "enum": "(5)",
+      "len": 5
+    }
+  ],
+  "verseText": "And he took bread, and gave thanks, and brake it, and gave unto them, saying, This is my body which is given for you: this do in remembrance of me.",
+  "verseCite": "Luke 22:19 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/the-garden-of-gethsemane/",
+      "eyebrow": "Mark 14",
+      "name": "The Garden of Gethsemane",
+      "sub": "Hard · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-crucifixion/",
+      "eyebrow": "Luke 23",
+      "name": "The Crucifixion",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-twelve-disciples/",
+      "eyebrow": "Mark 3",
+      "name": "The Twelve Disciples",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

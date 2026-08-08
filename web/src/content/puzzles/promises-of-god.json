@@ -1,0 +1,65 @@
+{
+  "title": "Promises of God Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Promises of God Bible Crossword",
+  "reference": "2 Corinthians 1",
+  "meta": "15×15 grid · Medium · Ends on 2 Corinthians 1:20",
+  "description": "Solve a promises of God Bible crossword: the bow in the cloud, the land of milk and honey, “I will never leave thee.” Free KJV puzzles on iPhone and iPad.",
+  "prose": [
+    "A puzzle built out of the covenants and the pledges attached to them: the bow set in the cloud after the flood, the seed as the stars for multitude, a land flowing with milk and honey, a new heart, a comforter, and the promise never to leave nor forsake.",
+    "<em>Promises of God</em> ranges across the whole Bible, so the clues name the promise and ask for its token, or the other way round. The closing verse is Paul's summary of all of them at once."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "Set in the cloud as a token after the flood",
+      "enum": "(3)",
+      "len": 3
+    },
+    {
+      "n": "2D",
+      "text": "The promised land flowed with milk and this",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "3A",
+      "text": "All the promises of God in him are this, and Amen",
+      "enum": "(3)",
+      "len": 3
+    },
+    {
+      "n": "4D",
+      "text": "“I will never leave thee, nor ___ thee”",
+      "enum": "(7)",
+      "len": 7
+    }
+  ],
+  "verseText": "For all the promises of God in him are yea, and in him Amen, unto the glory of God by us.",
+  "verseCite": "2 Corinthians 1:20 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/father-abraham/",
+      "eyebrow": "Genesis 12–22",
+      "name": "Father Abraham",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/noahs-ark/",
+      "eyebrow": "Genesis 6&ndash;9",
+      "name": "Noah's Ark",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/faith-hope-and-love/",
+      "eyebrow": "1 Corinthians 13",
+      "name": "Faith, Hope and Love",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

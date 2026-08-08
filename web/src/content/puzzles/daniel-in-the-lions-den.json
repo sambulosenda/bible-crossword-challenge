@@ -1,0 +1,65 @@
+{
+  "title": "Daniel in the Lions' Den Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Daniel in the Lions&rsquo; Den Bible Crossword",
+  "reference": "Daniel 6",
+  "meta": "15×15 grid · Easy · Ends on Daniel 6:22",
+  "description": "Solve a Daniel in the Lions' Den Bible crossword: King Darius, the sealed stone, the shut mouths of the lions. KJV-rooted clues, free on iPhone and iPad.",
+  "prose": [
+    "A decree that no man may pray, a window that stays open toward Jerusalem anyway, and a den sealed with a stone and the king's own signet — Daniel 6 is a story about quiet, unshowy courage, and it makes a satisfying grid. Every clue in <em>Daniel in the Lions' Den</em> comes from the chapter: the presidents and princes who set the trap, the king who could not sleep, the angel who shut the lions' mouths.",
+    "It's one of the gentler puzzles in the archive, which makes it a good place to start if Bible crosswords are new to you. The closing verse is Daniel's own answer, called up out of the den at dawn."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "King who signed the decree and then regretted it",
+      "enum": "(6)",
+      "len": 6
+    },
+    {
+      "n": "2D",
+      "text": "Beasts waiting in the den",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "3A",
+      "text": "Laid on the mouth of the den and sealed",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "4D",
+      "text": "City Daniel opened his window toward",
+      "enum": "(9)",
+      "len": 9
+    }
+  ],
+  "verseText": "My God hath sent his angel, and hath shut the lions mouths, that they have not hurt me: forasmuch as before him innocency was found in me; and also before thee, O king, have I done no hurt.",
+  "verseCite": "Daniel 6:22 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/jonah-and-the-whale/",
+      "eyebrow": "Jonah 1–2",
+      "name": "Jonah and the Whale",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/david-and-goliath/",
+      "eyebrow": "1 Samuel 17",
+      "name": "David and Goliath",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/noahs-ark/",
+      "eyebrow": "Genesis 6&ndash;9",
+      "name": "Noah's Ark",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

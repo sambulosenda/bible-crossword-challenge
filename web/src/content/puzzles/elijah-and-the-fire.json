@@ -1,0 +1,65 @@
+{
+  "title": "Elijah and the Fire Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Elijah and the Fire Bible Crossword",
+  "reference": "1 Kings 17–19",
+  "meta": "15×15 grid · Hard · Ends on 1 Kings 18:38",
+  "description": "Solve an Elijah Bible crossword: the ravens at Cherith, Carmel and the prophets of Baal, and the still small voice. Free KJV puzzles on iPhone and iPad.",
+  "prose": [
+    "Three years without rain, a brook where ravens bring him bread and flesh, a widow's barrel of meal that does not waste — and then the contest on Carmel, with four hundred and fifty prophets on one side and one man on the other, who has the altar drenched three times before he prays. <em>Elijah and the Fire</em> covers 1 Kings 17 to 19.",
+    "It ends quieter than it begins: a juniper tree, an angel with a cake baken on the coals, and a still small voice after the wind and the earthquake and the fire. The closing verse is the moment the fire falls."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "Mount where he challenged the prophets",
+      "enum": "(6)",
+      "len": 6
+    },
+    {
+      "n": "2D",
+      "text": "God whose prophets numbered four hundred and fifty",
+      "enum": "(4)",
+      "len": 4
+    },
+    {
+      "n": "3A",
+      "text": "Brook where the ravens fed him",
+      "enum": "(7)",
+      "len": 7
+    },
+    {
+      "n": "4D",
+      "text": "Poured on the sacrifice three times, four of these each",
+      "enum": "(7)",
+      "len": 7
+    }
+  ],
+  "verseText": "Then the fire of the LORD fell, and consumed the burnt sacrifice, and the wood, and the stones, and the dust, and licked up the water that was in the trench.",
+  "verseCite": "1 Kings 18:38 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/elisha-the-prophet/",
+      "eyebrow": "2 Kings 2–13",
+      "name": "Elisha the Prophet",
+      "sub": "Hard · Bible crossword"
+    },
+    {
+      "href": "/puzzles/kings-of-israel-and-judah/",
+      "eyebrow": "1 &amp; 2 Kings",
+      "name": "Kings of Israel and Judah",
+      "sub": "Hard · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-major-prophets/",
+      "eyebrow": "Isaiah to Daniel",
+      "name": "The Major Prophets",
+      "sub": "Hard · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

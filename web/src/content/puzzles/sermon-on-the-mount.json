@@ -1,0 +1,65 @@
+{
+  "title": "Sermon on the Mount Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Sermon on the Mount Bible Crossword",
+  "reference": "Matthew 5–7",
+  "meta": "15×15 grid · Medium · Ends on Matthew 5:14",
+  "description": "Solve a Sermon on the Mount Bible crossword: salt of the earth, light of the world, the lilies of the field, the house on the rock. Free KJV puzzles on iOS.",
+  "prose": [
+    "Three chapters, and most of the sayings anyone can quote. <em>Sermon on the Mount</em> ranges over all of Matthew 5 to 7 — salt and light, the city set on a hill, the lilies of the field that toil not, the strait gate, and the two houses built on rock and on sand.",
+    "The <a href=\"/puzzles/the-beatitudes/\">Beatitudes</a> and <a href=\"/puzzles/the-lords-prayer/\">the Lord's Prayer</a> both sit inside this sermon and both have puzzles of their own; this grid takes everything around them. It closes on the line about the city that cannot be hid."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "“Ye are the ___ of the earth”",
+      "enum": "(4)",
+      "len": 4
+    },
+    {
+      "n": "2D",
+      "text": "“Ye are the ___ of the world”",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "3A",
+      "text": "A city set on one cannot be hid",
+      "enum": "(4)",
+      "len": 4
+    },
+    {
+      "n": "4D",
+      "text": "The wise man built his house upon it",
+      "enum": "(4)",
+      "len": 4
+    }
+  ],
+  "verseText": "Ye are the light of the world. A city that is set on an hill cannot be hid.",
+  "verseCite": "Matthew 5:14 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/the-beatitudes/",
+      "eyebrow": "Matthew 5",
+      "name": "The Beatitudes",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-lords-prayer/",
+      "eyebrow": "Matthew 6",
+      "name": "The Lord's Prayer",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/parables-of-the-kingdom/",
+      "eyebrow": "Matthew 13",
+      "name": "Parables of the Kingdom",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

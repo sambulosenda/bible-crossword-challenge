@@ -1,0 +1,65 @@
+{
+  "title": "Joseph the Dreamer Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Joseph the Dreamer Bible Crossword",
+  "reference": "Genesis 37–45",
+  "meta": "15×15 grid · Easy · Ends on Genesis 37:3",
+  "description": "Solve a Joseph Bible crossword: the coat of many colours, the pit, Potiphar, Pharaoh’s dreams and the seven years of plenty. Free KJV puzzles on iOS.",
+  "prose": [
+    "A favourite son, a coat that says so, and eleven brothers who have had enough of his dreams. <em>Joseph the Dreamer</em> runs the length of the story — the pit, the Ishmeelites, Potiphar's house, the prison, the butler and the baker, and the morning Pharaoh sends for a Hebrew who can read a dream about cattle and corn.",
+    "The KJV calls it a coat of many <em>colours</em>, with the u, which is the kind of detail this app is built on. The closing verse comes early, at the moment the coat is given and the trouble begins."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "Joseph’s coat was of many of these",
+      "enum": "(7)",
+      "len": 7
+    },
+    {
+      "n": "2D",
+      "text": "His father, who loved him more than all his children",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "3A",
+      "text": "Land he was carried down into",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "4D",
+      "text": "Officer of Pharaoh who bought him",
+      "enum": "(8)",
+      "len": 8
+    }
+  ],
+  "verseText": "Now Israel loved Joseph more than all his children, because he was the son of his old age: and he made him a coat of many colours.",
+  "verseCite": "Genesis 37:3 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/father-abraham/",
+      "eyebrow": "Genesis 12–22",
+      "name": "Father Abraham",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/isaac-and-rebekah/",
+      "eyebrow": "Genesis 24–25",
+      "name": "Isaac and Rebekah",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/jacobs-ladder/",
+      "eyebrow": "Genesis 28",
+      "name": "Jacob's Ladder",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

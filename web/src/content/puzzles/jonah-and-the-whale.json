@@ -1,0 +1,65 @@
+{
+  "title": "Jonah and the Whale Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Jonah and the Whale Bible Crossword",
+  "reference": "Jonah 1–2",
+  "meta": "15×15 grid · Easy · Ends on Jonah 1:17",
+  "description": "Solve a Jonah and the Whale Bible crossword: Nineveh, Joppa, the great fish and three days in the deep, in KJV-rooted clues. Free daily puzzles on iPhone and iPad.",
+  "prose": [
+    "A prophet told to go east who buys a ticket west, a storm that finds him anyway, and a great fish waiting in the water — Jonah is the shortest of adventures and the most stubborn of men. In <em>Jonah and the Whale</em>, the clues follow him the whole way: down to Joppa, down into the ship, down into the sea, and finally up onto dry land with the errand still to run.",
+    "The grid holds the details that make the story stick — the lots cast by frightened sailors, the three days and three nights, the gourd that withered outside Nineveh. Solve it and the puzzle closes on the verse where the fish appears, which is where most of us remember the story beginning."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "Great city Jonah was sent to warn",
+      "enum": "(7)",
+      "len": 7
+    },
+    {
+      "n": "2D",
+      "text": "Port where he found a ship going the other way",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "3A",
+      "text": "What the LORD prepared to swallow him up",
+      "enum": "(4)",
+      "len": 4
+    },
+    {
+      "n": "4D",
+      "text": "Days and nights he spent in its belly",
+      "enum": "(5)",
+      "len": 5
+    }
+  ],
+  "verseText": "Now the LORD had prepared a great fish to swallow up Jonah. And Jonah was in the belly of the fish three days and three nights.",
+  "verseCite": "Jonah 1:17 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/daniel-in-the-lions-den/",
+      "eyebrow": "Daniel 6",
+      "name": "Daniel in the Lions' Den",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/noahs-ark/",
+      "eyebrow": "Genesis 6&ndash;9",
+      "name": "Noah's Ark",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/david-and-goliath/",
+      "eyebrow": "1 Samuel 17",
+      "name": "David and Goliath",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

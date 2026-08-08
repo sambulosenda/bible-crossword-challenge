@@ -1,0 +1,65 @@
+{
+  "title": "Paul's Journeys Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Paul&rsquo;s Journeys Bible Crossword",
+  "reference": "Acts 13–28",
+  "meta": "15×15 grid · Hard · Ends on Acts 1:8",
+  "description": "Solve a Paul's missionary journeys Bible crossword: Cyprus, Philippi, Athens and Mars' hill, Ephesus and Rome. Free KJV puzzles on iPhone and iPad.",
+  "prose": [
+    "Three journeys and a voyage in chains, across most of the eastern Mediterranean. <em>Paul's Journeys</em> follows the route — Cyprus with Barnabas, the vision of the man of Macedonia, the jail at Philippi that shook at midnight, Mars' hill and the altar to the unknown God, two years in Ephesus, and at last Rome.",
+    "The geography is the puzzle here, and it is genuinely hard: the clues expect the cities and who was met in them. The closing verse is the commission that sets the whole book in motion."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "Island of the first journey, with Barnabas",
+      "enum": "(6)",
+      "len": 6
+    },
+    {
+      "n": "2D",
+      "text": "City where he disputed on Mars’ hill",
+      "enum": "(6)",
+      "len": 6
+    },
+    {
+      "n": "3A",
+      "text": "Tentmaker’s wife, with Aquila",
+      "enum": "(9)",
+      "len": 9
+    },
+    {
+      "n": "4D",
+      "text": "City he reached at last, a prisoner",
+      "enum": "(4)",
+      "len": 4
+    }
+  ],
+  "verseText": "But ye shall receive power, after that the Holy Ghost is come upon you: and ye shall be witnesses unto me both in Jerusalem, and in all Judaea, and in Samaria, and unto the uttermost part of the earth.",
+  "verseCite": "Acts 1:8 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/shipwrecked-on-malta/",
+      "eyebrow": "Acts 27–28",
+      "name": "Shipwrecked on Malta",
+      "sub": "Hard · Bible crossword"
+    },
+    {
+      "href": "/puzzles/saul-on-the-damascus-road/",
+      "eyebrow": "Acts 9",
+      "name": "Saul on the Damascus Road",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-early-church/",
+      "eyebrow": "Acts 2–8",
+      "name": "The Early Church",
+      "sub": "Hard · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

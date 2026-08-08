@@ -1,0 +1,65 @@
+{
+  "title": "Words of the Wise Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Words of the Wise Bible Crossword",
+  "reference": "Proverbs 3",
+  "meta": "15×15 grid · Medium · Ends on Proverbs 3:5",
+  "description": "Solve a Proverbs Bible crossword: trust in the LORD, the soft answer, the ant, and the beginning of wisdom. Free KJV puzzles on iPhone and iPad.",
+  "prose": [
+    "Proverbs is a book of one-line arguments, and a surprising number of them have become ordinary English: a soft answer turneth away wrath, pride goeth before destruction, go to the ant thou sluggard. <em>Words of the Wise</em> makes a grid of the sayings themselves.",
+    "Because each proverb is self-contained, the clues can quote one and leave a word out — which is a very direct way to learn them. The closing verse is the one most people who know a proverb know."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "“___ in the LORD with all thine heart”",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "2D",
+      "text": "“lean not unto thine own ___”",
+      "enum": "(13)",
+      "len": 13
+    },
+    {
+      "n": "3A",
+      "text": "A soft answer turneth away this",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "4D",
+      "text": "“Go to the ___, thou sluggard”",
+      "enum": "(3)",
+      "len": 3
+    }
+  ],
+  "verseText": "Trust in the LORD with all thine heart; and lean not unto thine own understanding.",
+  "verseCite": "Proverbs 3:5 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/solomons-wisdom/",
+      "eyebrow": "1 Kings 3–10",
+      "name": "Solomon's Wisdom",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-patience-of-job/",
+      "eyebrow": "Job 1–42",
+      "name": "The Patience of Job",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/faith-hope-and-love/",
+      "eyebrow": "1 Corinthians 13",
+      "name": "Faith, Hope and Love",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

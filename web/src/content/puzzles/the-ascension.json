@@ -1,0 +1,65 @@
+{
+  "title": "The Ascension Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Ascension Bible Crossword",
+  "reference": "Acts 1",
+  "meta": "15×15 grid · Medium · Ends on Acts 1:10",
+  "description": "Solve an Ascension Bible crossword: the forty days, the mount called Olivet, the cloud, and the two men in white apparel. Free KJV puzzles on iPhone and iPad.",
+  "prose": [
+    "Forty days of appearing to them, a last instruction to wait in Jerusalem, and then a cloud that receives him out of their sight — and eleven men left looking steadfastly up into heaven until somebody asks them why. <em>The Ascension</em> makes a grid of Acts 1.",
+    "The clues take in the promise of the Comforter and the choosing of Matthias as well as the ascension itself. The closing verse is the moment the two men in white apparel appear beside them."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "It received him out of their sight",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "2D",
+      "text": "The mount they returned to Jerusalem from",
+      "enum": "(6)",
+      "len": 6
+    },
+    {
+      "n": "3A",
+      "text": "Two men stood by them in this apparel",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "4D",
+      "text": "Days he was seen of them after his passion",
+      "enum": "(5)",
+      "len": 5
+    }
+  ],
+  "verseText": "And while they looked stedfastly toward heaven as he went up, behold, two men stood by them in white apparel;",
+  "verseCite": "Acts 1:10 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/the-day-of-pentecost/",
+      "eyebrow": "Acts 2",
+      "name": "The Day of Pentecost",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-road-to-emmaus/",
+      "eyebrow": "Luke 24",
+      "name": "The Road to Emmaus",
+      "sub": "Hard · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-early-church/",
+      "eyebrow": "Acts 2–8",
+      "name": "The Early Church",
+      "sub": "Hard · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

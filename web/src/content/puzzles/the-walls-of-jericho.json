@@ -1,0 +1,65 @@
+{
+  "title": "The Walls of Jericho Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Walls of Jericho Bible Crossword",
+  "reference": "Joshua 6",
+  "meta": "15×15 grid · Easy · Ends on Joshua 6:20",
+  "description": "Solve a Walls of Jericho Bible crossword: Joshua, seven priests, seven trumpets, and Rahab’s scarlet line. KJV clues from Joshua 6, free on iPhone and iPad.",
+  "prose": [
+    "A city shut up straitly, an army told to walk round it in silence, and seven priests with seven trumpets of rams' horns. On the seventh day they compass it seven times, the people shout, and the wall falls down flat. <em>The Walls of Jericho</em> turns Joshua 6 into a grid built almost entirely out of sevens.",
+    "Rahab is in this puzzle too — the scarlet line in the window, and the house on the wall that stood when the rest came down. The closing verse is the shout itself."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "Leader of Israel after Moses",
+      "enum": "(6)",
+      "len": 6
+    },
+    {
+      "n": "2D",
+      "text": "Days they compassed the city, and times on the last",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "3A",
+      "text": "Of rams’ horns, blown by the priests",
+      "enum": "(8)",
+      "len": 8
+    },
+    {
+      "n": "4D",
+      "text": "Woman whose house was upon the wall",
+      "enum": "(5)",
+      "len": 5
+    }
+  ],
+  "verseText": "So the people shouted when the priests blew with the trumpets: and it came to pass, when the people heard the sound of the trumpet, and the people shouted with a great shout, that the wall fell down flat, so that the people went up into the city, every man straight before him, and they took the city.",
+  "verseCite": "Joshua 6:20 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/crossing-the-red-sea/",
+      "eyebrow": "Exodus 14",
+      "name": "Crossing the Red Sea",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/gideons-three-hundred/",
+      "eyebrow": "Judges 6–7",
+      "name": "Gideon's Three Hundred",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/david-and-goliath/",
+      "eyebrow": "1 Samuel 17",
+      "name": "David and Goliath",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

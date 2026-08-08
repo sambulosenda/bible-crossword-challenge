@@ -1,0 +1,65 @@
+{
+  "title": "The Early Church Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Early Church Bible Crossword",
+  "reference": "Acts 2–8",
+  "meta": "15×15 grid · Hard · Ends on Acts 2:42",
+  "description": "Solve an early church Bible crossword: the breaking of bread, all things common, Stephen the first martyr, and the deacons. Free KJV puzzles on iOS.",
+  "prose": [
+    "Three thousand souls added in a day, and then the ordinary business of being a church: continuing in the apostles' doctrine, breaking bread from house to house, and having all things common. <em>The Early Church</em> covers Acts 2 to 8 — Ananias and Sapphira, the seven chosen to serve tables, Stephen's speech and his stoning, and the scattering that spread the gospel further than staying ever would have.",
+    "The clues assume the book rather than the highlights, which puts this one in the Hard tier. The closing verse is the description of how they lived together."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "They continued stedfastly in the apostles’ ___",
+      "enum": "(8)",
+      "len": 8
+    },
+    {
+      "n": "2D",
+      "text": "First martyr, full of faith and power",
+      "enum": "(7)",
+      "len": 7
+    },
+    {
+      "n": "3A",
+      "text": "They had all things ___",
+      "enum": "(6)",
+      "len": 6
+    },
+    {
+      "n": "4D",
+      "text": "Seller of purple, of the city of Thyatira",
+      "enum": "(5)",
+      "len": 5
+    }
+  ],
+  "verseText": "And they continued stedfastly in the apostles’ doctrine and fellowship, and in breaking of bread, and in prayers.",
+  "verseCite": "Acts 2:42 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/the-day-of-pentecost/",
+      "eyebrow": "Acts 2",
+      "name": "The Day of Pentecost",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/pauls-journeys/",
+      "eyebrow": "Acts 13–28",
+      "name": "Paul's Journeys",
+      "sub": "Hard · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-ascension/",
+      "eyebrow": "Acts 1",
+      "name": "The Ascension",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

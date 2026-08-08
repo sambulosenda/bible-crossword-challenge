@@ -1,0 +1,65 @@
+{
+  "title": "The Ten Plagues Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Ten Plagues Bible Crossword",
+  "reference": "Exodus 7–12",
+  "meta": "15×15 grid · Medium · Ends on Exodus 11:1",
+  "description": "Solve a Ten Plagues Bible crossword: the river turned to blood, frogs, lice, hail, locusts and the darkness that could be felt. Free KJV puzzles on iOS.",
+  "prose": [
+    "Ten refusals and ten answers, escalating each time: a river turned to blood, frogs in the kneadingtroughs, lice, flies, murrain, boils, hail mingled with fire, locusts, and a darkness over Egypt that could be felt. <em>The Ten Plagues</em> puts them in a grid in order.",
+    "The clues use the KJV's own names for them, several of which are worth meeting — <em>murrain</em>, <em>blains</em>, <em>kneadingtroughs</em>. The closing verse is the LORD's word to Moses before the last plague of all."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "What the river was turned to",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "2D",
+      "text": "They came up and covered the land of Egypt",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "3A",
+      "text": "The darkness over Egypt could be this",
+      "enum": "(4)",
+      "len": 4
+    },
+    {
+      "n": "4D",
+      "text": "The last plague took the ___ born",
+      "enum": "(5)",
+      "len": 5
+    }
+  ],
+  "verseText": "And the LORD said unto Moses, Yet will I bring one plague more upon Pharaoh, and upon Egypt; afterwards he will let you go hence: when he shall let you go, he shall surely thrust you out hence altogether.",
+  "verseCite": "Exodus 11:1 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/crossing-the-red-sea/",
+      "eyebrow": "Exodus 14",
+      "name": "Crossing the Red Sea",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-burning-bush/",
+      "eyebrow": "Exodus 3",
+      "name": "The Burning Bush",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/manna-in-the-wilderness/",
+      "eyebrow": "Exodus 16",
+      "name": "Manna in the Wilderness",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

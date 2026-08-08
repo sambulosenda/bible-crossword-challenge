@@ -1,0 +1,65 @@
+{
+  "title": "In the Beginning — Creation Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Creation Bible Crossword",
+  "reference": "Genesis 1",
+  "meta": "15×15 grid · Easy · Ends on Genesis 1:1",
+  "description": "Solve a Creation Bible crossword: the six days of Genesis 1, the firmament, the lights in the heaven, and the seventh day of rest. Free on iPhone and iPad.",
+  "prose": [
+    "Genesis 1 is built like a poem, and it turns out to be built like a crossword too — six days, each with its own work, each ending the same way. <em>In the Beginning</em> asks for the light divided from the darkness, the firmament called Heaven, the dry land called Earth, the lights set to rule the day and the night, and everything that moves in the waters.",
+    "It's an easy grid and a good first puzzle, though a few clues reward reading the chapter closely: the KJV gives the days their own phrasing, and <em>the evening and the morning</em> are always in that order. The verse it closes on is the one the puzzle is named for."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "&ldquo;In the beginning God created the heaven and the ___&rdquo;",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "2D",
+      "text": "&ldquo;Let there be ___&rdquo;",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "3A",
+      "text": "What God called the light",
+      "enum": "(3)",
+      "len": 3
+    },
+    {
+      "n": "4D",
+      "text": "The day on which God rested from all his work",
+      "enum": "(7)",
+      "len": 7
+    }
+  ],
+  "verseText": "In the beginning God created the heaven and the earth.",
+  "verseCite": "Genesis 1:1 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/garden-of-eden/",
+      "eyebrow": "Genesis 2–3",
+      "name": "The Garden of Eden",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/noahs-ark/",
+      "eyebrow": "Genesis 6&ndash;9",
+      "name": "Noah's Ark",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/books-of-the-bible/",
+      "eyebrow": "Genesis to Revelation",
+      "name": "Books of the Bible",
+      "sub": "Hard · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

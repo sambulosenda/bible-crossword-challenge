@@ -1,0 +1,65 @@
+{
+  "title": "The Fruit of the Spirit Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Fruit of the Spirit Bible Crossword",
+  "reference": "Galatians 5",
+  "meta": "15×15 grid · Medium · Ends on Galatians 5:22",
+  "description": "Solve a Fruit of the Spirit Bible crossword: love, joy, peace, longsuffering and the rest of Galatians 5:22 in KJV wording. Free on iPhone and iPad.",
+  "prose": [
+    "Nine words in a single verse, and the King James Version gives several of them a shape you will not find in a modern translation — <em>longsuffering</em> where others say patience, <em>temperance</em> where others say self-control, <em>meekness</em> where others say gentleness. <em>The Fruit of the Spirit</em> makes a grid of all nine, in order, exactly as Galatians 5 lists them.",
+    "It is one of the more satisfying puzzles to finish, because the long answers cross the short ones and the whole verse assembles itself in front of you. The closing verse is the one the puzzle is made of."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "The first fruit named in the list",
+      "enum": "(4)",
+      "len": 4
+    },
+    {
+      "n": "2D",
+      "text": "The KJV's word where others say patience",
+      "enum": "(13)",
+      "len": 13
+    },
+    {
+      "n": "3A",
+      "text": "Third in the list, after love and joy",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "4D",
+      "text": "The last fruit named, where others say self-control",
+      "enum": "(10)",
+      "len": 10
+    }
+  ],
+  "verseText": "But the fruit of the Spirit is love, joy, peace, longsuffering, gentleness, goodness, faith,",
+  "verseCite": "Galatians 5:22 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/armour-of-god/",
+      "eyebrow": "Ephesians 6",
+      "name": "The Armour of God",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-beatitudes/",
+      "eyebrow": "Matthew 5",
+      "name": "The Beatitudes",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-lords-prayer/",
+      "eyebrow": "Matthew 6",
+      "name": "The Lord's Prayer",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

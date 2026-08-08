@@ -360,6 +360,10 @@ footer { border-top: 1px solid var(--rule); padding: var(--s-6) 0; font-size: 14
   justify-content: space-between; gap: var(--s-2);
 }
 .arch-list li .ref { font-family: var(--mono); font-size: 12.5px; color: var(--fg-mute); white-space: nowrap; }
+/* Titles that have a landing page are links; the rest sit at the same weight so
+   the column reads as one list rather than two. */
+.arch-list li a { color: var(--fg); border-bottom: 1px solid color-mix(in srgb, var(--accent) 40%, transparent); transition: color .15s ease, border-color .15s ease; }
+.arch-list li a:hover { color: var(--accent); border-bottom-color: var(--accent); }
 
 .content-section { padding-top: var(--s-1); }
 .content-section h2 { margin-top: var(--s-6); }

@@ -1,0 +1,65 @@
+{
+  "title": "The Good Shepherd Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Good Shepherd Bible Crossword",
+  "reference": "John 10",
+  "meta": "15×15 grid · Medium · Ends on John 10:11",
+  "description": "Solve a Good Shepherd Bible crossword: the door of the sheep, the hireling, the voice they know, and the one lost sheep. Free KJV puzzles on iPhone and iPad.",
+  "prose": [
+    "Jesus takes the oldest image in Israel's poetry and applies it to himself: the shepherd who goes in by the door, calls his own sheep by name, and leads them out. <em>The Good Shepherd</em> covers John 10 and the parable of the lost sheep alongside it — the hireling who flees, the wolf, the ninety and nine left in the wilderness.",
+    "It pairs naturally with <a href=\"/puzzles/psalm-23/\">Psalm 23</a>, which is the same picture a thousand years earlier. The closing verse is the sentence the whole chapter is built on."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "“I am the good ___”",
+      "enum": "(8)",
+      "len": 8
+    },
+    {
+      "n": "2D",
+      "text": "He giveth his life for them",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "3A",
+      "text": "He fleeth because he careth not for the sheep",
+      "enum": "(8)",
+      "len": 8
+    },
+    {
+      "n": "4D",
+      "text": "They know his ___ and follow him",
+      "enum": "(5)",
+      "len": 5
+    }
+  ],
+  "verseText": "I am the good shepherd: the good shepherd giveth his life for the sheep.",
+  "verseCite": "John 10:11 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/psalm-23/",
+      "eyebrow": "The Shepherd&rsquo;s Psalm",
+      "name": "Psalm 23",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/parables-of-the-kingdom/",
+      "eyebrow": "Matthew 13",
+      "name": "Parables of the Kingdom",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/animals-of-the-bible/",
+      "eyebrow": "Genesis to Revelation",
+      "name": "Animals of the Bible",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

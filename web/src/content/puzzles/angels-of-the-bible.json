@@ -1,0 +1,65 @@
+{
+  "title": "Angels of the Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Angels of the Bible Crossword",
+  "reference": "Psalm 91",
+  "meta": "15×15 grid · Medium · Ends on Psalm 91:11",
+  "description": "Solve an angels Bible crossword: Michael and Gabriel, the seraphims of Isaiah, the cherubims at Eden. KJV clues, free on iPhone and iPad.",
+  "prose": [
+    "Scripture's angels are rarely the soft-focus kind. They stand at the gate of Eden with a flaming sword, wrestle a man until daybreak, shut the mouths of lions, and open prison doors. <em>Angels of the Bible</em> gathers them across both testaments — the two named archangels, the seraphims crying holy in Isaiah's vision, the host over Bethlehem.",
+    "The KJV plurals are their own small lesson: <em>cherubims</em> and <em>seraphims</em>, both with the s. Get those right and the crossings fall into place. The closing verse is the promise about angels having charge over you."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "Archangel who contended about the body of Moses",
+      "enum": "(7)",
+      "len": 7
+    },
+    {
+      "n": "2D",
+      "text": "Angel sent to Mary at Nazareth",
+      "enum": "(7)",
+      "len": 7
+    },
+    {
+      "n": "3A",
+      "text": "Each had six wings, in Isaiah’s vision (KJV plural)",
+      "enum": "(9)",
+      "len": 9
+    },
+    {
+      "n": "4D",
+      "text": "Placed at the east of Eden with a flaming sword (KJV plural)",
+      "enum": "(9)",
+      "len": 9
+    }
+  ],
+  "verseText": "For he shall give his angels charge over thee, to keep thee in all thy ways.",
+  "verseCite": "Psalm 91:11 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/garden-of-eden/",
+      "eyebrow": "Genesis 2&ndash;3",
+      "name": "The Garden of Eden",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/jacobs-ladder/",
+      "eyebrow": "Genesis 28",
+      "name": "Jacob's Ladder",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/daniel-in-the-lions-den/",
+      "eyebrow": "Daniel 6",
+      "name": "Daniel in the Lions' Den",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

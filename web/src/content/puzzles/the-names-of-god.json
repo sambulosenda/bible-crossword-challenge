@@ -1,0 +1,65 @@
+{
+  "title": "The Names of God Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Names of God Bible Crossword",
+  "reference": "Exodus 3",
+  "meta": "15×15 grid · Hard · Ends on Exodus 3:14",
+  "description": "Solve a names of God Bible crossword: I AM THAT I AM, Jehovah, Immanuel, the Almighty and the Prince of Peace. Free KJV puzzles on iPhone and iPad.",
+  "prose": [
+    "Moses asks what he should say when they ask who sent him, and gets an answer that is not really a name at all. <em>The Names of God</em> gathers the titles across the whole Bible — the Almighty who appears to Abram, the LORD set in small capitals where the Hebrew has four letters, the names Isaiah gives the child, and the I AM sayings of John's Gospel.",
+    "It is a Hard puzzle and a rewarding one, because each answer carries an argument. The closing verse is the answer from the bush."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "Rendered LORD in small capitals throughout the KJV",
+      "enum": "(7)",
+      "len": 7
+    },
+    {
+      "n": "2D",
+      "text": "Isaiah’s name for the child, meaning God with us",
+      "enum": "(8)",
+      "len": 8
+    },
+    {
+      "n": "3A",
+      "text": "God Almighty, as he appeared unto Abram",
+      "enum": "(7)",
+      "len": 7
+    },
+    {
+      "n": "4D",
+      "text": "“I am the good ___” — one of the I AM sayings",
+      "enum": "(8)",
+      "len": 8
+    }
+  ],
+  "verseText": "And God said unto Moses, I AM THAT I AM: and he said, Thus shalt thou say unto the children of Israel, I AM hath sent me unto you.",
+  "verseCite": "Exodus 3:14 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/the-burning-bush/",
+      "eyebrow": "Exodus 3",
+      "name": "The Burning Bush",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-good-shepherd/",
+      "eyebrow": "John 10",
+      "name": "The Good Shepherd",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-major-prophets/",
+      "eyebrow": "Isaiah to Daniel",
+      "name": "The Major Prophets",
+      "sub": "Hard · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

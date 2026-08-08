@@ -1,0 +1,65 @@
+{
+  "title": "The Burning Bush Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Burning Bush Bible Crossword",
+  "reference": "Exodus 3",
+  "meta": "15×15 grid · Easy · Ends on Exodus 3:2",
+  "description": "Solve a Burning Bush Bible crossword: Horeb, the bush that was not consumed, holy ground and I AM THAT I AM. Free KJV puzzles on iPhone and iPad.",
+  "prose": [
+    "Moses is keeping his father in law's flock on the backside of the desert when he sees a bush on fire that does not burn up. He turns aside to look, and a voice tells him to take off his shoes. <em>The Burning Bush</em> puts Exodus 3 into a grid — the mountain of God, the holy ground, the rod, and the name given when Moses asks what he should say.",
+    "It's an easy puzzle with one of the weightiest answers in the whole archive at its centre. The verse it closes on is the moment the bush first appears."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "It burned with fire and was not consumed",
+      "enum": "(4)",
+      "len": 4
+    },
+    {
+      "n": "2D",
+      "text": "The mountain of God where it stood",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "3A",
+      "text": "He turned aside to see the great sight",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "4D",
+      "text": "Put off from his feet, for the ground was holy",
+      "enum": "(5)",
+      "len": 5
+    }
+  ],
+  "verseText": "And the angel of the LORD appeared unto him in a flame of fire out of the midst of a bush: and he looked, and, behold, the bush burned with fire, and the bush was not consumed.",
+  "verseCite": "Exodus 3:2 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/crossing-the-red-sea/",
+      "eyebrow": "Exodus 14",
+      "name": "Crossing the Red Sea",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/ten-commandments/",
+      "eyebrow": "Exodus 20",
+      "name": "Ten Commandments",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/father-abraham/",
+      "eyebrow": "Genesis 12–22",
+      "name": "Father Abraham",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

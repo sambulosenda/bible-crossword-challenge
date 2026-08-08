@@ -1,0 +1,65 @@
+{
+  "title": "The Beatitudes Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Beatitudes Bible Crossword",
+  "reference": "Matthew 5",
+  "meta": "15×15 grid · Medium · Ends on Matthew 5:5",
+  "description": "Solve a Beatitudes Bible crossword: blessed are the poor in spirit, the meek, the merciful, the peacemakers — Matthew 5 in KJV clues. Free on iPhone and iPad.",
+  "prose": [
+    "Jesus goes up into a mountain, sits down, and begins with nine blessings that turn the usual order of things upside down. <em>The Beatitudes</em> works through Matthew 5 blessing by blessing — poor in spirit, they that mourn, the meek, they which hunger and thirst after righteousness, the merciful, the pure in heart, the peacemakers.",
+    "Each clue names the blessing and asks for who receives it, or the other way round, so solving the grid walks you through the passage twice. It sits in the Medium tier: the words are familiar, but the KJV phrasing keeps you honest."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "&ldquo;Blessed are the ___: for they shall inherit the earth&rdquo;",
+      "enum": "(4)",
+      "len": 4
+    },
+    {
+      "n": "2D",
+      "text": "They shall be called the children of God",
+      "enum": "(11)",
+      "len": 11
+    },
+    {
+      "n": "3A",
+      "text": "&ldquo;Blessed are the ___ in heart: for they shall see God&rdquo;",
+      "enum": "(4)",
+      "len": 4
+    },
+    {
+      "n": "4D",
+      "text": "&ldquo;Blessed are they that ___: for they shall be comforted&rdquo;",
+      "enum": "(5)",
+      "len": 5
+    }
+  ],
+  "verseText": "Blessed are the meek: for they shall inherit the earth.",
+  "verseCite": "Matthew 5:5 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/the-lords-prayer/",
+      "eyebrow": "Matthew 6",
+      "name": "The Lord's Prayer",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/fruit-of-the-spirit/",
+      "eyebrow": "Galatians 5",
+      "name": "Fruit of the Spirit",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-good-samaritan/",
+      "eyebrow": "Luke 10",
+      "name": "The Good Samaritan",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

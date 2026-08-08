@@ -1,0 +1,65 @@
+{
+  "title": "Samson and Delilah Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Samson and Delilah Bible Crossword",
+  "reference": "Judges 13–16",
+  "meta": "15×15 grid · Easy · Ends on Judges 13:24",
+  "description": "Solve a Samson and Delilah Bible crossword: the Nazarite vow, the lion, the jawbone, and the pillars at Gaza. KJV clues from Judges, free on iPhone and iPad.",
+  "prose": [
+    "A child promised to a barren woman, raised a Nazarite with a razor never coming on his head, and given strength that made no sense. <em>Samson and Delilah</em> works through Judges 13–16 — the lion rent as a kid, the riddle at the wedding feast, the foxes, the jawbone of an ass, and the woman in the valley of Sorek who asked him one question four times.",
+    "It ends in Gaza, between two pillars, with his hair grown again. The closing verse is right at the start, where the child is born and the LORD blesses him."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "Woman of the valley of Sorek",
+      "enum": "(7)",
+      "len": 7
+    },
+    {
+      "n": "2D",
+      "text": "Where his great strength lay",
+      "enum": "(4)",
+      "len": 4
+    },
+    {
+      "n": "3A",
+      "text": "Beast he rent as he would have rent a kid",
+      "enum": "(4)",
+      "len": 4
+    },
+    {
+      "n": "4D",
+      "text": "City where he bowed himself between the pillars",
+      "enum": "(4)",
+      "len": 4
+    }
+  ],
+  "verseText": "And the woman bare a son, and called his name Samson: and the child grew, and the LORD blessed him.",
+  "verseCite": "Judges 13:24 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/gideons-three-hundred/",
+      "eyebrow": "Judges 6–7",
+      "name": "Gideon's Three Hundred",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/david-and-goliath/",
+      "eyebrow": "1 Samuel 17",
+      "name": "David and Goliath",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/samuel-hears-god/",
+      "eyebrow": "1 Samuel 3",
+      "name": "Samuel Hears God",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

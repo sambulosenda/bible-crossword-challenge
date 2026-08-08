@@ -1,0 +1,65 @@
+{
+  "title": "Father Abraham Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Father Abraham Bible Crossword",
+  "reference": "Genesis 12–22",
+  "meta": "15×15 grid · Easy · Ends on Genesis 15:6",
+  "description": "Solve an Abraham Bible crossword: the call from Ur, Sarah and Isaac, the stars of the promise, and Mount Moriah. KJV clues, free on iPhone and iPad.",
+  "prose": [
+    "A man is told to leave his country and his kindred for a land he will be shown, and he goes. <em>Father Abraham</em> follows the whole arc — the promise of a seed as numberless as the stars, the long wait, the laughter in the tent, and the hardest morning of his life on a mountain in the land of Moriah.",
+    "The clues cover the people around him as well as the promise: Sarah, Lot, Hagar and Ishmael, Isaac, and the ram caught in a thicket by his horns. The closing verse is the one Paul would later build an argument on."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "Abraham’s wife, who laughed in the tent door",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "2D",
+      "text": "The son of the promise",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "3A",
+      "text": "Land he was sent to, leaving his country",
+      "enum": "(6)",
+      "len": 6
+    },
+    {
+      "n": "4D",
+      "text": "What he did in the LORD, counted to him for righteousness",
+      "enum": "(8)",
+      "len": 8
+    }
+  ],
+  "verseText": "And he believed in the LORD; and he counted it to him for righteousness.",
+  "verseCite": "Genesis 15:6 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/isaac-and-rebekah/",
+      "eyebrow": "Genesis 24–25",
+      "name": "Isaac and Rebekah",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/jacobs-ladder/",
+      "eyebrow": "Genesis 28",
+      "name": "Jacob's Ladder",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/joseph-the-dreamer/",
+      "eyebrow": "Genesis 37–45",
+      "name": "Joseph the Dreamer",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

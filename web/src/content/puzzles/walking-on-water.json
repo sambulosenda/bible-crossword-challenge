@@ -1,0 +1,65 @@
+{
+  "title": "Walking on Water Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Walking on Water Bible Crossword",
+  "reference": "Matthew 14",
+  "meta": "15×15 grid · Medium · Ends on Matthew 14:27",
+  "description": "Solve a Walking on Water Bible crossword: the fourth watch, Peter out of the ship, the boisterous wind, and “O thou of little faith.” Free KJV puzzles on iOS.",
+  "prose": [
+    "In the fourth watch of the night he goes to them walking on the sea, and they cry out for fear, supposing it is a spirit. <em>Walking on Water</em> covers Matthew 14 — the ship tossed with waves, the voice across the water, and Peter, who asks to come and then looks at the wind.",
+    "The clue that gives this puzzle its character is the one about what Peter began to do, because the answer is the whole lesson in four letters. The closing verse is what Jesus says before any of it happens."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "Disciple who came down out of the ship",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "2D",
+      "text": "What he began to do when he saw the wind boisterous",
+      "enum": "(4)",
+      "len": 4
+    },
+    {
+      "n": "3A",
+      "text": "Watch of the night in which Jesus came to them",
+      "enum": "(6)",
+      "len": 6
+    },
+    {
+      "n": "4D",
+      "text": "“Be of good cheer; it is I; be not ___”",
+      "enum": "(6)",
+      "len": 6
+    }
+  ],
+  "verseText": "But straightway Jesus spake unto them, saying, Be of good cheer; it is I; be not afraid.",
+  "verseCite": "Matthew 14:27 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/calming-the-storm/",
+      "eyebrow": "Mark 4",
+      "name": "Calming the Storm",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/feeding-the-five-thousand/",
+      "eyebrow": "John 6",
+      "name": "Feeding the Five Thousand",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-twelve-disciples/",
+      "eyebrow": "Mark 3",
+      "name": "The Twelve Disciples",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

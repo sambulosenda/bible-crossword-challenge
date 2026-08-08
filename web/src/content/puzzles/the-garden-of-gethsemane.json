@@ -1,0 +1,65 @@
+{
+  "title": "The Garden of Gethsemane Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Garden of Gethsemane Bible Crossword",
+  "reference": "Mark 14",
+  "meta": "15×15 grid · Hard · Ends on Mark 14:36",
+  "description": "Solve a Gethsemane Bible crossword: the sleeping disciples, “let this cup pass”, the kiss, and the ear of Malchus. Free KJV puzzles on iPhone and iPad.",
+  "prose": [
+    "He takes three of them further in, tells them his soul is exceeding sorrowful unto death, and goes a little forward to pray the same prayer three times. Each time he comes back they are asleep. <em>The Garden of Gethsemane</em> covers Mark 14 with the other accounts alongside.",
+    "The arrest is in the grid too — the lanterns and torches, the kiss, the drawn sword and the servant's ear. The closing verse is the prayer itself, in the words Mark keeps in Aramaic."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "Garden over the brook Kidron",
+      "enum": "(10)",
+      "len": 10
+    },
+    {
+      "n": "2D",
+      "text": "“___, Father, all things are possible unto thee”",
+      "enum": "(4)",
+      "len": 4
+    },
+    {
+      "n": "3A",
+      "text": "He asked that it might pass from him",
+      "enum": "(3)",
+      "len": 3
+    },
+    {
+      "n": "4D",
+      "text": "Could they not watch with him one of these?",
+      "enum": "(4)",
+      "len": 4
+    }
+  ],
+  "verseText": "And he said, Abba, Father, all things are possible unto thee; take away this cup from me: nevertheless not what I will, but what thou wilt.",
+  "verseCite": "Mark 14:36 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/the-last-supper/",
+      "eyebrow": "Luke 22",
+      "name": "The Last Supper",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-crucifixion/",
+      "eyebrow": "Luke 23",
+      "name": "The Crucifixion",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/easter/",
+      "eyebrow": "Matthew 28",
+      "name": "Easter",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

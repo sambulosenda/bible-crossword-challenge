@@ -1,0 +1,65 @@
+{
+  "title": "The Tabernacle Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Tabernacle Bible Crossword",
+  "reference": "Exodus 25–40",
+  "meta": "15×15 grid · Hard · Ends on Exodus 25:8",
+  "description": "Solve a tabernacle Bible crossword: shittim wood and the ark, the mercy seat, the golden candlestick, the veil and the shewbread. Free KJV puzzles on iOS.",
+  "prose": [
+    "Fifteen chapters of Exodus are given to a tent and its furniture, described twice over: once as instruction and once as it was made. <em>The Tabernacle</em> works through the whole plan — the ark of shittim wood overlaid with gold, the mercy seat and the cherubims, the table of shewbread, the golden candlestick, the veil, the laver, and the cloud that covered the tent when it was finished.",
+    "It is the most technical puzzle in the archive and the most satisfying to complete, because the KJV's vocabulary here is unlike anywhere else. The closing verse is the reason given for building it at all."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "Wood the ark was made of",
+      "enum": "(7)",
+      "len": 7
+    },
+    {
+      "n": "2D",
+      "text": "Bread set in order before the LORD",
+      "enum": "(9)",
+      "len": 9
+    },
+    {
+      "n": "3A",
+      "text": "The most holy place, behind the veil",
+      "enum": "(7)",
+      "len": 7
+    },
+    {
+      "n": "4D",
+      "text": "Of the LORD, it filled the tabernacle",
+      "enum": "(5)",
+      "len": 5
+    }
+  ],
+  "verseText": "And let them make me a sanctuary; that I may dwell among them.",
+  "verseCite": "Exodus 25:8 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/ten-commandments/",
+      "eyebrow": "Exodus 20",
+      "name": "Ten Commandments",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/feasts-and-festivals/",
+      "eyebrow": "Leviticus 23 · Acts 2",
+      "name": "Feasts and Festivals",
+      "sub": "Hard · Bible crossword"
+    },
+    {
+      "href": "/puzzles/manna-in-the-wilderness/",
+      "eyebrow": "Exodus 16",
+      "name": "Manna in the Wilderness",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

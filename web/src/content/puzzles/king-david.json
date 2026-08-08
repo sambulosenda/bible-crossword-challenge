@@ -1,0 +1,65 @@
+{
+  "title": "King David Bible Crossword Puzzle — Free on iOS",
+  "heading": "The King David Bible Crossword",
+  "reference": "1 &amp; 2 Samuel",
+  "meta": "15×15 grid · Easy · Ends on Psalm 23:1",
+  "description": "Solve a King David Bible crossword: the shepherd boy, the harp, Jerusalem, Absalom and the psalms. KJV clues from 1 and 2 Samuel, free on iPhone and iPad.",
+  "prose": [
+    "The youngest of eight sons, keeping sheep while his brothers are called in to meet the prophet — and the one God chooses, because the LORD looketh on the heart. <em>King David</em> covers the life rather than any single episode: the harp that quieted Saul, the years as a fugitive, the city he took and made his own, and the son who broke his heart.",
+    "If you want the giant, that is <a href=\"/puzzles/david-and-goliath/\">its own puzzle</a>; if you want the psalm, so is <a href=\"/puzzles/psalm-23/\">Psalm 23</a>. This grid is the man in between. It closes, fittingly, on the line he is best remembered for."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "He played it, and the evil spirit departed from Saul",
+      "enum": "(4)",
+      "len": 4
+    },
+    {
+      "n": "2D",
+      "text": "Town where Samuel found him keeping sheep",
+      "enum": "(9)",
+      "len": 9
+    },
+    {
+      "n": "3A",
+      "text": "His son who rebelled and was caught by his hair",
+      "enum": "(7)",
+      "len": 7
+    },
+    {
+      "n": "4D",
+      "text": "Prophet who said “Thou art the man”",
+      "enum": "(6)",
+      "len": 6
+    }
+  ],
+  "verseText": "The LORD is my shepherd; I shall not want.",
+  "verseCite": "Psalm 23:1 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/king-saul/",
+      "eyebrow": "1 Samuel 9–31",
+      "name": "King Saul",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/psalm-23/",
+      "eyebrow": "The Shepherd&rsquo;s Psalm",
+      "name": "Psalm 23",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/david-and-goliath/",
+      "eyebrow": "1 Samuel 17",
+      "name": "David and Goliath",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

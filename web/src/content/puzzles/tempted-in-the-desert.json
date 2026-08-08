@@ -1,0 +1,65 @@
+{
+  "title": "Tempted in the Desert Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Tempted in the Desert Bible Crossword",
+  "reference": "Matthew 4",
+  "meta": "15×15 grid · Hard · Ends on Matthew 4:3",
+  "description": "Solve a temptation of Christ Bible crossword: forty days fasting, the stones and bread, the pinnacle, and “Get thee hence.” Free KJV puzzles on iOS.",
+  "prose": [
+    "Led up of the Spirit into the wilderness to be tempted, he fasts forty days and forty nights, and afterward is an hungred. <em>Tempted in the Desert</em> covers all three temptations and the three answers, each of which is a quotation from Deuteronomy.",
+    "The puzzle is in the Hard tier because it expects the scripture behind each reply, not just the exchange. The closing verse is the tempter's opening line."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "Days and nights he fasted",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "2D",
+      "text": "“Man shall not live by ___ alone”",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "3A",
+      "text": "He was set on a pinnacle of it",
+      "enum": "(6)",
+      "len": 6
+    },
+    {
+      "n": "4D",
+      "text": "They came and ministered unto him",
+      "enum": "(6)",
+      "len": 6
+    }
+  ],
+  "verseText": "And when the tempter came to him, he said, If thou be the Son of God, command that these stones be made bread.",
+  "verseCite": "Matthew 4:3 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/the-baptism-of-jesus/",
+      "eyebrow": "Mark 1",
+      "name": "The Baptism of Jesus",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/sermon-on-the-mount/",
+      "eyebrow": "Matthew 5–7",
+      "name": "Sermon on the Mount",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-garden-of-gethsemane/",
+      "eyebrow": "Mark 14",
+      "name": "The Garden of Gethsemane",
+      "sub": "Hard · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

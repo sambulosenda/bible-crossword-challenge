@@ -1,0 +1,65 @@
+{
+  "title": "The Road to Emmaus Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Road to Emmaus Bible Crossword",
+  "reference": "Luke 24",
+  "meta": "15×15 grid · Hard · Ends on Luke 24:31",
+  "description": "Solve a Road to Emmaus Bible crossword: the two disciples, the stranger who expounded the scriptures, and the breaking of bread. Free KJV puzzles on iOS.",
+  "prose": [
+    "Two of them are walking to a village threescore furlongs from Jerusalem, talking about everything that has happened, when a stranger joins them and asks what the conversation is. Their eyes are holden that they should not know him. <em>The Road to Emmaus</em> covers Luke 24.",
+    "The best part of the chapter is what the stranger does on the road — beginning at Moses and all the prophets, expounding in all the scriptures the things concerning himself. The closing verse is the moment at the table when they finally see who it is."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "Village threescore furlongs from Jerusalem",
+      "enum": "(6)",
+      "len": 6
+    },
+    {
+      "n": "2D",
+      "text": "Their eyes were holden that they should not do this",
+      "enum": "(4)",
+      "len": 4
+    },
+    {
+      "n": "3A",
+      "text": "He expounded the scriptures beginning at him",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "4D",
+      "text": "They knew him in the breaking of it",
+      "enum": "(5)",
+      "len": 5
+    }
+  ],
+  "verseText": "And their eyes were opened, and they knew him; and he vanished out of their sight.",
+  "verseCite": "Luke 24:31 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/easter/",
+      "eyebrow": "Matthew 28",
+      "name": "Easter",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-ascension/",
+      "eyebrow": "Acts 1",
+      "name": "The Ascension",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/lazarus-come-forth/",
+      "eyebrow": "John 11",
+      "name": "Lazarus, Come Forth",
+      "sub": "Hard · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "title": "Lazarus, Come Forth Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Lazarus, Come Forth Bible Crossword",
+  "reference": "John 11",
+  "meta": "15×15 grid · Hard · Ends on John 11:25",
+  "description": "Solve a raising of Lazarus Bible crossword: Bethany, four days in the grave, “Jesus wept”, and the graveclothes. Free KJV puzzles on iPhone and iPad.",
+  "prose": [
+    "A message comes that his friend is sick, and he stays two days longer where he is. By the time he reaches Bethany the man has been in the grave four days, and both sisters say the same sentence to him. <em>Lazarus, Come Forth</em> covers John 11 in full.",
+    "The shortest verse in the Bible is in this chapter, and so is one of the largest claims in it. The closing verse is the one he says to Martha before the stone is moved."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "Town where he lay in the grave",
+      "enum": "(7)",
+      "len": 7
+    },
+    {
+      "n": "2D",
+      "text": "Sister who went and met him first",
+      "enum": "(6)",
+      "len": 6
+    },
+    {
+      "n": "3A",
+      "text": "Days he had already been in the grave",
+      "enum": "(4)",
+      "len": 4
+    },
+    {
+      "n": "4D",
+      "text": "“Jesus ___” — the shortest verse in the Bible",
+      "enum": "(4)",
+      "len": 4
+    }
+  ],
+  "verseText": "Jesus said unto her, I am the resurrection, and the life: he that believeth in me, though he were dead, yet shall he live:",
+  "verseCite": "John 11:25 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/miracles-of-jesus/",
+      "eyebrow": "The Gospels",
+      "name": "Miracles of Jesus",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-good-shepherd/",
+      "eyebrow": "John 10",
+      "name": "The Good Shepherd",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/easter/",
+      "eyebrow": "Matthew 28",
+      "name": "Easter",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

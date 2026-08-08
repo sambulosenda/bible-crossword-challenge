@@ -1,0 +1,65 @@
+{
+  "title": "The Fiery Furnace Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Fiery Furnace Bible Crossword",
+  "reference": "Daniel 3",
+  "meta": "15×15 grid · Medium · Ends on Daniel 3:25",
+  "description": "Solve a fiery furnace Bible crossword: the golden image, Shadrach, Meshach and Abednego, and the fourth man in the fire. Free KJV puzzles on iOS.",
+  "prose": [
+    "An image of gold on the plain of Dura, an orchestra to cue the bowing, and three men who will not. <em>The Fiery Furnace</em> covers Daniel 3 — the furnace heated seven times more than it was wont, the mighty men bound and cast in, and the king rising up in haste because he can count to four.",
+    "The three Hebrew names are the backbone of the grid, and they cross beautifully. The closing verse is the king's own description of the fourth figure walking in the fire."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "King who set up the golden image",
+      "enum": "(14)",
+      "len": 14
+    },
+    {
+      "n": "2D",
+      "text": "One of the three, with Meshach and Abednego",
+      "enum": "(8)",
+      "len": 8
+    },
+    {
+      "n": "3A",
+      "text": "How many times more the furnace was heated",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "4D",
+      "text": "The fourth in the fire was like the ___ of God",
+      "enum": "(3)",
+      "len": 3
+    }
+  ],
+  "verseText": "He answered and said, Lo, I see four men loose, walking in the midst of the fire, and they have no hurt; and the form of the fourth is like the Son of God.",
+  "verseCite": "Daniel 3:25 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/daniel-in-the-lions-den/",
+      "eyebrow": "Daniel 6",
+      "name": "Daniel in the Lions' Den",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/queen-esther/",
+      "eyebrow": "Esther 1–10",
+      "name": "Queen Esther",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/nehemiah-rebuilds/",
+      "eyebrow": "Nehemiah 1–6",
+      "name": "Nehemiah Rebuilds",
+      "sub": "Hard · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

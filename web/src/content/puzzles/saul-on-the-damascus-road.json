@@ -1,0 +1,65 @@
+{
+  "title": "Saul on the Damascus Road Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Damascus Road Bible Crossword",
+  "reference": "Acts 9",
+  "meta": "15×15 grid · Medium · Ends on Acts 9:4",
+  "description": "Solve a Damascus Road Bible crossword: the light from heaven, “why persecutest thou me”, Ananias and the scales. Free KJV puzzles on iPhone and iPad.",
+  "prose": [
+    "He is on the road with letters in his hand authorising arrests when a light shines round about him and a voice asks a question with his name in it twice. <em>Saul on the Damascus Road</em> covers Acts 9 — the three days without sight, the street called Straight, the disciple sent to him who quite reasonably argues first.",
+    "The clue about what fell from his eyes has one of the best answers in the archive, because the KJV's own image is already a metaphor. The closing verse is the question from the light."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "City he was journeying to with letters",
+      "enum": "(8)",
+      "len": 8
+    },
+    {
+      "n": "2D",
+      "text": "It shined round about him from heaven",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "3A",
+      "text": "Disciple sent to lay hands on him",
+      "enum": "(7)",
+      "len": 7
+    },
+    {
+      "n": "4D",
+      "text": "They fell from his eyes and he received sight",
+      "enum": "(6)",
+      "len": 6
+    }
+  ],
+  "verseText": "And he fell to the earth, and heard a voice saying unto him, Saul, Saul, why persecutest thou me?",
+  "verseCite": "Acts 9:4 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/pauls-journeys/",
+      "eyebrow": "Acts 13–28",
+      "name": "Paul's Journeys",
+      "sub": "Hard · Bible crossword"
+    },
+    {
+      "href": "/puzzles/shipwrecked-on-malta/",
+      "eyebrow": "Acts 27–28",
+      "name": "Shipwrecked on Malta",
+      "sub": "Hard · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-early-church/",
+      "eyebrow": "Acts 2–8",
+      "name": "The Early Church",
+      "sub": "Hard · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

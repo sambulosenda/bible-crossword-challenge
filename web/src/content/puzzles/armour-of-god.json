@@ -1,0 +1,65 @@
+{
+  "title": "The Armour of God Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Armour of God Bible Crossword",
+  "reference": "Ephesians 6",
+  "meta": "15×15 grid · Medium · Ends on Ephesians 6:11",
+  "description": "Solve an Armour of God Bible crossword: the belt of truth, breastplate of righteousness, shield of faith and sword of the Spirit. KJV clues, free on iPhone and iPad.",
+  "prose": [
+    "Paul writes to the Ephesians from prison and reaches for a soldier's kit to describe how to stand: loins girt with truth, the breastplate of righteousness, feet shod, the shield, the helmet, the sword. <em>The Armour of God</em> is a grid built piece by piece out of Ephesians 6 — and because Paul names each item with what it stands for, every clue teaches while you solve it.",
+    "Note the KJV spelling in the title: <em>armour</em>, with a u. That is worth remembering across the whole app — answers follow the King James Version, so <em>Saviour</em>, <em>honour</em> and <em>armour</em> all keep their extra letter, and a word that seems one square too long is usually right after all."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "What your loins are to be girt about with",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "2D",
+      "text": "The breastplate of ___",
+      "enum": "(13)",
+      "len": 13
+    },
+    {
+      "n": "3A",
+      "text": "The shield that quenches the fiery darts",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "4D",
+      "text": "The helmet of ___",
+      "enum": "(9)",
+      "len": 9
+    }
+  ],
+  "verseText": "Put on the whole armour of God, that ye may be able to stand against the wiles of the devil.",
+  "verseCite": "Ephesians 6:11 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/fruit-of-the-spirit/",
+      "eyebrow": "Galatians 5",
+      "name": "Fruit of the Spirit",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-beatitudes/",
+      "eyebrow": "Matthew 5",
+      "name": "The Beatitudes",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-lords-prayer/",
+      "eyebrow": "Matthew 6",
+      "name": "The Lord's Prayer",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

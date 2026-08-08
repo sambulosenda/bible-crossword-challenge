@@ -1,0 +1,65 @@
+{
+  "title": "Miracles of Jesus Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Miracles of Jesus Bible Crossword",
+  "reference": "The Gospels",
+  "meta": "15×15 grid · Medium · Ends on John 20:30",
+  "description": "Solve a miracles of Jesus Bible crossword: water into wine, the blind man, Lazarus, the loaves and fishes. KJV clues, free on iPhone and iPad.",
+  "prose": [
+    "This is the wide-angle puzzle: not one miracle but the whole range of them, from a wedding in Cana that ran out of wine to a grave in Bethany four days old. <em>Miracles of Jesus</em> asks you to place each sign with its place and its detail — the pool with five porches, the withered hand, the ten lepers and the one who came back.",
+    "If you want a single miracle at length, the archive has <a href=\"/puzzles/walking-on-water/\">Walking on Water</a>, <a href=\"/puzzles/calming-the-storm/\">Calming the Storm</a> and <a href=\"/puzzles/feeding-the-five-thousand/\">Feeding the Five Thousand</a> as puzzles of their own. This one closes on John's note that there were many others besides."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "What the water became at the marriage in Cana",
+      "enum": "(4)",
+      "len": 4
+    },
+    {
+      "n": "2D",
+      "text": "Raised in Bethany, brother of Mary and Martha",
+      "enum": "(7)",
+      "len": 7
+    },
+    {
+      "n": "3A",
+      "text": "Pool with five porches where the impotent man lay",
+      "enum": "(8)",
+      "len": 8
+    },
+    {
+      "n": "4D",
+      "text": "Loaves that fed the five thousand",
+      "enum": "(4)",
+      "len": 4
+    }
+  ],
+  "verseText": "And many other signs truly did Jesus in the presence of his disciples, which are not written in this book:",
+  "verseCite": "John 20:30 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/walking-on-water/",
+      "eyebrow": "Matthew 14",
+      "name": "Walking on Water",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/calming-the-storm/",
+      "eyebrow": "Mark 4",
+      "name": "Calming the Storm",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/feeding-the-five-thousand/",
+      "eyebrow": "John 6",
+      "name": "Feeding the Five Thousand",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "title": "Praise and Worship Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Praise and Worship Bible Crossword",
+  "reference": "Psalm 95",
+  "meta": "15×15 grid · Easy · Ends on Psalm 95:1",
+  "description": "Solve a praise and worship Bible crossword: the joyful noise, the rock of our salvation, timbrel and harp. KJV clues from the Psalms, free on iOS.",
+  "prose": [
+    "This one is about the act of worship rather than any single psalm — the kneeling, the singing, the noise. <em>Praise and Worship</em> draws its clues from across the Psalter: the joyful noise unto the rock of our salvation, coming before his presence with thanksgiving, and every instrument the psalms hand out — timbrel, harp, psaltery, cymbals, the trumpet.",
+    "If you would rather have the psalms as songs than worship as a subject, the archive also holds <em>Songs of Praise</em>, which is a different grid. This one closes on the call that opens Psalm 95."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "“O come, let us ___ unto the LORD”",
+      "enum": "(4)",
+      "len": 4
+    },
+    {
+      "n": "2D",
+      "text": "“the rock of our ___”",
+      "enum": "(9)",
+      "len": 9
+    },
+    {
+      "n": "3A",
+      "text": "Make a joyful one unto the rock of our salvation",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "4D",
+      "text": "Ten-stringed instrument of the psalms",
+      "enum": "(8)",
+      "len": 8
+    }
+  ],
+  "verseText": "O come, let us sing unto the LORD: let us make a joyful noise to the rock of our salvation.",
+  "verseCite": "Psalm 95:1 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/songs-of-praise/",
+      "eyebrow": "Psalm 100",
+      "name": "Songs of Praise",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/psalm-23/",
+      "eyebrow": "The Shepherd&rsquo;s Psalm",
+      "name": "Psalm 23",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/king-david/",
+      "eyebrow": "1 &amp; 2 Samuel",
+      "name": "King David",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

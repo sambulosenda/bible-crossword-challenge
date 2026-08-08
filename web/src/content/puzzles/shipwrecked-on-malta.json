@@ -1,0 +1,65 @@
+{
+  "title": "Shipwrecked on Malta Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Shipwrecked on Malta Bible Crossword",
+  "reference": "Acts 27–28",
+  "meta": "15×15 grid · Hard · Ends on Acts 27:25",
+  "description": "Solve an Acts 27 Bible crossword: the wind Euroclydon, the soundings, the island of Melita, and the viper on Paul’s hand. Free KJV puzzles on iOS.",
+  "prose": [
+    "Acts 27 is the most detailed sea narrative in the Bible: the undergirding of the ship, the sounding of the depths, the anchors cast out of the stern, and fourteen nights of being driven up and down in Adria. <em>Shipwrecked on Malta</em> makes a grid of the voyage and the landing that follows.",
+    "The KJV calls the island Melita and the wind Euroclydon, and the puzzle uses both. The closing verse is Paul's word to the crew in the middle of the storm."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "Tempestuous wind that drove the ship",
+      "enum": "(10)",
+      "len": 10
+    },
+    {
+      "n": "2D",
+      "text": "Island they escaped safe to (KJV name)",
+      "enum": "(6)",
+      "len": 6
+    },
+    {
+      "n": "3A",
+      "text": "It came out of the heat and fastened on his hand",
+      "enum": "(5)",
+      "len": 5
+    },
+    {
+      "n": "4D",
+      "text": "Cast out of the stern, four of them",
+      "enum": "(7)",
+      "len": 7
+    }
+  ],
+  "verseText": "Wherefore, sirs, be of good cheer: for I believe God, that it shall be even as it was told me.",
+  "verseCite": "Acts 27:25 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/pauls-journeys/",
+      "eyebrow": "Acts 13–28",
+      "name": "Paul's Journeys",
+      "sub": "Hard · Bible crossword"
+    },
+    {
+      "href": "/puzzles/saul-on-the-damascus-road/",
+      "eyebrow": "Acts 9",
+      "name": "Saul on the Damascus Road",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-early-church/",
+      "eyebrow": "Acts 2–8",
+      "name": "The Early Church",
+      "sub": "Hard · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

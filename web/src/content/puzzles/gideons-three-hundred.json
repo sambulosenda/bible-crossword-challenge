@@ -1,0 +1,65 @@
+{
+  "title": "Gideon's Three Hundred Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Gideon&rsquo;s Three Hundred Bible Crossword",
+  "reference": "Judges 6–7",
+  "meta": "15×15 grid · Medium · Ends on Judges 7:7",
+  "description": "Solve a Gideon Bible crossword: the fleece, the winnowing of the army, the trumpets and pitchers and lamps. KJV clues from Judges 6–7, free on iOS.",
+  "prose": [
+    "Gideon is threshing wheat by the winepress to hide it from the Midianites when he is greeted as a mighty man of valour. <em>Gideon's Three Hundred</em> covers what follows — the fleece laid out twice, wet then dry; an army of thirty-two thousand cut to ten thousand and then to three hundred by the way the men drank at the water.",
+    "The victory itself is the strangest part of the grid: trumpets, empty pitchers, and lamps hidden inside them. The closing verse is the LORD's instruction that three hundred will be enough."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "Laid on the floor, wet with dew while the earth was dry",
+      "enum": "(6)",
+      "len": 6
+    },
+    {
+      "n": "2D",
+      "text": "Enemy Israel was delivered from",
+      "enum": "(9)",
+      "len": 9
+    },
+    {
+      "n": "3A",
+      "text": "Empty vessels hiding the lamps",
+      "enum": "(8)",
+      "len": 8
+    },
+    {
+      "n": "4D",
+      "text": "How the three hundred were chosen — by how they did this",
+      "enum": "(5)",
+      "len": 5
+    }
+  ],
+  "verseText": "And the LORD said unto Gideon, By the three hundred men that lapped will I save you, and deliver the Midianites into thine hand: and let all the other people go every man unto his place.",
+  "verseCite": "Judges 7:7 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/samson-and-delilah/",
+      "eyebrow": "Judges 13–16",
+      "name": "Samson and Delilah",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-walls-of-jericho/",
+      "eyebrow": "Joshua 6",
+      "name": "The Walls of Jericho",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/david-and-goliath/",
+      "eyebrow": "1 Samuel 17",
+      "name": "David and Goliath",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

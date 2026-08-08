@@ -1,0 +1,65 @@
+{
+  "title": "The Good Samaritan Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Good Samaritan Bible Crossword",
+  "reference": "Luke 10",
+  "meta": "15×15 grid · Easy · Ends on Luke 10:27",
+  "description": "Solve a Good Samaritan Bible crossword: the road to Jericho, the priest and the Levite, oil and wine and an inn. KJV-rooted clues, free on iPhone and iPad.",
+  "prose": [
+    "A lawyer asks who counts as a neighbour and gets a story instead of a definition. A man goes down from Jerusalem to Jericho and falls among thieves; two men who should stop don't; the one nobody expected does. <em>The Good Samaritan</em> turns Luke 10 into a grid — the road, the priest, the Levite, the oil and wine poured into the wounds, the two pence left with the host.",
+    "Parables make particularly good crosswords, because the details are the argument: it matters that it was a Samaritan, and it matters that he paid. Finish the grid and the puzzle closes on the verse the whole parable was told to answer."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "City the wounded man was travelling down to",
+      "enum": "(7)",
+      "len": 7
+    },
+    {
+      "n": "2D",
+      "text": "First to see him and pass by on the other side",
+      "enum": "(6)",
+      "len": 6
+    },
+    {
+      "n": "3A",
+      "text": "Poured into his wounds, with wine",
+      "enum": "(3)",
+      "len": 3
+    },
+    {
+      "n": "4D",
+      "text": "Where the Samaritan brought him to be cared for",
+      "enum": "(3)",
+      "len": 3
+    }
+  ],
+  "verseText": "And he answering said, Thou shalt love the Lord thy God with all thy heart, and with all thy soul, and with all thy strength, and with all thy mind; and thy neighbour as thyself.",
+  "verseCite": "Luke 10:27 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/the-prodigal-son/",
+      "eyebrow": "Luke 15",
+      "name": "The Prodigal Son",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-lords-prayer/",
+      "eyebrow": "Matthew 6",
+      "name": "The Lord's Prayer",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-beatitudes/",
+      "eyebrow": "Matthew 5",
+      "name": "The Beatitudes",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

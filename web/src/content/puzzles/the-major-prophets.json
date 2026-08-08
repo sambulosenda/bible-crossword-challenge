@@ -1,0 +1,65 @@
+{
+  "title": "The Major Prophets Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Major Prophets Bible Crossword",
+  "reference": "Isaiah to Daniel",
+  "meta": "15×15 grid · Hard · Ends on Isaiah 40:8",
+  "description": "Solve a major prophets Bible crossword: Isaiah, Jeremiah, Lamentations, Ezekiel and Daniel. KJV clues, free on iPhone and iPad.",
+  "prose": [
+    "Five books and four men: Isaiah, who saw the LORD high and lifted up; Jeremiah, who wept over a city that would not listen; Ezekiel, with his wheel within a wheel and his valley of dry bones; and Daniel in Babylon reading writing on a wall.",
+    "<em>The Major Prophets</em> asks you to place each vision with its prophet, which is harder than it sounds once the images start to blur together. The closing verse is Isaiah's line about the grass and the word of our God."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "He saw the LORD high and lifted up",
+      "enum": "(6)",
+      "len": 6
+    },
+    {
+      "n": "2D",
+      "text": "The weeping prophet",
+      "enum": "(8)",
+      "len": 8
+    },
+    {
+      "n": "3A",
+      "text": "Prophet of the wheel within a wheel",
+      "enum": "(7)",
+      "len": 7
+    },
+    {
+      "n": "4D",
+      "text": "His book of laments over Jerusalem",
+      "enum": "(12)",
+      "len": 12
+    }
+  ],
+  "verseText": "The grass withereth, the flower fadeth: but the word of our God shall stand for ever.",
+  "verseCite": "Isaiah 40:8 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/elijah-and-the-fire/",
+      "eyebrow": "1 Kings 17–19",
+      "name": "Elijah and the Fire",
+      "sub": "Hard · Bible crossword"
+    },
+    {
+      "href": "/puzzles/daniel-in-the-lions-den/",
+      "eyebrow": "Daniel 6",
+      "name": "Daniel in the Lions' Den",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-book-of-revelation/",
+      "eyebrow": "Revelation 1–22",
+      "name": "The Book of Revelation",
+      "sub": "Hard · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

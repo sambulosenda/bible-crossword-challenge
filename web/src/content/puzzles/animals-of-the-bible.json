@@ -1,0 +1,65 @@
+{
+  "title": "Animals of the Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Animals of the Bible Crossword",
+  "reference": "Genesis to Revelation",
+  "meta": "15×15 grid · Easy · Ends on Isaiah 11:6",
+  "description": "Solve an Animals of the Bible crossword: the dove and the raven, Balaam’s ass, the lions’ den, the Lamb. KJV clues, free on iPhone and iPad.",
+  "prose": [
+    "Scripture is full of animals, and most of them are doing theological work: a dove with an olive leaf, a raven that did not come back, a ram caught in a thicket, an ass that spoke, lions with their mouths shut, and a Lamb at the centre of Revelation. <em>Animals of the Bible</em> gathers them into one grid.",
+    "It's a good puzzle for readers who know their way around the whole Bible rather than one book, because the clues jump from Genesis to the prophets to the Gospels. The closing verse is Isaiah's picture of the wolf and the lamb together."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "It shall dwell with the lamb, says Isaiah",
+      "enum": "(4)",
+      "len": 4
+    },
+    {
+      "n": "2D",
+      "text": "Sent from the ark, returning with an olive leaf",
+      "enum": "(4)",
+      "len": 4
+    },
+    {
+      "n": "3A",
+      "text": "Balaam’s beast, which spoke to him",
+      "enum": "(3)",
+      "len": 3
+    },
+    {
+      "n": "4D",
+      "text": "It shall lie down with the kid",
+      "enum": "(7)",
+      "len": 7
+    }
+  ],
+  "verseText": "The wolf also shall dwell with the lamb, and the leopard shall lie down with the kid; and the calf and the young lion and the fatling together; and a little child shall lead them.",
+  "verseCite": "Isaiah 11:6 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/noahs-ark/",
+      "eyebrow": "Genesis 6&ndash;9",
+      "name": "Noah's Ark",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/daniel-in-the-lions-den/",
+      "eyebrow": "Daniel 6",
+      "name": "Daniel in the Lions' Den",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/psalm-23/",
+      "eyebrow": "The Shepherd&rsquo;s Psalm",
+      "name": "Psalm 23",
+      "sub": "Easy · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

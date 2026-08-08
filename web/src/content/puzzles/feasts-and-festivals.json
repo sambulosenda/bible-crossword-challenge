@@ -1,0 +1,65 @@
+{
+  "title": "Bible Feasts and Festivals Crossword Puzzle — Free on iOS",
+  "heading": "The Feasts and Festivals Bible Crossword",
+  "reference": "Leviticus 23 · Acts 2",
+  "meta": "15×15 grid · Hard · Ends on Acts 2:1",
+  "description": "Solve a Bible feasts crossword: passover and unleavened bread, firstfruits, pentecost, trumpets, atonement and tabernacles. Free KJV puzzles on iOS.",
+  "prose": [
+    "Leviticus 23 sets out the appointed seasons in order, and the New Testament keeps them: passover and the feast of unleavened bread, the sheaf of firstfruits, the feast of weeks that Acts calls Pentecost, the memorial of blowing of trumpets, the day of atonement, and the feast of tabernacles with its booths.",
+    "<em>Feasts and Festivals</em> is one of the archive's harder puzzles because it asks for the calendar as well as the names. The closing verse is the morning the day of Pentecost was fully come."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "Feast kept with unleavened bread and a lamb",
+      "enum": "(8)",
+      "len": 8
+    },
+    {
+      "n": "2D",
+      "text": "The feast of weeks, fifty days after",
+      "enum": "(9)",
+      "len": 9
+    },
+    {
+      "n": "3A",
+      "text": "Feast of booths in the seventh month",
+      "enum": "(11)",
+      "len": 11
+    },
+    {
+      "n": "4D",
+      "text": "A memorial of blowing of them",
+      "enum": "(8)",
+      "len": 8
+    }
+  ],
+  "verseText": "And when the day of Pentecost was fully come, they were all with one accord in one place.",
+  "verseCite": "Acts 2:1 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/the-day-of-pentecost/",
+      "eyebrow": "Acts 2",
+      "name": "The Day of Pentecost",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-tabernacle/",
+      "eyebrow": "Exodus 25–40",
+      "name": "The Tabernacle",
+      "sub": "Hard · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-last-supper/",
+      "eyebrow": "Luke 22",
+      "name": "The Last Supper",
+      "sub": "Medium · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "title": "Elisha the Prophet Bible Crossword Puzzle — Free on iOS",
+  "heading": "The Elisha the Prophet Bible Crossword",
+  "reference": "2 Kings 2–13",
+  "meta": "15×15 grid · Hard · Ends on 2 Kings 4:36",
+  "description": "Solve an Elisha Bible crossword: the mantle and the double portion, the widow’s oil, Naaman in Jordan, and the chariots of fire. Free KJV puzzles on iOS.",
+  "prose": [
+    "He asks for a double portion of Elijah's spirit, watches the chariot of fire go up, and picks the mantle off the ground. <em>Elisha the Prophet</em> covers the miracles that follow through 2 Kings — the waters healed with salt, the widow's pot of oil that fills every vessel she can borrow, the Shunammite's son, the axe head that swims.",
+    "It's in the Hard tier because the stories are many and rarely retold. The closing verse is the moment the Shunammite's son is given back to her."
+  ],
+  "clues": [
+    {
+      "n": "1A",
+      "text": "Syrian captain healed of his leprosy",
+      "enum": "(6)",
+      "len": 6
+    },
+    {
+      "n": "2D",
+      "text": "River he was told to wash in seven times",
+      "enum": "(6)",
+      "len": 6
+    },
+    {
+      "n": "3A",
+      "text": "What he asked a double portion of",
+      "enum": "(6)",
+      "len": 6
+    },
+    {
+      "n": "4D",
+      "text": "The widow’s pot never lacked it",
+      "enum": "(3)",
+      "len": 3
+    }
+  ],
+  "verseText": "And he called Gehazi, and said, Call this Shunammite. So he called her. And when she was come in unto him, he said, Take up thy son.",
+  "verseCite": "2 Kings 4:36 · KJV",
+  "related": [
+    {
+      "href": "/puzzles/elijah-and-the-fire/",
+      "eyebrow": "1 Kings 17–19",
+      "name": "Elijah and the Fire",
+      "sub": "Hard · Bible crossword"
+    },
+    {
+      "href": "/puzzles/the-major-prophets/",
+      "eyebrow": "Isaiah to Daniel",
+      "name": "The Major Prophets",
+      "sub": "Hard · Bible crossword"
+    },
+    {
+      "href": "/puzzles/kings-of-israel-and-judah/",
+      "eyebrow": "1 &amp; 2 Kings",
+      "name": "Kings of Israel and Judah",
+      "sub": "Hard · Bible crossword"
+    },
+    {
+      "href": "/puzzles/",
+      "eyebrow": "The full archive",
+      "name": "All puzzle themes",
+      "sub": "80+ puzzles, Genesis to Revelation"
+    }
+  ]
+}
