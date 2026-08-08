@@ -157,7 +157,8 @@
         "row": 10,
         "col": 2,
         "text": "Strong beasts that pull the plow",
-        "answer": "OXEN"
+        "answer": "OXEN",
+        "reference": "Proverbs 14:4"
       },
       {
         "number": 15,
