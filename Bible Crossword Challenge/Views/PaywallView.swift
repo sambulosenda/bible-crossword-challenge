@@ -754,7 +754,7 @@ struct PremiumBenefit: Identifiable {
         [
             PremiumBenefit(
                 icon: "square.grid.3x3.fill",
-                title: "\(puzzleCount) puzzles, not just today's",
+                title: "\(puzzleCount) puzzles, not just this week's",
                 detail: "The whole archive, back to the very first — replay any of them, any time."
             ),
             PremiumBenefit(

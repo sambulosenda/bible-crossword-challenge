@@ -324,8 +324,14 @@ struct CompletionView: View {
 
     // MARK: - Mini upsell
 
-    /// Every mini in the bank except today's — the library Premium unlocks.
-    private var pastMiniCount: Int { max(0, puzzleProvider.minis.count - 1) }
+    /// The minis actually behind the wall: everything except the ones a free
+    /// player can already open this week (see `PuzzleAccess`). This used to
+    /// subtract only today's, which overstated the offer the moment the archive
+    /// gate softened — and a count the reader can disprove by opening Library
+    /// costs more than it wins.
+    private var pastMiniCount: Int {
+        max(0, puzzleProvider.minis.count - PuzzleAccess.windowLength)
+    }
 
     /// The post-win ask: shown only to free users right after a Mini solve,
     /// when the appetite for "one more" is highest. A single quiet card — the
