@@ -184,6 +184,9 @@ struct PaywallView: View {
     private enum Entry: String {
         case hintLimit = "hint_limit"
         case completion
+        case firstCompletion = "first_completion"
+        case miniCompletion = "mini_completion"
+        case streak3 = "streak_3"
         case packCompletion = "pack_completion"
         case packLocked = "pack_locked"
         case homeCard = "home_card"
@@ -203,6 +206,18 @@ struct PaywallView: View {
             return "Never stuck for long."
         case .completion:
             return solvedTally ?? Self.defaultHeadline
+        // The two auto-opens from `maybeAutoShowPaywall`, which fire once ever
+        // at the highest-intent moments the app has. Both used to land on the
+        // brand line — the largest text on the screen saying nothing about the
+        // thing that had just happened.
+        case .firstCompletion:
+            return "That's your first. The rest are waiting."
+        case .streak3:
+            // Names the actual reason Premium matters *here*: the habit they've
+            // just built runs on one puzzle a day, and that's all free gives.
+            return "A habit needs more than one a day."
+        case .miniCompletion:
+            return "Two minutes was just the start."
         case .packCompletion:
             return "The rest of the pack is waiting."
         case .packLocked:
@@ -211,8 +226,9 @@ struct PaywallView: View {
             return "Make it part of the morning."
         case .archive:
             return PremiumCopy.archive
-        // `profile`, onboarding, and anything added later. A player who hasn't
-        // hit a wall needs telling what the app is for, not what it withholds.
+        // `profile` and anything added later. A player who hasn't hit a wall
+        // needs telling what the app is for, not what it withholds. (Onboarding
+        // never arrives here — its premium page is part of `OnboardingView`.)
         case nil:
             return Self.defaultHeadline
         }
@@ -693,6 +709,15 @@ struct PremiumBenefit: Identifiable {
     /// Counts are passed in from the bundle rather than written as "100+" or
     /// "four", so no claim here can go stale as puzzles and packs are added.
     ///
+    /// The first row says "not just today's" rather than "all N puzzles,
+    /// unlocked". The free tier already gives a daily and a mini, so "unlocked"
+    /// described a state the reader was not in — it invited them to check, find
+    /// today's puzzle playable, and discount the other two rows with it. Naming
+    /// the free tier in the same breath as the offer is the only version a
+    /// daily player can't catch out. It also stopped the row from reaching for
+    /// packs, which the third row already owns: one row for the archive and
+    /// replay, one for hints, one for packs.
+    ///
     /// Hint limits get their own row rather than sharing one with ads: they're
     /// the most-hit paywall trigger in the app, and pairing the strongest
     /// reason to subscribe with the weakest one buried it. "No ads" is gone
@@ -703,8 +728,8 @@ struct PremiumBenefit: Identifiable {
         [
             PremiumBenefit(
                 icon: "square.grid.3x3.fill",
-                title: "All \(puzzleCount) puzzles, unlocked",
-                detail: "Every daily, mini and themed pack — replay any of them, any time."
+                title: "\(puzzleCount) puzzles, not just today's",
+                detail: "The whole archive, back to the very first — replay any of them, any time."
             ),
             PremiumBenefit(
                 icon: "lightbulb.fill",
