@@ -51,7 +51,15 @@ struct ProfileView: View {
             ScrollView {
                 VStack(spacing: Theme.Spacing.l) {
                     identityCard
-                    statsCard
+                    ProfileStatsCard(
+                        streak: profile.currentStreak,
+                        solved: profile.totalPuzzlesCompleted,
+                        bestStreak: profile.bestStreak,
+                        bestSolveSeconds: profile.bestSolveSeconds,
+                        freezes: profile.streakFreezes,
+                        unlocked: unlockedCount,
+                        totalAchievements: Achievements.all.count
+                    )
                     premiumSection
                     preferencesSection
                     remindersSection
@@ -141,36 +149,6 @@ struct ProfileView: View {
     }
 
     // MARK: - Stats
-
-    /// One card, two rows. The three headline numbers lead at title size; the
-    /// three supporting ones sit below a divider at a smaller scale. Previously
-    /// three were hero stats and the other two were buried as list rows in a
-    /// separate section, which split one idea across two places.
-    private var statsCard: some View {
-        VStack(spacing: Theme.Spacing.m) {
-            HStack(spacing: 0) {
-                heroStat(value: "\(profile.currentStreak)", label: "Day Streak", symbol: "flame.fill", tint: .orange)
-                heroStat(value: "\(profile.totalPuzzlesCompleted)", label: "Solved", symbol: "checkmark.circle.fill", tint: .green)
-                heroStat(value: "\(profile.bestStreak)", label: "Best Streak", symbol: "trophy.fill", tint: .yellow)
-            }
-
-            Divider()
-
-            HStack(spacing: 0) {
-                minorStat(value: bestTimeValue, label: "Best Time", symbol: "stopwatch.fill", tint: Theme.accent)
-                minorStat(value: "\(profile.streakFreezes)", label: "Freezes", symbol: "snowflake", tint: .cyan)
-                minorStat(value: "\(unlockedCount)/\(Achievements.all.count)", label: "Badges", symbol: "star.fill", tint: .indigo)
-            }
-        }
-        .padding(Theme.Spacing.l)
-        .elevatedCard()
-    }
-
-    /// An em dash until the first solve — "0:00" would read as a real record.
-    private var bestTimeValue: String {
-        guard let seconds = profile.bestSolveSeconds else { return "—" }
-        return TimeFormat.clock(seconds)
-    }
 
     // MARK: - Premium
 
@@ -278,26 +256,26 @@ struct ProfileView: View {
 
     private var remindersSection: some View {
         SettingsSection("Reminders") {
-            SettingsRow(title: "Daily reminder", symbol: "bell.fill", tint: .orange) {
-                Toggle("Daily reminder", isOn: $remindersEnabled)
-                    .labelsHidden()
-                    .onChange(of: remindersEnabled) { _, enabled in
-                        handleReminderToggle(enabled)
-                    }
+            // The control carries the row's label rather than sitting beside a
+            // separate `Text`. Split apart, VoiceOver reads "Daily reminder"
+            // twice — once as static text, once as the switch's own label —
+            // where the Form this replaced gave one element for the pair.
+            Toggle(isOn: $remindersEnabled) {
+                SettingsRowLabel(title: "Daily reminder", symbol: "bell.fill", tint: .orange)
+            }
+            .settingsRowInsets()
+            .onChange(of: remindersEnabled) { _, enabled in
+                handleReminderToggle(enabled)
             }
 
             if remindersEnabled && notifications.authorizationStatus == .authorized {
                 RowDivider()
-                SettingsRow(title: "Time", symbol: "clock.fill", tint: Theme.accent) {
-                    DatePicker(
-                        "Time",
-                        selection: reminderTime,
-                        displayedComponents: .hourAndMinute
-                    )
-                    .labelsHidden()
-                    .onChange(of: reminderMinutes) { _, _ in
-                        rescheduleReminders()
-                    }
+                DatePicker(selection: reminderTime, displayedComponents: .hourAndMinute) {
+                    SettingsRowLabel(title: "Time", symbol: "clock.fill", tint: Theme.accent)
+                }
+                .settingsRowInsets()
+                .onChange(of: reminderMinutes) { _, _ in
+                    rescheduleReminders()
                 }
             }
         } footer: {
@@ -317,6 +295,9 @@ struct ProfileView: View {
                     .monospacedDigit()
                     .foregroundStyle(.secondary)
             }
+            // Label and value are one fact, so they're one stop for VoiceOver
+            // ("Version, 1.9") rather than two adjacent static texts.
+            .accessibilityElement(children: .combine)
         } footer: {
             Text("Bible Crossword Challenge — learn Scripture one puzzle a day.")
         }
@@ -380,7 +361,60 @@ struct ProfileView: View {
         }
     }
 
-    // MARK: - Stat tiles
+    private var appVersion: String {
+        let v = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
+        return v
+    }
+}
+
+// MARK: - Stats
+
+/// One card, two rows. The three headline numbers lead at title size; the three
+/// supporting ones sit below a divider at a smaller scale. Previously three were
+/// hero stats and the other two were buried as list rows in a separate section,
+/// which split one idea across two places.
+///
+/// Its own type, taking plain values, rather than a computed property on
+/// `ProfileView` — the six tiles are the densest thing on the screen, and as a
+/// computed property they shared the parent's invalidation boundary and rebuilt
+/// every time an unrelated bit of profile state changed (opening the paywall
+/// sheet, flipping the reminder switch, typing in the rename alert). With only
+/// value inputs and no property wrappers SwiftUI can compare the whole view and
+/// skip its body outright. `HomeView`'s cards are built the same way and say so.
+private struct ProfileStatsCard: View {
+    let streak: Int
+    let solved: Int
+    let bestStreak: Int
+    let bestSolveSeconds: Int?
+    let freezes: Int
+    let unlocked: Int
+    let totalAchievements: Int
+
+    var body: some View {
+        VStack(spacing: Theme.Spacing.m) {
+            HStack(spacing: 0) {
+                heroStat(value: "\(streak)", label: "Day Streak", symbol: "flame.fill", tint: .orange)
+                heroStat(value: "\(solved)", label: "Solved", symbol: "checkmark.circle.fill", tint: .green)
+                heroStat(value: "\(bestStreak)", label: "Best Streak", symbol: "trophy.fill", tint: .yellow)
+            }
+
+            Divider()
+
+            HStack(spacing: 0) {
+                minorStat(value: bestTimeValue, label: "Best Time", symbol: "stopwatch.fill", tint: Theme.accent)
+                minorStat(value: "\(freezes)", label: "Freezes", symbol: "snowflake", tint: .cyan)
+                minorStat(value: "\(unlocked)/\(totalAchievements)", label: "Badges", symbol: "star.fill", tint: .indigo)
+            }
+        }
+        .padding(Theme.Spacing.l)
+        .elevatedCard()
+    }
+
+    /// An em dash until the first solve — "0:00" would read as a real record.
+    private var bestTimeValue: String {
+        guard let bestSolveSeconds else { return "—" }
+        return TimeFormat.clock(bestSolveSeconds)
+    }
 
     private func heroStat(value: String, label: String, symbol: String, tint: Color) -> some View {
         VStack(spacing: Theme.Spacing.xs) {
@@ -423,11 +457,6 @@ struct ProfileView: View {
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(label)
         .accessibilityValue(value)
-    }
-
-    private var appVersion: String {
-        let v = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
-        return v
     }
 }
 
@@ -538,6 +567,15 @@ private struct IconChip: View {
     }
 }
 
+/// The row's padding, shared by `SettingsRow` and by controls that carry their
+/// own label (`Toggle`, `DatePicker`) so both sit on the same rhythm.
+private extension View {
+    func settingsRowInsets() -> some View {
+        padding(.horizontal, Theme.Spacing.m)
+            .padding(.vertical, Theme.Spacing.s + 2)
+    }
+}
+
 /// Chip + title, the shared leading half of every settings row.
 private struct SettingsRowLabel: View {
     let title: LocalizedStringKey
@@ -579,8 +617,7 @@ private struct SettingsRow<Trailing: View>: View {
             Spacer(minLength: Theme.Spacing.s)
             trailing
         }
-        .padding(.horizontal, Theme.Spacing.m)
-        .padding(.vertical, Theme.Spacing.s + 2)
+        .settingsRowInsets()
     }
 }
 
@@ -603,8 +640,7 @@ private struct SettingsButtonRow: View {
                     .font(.footnote.weight(.semibold))
                     .foregroundStyle(.tertiary)
             }
-            .padding(.horizontal, Theme.Spacing.m)
-            .padding(.vertical, Theme.Spacing.s + 2)
+            .settingsRowInsets()
             .contentShape(.rect)
         }
         .buttonStyle(.plain)
