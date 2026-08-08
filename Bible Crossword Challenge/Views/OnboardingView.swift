@@ -39,9 +39,10 @@ struct OnboardingView: View {
     @State private var didLogFirstSolve = false
     @FocusState private var nameFocused: Bool
 
-    /// Matches `PaywallView.checkSize` in intent: the benefit badge grows with
-    /// the player's text size instead of being pinned to a point value.
-    @ScaledMetric(relativeTo: .body) private var benefitIconSize: CGFloat = 34
+    /// Which plan the premium page has selected. Lives here rather than in
+    /// `PremiumOfferView` because the CTA that buys it is down in `controls`,
+    /// outside the TabView the offer is a page of.
+    @State private var selectedPlanID = StoreService.yearlyID
 
     /// Typed separately from `profile.username` so the field can start empty:
     /// a new profile is created with the placeholder name "Friend", and showing
@@ -348,54 +349,24 @@ struct OnboardingView: View {
         }
     }
 
+    /// The same offer the sheet makes, in a page instead of a sheet.
+    ///
+    /// Everything below the promise — the trial line, the benefits, the plans —
+    /// is `PremiumOfferView`, so this page can't drift from `PaywallView` again.
+    /// It also means onboarding now shows the *whole* offer: it used to sell the
+    /// yearly plan alone, with no monthly, no lifetime, no per-month figure and
+    /// no savings badge, to nine in ten of everyone who ever saw a paywall here.
+    ///
+    /// No progress line: the most the player can have solved by now is the
+    /// tutorial clue, and a tally of one reads as a tally of nothing.
     private var premiumPage: some View {
-        let active = page == 4
+        let active = page == lastPage
         return pageFrame(spacing: Theme.Spacing.l) {
-            VStack(spacing: Theme.Spacing.m) {
-                Text("Premium")
-                    .kicker()
-                    .entrance(active: active, delay: 0.05, reduceMotion: reduceMotion)
-                // Shared with the paywall rather than restated — see
-                // `PremiumCopy.promise`. The explicit line break went with it:
-                // the sentence wraps to the same two lines at this width, and a
-                // hardcoded break is what stops shared copy staying shared.
-                Text(premiumHeadline)
-                    .font(.scripture(.largeTitle, weight: .semibold))
-                    .multilineTextAlignment(.center)
-                    .entrance(active: active, delay: 0.10, reduceMotion: reduceMotion)
-
-                // The offer, above the benefits card rather than only down on
-                // the button. A player deciding whether to read on shouldn't
-                // have to look at the CTA to find out the trial costs nothing.
-                Group {
-                    if let trialText {
-                        PremiumCopy.trialSubhead(trialText)
-                    } else {
-                        // No trial to lead with, so lead with what stays free.
-                        Text(PremiumCopy.freeDailyReassurance)
-                            .foregroundStyle(.secondary)
-                    }
-                }
-                .font(.subheadline.weight(.medium))
-                .multilineTextAlignment(.center)
-                .entrance(active: active, delay: 0.14, reduceMotion: reduceMotion)
-            }
-
-            VStack(alignment: .leading, spacing: Theme.Spacing.m) {
-                // Shared with the paywall rather than restated here — see
-                // `PremiumBenefit.all`. The two screens sell the same thing and
-                // had already drifted apart once.
-                ForEach(PremiumBenefit.all(
-                    puzzleCount: puzzleProvider.totalPuzzleCount,
-                    packCount: puzzleProvider.packs.filter(\.isPremium).count
-                )) { item in
-                    benefit(item.icon, item.title, item.detail)
-                }
-            }
-            .padding(Theme.Spacing.l)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .elevatedCard()
-            .entrance(active: active, delay: 0.18, reduceMotion: reduceMotion)
+            PremiumOfferView(
+                headline: premiumHeadline,
+                selectedID: $selectedPlanID,
+                entranceActive: active
+            )
         }
     }
 
@@ -422,28 +393,6 @@ struct OnboardingView: View {
             }
             .scrollBounceBehavior(.basedOnSize)
             .scrollIndicators(.hidden)
-        }
-    }
-
-    private func benefit(_ icon: String, _ title: String, _ detail: String) -> some View {
-        HStack(alignment: .top, spacing: Theme.Spacing.m) {
-            Image(systemName: icon)
-                // Both the disc and the glyph scale, as the paywall's check
-                // circles do. At a fixed 34pt the disc stayed put while the
-                // title beside it grew, so at accessibility sizes the row read
-                // as a bullet dot rather than the paywall's matching badge.
-                .font(.body.weight(.semibold))
-                .foregroundStyle(Theme.accent)
-                .frame(width: benefitIconSize, height: benefitIconSize)
-                .background(Theme.accent.opacity(0.12), in: .circle)
-            VStack(alignment: .leading, spacing: 2) {
-                Text(title).font(.headline)
-                Text(detail)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-            Spacer(minLength: 0)
         }
     }
 
@@ -507,7 +456,7 @@ struct OnboardingView: View {
     @ViewBuilder
     private var premiumControls: some View {
         Button {
-            buyYearly()
+            buySelectedPlan()
         } label: {
             Group {
                 if store.purchaseInFlight {
@@ -518,7 +467,7 @@ struct OnboardingView: View {
             }
         }
         .buttonStyle(.pillProminent)
-        .disabled(store.purchaseInFlight || store.yearly == nil)
+        .disabled(store.purchaseInFlight || selectedPlan == nil)
 
         Text(priceLine)
             .font(.caption)
@@ -544,9 +493,17 @@ struct OnboardingView: View {
         .padding(.top, Theme.Spacing.xs)
     }
 
+    /// The plan the page has selected, or nil while products are still loading.
+    private var selectedPlan: Product? {
+        store.products.first { $0.id == selectedPlanID }
+    }
+
+    /// The trial on the *selected* plan. Only yearly carries an introductory
+    /// offer today, so picking monthly or lifetime correctly drops the trial
+    /// language from the button and the line beneath it.
     private var trialText: String? {
-        guard let yearly = store.yearly else { return nil }
-        return store.introOfferText(for: yearly)
+        guard let plan = selectedPlan else { return nil }
+        return store.introOfferText(for: plan)
     }
 
     /// The promise, aware of what the player just did.
@@ -561,21 +518,19 @@ struct OnboardingView: View {
         solved ? "You got the idea.\nKeep it going." : PremiumCopy.promise
     }
 
-    /// "Start 3-day free trial" when there's an offer, plain unlock copy when
-    /// there isn't — shared with the paywall so the two can't drift, and driven
-    /// by StoreKit so it can never advertise a length that isn't configured.
+    /// Both shared with the sheet — see `PremiumOfferView.ctaTitle` and
+    /// `commitmentText`. Driven by StoreKit, so neither can advertise a trial
+    /// length or a price that isn't configured.
     private var premiumCTATitle: String {
-        guard let trialText else { return "Unlock Premium" }
-        return PremiumCopy.trialCTA(trialText)
+        PremiumOfferView.ctaTitle(
+            for: selectedPlan,
+            store: store,
+            puzzleCount: puzzleProvider.totalPuzzleCount
+        )
     }
 
     private var priceLine: String {
-        guard let yearly = store.yearly else { return "" }
-        let period = store.periodText(for: yearly) ?? ""
-        if let trialText {
-            return "\(trialText), then \(yearly.displayPrice)\(period). Cancel anytime."
-        }
-        return "\(yearly.displayPrice)\(period). Cancel anytime."
+        PremiumOfferView.commitmentText(for: selectedPlan, store: store) ?? ""
     }
 
     // MARK: - First solve
@@ -637,28 +592,32 @@ struct OnboardingView: View {
         withAnimation { page += 1 }
     }
 
-    private func buyYearly() {
+    private func buySelectedPlan() {
         Task {
-            guard let yearly = store.yearly else { return finish() }
+            guard let plan = selectedPlan else { return finish() }
+            // The plan is named the same way the sheet names it, so the two
+            // surfaces' `plan` values are comparable rather than one of them
+            // always reading "yearly" because that was all it could sell.
+            let planName = PremiumOfferView.planTitle(plan).lowercased()
             // Logged here as well as on the paywall, because this screen is
             // where roughly nine in ten players meet the offer — measuring the
             // commit rate everywhere except the busiest surface would answer
             // the question for almost nobody.
             analytics.log(.paywallCTATapped(
-                plan: "yearly",
+                plan: planName,
                 source: "onboarding",
-                offersTrial: store.introOfferText(for: yearly) != nil
+                offersTrial: store.introOfferText(for: plan) != nil
             ))
             // StoreService emits `premium_purchased` for every grant, including
             // ones that land after this screen is gone — see its `report`.
-            switch await store.purchase(yearly, source: "onboarding") {
+            switch await store.purchase(plan, source: "onboarding") {
             case .purchased:
                 finish()
             case .cancelled:
                 // Nothing to explain, continue on in.
                 finish()
             case .failed(let reason):
-                analytics.log(.purchaseFailed(plan: "yearly", source: "onboarding", reason: reason))
+                analytics.log(.purchaseFailed(plan: planName, source: "onboarding", reason: reason))
             case .pending:
                 break
             }
@@ -698,7 +657,10 @@ struct OnboardingView: View {
 
 // MARK: - Staggered entrance
 
-private struct Entrance: ViewModifier {
+/// Internal rather than file-private so `PremiumOfferView` can stagger its own
+/// blocks the way this file's pages do — the offer moved out, the page
+/// treatment around it did not.
+struct Entrance: ViewModifier {
     let active: Bool
     let delay: Double
     let reduceMotion: Bool
@@ -716,7 +678,7 @@ private struct Entrance: ViewModifier {
     }
 }
 
-private extension View {
+extension View {
     func entrance(active: Bool, delay: Double = 0, reduceMotion: Bool) -> some View {
         modifier(Entrance(active: active, delay: delay, reduceMotion: reduceMotion))
     }
