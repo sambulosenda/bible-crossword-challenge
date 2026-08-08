@@ -107,11 +107,44 @@ final class PuzzleProvider {
 
     private func rotated(_ pool: [Puzzle], for date: Date, calendar: Calendar) -> Puzzle? {
         guard !pool.isEmpty else { return nil }
+        return pool[index(in: pool.count, for: date, calendar: calendar)]
+    }
+
+    /// Whole days from the content epoch to `date`. Negative before the epoch;
+    /// callers wrap it into a pool with `index(in:for:calendar:)`.
+    func dayIndex(for date: Date = Date(), calendar: Calendar = .current) -> Int {
         let startToday = calendar.startOfDay(for: date)
         let startEpoch = calendar.startOfDay(for: epoch)
-        let days = calendar.dateComponents([.day], from: startEpoch, to: startToday).day ?? 0
-        let index = ((days % pool.count) + pool.count) % pool.count
-        return pool[index]
+        return calendar.dateComponents([.day], from: startEpoch, to: startToday).day ?? 0
+    }
+
+    /// `dayIndex` wrapped into a pool of `count`, always non-negative.
+    private func index(in count: Int, for date: Date, calendar: Calendar) -> Int {
+        let days = dayIndex(for: date, calendar: calendar)
+        return ((days % count) + count) % count
+    }
+
+    /// The `length` puzzles currently open in `pool`: today's, then the ones
+    /// served before it, walking the rotation backwards and wrapping with it.
+    ///
+    /// Positions, not dates. The pool recurs every `pool.count` days, so no
+    /// puzzle belongs to a calendar day — asking for "the last seven days of
+    /// puzzles" only has an answer because the rotation says which seven are
+    /// currently in play, and that answer stays defined after the pool wraps.
+    func rotationWindow(
+        _ pool: [Puzzle],
+        for date: Date = Date(),
+        calendar: Calendar = .current,
+        length: Int
+    ) -> [Puzzle] {
+        guard !pool.isEmpty, length > 0 else { return [] }
+        let today = dayIndex(for: date, calendar: calendar)
+        // A window longer than the pool would repeat puzzles rather than widen.
+        let span = min(length, pool.count)
+        return (0..<span).map { offset in
+            let i = (((today - offset) % pool.count) + pool.count) % pool.count
+            return pool[i]
+        }
     }
 
     func puzzle(id: String) -> Puzzle? {
