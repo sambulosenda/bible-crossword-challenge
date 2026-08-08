@@ -113,8 +113,8 @@ final class FamilyBoardService {
     static let maxStandings = 12
     /// Boards kept on device, newest first.
     static let maxBoards = 20
-    private static let maxNameLength = 20
-    private static let maxSeconds = 86_400
+    private nonisolated static let maxNameLength = 20
+    private nonisolated static let maxSeconds = 86_400
 
     private let defaults: UserDefaults
     private let now: () -> Date
@@ -176,7 +176,10 @@ final class FamilyBoardService {
 
     /// `"154:Sam"` — seconds first so a name may contain anything, colons
     /// included. Splitting on the *first* colon keeps that unambiguous.
-    private static func parseStanding(_ raw: String) -> Standing? {
+    ///
+    /// `nonisolated` because the module defaults to `@MainActor`, and this is
+    /// passed as a function value to `compactMap`, which wants a plain one.
+    private nonisolated static func parseStanding(_ raw: String) -> Standing? {
         guard let separator = raw.firstIndex(of: ":") else { return nil }
         guard let seconds = Int(raw[raw.startIndex..<separator]),
               (1...maxSeconds).contains(seconds)

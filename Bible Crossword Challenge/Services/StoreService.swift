@@ -205,6 +205,7 @@ final class StoreService {
             case .notAvailableInStorefront: return "not_in_storefront"
             case .notEntitled: return "not_entitled"
             case .unknown: return "unknown"
+            case .unsupported: return "unsupported"
             @unknown default: return "unknown"
             }
         case let purchaseError as Product.PurchaseError:

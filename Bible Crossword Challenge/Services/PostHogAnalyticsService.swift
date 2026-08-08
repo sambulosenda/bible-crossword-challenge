@@ -36,7 +36,7 @@ struct PostHogAnalyticsService: AnalyticsService {
     static func configure() {
         guard isEnabled else { return }
 
-        let config = PostHogConfig(apiKey: apiKey, host: host)
+        let config = PostHogConfig(projectToken: apiKey, host: host)
         // Lifecycle capture stays on for `Application Installed` and
         // `Application Updated`: our own `app_open` fires on every launch and
         // so can't tell a first-ever open from the hundredth, which is exactly

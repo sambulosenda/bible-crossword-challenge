@@ -356,7 +356,10 @@ enum PackCompletion {
 
 extension Color {
     /// Parses "#RRGGBB" (or "RRGGBB"); returns `nil` on malformed input.
-    init?(hex: String) {
+    ///
+    /// `nonisolated` because the module defaults to `@MainActor`, and this is
+    /// passed as a function value to `flatMap`, which wants a plain one.
+    nonisolated init?(hex: String) {
         var s = hex.trimmingCharacters(in: .whitespaces)
         if s.hasPrefix("#") { s.removeFirst() }
         guard s.count == 6, let value = UInt32(s, radix: 16) else { return nil }
