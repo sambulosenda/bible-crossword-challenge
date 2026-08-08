@@ -136,6 +136,16 @@ struct CrosswordGameView: View {
                     dismiss()
                 }
             )
+            // Tie the results screen's identity to the puzzle it reports.
+            //
+            // A deep link can replace the Today stack while this cover is up —
+            // tap a friend's board link from the screen that just told you to
+            // send one and that is exactly what happens. SwiftUI then reuses
+            // this view for the new puzzle: the `let` properties re-render, but
+            // every `@State` the screen captured on appear (the challenge, the
+            // family board, the pack context, the week row) stays behind,
+            // leaving one puzzle's verse above another's board.
+            .id(puzzle.id)
         }
         .sensoryFeedback(.success, trigger: vm.isComplete)
         .sensoryFeedback(.warning, trigger: vm.gridFullWithErrorsTick)
