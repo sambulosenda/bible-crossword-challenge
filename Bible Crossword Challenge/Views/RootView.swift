@@ -71,6 +71,20 @@ struct RootView: View {
                         if let id = pendingNavPuzzleID {
                             pendingNavPuzzleID = nil
                             openPuzzle(id: id)
+                        } else if let mini = puzzleProvider.dailyMini() {
+                            // Straight into the Mini rather than onto Today.
+                            //
+                            // Finishing one puzzle on day one is what predicts
+                            // coming back — 61% next-day return against 21% —
+                            // and the Mini is finished by two thirds of the
+                            // people who open it against fewer than half for the
+                            // 15×15. This is the highest-intent moment the app
+                            // gets, so it spends it on the puzzle most likely to
+                            // be finished instead of a screen of choices.
+                            //
+                            // Not a trap: it pushes onto the Today stack, so the
+                            // back button lands exactly where they'd have been.
+                            openPuzzle(id: mini.id)
                         }
                     }
                 } else {

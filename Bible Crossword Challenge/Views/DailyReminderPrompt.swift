@@ -133,11 +133,16 @@ struct DailyReminderPrompt: View {
 
                 // Same weight as onboarding's. A second ask is already pushing
                 // it; a hard-to-refuse one would be worse than not asking.
-                Button("No thanks") { onFinish() }
-                    .font(.subheadline.weight(.semibold))
-                    .tint(.secondary)
-                    .padding(.top, Theme.Spacing.xs)
-                    .disabled(working)
+                Button("No thanks") {
+                    // Same event as onboarding's decline, so the two asks can be
+                    // compared directly — see `Analytics.reminderDeclined`.
+                    analytics.log(.reminderDeclined(source: "prompt"))
+                    onFinish()
+                }
+                .font(.subheadline.weight(.semibold))
+                .tint(.secondary)
+                .padding(.top, Theme.Spacing.xs)
+                .disabled(working)
             }
         }
         .padding(.horizontal, Theme.Spacing.l)

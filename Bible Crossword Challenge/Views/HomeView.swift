@@ -93,27 +93,62 @@ struct HomeView: View {
         let record = daily.flatMap { d in records.first { $0.puzzleID == d.id } }
         let mini = dailyMini
         let miniRecord = mini.flatMap { m in records.first { $0.puzzleID == m.id } }
+        let leadsWithMini = profile.totalPuzzlesCompleted == 0 && mini != nil
 
         return NavigationStack(path: $path) {
             ScrollView {
                 VStack(spacing: Theme.Spacing.l) {
                     TodayHeader(verse: verseOfTheDay(excluding: daily))
 
-                    if let daily {
-                        DailyPuzzleCard(
-                            puzzle: daily,
-                            presentation: .of(record: record, on: Date()),
-                            progress: inProgressFraction(daily, record: record)
-                        )
-                    } else {
-                        emptyDailyCard
-                    }
-
-                    if let mini {
-                        MiniPuzzleCard(
+                    // A player who has never finished a puzzle leads with the
+                    // Mini; everyone else leads with the daily, as before.
+                    //
+                    // Finishing one puzzle on the first day is what separates a
+                    // player who comes back from one who doesn't — measured at
+                    // 61% next-day return against 21%. The Mini is finished by
+                    // two thirds of the people who start it and the 15×15 by
+                    // fewer than half, but 92% of first-ever puzzle starts were
+                    // the 15×15, because it owns the hero card and the Mini sat
+                    // in a row underneath it. New players came out of a
+                    // two-letter tutorial and were handed a 19-clue grid.
+                    //
+                    // This reverses only that first choice. The moment they
+                    // finish anything the screen is the one everybody else has,
+                    // permanently — the daily is the habit, the Mini is just a
+                    // gentler way in.
+                    if leadsWithMini, let mini {
+                        LeadPuzzleCard(
                             puzzle: mini,
-                            presentation: .of(record: miniRecord, on: Date())
+                            billing: .mini,
+                            presentation: .of(record: miniRecord, on: Date()),
+                            progress: inProgressFraction(mini, record: miniRecord)
                         )
+                        if let daily {
+                            CompactPuzzleCard(
+                                puzzle: daily,
+                                billing: .daily,
+                                presentation: .of(record: record, on: Date())
+                            )
+                        }
+                    } else {
+                        if let daily {
+                            LeadPuzzleCard(
+                                puzzle: daily,
+                                billing: .daily,
+                                presentation: .of(record: record, on: Date()),
+                                progress: inProgressFraction(daily, record: record)
+                            )
+                        } else {
+                            emptyDailyCard
+                        }
+
+                        if let mini {
+                            CompactPuzzleCard(
+                                puzzle: mini,
+                                billing: .mini,
+                                presentation: .of(record: miniRecord, on: Date())
+                            )
+                        }
                     }
 
                     // Instead of, not above: a comeback card stacked on a flame
@@ -291,7 +326,34 @@ private struct TodayHeader: View {
     }
 }
 
-// MARK: - Daily puzzle card
+// MARK: - Billing
+
+/// How a puzzle is introduced on Today: which one it is, not which slot it
+/// happens to be filling.
+///
+/// The two cards below are *treatments* — a tinted hero and a compact row — and
+/// either of the day's two puzzles can occupy either one, so neither card can
+/// name its own occupant any more.
+private enum PuzzleBilling {
+    case daily, mini
+
+    var kicker: String { self == .daily ? "DAILY PUZZLE" : "DAILY MINI" }
+    var symbol: String { self == .daily ? "calendar" : "square.grid.3x3" }
+
+    /// The noun VoiceOver leads with.
+    var spoken: String { self == .daily ? "Daily puzzle" : "Daily mini" }
+
+    /// The one-line description the compact row shows when the puzzle is
+    /// unplayed. "A quick two-minute puzzle" is a promise only the Mini keeps.
+    func blurb(_ puzzle: Puzzle) -> String {
+        switch self {
+        case .daily: "\(puzzle.size)×\(puzzle.size) · \(puzzle.clueCount) clues"
+        case .mini: "\(puzzle.size)×\(puzzle.size) · A quick two-minute puzzle"
+        }
+    }
+}
+
+// MARK: - Lead puzzle card
 //
 // The hero of the screen. It is the only tinted card on Today — every other
 // module is white — so the eye lands here first without any of them shouting.
@@ -299,9 +361,12 @@ private struct TodayHeader: View {
 // the same device the completion screen uses to mark its one important card.
 // When solved it becomes a quiet win moment (the time you earned) rather than
 // a dead "done" tile.
+//
+// Which puzzle it carries is decided by the caller — see `leadsWithMini`.
 
-private struct DailyPuzzleCard: View {
+private struct LeadPuzzleCard: View {
     let puzzle: Puzzle
+    let billing: PuzzleBilling
     let presentation: DailyPresentation
     var progress: Double? = nil
 
@@ -330,7 +395,7 @@ private struct DailyPuzzleCard: View {
     private var info: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.m) {
             HStack {
-                Label("DAILY PUZZLE", systemImage: "calendar").kicker()
+                Label(billing.kicker, systemImage: billing.symbol).kicker()
                 Spacer()
                 DifficultyBadge(difficulty: puzzle.difficulty)
             }
@@ -468,19 +533,19 @@ private struct DailyPuzzleCard: View {
         switch presentation {
         case .solvedToday(let seconds):
             if let secs = seconds, secs > 0 {
-                return "Daily puzzle. \(puzzle.title). Solved in \(TimeFormat.clock(secs))."
+                return "\(billing.spoken). \(puzzle.title). Solved in \(TimeFormat.clock(secs))."
             }
-            return "Daily puzzle. \(puzzle.title). Completed."
+            return "\(billing.spoken). \(puzzle.title). Completed."
         case .playedBefore(let previous):
-            let base = "Daily puzzle. \(puzzle.title). \(puzzle.difficulty.label) difficulty. You've played this one before"
+            let base = "\(billing.spoken). \(puzzle.title). \(puzzle.difficulty.label) difficulty. You've played this one before"
             if let previous, previous > 0 {
                 return base + ", in \(TimeFormat.clock(previous)). Play again to beat it."
             }
             return base + ". Play again."
         case .play(.inProgress):
-            return "Daily puzzle. \(puzzle.title). \(puzzle.difficulty.label) difficulty. In progress. \(puzzle.clueCount) clues, \(puzzle.size) by \(puzzle.size) grid."
+            return "\(billing.spoken). \(puzzle.title). \(puzzle.difficulty.label) difficulty. In progress. \(puzzle.clueCount) clues, \(puzzle.size) by \(puzzle.size) grid."
         case .play:
-            return "Daily puzzle. \(puzzle.title). \(puzzle.difficulty.label) difficulty. \(puzzle.clueCount) clues, \(puzzle.size) by \(puzzle.size) grid."
+            return "\(billing.spoken). \(puzzle.title). \(puzzle.difficulty.label) difficulty. \(puzzle.clueCount) clues, \(puzzle.size) by \(puzzle.size) grid."
         }
     }
 }
@@ -761,13 +826,14 @@ private struct UpgradeCard: View {
 // the full puzzle is too big. Kept visually lighter than the daily so it
 // reads as the second course, not a competing headline.
 
-private struct MiniPuzzleCard: View {
+private struct CompactPuzzleCard: View {
     let puzzle: Puzzle
+    let billing: PuzzleBilling
     let presentation: DailyPresentation
 
-    /// Only a mini finished today wears the green check. The mini pool wraps on
-    /// its own schedule, eight days after the daily's, and a repeat there tells
-    /// the same streak-ending lie.
+    /// Only a puzzle finished today wears the green check. Each pool wraps on
+    /// its own schedule — the mini's eight days after the daily's — and a repeat
+    /// there tells the same streak-ending lie.
     private var isSolvedToday: Bool {
         if case .solvedToday = presentation { return true }
         return false
@@ -781,7 +847,7 @@ private struct MiniPuzzleCard: View {
                     .foregroundStyle(isSolvedToday ? .green : Theme.accent)
 
                 VStack(alignment: .leading, spacing: 2) {
-                    Label("DAILY MINI", systemImage: "square.grid.3x3").kicker()
+                    Label(billing.kicker, systemImage: billing.symbol).kicker()
                     Text(puzzle.title)
                         .font(.headline)
                         .foregroundStyle(.primary)
@@ -820,16 +886,16 @@ private struct MiniPuzzleCard: View {
         case .play(.inProgress):
             return "In progress · \(puzzle.size)×\(puzzle.size)"
         case .play:
-            return "\(puzzle.size)×\(puzzle.size) · A quick two-minute puzzle"
+            return billing.blurb(puzzle)
         }
     }
 
     private var accessibilityLabel: String {
         switch presentation {
-        case .solvedToday: return "Daily mini. \(puzzle.title). \(subtitle)."
-        case .playedBefore: return "Daily mini. \(puzzle.title). \(subtitle)."
-        case .play(.inProgress): return "Daily mini. \(puzzle.title). In progress."
-        case .play: return "Daily mini. \(puzzle.title). A quick two-minute puzzle."
+        case .solvedToday, .playedBefore, .play(.inProgress):
+            return "\(billing.spoken). \(puzzle.title). \(subtitle)."
+        case .play:
+            return "\(billing.spoken). \(puzzle.title). \(billing.blurb(puzzle))."
         }
     }
 }

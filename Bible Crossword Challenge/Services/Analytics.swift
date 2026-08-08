@@ -74,6 +74,18 @@ enum AnalyticsEvent {
     /// it and would otherwise cancel one out.
     case paywallCTATapped(plan: String, source: String, offersTrial: Bool)
     case notificationPermission(granted: Bool)
+    /// The player declined reminders in the app, before iOS was ever asked.
+    ///
+    /// Without this the decline was invisible: `notification_permission` only
+    /// fires once `requestAuthorization` runs, so tapping "Not now" produced no
+    /// event at all and the drop-off could only be inferred by subtracting the
+    /// prompts from the people who reached the page. That subtraction said two
+    /// thirds decline in-app — a bigger leak than the system prompt's — which
+    /// is too large a number to keep estimating.
+    ///
+    /// `source` names the surface, since onboarding's page and the standalone
+    /// `DailyReminderPrompt` ask the same question at very different moments.
+    case reminderDeclined(source: String)
     case reminderSettingChanged(enabled: Bool)
     /// `source` names the surface that pushed the pack (`home`, `packs`,
     /// `notification`) — the question a seasonal pack raises is not how many
@@ -119,6 +131,7 @@ enum AnalyticsEvent {
         case .paywallOpened: return "paywall_opened"
         case .paywallCTATapped: return "paywall_cta_tapped"
         case .notificationPermission: return "notification_permission"
+        case .reminderDeclined: return "reminder_declined"
         case .reminderSettingChanged: return "reminder_setting_changed"
         case .packOpened: return "pack_opened"
         case .packCompleted: return "pack_completed"
@@ -198,6 +211,8 @@ enum AnalyticsEvent {
             return ["achievement_id": id]
         case .notificationPermission(let granted):
             return ["granted": granted]
+        case .reminderDeclined(let source):
+            return ["source": source]
         case .reminderSettingChanged(let enabled):
             return ["enabled": enabled]
         case .packOpened(let id, let source):

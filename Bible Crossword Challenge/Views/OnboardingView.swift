@@ -426,10 +426,13 @@ struct OnboardingView: View {
                 // the sentence the player is actually agreeing to.
                 Button("Remind me at \(reminderTimeText)") { enableReminders() }
                     .buttonStyle(.pillProminent)
-                Button("Not now") { advance() }
-                    .font(.subheadline.weight(.semibold))
-                    .tint(.secondary)
-                    .padding(.top, Theme.Spacing.xs)
+                Button("Not now") {
+                    analytics.log(.reminderDeclined(source: "onboarding"))
+                    advance()
+                }
+                .font(.subheadline.weight(.semibold))
+                .tint(.secondary)
+                .padding(.top, Theme.Spacing.xs)
 
             case lastPage:
                 premiumControls
