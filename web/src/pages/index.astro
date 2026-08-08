@@ -1,7 +1,12 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import AppStoreButton from '../components/AppStoreButton.astro';
-import { SITE, APP_STORE_URL } from '../consts';
+import AppRating from '../components/AppRating.astro';
+import { getAppRating } from '../lib/app-store';
+import { SITE, APP_STORE_URL, APP_STORE_ID } from '../consts';
+
+// Read once at build time; null when Apple is unreachable or has no ratings yet.
+const rating = await getAppRating(APP_STORE_ID);
 
 const title = 'Bible Crossword Challenge — a daily Bible crossword for iOS';
 const description =
@@ -81,6 +86,19 @@ const softwareLd = {
     url: `${SITE}/assets/${s.img}.png`,
     caption: s.alt,
   })),
+  // Only ever emitted alongside the rating the page itself displays — markup
+  // that claims a rating the visitor cannot see is what Google calls spam.
+  ...(rating
+    ? {
+        aggregateRating: {
+          '@type': 'AggregateRating',
+          ratingValue: rating.value,
+          ratingCount: rating.count,
+          bestRating: 5,
+          worstRating: 1,
+        },
+      }
+    : {}),
   description:
     'A fresh Bible crossword every day. Solve scripture-themed puzzles, build a daily streak, and learn the Word as you play.',
 };
@@ -111,7 +129,7 @@ const faqLd = {
             A fresh crossword every day, with clues rooted in Scripture — from Genesis to
             Revelation. Build a streak, earn achievements, and end every puzzle on a verse.
           </p>
-          <div class="rise d3"><AppStoreButton /></div>
+          <div class="rise d3"><AppStoreButton /><AppRating rating={rating} /></div>
         </div>
 
         <div class="xw-wrap rise d4" aria-label="An example crossword solving the words faith, grace, daily and streak">
@@ -237,6 +255,7 @@ const faqLd = {
         <h2>Start your streak today.</h2>
         <p class="sec-sub">Free on the App Store. Tomorrow's puzzle will be there too.</p>
         <div class="final-cta"><AppStoreButton note={false} /></div>
+        <AppRating rating={rating} center />
       </div>
     </section>
   </main>

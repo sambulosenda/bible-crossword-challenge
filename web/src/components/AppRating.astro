@@ -1,0 +1,63 @@
+---
+// Visible App Store rating. Renders nothing when the build-time lookup came
+// back empty — the `aggregateRating` in structured data is gated on the same
+// value, so markup and page can never disagree about whether a rating exists.
+import type { AppRating } from '../lib/app-store';
+import { APP_STORE_URL } from '../consts';
+
+interface Props {
+  rating: AppRating | null;
+  /** Centre the line, for the closing CTA band. */
+  center?: boolean;
+}
+const { rating, center = false } = Astro.props;
+
+// Five glyphs, filled to the nearest half — the same reading Apple shows.
+const stars = rating
+  ? Array.from({ length: 5 }, (_, i) => {
+      const filled = rating.value - i;
+      return filled >= 0.75 ? 'full' : filled >= 0.25 ? 'half' : 'empty';
+    })
+  : [];
+---
+{rating && (
+  <p class:list={['app-rating', center && 'is-center']}>
+    <span class="stars" aria-hidden="true">
+      {stars.map((s) => (
+        <span class:list={['star', s]}>★</span>
+      ))}
+    </span>
+    <span>
+      <strong>{rating.value.toFixed(1)}</strong> out of 5 ·{' '}
+      <a href={APP_STORE_URL} rel="noopener">{`${rating.count} ${rating.count === 1 ? 'rating' : 'ratings'} on the App Store`}</a>
+    </span>
+  </p>
+)}
+
+<style is:global>
+  .app-rating {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    flex-wrap: wrap;
+    margin: var(--s-2) 0 0;
+    font-size: 14px;
+    color: var(--fg-mute);
+  }
+  .app-rating.is-center { justify-content: center; }
+  .app-rating strong { color: var(--fg-soft); font-weight: 600; }
+  .app-rating a { border-bottom: 1px solid transparent; transition: border-color .15s ease, color .15s ease; }
+  .app-rating a:hover { color: var(--fg-soft); border-bottom-color: currentColor; }
+
+  .stars { display: inline-flex; gap: 1px; font-size: 13px; line-height: 1; }
+  .star { color: var(--gilt); }
+  .star.empty { color: var(--rule-strong); }
+  /* A half star is one glyph clipped down the middle, with the empty rule
+     colour showing through the right side. */
+  .star.half {
+    background: linear-gradient(90deg, var(--gilt) 50%, var(--rule-strong) 50%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+</style>
