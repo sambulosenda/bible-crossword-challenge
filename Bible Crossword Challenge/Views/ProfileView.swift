@@ -24,6 +24,7 @@ struct ProfileView: View {
     @Environment(\.notifications) private var notifications
     @Environment(\.gameCenter) private var gameCenter
     @Environment(\.openURL) private var openURL
+    @Environment(\.challengeHistory) private var challengeHistory
     @AppStorage("appTheme") private var appTheme: AppTheme = .system
     @AppStorage("remindersEnabled") private var remindersEnabled = false
     /// Set when the player is sent to Settings to allow notifications; RootView
@@ -34,6 +35,7 @@ struct ProfileView: View {
     @State private var showManageSubscriptions = false
     @State private var showRename = false
     @State private var draftName = ""
+    @State private var showChallengeHistory = false
 
     private var reminderTime: Binding<Date> {
         Binding(
@@ -60,6 +62,7 @@ struct ProfileView: View {
                         unlocked: unlockedCount,
                         totalAchievements: Achievements.all.count
                     )
+                    challengesSection
                     premiumSection
                     preferencesSection
                     remindersSection
@@ -74,6 +77,9 @@ struct ProfileView: View {
             }
             .background(Theme.background)
             .navigationTitle("Profile")
+            .navigationDestination(isPresented: $showChallengeHistory) {
+                ChallengeHistoryView(profile: profile)
+            }
             .sheet(isPresented: $showPaywall) {
                 PaywallView(source: "profile")
             }
@@ -281,6 +287,39 @@ struct ProfileView: View {
         } footer: {
             if notifications.authorizationStatus == .denied {
                 Text("Notifications are turned off for this app. Enable them in Settings to receive your daily reminder.")
+            }
+        }
+    }
+
+    // MARK: - Challenges
+
+    /// The friend-challenge ledger, previewed. Hidden until there is something
+    /// to show: a "Recent challenges" heading over an empty card advertises a
+    /// feature by its absence, and the completion screen is where the invitation
+    /// to send one actually belongs.
+    @ViewBuilder
+    private var challengesSection: some View {
+        let recent = Array(challengeHistory.entries.prefix(3))
+        if !recent.isEmpty {
+            VStack(alignment: .leading, spacing: Theme.Spacing.s) {
+                Text("Recent challenges").kicker()
+                    .padding(.horizontal, Theme.Spacing.xs)
+
+                // Every row leads to the same place — the full list is where
+                // replay and rematch live.
+                ChallengeHistoryList(entries: recent) { _ in
+                    showChallengeHistory = true
+                }
+
+                Button {
+                    showChallengeHistory = true
+                } label: {
+                    Text(challengeHistory.entries.count > recent.count
+                         ? "See all \(challengeHistory.entries.count)"
+                         : "See all")
+                        .font(.caption.weight(.semibold))
+                }
+                .padding(.horizontal, Theme.Spacing.xs)
             }
         }
     }

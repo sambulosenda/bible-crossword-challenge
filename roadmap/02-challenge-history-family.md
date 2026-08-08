@@ -2,7 +2,7 @@
 
 **Priority:** 2  
 **Goal:** Growth  
-**Status:** `[ ]`  
+**Status:** `[~]` — T1, T2, T4 shipped; T3 and T5 open  
 **Depends on:** `ChallengeService`, Completion share, universal links  
 **Related:** `docs/friend-challenge-spec.md`
 
@@ -22,15 +22,15 @@ Beat-my-time is shipped. History + multi-person challenges turn one-off shares i
 
 ### P2-T1 — Challenge history (local)
 
-**Status:** `[ ]`  
+**Status:** `[x]`  
 **Type:** eng  
 **Estimate:** M
 
-- [ ] Persist sent + received challenge results (device-local UserDefaults or SwiftData non-synced)
-- [ ] Record: puzzleID, opponent name, their time, my time, won/lost, date
-- [ ] Profile or Home section: “Recent challenges” list
-- [ ] Tap → open puzzle / rematch share sheet
-- [ ] Cap list (e.g. last 50); no CloudKit schema change
+- [x] Persist sent + received challenge results (`ChallengeHistory`, UserDefaults `challengeHistory.v1`)
+- [x] Record: puzzleID, title, opponent name, their time, my time, outcome, date
+- [x] Profile section: “Recent challenges” (last 3) → `ChallengeHistoryView` for the rest
+- [x] Tap → confirmation dialog: Play Again / Challenge Again
+- [x] Cap list (50); no CloudKit schema change
 
 **Acceptance**
 - After finishing a challenge, result appears in history with win/loss + delta
@@ -40,13 +40,16 @@ Beat-my-time is shipped. History + multi-person challenges turn one-off shares i
 
 ### P2-T2 — History from outgoing challenges
 
-**Status:** `[ ]`  
+**Status:** `[x]`  
 **Type:** eng  
 **Estimate:** S
 
-- [ ] When user shares “beat my time”, store outgoing pending entry (puzzle, my time, name)
-- [ ] When rematch sent, link to prior history entry if possible
-- [ ] Analytics already cover rematch — keep events consistent
+- [x] Sharing “beat my time” stores a `.sent` row — written on the share sheet's
+      completion handler, so a cancelled share doesn't claim a challenge
+- [x] A rematch marks `rematchSentAt` on the row it answers instead of opening a
+      second row for the same matchup
+- [x] Analytics untouched — `challenge_sent` / `challenge_rematch_sent` still fire
+      at presentation, so the existing series stays comparable
 
 **Acceptance**
 - User sees challenges they *sent*, not only ones received
@@ -80,13 +83,17 @@ Design constraint: still URL- or sheet-based, offline-friendly.
 
 ### P2-T4 — Challenge UX on Completion
 
-**Status:** `[ ]`  
+**Status:** `[x]`  
 **Type:** eng / design  
 **Estimate:** S
 
-- [ ] Primary CTA hierarchy: Share result / Challenge a friend / Rematch (if pending consumed)
-- [ ] Show last opponent + “Play them again” when history exists for this puzzle
-- [ ] Empty state copy for first-time sharers
+- [x] CTA hierarchy unchanged in shape: Share (prominent) → challenge (tonal) →
+      Home; an incoming challenge still replaces the tonal slot with the result
+      card's "Send Result Back"
+- [x] Last opponent named in the CTA ("Challenge Sam Again") with the standing
+      result underneath, when this puzzle has history
+- [x] Empty state copy for first-time sharers ("They'll get a link to this exact
+      puzzle. Fastest time wins.")
 
 **Acceptance**
 - Challenge is one tap from completion; no buried menu only
@@ -118,5 +125,8 @@ Design constraint: still URL- or sheet-based, offline-friendly.
 
 ## Open questions
 
-- Display name: always Profile username, or per-challenge prompt?
+- ~~Display name: always Profile username, or per-challenge prompt?~~ Settled by
+  T1/T2: Profile username, with a one-time inline prompt the first time someone
+  sends a challenge (the highest-motivation moment to ask). Same prompt now on
+  both send paths — Completion and the history list.
 - Family board privacy (names only on device — OK for v1?)

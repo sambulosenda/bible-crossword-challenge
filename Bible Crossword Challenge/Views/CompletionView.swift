@@ -49,6 +49,10 @@ struct CompletionView: View {
     @State private var showNamePrompt = false
     @State private var draftName = ""
     @State private var pendingRematchIntent = false
+    /// The last friend we have a recorded head-to-head against on *this* puzzle,
+    /// captured on appear. Only read when no challenge arrived with this solve —
+    /// otherwise the result card is already naming an opponent.
+    @State private var lastOpponent: ChallengeHistory.Entry?
     @Environment(\.displayScale) private var displayScale
     @Environment(\.openURL) private var openURL
     @Environment(\.gameCenter) private var gameCenter
@@ -57,6 +61,7 @@ struct CompletionView: View {
     @Environment(\.readerRouter) private var readerRouter
     @Environment(\.analytics) private var analytics
     @Environment(\.challengeService) private var challengeService
+    @Environment(\.challengeHistory) private var challengeHistory
     @Environment(\.modelContext) private var context
     @Environment(StoreService.self) private var store
     /// Highest completion milestone we've already asked a review at, so each
@@ -125,6 +130,7 @@ struct CompletionView: View {
             renderShareCard()
             maybeRequestReview()
             processIncomingChallenge()
+            loadLastOpponent()
             loadWeek()
             loadPackContext()
             maybeAutoShowPaywall()
@@ -133,7 +139,13 @@ struct CompletionView: View {
             PaywallView(source: paywallSource)
         }
         .sheet(item: $challengeShare) { share in
-            ShareSheet(items: [share.caption, share.url])
+            // History records the send, not the intent: a share sheet the
+            // player backs out of never happened, and a list claiming
+            // otherwise is the one thing a brag sheet can't afford.
+            ShareSheet(items: [share.caption, share.url]) { completed in
+                guard completed else { return }
+                recordOutgoing(rematch: share.isRematch)
+            }
         }
         .alert("What should we call you?", isPresented: $showNamePrompt) {
             TextField("Your name", text: $draftName)
@@ -158,7 +170,37 @@ struct CompletionView: View {
             won: seconds < incoming.seconds,
             deltaSeconds: incoming.seconds - seconds
         ))
+        challengeHistory.recordPlayed(
+            puzzleID: puzzle.id,
+            puzzleTitle: puzzle.title,
+            opponentName: incoming.challengerName,
+            opponentSeconds: incoming.seconds,
+            mySeconds: seconds
+        )
         challengeService.consume(puzzleID: puzzle.id)
+    }
+
+    /// The opponent this screen offers a rematch against — only when no
+    /// challenge came in with this solve, since that case already has the result
+    /// card and its own "Send Result Back". Read after `processIncomingChallenge`
+    /// so the row it just wrote can't be mistaken for a past matchup.
+    private func loadLastOpponent() {
+        guard challenge == nil else { return }
+        lastOpponent = challengeHistory.lastOpponent(for: puzzle.id)
+    }
+
+    /// Write an outgoing challenge to history once the share has gone through.
+    /// A rematch marks the row it answers rather than opening a second one.
+    private func recordOutgoing(rematch: Bool) {
+        if rematch {
+            challengeHistory.markRematchSent(
+                puzzleID: puzzle.id, puzzleTitle: puzzle.title, mySeconds: seconds
+            )
+        } else {
+            challengeHistory.recordSent(
+                puzzleID: puzzle.id, puzzleTitle: puzzle.title, mySeconds: seconds
+            )
+        }
     }
 
     /// The head-to-head against a friend's time, crowning the screen above the
@@ -210,6 +252,30 @@ struct CompletionView: View {
         .frame(maxWidth: .infinity)
     }
 
+    /// The secondary CTA's title. Naming the last opponent turns a generic
+    /// "Challenge a Friend" into a specific person to beat, which is the whole
+    /// reason the rematch loop exists.
+    private var challengeTitle: String {
+        guard let name = lastOpponent?.opponentName else { return "Challenge a Friend" }
+        return "Challenge \(name) Again"
+    }
+
+    /// One quiet line under the CTA: how this puzzle's last matchup stands, or —
+    /// for someone who has never sent one — what tapping actually does.
+    private var challengeHint: String? {
+        if let last = lastOpponent, let name = last.opponentName, let theirs = last.opponentSeconds {
+            let mine = TimeFormat.clock(last.mySeconds)
+            let hers = TimeFormat.clock(theirs)
+            switch last.outcome {
+            case .won: return "You won that one — \(mine) to \(hers)."
+            case .lost: return "\(name) won that one — \(hers) to \(mine)."
+            case .tied, .none: return "You and \(name) tied at \(mine)."
+            }
+        }
+        guard challengeHistory.entries.isEmpty else { return nil }
+        return "They'll get a link to this exact puzzle. Fastest time wins."
+    }
+
     /// True once the player has set a display name (the default counts as unset).
     private var hasChosenName: Bool {
         let name = profile.username.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -231,7 +297,7 @@ struct CompletionView: View {
             puzzleID: puzzle.id, seconds: seconds, name: profile.username
         ) else { return }
         let caption = "Can you beat me? I solved \"\(puzzle.title)\" in \(TimeFormat.clock(seconds)) — Bible Crossword"
-        challengeShare = ChallengeShare(url: url, caption: caption)
+        challengeShare = ChallengeShare(url: url, caption: caption, isRematch: rematch)
         analytics.log(rematch ? .challengeRematchSent(puzzleID: puzzle.id)
                               : .challengeSent(puzzleID: puzzle.id))
     }
@@ -658,12 +724,21 @@ struct CompletionView: View {
             // A challenge that arrived for this puzzle already offers "Send
             // Result Back" in the result card — don't double up the CTA.
             if challenge == nil {
-                Button {
-                    sendChallenge(rematch: false)
-                } label: {
-                    Label("Challenge a Friend", systemImage: "flag.checkered")
+                VStack(spacing: Theme.Spacing.xs) {
+                    Button {
+                        sendChallenge(rematch: lastOpponent != nil)
+                    } label: {
+                        Label(challengeTitle, systemImage: "flag.checkered")
+                    }
+                    .buttonStyle(.pillTonal)
+
+                    if let hint = challengeHint {
+                        Text(hint)
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                            .multilineTextAlignment(.center)
+                    }
                 }
-                .buttonStyle(.pillTonal)
             }
 
             // Minis race the clock against everyone — surface this week's
@@ -702,6 +777,9 @@ struct CompletionView: View {
         let id = UUID()
         let url: URL
         let caption: String
+        /// Carried through the sheet so the completion handler knows whether to
+        /// open a history row or mark the one this answers.
+        let isRematch: Bool
     }
 
     /// Rasterise the spoiler-free result card so it can be shared as an image.
@@ -723,19 +801,6 @@ struct CompletionView: View {
             shareImage = Image(uiImage: ui)
         }
     }
-}
-
-/// A thin `UIActivityViewController` wrapper for imperative sharing — used for
-/// the challenge link, which is built after an optional name prompt and so can't
-/// be a declarative `ShareLink`.
-private struct ShareSheet: UIViewControllerRepresentable {
-    let items: [Any]
-
-    func makeUIViewController(context: Context) -> UIActivityViewController {
-        UIActivityViewController(activityItems: items, applicationActivities: nil)
-    }
-
-    func updateUIViewController(_ controller: UIActivityViewController, context: Context) {}
 }
 
 // MARK: - Scroll edge
