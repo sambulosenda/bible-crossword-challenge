@@ -40,13 +40,68 @@
     "season": null
   },
   {
+    "id": "lent",
+    "title": "Lent",
+    "blurb": "Forty days towards the cross, from ashes to the garden.",
+    "coverSymbol": "leaf",
+    "accentHex": "#6B5B95",
+    "isPremium": true,
+    "puzzleIDs": [
+      "pack-lent-001",
+      "pack-lent-002",
+      "pack-lent-003",
+      "pack-lent-004",
+      "pack-lent-005"
+    ],
+    "season": { "kind": "easter", "from": -46, "to": -1 }
+  },
+  {
+    "id": "easter",
+    "title": "Easter",
+    "blurb": "Palm Sunday to the lakeside, one week at a time.",
+    "coverSymbol": "sunrise",
+    "accentHex": "#C8912B",
+    "isPremium": true,
+    "puzzleIDs": [
+      "pack-easter-001",
+      "pack-easter-002",
+      "pack-easter-003",
+      "pack-easter-004",
+      "pack-easter-005"
+    ],
+    "season": { "kind": "easter", "from": -7, "to": 7 }
+  },
+  {
     "id": "advent",
     "title": "Advent",
     "blurb": "Count down to Christmas, one puzzle at a time.",
     "coverSymbol": "sparkles",
     "accentHex": "#1F6F54",
     "isPremium": true,
-    "puzzleIDs": ["daily-019", "daily-028"],
+    "puzzleIDs": [
+      "pack-advent-001",
+      "pack-advent-002",
+      "pack-advent-003",
+      "pack-advent-004",
+      "pack-advent-005",
+      "pack-advent-006"
+    ],
     "season": { "kind": "annual", "from": "12-01", "to": "12-26" }
+  },
+  {
+    "id": "christmas",
+    "title": "Christmas",
+    "blurb": "The twelve days, from the manger to the temple.",
+    "coverSymbol": "star",
+    "accentHex": "#2E4A8E",
+    "isPremium": true,
+    "puzzleIDs": [
+      "pack-christmas-001",
+      "pack-christmas-002",
+      "pack-christmas-003",
+      "pack-christmas-004",
+      "pack-christmas-005"
+    ],
+    "season": { "kind": "annual", "from": "12-26", "to": "01-06" }
   }
 ]

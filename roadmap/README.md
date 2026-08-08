@@ -55,7 +55,8 @@ whenever puzzles are added — every daily added moves the first date by one.
 ## Current baseline (shipped)
 
 - Daily full + daily mini
-- Packs: First Steps, Life of David, Parables, Psalm 23, Advent (seasonal window)
+- Packs: First Steps, Life of David, Parables, Psalm 23, plus four seasonal —
+  Lent, Easter, Advent, Christmas — on recurring windows (`PackSeason`)
 - Streaks + freezes, achievements, hints, paywall
 - Friend “beat my time” challenges (URL, no backend)
 - Scripture reader + post-solve clue refs (partial)

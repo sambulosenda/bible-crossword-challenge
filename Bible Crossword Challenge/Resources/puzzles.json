@@ -20830,6 +20830,3826 @@
     "kind": "mini"
   },
   {
+    "id": "pack-advent-002",
+    "title": "Hail, Thou That Art Highly Favoured",
+    "difficulty": "easy",
+    "verse": "And the angel came in unto her, and said, Hail, thou that art highly favoured, the Lord is with thee: blessed art thou among women.",
+    "reference": "Luke 1:28",
+    "publishDate": "2026-07-01",
+    "size": 15,
+    "grid": [
+      "..HANDMAID.G...",
+      "......A...HAIL.",
+      ".FAVOURED..B..R",
+      "...I..Y..THRONE",
+      "FEAR....J..I..I",
+      "...G.ESPOUSED.G",
+      "...I....S..L..N",
+      "...NAZARETH....",
+      "........P.I..G.",
+      ".JESUS..H.GREAT",
+      ".A....W...H..L.",
+      ".C..TROUBLED.I.",
+      ".O....M...S..L.",
+      ".BLESSED..T..E.",
+      "......N......E."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 2,
+        "text": "What she called herself, of the Lord",
+        "answer": "HANDMAID"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 6,
+        "text": "Her name, said the evangelist",
+        "answer": "MARY"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 0,
+        "col": 11,
+        "text": "The angel sent from God to a city of Galilee",
+        "answer": "GABRIEL"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 1,
+        "col": 10,
+        "text": "The angel's first word to her",
+        "answer": "HAIL"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 2,
+        "col": 1,
+        "text": "Highly so, said the angel",
+        "answer": "FAVOURED"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 2,
+        "col": 3,
+        "text": "What Mary was, espoused to a man of David's house",
+        "answer": "VIRGIN"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 2,
+        "col": 14,
+        "text": "What He shall do over the house of Jacob for ever",
+        "answer": "REIGN"
+      },
+      {
+        "number": 8,
+        "direction": "across",
+        "row": 3,
+        "col": 9,
+        "text": "Of His father David, given Him by the Lord God",
+        "answer": "THRONE"
+      },
+      {
+        "number": 9,
+        "direction": "across",
+        "row": 4,
+        "col": 0,
+        "text": "What the angel told her not to have",
+        "answer": "FEAR"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 4,
+        "col": 8,
+        "text": "The man she was espoused to",
+        "answer": "JOSEPH"
+      },
+      {
+        "number": 11,
+        "direction": "across",
+        "row": 5,
+        "col": 5,
+        "text": "What she was to him, of the house of David",
+        "answer": "ESPOUSED"
+      },
+      {
+        "number": 12,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "The city he was sent to",
+        "answer": "NAZARETH"
+      },
+      {
+        "number": 13,
+        "direction": "down",
+        "row": 7,
+        "col": 10,
+        "text": "Whose Son He shall be called",
+        "answer": "HIGHEST"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 8,
+        "col": 13,
+        "text": "The region that city lay in",
+        "answer": "GALILEE"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 9,
+        "col": 1,
+        "text": "The name she was told to call Him",
+        "answer": "JESUS"
+      },
+      {
+        "number": 15,
+        "direction": "down",
+        "row": 9,
+        "col": 1,
+        "text": "Whose house He shall rule, world without end",
+        "answer": "JACOB"
+      },
+      {
+        "number": 16,
+        "direction": "across",
+        "row": 9,
+        "col": 10,
+        "text": "What He shall be, and called the Son of the Highest",
+        "answer": "GREAT"
+      },
+      {
+        "number": 17,
+        "direction": "down",
+        "row": 10,
+        "col": 6,
+        "text": "Among whom she is blessed",
+        "answer": "WOMEN"
+      },
+      {
+        "number": 18,
+        "direction": "across",
+        "row": 11,
+        "col": 4,
+        "text": "What she was at his saying",
+        "answer": "TROUBLED"
+      },
+      {
+        "number": 19,
+        "direction": "across",
+        "row": 13,
+        "col": 1,
+        "text": "What she is, among women",
+        "answer": "BLESSED"
+      }
+    ]
+  },
+  {
+    "id": "pack-advent-003",
+    "title": "My Soul Doth Magnify the Lord",
+    "difficulty": "easy",
+    "verse": "And Mary said, My soul doth magnify the Lord, And my spirit hath rejoiced in God my Saviour.",
+    "reference": "Luke 1:46-47",
+    "publishDate": "2026-07-02",
+    "size": 15,
+    "grid": [
+      "...S.....LOWLY.",
+      "...O.Z......E.S",
+      "..JUDA...ESTATE",
+      "...L.C....P.P.E",
+      ".....HILL.I.E.D",
+      ".....A....R.D..",
+      "...R.R.S..I....",
+      ".A.ELISABETH...",
+      ".B.J.A.V...U.S.",
+      ".R.O.S.I...N.A.",
+      ".A.I..WOMB.G.L.",
+      ".H.C...U..PROUD",
+      "BABE.MERCY.Y.T.",
+      ".M...........E.",
+      "..............."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 3,
+        "text": "What magnifies the Lord, in her song",
+        "answer": "SOUL"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 0,
+        "col": 9,
+        "text": "How her estate is described, and yet regarded",
+        "answer": "LOWLY"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 0,
+        "col": 12,
+        "text": "What the unborn child did, for joy",
+        "answer": "LEAPED"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 1,
+        "col": 5,
+        "text": "The priest whose house she entered",
+        "answer": "ZACHARIAS"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 1,
+        "col": 14,
+        "text": "His, for ever, as He spake to our fathers",
+        "answer": "SEED"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 2,
+        "col": 2,
+        "text": "The city she came to was in this hill country",
+        "answer": "JUDA"
+      },
+      {
+        "number": 7,
+        "direction": "across",
+        "row": 2,
+        "col": 9,
+        "text": "Hers was low, and He regarded it",
+        "answer": "ESTATE"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 2,
+        "col": 10,
+        "text": "What hath rejoiced in God her Saviour",
+        "answer": "SPIRIT"
+      },
+      {
+        "number": 9,
+        "direction": "across",
+        "row": 4,
+        "col": 5,
+        "text": "The country she went into with haste",
+        "answer": "HILL"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 6,
+        "col": 3,
+        "text": "What her spirit did, in God her Saviour",
+        "answer": "REJOICE"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 6,
+        "col": 7,
+        "text": "What she calls God, in the same breath",
+        "answer": "SAVIOUR"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 7,
+        "col": 1,
+        "text": "To him and his seed the mercy was spoken",
+        "answer": "ABRAHAM"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "Her cousin, whom she went to greet",
+        "answer": "ELISABETH"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 7,
+        "col": 11,
+        "text": "Whom He hath filled with good things",
+        "answer": "HUNGRY"
+      },
+      {
+        "number": 15,
+        "direction": "down",
+        "row": 8,
+        "col": 13,
+        "text": "What she did on entering the house",
+        "answer": "SALUTE"
+      },
+      {
+        "number": 16,
+        "direction": "across",
+        "row": 10,
+        "col": 6,
+        "text": "Where the child leaped, and where the fruit was blessed",
+        "answer": "WOMB"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 11,
+        "col": 10,
+        "text": "Whom He hath scattered, in the imagination of their hearts",
+        "answer": "PROUD"
+      },
+      {
+        "number": 18,
+        "direction": "across",
+        "row": 12,
+        "col": 0,
+        "text": "What leaped at the sound of her greeting",
+        "answer": "BABE"
+      },
+      {
+        "number": 19,
+        "direction": "across",
+        "row": 12,
+        "col": 5,
+        "text": "What is on them that fear Him, from generation to generation",
+        "answer": "MERCY"
+      }
+    ]
+  },
+  {
+    "id": "pack-advent-001",
+    "title": "Unto Us a Child Is Born",
+    "difficulty": "easy",
+    "verse": "For unto us a child is born, unto us a son is given: and the government shall be upon his shoulder: and his name shall be called Wonderful, Counsellor, The mighty God, The everlasting Father, The Prince of Peace.",
+    "reference": "Isaiah 9:6",
+    "publishDate": "2026-07-03",
+    "size": 15,
+    "grid": [
+      "...D..G...F....",
+      "...A..O.ZEAL...",
+      "...V..V...T.Y..",
+      ".PRINCE..THRONE",
+      "...D..R...E.K..",
+      "....SON.BURDEN.",
+      "....H...O......",
+      "P..WONDERFUL..J",
+      "E...U.A.N..I..O",
+      "A.G.L.R..MIGHTY",
+      "CHILD.K....H...",
+      "E.V.E.NAME.T...",
+      "..E.R.E........",
+      "..N...S........",
+      "......S........"
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 3,
+        "text": "Whose throne He will uphold with judgment",
+        "answer": "DAVID"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 6,
+        "text": "What He shall do, the rule being upon His shoulder",
+        "answer": "GOVERN"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 0,
+        "col": 10,
+        "text": "Everlasting, in the roll of His names",
+        "answer": "FATHER"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 1,
+        "col": 8,
+        "text": "Of the LORD of hosts, which shall perform this",
+        "answer": "ZEAL"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 2,
+        "col": 12,
+        "text": "Of his burden, which Thou hast broken",
+        "answer": "YOKE"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 3,
+        "col": 1,
+        "text": "Of Peace, the last title in the verse",
+        "answer": "PRINCE"
+      },
+      {
+        "number": 7,
+        "direction": "across",
+        "row": 3,
+        "col": 9,
+        "text": "Of David, which He shall order and establish",
+        "answer": "THRONE"
+      },
+      {
+        "number": 8,
+        "direction": "across",
+        "row": 5,
+        "col": 4,
+        "text": "Given unto us, says Isaiah",
+        "answer": "SON"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 5,
+        "col": 4,
+        "text": "Where the government shall rest",
+        "answer": "SHOULDER"
+      },
+      {
+        "number": 9,
+        "direction": "across",
+        "row": 5,
+        "col": 8,
+        "text": "Whose yoke is broken, as in the day of Midian",
+        "answer": "BURDEN"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 5,
+        "col": 8,
+        "text": "What the child is, unto us",
+        "answer": "BORN"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 7,
+        "col": 0,
+        "text": "What the Prince brings, and of its increase no end",
+        "answer": "PEACE"
+      },
+      {
+        "number": 11,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "The first of the titles the prophet gives Him",
+        "answer": "WONDERFUL"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 7,
+        "col": 6,
+        "text": "What the people walked in, before the great light",
+        "answer": "DARKNESS"
+      },
+      {
+        "number": 13,
+        "direction": "down",
+        "row": 7,
+        "col": 11,
+        "text": "What the people walking in darkness have seen",
+        "answer": "LIGHT"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 7,
+        "col": 14,
+        "text": "What is increased before Thee, as in harvest",
+        "answer": "JOY"
+      },
+      {
+        "number": 15,
+        "direction": "down",
+        "row": 9,
+        "col": 2,
+        "text": "What the son was, unto us",
+        "answer": "GIVEN"
+      },
+      {
+        "number": 16,
+        "direction": "across",
+        "row": 9,
+        "col": 9,
+        "text": "The God of the prophecy, and the everlasting Father",
+        "answer": "MIGHTY"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 10,
+        "col": 0,
+        "text": "The one born unto us, in the prophet's promise",
+        "answer": "CHILD"
+      },
+      {
+        "number": 18,
+        "direction": "across",
+        "row": 11,
+        "col": 6,
+        "text": "What shall be called Wonderful, and Prince of Peace",
+        "answer": "NAME"
+      }
+    ]
+  },
+  {
+    "id": "pack-advent-005",
+    "title": "No Room in the Inn",
+    "difficulty": "medium",
+    "verse": "And she brought forth her firstborn son, and wrapped him in swaddling clothes, and laid him in a manger; because there was no room for them in the inn.",
+    "reference": "Luke 2:7",
+    "publishDate": "2026-07-04",
+    "size": 15,
+    "grid": [
+      ".CYRENIUS......",
+      ".I..........C..",
+      ".T.F......N.A..",
+      "SYRIA...H.A.E..",
+      "...R.C..O.Z.S..",
+      "...S.L.JUDAEA..",
+      ".G.T.O..S.R.R..",
+      ".O.BETHLEHEM...",
+      ".V.O.H.I..T..G.",
+      "DECREE.N..H..A.",
+      ".R.N.S.E.....L.",
+      ".N....TAXED..I.",
+      "ROOM...G.....L.",
+      ".R....DELIVERED",
+      ".............E."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 1,
+        "text": "The one governing Syria when the taxing was first made",
+        "answer": "CYRENIUS"
+      },
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 1,
+        "text": "Of David, which is called Bethlehem",
+        "answer": "CITY"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 1,
+        "col": 12,
+        "text": "From whom the decree went out, that all should be taxed",
+        "answer": "CAESAR"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 2,
+        "col": 3,
+        "text": "What the son she brought forth was",
+        "answer": "FIRSTBORN"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 2,
+        "col": 10,
+        "text": "The city they went up out of",
+        "answer": "NAZARETH"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "The province he governed",
+        "answer": "SYRIA"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 3,
+        "col": 8,
+        "text": "Of David, to which Joseph belonged",
+        "answer": "HOUSE"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 4,
+        "col": 5,
+        "text": "Swaddling ones, that he was wrapped in",
+        "answer": "CLOTHES"
+      },
+      {
+        "number": 8,
+        "direction": "across",
+        "row": 5,
+        "col": 7,
+        "text": "Where they went up into, to be taxed",
+        "answer": "JUDAEA"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 6,
+        "col": 1,
+        "text": "What Cyrenius was, of that province",
+        "answer": "GOVERNOR"
+      },
+      {
+        "number": 10,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "The city of David they came to",
+        "answer": "BETHLEHEM"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 7,
+        "col": 7,
+        "text": "His, of the house of David, which made him go there",
+        "answer": "LINEAGE"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 8,
+        "col": 13,
+        "text": "The region they left, going up to Judaea",
+        "answer": "GALILEE"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 9,
+        "col": 0,
+        "text": "What went out, that all the world should be taxed",
+        "answer": "DECREE"
+      },
+      {
+        "number": 14,
+        "direction": "across",
+        "row": 11,
+        "col": 6,
+        "text": "What all the world was to be, by the decree",
+        "answer": "TAXED"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 12,
+        "col": 0,
+        "text": "What there was none of, for them",
+        "answer": "ROOM"
+      },
+      {
+        "number": 16,
+        "direction": "across",
+        "row": 13,
+        "col": 6,
+        "text": "What the days accomplished that she should be",
+        "answer": "DELIVERED"
+      }
+    ]
+  },
+  {
+    "id": "pack-advent-004",
+    "title": "They Shall Call His Name Emmanuel",
+    "difficulty": "medium",
+    "verse": "Behold, a virgin shall be with child, and shall bring forth a son, and they shall call his name Emmanuel, which being interpreted is, God with us.",
+    "reference": "Matthew 1:23",
+    "publishDate": "2026-07-05",
+    "size": 15,
+    "grid": [
+      "..P.VIRGIN.....",
+      "..R....H.......",
+      ".SINS.JOSEPH...",
+      "..V....S...U...",
+      "CHILD..T...SAVE",
+      "A.L.A......B..M",
+      "L.Y.V....H.A..M",
+      "L..FIRSTBORN..A",
+      "E...D..A.L.D..N",
+      "D..B...K.Y....U",
+      "..PEOPLE......E",
+      "...H......ANGEL",
+      ".PROPHET.......",
+      "...L...........",
+      "...DREAM......."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 2,
+        "text": "How he was minded to put her away",
+        "answer": "PRIVILY"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 0,
+        "col": 4,
+        "text": "Who shall be with child, said the prophet",
+        "answer": "VIRGIN"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 0,
+        "col": 7,
+        "text": "Of the Holy one, by whom she was found with child",
+        "answer": "GHOST"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 2,
+        "col": 1,
+        "text": "What He shall save His people from",
+        "answer": "SINS"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 2,
+        "col": 6,
+        "text": "The just man who was minded to put her away quietly",
+        "answer": "JOSEPH"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 2,
+        "col": 11,
+        "text": "What he was to her, though not yet come together",
+        "answer": "HUSBAND"
+      },
+      {
+        "number": 7,
+        "direction": "across",
+        "row": 4,
+        "col": 0,
+        "text": "What the virgin shall be with",
+        "answer": "CHILD"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 4,
+        "col": 0,
+        "text": "What His name shall be, by the people",
+        "answer": "CALLED"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 4,
+        "col": 4,
+        "text": "Whose son Joseph is called, by the angel",
+        "answer": "DAVID"
+      },
+      {
+        "number": 9,
+        "direction": "across",
+        "row": 4,
+        "col": 11,
+        "text": "What He shall do for His people, from their sins",
+        "answer": "SAVE"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 4,
+        "col": 14,
+        "text": "The name of the prophecy, being interpreted, God with us",
+        "answer": "EMMANUEL"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 6,
+        "col": 9,
+        "text": "The Ghost of whom the conception was",
+        "answer": "HOLY"
+      },
+      {
+        "number": 12,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "What her son was, when he knew her not till then",
+        "answer": "FIRSTBORN"
+      },
+      {
+        "number": 13,
+        "direction": "down",
+        "row": 7,
+        "col": 7,
+        "text": "What he was told not to fear to do, with Mary as wife",
+        "answer": "TAKE"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 9,
+        "col": 3,
+        "text": "The word that opens the prophecy",
+        "answer": "BEHOLD"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 10,
+        "col": 2,
+        "text": "His, whom He shall save",
+        "answer": "PEOPLE"
+      },
+      {
+        "number": 16,
+        "direction": "across",
+        "row": 11,
+        "col": 10,
+        "text": "Who appeared to him while he thought on these things",
+        "answer": "ANGEL"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 12,
+        "col": 1,
+        "text": "By whom the Lord had spoken this long before",
+        "answer": "PROPHET"
+      },
+      {
+        "number": 18,
+        "direction": "across",
+        "row": 14,
+        "col": 3,
+        "text": "Where the angel of the Lord appeared to him",
+        "answer": "DREAM"
+      }
+    ]
+  },
+  {
+    "id": "pack-advent-006",
+    "title": "Glory to God in the Highest",
+    "difficulty": "hard",
+    "verse": "Glory to God in the highest, and on earth peace, good will toward men.",
+    "reference": "Luke 2:14",
+    "publishDate": "2026-07-06",
+    "size": 15,
+    "grid": [
+      ".....E....EARTH",
+      ".KEEPING...B...",
+      ".....G....FIELD",
+      "...W.H.....D...",
+      "..HASTE.S..I...",
+      "G..T.H.TIDINGS.",
+      "O..C....G..G...",
+      "O..HEAVENLY.R..",
+      "D.K..F......E..",
+      "WONDERED.HOST..",
+      "I.O..A......U..",
+      "L.W.HIGHEST.R..",
+      "L.N..D...O..N..",
+      ".........R..E..",
+      ".....PONDERED.."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 5,
+        "text": "The day, when His name was called Jesus",
+        "answer": "EIGHTH"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 0,
+        "col": 10,
+        "text": "Where peace is, in the same verse",
+        "answer": "EARTH"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 0,
+        "col": 11,
+        "text": "What they were doing in the field, that night",
+        "answer": "ABIDING"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 1,
+        "col": 1,
+        "text": "What they were doing, over the flock, by night",
+        "answer": "KEEPING"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 2,
+        "col": 10,
+        "text": "Where they kept watch over their flock",
+        "answer": "FIELD"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 3,
+        "col": 3,
+        "text": "What they kept over the flock by night",
+        "answer": "WATCH"
+      },
+      {
+        "number": 7,
+        "direction": "across",
+        "row": 4,
+        "col": 2,
+        "text": "How they came, to see this thing",
+        "answer": "HASTE"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 4,
+        "col": 8,
+        "text": "What was given them: the babe wrapped and lying",
+        "answer": "SIGN"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 5,
+        "col": 0,
+        "text": "Toward men, on earth, in the angels' song",
+        "answer": "GOODWILL"
+      },
+      {
+        "number": 10,
+        "direction": "across",
+        "row": 5,
+        "col": 7,
+        "text": "Good, of great joy, to all people",
+        "answer": "TIDINGS"
+      },
+      {
+        "number": 11,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "The host that came suddenly with the angel",
+        "answer": "HEAVENLY"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 7,
+        "col": 5,
+        "text": "What they were, and were told not to be",
+        "answer": "AFRAID"
+      },
+      {
+        "number": 13,
+        "direction": "down",
+        "row": 7,
+        "col": 12,
+        "text": "What they did, glorifying and praising God",
+        "answer": "RETURNED"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 8,
+        "col": 2,
+        "text": "What they made abroad, concerning the saying",
+        "answer": "KNOWN"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 9,
+        "col": 0,
+        "text": "What all they that heard it did",
+        "answer": "WONDERED"
+      },
+      {
+        "number": 16,
+        "direction": "across",
+        "row": 9,
+        "col": 9,
+        "text": "A multitude of the heavenly one, praising God",
+        "answer": "HOST"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 11,
+        "col": 4,
+        "text": "Where glory is given to God, in the song",
+        "answer": "HIGHEST"
+      },
+      {
+        "number": 18,
+        "direction": "down",
+        "row": 11,
+        "col": 9,
+        "text": "How afraid they were, when the glory shone round",
+        "answer": "SORE"
+      },
+      {
+        "number": 19,
+        "direction": "across",
+        "row": 14,
+        "col": 5,
+        "text": "What Mary did with all these things, in her heart",
+        "answer": "PONDERED"
+      }
+    ]
+  },
+  {
+    "id": "pack-christmas-002",
+    "title": "Simeon and Anna",
+    "difficulty": "easy",
+    "verse": "Lord, now lettest thou thy servant depart in peace, according to thy word.",
+    "reference": "Luke 2:29",
+    "publishDate": "2026-07-01",
+    "size": 15,
+    "grid": [
+      ".I.......ARMS..",
+      ".SALVATION....P",
+      ".R.......N..W.I",
+      ".A....D.WAITING",
+      "REVEALED....D.E",
+      ".L....V...P.O.O",
+      "D...G.O.S.R.W.N",
+      "E..JERUSALEM..S",
+      "P...N.T.C.S....",
+      "A...T...R.E.S..",
+      "R...I...I.N.I..",
+      "TEMPLE..F.T.M..",
+      "....E...I...E..",
+      "DOVES...C...O..",
+      ".......SERVANT."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 1,
+        "text": "Whose glory the child would be, and consolation",
+        "answer": "ISRAEL"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 0,
+        "col": 9,
+        "text": "Where he took the child up",
+        "answer": "ARMS"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 9,
+        "text": "The prophetess of the tribe of Aser",
+        "answer": "ANNA"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 1,
+        "col": 1,
+        "text": "What his eyes had seen, prepared before all people",
+        "answer": "SALVATION"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 1,
+        "col": 14,
+        "text": "Two young ones, the other offering allowed",
+        "answer": "PIGEONS"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 2,
+        "col": 12,
+        "text": "What Anna had been, of great age",
+        "answer": "WIDOW"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 3,
+        "col": 6,
+        "text": "What Simeon was, as well as just",
+        "answer": "DEVOUT"
+      },
+      {
+        "number": 7,
+        "direction": "across",
+        "row": 3,
+        "col": 8,
+        "text": "What he had long been doing, for the consolation of Israel",
+        "answer": "WAITING"
+      },
+      {
+        "number": 8,
+        "direction": "across",
+        "row": 4,
+        "col": 0,
+        "text": "What it was unto him, that he should not see death first",
+        "answer": "REVEALED"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 5,
+        "col": 10,
+        "text": "What they brought the child to the Lord to do",
+        "answer": "PRESENT"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 6,
+        "col": 0,
+        "text": "What he now asks to do, in peace",
+        "answer": "DEPART"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 6,
+        "col": 4,
+        "text": "To whom the child would be a light",
+        "answer": "GENTILES"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 6,
+        "col": 8,
+        "text": "What the pair of birds were brought for",
+        "answer": "SACRIFICE"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "Where he dwelt, waiting for the consolation of Israel",
+        "answer": "JERUSALEM"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 9,
+        "col": 12,
+        "text": "The just and devout man waiting in Jerusalem",
+        "answer": "SIMEON"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 11,
+        "col": 0,
+        "text": "Where he came by the Spirit, and where she never left",
+        "answer": "TEMPLE"
+      },
+      {
+        "number": 16,
+        "direction": "across",
+        "row": 13,
+        "col": 0,
+        "text": "A pair of turtle ones, in the offering of the law",
+        "answer": "DOVES"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 14,
+        "col": 7,
+        "text": "What he calls himself, in his song",
+        "answer": "SERVANT"
+      }
+    ]
+  },
+  {
+    "id": "pack-christmas-001",
+    "title": "The Word Made Flesh",
+    "difficulty": "easy",
+    "verse": "And the Word was made flesh, and dwelt among us, (and we beheld his glory, the glory as of the only begotten of the Father,) full of grace and truth.",
+    "reference": "John 1:14",
+    "publishDate": "2026-07-02",
+    "size": 15,
+    "grid": [
+      "..........BORN.",
+      ".......LIFE....",
+      "..........G....",
+      ".FATHER..JOHN..",
+      "......E.F.T...S",
+      ".WORD.C.U.TRUTH",
+      "....W.E.L.E...I",
+      "...BEGINNING..N",
+      ".W..L.V.E..R..E",
+      "LIGHT.E.S..A..T",
+      ".T....D.S..C..H",
+      ".N.......FLESH.",
+      "BELIEVE.....O..",
+      ".S..........N..",
+      ".S....DARKNESS."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 10,
+        "text": "Not of blood, nor of the will of man, but of God",
+        "answer": "BORN"
+      },
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 10,
+        "text": "The only one, of the Father",
+        "answer": "BEGOTTEN"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 1,
+        "col": 7,
+        "text": "What was in Him, and was the light of men",
+        "answer": "LIFE"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 3,
+        "col": 1,
+        "text": "Whose only begotten He is",
+        "answer": "FATHER"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 3,
+        "col": 6,
+        "text": "What His own did not do, when He came unto them",
+        "answer": "RECEIVED"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 3,
+        "col": 9,
+        "text": "The man sent from God, to bear witness",
+        "answer": "JOHN"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 4,
+        "col": 8,
+        "text": "His, of which we have all received, and grace for grace",
+        "answer": "FULNESS"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 4,
+        "col": 14,
+        "text": "What the light does in the darkness",
+        "answer": "SHINETH"
+      },
+      {
+        "number": 8,
+        "direction": "across",
+        "row": 5,
+        "col": 1,
+        "text": "What was in the beginning, and was with God",
+        "answer": "WORD"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 5,
+        "col": 4,
+        "text": "What He did among us, being made flesh",
+        "answer": "DWELT"
+      },
+      {
+        "number": 10,
+        "direction": "across",
+        "row": 5,
+        "col": 10,
+        "text": "With grace, what He was full of",
+        "answer": "TRUTH"
+      },
+      {
+        "number": 11,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "When the Word already was",
+        "answer": "BEGINNING"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 7,
+        "col": 11,
+        "text": "With truth, what He was full of",
+        "answer": "GRACE"
+      },
+      {
+        "number": 13,
+        "direction": "down",
+        "row": 8,
+        "col": 1,
+        "text": "What John came to bear, of the Light",
+        "answer": "WITNESS"
+      },
+      {
+        "number": 14,
+        "direction": "across",
+        "row": 9,
+        "col": 0,
+        "text": "What the life was, of men",
+        "answer": "LIGHT"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 11,
+        "col": 9,
+        "text": "What the Word was made",
+        "answer": "FLESH"
+      },
+      {
+        "number": 16,
+        "direction": "down",
+        "row": 11,
+        "col": 12,
+        "text": "Of God, what those who received Him were given power to become",
+        "answer": "SONS"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 12,
+        "col": 0,
+        "text": "What all men through him might do",
+        "answer": "BELIEVE"
+      },
+      {
+        "number": 18,
+        "direction": "across",
+        "row": 14,
+        "col": 6,
+        "text": "What comprehended it not, though it shined there",
+        "answer": "DARKNESS"
+      }
+    ]
+  },
+  {
+    "id": "pack-christmas-004",
+    "title": "The Flight into Egypt",
+    "difficulty": "medium",
+    "verse": "And when they were departed, behold, the angel of the Lord appeareth to Joseph in a dream, saying, Arise, and take the young child and his mother, and flee into Egypt, and be thou there until I bring thee word.",
+    "reference": "Matthew 2:13",
+    "publishDate": "2026-07-03",
+    "size": 15,
+    "grid": [
+      ".......MOCKED..",
+      ".....D.....G...",
+      "....WROTH..Y...",
+      ".....E.....P...",
+      ".A...A...RETURN",
+      ".R.RAMA.......A",
+      ".C.A....A.D...Z",
+      ".H.COMFORTED..A",
+      ".E.H.O..I.S...R",
+      "FLEE.U..S.T...E",
+      ".A.L.R..E.R.H.T",
+      ".U...N...JOSEPH",
+      ".S..NIGHT.Y.R..",
+      ".....N......O..",
+      "...ANGEL.DEAD.."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 7,
+        "text": "What he saw he was, of the wise men",
+        "answer": "MOCKED"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 11,
+        "text": "Whither they were told to flee, and stay till word came",
+        "answer": "EGYPT"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 1,
+        "col": 5,
+        "text": "Where the angel of the Lord appeared to him",
+        "answer": "DREAM"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 2,
+        "col": 4,
+        "text": "What he was, exceedingly, on seeing he was mocked",
+        "answer": "WROTH"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 4,
+        "col": 1,
+        "text": "Who reigned in Judaea in the room of his father",
+        "answer": "ARCHELAUS"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 4,
+        "col": 9,
+        "text": "What he was told to do, into the land of Israel",
+        "answer": "RETURN"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 4,
+        "col": 14,
+        "text": "The city they turned aside to dwell in",
+        "answer": "NAZARETH"
+      },
+      {
+        "number": 8,
+        "direction": "across",
+        "row": 5,
+        "col": 3,
+        "text": "Where a voice was heard, in the prophet's words",
+        "answer": "RAMA"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 5,
+        "col": 3,
+        "text": "Who wept for her children there",
+        "answer": "RACHEL"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 6,
+        "col": 8,
+        "text": "The angel's first command in the dream",
+        "answer": "ARISE"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 6,
+        "col": 10,
+        "text": "What Herod would seek to do to the child",
+        "answer": "DESTROY"
+      },
+      {
+        "number": 11,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "What she would not be, because they were not",
+        "answer": "COMFORTED"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 7,
+        "col": 5,
+        "text": "With lamentation, what was heard in Rama",
+        "answer": "MOURNING"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 9,
+        "col": 0,
+        "text": "What they were told to do, with the child",
+        "answer": "FLEE"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 10,
+        "col": 12,
+        "text": "The king who sought the child's life",
+        "answer": "HEROD"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 11,
+        "col": 9,
+        "text": "To whom the warning came, twice over",
+        "answer": "JOSEPH"
+      },
+      {
+        "number": 16,
+        "direction": "across",
+        "row": 12,
+        "col": 4,
+        "text": "When he took the child and his mother and departed",
+        "answer": "NIGHT"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 14,
+        "col": 3,
+        "text": "Who came with the warning, once the wise men had gone",
+        "answer": "ANGEL"
+      },
+      {
+        "number": 18,
+        "direction": "across",
+        "row": 14,
+        "col": 9,
+        "text": "What they were, which sought the young child's life",
+        "answer": "DEAD"
+      }
+    ]
+  },
+  {
+    "id": "pack-christmas-003",
+    "title": "The Star in the East",
+    "difficulty": "medium",
+    "verse": "Saying, Where is he that is born King of the Jews? for we have seen his star in the east, and are come to worship him.",
+    "reference": "Matthew 2:2",
+    "publishDate": "2026-07-04",
+    "size": 15,
+    "grid": [
+      "R.....GOVERNOR.",
+      "E....F......P..",
+      "J.M..E...RULE..",
+      "O.Y..L......N..",
+      "ISRAEL.PROPHET.",
+      "C.R.X.Y...R.D..",
+      "E.H.C.O...I....",
+      "D..JERUSALEM...",
+      "..G.E.N.P.S..M.",
+      "STOOD.G.P.T..O.",
+      "T.L.I...E.S..T.",
+      "A.D.N...A....H.",
+      "R...G..TROUBLED",
+      "........E....R.",
+      ".ENQUIRED......"
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 0,
+        "text": "What they did on seeing the star again",
+        "answer": "REJOICED"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 0,
+        "col": 6,
+        "text": "What shall come out of Bethlehem, to rule the people",
+        "answer": "GOVERNOR"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 0,
+        "col": 12,
+        "text": "What they did with their treasures",
+        "answer": "OPENED"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 1,
+        "col": 5,
+        "text": "What they did down, and worshipped Him",
+        "answer": "FELL"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 2,
+        "col": 2,
+        "text": "The last of the three, with gold and frankincense",
+        "answer": "MYRRH"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 2,
+        "col": 9,
+        "text": "What the one coming out of Bethlehem shall do",
+        "answer": "RULE"
+      },
+      {
+        "number": 7,
+        "direction": "across",
+        "row": 4,
+        "col": 0,
+        "text": "The people He shall govern, in the prophecy",
+        "answer": "ISRAEL"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 4,
+        "col": 4,
+        "text": "How great their joy was",
+        "answer": "EXCEEDING"
+      },
+      {
+        "number": 9,
+        "direction": "across",
+        "row": 4,
+        "col": 7,
+        "text": "By whom it was written of Bethlehem",
+        "answer": "PROPHET"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 4,
+        "col": 10,
+        "text": "The chief ones, gathered with the scribes",
+        "answer": "PRIESTS"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 5,
+        "col": 6,
+        "text": "The child they came to find, with Mary his mother",
+        "answer": "YOUNG"
+      },
+      {
+        "number": 12,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "Where they came asking, and where the king was troubled",
+        "answer": "JERUSALEM"
+      },
+      {
+        "number": 13,
+        "direction": "down",
+        "row": 7,
+        "col": 8,
+        "text": "What the star had done, at a time he wanted to know",
+        "answer": "APPEARED"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 8,
+        "col": 2,
+        "text": "The first of the three things presented",
+        "answer": "GOLD"
+      },
+      {
+        "number": 15,
+        "direction": "down",
+        "row": 8,
+        "col": 13,
+        "text": "Whom they saw the child with, in the house",
+        "answer": "MOTHER"
+      },
+      {
+        "number": 16,
+        "direction": "across",
+        "row": 9,
+        "col": 0,
+        "text": "What the star did, over where the young child was",
+        "answer": "STOOD"
+      },
+      {
+        "number": 16,
+        "direction": "down",
+        "row": 9,
+        "col": 0,
+        "text": "What they had seen in the east, and followed",
+        "answer": "STAR"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 12,
+        "col": 7,
+        "text": "What Herod was, and all the city with him",
+        "answer": "TROUBLED"
+      },
+      {
+        "number": 18,
+        "direction": "across",
+        "row": 14,
+        "col": 1,
+        "text": "What Herod did of them, diligently, about the time",
+        "answer": "ENQUIRED"
+      }
+    ]
+  },
+  {
+    "id": "pack-christmas-005",
+    "title": "About My Father's Business",
+    "difficulty": "hard",
+    "verse": "And he said unto them, How is it that ye sought me? wist ye not that I must be about my Father's business?",
+    "reference": "Luke 2:49",
+    "publishDate": "2026-07-05",
+    "size": 15,
+    "grid": [
+      "P...F...ASKING.",
+      "ANSWERS.M......",
+      "S...A..SAYINGS.",
+      "S...S...Z....T.",
+      "O...THREE..YEAR",
+      "V..B.E..D.K..T.",
+      "E..U.A.S..I..U.",
+      "R..SORROWING.R.",
+      "...I.I.U..S..E.",
+      "...N.N.G..F....",
+      "...E.G.H..O.H..",
+      "...S...TWELVE..",
+      ".WISDOM...K.A..",
+      "............R..",
+      "......SUBJECT.."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 0,
+        "text": "The feast His parents went up to every year",
+        "answer": "PASSOVER"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 4,
+        "text": "What they had fulfilled the days of, before returning",
+        "answer": "FEAST"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 0,
+        "col": 8,
+        "text": "What He did of them, as well as hearing",
+        "answer": "ASKING"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 0,
+        "col": 8,
+        "text": "What they were, seeing Him there",
+        "answer": "AMAZED"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 1,
+        "col": 0,
+        "text": "What astonished all who heard Him, with His understanding",
+        "answer": "ANSWERS"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 2,
+        "col": 7,
+        "text": "What she kept, and pondered",
+        "answer": "SAYINGS"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 2,
+        "col": 13,
+        "text": "What He increased in, and in favour",
+        "answer": "STATURE"
+      },
+      {
+        "number": 7,
+        "direction": "across",
+        "row": 4,
+        "col": 4,
+        "text": "The days after which they found Him",
+        "answer": "THREE"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 4,
+        "col": 5,
+        "text": "What He was doing, along with asking",
+        "answer": "HEARING"
+      },
+      {
+        "number": 9,
+        "direction": "across",
+        "row": 4,
+        "col": 11,
+        "text": "How often His parents went up to Jerusalem",
+        "answer": "YEAR"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 5,
+        "col": 3,
+        "text": "His Father's, about which He must be",
+        "answer": "BUSINESS"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 5,
+        "col": 10,
+        "text": "Among whom they sought Him, with their acquaintance",
+        "answer": "KINSFOLK"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 6,
+        "col": 7,
+        "text": "What they did, supposing Him in the company",
+        "answer": "SOUGHT"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "How they had been looking for Him, all that while",
+        "answer": "SORROWING"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 10,
+        "col": 12,
+        "text": "Where His mother kept all these sayings",
+        "answer": "HEART"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 11,
+        "col": 7,
+        "text": "His age, when they went up as usual",
+        "answer": "TWELVE"
+      },
+      {
+        "number": 16,
+        "direction": "across",
+        "row": 12,
+        "col": 1,
+        "text": "What He increased in, along with stature",
+        "answer": "WISDOM"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 14,
+        "col": 6,
+        "text": "What He was to them, going down to Nazareth",
+        "answer": "SUBJECT"
+      }
+    ]
+  },
+  {
+    "id": "pack-easter-001",
+    "title": "Hosanna in the Highest",
+    "difficulty": "easy",
+    "verse": "And the multitudes that went before, and that followed, cried, saying, Hosanna to the Son of David: Blessed is he that cometh in the name of the Lord; Hosanna in the highest.",
+    "reference": "Matthew 21:9",
+    "publishDate": "2026-07-01",
+    "size": 15,
+    "grid": [
+      "..............C",
+      ".PALM.........R",
+      ".R...LORD.....O",
+      ".A....L....A..W",
+      "SION..I.BLESSED",
+      ".S....V.R..S...",
+      "JESUS.E.A.G....",
+      "....HOSANNA....",
+      "....O...C.ROAD.",
+      "....U...H.M..A.",
+      ".COLT.....E..V.",
+      ".I....M.KING.I.",
+      ".TEMPLE...T..D.",
+      ".Y....E........",
+      "......K........"
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 14,
+        "text": "The throng that went before and that followed",
+        "answer": "CROWD"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 1,
+        "col": 1,
+        "text": "The tree whose branches were strewn in the way",
+        "answer": "PALM"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 1,
+        "col": 1,
+        "text": "What the children gave Him in the temple",
+        "answer": "PRAISE"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 2,
+        "col": 5,
+        "text": "In whose name He came, said the crowds",
+        "answer": "LORD"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 2,
+        "col": 6,
+        "text": "The mount they came from, over against the city",
+        "answer": "OLIVES"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 3,
+        "col": 11,
+        "text": "The beast of the prophecy, and her colt with her",
+        "answer": "ASS"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 4,
+        "col": 0,
+        "text": "The daughter bidden to behold her King",
+        "answer": "SION"
+      },
+      {
+        "number": 7,
+        "direction": "across",
+        "row": 4,
+        "col": 8,
+        "text": "What he is, that cometh in the name of the Lord",
+        "answer": "BLESSED"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 4,
+        "col": 8,
+        "text": "What the people cut down and spread before Him",
+        "answer": "BRANCH"
+      },
+      {
+        "number": 8,
+        "direction": "across",
+        "row": 6,
+        "col": 0,
+        "text": "The One riding in that day",
+        "answer": "JESUS"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 6,
+        "col": 4,
+        "text": "What the multitudes did as He passed by",
+        "answer": "SHOUT"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 6,
+        "col": 10,
+        "text": "What they laid in the road for Him to pass over",
+        "answer": "GARMENT"
+      },
+      {
+        "number": 11,
+        "direction": "across",
+        "row": 7,
+        "col": 4,
+        "text": "The cry of the multitudes as He came into the city",
+        "answer": "HOSANNA"
+      },
+      {
+        "number": 12,
+        "direction": "across",
+        "row": 8,
+        "col": 10,
+        "text": "The way made ready with garments and branches",
+        "answer": "ROAD"
+      },
+      {
+        "number": 13,
+        "direction": "down",
+        "row": 8,
+        "col": 13,
+        "text": "Whose Son the people hailed Him as",
+        "answer": "DAVID"
+      },
+      {
+        "number": 14,
+        "direction": "across",
+        "row": 10,
+        "col": 1,
+        "text": "The young beast He rode, whereon never man sat",
+        "answer": "COLT"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 10,
+        "col": 1,
+        "text": "Jerusalem, moved when He entered in",
+        "answer": "CITY"
+      },
+      {
+        "number": 15,
+        "direction": "down",
+        "row": 11,
+        "col": 6,
+        "text": "How the prophet said the King would come",
+        "answer": "MEEK"
+      },
+      {
+        "number": 16,
+        "direction": "across",
+        "row": 11,
+        "col": 8,
+        "text": "What Zechariah foretold would come, meek and riding",
+        "answer": "KING"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 12,
+        "col": 1,
+        "text": "Where He went, and cast out them that sold",
+        "answer": "TEMPLE"
+      }
+    ]
+  },
+  {
+    "id": "pack-easter-002",
+    "title": "It Is Finished",
+    "difficulty": "easy",
+    "verse": "When Jesus therefore had received the vinegar, he said, It is finished: and he bowed his head, and gave up the ghost.",
+    "reference": "John 19:30",
+    "publishDate": "2026-07-02",
+    "size": 15,
+    "grid": [
+      "THORNS...COAT..",
+      ".Y..........I..",
+      ".S........WATER",
+      ".S.V........L..",
+      ".O.I...PURPLE..",
+      "SPONGE....I..S.",
+      "P..E...M..L..P.",
+      "E..GOLGOTHA..I.",
+      "A..A.I.T..T..C.",
+      "R..R.N.H.HEBREW",
+      "..C..E.E...L.S.",
+      "GARDEN.R...O...",
+      "..O.......TOMB.",
+      "..SOLDIER..D...",
+      "..S............"
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 0,
+        "text": "Plaited into a crown by the soldiers",
+        "answer": "THORNS"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 1,
+        "text": "The stalk they put the sponge upon",
+        "answer": "HYSSOP"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 0,
+        "col": 9,
+        "text": "Woven throughout without seam, so they cast lots for it",
+        "answer": "COAT"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 0,
+        "col": 12,
+        "text": "The writing set above Him on the tree",
+        "answer": "TITLE"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 2,
+        "col": 10,
+        "text": "What came out with the blood",
+        "answer": "WATER"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 3,
+        "col": 3,
+        "text": "What He received at the very last",
+        "answer": "VINEGAR"
+      },
+      {
+        "number": 7,
+        "direction": "across",
+        "row": 4,
+        "col": 7,
+        "text": "The robe they put upon Him in mockery",
+        "answer": "PURPLE"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 4,
+        "col": 10,
+        "text": "The governor who wrote the title and would not change it",
+        "answer": "PILATE"
+      },
+      {
+        "number": 9,
+        "direction": "across",
+        "row": 5,
+        "col": 0,
+        "text": "Filled with vinegar and raised to His mouth",
+        "answer": "SPONGE"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 5,
+        "col": 0,
+        "text": "What one of them thrust into His side",
+        "answer": "SPEAR"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 5,
+        "col": 13,
+        "text": "Myrrh and aloes, brought by Nicodemus",
+        "answer": "SPICES"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 6,
+        "col": 7,
+        "text": "Whom He gave into the beloved disciple's keeping",
+        "answer": "MOTHER"
+      },
+      {
+        "number": 12,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "The place of a skull, so called in the Hebrew",
+        "answer": "GOLGOTHA"
+      },
+      {
+        "number": 13,
+        "direction": "down",
+        "row": 7,
+        "col": 5,
+        "text": "The clothes His body was wound in",
+        "answer": "LINEN"
+      },
+      {
+        "number": 14,
+        "direction": "across",
+        "row": 9,
+        "col": 9,
+        "text": "One of the three tongues the writing was in",
+        "answer": "HEBREW"
+      },
+      {
+        "number": 15,
+        "direction": "down",
+        "row": 9,
+        "col": 11,
+        "text": "What came forth from His side, with water",
+        "answer": "BLOOD"
+      },
+      {
+        "number": 16,
+        "direction": "down",
+        "row": 10,
+        "col": 2,
+        "text": "What He bore, going forth to the place of a skull",
+        "answer": "CROSS"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 11,
+        "col": 0,
+        "text": "Where the new sepulchre stood, in the place He was crucified",
+        "answer": "GARDEN"
+      },
+      {
+        "number": 18,
+        "direction": "across",
+        "row": 12,
+        "col": 10,
+        "text": "The new one, wherein was never man yet laid",
+        "answer": "TOMB"
+      },
+      {
+        "number": 19,
+        "direction": "across",
+        "row": 13,
+        "col": 2,
+        "text": "One of the four who parted His garments",
+        "answer": "SOLDIER"
+      }
+    ]
+  },
+  {
+    "id": "pack-easter-003",
+    "title": "The First Day of the Week",
+    "difficulty": "medium",
+    "verse": "Jesus saith unto her, Mary. She turned herself, and saith unto him, Rabboni; which is to say, Master.",
+    "reference": "John 20:16",
+    "publishDate": "2026-07-03",
+    "size": 15,
+    "grid": [
+      "...WEEPING..P..",
+      "........A...E..",
+      "........PRINT..",
+      "........K...E..",
+      "..RABBONI.MARY.",
+      "........N..N...",
+      "N...P....T.G...",
+      "A..SEPULCHRE...",
+      "I...A..I.O.L.B.",
+      "L.D.C..N.MASTER",
+      "STONE..E.A...L.",
+      "..O..HANDS...I.",
+      "EARLY.....RISEN",
+      "..S..........V.",
+      ".......GARDENER"
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 3,
+        "text": "What Mary stood without doing",
+        "answer": "WEEPING"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 8,
+        "text": "Wrapped together in a place by itself",
+        "answer": "NAPKIN"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 0,
+        "col": 12,
+        "text": "The disciple who went in first and saw the clothes",
+        "answer": "PETER"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 2,
+        "col": 8,
+        "text": "Of the nails, which Thomas would see before believing",
+        "answer": "PRINT"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 4,
+        "col": 2,
+        "text": "What she called Him, which is to say Master",
+        "answer": "RABBONI"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 4,
+        "col": 10,
+        "text": "Magdalene, come to the sepulchre while it was yet dark",
+        "answer": "MARY"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 4,
+        "col": 11,
+        "text": "Two in white, sitting where the body had lain",
+        "answer": "ANGELS"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 6,
+        "col": 0,
+        "text": "What left their mark in His hands",
+        "answer": "NAILS"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 6,
+        "col": 4,
+        "text": "His word to them, the doors being shut",
+        "answer": "PEACE"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 6,
+        "col": 9,
+        "text": "Called Didymus, and not with them when Jesus came",
+        "answer": "THOMAS"
+      },
+      {
+        "number": 11,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "The place she found empty that morning",
+        "answer": "SEPULCHRE"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 7,
+        "col": 7,
+        "text": "The clothes lying there, left behind",
+        "answer": "LINEN"
+      },
+      {
+        "number": 13,
+        "direction": "down",
+        "row": 8,
+        "col": 13,
+        "text": "What Thomas was bidden to do, and be not faithless",
+        "answer": "BELIEVE"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 9,
+        "col": 2,
+        "text": "Shut for fear, yet He stood in the midst",
+        "answer": "DOORS"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 9,
+        "col": 9,
+        "text": "What Rabboni means, being interpreted",
+        "answer": "MASTER"
+      },
+      {
+        "number": 16,
+        "direction": "across",
+        "row": 10,
+        "col": 0,
+        "text": "What she saw taken away from the sepulchre",
+        "answer": "STONE"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 11,
+        "col": 5,
+        "text": "These, and His side, He shewed unto the disciples",
+        "answer": "HANDS"
+      },
+      {
+        "number": 18,
+        "direction": "across",
+        "row": 12,
+        "col": 0,
+        "text": "When she came, the first day of the week",
+        "answer": "EARLY"
+      },
+      {
+        "number": 19,
+        "direction": "across",
+        "row": 12,
+        "col": 10,
+        "text": "What He was, though as yet they knew not the scripture",
+        "answer": "RISEN"
+      },
+      {
+        "number": 20,
+        "direction": "across",
+        "row": 14,
+        "col": 7,
+        "text": "Whom she supposed Him to be, until He spoke",
+        "answer": "GARDENER"
+      }
+    ]
+  },
+  {
+    "id": "pack-easter-004",
+    "title": "The Road to Emmaus",
+    "difficulty": "medium",
+    "verse": "And they said one to another, Did not our heart burn within us, while he talked with us by the way, and while he opened to us the scriptures?",
+    "reference": "Luke 24:32",
+    "publishDate": "2026-07-04",
+    "size": 15,
+    "grid": [
+      ".....T.........",
+      "VANISHED......K",
+      ".....I........N",
+      "....PROPHETS..O",
+      ".....D..E.....W",
+      "V.....A.A..BURN",
+      "I.....B.R..L...",
+      "L..SCRIPTURE.J.",
+      "L..T..D....SLOW",
+      "A.BRAKE....S.U.",
+      "G..A...TABLE.R.",
+      "EVENING..R.D.N.",
+      "...G.....E...E.",
+      "MOSES.EMMAUS.Y.",
+      "...R.....D....."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 5,
+        "text": "The day, since these things were done",
+        "answer": "THIRD"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 1,
+        "col": 0,
+        "text": "What He did out of their sight",
+        "answer": "VANISHED"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 1,
+        "col": 14,
+        "text": "What He was made to them in the breaking of bread",
+        "answer": "KNOWN"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 4,
+        "text": "All of them, whose writings He expounded",
+        "answer": "PROPHETS"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 3,
+        "col": 8,
+        "text": "What burned in them as He talked with them",
+        "answer": "HEART"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 5,
+        "col": 0,
+        "text": "Whither they went, and He made as though to go further",
+        "answer": "VILLAGE"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 5,
+        "col": 6,
+        "text": "What they constrained Him to do, the day being far spent",
+        "answer": "ABIDE"
+      },
+      {
+        "number": 8,
+        "direction": "across",
+        "row": 5,
+        "col": 11,
+        "text": "What their heart did within them by the way",
+        "answer": "BURN"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 5,
+        "col": 11,
+        "text": "What He did before He brake it",
+        "answer": "BLESSED"
+      },
+      {
+        "number": 9,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "What He opened to them, beginning at Moses",
+        "answer": "SCRIPTURE"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 7,
+        "col": 3,
+        "text": "What they took Him for, their eyes being holden",
+        "answer": "STRANGER"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 7,
+        "col": 13,
+        "text": "Their walk of that same day, and His with them",
+        "answer": "JOURNEY"
+      },
+      {
+        "number": 11,
+        "direction": "across",
+        "row": 8,
+        "col": 11,
+        "text": "What He called them, of heart to believe",
+        "answer": "SLOW"
+      },
+      {
+        "number": 12,
+        "direction": "across",
+        "row": 9,
+        "col": 2,
+        "text": "What He did with it, sitting at meat",
+        "answer": "BRAKE"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 10,
+        "col": 7,
+        "text": "Where He sat with them, and was known",
+        "answer": "TABLE"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 10,
+        "col": 9,
+        "text": "What He took, and blessed, and brake",
+        "answer": "BREAD"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 11,
+        "col": 0,
+        "text": "The hour that made them press Him to stay",
+        "answer": "EVENING"
+      },
+      {
+        "number": 16,
+        "direction": "across",
+        "row": 13,
+        "col": 0,
+        "text": "Where He began, expounding things concerning Himself",
+        "answer": "MOSES"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 13,
+        "col": 6,
+        "text": "The village threescore furlongs from Jerusalem",
+        "answer": "EMMAUS"
+      }
+    ]
+  },
+  {
+    "id": "pack-easter-005",
+    "title": "Breakfast by the Sea",
+    "difficulty": "hard",
+    "verse": "Jesus saith unto them, Come and dine. And none of the disciples durst ask him, Who art thou? knowing that it was the Lord.",
+    "reference": "John 21:12",
+    "publishDate": "2026-07-05",
+    "size": 15,
+    "grid": [
+      ".......FISHING.",
+      "...SHORE.......",
+      ".......E..CAST.",
+      "...BREAD....H..",
+      "..M.I....THREE.",
+      "..O.G..D.I..E..",
+      "..R.H..I.B..P..",
+      "..NATHANAEL....",
+      "H.I....E.R.....",
+      "U.NET...FIFTY..",
+      "N.G...C..A.....",
+      "D....LOVEST....",
+      "R.....A........",
+      "E.....LAMBS....",
+      "DIDYMUS........"
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 7,
+        "text": "What Peter told the others he was going to do",
+        "answer": "FISHING"
+      },
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 7,
+        "text": "What He charged Peter to do with His flock",
+        "answer": "FEED"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 1,
+        "col": 3,
+        "text": "Where Jesus stood when the morning was come",
+        "answer": "SHORE"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 2,
+        "col": 10,
+        "text": "What He bade them do with the net",
+        "answer": "CAST"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 2,
+        "col": 12,
+        "text": "What Peter was bidden to feed, and to tend",
+        "answer": "SHEEP"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 3,
+        "col": 3,
+        "text": "Laid by the fire beside the fish",
+        "answer": "BREAD"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 3,
+        "col": 4,
+        "text": "The side of the ship where He told them to try",
+        "answer": "RIGHT"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 4,
+        "col": 2,
+        "text": "When He stood there, but they knew Him not",
+        "answer": "MORNING"
+      },
+      {
+        "number": 8,
+        "direction": "across",
+        "row": 4,
+        "col": 9,
+        "text": "The times He asked Peter the same question",
+        "answer": "THREE"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 4,
+        "col": 9,
+        "text": "The sea where He shewed Himself again to the disciples",
+        "answer": "TIBERIAS"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 5,
+        "col": 7,
+        "text": "What He bade them come and do",
+        "answer": "DINE"
+      },
+      {
+        "number": 10,
+        "direction": "across",
+        "row": 7,
+        "col": 2,
+        "text": "Of Cana in Galilee, one of the seven that went",
+        "answer": "NATHANAEL"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 8,
+        "col": 0,
+        "text": "With fifty and three, the count of great fishes",
+        "answer": "HUNDRED"
+      },
+      {
+        "number": 12,
+        "direction": "across",
+        "row": 9,
+        "col": 2,
+        "text": "Not broken, for all the great fishes in it",
+        "answer": "NET"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 9,
+        "col": 8,
+        "text": "Part of the number of the fishes drawn to land",
+        "answer": "FIFTY"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 10,
+        "col": 6,
+        "text": "The fire of these, with fish laid thereon",
+        "answer": "COALS"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 11,
+        "col": 5,
+        "text": "The word He put to Peter three times over",
+        "answer": "LOVEST"
+      },
+      {
+        "number": 16,
+        "direction": "across",
+        "row": 13,
+        "col": 6,
+        "text": "What Peter was first bidden to feed",
+        "answer": "LAMBS"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 14,
+        "col": 0,
+        "text": "The name by which Thomas was called",
+        "answer": "DIDYMUS"
+      }
+    ]
+  },
+  {
+    "id": "pack-lent-002",
+    "title": "Forty Days in the Wilderness",
+    "difficulty": "easy",
+    "verse": "But he answered and said, It is written, Man shall not live by bread alone, but by every word that proceedeth out of the mouth of God.",
+    "reference": "Matthew 4:4",
+    "publishDate": "2026-07-01",
+    "size": 15,
+    "grid": [
+      "....S...D..M...",
+      ".B.TEMPTER.O...",
+      ".R..R...V..U...",
+      ".E..V.SPIRIT..K",
+      "FASTED..L..H..I",
+      ".D.E..........N",
+      "...M.A....T...G",
+      "...PINNACLE.M.D",
+      "...L.G....M.O.O",
+      "H.DESERT..P.U.M",
+      "U....L...STONES",
+      "NIGHTS....E.T..",
+      "G......WORD.A..",
+      "E...........I..",
+      "R.....WRITTEN.."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 4,
+        "text": "What only God is to be given, along with worship",
+        "answer": "SERVE"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 8,
+        "text": "Who took Him up into the holy city, and to the mountain",
+        "answer": "DEVIL"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 0,
+        "col": 11,
+        "text": "Of God, whence every word proceeds",
+        "answer": "MOUTH"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 1,
+        "col": 1,
+        "text": "What man shall not live by alone",
+        "answer": "BREAD"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 1,
+        "col": 3,
+        "text": "The one who came to Him when the fast was done",
+        "answer": "TEMPTER"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 3,
+        "col": 6,
+        "text": "By whom He was led up, to be tried",
+        "answer": "SPIRIT"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 3,
+        "col": 14,
+        "text": "All of the world, and their glory, offered in a moment",
+        "answer": "KINGDOMS"
+      },
+      {
+        "number": 8,
+        "direction": "across",
+        "row": 4,
+        "col": 0,
+        "text": "What He had done, forty days and forty nights",
+        "answer": "FASTED"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 4,
+        "col": 3,
+        "text": "Whose highest point He was set upon",
+        "answer": "TEMPLE"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 6,
+        "col": 5,
+        "text": "Whom the psalm said would bear Him up",
+        "answer": "ANGELS"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 6,
+        "col": 10,
+        "text": "What He was there, of the devil",
+        "answer": "TEMPTED"
+      },
+      {
+        "number": 12,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "Of the temple, where He was set",
+        "answer": "PINNACLE"
+      },
+      {
+        "number": 13,
+        "direction": "down",
+        "row": 7,
+        "col": 12,
+        "text": "An exceeding high one, whence the kingdoms were shown",
+        "answer": "MOUNTAIN"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 9,
+        "col": 0,
+        "text": "What He felt afterward, and the first trial played upon",
+        "answer": "HUNGER"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 9,
+        "col": 2,
+        "text": "The barren country the Spirit led Him up into",
+        "answer": "DESERT"
+      },
+      {
+        "number": 16,
+        "direction": "across",
+        "row": 10,
+        "col": 9,
+        "text": "What He was told to command into bread",
+        "answer": "STONES"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 11,
+        "col": 0,
+        "text": "Forty of them, along with as many days",
+        "answer": "NIGHTS"
+      },
+      {
+        "number": 18,
+        "direction": "across",
+        "row": 12,
+        "col": 7,
+        "text": "Every one proceeding out of the mouth of God, by which man lives",
+        "answer": "WORD"
+      },
+      {
+        "number": 19,
+        "direction": "across",
+        "row": 14,
+        "col": 6,
+        "text": "How each of His three answers began: it is so",
+        "answer": "WRITTEN"
+      }
+    ]
+  },
+  {
+    "id": "pack-lent-001",
+    "title": "Rend Your Heart",
+    "difficulty": "easy",
+    "verse": "And rend your heart, and not your garments, and turn unto the LORD your God: for he is gracious and merciful, slow to anger, and of great kindness, and repenteth him of the evil.",
+    "reference": "Joel 2:13",
+    "publishDate": "2026-07-02",
+    "size": 15,
+    "grid": [
+      ".............R.",
+      "....Z...TRUMPET",
+      "MERCIFUL.....S.",
+      "..E.O...REPENT.",
+      "KINDNESS.....O.",
+      "..D...A.S.F..R.",
+      "....P.N.L.ANGER",
+      ".A.GRACIOUS.A..",
+      ".S..I.T.W.TURN.",
+      ".S..E.I..S..M..",
+      "YEARS.F..O.WEEP",
+      ".M..T.Y..L..N..",
+      ".B..S...HEART..",
+      ".L.......M.....",
+      ".Y.......N....."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 13,
+        "text": "What He promises to do with the lost years",
+        "answer": "RESTORE"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 1,
+        "col": 4,
+        "text": "Where the trumpet is to sound the alarm",
+        "answer": "ZION"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 1,
+        "col": 8,
+        "text": "What is to be blown in Zion",
+        "answer": "TRUMPET"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 2,
+        "col": 0,
+        "text": "What He is, along with being gracious",
+        "answer": "MERCIFUL"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 2,
+        "col": 2,
+        "text": "What the prophet asks be done to the heart, not the clothes",
+        "answer": "REND"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 3,
+        "col": 8,
+        "text": "What the LORD is said to do, of the evil",
+        "answer": "REPENT"
+      },
+      {
+        "number": 7,
+        "direction": "across",
+        "row": 4,
+        "col": 0,
+        "text": "What He has, and greatly",
+        "answer": "KINDNESS"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 4,
+        "col": 6,
+        "text": "What is to be done to the fast, and to the congregation",
+        "answer": "SANCTIFY"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 5,
+        "col": 8,
+        "text": "How He is to anger, in the prophet's description",
+        "answer": "SLOW"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 5,
+        "col": 10,
+        "text": "What is to be sanctified, with a solemn gathering",
+        "answer": "FAST"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 6,
+        "col": 4,
+        "text": "The ministers of the LORD, called to mourn",
+        "answer": "PRIESTS"
+      },
+      {
+        "number": 12,
+        "direction": "across",
+        "row": 6,
+        "col": 10,
+        "text": "What He is slow to, being of great kindness",
+        "answer": "ANGER"
+      },
+      {
+        "number": 13,
+        "direction": "down",
+        "row": 6,
+        "col": 12,
+        "text": "What is not to be torn, in the prophet's charge",
+        "answer": "GARMENT"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 7,
+        "col": 1,
+        "text": "The solemn one to be called",
+        "answer": "ASSEMBLY"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "What He is, and merciful besides",
+        "answer": "GRACIOUS"
+      },
+      {
+        "number": 16,
+        "direction": "across",
+        "row": 8,
+        "col": 10,
+        "text": "What the people are to do, unto the LORD their God",
+        "answer": "TURN"
+      },
+      {
+        "number": 17,
+        "direction": "down",
+        "row": 9,
+        "col": 9,
+        "text": "How the assembly is to be called",
+        "answer": "SOLEMN"
+      },
+      {
+        "number": 18,
+        "direction": "across",
+        "row": 10,
+        "col": 0,
+        "text": "What the locust hath eaten, and He will give again",
+        "answer": "YEARS"
+      },
+      {
+        "number": 19,
+        "direction": "across",
+        "row": 10,
+        "col": 11,
+        "text": "What the priests are to do between the porch and the altar",
+        "answer": "WEEP"
+      },
+      {
+        "number": 20,
+        "direction": "across",
+        "row": 12,
+        "col": 8,
+        "text": "What is to be torn, rather than the garments",
+        "answer": "HEART"
+      }
+    ]
+  },
+  {
+    "id": "pack-lent-003",
+    "title": "A Great Way Off",
+    "difficulty": "medium",
+    "verse": "And he arose, and came to his father. But when he was yet a great way off, his father saw him, and had compassion, and ran, and fell on his neck, and kissed him.",
+    "reference": "Luke 15:20",
+    "publishDate": "2026-07-03",
+    "size": 15,
+    "grid": [
+      ".Y.S......M....",
+      ".O.I..KISSED.P.",
+      ".U.N......R..R.",
+      ".N.N....PORTION",
+      ".G.E...R..Y..D.",
+      ".ELDER.I.R...I.",
+      ".R...O.O.I.N.G.",
+      "...SUBSTANCE.A.",
+      "...E.E.O.G.CALF",
+      "...R...U...K..A",
+      "HEAVEN.S......M",
+      "U..A..........I",
+      "SWINE.......RAN",
+      "K..T..........E",
+      "S..SHOES......."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 1,
+        "text": "Which son asked for his portion and left",
+        "answer": "YOUNGER"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 3,
+        "text": "What he came home saying he had done, against heaven",
+        "answer": "SINNED"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 0,
+        "col": 10,
+        "text": "What it was right to be, for the lost was found",
+        "answer": "MERRY"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 1,
+        "col": 6,
+        "text": "What the father did, before a word of the speech was out",
+        "answer": "KISSED"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 1,
+        "col": 13,
+        "text": "The name tradition gives the younger of the two sons",
+        "answer": "PRODIGAL"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 3,
+        "col": 8,
+        "text": "What he asked his father for, of the goods",
+        "answer": "PORTION"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 4,
+        "col": 7,
+        "text": "The manner of living that wasted his substance",
+        "answer": "RIOTOUS"
+      },
+      {
+        "number": 8,
+        "direction": "across",
+        "row": 5,
+        "col": 1,
+        "text": "The son who was in the field, and would not go in",
+        "answer": "ELDER"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 5,
+        "col": 5,
+        "text": "The best one, called for at once",
+        "answer": "ROBE"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 5,
+        "col": 9,
+        "text": "What was put on his hand",
+        "answer": "RING"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 6,
+        "col": 11,
+        "text": "Where the father fell, on meeting him",
+        "answer": "NECK"
+      },
+      {
+        "number": 12,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "What he wasted, in a far country",
+        "answer": "SUBSTANCE"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 7,
+        "col": 3,
+        "text": "His father's hired ones, who had bread enough and to spare",
+        "answer": "SERVANTS"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 8,
+        "col": 11,
+        "text": "The fatted one, killed for the feast",
+        "answer": "CALF"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 8,
+        "col": 14,
+        "text": "The mighty one that arose in that land",
+        "answer": "FAMINE"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 10,
+        "col": 0,
+        "text": "Against which, and before his father, he confessed",
+        "answer": "HEAVEN"
+      },
+      {
+        "number": 15,
+        "direction": "down",
+        "row": 10,
+        "col": 0,
+        "text": "What he would gladly have filled his belly with",
+        "answer": "HUSKS"
+      },
+      {
+        "number": 16,
+        "direction": "across",
+        "row": 12,
+        "col": 0,
+        "text": "What he was sent into the fields to feed",
+        "answer": "SWINE"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 12,
+        "col": 12,
+        "text": "What the father did, seeing him a great way off",
+        "answer": "RAN"
+      },
+      {
+        "number": 18,
+        "direction": "across",
+        "row": 14,
+        "col": 3,
+        "text": "What was put on his feet",
+        "answer": "SHOES"
+      }
+    ]
+  },
+  {
+    "id": "pack-lent-004",
+    "title": "He Washed Their Feet",
+    "difficulty": "medium",
+    "verse": "If I then, your Lord and Master, have washed your feet; ye also ought to wash one another's feet.",
+    "reference": "John 13:14",
+    "publishDate": "2026-07-04",
+    "size": 15,
+    "grid": [
+      "GIRDED..M.....P",
+      ".S......A...W.E",
+      ".C.P....SERVANT",
+      ".A.O.J..T...S.E",
+      ".R.U.U..E.W.H.R",
+      ".I.R.D.GREATER.",
+      "LOVE.A....T.D..",
+      ".T.DISCIPLES...",
+      "......L...R....",
+      "S....FEET......",
+      "U.....A.O......",
+      "P.BASIN.W......",
+      "P...O..BETRAY..",
+      "EXAMPLE.L......",
+      "R.............."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 0,
+        "text": "What He did with the towel, laying His garments aside",
+        "answer": "GIRDED"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 1,
+        "text": "His surname, and Simon's before him",
+        "answer": "ISCARIOT"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 0,
+        "col": 8,
+        "text": "What they called Him, along with Lord \u2014 and rightly, He said",
+        "answer": "MASTER"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 0,
+        "col": 14,
+        "text": "Who said He should never do this to him",
+        "answer": "PETER"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 1,
+        "col": 12,
+        "text": "What He did to the disciples' feet, before the meal was done",
+        "answer": "WASHED"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 2,
+        "col": 3,
+        "text": "What He did with the water, before He began",
+        "answer": "POURED"
+      },
+      {
+        "number": 7,
+        "direction": "across",
+        "row": 2,
+        "col": 8,
+        "text": "Who is not greater than his lord, in His saying",
+        "answer": "SERVANT"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 3,
+        "col": 5,
+        "text": "Who took the morsel and went out",
+        "answer": "JUDAS"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 4,
+        "col": 10,
+        "text": "What was poured out for the task",
+        "answer": "WATER"
+      },
+      {
+        "number": 10,
+        "direction": "across",
+        "row": 5,
+        "col": 7,
+        "text": "What the servant is not, than the one who sent him",
+        "answer": "GREATER"
+      },
+      {
+        "number": 11,
+        "direction": "across",
+        "row": 6,
+        "col": 0,
+        "text": "The new commandment: that ye do this one to another",
+        "answer": "LOVE"
+      },
+      {
+        "number": 12,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "Those in the room with Him that evening",
+        "answer": "DISCIPLES"
+      },
+      {
+        "number": 13,
+        "direction": "down",
+        "row": 7,
+        "col": 6,
+        "text": "What He said they were \u2014 but not all of them",
+        "answer": "CLEAN"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 9,
+        "col": 0,
+        "text": "The meal this happened at, the feast being near",
+        "answer": "SUPPER"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 9,
+        "col": 5,
+        "text": "What He knelt to clean, one pair after another",
+        "answer": "FEET"
+      },
+      {
+        "number": 16,
+        "direction": "down",
+        "row": 9,
+        "col": 8,
+        "text": "What He girded Himself with, and wiped with",
+        "answer": "TOWEL"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 11,
+        "col": 2,
+        "text": "The vessel He poured the water into",
+        "answer": "BASIN"
+      },
+      {
+        "number": 18,
+        "direction": "down",
+        "row": 11,
+        "col": 4,
+        "text": "The morsel He dipped and gave, marking the one",
+        "answer": "SOP"
+      },
+      {
+        "number": 19,
+        "direction": "across",
+        "row": 12,
+        "col": 7,
+        "text": "What one of them at the table would do",
+        "answer": "BETRAY"
+      },
+      {
+        "number": 20,
+        "direction": "across",
+        "row": 13,
+        "col": 0,
+        "text": "What He said He had given them, to do likewise",
+        "answer": "EXAMPLE"
+      }
+    ]
+  },
+  {
+    "id": "pack-lent-005",
+    "title": "Not as I Will",
+    "difficulty": "hard",
+    "verse": "And he went a little further, and fell on his face, and prayed, saying, O my Father, if it be possible, let this cup pass from me: nevertheless not as I will, but as thou wilt.",
+    "reference": "Matthew 26:39",
+    "publishDate": "2026-07-05",
+    "size": 15,
+    "grid": [
+      ".T.............",
+      ".H.....HYMN....",
+      ".R.....E.......",
+      "WILL..WATCH....",
+      ".C...H.V.U...B.",
+      "WEAK.O.Y.PRAYED",
+      "...I.U.....S.T.",
+      ".F.SORROWFUL.R.",
+      "PASS....I..E.A.",
+      ".T...SOUL..E.Y.",
+      ".H....L.L..P.E.",
+      ".E..SPIRIT...D.",
+      ".R....V.N......",
+      "......E.G......",
+      "...FLESH......."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 1,
+        "text": "How often He came back and found them sleeping",
+        "answer": "THRICE"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 1,
+        "col": 7,
+        "text": "What they sang before going out to the mount",
+        "answer": "HYMN"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 1,
+        "col": 7,
+        "text": "What He began to be, along with very sorrowful",
+        "answer": "HEAVY"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "What He set aside, in favour of His Father's",
+        "answer": "WILL"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 6,
+        "text": "What He asked the three to do with Him",
+        "answer": "WATCH"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 3,
+        "col": 9,
+        "text": "What He asked might be taken from Him, if it were possible",
+        "answer": "CUP"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 4,
+        "col": 5,
+        "text": "What they could not keep awake for even one of",
+        "answer": "HOUR"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 4,
+        "col": 13,
+        "text": "What He said the Son of man was about to be",
+        "answer": "BETRAYED"
+      },
+      {
+        "number": 8,
+        "direction": "across",
+        "row": 5,
+        "col": 0,
+        "text": "What the flesh is, in the saying",
+        "answer": "WEAK"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 5,
+        "col": 3,
+        "text": "The sign agreed on, by which He was given up",
+        "answer": "KISS"
+      },
+      {
+        "number": 10,
+        "direction": "across",
+        "row": 5,
+        "col": 9,
+        "text": "What He did three times, in the same words",
+        "answer": "PRAYED"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 5,
+        "col": 11,
+        "text": "What He found them, returning from the prayer",
+        "answer": "ASLEEP"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 7,
+        "col": 1,
+        "text": "Whom He addressed, falling on His face",
+        "answer": "FATHER"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "How He told them His soul was, even unto death",
+        "answer": "SORROWFUL"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 7,
+        "col": 8,
+        "text": "What the spirit indeed is, in His gentle excuse for them",
+        "answer": "WILLING"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 8,
+        "col": 0,
+        "text": "What He asked the cup might do, from Him",
+        "answer": "PASS"
+      },
+      {
+        "number": 16,
+        "direction": "across",
+        "row": 9,
+        "col": 5,
+        "text": "What was exceeding sorrowful in Him",
+        "answer": "SOUL"
+      },
+      {
+        "number": 17,
+        "direction": "down",
+        "row": 9,
+        "col": 6,
+        "text": "The mount they went out to, after the hymn",
+        "answer": "OLIVES"
+      },
+      {
+        "number": 18,
+        "direction": "across",
+        "row": 11,
+        "col": 4,
+        "text": "What is indeed ready, though the flesh is not",
+        "answer": "SPIRIT"
+      },
+      {
+        "number": 19,
+        "direction": "across",
+        "row": 14,
+        "col": 3,
+        "text": "What is weak, though the spirit is ready",
+        "answer": "FLESH"
+      }
+    ]
+  },
+  {
     "id": "pack-psalm-23-002",
     "title": "Green Pastures",
     "difficulty": "easy",
