@@ -207,6 +207,29 @@ struct FamilyBoardTests {
         #expect(parsed.standings.count == FamilyBoardService.maxStandings)
     }
 
+    // MARK: - Hosts
+
+    /// Outgoing links go out on the apex, which is one redirect hop shorter than
+    /// the www they used to use.
+    @Test func outgoingLinksUseTheApex() throws {
+        let service = makeService()
+        let url = try #require(service.boardURL(board([("Sam", 154)])))
+        #expect(url.host() == "biblecrosswordchallenge.com")
+    }
+
+    /// The links already sent on www have to keep working — someone's family
+    /// board is sitting in a group chat right now.
+    @Test func linksAlreadySentOnWwwStillOpen() {
+        let service = makeService()
+        for host in ["biblecrosswordchallenge.com", "www.biblecrosswordchallenge.com"] {
+            let url = URL(string: "https://\(host)/challenge/?v=2&p=daily-042&e=154:Sam")!
+            guard case .valid = service.parse(url, title: { _ in "Daily 42" }) else {
+                Issue.record("\(host) should still parse as a board")
+                continue
+            }
+        }
+    }
+
     // MARK: - Telling the two payloads apart
 
     @Test func aOneToOneChallengeLinkIsNotABoard() {

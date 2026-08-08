@@ -53,11 +53,17 @@ final class ChallengeService {
     /// page); the custom scheme above stays a parseable fallback.
     /// Incoming links are accepted from `webHost` and any subdomain of it.
     static let webHost = "biblecrosswordchallenge.com"
-    /// Outgoing links are generated on www: the apex DNS still points at the
-    /// old host, which 404s the AASA file — apex links would open Safari, not
-    /// the app. www is served by Railway/Caddy with a correct AASA. Safe to
-    /// fold back to the apex once its DNS moves to the same deployment.
-    static let outgoingWebHost = "www.biblecrosswordchallenge.com"
+    /// Outgoing links are generated on the apex.
+    ///
+    /// They used to go out on www, because the apex pointed at an older host
+    /// that 404'd the AASA file and so opened Safari instead of the app. Both
+    /// hosts are now the same Cloudflare Pages deployment and both serve the
+    /// AASA, which was the condition that note set for folding back. Sending on
+    /// the apex drops a www → apex redirect hop from every link a player shares.
+    ///
+    /// Links already in the wild are unaffected: `isChallengeLink` accepts the
+    /// apex and any subdomain of it, so www links keep opening the app.
+    static let outgoingWebHost = webHost
     static let webPath = "/challenge/"
     /// The default profile name — treated as "no name chosen yet" so we prompt
     /// once before the first outgoing challenge rather than shipping "Friend".
