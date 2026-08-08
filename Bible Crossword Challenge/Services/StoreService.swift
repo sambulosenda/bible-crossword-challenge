@@ -387,15 +387,41 @@ final class StoreService {
 
     // MARK: - Display helpers
 
-    /// e.g. "7-day free trial" when the product has a free introductory offer.
-    func introOfferText(for product: Product) -> String? {
+    /// A free introductory offer in the two grammatical forms the UI needs.
+    ///
+    /// One string cannot serve both positions. "3-day free trial" is right in
+    /// front of a noun; "Free for 3 days" is right after a preposition. The
+    /// paywall used to derive the second from the first by trimming
+    /// " free trial" off it, which shipped "Free for 3-days" against the real
+    /// product and "Free for 7-day" against the local StoreKit config — wrong
+    /// in both, differently.
+    struct IntroOffer {
+        /// Compound adjective, never pluralised: "3-day", "7-day", "1-month".
+        /// The `s` belongs to `duration`; in front of a noun it is not English.
+        let length: String
+        /// Standalone duration, pluralised normally: "3 days", "1 month".
+        let duration: String
+        /// "3-day free trial" — the phrase the UI uses on its own.
+        var trialText: String { "\(length) free trial" }
+    }
+
+    /// The product's free trial, or nil if it has no introductory free offer.
+    func introOffer(for product: Product) -> IntroOffer? {
         guard let offer = product.subscription?.introductoryOffer,
               offer.paymentMode == .freeTrial else { return nil }
         let period = offer.period
-        // A "P1W" trial reads more naturally as "7-day".
-        if period.unit == .week { return "\(period.value * 7)-day free trial" }
-        let unit = unitLabel(period.unit)
-        return "\(period.value)-\(unit)\(period.value > 1 ? "s" : "") free trial"
+        // A "P1W" trial reads more naturally in days than in weeks.
+        let value = period.unit == .week ? period.value * 7 : period.value
+        let unit = period.unit == .week ? "day" : unitLabel(period.unit)
+        return IntroOffer(
+            length: "\(value)-\(unit)",
+            duration: "\(value) \(unit)\(value == 1 ? "" : "s")"
+        )
+    }
+
+    /// e.g. "7-day free trial" when the product has a free introductory offer.
+    func introOfferText(for product: Product) -> String? {
+        introOffer(for: product)?.trialText
     }
 
     /// e.g. "/month", "/year" for a subscription product; nil otherwise.

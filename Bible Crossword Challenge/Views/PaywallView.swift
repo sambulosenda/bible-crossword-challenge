@@ -618,10 +618,12 @@ struct PaywallView: View {
     private var ctaSubtext: String? {
         guard let product = selectedProduct else { return nil }
         let period = store.periodText(for: product) ?? ""
-        if let trial = store.introOfferText(for: product) {
+        if let offer = store.introOffer(for: product) {
             // Says when money starts, not just that a trial exists — the
             // question a trial-sceptic is actually asking at this point.
-            return "Free for \(trial.replacingOccurrences(of: " free trial", with: "")), then \(product.displayPrice)\(period), renewing until cancelled. Cancel anytime."
+            // `duration`, not the trial phrase with " free trial" trimmed off
+            // it: after "Free for" the length needs its plural back.
+            return "Free for \(offer.duration), then \(product.displayPrice)\(period), renewing until cancelled. Cancel anytime."
         }
         if !period.isEmpty {
             return "Auto-renews at \(product.displayPrice)\(period) until cancelled. Cancel anytime in Settings."
