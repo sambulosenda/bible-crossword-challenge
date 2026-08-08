@@ -164,9 +164,13 @@ struct ComebackCard: View {
     }
 }
 
-/// The seven-day row inside `StreakCard`: a filled scarlet check for completed
-/// days, an outlined ring for today, and muted letter chips for the rest.
-private struct WeekRow: View {
+/// The seven-day row: a filled accent check for completed days, an outlined ring
+/// for today, and muted letter chips for the rest.
+///
+/// Shared by `StreakCard` on Today and the completion scorecard — the dot that
+/// fills is the same dot in both places, which is the point of showing it at the
+/// moment it fills.
+struct WeekRow: View {
     let completedWeekdays: Set<Int>
 
     @Environment(\.calendar) private var calendar

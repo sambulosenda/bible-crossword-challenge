@@ -17,8 +17,15 @@ struct ShareCardView: View {
     let streak: Int
     let verse: String
     let reference: String
+    /// The puzzle's grid rows. Cell positions only — no letters — so this stays
+    /// spoiler-free while making every shared card look like its own puzzle.
+    var grid: [String] = []
 
-    private static let size = CGSize(width: 340, height: 440)
+    /// Taller than it was: the grid mark needs ~50pt that the old 440 didn't
+    /// have, and taking it from the content squeezed the verse down to two lines
+    /// and an ellipsis. The verse is the reason anyone shares this card, so the
+    /// card grew instead.
+    private static let size = CGSize(width: 340, height: 490)
 
     // Fixed palette — independent of the user's color scheme.
     private let ink = Color.white
@@ -62,10 +69,22 @@ struct ShareCardView: View {
         )
     }
 
+    /// The puzzle's own grid over the wordmark, in place of the seal-and-tick
+    /// lockup this used to carry.
+    ///
+    /// A tick beside a brand name is the mark for "operation succeeded" and says
+    /// nothing about what was solved; every card looked the same whichever
+    /// puzzle produced it. The grid makes each shared image its own puzzle, and
+    /// it stays spoiler-free because `GridThumbnail` draws cell positions only,
+    /// never letters.
+    ///
+    /// 56pt because this mark has to survive the one journey that matters — a
+    /// screenshot in someone else's chat thread. At the ~22pt the old lockup
+    /// icon occupied, a 15×15 grid collapses into a smudge.
     private var header: some View {
-        HStack(spacing: 8) {
-            Image(systemName: "checkmark.seal.fill")
-                .foregroundStyle(gold)
+        VStack(spacing: 10) {
+            GridThumbnail(grid: grid, tint: gold, gap: 0.5, cropsToContent: true)
+                .frame(width: 56, height: 56)
             Text("BIBLE CROSSWORD")
                 .font(.caption.weight(.bold))
                 .tracking(2)
@@ -120,7 +139,11 @@ enum ShareConfig {
         seconds: 154,
         streak: 12,
         verse: "Thou shalt love thy neighbour as thyself.",
-        reference: "Luke 10:27"
+        reference: "Luke 10:27",
+        grid: [
+            "...ABC...", ".DEFGHIJ.", "KLM.NOP..", ".QR.STUV.",
+            "WXY.Z.AB.", ".CDEFGH..", "..IJK.LM.", ".NOPQRST.", "...UVW..."
+        ]
     )
     .padding()
 }

@@ -41,6 +41,9 @@ struct CompletionView: View {
     /// The solved puzzle's pack, if any, with progress and the next unsolved
     /// puzzle — computed once on appear so the card doesn't shift mid-view.
     @State private var packContext: PackContext?
+    /// Weekdays solved this week, driving the scorecard's week row. Captured on
+    /// appear so the row can't shift mid-view.
+    @State private var completedWeekdays: Set<Int> = []
     /// First outgoing challenge needs a display name — collected inline. The
     /// intent (fresh challenge vs. rematch) is stashed across the prompt.
     @State private var showNamePrompt = false
@@ -77,6 +80,8 @@ struct CompletionView: View {
         ScrollView {
             VStack(spacing: Theme.Spacing.l) {
                 header
+
+                scorecard
 
                 if let challenge {
                     resultCard(challenge)
@@ -120,6 +125,7 @@ struct CompletionView: View {
             renderShareCard()
             maybeRequestReview()
             processIncomingChallenge()
+            loadWeek()
             loadPackContext()
             maybeAutoShowPaywall()
         }
@@ -364,7 +370,11 @@ struct CompletionView: View {
             }
             .padding(Theme.Spacing.l)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(Theme.accent.opacity(0.10), in: .rect(cornerRadius: Theme.cornerRadius, style: .continuous))
+            // A plain card, not an accent wash: the verse is this screen's hero
+            // and the wash is what marks it. Dressing the upsell in the same
+            // tint made the two read as siblings, with the ask borrowing the
+            // weight the payoff had earned.
+            .elevatedCard()
         }
         .buttonStyle(PressableCardStyle())
         .accessibilityElement(children: .ignore)
@@ -379,46 +389,99 @@ struct CompletionView: View {
             Text("Puzzle Completed!")
                 .font(.largeTitle.bold())
                 .multilineTextAlignment(.center)
-
-            statLine
         }
         .padding(.top, Theme.Spacing.m)
     }
 
-    /// Celebratory completion mark. The disc is drawn natively so it tracks the
-    /// accent and survives Reduce Motion intact; the Lottie adds only confetti.
+    /// Celebratory completion mark: the grid the player just filled, not a
+    /// checkmark. A tick is what iOS shows for "operation succeeded" — it marks
+    /// that something finished without saying what, and every results screen in
+    /// the category that reaches for one looks like every other. The grid is the
+    /// puzzle itself, a different shape every day, and the same mark the app
+    /// icon, the daily card and the share caption already use.
+    ///
+    /// The disc is drawn natively so it tracks the accent and survives Reduce
+    /// Motion intact; the Lottie adds only confetti.
     private var celebration: some View {
-        CelebrationBadge(systemImage: "checkmark", confetti: "puzzle_complete")
+        CelebrationBadge(grid: puzzle.grid, confetti: "puzzle_complete")
     }
 
-    /// Time and streak inline under the title — two small numbers don't
-    /// warrant cards of their own.
-    private var statLine: some View {
-        HStack(spacing: Theme.Spacing.s) {
-            Label {
-                Text(TimeFormat.clock(seconds)).monospacedDigit()
-            } icon: {
-                Image(systemName: "timer")
-            }
+    /// The solve's own numbers, given the weight a results screen owes them.
+    ///
+    /// These used to be one grey `.subheadline` line under the title — smaller
+    /// than the upsell card's body text, on the one screen whose whole job is to
+    /// report them. Tiles put the numbers first and the labels under, and the
+    /// week row underneath turns a bare streak count into a visible run: this is
+    /// the moment today's dot fills, so it's the moment worth showing it.
+    private var scorecard: some View {
+        VStack(spacing: Theme.Spacing.m) {
+            HStack(spacing: Theme.Spacing.m) {
+                statTile(value: TimeFormat.clock(seconds),
+                         label: "Time",
+                         symbol: "timer",
+                         tint: .secondary)
 
-            if streak > 0 {
-                Text("·")
-                    .foregroundStyle(.tertiary)
-                    .accessibilityHidden(true)
-
-                Label {
+                if streak > 0 {
                     // "1-day streak" is a true but bleak thing to show someone
                     // who just lost a long one. Naming it a new streak says the
                     // same number and frames it as a start.
-                    Text(isComeback ? "New streak — day \(streak)" : "\(streak)-day streak")
-                } icon: {
-                    Image(systemName: "flame.fill")
-                        .foregroundStyle(.orange)
+                    statTile(value: "\(streak)",
+                             label: isComeback ? "New streak" : "Day streak",
+                             symbol: "flame.fill",
+                             tint: .orange)
                 }
             }
+
+            Rectangle()
+                .fill(Color.primary.opacity(0.08))
+                .frame(height: 1)
+
+            WeekRow(completedWeekdays: completedWeekdays)
         }
-        .font(.subheadline.weight(.semibold))
-        .foregroundStyle(.secondary)
+        .padding(Theme.Spacing.l)
+        .frame(maxWidth: .infinity)
+        .elevatedCard()
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(scorecardLabel)
+    }
+
+    private func statTile(value: String, label: String, symbol: String, tint: Color) -> some View {
+        VStack(spacing: 2) {
+            Image(systemName: symbol)
+                .font(.subheadline)
+                .foregroundStyle(tint)
+            Text(value)
+                .font(.title.weight(.bold))
+                .monospacedDigit()
+            Text(label)
+                .kicker()
+        }
+        .frame(maxWidth: .infinity)
+        .lineLimit(1)
+        .minimumScaleFactor(0.6)
+    }
+
+    private var scorecardLabel: String {
+        var parts = ["Solved in \(TimeFormat.clock(seconds))"]
+        if streak > 0 {
+            parts.append(isComeback ? "New streak, day \(streak)" : "\(streak) day streak")
+        }
+        let days = completedWeekdays.count
+        parts.append("\(days) \(days == 1 ? "day" : "days") completed this week")
+        return parts.joined(separator: ". ")
+    }
+
+    /// Weekdays with a completed puzzle in the current week, for the week row.
+    /// Read once on appear — this solve's record is already written and saved by
+    /// the time the cover presents, so today's dot is lit.
+    private func loadWeek() {
+        let calendar = Calendar.current
+        guard let week = calendar.dateInterval(of: .weekOfYear, for: Date()) else { return }
+        let records = (try? context.fetch(FetchDescriptor<PuzzleRecord>())) ?? []
+        completedWeekdays = Set(records.compactMap { record in
+            guard record.isCompleted, let date = record.completedDate, week.contains(date) else { return nil }
+            return calendar.component(.weekday, from: date)
+        })
     }
 
     /// Snowflake mark for the streak-freeze card. Cyan carries the meaning; the
@@ -483,7 +546,7 @@ struct CompletionView: View {
         }
         .padding(Theme.Spacing.l)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(.secondarySystemGroupedBackground), in: .rect(cornerRadius: Theme.cornerRadius))
+        .elevatedCard()
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("Streak freeze earned. It'll cover you if you miss a day.")
     }
@@ -508,7 +571,7 @@ struct CompletionView: View {
         }
         .padding(Theme.Spacing.l)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(.secondarySystemGroupedBackground), in: .rect(cornerRadius: Theme.cornerRadius))
+        .elevatedCard()
     }
 
     /// Tomorrow hook, demoted to a quiet footer line — the streak already
@@ -651,7 +714,8 @@ struct CompletionView: View {
                 seconds: seconds,
                 streak: streak,
                 verse: puzzle.verse,
-                reference: puzzle.reference
+                reference: puzzle.reference,
+                grid: puzzle.grid
             )
         )
         renderer.scale = displayScale
