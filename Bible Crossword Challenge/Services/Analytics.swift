@@ -22,6 +22,14 @@ enum AnalyticsEvent {
     case dailyPuzzleCompleted(puzzleID: String, seconds: Int)
     case hintUsed(type: String)
     case streakUpdated(streak: Int)
+    // The two halves of a lost streak. `streakBroken` fires once, on the launch
+    // that resets it (see `Streaks.Outcome`), carrying what was lost — the
+    // length is the interesting part, since a 3-day lapse and a 60-day one are
+    // different events. `streakComebackStarted` fires on the solve that starts
+    // the next one, so the pair answers: after a break, do they come back, from
+    // where, and how long did the lost streak have to be before they don't.
+    case streakBroken(previousLength: Int)
+    case streakComebackStarted(source: String)
     case achievementUnlocked(id: String)
     // Purchases. `isTrial` is what StoreKit actually applied, so a trial start
     // and a paid conversion are never counted as the same thing — the yearly
@@ -91,6 +99,8 @@ enum AnalyticsEvent {
         case .dailyPuzzleCompleted: return "daily_puzzle_completed"
         case .hintUsed: return "hint_used"
         case .streakUpdated: return "streak_updated"
+        case .streakBroken: return "streak_broken"
+        case .streakComebackStarted: return "streak_comeback_started"
         case .achievementUnlocked: return "achievement_unlocked"
         case .premiumPurchased: return "premium_purchased"
         case .subscriptionRenewed: return "subscription_renewed"
@@ -166,6 +176,10 @@ enum AnalyticsEvent {
             return ["type": type]
         case .streakUpdated(let streak):
             return ["streak": streak]
+        case .streakBroken(let previousLength):
+            return ["previous_length": previousLength]
+        case .streakComebackStarted(let source):
+            return ["source": source]
         case .achievementUnlocked(let id):
             return ["achievement_id": id]
         case .notificationPermission(let granted):

@@ -112,6 +112,77 @@ struct StreakTests {
         #expect(p.currentStreak == 1)
     }
 
+    // MARK: - Break detection (ticket 11)
+
+    /// The comeback card is keyed on this outcome, so the freeze path must not
+    /// report a break: the streak survived, and telling the player it ended
+    /// would contradict the reassurance the streak card shows on the same
+    /// launch.
+    @Test func freezeSaveIsNotReportedAsABreak() {
+        let p = PlayerProfile() // one freeze
+        Streaks.registerCompletion(p, now: day(2026, 7, 1), calendar: utc)
+        let outcome = Streaks.normalize(p, now: day(2026, 7, 3), calendar: utc)
+        #expect(outcome == .freezeSaved)
+        #expect(p.currentStreak == 1)
+    }
+
+    @Test func multiDayGapReportsBreakWithItsLength() {
+        let p = PlayerProfile(streakFreezes: 0)
+        for date in 1...5 {
+            Streaks.registerCompletion(p, now: day(2026, 7, date), calendar: utc)
+        }
+        #expect(p.currentStreak == 5)
+        let outcome = Streaks.normalize(p, now: day(2026, 7, 10), calendar: utc)
+        #expect(outcome == .broken(previous: 5))
+        #expect(p.currentStreak == 0)
+    }
+
+    /// The break is announced once. A second pass finds the streak already at
+    /// zero and must stay quiet, or every launch would re-open the comeback
+    /// card on a loss the player has already seen.
+    @Test func breakIsReportedOnlyOnce() {
+        let p = PlayerProfile(streakFreezes: 0)
+        Streaks.registerCompletion(p, now: day(2026, 7, 1), calendar: utc)
+        #expect(Streaks.normalize(p, now: day(2026, 7, 5), calendar: utc) == .broken(previous: 1))
+        #expect(Streaks.normalize(p, now: day(2026, 7, 5), calendar: utc) == .unchanged)
+        #expect(Streaks.normalize(p, now: day(2026, 7, 6), calendar: utc) == .unchanged)
+    }
+
+    /// A gap that a freeze covers, followed by a second gap it can't.
+    @Test func breakAfterAFreezeCarriesTheSurvivingLength() {
+        let p = PlayerProfile() // one freeze
+        Streaks.registerCompletion(p, now: day(2026, 7, 1), calendar: utc)
+        Streaks.registerCompletion(p, now: day(2026, 7, 2), calendar: utc)
+        #expect(Streaks.normalize(p, now: day(2026, 7, 4), calendar: utc) == .freezeSaved)
+        #expect(p.currentStreak == 2)
+        // Freeze is spent, so the next gap breaks it.
+        #expect(Streaks.normalize(p, now: day(2026, 7, 7), calendar: utc) == .broken(previous: 2))
+    }
+
+    @Test func currentStreakReportsUnchanged() {
+        let p = PlayerProfile()
+        Streaks.registerCompletion(p, now: day(2026, 7, 1), calendar: utc)
+        #expect(Streaks.normalize(p, now: day(2026, 7, 1), calendar: utc) == .unchanged)
+        #expect(Streaks.normalize(p, now: day(2026, 7, 2), calendar: utc) == .unchanged)
+    }
+
+    /// A profile that has never completed anything has no streak to lose.
+    @Test func neverPlayedIsNotABreak() {
+        let p = PlayerProfile()
+        #expect(Streaks.normalize(p, now: day(2026, 7, 1), calendar: utc) == .unchanged)
+    }
+
+    /// The solve after a break restarts at 1 — what the completion screen calls
+    /// "New streak — day 1".
+    @Test func solveAfterBreakRestartsAtOne() {
+        let p = PlayerProfile(streakFreezes: 0)
+        Streaks.registerCompletion(p, now: day(2026, 7, 1), calendar: utc)
+        Streaks.normalize(p, now: day(2026, 7, 5), calendar: utc)
+        #expect(p.currentStreak == 0)
+        Streaks.registerCompletion(p, now: day(2026, 7, 5), calendar: utc)
+        #expect(p.currentStreak == 1)
+    }
+
     @Test func milestoneGrantsFreeze() {
         let p = PlayerProfile() // starts with one
         for d in 1...7 {

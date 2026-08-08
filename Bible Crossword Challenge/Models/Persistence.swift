@@ -255,18 +255,32 @@ extension PlayerProfile {
 // MARK: - Streak rules
 
 enum Streaks {
+    /// What a `normalize` pass did, so the caller can react without inferring it
+    /// from the profile afterwards.
+    ///
+    /// `broken` carries the length that was lost and is reported **only** on the
+    /// pass that actually resets it. A second pass the same day finds the streak
+    /// already at zero and reports `unchanged`, which is what keeps the comeback
+    /// card from re-firing on every launch.
+    enum Outcome: Equatable {
+        case unchanged
+        case freezeSaved
+        case broken(previous: Int)
+    }
+
     /// Called on app launch: drops a stale streak to zero if a day was missed,
     /// unless a single missed day can be bridged by spending a streak freeze.
-    static func normalize(_ p: PlayerProfile, now: Date = Date(), calendar: Calendar = .current) {
+    @discardableResult
+    static func normalize(_ p: PlayerProfile, now: Date = Date(), calendar: Calendar = .current) -> Outcome {
         guard let last = p.lastCompletedDate else {
             p.currentStreak = 0
-            return
+            return .unchanged
         }
         let today = calendar.startOfDay(for: now)
         let lastDay = calendar.startOfDay(for: last)
-        guard let yesterday = calendar.date(byAdding: .day, value: -1, to: today) else { return }
+        guard let yesterday = calendar.date(byAdding: .day, value: -1, to: today) else { return .unchanged }
         // Solved today or yesterday — streak is current, nothing to do.
-        if lastDay >= yesterday { return }
+        if lastDay >= yesterday { return .unchanged }
 
         // At least one full day was missed. A freeze can bridge exactly one
         // missed day (last solve was the day before yesterday). Larger gaps
@@ -278,9 +292,15 @@ enum Streaks {
             // same-day normalize passes don't spend another freeze.
             p.lastCompletedDate = yesterday
             p.lastFreezeUsedDate = today
-            return
+            return .freezeSaved
         }
+        // Only a streak that was actually running can break. Reporting the reset
+        // of an already-zero streak would re-announce the same loss on every
+        // launch until they solved something.
+        guard p.currentStreak > 0 else { return .unchanged }
+        let previous = p.currentStreak
         p.currentStreak = 0
+        return .broken(previous: previous)
     }
 
     /// Called when a puzzle is completed. Returns true if the streak advanced today.
