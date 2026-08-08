@@ -1,7 +1,7 @@
 # Ticket 11 — Streak break / comeback
 
 **Priority:** medium (D1–D7 retention)  
-**Status:** `[ ]`  
+**Status:** `[x]`  
 **Type:** eng / copy  
 **Estimate:** M  
 **Files:** `Models/Persistence.swift` (`Streaks`), `Views/HomeView.swift`, `NotificationService.swift`, Completion / Profile streak UI  
@@ -36,12 +36,12 @@ When a streak dies (or is one freeze from dying), make the next open feel like *
 
 ### T1 — Detect break vs freeze-save (surface state)
 
-**Status:** `[ ]`
+**Status:** `[x]`
 
-- [ ] On launch after `Streaks.normalize`, distinguish:
+- [x] On launch after `Streaks.normalize`, distinguish:
   - **Freeze saved** (already: `lastFreezeUsedDate` today)
   - **Streak reset this launch** (was >0, now 0) — may need a one-shot flag written during normalize, e.g. `streakBrokenAt` or UserDefaults `pendingStreakBreakBanner`
-- [ ] Don’t re-show break banner every launch forever — once until dismissed or until streak > 0 again
+- [x] Don’t re-show break banner every launch forever — once until dismissed or until streak > 0 again
 
 **Acceptance**
 - Tests: freeze path doesn’t fire “streak broken”; multi-day gap does; single show
@@ -50,15 +50,15 @@ When a streak dies (or is one freeze from dying), make the next open feel like *
 
 ### T2 — Home comeback card
 
-**Status:** `[ ]`
+**Status:** `[x]`
 
 When pending break (streak 0 after loss):
 
-- [ ] Card on Home above or instead of empty flame energy: calm copy  
+- [x] Card on Home above or instead of empty flame energy: calm copy  
   e.g. “Streak paused — one mini starts a new one.”
-- [ ] Primary: **Play today’s mini** (or daily if mini missing)
-- [ ] Secondary dismiss
-- [ ] If freeze saved: keep existing cyan reassurance (don’t stack break + save)
+- [x] Primary: **Play today’s mini** (or daily if mini missing)
+- [x] Secondary dismiss
+- [x] If freeze saved: keep existing cyan reassurance (don’t stack break + save)
 
 **Acceptance**
 - After artificial streak break in debug/seed, Home shows comeback CTA
@@ -68,11 +68,11 @@ When pending break (streak 0 after loss):
 
 ### T3 — Notifications
 
-**Status:** `[ ]`
+**Status:** `[~]` — first bullet done, second deliberately not (see ship notes)
 
-- [ ] **At-risk (existing):** ensure copy mentions freeze if `streakFreezes > 0` (“A freeze can cover you tonight”)
+- [x] **At-risk (existing):** ensure copy mentions freeze if `streakFreezes > 0` (“A freeze can cover you tonight”)
 - [ ] **Day after break (new, optional):** one notification if reminders enabled and streak hit 0 yesterday — “New streak starts with today’s puzzle” — not spammy (once)
-- [ ] Respect auth + `remindersEnabled`; no notify if Premium-only nonsense
+- [x] Respect auth + `remindersEnabled`; no notify if Premium-only nonsense
 
 **Acceptance**
 - No notification storms; reschedule logic still centralized in `NotificationService`
@@ -81,10 +81,10 @@ When pending break (streak 0 after loss):
 
 ### T4 — Completion copy when restarting
 
-**Status:** `[ ]`
+**Status:** `[x]`
 
-- [ ] When completion advances streak from 0 → 1 after a break, light celebration: “New streak — day 1” (not only for big milestones)
-- [ ] Don’t steal thunder from achievements / pack complete
+- [x] When completion advances streak from 0 → 1 after a break, light celebration: “New streak — day 1” (not only for big milestones)
+- [x] Don’t steal thunder from achievements / pack complete
 
 **Acceptance**
 - First solve after break feels acknowledged
@@ -93,11 +93,11 @@ When pending break (streak 0 after loss):
 
 ### T5 — Analytics
 
-**Status:** `[ ]`
+**Status:** `[x]`
 
-- [ ] `streak_broken(previousLength: Int)` (bucket or cap length if needed)
-- [ ] `streak_comeback_started(source: home_card|notification|organic)`
-- [ ] Existing `streak_updated` remains source of truth for length
+- [x] `streak_broken(previousLength: Int)` (bucket or cap length if needed)
+- [x] `streak_comeback_started(source: home_card|notification|organic)`
+- [x] Existing `streak_updated` remains source of truth for length
 
 **Acceptance**
 - Can measure break → return-within-7d in analytics
@@ -112,12 +112,50 @@ When pending break (streak 0 after loss):
 
 ## Test plan
 
-- [ ] Miss one day with freeze > 0 → freeze save UI, streak intact, no comeback card
-- [ ] Miss one day with freeze = 0 → streak 0, comeback card once
-- [ ] Miss many days → streak 0, comeback once
-- [ ] Complete mini from card → streak 1, card gone
-- [ ] Reminder schedule with/without freezes at risk
+- [x] Miss one day with freeze > 0 → freeze save UI, streak intact, no comeback card
+- [x] Miss one day with freeze = 0 → streak 0, comeback card once
+- [x] Miss many days → streak 0, comeback once
+- [x] Complete mini from card → streak 1, card gone
+- [x] Reminder schedule with/without freezes at risk
 
 ## Done when
 
 Losing a streak produces a **clear, kind path back** (especially via mini), with analytics on break and comeback — without paywalling grief.
+
+---
+
+## Ship notes
+
+**No new persisted model state.** `Streaks.normalize` returns a `Streaks.Outcome`
+(`unchanged` / `freezeSaved` / `broken(previous:)`) and the break is held in
+`@AppStorage("pendingStreakBreak")`. T1 suggested a `streakBrokenAt` field on
+`PlayerProfile`; that would be a synced SwiftData field, so it would need a
+CloudKit schema deploy to Production before release — for a transient piece of UI
+state. `broken` is reported only by the pass that actually resets a running
+streak, so repeat launches report `unchanged` and the card can't re-fire.
+
+**The card replaces StreakCard rather than sitting above it.** Stacking a comeback
+card on a flame card reading 0 states the loss twice and answers it once. The two
+can't collide anyway: a freeze save means the streak survived.
+
+**The offer is owed until something is solved.** `pendingStreakBreak` clears on the
+solve, not on the card's tap — opening a puzzle and backing out shouldn't spend it.
+Any solve counts, not just one launched from the card; `source` records which.
+
+**T3's second bullet is deliberately not done.** A separate day-after-break
+notification would land on top of the existing daily reminder, which already fires
+that morning with "Today's puzzle is ready". Two notifications the day after a
+player lapses is the spam the ticket warns about, and the second one carries no
+information the first doesn't. The at-risk copy now names an available freeze
+(first bullet) — withholding it to keep the threat sharp would be a lie by
+omission about something the player earned.
+
+**Debug affordance:** launch with `-uiSeedStreakBreak` to date a 14-day streak into
+the past with no freezes, so the next normalize breaks it. The test plan needs an
+artificial break and there is no other way to reach the card without waiting two
+real days.
+
+**Verified end to end on device:** break detected on launch → card shown → mini
+played from the card → "New streak — day 1" on completion → card gone, streak card
+back at 1 with best 14. Unit tests cover freeze-vs-break, multi-day gaps, the
+report-once rule, break after a spent freeze, and restart-at-1.
