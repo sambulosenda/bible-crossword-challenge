@@ -102,8 +102,7 @@ struct HomeView: View {
                     if let daily {
                         DailyPuzzleCard(
                             puzzle: daily,
-                            status: PuzzleStatus(record: record),
-                            solveSeconds: record?.isCompleted == true ? record?.elapsedSeconds : nil,
+                            presentation: .of(record: record, on: Date()),
                             progress: inProgressFraction(daily, record: record)
                         )
                     } else {
@@ -113,8 +112,7 @@ struct HomeView: View {
                     if let mini {
                         MiniPuzzleCard(
                             puzzle: mini,
-                            status: PuzzleStatus(record: miniRecord),
-                            solveSeconds: miniRecord?.isCompleted == true ? miniRecord?.elapsedSeconds : nil
+                            presentation: .of(record: miniRecord, on: Date())
                         )
                     }
 
@@ -304,8 +302,7 @@ private struct TodayHeader: View {
 
 private struct DailyPuzzleCard: View {
     let puzzle: Puzzle
-    let status: PuzzleStatus
-    var solveSeconds: Int? = nil
+    let presentation: DailyPresentation
     var progress: Double? = nil
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -321,7 +318,10 @@ private struct DailyPuzzleCard: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .elevatedCard(fill: Theme.accent.opacity(0.10))
         .onAppear {
-            if status == .completed && !reduceMotion { celebrate.toggle() }
+            // Only a puzzle finished *today* is worth celebrating. The rotation
+            // repeat is also `isCompleted`, and bouncing a seal at it is exactly
+            // the message that ends streaks.
+            if case .solvedToday = presentation, !reduceMotion { celebrate.toggle() }
         }
     }
 
@@ -341,9 +341,16 @@ private struct DailyPuzzleCard: View {
                         .font(.scripture(.title, weight: .bold))
                         .fixedSize(horizontal: false, vertical: true)
 
-                    if status == .completed {
-                        solvedReward
-                    } else {
+                    switch presentation {
+                    case .solvedToday(let seconds):
+                        solvedReward(seconds)
+                    case .playedBefore(let previous):
+                        // Presented as playable, because it is: the meta row is
+                        // what an unsolved puzzle shows, and the pill turns the
+                        // old time into a target rather than a full stop.
+                        metaRow
+                        replayPrompt(previous)
+                    case .play:
                         metaRow
                         if let progress {
                             ProgressView(value: progress)
@@ -388,13 +395,13 @@ private struct DailyPuzzleCard: View {
     // The win moment: leads with the time the user just earned, echoing the
     // CompletionView language (green seal + monospaced clock).
     // A compact success pill that hugs its content (not a full-width bar).
-    private var solvedReward: some View {
+    private func solvedReward(_ seconds: Int?) -> some View {
         HStack(spacing: Theme.Spacing.xs) {
             Image(systemName: "checkmark.seal.fill")
                 .foregroundStyle(.green)
                 .symbolEffect(.bounce, value: celebrate)
             Text("Solved").foregroundStyle(.green)
-            if let secs = solveSeconds, secs > 0 {
+            if let secs = seconds, secs > 0 {
                 Text("in \(TimeFormat.clock(secs))")
                     .foregroundStyle(.primary)
                     .monospacedDigit()
@@ -407,16 +414,49 @@ private struct DailyPuzzleCard: View {
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 
+    /// The rotation has come back around to a puzzle this player finished on an
+    /// earlier day. Accent, not green: green is this app's word for "done", and
+    /// today is not.
+    private func replayPrompt(_ previous: Int?) -> some View {
+        HStack(spacing: Theme.Spacing.xs) {
+            Image(systemName: "arrow.triangle.2.circlepath")
+            // Concatenated rather than two views in the stack: as one `Text` it
+            // wraps as a phrase instead of breaking between "beat" and the time.
+            if let previous, previous > 0 {
+                Text("Played before · beat ")
+                    + Text(TimeFormat.clock(previous)).monospacedDigit()
+            } else {
+                Text("You've played this one before")
+            }
+        }
+        .lineLimit(1)
+        .minimumScaleFactor(0.8)
+        .font(.subheadline.weight(.semibold))
+        .foregroundStyle(Theme.accent)
+        .padding(.horizontal, Theme.Spacing.m)
+        .padding(.vertical, Theme.Spacing.s)
+        .background(Theme.accent.opacity(0.14), in: .capsule)
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
     @ViewBuilder
     private var actionButton: some View {
-        if status == .completed {
+        switch presentation {
+        case .solvedToday:
             // Full-width but secondary (tonal) — replay stays available without
             // out-shouting the ink pill used for unsolved puzzles.
             NavigationLink(value: puzzle) {
                 Label("Play again", systemImage: "arrow.clockwise")
             }
             .buttonStyle(.pillTonal)
-        } else {
+        case .playedBefore:
+            // Prominent, unlike the solved-today replay: this *is* the day's
+            // action, and the streak depends on it being taken.
+            NavigationLink(value: puzzle) {
+                Label("Play again", systemImage: "arrow.clockwise")
+            }
+            .buttonStyle(.pillProminent)
+        case .play(let status):
             NavigationLink(value: puzzle) {
                 Label(status.actionTitle, systemImage: status.actionSymbol)
             }
@@ -425,15 +465,21 @@ private struct DailyPuzzleCard: View {
     }
 
     private var accessibilityLabel: String {
-        switch status {
-        case .completed:
-            if let secs = solveSeconds, secs > 0 {
+        switch presentation {
+        case .solvedToday(let seconds):
+            if let secs = seconds, secs > 0 {
                 return "Daily puzzle. \(puzzle.title). Solved in \(TimeFormat.clock(secs))."
             }
             return "Daily puzzle. \(puzzle.title). Completed."
-        case .inProgress:
+        case .playedBefore(let previous):
+            let base = "Daily puzzle. \(puzzle.title). \(puzzle.difficulty.label) difficulty. You've played this one before"
+            if let previous, previous > 0 {
+                return base + ", in \(TimeFormat.clock(previous)). Play again to beat it."
+            }
+            return base + ". Play again."
+        case .play(.inProgress):
             return "Daily puzzle. \(puzzle.title). \(puzzle.difficulty.label) difficulty. In progress. \(puzzle.clueCount) clues, \(puzzle.size) by \(puzzle.size) grid."
-        case .start:
+        case .play:
             return "Daily puzzle. \(puzzle.title). \(puzzle.difficulty.label) difficulty. \(puzzle.clueCount) clues, \(puzzle.size) by \(puzzle.size) grid."
         }
     }
@@ -717,15 +763,22 @@ private struct UpgradeCard: View {
 
 private struct MiniPuzzleCard: View {
     let puzzle: Puzzle
-    let status: PuzzleStatus
-    var solveSeconds: Int? = nil
+    let presentation: DailyPresentation
+
+    /// Only a mini finished today wears the green check. The mini pool wraps on
+    /// its own schedule, eight days after the daily's, and a repeat there tells
+    /// the same streak-ending lie.
+    private var isSolvedToday: Bool {
+        if case .solvedToday = presentation { return true }
+        return false
+    }
 
     var body: some View {
         NavigationLink(value: puzzle) {
             HStack(spacing: Theme.Spacing.m) {
-                Image(systemName: status == .completed ? "checkmark.circle.fill" : "bolt.circle.fill")
+                Image(systemName: isSolvedToday ? "checkmark.circle.fill" : "bolt.circle.fill")
                     .font(.title)
-                    .foregroundStyle(status == .completed ? .green : Theme.accent)
+                    .foregroundStyle(isSolvedToday ? .green : Theme.accent)
 
                 VStack(alignment: .leading, spacing: 2) {
                     Label("DAILY MINI", systemImage: "square.grid.3x3").kicker()
@@ -753,24 +806,30 @@ private struct MiniPuzzleCard: View {
     }
 
     private var subtitle: String {
-        switch status {
-        case .completed:
-            if let secs = solveSeconds, secs > 0 {
+        switch presentation {
+        case .solvedToday(let seconds):
+            if let secs = seconds, secs > 0 {
                 return "Solved in \(TimeFormat.clock(secs))"
             }
             return "Solved"
-        case .inProgress:
+        case .playedBefore(let previous):
+            if let previous, previous > 0 {
+                return "Played before · beat \(TimeFormat.clock(previous))"
+            }
+            return "Played before · go again"
+        case .play(.inProgress):
             return "In progress · \(puzzle.size)×\(puzzle.size)"
-        case .start:
+        case .play:
             return "\(puzzle.size)×\(puzzle.size) · A quick two-minute puzzle"
         }
     }
 
     private var accessibilityLabel: String {
-        switch status {
-        case .completed: return "Daily mini. \(puzzle.title). \(subtitle)."
-        case .inProgress: return "Daily mini. \(puzzle.title). In progress."
-        case .start: return "Daily mini. \(puzzle.title). A quick two-minute puzzle."
+        switch presentation {
+        case .solvedToday: return "Daily mini. \(puzzle.title). \(subtitle)."
+        case .playedBefore: return "Daily mini. \(puzzle.title). \(subtitle)."
+        case .play(.inProgress): return "Daily mini. \(puzzle.title). In progress."
+        case .play: return "Daily mini. \(puzzle.title). A quick two-minute puzzle."
         }
     }
 }

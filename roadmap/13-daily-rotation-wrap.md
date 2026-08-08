@@ -1,7 +1,8 @@
 # Ticket 13 — Daily rotation wrap (streak-break event, dated)
 
 **Priority:** critical (dated: **2026-09-21**) — retention of the most engaged cohort
-**Status:** `[ ]`
+**Status:** `[~]` — T1, T2 shipped (the safety net). T3 (content) and T4
+(replay counting) open; T3 is the actual fix.
 **Type:** eng / content
 **Estimate:** S (safety net) + ongoing (content)
 **Files:** `Views/HomeView.swift` (`DailyPuzzleCard`), `Services/PuzzleProvider.swift`, `Resources/puzzles.json`
@@ -63,38 +64,66 @@ daily that challenges and "did you do today's?" depend on).
 
 ### T1 — Know when today's daily is a repeat
 
-**Status:** `[ ]`
+**Status:** `[x]`
 
-- [ ] Distinguish *solved today* (correct, celebrate it) from *solved on an earlier
-      day* (a rotation repeat) — the condition is `record.completedDate` not being
-      today, not `isCompleted`
-- [ ] Same for the mini
-- [ ] Keep it a pure function of (puzzle, record, date) so it's testable without a
-      wall clock
+- [x] `DailyPresentation.of(record:on:calendar:)` — `.solvedToday`,
+      `.playedBefore`, or `.play(status)`, keyed on `completedDate`, not
+      `isCompleted`
+- [x] Same type drives the mini
+- [x] Pure in `(record, date, calendar)`
+
+Kept **separate from `PuzzleStatus`** rather than adding a case to it. "Repeat"
+only means anything where the app claims a puzzle is *today's*; in Archive and
+pack lists a completed puzzle is simply completed, and a fourth case would have
+forced every one of those call sites to answer a question it doesn't have.
+
+An undated completion (pre-dating the field, or arrived through sync without it)
+is treated as a repeat: a needless replay costs nothing, a false "done" costs a
+streak.
 
 **Acceptance**
-- Unit tests: solved-today, solved-earlier, never-solved, and the exact wrap dates
-  above driven through `dailyPuzzle(for:calendar:)`
+- [x] Unit tests: solved-today, solved-earlier, same-day-different-hour,
+      yesterday-by-an-hour, never-solved, in-progress, undated, zero-time
+- [x] Wrap dates driven through `dailyPuzzle(for:)` / `dailyMini(for:)`
+
+**The tests count in `Calendar.current`, not UTC** — `PuzzleProvider` builds its
+epoch from `Calendar.current`, so pinning a date in UTC puts the index a day out.
+Worth knowing beyond the test: **the exact wrap date is the device's, not a
+universal one.** A player east of the line sees it first.
 
 ---
 
 ### T2 — Card treatment for a repeat
 
-**Status:** `[ ]`
+**Status:** `[x]`
 
-- [ ] A repeat must not present the day as finished: no `solvedReward` as the
-      card's whole state, no celebratory bounce
-- [ ] Offer the replay explicitly — "Play again", with their previous time as the
-      thing to beat (the app already has this language on the completion screen)
-- [ ] Keep the daily shared: everyone still gets the same puzzle, so challenges
-      and social copy still hold
-- [ ] Consider a secondary route to something unsolved (Library's free window
-      already gives free players seven, per 09)
+- [x] A repeat shows the meta row an unsolved puzzle shows — no green seal, no
+      bounce (the bounce is now gated on `.solvedToday`, not `isCompleted`)
+- [x] An accent pill turns the old time into a target: "Played before · beat 4:32"
+- [x] The CTA is **prominent** for a repeat, where solved-today keeps its tonal
+      replay: on a wrap day this *is* the day's action and the streak depends on
+      it being taken
+- [x] Daily stays shared — nothing about the rotation changed
+- [x] Same treatment on the mini card, which wraps eight days later
+- [ ] Secondary route to something unsolved — not built; the prominent replay
+      answers the streak risk on its own, and a second CTA on the hero card is a
+      bigger design change than the safety net warrants
+
+**Green is this app's word for "done", so a repeat doesn't get any.** The pill is
+accent, the mini keeps its blue bolt instead of the green check.
 
 **Acceptance**
-- On a wrap date, the daily card shows a playable action, not a finished state
-- Solving it still advances the streak (unchanged behaviour, worth asserting)
-- A puzzle solved *earlier today* still shows the existing solved treatment
+- [x] On a wrap date the card shows a playable action, not a finished state
+- [x] Solving a repeat still advances the streak — asserted, since the whole fix
+      rests on a mechanism that was never broken
+- [x] Solved *today* is unchanged — verified on device with both states on one
+      screen at once (daily solved today, mini a repeat)
+
+**Testing it** — `-uiSeedRotationRepeat` marks today's daily and mini as solved
+60 days ago, which is what the wrap does to the cohort. Same family as
+`-uiForceReminderPrompt`: the state is otherwise two months of clock-moving away,
+which made the card that decides a streak one of the hardest in the app to look
+at.
 
 ---
 

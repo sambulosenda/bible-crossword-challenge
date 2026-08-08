@@ -93,6 +93,9 @@ struct RootView: View {
             if ProcessInfo.processInfo.arguments.contains("-uiSeedStreakBreak") {
                 seedStreakBreak(profile)
             }
+            if ProcessInfo.processInfo.arguments.contains("-uiSeedRotationRepeat") {
+                seedRotationRepeat()
+            }
             #endif
             // A break is announced once, by the pass that causes it — see
             // `Streaks.Outcome`. A freeze save needs nothing here: the streak
@@ -392,6 +395,33 @@ struct RootView: View {
         p.streakFreezes = 0     // a freeze would bridge the gap instead
         p.lastCompletedDate = calendar.date(byAdding: .day, value: -4, to: Date())
         pendingStreakBreak = 0  // let normalize be the thing that reports it
+    }
+
+    /// Marks today's daily and mini as solved on an earlier day — which is what
+    /// the rotation wrap does to the whole cohort on 2026-09-21 and 2026-09-29.
+    ///
+    /// Same family as `-uiForceReminderPrompt`: the state is otherwise only
+    /// reachable by moving the device clock two months forward, which makes the
+    /// card that decides a streak one of the hardest in the app to look at.
+    private func seedRotationRepeat() {
+        let earlier = Calendar.current.date(byAdding: .day, value: -60, to: Date()) ?? Date()
+        let existing = (try? context.fetch(FetchDescriptor<PuzzleRecord>())) ?? []
+        let byID = Dictionary(existing.map { ($0.puzzleID, $0) }, uniquingKeysWith: { a, _ in a })
+
+        for puzzle in [puzzleProvider.dailyPuzzle(), puzzleProvider.dailyMini()].compactMap({ $0 }) {
+            // Update in place when a record exists, so re-running the flag can't
+            // leave two records for one puzzle.
+            let record = byID[puzzle.id] ?? {
+                let fresh = PuzzleRecord(puzzleID: puzzle.id)
+                context.insert(fresh)
+                return fresh
+            }()
+            record.isCompleted = true
+            record.completedDate = earlier
+            record.elapsedSeconds = 272
+            record.updatedAt = earlier
+        }
+        context.saveLogged("seed rotation repeat")
     }
 
     private func seedShowcase(_ p: PlayerProfile) {
