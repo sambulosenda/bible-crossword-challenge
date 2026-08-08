@@ -2,9 +2,12 @@
 //  LibraryView.swift
 //  Bible Crossword Challenge
 //
-//  Premium-only library of every puzzle — searchable, filterable by difficulty
-//  and completion status, with a one-tap jump to the next unsolved puzzle. Free
-//  users see a locked state that routes to the paywall.
+//  The library of every puzzle — searchable, filterable by difficulty and
+//  completion status, with a one-tap jump to the next unsolved puzzle.
+//
+//  Free players see the same list behind a soft gate rather than a locked
+//  screen: what they can play, then what Premium opens. The rule is in
+//  `PuzzleAccess`; this file only draws it.
 //
 //  Called a library, not an archive, because that is what it is: the daily
 //  puzzle rotates with `days % pool.count` (see PuzzleProvider.rotated), so
@@ -82,13 +85,42 @@ struct LibraryView: View {
         return records.filter { $0.isCompleted && ids.contains($0.puzzleID) }.count
     }
 
+    // MARK: - Free tier
+
+    /// The soft gate. Two small windows of ids — see `PuzzleAccess` for the rule
+    /// and why it holds no persisted state.
+    private var access: PuzzleAccess {
+        PuzzleAccess(provider: puzzleProvider)
+    }
+
+    private func canPlay(_ puzzle: Puzzle, gate: PuzzleAccess) -> Bool {
+        gate.canPlay(
+            puzzle,
+            isPremium: store.isPremium,
+            hasProgress: recordsByID[puzzle.id] != nil
+        )
+    }
+
+    /// Everything the filters admit, split by whether this player can open it.
+    /// Minis follow the dailies rather than interleaving: they're a different
+    /// length of sitting, and the premium list already groups them apart.
+    private func partitioned(gate: PuzzleAccess) -> (free: [Puzzle], locked: [Puzzle]) {
+        let all = filtered + filteredMinis
+        var free: [Puzzle] = []
+        var locked: [Puzzle] = []
+        for puzzle in all {
+            if canPlay(puzzle, gate: gate) { free.append(puzzle) } else { locked.append(puzzle) }
+        }
+        return (free, locked)
+    }
+
     var body: some View {
         NavigationStack {
             Group {
                 if store.isPremium {
                     premiumList
                 } else {
-                    lockedState
+                    freeList
                 }
             }
             .navigationTitle("Library")
@@ -283,88 +315,135 @@ struct LibraryView: View {
         }
     }
 
-    // MARK: - Locked state
+    // MARK: - Free list
 
-    /// The half most people see. It used to be a `ContentUnavailableView` with
-    /// a yellow crown and the headline "Premium Feature" — the name of a
-    /// business model rather than a benefit, set in system yellow on paper at
-    /// 1.39:1, which fails every contrast threshold including large text.
+    /// The half most people see.
     ///
-    /// Now it shows the collection it's withholding: real titles, real grids,
-    /// locked. Same device as the paywall's pack strip.
-    private var lockedState: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: Theme.Spacing.l) {
-                VStack(alignment: .leading, spacing: Theme.Spacing.s) {
-                    Text("Premium")
-                        .kicker()
-                    // The same line the paywall shows when the button below is
-                    // tapped — see `PremiumCopy.archive`. Two headlines one tap
-                    // apart made a single journey read as two separate pitches.
-                    Text(PremiumCopy.archive)
-                        .font(.scripture(.largeTitle, weight: .semibold))
-                        .fixedSize(horizontal: false, vertical: true)
-                    // Both numbers, deliberately. This used to quote only the
-                    // archive's own count to avoid looking like a different
-                    // claim from the paywall's — but the reader meets the two
-                    // totals anyway, on Today and in onboarding, and a screen
-                    // that says 82 while everything else says 177 reads as a
-                    // contradiction rather than as scoping. Naming the whole
-                    // library *and* this screen's share of it settles that in
-                    // one sentence, and sells the larger thing while it's at it.
-                    Text("All \(puzzleProvider.totalPuzzleCount) puzzles, including every one of the \(puzzles.count) dailies in this archive — play and replay as often as you want.")
-                        .font(.body)
-                        .foregroundStyle(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
+    /// This screen used to be all-or-nothing: a locked preview of four dimmed
+    /// rows and an Unlock button, with no way to play anything. That maximised
+    /// paywall pressure, at the cost of a player meeting "everything is locked"
+    /// before they had seen enough of the collection to want it — and of
+    /// contradicting the store listing, which invites them to revisit a library.
+    ///
+    /// Now the same list premium sees, with the gate drawn through it: what they
+    /// can play first, what Premium opens underneath. The rule lives in
+    /// `PuzzleAccess`; this only renders it.
+    private var freeList: some View {
+        let gate = access
+        let split = partitioned(gate: gate)
 
-                lockedPreview
-
-                Button {
-                    showPaywall = true
-                } label: {
-                    Text("Unlock Premium")
+        return List {
+            if !split.free.isEmpty {
+                Section {
+                    ForEach(split.free) { row($0) }
+                } header: {
+                    freeHeader(freeCount: split.free.count)
                 }
-                .buttonStyle(.pillProminent)
             }
-            .padding(Theme.Spacing.l)
-            .frame(maxWidth: 520)
-            .frame(maxWidth: .infinity)
+
+            if !split.locked.isEmpty {
+                Section {
+                    ForEach(split.locked) { lockedRow($0) }
+                } header: {
+                    Text("Premium")
+                } footer: {
+                    upgradeFooter
+                }
+            }
         }
+        .scrollContentBackground(.hidden)
         .background(Theme.background)
+        .searchable(text: $query, prompt: "Search puzzles")
+        .toolbar { filterMenu }
+        .overlay {
+            if split.free.isEmpty && split.locked.isEmpty {
+                if query.isEmpty {
+                    ContentUnavailableView(
+                        "No Puzzles",
+                        systemImage: "line.3.horizontal.decrease.circle",
+                        description: Text("No puzzles match these filters.")
+                    )
+                } else {
+                    ContentUnavailableView.search(text: query)
+                }
+            }
+        }
     }
 
-    /// Four real rows from the collection, dimmed and locked.
-    private var lockedPreview: some View {
-        VStack(spacing: 0) {
-            ForEach(Array(puzzles.prefix(4)), id: \.id) { puzzle in
-                HStack(spacing: Theme.Spacing.m) {
-                    GridThumbnail(grid: puzzle.grid, tint: Color.primary.opacity(0.18))
-                        .frame(width: 34, height: 34)
+    /// States the allowance in the player's own terms, without claiming dates.
+    ///
+    /// "This week's seven" describes which puzzles are open, not when they were
+    /// published — the pool rotates, so no puzzle belongs to a day (see the file
+    /// note above). The count is what they can actually open right now, which
+    /// grows past seven as they start puzzles and keep them.
+    private func freeHeader(freeCount: Int) -> some View {
+        VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
+            Text("^[\(freeCount) puzzle](inflect: true) to play")
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(.primary)
+            Text("This week's seven are free, and anything you start stays yours.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .textCase(nil)          // section headers upper-case by default
+        .padding(.bottom, Theme.Spacing.xs)
+        .accessibilityElement(children: .combine)
+    }
+
+    /// The upgrade path, kept where the locked rows are rather than as a screen
+    /// of its own. Same promise the paywall opens with — see `PremiumCopy`.
+    private var upgradeFooter: some View {
+        VStack(alignment: .leading, spacing: Theme.Spacing.m) {
+            // Both numbers, deliberately. The reader meets the two totals
+            // anyway, on Today and in onboarding, and a screen that says 82
+            // while everything else says 177 reads as a contradiction rather
+            // than as scoping.
+            Text("Premium opens all \(puzzleProvider.totalPuzzleCount) puzzles, including every one of the \(puzzles.count) dailies in this archive — play and replay as often as you want.")
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+
+            Button("Unlock Premium") { showPaywall = true }
+                .buttonStyle(.pillProminent)
+                .padding(.bottom, Theme.Spacing.s)
+        }
+        .textCase(nil)
+        .padding(.top, Theme.Spacing.s)
+    }
+
+    /// A locked row: the same shape as a playable one so the list reads as one
+    /// collection, but it opens the paywall instead of the puzzle.
+    private func lockedRow(_ puzzle: Puzzle) -> some View {
+        Button {
+            showPaywall = true
+        } label: {
+            HStack(spacing: Theme.Spacing.m) {
+                GridThumbnail(grid: puzzle.grid, tint: Color.primary.opacity(0.18))
+                    .frame(width: 34, height: 34)
+
+                VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
                     Text(puzzle.title)
                         .font(.headline)
                         .foregroundStyle(.secondary)
-                        .lineLimit(1)
-                    Spacer(minLength: 0)
-                    Image(systemName: "lock.fill")
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
+                    HStack(spacing: Theme.Spacing.s) {
+                        DifficultyBadge(difficulty: puzzle.difficulty)
+                        Text("\(puzzle.clueCount) clues")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
                 }
-                .padding(Theme.Spacing.m)
-
-                if puzzle.id != puzzles.prefix(4).last?.id {
-                    Rectangle()
-                        .fill(Color.primary.opacity(0.06))
-                        .frame(height: 1)
-                        .padding(.leading, Theme.Spacing.m)
-                }
+                Spacer(minLength: 0)
+                Image(systemName: "lock.fill")
+                    .font(.footnote)
+                    .foregroundStyle(.tertiary)
             }
+            .padding(.vertical, 2)
+            .contentShape(.rect)
         }
-        .elevatedCard()
-        .accessibilityElement(children: .ignore)
-        // Four rows are shown; the label describes the archive they stand for,
-        // which is the daily pool rather than the whole library.
-        .accessibilityLabel("Locked preview of the \(puzzles.count) daily puzzles in this archive")
+        .buttonStyle(.plain)
+        .accessibilityLabel("\(puzzle.title), locked")
+        .accessibilityHint("Opens Premium")
     }
 }
 
