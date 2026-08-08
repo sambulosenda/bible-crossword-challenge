@@ -313,7 +313,7 @@ struct CrosswordGameView: View {
         let firstCompletion = !rec.isCompleted
 
         let freezesBefore = profile.streakFreezes
-        let advanced = Streaks.registerCompletion(profile)
+        let advanced = Streaks.registerCompletion(profile, isReplay: !firstCompletion)
         earnedFreeze = profile.streakFreezes > freezesBefore
         analytics.log(.dailyPuzzleCompleted(puzzleID: puzzle.id, seconds: seconds))
         if advanced {

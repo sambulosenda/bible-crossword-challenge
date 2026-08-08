@@ -41,13 +41,58 @@ struct StreakTests {
         #expect(p.totalPuzzlesCompleted == 3)
     }
 
+    /// Two *different* puzzles on one day — the daily and the mini. The streak
+    /// counts the day once; the solved count counts both.
     @Test func sameDayDoesNotDoubleCountStreak() {
         let p = PlayerProfile()
         Streaks.registerCompletion(p, now: day(2026, 7, 1), calendar: utc)
         let advanced = Streaks.registerCompletion(p, now: day(2026, 7, 1), calendar: utc)
         #expect(advanced == false)
         #expect(p.currentStreak == 1)
-        #expect(p.totalPuzzlesCompleted == 2) // puzzle still counts
+        #expect(p.totalPuzzlesCompleted == 2) // two puzzles, both count
+    }
+
+    /// Re-solving a puzzle already finished. The day counts — after the rotation
+    /// wraps a replay is the only play available — but the solved count is
+    /// distinct puzzles, so it stays put.
+    @Test func aReplayAdvancesTheStreakWithoutCountingAsAPuzzle() {
+        let p = PlayerProfile()
+        Streaks.registerCompletion(p, now: day(2026, 7, 1), calendar: utc)
+        #expect(p.totalPuzzlesCompleted == 1)
+
+        let advanced = Streaks.registerCompletion(
+            p, isReplay: true, now: day(2026, 7, 2), calendar: utc
+        )
+        #expect(advanced)
+        #expect(p.currentStreak == 2)
+        #expect(p.totalPuzzlesCompleted == 1, "a replay is not a new puzzle")
+    }
+
+    /// The wrap in miniature: a whole pool re-solved, day after day, must not
+    /// re-run the player through the puzzle-count achievements.
+    @Test func aWrappedWeekOfReplaysAddsNothingToTheSolvedCount() {
+        let p = PlayerProfile(totalPuzzlesCompleted: 82)
+        p.lastCompletedDate = day(2026, 9, 20)
+        p.currentStreak = 82
+
+        for d in 21...27 {
+            Streaks.registerCompletion(p, isReplay: true, now: day(2026, 9, d), calendar: utc)
+        }
+        #expect(p.currentStreak == 89, "the streak survives the wrap")
+        #expect(p.totalPuzzlesCompleted == 82, "no puzzle was solved that wasn't already")
+    }
+
+    /// A replay still earns a streak freeze at the seven-day milestone — the
+    /// freeze rewards showing up, which a replay is.
+    @Test func replaysStillEarnStreakFreezes() {
+        let p = PlayerProfile()
+        let freezesBefore = p.streakFreezes  // a new profile is given one
+        for d in 1...7 {
+            Streaks.registerCompletion(p, isReplay: true, now: day(2026, 7, d), calendar: utc)
+        }
+        #expect(p.currentStreak == 7)
+        #expect(p.streakFreezes == freezesBefore + 1)
+        #expect(p.totalPuzzlesCompleted == 0)
     }
 
     @Test func missedDayResetsStreak() {

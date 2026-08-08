@@ -1,8 +1,9 @@
 # Ticket 13 — Daily rotation wrap (streak-break event, dated)
 
 **Priority:** critical (dated: **2026-09-21**) — retention of the most engaged cohort
-**Status:** `[~]` — T1, T2 shipped (the safety net). T3 (content) and T4
-(replay counting) open; T3 is the actual fix.
+**Status:** `[~]` — T1, T2, T4 shipped (the safety net). **T3 (content) is the
+only one left, and it is the actual fix** — every daily added moves the wrap a
+day.
 **Type:** eng / content
 **Estimate:** S (safety net) + ongoing (content)
 **Files:** `Views/HomeView.swift` (`DailyPuzzleCard`), `Services/PuzzleProvider.swift`, `Resources/puzzles.json`
@@ -148,21 +149,37 @@ wraps eventually.
 
 ### T4 — Replays inflate the solved count
 
-**Status:** `[ ]`
+**Status:** `[x]`
 
-Secondary, surfaced while tracing the above. `registerCompletion` does
-`totalPuzzlesCompleted += 1` on *every* completion, replays included. Pre-existing
-(premium could already replay from Library), but the wrap makes it systematic:
-the whole cohort re-solves the whole pool.
+- [x] **"Solved" means distinct puzzles.** Documented on
+      `PlayerProfile.totalPuzzlesCompleted`
+- [x] `registerCompletion(_:isReplay:…)` — a replay advances the streak but
+      doesn't add to the count
+- [x] Profile's tile and the achievement thresholds read the same field, so they
+      agree by construction
 
-- [ ] Decide whether "Solved" means completions or distinct puzzles
-- [ ] If distinct: it feeds the puzzle-count achievements, so changing it changes
-      unlock timing — check `Achievements` thresholds before touching
-- [ ] Whatever is decided, Profile's "Solved" tile and the achievement thresholds
-      must agree
+**The decision was less open than it looked.** `firstCompletion` already guards
+`noHintSolves`, `hardCompleted` and pack completion — the code comment beside
+them says "the once-per-puzzle stats only on the first completion". The solved
+count is the one that escaped, and only for a structural reason: it lived inside
+`Streaks.registerCompletion`, which knows the date but not *which puzzle*. So
+this restores an existing rule rather than choosing a new one.
+
+**No retroactive loss — the risk this ticket flagged is avoided by not
+recomputing.** Counts already inflated by replays are left exactly as they are.
+Recalculating from records would have pulled numbers *down* and taken back
+achievements players have already been shown, which is a worse outcome than a
+slightly generous count. The counter only ever rises; `SyncMerge` already takes
+`max` across devices, so this matches how it behaves under sync.
+
+A replay still earns everything a day's play earns: the streak advances, and the
+seven-day freeze milestone still pays out. After the wrap a replay *is* the only
+play available, so anything less would punish the cohort for the pool's length.
 
 **Acceptance**
-- One documented definition, used by both surfaces
+- [x] One documented definition, used by both surfaces
+- [x] Verified on device: replaying a solved puzzle left "Solved" at 18 where it
+      would previously have read 19
 
 ---
 

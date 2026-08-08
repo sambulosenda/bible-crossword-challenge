@@ -42,6 +42,15 @@ final class PlayerProfile {
     var username: String = "Friend"
     var currentStreak: Int = 0
     var bestStreak: Int = 0
+    /// **Distinct puzzles solved**, not completions — a replay of a puzzle
+    /// already finished doesn't count, matching `noHintSolves`, `hardCompleted`
+    /// and pack completion, which have always been once-per-puzzle.
+    ///
+    /// This is the definition Profile's "Solved" tile shows and the one the
+    /// puzzle-count achievements are measured against, so the two cannot
+    /// disagree. It is never recomputed downward: counts inflated by replays
+    /// before this rule existed are left alone, because recalculating would
+    /// retroactively take back achievements players have already been shown.
     var totalPuzzlesCompleted: Int = 0
     var lastCompletedDate: Date?
     var hintsUsedToday: Int = 0
@@ -304,8 +313,20 @@ enum Streaks {
     }
 
     /// Called when a puzzle is completed. Returns true if the streak advanced today.
+    ///
+    /// `isReplay` marks a puzzle the player had already finished. The streak
+    /// still advances — a replay is a real day's play, and after the rotation
+    /// wraps it is the *only* play available — but it doesn't add to the solved
+    /// count, which counts distinct puzzles. Without this the wrap would have
+    /// the whole cohort re-solve the whole pool and every puzzle-count
+    /// achievement would unlock again on the way through.
     @discardableResult
-    static func registerCompletion(_ p: PlayerProfile, now: Date = Date(), calendar: Calendar = .current) -> Bool {
+    static func registerCompletion(
+        _ p: PlayerProfile,
+        isReplay: Bool = false,
+        now: Date = Date(),
+        calendar: Calendar = .current
+    ) -> Bool {
         let today = calendar.startOfDay(for: now)
         var advanced = false
 
@@ -328,7 +349,7 @@ enum Streaks {
         if calendar.startOfDay(for: p.lastCompletedDate ?? .distantPast) != today {
             p.lastCompletedDate = today
         }
-        p.totalPuzzlesCompleted += 1
+        if !isReplay { p.totalPuzzlesCompleted += 1 }
         p.bestStreak = max(p.bestStreak, p.currentStreak)
 
         // Reward sustained streaks: a freeze each time the streak crosses a
