@@ -46,6 +46,21 @@ struct BibleJourneyTests {
         #expect(BibleCanon.book(named: "Book of Mormon") == nil)
     }
 
+    /// Pack detail sorts a handful of books back into reading order with this.
+    @Test func positionOrdersBooksAsTheyAreRead() {
+        let shuffled = ["Acts", "Genesis", "Matthew", "Isaiah"]
+        let ordered = shuffled.sorted { BibleCanon.position(of: $0) < BibleCanon.position(of: $1) }
+        #expect(ordered == ["Genesis", "Isaiah", "Matthew", "Acts"])
+    }
+
+    /// An unrecognised name belongs at the end of a list, not ahead of Genesis.
+    @Test func unknownBooksSortLast() {
+        let ordered = ["Sirach", "Genesis"].sorted {
+            BibleCanon.position(of: $0) < BibleCanon.position(of: $1)
+        }
+        #expect(ordered == ["Genesis", "Sirach"])
+    }
+
     // MARK: - Anchoring a puzzle to a book
 
     @Test func aPuzzleIsAnchoredByItsVerseReference() {

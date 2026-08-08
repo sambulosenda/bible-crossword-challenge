@@ -2,7 +2,7 @@
 
 **Priority:** 5  
 **Goal:** Long-term engagement  
-**Status:** `[~]` — T1, T2 shipped; T3, T4 open; T5 blocked on Epic 03  
+**Status:** `[~]` — T1, T2, T4 shipped; T3 open; T5 blocked on Epic 03  
 **Depends on:** Puzzle metadata (themes/books), completion records, optional clue refs  
 **Related:** Achievements, packs, Profile stats
 
@@ -99,15 +99,39 @@ colour-blind reader.
 
 ### P5-T4 — Pack → journey linkage
 
-**Status:** `[ ]`  
+**Status:** `[x]`  
 **Type:** eng  
 **Estimate:** S
 
-- [ ] Completing a pack fills obvious books (David → Samuel/Psalms, Parables → Gospels)
-- [ ] Pack detail shows “Books in this collection”
+- [x] Completing a pack fills its books — **already true from T1**, nothing built
+- [x] Pack detail shows “Books in this collection”
+
+**No pack → book mapping exists, deliberately.** Every puzzle already anchors to
+a book through its verse reference, so a pack covers whatever its puzzles cover
+and the two can't fall out of step. The ticket's own examples hold without any
+authored data: David → 1 Samuel + Psalm, Parables → Luke + Matthew. A hand-kept
+table would have been a second source of truth with nothing to gain.
+
+Measured coverage per pack:
+
+| Pack | Books |
+|---|---|
+| First Steps | Genesis, Isaiah, Matthew, Acts |
+| The Life of David | 1 Samuel, Psalm |
+| Parables of Jesus | Matthew, Luke |
+| The Shepherd's Psalm | Psalm |
+| Lent | Joel, Matthew, Luke, John |
+| Easter | Matthew, Luke, John |
+| Advent | Isaiah, Matthew, Luke |
+| Christmas | Matthew, Luke, John |
 
 **Acceptance**
-- Pack completion visibly advances map
+- [x] Pack completion visibly advances the map
+- [x] The card names what finishing would *add* ("Finishing this adds Isaiah and
+      Acts to your journey"), skipping books already explored — which is the
+      linkage the ticket was after, stated before the player commits
+- [x] Shown on locked packs too: which books a collection covers is part of
+      deciding whether to buy it
 
 ---
 

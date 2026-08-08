@@ -60,6 +60,9 @@ struct PackDetailView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: Theme.Spacing.l) {
                 header
+                // Shown locked as well as unlocked: which books a collection
+                // covers is part of deciding whether to buy it.
+                booksCard
                 if isLocked {
                     lockedState
                 } else {
@@ -140,6 +143,90 @@ struct PackDetailView: View {
             .font(.caption)
             .foregroundStyle(.secondary)
         }
+    }
+
+    // MARK: - Books
+
+    /// The books this collection's puzzles are drawn from, in reading order.
+    ///
+    /// Nothing maps packs to books: every puzzle already anchors to one through
+    /// its verse reference, so a pack covers whatever its puzzles cover and the
+    /// two can't fall out of step. Finishing a pack moves the journey map on its
+    /// own — this card is what makes that visible beforehand.
+    private var packBooks: [BibleCanon.Book] {
+        var seen: Set<String> = []
+        let books = puzzles.compactMap { BibleJourney.book(for: $0) }
+            .filter { seen.insert($0.name).inserted }
+        return books.sorted { BibleCanon.position(of: $0.name) < BibleCanon.position(of: $1.name) }
+    }
+
+    /// Books the player has already reached anywhere in their solving, not just
+    /// in this pack — the question the card answers is what finishing it would
+    /// *add*.
+    private var exploredBooks: Set<String> {
+        let solved = Set(records.filter(\.isCompleted).map(\.puzzleID))
+        return BibleJourney.booksTouched(
+            completedPuzzleIDs: solved, puzzles: puzzleProvider.allPuzzles
+        )
+    }
+
+    @ViewBuilder
+    private var booksCard: some View {
+        let books = packBooks
+        if !books.isEmpty {
+            let explored = exploredBooks
+            let fresh = books.filter { !explored.contains($0.name) }
+
+            VStack(alignment: .leading, spacing: Theme.Spacing.m) {
+                Text("Books in this collection").kicker()
+
+                LazyVGrid(
+                    columns: [GridItem(.adaptive(minimum: 96), spacing: Theme.Spacing.s)],
+                    spacing: Theme.Spacing.s
+                ) {
+                    ForEach(books) { book in
+                        bookChip(book, explored: explored.contains(book.name))
+                    }
+                }
+
+                Text(journeyLine(fresh: fresh))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .padding(Theme.Spacing.l)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .elevatedCard()
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(
+                "Books in this collection: \(books.map(\.name).formatted(.list(type: .and))). "
+                + journeyLine(fresh: fresh)
+            )
+        }
+    }
+
+    private func journeyLine(fresh: [BibleCanon.Book]) -> String {
+        guard !fresh.isEmpty else { return "All of these are already part of your journey." }
+        return "Finishing this adds \(fresh.map(\.name).formatted(.list(type: .and))) to your journey."
+    }
+
+    /// Explored books borrow the map's own fill, so the two screens agree about
+    /// what "you've been here" looks like.
+    private func bookChip(_ book: BibleCanon.Book, explored: Bool) -> some View {
+        let state: BibleJourney.BookProgress.State = explored ? .touched : .untouched
+        return Text(book.name)
+            .font(.caption.weight(.medium))
+            .lineLimit(1)
+            .minimumScaleFactor(0.7)
+            .foregroundStyle(JourneyStyle.text(state))
+            .padding(.horizontal, Theme.Spacing.s)
+            .padding(.vertical, 8)
+            .frame(maxWidth: .infinity)
+            .background(JourneyStyle.fill(state), in: .rect(cornerRadius: 10, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    .strokeBorder(JourneyStyle.border(state), lineWidth: JourneyStyle.borderWidth(state))
+            }
     }
 
     // MARK: - Puzzle list

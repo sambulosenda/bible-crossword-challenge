@@ -72,6 +72,18 @@ enum BibleCanon {
         byName[name.trimmingCharacters(in: .whitespaces).lowercased()]
     }
 
+    private static let order: [String: Int] = Dictionary(
+        books.enumerated().map { ($0.element.name, $0.offset) },
+        uniquingKeysWith: { first, _ in first }
+    )
+
+    /// Position in reading order, so a subset of books can be sorted back into
+    /// canon sequence. Unknown names sort last rather than first — an
+    /// unrecognised book belongs at the end of a list, not ahead of Genesis.
+    static func position(of name: String) -> Int {
+        order[name] ?? books.count
+    }
+
     static func books(in testament: Testament) -> [Book] {
         books.filter { $0.testament == testament }
     }
