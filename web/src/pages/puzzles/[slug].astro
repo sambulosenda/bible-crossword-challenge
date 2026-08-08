@@ -63,7 +63,16 @@ const gameLd = {
   citation: `${plain(p.verseCite)}: “${plain(p.verseText)}”`,
 };
 ---
-<Layout title={p.title} description={p.description} path={path}>
+{/* Each puzzle has its own share card, pre-rendered to /assets/og/<slug>.png.
+    /assets/* is immutable for a year, so a card regenerated after a heading
+    change must ship at a new filename — not overwrite this one. */}
+<Layout
+  title={p.title}
+  description={p.description}
+  path={path}
+  ogImage={`${SITE}/assets/og/${entry.id}.png`}
+  ogImageAlt={`${heading} — a Bible crossword puzzle on ${plain(p.reference)}`}
+>
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify(breadcrumbLd)} />
     <script type="application/ld+json" set:html={JSON.stringify(gameLd)} />
