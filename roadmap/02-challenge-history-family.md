@@ -58,7 +58,7 @@ Beat-my-time is shipped. History + multi-person challenges turn one-off shares i
 
 ### P2-T3 — Family / group challenge (v1, no backend)
 
-**Status:** `[x]` — Option B, app side. Web landing page still to do (see below).  
+**Status:** `[x]` — Option B, app + web. Not yet deployed.  
 **Type:** eng  
 **Estimate:** L
 
@@ -94,10 +94,10 @@ Your own row is never overwritten by a replay.
 **Acceptance**
 - [x] ≥2 people play the same puzzle and see ranked times, no accounts —
       verified on device: 3-name link → join → solve → 4-name ranked board
-- [ ] Web page for non-installed recipients — **the `/challenge/` landing page
-      renders a one-to-one challenge and will not understand `e=` params.** Board
-      links to non-installed users currently land on a page describing the wrong
-      thing. App-to-app works today; this is the remaining piece.
+- [x] Web page for non-installed recipients — `/challenge/` now renders either
+      payload, ranked list included. Its parser mirrors `FamilyBoardService`
+      rule for rule; keep the two in step if the wire format ever moves.
+      **Still needs a deploy** — until then, board links only work app-to-app.
 
 **Known v1 limits (deliberate)**
 - Two people with the same first name merge into one row
