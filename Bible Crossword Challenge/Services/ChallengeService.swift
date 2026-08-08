@@ -86,6 +86,23 @@ final class ChallengeService {
         self.challenges = Self.load(from: defaults, key: storageKey)
     }
 
+    // MARK: - Link matching
+
+    /// Whether a URL is addressed to the challenge endpoint at all — the custom
+    /// scheme, or the https universal link on the web host or any subdomain of
+    /// it. Says nothing about the payload.
+    ///
+    /// Shared with `FamilyBoardService`, which rides the same path: the AASA file
+    /// claims `/challenge*` and nothing else, so every link that must open the
+    /// app lands here and is told apart by its query, not its path.
+    static func isChallengeLink(_ url: URL, components: URLComponents) -> Bool {
+        if url.scheme == Self.scheme && url.host() == Self.host { return true }
+        let host = url.host() ?? ""
+        return url.scheme == "https"
+            && (host == Self.webHost || host.hasSuffix("." + Self.webHost))
+            && components.path.hasPrefix("/challenge")
+    }
+
     // MARK: - Parsing
 
     /// Validate an incoming URL. Structural checks first (cheap, no I/O), then
@@ -96,13 +113,7 @@ final class ChallengeService {
             return .notAChallenge
         }
 
-        let isCustom = url.scheme == Self.scheme && url.host() == Self.host
-        // Match the apex and any subdomain (www) of the web host.
-        let host = url.host() ?? ""
-        let isUniversal = url.scheme == "https"
-            && (host == Self.webHost || host.hasSuffix("." + Self.webHost))
-            && components.path.hasPrefix("/challenge")
-        guard isCustom || isUniversal else { return .notAChallenge }
+        guard Self.isChallengeLink(url, components: components) else { return .notAChallenge }
 
         var query: [String: String] = [:]
         for item in components.queryItems ?? [] where item.value != nil {

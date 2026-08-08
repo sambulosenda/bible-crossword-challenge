@@ -23,11 +23,14 @@ struct RootView: View {
     @Environment(\.readerRouter) private var readerRouter
     @Environment(\.puzzleProvider) private var puzzleProvider
     @Environment(\.challengeService) private var challengeService
+    @Environment(\.familyBoard) private var familyBoard
     @Environment(\.scenePhase) private var scenePhase
     @State private var selectedTab: RootTab = .today
-    /// A challenge accepted before onboarding finished — opened once the player
-    /// is set up (see the onboarding-finish closure).
-    @State private var pendingNavChallenge: ChallengeService.Challenge?
+    /// A puzzle a challenge or family board asked for before onboarding
+    /// finished — opened once the player is set up (see the onboarding-finish
+    /// closure). The payload is already stored by its own service; all that's
+    /// deferred is the navigation.
+    @State private var pendingNavPuzzleID: String?
     /// A challenge link from a newer app version or for an unknown puzzle.
     @State private var showChallengeUpdateAlert = false
     /// Navigation stack for the Today tab. Held here so a widget deep-link can
@@ -63,11 +66,11 @@ struct RootView: View {
                     OnboardingView(profile: profile) {
                         context.saveLogged("onboarding finish")
                         withAnimation { hasOnboarded = true }
-                        // A challenge link that arrived mid-onboarding was stashed;
-                        // now that the tabs exist, jump into it.
-                        if let challenge = pendingNavChallenge {
-                            pendingNavChallenge = nil
-                            openChallenge(challenge)
+                        // A challenge or board link that arrived mid-onboarding
+                        // was stashed; now that the tabs exist, jump into it.
+                        if let id = pendingNavPuzzleID {
+                            pendingNavPuzzleID = nil
+                            openPuzzle(id: id)
                         }
                     }
                 } else {
@@ -201,7 +204,7 @@ struct RootView: View {
               !didAskReminderAgain,
               notifications.authorizationStatus == .notDetermined,
               // A challenge link is taking them somewhere; don't interrupt it.
-              pendingNavChallenge == nil
+              pendingNavPuzzleID == nil
         else { return false }
         #if DEBUG
         // Same family as -uiSeedShowcase. The day-2 clause is otherwise only
@@ -228,14 +231,34 @@ struct RootView: View {
         // Friend challenge. Accept the payload even before onboarding completes
         // so an invite that prompts a fresh install still lands afterwards.
         if url.host() == "challenge" {
+            // A family board rides the same path and is told apart by its query,
+            // so it has to be offered the link first: to the one-to-one parser a
+            // board reads as a version it doesn't understand.
+            switch familyBoard.parse(url, title: { puzzleProvider.puzzle(id: $0)?.title }) {
+            case .valid(let board):
+                let merged = familyBoard.accept(board)
+                analytics.log(.familyBoardOpened(puzzleID: merged.puzzleID, size: merged.standings.count))
+                if hasOnboarded {
+                    openPuzzle(id: merged.puzzleID)
+                } else {
+                    pendingNavPuzzleID = merged.puzzleID
+                }
+                return
+            case .needsUpdate:
+                showChallengeUpdateAlert = true
+                return
+            case .notABoard:
+                break
+            }
+
             switch challengeService.parse(url) {
             case .valid(let challenge):
                 challengeService.accept(challenge)
                 analytics.log(.challengeOpened(puzzleID: challenge.puzzleID))
                 if hasOnboarded {
-                    openChallenge(challenge)
+                    openPuzzle(id: challenge.puzzleID)
                 } else {
-                    pendingNavChallenge = challenge
+                    pendingNavPuzzleID = challenge.puzzleID
                 }
             case .needsUpdate:
                 showChallengeUpdateAlert = true
@@ -280,11 +303,12 @@ struct RootView: View {
         }
     }
 
-    /// Push the challenged puzzle onto the Today stack. Pushing the `Puzzle`
+    /// Push a linked-to puzzle onto the Today stack. Pushing the `Puzzle`
     /// directly plays it via `HomeView`'s destination — bypassing the Archive
-    /// gate, so a free player can always take a friend's single challenge.
-    private func openChallenge(_ challenge: ChallengeService.Challenge) {
-        guard let puzzle = puzzleProvider.puzzle(id: challenge.puzzleID) else { return }
+    /// gate, so a free player can always take a friend's single challenge or
+    /// join the family's board.
+    private func openPuzzle(id: String) {
+        guard let puzzle = puzzleProvider.puzzle(id: id) else { return }
         selectedTab = .today
         todayPath = NavigationPath([puzzle])
     }

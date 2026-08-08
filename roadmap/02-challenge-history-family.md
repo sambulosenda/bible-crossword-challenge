@@ -2,7 +2,7 @@
 
 **Priority:** 2  
 **Goal:** Growth  
-**Status:** `[~]` — T1, T2, T4 shipped; T3 and T5 open  
+**Status:** `[~]` — T1–T4 shipped (T3 needs a web landing page); T5 open  
 **Depends on:** `ChallengeService`, Completion share, universal links  
 **Related:** `docs/friend-challenge-spec.md`
 
@@ -58,26 +58,50 @@ Beat-my-time is shipped. History + multi-person challenges turn one-off shares i
 
 ### P2-T3 — Family / group challenge (v1, no backend)
 
-**Status:** `[ ]`  
+**Status:** `[x]` — Option B, app side. Web landing page still to do (see below).  
 **Type:** eng  
 **Estimate:** L
 
 Design constraint: still URL- or sheet-based, offline-friendly.
 
-**Option A (recommended MVP)** — Shared scorecard link  
-- [ ] URL encodes puzzle id + host name + host time; recipients append their result by sharing *back* or via multi-share text
-- [ ] Or: host creates “family race” → shareable message with puzzle deep link; each person plays solo; compare times in a simple group sheet the host fills manually — too weak, prefer Option B
+**Option A** — rejected, as the ticket already leaned. A board nobody can see
+isn't a board.
 
-**Option B (preferred)** — Multi-result local board  
-- [ ] After solve, “Add to family board” / “Challenge the family”
-- [ ] Board = puzzleID + list of `{name, seconds}` stored locally
-- [ ] Share board as text or image (ranked list) + link so others can play same puzzle
-- [ ] Incoming solve can open sheet “Log your time under name X” on the *recipient’s* device only (honest local brag board)
-- [ ] Optional: encode top N times in URL for small groups (size limits!)
+**Option B (built)** — Multi-result board that travels in the link
+- [x] After solve: "Start a family board" when the puzzle has none; the ranked
+      board itself when it does
+- [x] Board = puzzleID + `[{name, seconds}]`, UserDefaults `familyBoards.v1`,
+      12 names, 20 boards
+- [x] Share as ranked text (medals) + the link
+- [x] An incoming solve is added under the player's own name on their *own*
+      device; the name is only asked for when the board is about to leave it
+- [x] The standings ride in the URL — this is what makes the acceptance
+      criterion reachable at all. `e=<seconds>:<name>`, repeated
+
+**Not built:** a ranked-list share *image*. `ShareCardView` is built around one
+person's result; a board image is its own design job. Text + link ships the loop.
+
+**Wire format** — `?v=2&p=<id>&e=154:Sam&e=201:Ann`, on the existing
+`/challenge/` path. The AASA file claims `/challenge*` and nothing else, so a
+`/board/` path would have opened Safari until a web deploy caught up. `v=2` does
+the discriminating: builds that predate boards read it as "newer than I
+understand" and show their existing update alert. One-to-one links stay `v=1`.
+
+**Merge rule** — lowest time wins per name, so merging is commutative: the link
+can criss-cross a group in any order and every copy converges on the same board.
+Your own row is never overwritten by a replay.
 
 **Acceptance**
-- ≥2 people can play same puzzle and see ranked times without accounts
-- Works for installed users; web page still funnels non-installed to App Store
+- [x] ≥2 people play the same puzzle and see ranked times, no accounts —
+      verified on device: 3-name link → join → solve → 4-name ranked board
+- [ ] Web page for non-installed recipients — **the `/challenge/` landing page
+      renders a one-to-one challenge and will not understand `e=` params.** Board
+      links to non-installed users currently land on a page describing the wrong
+      thing. App-to-app works today; this is the remaining piece.
+
+**Known v1 limits (deliberate)**
+- Two people with the same first name merge into one row
+- Honour system throughout — anyone can hand-edit a link (as with `ChallengeService`)
 
 ---
 

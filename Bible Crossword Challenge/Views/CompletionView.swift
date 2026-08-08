@@ -49,10 +49,17 @@ struct CompletionView: View {
     @State private var showNamePrompt = false
     @State private var draftName = ""
     @State private var pendingRematchIntent = false
+    /// True when the name prompt was raised by a board action rather than a
+    /// one-to-one challenge, so saving the name resumes the right one.
+    @State private var pendingBoardIntent = false
     /// The last friend we have a recorded head-to-head against on *this* puzzle,
     /// captured on appear. Only read when no challenge arrived with this solve —
     /// otherwise the result card is already naming an opponent.
     @State private var lastOpponent: ChallengeHistory.Entry?
+    /// This puzzle's family board once this solve has been folded in, or nil
+    /// when the player isn't part of one. Captured on appear so the card can't
+    /// appear or re-rank mid-view.
+    @State private var board: FamilyBoardService.Board?
     @Environment(\.displayScale) private var displayScale
     @Environment(\.openURL) private var openURL
     @Environment(\.gameCenter) private var gameCenter
@@ -62,6 +69,7 @@ struct CompletionView: View {
     @Environment(\.analytics) private var analytics
     @Environment(\.challengeService) private var challengeService
     @Environment(\.challengeHistory) private var challengeHistory
+    @Environment(\.familyBoard) private var familyBoard
     @Environment(\.modelContext) private var context
     @Environment(StoreService.self) private var store
     /// Highest completion milestone we've already asked a review at, so each
@@ -92,10 +100,22 @@ struct CompletionView: View {
                     resultCard(challenge)
                 }
 
+                // A board the player is already part of is why they're on this
+                // screen, so it sits above the verse with the other payoffs.
+                if let board {
+                    familyBoardCard(board)
+                }
+
                 verseCard
 
                 if let packContext {
                     packCard(packContext)
+                }
+
+                // The invitation, by contrast, is an ask — it belongs down here
+                // with the other quiet cards, not competing with the verse.
+                if board == nil {
+                    startBoardCard
                 }
 
                 if earnedFreeze {
@@ -131,6 +151,7 @@ struct CompletionView: View {
             maybeRequestReview()
             processIncomingChallenge()
             loadLastOpponent()
+            loadFamilyBoard()
             loadWeek()
             loadPackContext()
             maybeAutoShowPaywall()
@@ -143,7 +164,7 @@ struct CompletionView: View {
             // player backs out of never happened, and a list claiming
             // otherwise is the one thing a brag sheet can't afford.
             ShareSheet(items: [share.caption, share.url]) { completed in
-                guard completed else { return }
+                guard completed, !share.isBoard else { return }
                 recordOutgoing(rematch: share.isRematch)
             }
         }
@@ -305,9 +326,170 @@ struct CompletionView: View {
     private func saveNameAndSend() {
         let name = draftName.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !name.isEmpty else { return }
+        let previous = boardName
         profile.username = String(name.prefix(20))
         context.saveLogged("challenge name")
-        sendChallenge(rematch: pendingRematchIntent)
+
+        guard pendingBoardIntent else {
+            sendChallenge(rematch: pendingRematchIntent)
+            return
+        }
+        pendingBoardIntent = false
+        // A board joined before the name was chosen carries the placeholder;
+        // relabel that row rather than letting a second one appear beside it.
+        familyBoard.rename(puzzleID: puzzle.id, from: previous, to: profile.username)
+        if board == nil {
+            startBoard()
+        } else if let refreshed = familyBoard.board(for: puzzle.id) {
+            board = refreshed
+            shareBoard(refreshed)
+        }
+    }
+
+    // MARK: - Family board
+
+    /// Fold this solve into the puzzle's board, if the player is on one.
+    ///
+    /// Only an existing board is joined here — starting one is a deliberate tap,
+    /// because a board is a thing you send to people and creating them silently
+    /// on every solve would fill the list with boards of one.
+    private func loadFamilyBoard() {
+        guard familyBoard.board(for: puzzle.id) != nil else { return }
+        board = familyBoard.record(
+            puzzleID: puzzle.id,
+            puzzleTitle: puzzle.title,
+            name: boardName,
+            seconds: seconds
+        )
+    }
+
+    /// What this device is called on a board. Falls back to the placeholder
+    /// rather than blocking on a prompt: the board is local until it's shared,
+    /// and `shareBoard` collects a real name before it leaves the device.
+    private var boardName: String {
+        hasChosenName ? profile.username : ChallengeService.placeholderName
+    }
+
+    /// The ranked board, with this player's row marked. The whole feature is
+    /// this list — everything else is plumbing to get names onto it.
+    private func familyBoardCard(_ board: FamilyBoardService.Board) -> some View {
+        VStack(alignment: .leading, spacing: Theme.Spacing.m) {
+            HStack(spacing: Theme.Spacing.s) {
+                Image(systemName: "person.3.fill")
+                    .foregroundStyle(Theme.accent)
+                Text("Family board")
+                    .kicker()
+                Spacer(minLength: 0)
+                Text("\(board.standings.count) playing")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+
+            VStack(spacing: Theme.Spacing.s) {
+                ForEach(Array(board.standings.enumerated()), id: \.element.id) { index, standing in
+                    standingRow(index: index, standing: standing, isMe: standing.name == boardName)
+                }
+            }
+
+            Button {
+                shareBoard(board)
+            } label: {
+                Label("Share the Board", systemImage: "square.and.arrow.up")
+            }
+            .buttonStyle(.pillTonal)
+        }
+        .padding(Theme.Spacing.l)
+        .frame(maxWidth: .infinity)
+        .background(Theme.accent.opacity(0.1), in: .rect(cornerRadius: Theme.cornerRadius, style: .continuous))
+        .accessibilityElement(children: .contain)
+    }
+
+    private func standingRow(index: Int, standing: FamilyBoardService.Standing, isMe: Bool) -> some View {
+        HStack(spacing: Theme.Spacing.m) {
+            Text("\(index + 1)")
+                .font(.caption.weight(.bold))
+                .monospacedDigit()
+                .foregroundStyle(.secondary)
+                .frame(width: 18, alignment: .trailing)
+            Text(standing.name)
+                .font(.subheadline.weight(isMe ? .bold : .regular))
+                .lineLimit(1)
+            Spacer(minLength: Theme.Spacing.s)
+            Text(TimeFormat.clock(standing.seconds))
+                .font(.subheadline.weight(.semibold))
+                .monospacedDigit()
+        }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("\(index + 1). \(standing.name)\(isMe ? ", you" : ""), \(TimeFormat.clock(standing.seconds))")
+    }
+
+    /// The invitation, for a puzzle with no board yet.
+    private var startBoardCard: some View {
+        Button {
+            startBoard()
+        } label: {
+            HStack(spacing: Theme.Spacing.m) {
+                Image(systemName: "person.3.fill")
+                    .font(.title)
+                    .foregroundStyle(Theme.accent)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Start a family board")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.primary)
+                    Text("Everyone plays this puzzle; the times stack up in one list.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                Spacer(minLength: 0)
+                Image(systemName: "chevron.right")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(.secondary)
+            }
+            .padding(Theme.Spacing.l)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .elevatedCard()
+        }
+        .buttonStyle(PressableCardStyle())
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Start a family board. Everyone plays this puzzle; the times stack up in one list.")
+        .accessibilityHint("Creates a board with your time and opens the share sheet")
+    }
+
+    /// Create the board with this solve on it and hand it straight to the share
+    /// sheet — a board of one has no reason to exist until it's sent.
+    private func startBoard() {
+        guard hasChosenName else {
+            pendingBoardIntent = true
+            draftName = ""
+            showNamePrompt = true
+            return
+        }
+        let created = familyBoard.record(
+            puzzleID: puzzle.id,
+            puzzleTitle: puzzle.title,
+            name: profile.username,
+            seconds: seconds
+        )
+        board = created
+        analytics.log(.familyBoardStarted(puzzleID: puzzle.id))
+        shareBoard(created)
+    }
+
+    private func shareBoard(_ board: FamilyBoardService.Board) {
+        guard hasChosenName else {
+            pendingBoardIntent = true
+            draftName = ""
+            showNamePrompt = true
+            return
+        }
+        guard let url = familyBoard.boardURL(board) else { return }
+        challengeShare = ChallengeShare(
+            url: url,
+            caption: board.shareText + "\n\nBeat us:",
+            isRematch: false,
+            isBoard: true
+        )
+        analytics.log(.familyBoardShared(puzzleID: board.puzzleID, size: board.standings.count))
     }
 
     // MARK: - Pack continuation
@@ -780,6 +962,9 @@ struct CompletionView: View {
         /// Carried through the sheet so the completion handler knows whether to
         /// open a history row or mark the one this answers.
         let isRematch: Bool
+        /// A board share is not a one-to-one challenge and must not land in the
+        /// head-to-head history — there's no single opponent to record.
+        var isBoard = false
     }
 
     /// Rasterise the spoiler-free result card so it can be shared as an image.

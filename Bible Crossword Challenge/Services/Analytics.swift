@@ -85,6 +85,13 @@ enum AnalyticsEvent {
     case challengeOpened(puzzleID: String)
     case challengeCompleted(puzzleID: String, won: Bool, deltaSeconds: Int)
     case challengeRematchSent(puzzleID: String)
+    /// The family board, which travels as a link rather than living on a server.
+    /// `size` is how many names the board carried at that moment — the only
+    /// measure of whether a board actually spread past two people, since there
+    /// is nothing server-side to count.
+    case familyBoardStarted(puzzleID: String)
+    case familyBoardOpened(puzzleID: String, size: Int)
+    case familyBoardShared(puzzleID: String, size: Int)
     /// Someone opened a passage in the reader. `source` separates the two ways
     /// in — the Verse of the Day at the top of Today, and the closing verse
     /// after a solve — because they answer different questions: the first is
@@ -119,6 +126,9 @@ enum AnalyticsEvent {
         case .challengeOpened: return "challenge_opened"
         case .challengeCompleted: return "challenge_completed"
         case .challengeRematchSent: return "challenge_rematch_sent"
+        case .familyBoardStarted: return "family_board_started"
+        case .familyBoardOpened: return "family_board_opened"
+        case .familyBoardShared: return "family_board_shared"
         case .scriptureOpened: return "scripture_opened"
         }
     }
@@ -202,6 +212,12 @@ enum AnalyticsEvent {
             return ["puzzle_id": id, "won": won, "delta_seconds": delta]
         case .challengeRematchSent(let id):
             return ["puzzle_id": id]
+        case .familyBoardStarted(let id):
+            return ["puzzle_id": id]
+        case .familyBoardOpened(let id, let size):
+            return ["puzzle_id": id, "size": size]
+        case .familyBoardShared(let id, let size):
+            return ["puzzle_id": id, "size": size]
         case .scriptureOpened(let reference, let source):
             return ["reference": reference, "source": source]
         }

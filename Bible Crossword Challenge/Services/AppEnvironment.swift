@@ -17,4 +17,5 @@ extension EnvironmentValues {
     @Entry var readerRouter: ReaderRouter = .shared
     @Entry var challengeService: ChallengeService = .shared
     @Entry var challengeHistory: ChallengeHistory = .shared
+    @Entry var familyBoard: FamilyBoardService = .shared
 }
