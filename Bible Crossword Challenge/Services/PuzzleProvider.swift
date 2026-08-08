@@ -25,7 +25,11 @@ final class PuzzleProvider {
     /// Everything in the bundle, including `pack-` exclusives that never enter
     /// the daily or Archive pools but must still resolve by id (pack rows,
     /// challenge links, deep links).
-    private let allPuzzles: [Puzzle]
+    ///
+    /// Readable because the journey map counts across the whole catalogue: how
+    /// much of a book exists is as much a part of that picture as how much of it
+    /// has been solved.
+    let allPuzzles: [Puzzle]
 
     /// Everything a Premium player can play: dailies, minis and pack
     /// exclusives. `puzzles` is only the daily/Archive pool, so it understates
