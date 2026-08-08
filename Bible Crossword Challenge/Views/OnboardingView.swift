@@ -477,9 +477,15 @@ struct OnboardingView: View {
             .foregroundStyle(.secondary)
             .multilineTextAlignment(.center)
 
-        // Quiet, but never hidden: the daily puzzle really is free, and a
-        // paywall whose exit is hard to find is a rejection risk.
-        Button("Continue with the free daily puzzle") { finish() }
+        // Quiet, but never hidden: the puzzle really is free, and a paywall
+        // whose exit is hard to find is a rejection risk.
+        //
+        // "today's free puzzle", not "the free daily puzzle": this button now
+        // lands in the Mini, and the Daily Puzzle is a different, named thing
+        // one row below it on Today. Naming the wrong one would be the first
+        // promise the app breaks. Deliberately no more inviting than before —
+        // it is still the decline, and this is the busiest paywall in the app.
+        Button("Continue with today's free puzzle") { finish() }
             .font(.subheadline.weight(.semibold))
             .tint(.primary)
             .padding(.top, Theme.Spacing.xs)
