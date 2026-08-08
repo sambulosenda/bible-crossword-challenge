@@ -20,18 +20,6 @@ const year = new Date().getFullYear();
   <div class="wrap foot-base">© {year} Bible Crossword Challenge</div>
 </footer>
 
-<style is:global>
-  footer.band-ink { border-top: 1px solid var(--rule); padding: var(--s-8) 0 var(--s-6); }
-  .foot-inner { align-items: flex-start; gap: var(--s-6); }
-  .foot-brand { display: flex; flex-direction: column; gap: var(--s-2); }
-  .foot-brand .brand-name { font-size: 17px; }
-  .foot-line { margin: 0; font-size: 14.5px; color: var(--fg-mute); max-width: 30ch; }
-  .foot-links { gap: var(--s-3) var(--s-4); }
-  .foot-links a { font-size: 14.5px; }
-  .foot-base {
-    margin-top: var(--s-6); padding-top: var(--s-3);
-    border-top: 1px solid var(--rule);
-    font-family: var(--mono); font-size: 12px; letter-spacing: .08em;
-    text-transform: uppercase; color: var(--fg-mute);
-  }
-</style>
+{/* Footer styles live in global.css — same-specificity rules there (.wrap,
+    .foot-inner) are bundled after component styles and silently won the
+    cascade when a copy lived here. */}

@@ -354,11 +354,23 @@ h3 {
 /* ==========================================================================
    Footer
    ========================================================================= */
-footer { border-top: 1px solid var(--rule); padding: var(--s-6) 0; font-size: 14px; color: var(--fg-mute); }
-.foot-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--s-2); }
-.foot-links { display: flex; gap: var(--s-4); flex-wrap: wrap; }
-.foot-links a { transition: color .15s ease; }
+footer { border-top: 1px solid var(--rule); padding: var(--s-8) 0 var(--s-6); font-size: 14px; color: var(--fg-mute); }
+.foot-inner { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: var(--s-6); }
+.foot-brand { display: flex; flex-direction: column; gap: var(--s-2); }
+.foot-brand .brand-name { font-size: 17px; }
+.foot-line { margin: 0; font-size: 14.5px; color: var(--fg-mute); max-width: 30ch; }
+.foot-links { display: flex; gap: var(--s-3) var(--s-4); flex-wrap: wrap; }
+.foot-links a { font-size: 14.5px; transition: color .15s ease; }
 .foot-links a:hover { color: var(--fg); }
+/* .foot-base is also .wrap, whose zero margin/padding-top would win if these
+   rules lived in a component style block bundled before this file — they must
+   stay here, after .wrap. */
+.foot-base {
+  margin-top: var(--s-6); padding-top: var(--s-3);
+  border-top: 1px solid var(--rule);
+  font-family: var(--mono); font-size: 12px; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--fg-mute);
+}
 
 /* ==========================================================================
    Shared content-page components
@@ -388,12 +400,14 @@ footer { border-top: 1px solid var(--rule); padding: var(--s-6) 0; font-size: 14
 
 /* Sample-clue list — shared by the feature list and the puzzle pages */
 .clue-samples { border-top: 2px solid var(--fg); margin-top: var(--s-1); }
-.clue { display: flex; flex-direction: column; gap: var(--s-1); padding: var(--s-2) 0; border-bottom: 1px solid var(--rule); }
+/* --clue-num-w is one width shared by the number column and the tiles indent,
+   in px because the two elements have different font sizes — em drifts. */
+.clue { --clue-num-w: 34px; display: flex; flex-direction: column; gap: var(--s-1); padding: var(--s-2) 0; border-bottom: 1px solid var(--rule); }
 .clue-q { display: flex; gap: var(--s-2); align-items: baseline; }
-.clue-n { font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--fg-mute); min-width: 2.6em; text-align: right; }
+.clue-n { font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--fg-mute); min-width: var(--clue-num-w, 2.6em); text-align: right; }
 .clue-text { font-family: var(--scripture); font-size: 17.5px; color: var(--fg-soft); }
 .clue-text .enum { color: var(--fg-mute); font-size: 14px; white-space: nowrap; font-family: var(--mono); }
-.tiles { display: flex; gap: 4px; margin-left: calc(2.6em + var(--s-2)); flex-wrap: wrap; }
+.tiles { display: flex; gap: 4px; margin-left: calc(var(--clue-num-w) + var(--s-2)); flex-wrap: wrap; }
 .tile {
   width: 28px; height: 28px; border: 1.5px solid var(--fg); border-radius: 4px;
   background: var(--bg-raised); color: var(--fg);
