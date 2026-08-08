@@ -13,6 +13,7 @@
 //
 
 import SwiftUI
+import SwiftData
 import UIKit
 import StoreKit
 
@@ -25,6 +26,8 @@ struct ProfileView: View {
     @Environment(\.gameCenter) private var gameCenter
     @Environment(\.openURL) private var openURL
     @Environment(\.challengeHistory) private var challengeHistory
+    @Environment(\.puzzleProvider) private var puzzleProvider
+    @Query private var records: [PuzzleRecord]
     @AppStorage("appTheme") private var appTheme: AppTheme = .system
     @AppStorage("remindersEnabled") private var remindersEnabled = false
     /// Set when the player is sent to Settings to allow notifications; RootView
@@ -62,6 +65,7 @@ struct ProfileView: View {
                         unlocked: unlockedCount,
                         totalAchievements: Achievements.all.count
                     )
+                    journeyCard
                     challengesSection
                     premiumSection
                     preferencesSection
@@ -289,6 +293,55 @@ struct ProfileView: View {
                 Text("Notifications are turned off for this app. Enable them in Settings to receive your daily reminder.")
             }
         }
+    }
+
+    // MARK: - Journey
+
+    /// The way into the map. A row rather than the map itself: sixty-six books
+    /// would swamp a settings screen, and the count is the part worth seeing
+    /// from here.
+    private var journeyCard: some View {
+        NavigationLink {
+            JourneyView()
+        } label: {
+            HStack(spacing: Theme.Spacing.m) {
+                Image(systemName: "map.fill")
+                    .font(.title)
+                    .foregroundStyle(Theme.accent)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Your journey")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.primary)
+                    Text(journeySummary)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                Spacer(minLength: 0)
+                Image(systemName: "chevron.right")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(.secondary)
+            }
+            .padding(Theme.Spacing.l)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .elevatedCard()
+        }
+        .buttonStyle(PressableCardStyle())
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Your journey. \(journeySummary)")
+        .accessibilityHint("Opens the map of books you've explored")
+    }
+
+    private var journeySummary: String {
+        let count = booksExplored
+        if count == 0 { return "See which books of the Bible you've explored" }
+        return "\(count) \(count == 1 ? "book" : "books") of the Bible explored"
+    }
+
+    private var booksExplored: Int {
+        let solved = Set(records.filter(\.isCompleted).map(\.puzzleID))
+        return BibleJourney.booksTouched(
+            completedPuzzleIDs: solved, puzzles: puzzleProvider.allPuzzles
+        ).count
     }
 
     // MARK: - Challenges
