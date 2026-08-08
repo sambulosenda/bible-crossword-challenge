@@ -10,9 +10,32 @@
 import SwiftUI
 import SwiftData
 
+/// The surfaces that can open a pack. A closed set rather than a bare string,
+/// so a new entry point has to name itself here and can't quietly ship as an
+/// untracked one.
+enum PackOpenSource: String, Hashable {
+    case home
+    case packs
+    case notification
+}
+
+/// A pack push, tagged with the surface that made it.
+///
+/// Pushing a bare `PuzzlePack` was enough while every route looked the same;
+/// it isn't now that `pack_opened` has to say *where* from, and a navigation
+/// value is the only thing that travels from the tap to the screen that logs.
+struct PackRoute: Hashable {
+    let pack: PuzzlePack
+    let source: PackOpenSource
+}
+
 struct PackDetailView: View {
     let pack: PuzzlePack
     let profile: PlayerProfile
+    /// Which surface pushed this pack — carried on `pack_opened` so the Home
+    /// carousel, the Packs tab and a season-opening notification can be told
+    /// apart when judging whether a discovery surface is doing any work.
+    let source: PackOpenSource
 
     @Environment(\.puzzleProvider) private var puzzleProvider
     @Environment(\.analytics) private var analytics
@@ -28,6 +51,10 @@ struct PackDetailView: View {
     private var puzzles: [Puzzle] { puzzleProvider.puzzles(in: pack) }
     private var progress: PackProgress { PackProgress(pack: pack, recordsByID: recordsByID) }
     private var isLocked: Bool { pack.isPremium && !store.isPremium }
+
+    /// Day and month only ("12 April") — the year is never in question for a
+    /// window that is, by definition, running right now.
+    private static let seasonEndFormat = Date.FormatStyle().day().month(.wide)
 
     var body: some View {
         ScrollView {
@@ -46,11 +73,15 @@ struct PackDetailView: View {
         .background(Theme.background)
         .navigationTitle(pack.title)
         .navigationBarTitleDisplayMode(.inline)
-        .sheet(isPresented: $showPaywall) { PaywallView(source: "pack_locked") }
+        .sheet(isPresented: $showPaywall) {
+            // A seasonal pack gets its name into the promise: "the collections
+            // are waiting" is true all year, and this one isn't.
+            PaywallView(source: "pack_locked", subject: pack.isSeasonal ? pack.title : nil)
+        }
         // packCompleted is logged where it happens — the game screen's
         // completion hook — so it fires exactly once, even if this view is
         // never revisited.
-        .task { analytics.log(.packOpened(id: pack.id)) }
+        .task { analytics.log(.packOpened(id: pack.id, source: source.rawValue)) }
     }
 
     // MARK: - Header
@@ -72,6 +103,8 @@ struct PackDetailView: View {
                 }
             }
 
+            seasonLine
+
             if progress.isComplete {
                 Label("Pack complete — every puzzle solved", systemImage: "checkmark.seal.fill")
                     .font(.subheadline.weight(.semibold))
@@ -90,6 +123,23 @@ struct PackDetailView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .elevatedCard()
         .accessibilityElement(children: .combine)
+    }
+
+    /// How long the pack is here for. Early in a window that's a date the player
+    /// can plan around; in the closing fortnight the countdown says more than
+    /// the date does, so the badge takes over rather than sitting beside it.
+    @ViewBuilder
+    private var seasonLine: some View {
+        if let closingDays = SeasonBadge.daysRemaining(for: pack) {
+            SeasonBadge(daysRemaining: closingDays)
+        } else if let end = pack.seasonEnd() {
+            Label(
+                "In season until \(end.formatted(Self.seasonEndFormat))",
+                systemImage: "calendar"
+            )
+            .font(.caption)
+            .foregroundStyle(.secondary)
+        }
     }
 
     // MARK: - Puzzle list
@@ -157,7 +207,7 @@ struct PackDetailView: View {
                 Label("Premium Collection", systemImage: "crown.fill")
                     .foregroundStyle(.yellow)
             } description: {
-                Text("Unlock \(pack.title) and every other collection with Premium — \(pack.puzzleIDs.count) themed puzzles in this pack alone.")
+                Text(lockedDescription)
             } actions: {
                 Button {
                     showPaywall = true
@@ -170,5 +220,15 @@ struct PackDetailView: View {
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, Theme.Spacing.xl)
+    }
+
+    /// States the size of the pack, and for a seasonal one the date it goes
+    /// away. The deadline is the honest reason to decide now, and it's a fact
+    /// the app already knows — so it belongs here rather than in urgency copy.
+    private var lockedDescription: String {
+        let base = "Unlock \(pack.title) and every other collection with Premium — "
+            + "\(pack.puzzleIDs.count) themed puzzles in this pack alone."
+        guard let end = pack.seasonEnd() else { return base }
+        return base + " This one is only here until \(end.formatted(Self.seasonEndFormat))."
     }
 }

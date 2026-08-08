@@ -53,12 +53,39 @@ struct PuzzlePack: Codable, Identifiable, Hashable {
     let blurb: String         // one-line description
     let coverSymbol: String   // SF Symbol name
     let accentHex: String?    // optional per-pack tint; nil = Theme.accent
-    let isPremium: Bool        // false for the free starter pack
+    let isPremium: Bool       // false for the free starter pack
     let puzzleIDs: [String]   // ordered membership — the single source of truth
-    let availableFrom: String? // ISO "2026-12-01" — seasonal gate (nil = always)
-    let availableTo: String?   // ISO "2026-12-26"
+    let season: PackSeason?   // when it's in season; nil = evergreen
 }
 ```
+
+### Seasons (revised 2026-08-08)
+
+The original design gated a pack on two absolute ISO dates. That works for
+exactly one year: the Advent pack shipped as `2026-12-01 … 2026-12-26` would
+have vanished for good on Boxing Day 2026, silently, and Easter — which moves
+between 22 March and 25 April — could not be expressed at all. A feast is a
+rule, not an event, so a season now stores the rule:
+
+```swift
+enum PackSeason: Hashable, Codable {
+    case dates(from: String, to: String)   // "2026-07-01" — one-off, expires
+    case annual(from: String, to: String)  // "12-01" — every year, may wrap
+    case easter(from: Int, to: Int)        // days from Easter Sunday
+}
+```
+
+`easter` resolves via the anonymous Gregorian algorithm (Meeus/Jones/Butcher),
+so Lent (`-46 … -1`) and Easter week (`-7 … +7`) land correctly in any year with
+no table to maintain. `PuzzlePack.isAvailable(on:)` keeps its signature; the
+view layer is unchanged.
+
+Derived from the same window: `seasonEnd(on:)` and `daysRemaining(on:)` drive
+the "4 days left" badge, and `PuzzlePack.openings(in:from:within:)` finds seasons
+about to start for the notification scheduler.
+
+**Out-of-window packs are hidden**, not teased (decided 2026-08-08). A locked
+"returns in December" row is a dead end on every surface that would carry it.
 
 `packs.json` is the **single source of pack membership + ordering + editorial
 metadata**. Puzzles need no new field for membership; the provider derives a reverse
@@ -75,18 +102,7 @@ Example `Resources/packs.json`:
     "accentHex": null,
     "isPremium": false,
     "puzzleIDs": ["daily-001","daily-004","mini-001","daily-012","mini-003"],
-    "availableFrom": null,
-    "availableTo": null
-  },
-  {
-    "id": "life-of-david",
-    "title": "The Life of David",
-    "blurb": "From the sheepfold to the throne.",
-    "coverSymbol": "crown",
-    "accentHex": "#8A6D3B",
-    "isPremium": true,
-    "puzzleIDs": ["daily-007","daily-018","daily-022","daily-031"],
-    "availableFrom": null, "availableTo": null
+    "season": null
   },
   {
     "id": "advent",
@@ -95,8 +111,16 @@ Example `Resources/packs.json`:
     "coverSymbol": "sparkles",
     "isPremium": true,
     "puzzleIDs": ["daily-040","daily-041","daily-042"],
-    "availableFrom": "2026-12-01",
-    "availableTo": "2026-12-26"
+    "season": { "kind": "annual", "from": "12-01", "to": "12-26" }
+  },
+  {
+    "id": "lent",
+    "title": "Lent",
+    "blurb": "Forty days towards the cross.",
+    "coverSymbol": "leaf",
+    "isPremium": true,
+    "puzzleIDs": ["pack-lent-001","pack-lent-002"],
+    "season": { "kind": "easter", "from": -46, "to": -1 }
   }
 ]
 ```
@@ -253,6 +277,12 @@ themed). No pipeline change → shippable immediately. Phase 2 authors dedicated
 seasonal/character packs as the content bank grows.
 
 ---
+
+## Resolved (2026-08-08)
+- **Seasonal out-of-window** — hidden entirely, no teaser. (Was Q5.)
+- **Free teaser inside a Premium seasonal pack** — no. Seasonal packs are
+  Premium in full; `first-steps` remains the single free pack.
+- **Recurrence** — seasons are rules, not dates (`PackSeason` above).
 
 ## Unresolved questions
 1. **Nav placement** — new 5th tab (free browse, recommended) vs. fold into Archive as

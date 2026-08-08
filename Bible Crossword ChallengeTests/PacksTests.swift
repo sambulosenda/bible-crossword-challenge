@@ -78,16 +78,49 @@ struct PacksTests {
         #expect(evergreen.isAvailable(on: day(2026, 12, 25), calendar: utc))
     }
 
-    @Test func seasonalPackRespectsWindow() {
-        let advent = PuzzlePack(
-            id: "advent", title: "Advent", blurb: "", coverSymbol: "sparkles",
-            accentHex: nil, isPremium: true, puzzleIDs: ["daily-019"],
-            availableFrom: "2026-12-01", availableTo: "2026-12-26"
+    @Test func annualSeasonRespectsWindow() {
+        let advent = PuzzlePack.fixture(
+            id: "advent", puzzleIDs: ["daily-019"],
+            season: .annual(from: "12-01", to: "12-26")
         )
         #expect(advent.isAvailable(on: day(2026, 11, 30), calendar: utc) == false)
         #expect(advent.isAvailable(on: day(2026, 12, 1), calendar: utc))   // inclusive start
         #expect(advent.isAvailable(on: day(2026, 12, 26), calendar: utc))  // inclusive end
         #expect(advent.isAvailable(on: day(2026, 12, 27), calendar: utc) == false)
+    }
+
+    /// The reason `.annual` exists: the same window has to come back next year
+    /// without anyone editing packs.json.
+    @Test func annualSeasonReturnsEveryYear() {
+        let advent = PuzzlePack.fixture(
+            id: "advent", puzzleIDs: ["daily-019"],
+            season: .annual(from: "12-01", to: "12-26")
+        )
+        for year in [2026, 2027, 2030, 2041] {
+            #expect(advent.isAvailable(on: day(year, 12, 10), calendar: utc),
+                    "Advent should run in \(year)")
+            #expect(advent.isAvailable(on: day(year, 7, 10), calendar: utc) == false)
+        }
+    }
+
+    @Test func annualSeasonCanWrapTheNewYear() {
+        // Christmastide: 26 December → 6 January.
+        let season = PackSeason.annual(from: "12-26", to: "01-06")
+        #expect(season.contains(day(2026, 12, 26), calendar: utc))
+        #expect(season.contains(day(2026, 12, 31), calendar: utc))
+        #expect(season.contains(day(2027, 1, 1), calendar: utc))
+        #expect(season.contains(day(2027, 1, 6), calendar: utc))
+        #expect(season.contains(day(2027, 1, 7), calendar: utc) == false)
+        #expect(season.contains(day(2026, 12, 25), calendar: utc) == false)
+    }
+
+    /// An expired one-off window stays expired — the confirmed policy is that a
+    /// finished seasonal pack is hidden, not teased.
+    @Test func oneOffSeasonExpiresForGood() {
+        let launch = PackSeason.dates(from: "2026-07-01", to: "2026-07-07")
+        #expect(launch.contains(day(2026, 7, 3), calendar: utc))
+        #expect(launch.contains(day(2027, 7, 3), calendar: utc) == false)
+        #expect(launch.nextStart(onOrAfter: day(2026, 8, 1), calendar: utc) == nil)
     }
 
     @Test func availablePacksFiltersByDate() {
@@ -98,14 +131,143 @@ struct PacksTests {
         #expect(inSeason.count >= offSeason.count)
     }
 
+    // MARK: - Easter
+
+    /// Known Western Easter Sundays. The algorithm is the only reason a Lent or
+    /// Easter pack can be authored once and open on the right day every year,
+    /// so it's pinned against dates that can be checked against a calendar.
+    @Test(arguments: [
+        (2024, 3, 31), (2025, 4, 20), (2026, 4, 5), (2027, 3, 28),
+        (2028, 4, 16), (2029, 4, 1), (2030, 4, 21), (2038, 4, 25),
+    ])
+    func easterSundayMatchesKnownDates(year: Int, month: Int, dayOfMonth: Int) {
+        let easter = PackSeason.easterSunday(year: year, calendar: utc)
+        #expect(easter == utc.startOfDay(for: day(year, month, dayOfMonth)))
+    }
+
+    @Test func lentTracksEasterAcrossYears() {
+        // Ash Wednesday → Easter Eve is Easter minus 46 to minus 1.
+        let lent = PuzzlePack.fixture(
+            id: "lent", puzzleIDs: ["a"], season: .easter(from: -46, to: -1)
+        )
+        // 2026: Easter 5 April → Lent runs 18 Feb … 4 April.
+        #expect(lent.isAvailable(on: day(2026, 2, 18), calendar: utc))
+        #expect(lent.isAvailable(on: day(2026, 4, 4), calendar: utc))
+        #expect(lent.isAvailable(on: day(2026, 4, 5), calendar: utc) == false)  // Easter itself
+        #expect(lent.isAvailable(on: day(2026, 2, 17), calendar: utc) == false)
+        // 2027: Easter 28 March → the whole window shifts a week earlier.
+        #expect(lent.isAvailable(on: day(2027, 2, 10), calendar: utc))
+        #expect(lent.isAvailable(on: day(2027, 3, 27), calendar: utc))
+        #expect(lent.isAvailable(on: day(2027, 3, 28), calendar: utc) == false)
+        // The 2026 window's dates are emphatically not the 2027 window's.
+        #expect(lent.isAvailable(on: day(2027, 4, 4), calendar: utc) == false)
+    }
+
+    @Test func easterWeekWindowSpansTheFeast() {
+        let easterWeek = PackSeason.easter(from: -7, to: 7)
+        #expect(easterWeek.contains(day(2026, 3, 29), calendar: utc))   // Palm Sunday
+        #expect(easterWeek.contains(day(2026, 4, 5), calendar: utc))    // Easter Sunday
+        #expect(easterWeek.contains(day(2026, 4, 12), calendar: utc))   // +7
+        #expect(easterWeek.contains(day(2026, 4, 13), calendar: utc) == false)
+    }
+
+    // MARK: - Countdown
+
+    @Test func daysRemainingCountsInclusiveOfToday() {
+        let advent = PuzzlePack.fixture(
+            id: "advent", puzzleIDs: ["a"], season: .annual(from: "12-01", to: "12-26")
+        )
+        #expect(advent.daysRemaining(on: day(2026, 12, 26), calendar: utc) == 0)  // last day
+        #expect(advent.daysRemaining(on: day(2026, 12, 25), calendar: utc) == 1)
+        #expect(advent.daysRemaining(on: day(2026, 12, 1), calendar: utc) == 25)
+        #expect(advent.daysRemaining(on: day(2026, 11, 30), calendar: utc) == nil)
+    }
+
+    @Test func evergreenPackHasNoCountdown() {
+        #expect(PuzzlePack.fixtureEvergreen.daysRemaining(on: day(2026, 12, 25), calendar: utc) == nil)
+        #expect(PuzzlePack.fixtureEvergreen.seasonEnd(on: day(2026, 12, 25), calendar: utc) == nil)
+    }
+
+    @Test func badgeOnlyShowsInTheClosingStretch() {
+        #expect(SeasonBadge.text(daysRemaining: 0) == "Last day")
+        #expect(SeasonBadge.text(daysRemaining: 1) == "1 day left")
+        #expect(SeasonBadge.text(daysRemaining: 9) == "9 days left")
+    }
+
+    // MARK: - Openings
+
+    @Test func openingsFindSeasonsStartingInsideTheHorizon() {
+        let advent = PuzzlePack.fixture(
+            id: "advent", puzzleIDs: ["a"], season: .annual(from: "12-01", to: "12-26")
+        )
+        let evergreen = PuzzlePack.fixtureEvergreen
+        let packs = [evergreen, advent]
+
+        let soon = PuzzlePack.openings(
+            in: packs, from: day(2026, 11, 25), within: 14, calendar: utc
+        )
+        #expect(soon.map(\.pack.id) == ["advent"])
+        #expect(soon.first?.opensOn == utc.startOfDay(for: day(2026, 12, 1)))
+
+        // Far out: nothing to announce yet.
+        #expect(PuzzlePack.openings(in: packs, from: day(2026, 10, 1), within: 14, calendar: utc).isEmpty)
+    }
+
+    /// The rule that makes "announce it once" need no stored flag: a season
+    /// already under way is not an upcoming opening.
+    @Test func openingsIgnoreSeasonsAlreadyRunning() {
+        let advent = PuzzlePack.fixture(
+            id: "advent", puzzleIDs: ["a"], season: .annual(from: "12-01", to: "12-26")
+        )
+        // Opening day itself still counts — that's the day the notice fires.
+        #expect(PuzzlePack.openings(in: [advent], from: day(2026, 12, 1), within: 14, calendar: utc).count == 1)
+        // A day into the window, there is nothing left to announce.
+        #expect(PuzzlePack.openings(in: [advent], from: day(2026, 12, 2), within: 14, calendar: utc).isEmpty)
+    }
+
+    @Test func openingsAreSortedByDate() {
+        let advent = PuzzlePack.fixture(
+            id: "advent", puzzleIDs: ["a"], season: .annual(from: "12-01", to: "12-26")
+        )
+        let stir = PuzzlePack.fixture(
+            id: "stir-up", puzzleIDs: ["b"], season: .annual(from: "11-22", to: "11-28")
+        )
+        let openings = PuzzlePack.openings(
+            in: [advent, stir], from: day(2026, 11, 20), within: 30, calendar: utc
+        )
+        #expect(openings.map(\.pack.id) == ["stir-up", "advent"])
+    }
+
+    // MARK: - Season decoding
+
+    @Test func seasonRoundTripsThroughJSON() throws {
+        let seasons: [PackSeason] = [
+            .dates(from: "2026-07-01", to: "2026-07-07"),
+            .annual(from: "12-01", to: "12-26"),
+            .easter(from: -46, to: -1),
+        ]
+        for season in seasons {
+            let data = try JSONEncoder().encode(season)
+            #expect(try JSONDecoder().decode(PackSeason.self, from: data) == season)
+        }
+    }
+
+    @Test func everySeasonInTheBundleResolvesAWindow() {
+        for pack in PuzzleProvider.shared.packs {
+            guard let season = pack.season else { continue }
+            // A mistyped month/day silently resolves to nothing, which would
+            // read as "this pack never opens" rather than as a bug.
+            let resolved = (2026...2030).contains {
+                season.window(anchoredTo: $0, calendar: utc) != nil
+            }
+            #expect(resolved, "Pack \(pack.id) has a season that never resolves")
+        }
+    }
+
     // MARK: - Progress
 
     @Test func progressCountsOnlyCompleted() {
-        let pack = PuzzlePack(
-            id: "p", title: "P", blurb: "", coverSymbol: "star", accentHex: nil,
-            isPremium: false, puzzleIDs: ["a", "b", "c"],
-            availableFrom: nil, availableTo: nil
-        )
+        let pack = PuzzlePack.fixture(id: "p", puzzleIDs: ["a", "b", "c"])
         let byID: [String: PuzzleRecord] = [
             "a": record(id: "a", completed: true),
             "b": record(id: "b", completed: false),
@@ -118,11 +280,7 @@ struct PacksTests {
     }
 
     @Test func fullyCompletedPackIsComplete() {
-        let pack = PuzzlePack(
-            id: "p", title: "P", blurb: "", coverSymbol: "star", accentHex: nil,
-            isPremium: false, puzzleIDs: ["a", "b"],
-            availableFrom: nil, availableTo: nil
-        )
+        let pack = PuzzlePack.fixture(id: "p", puzzleIDs: ["a", "b"])
         let byID = ["a": record(id: "a", completed: true),
                     "b": record(id: "b", completed: true)]
         #expect(PackProgress(pack: pack, recordsByID: byID).isComplete)
@@ -229,15 +387,14 @@ struct PacksTests {
 }
 
 private extension PuzzlePack {
-    static let fixtureEvergreen = PuzzlePack(
-        id: "e", title: "E", blurb: "", coverSymbol: "star", accentHex: nil,
-        isPremium: false, puzzleIDs: ["x"], availableFrom: nil, availableTo: nil
-    )
+    static let fixtureEvergreen = PuzzlePack.fixture(id: "e", puzzleIDs: ["x"])
 
-    static func fixture(id: String, puzzleIDs: [String]) -> PuzzlePack {
+    static func fixture(
+        id: String, puzzleIDs: [String], season: PackSeason? = nil
+    ) -> PuzzlePack {
         PuzzlePack(
             id: id, title: id, blurb: "", coverSymbol: "star", accentHex: nil,
-            isPremium: false, puzzleIDs: puzzleIDs, availableFrom: nil, availableTo: nil
+            isPremium: false, puzzleIDs: puzzleIDs, season: season
         )
     }
 }

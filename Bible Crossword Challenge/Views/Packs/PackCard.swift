@@ -16,6 +16,10 @@ struct PackCard: View {
 
     @ScaledMetric(relativeTo: .title) private var iconSize = 52
 
+    /// Days left when the pack's window is closing — drives both the badge and
+    /// the spoken label, so they can't say different things.
+    private var closingDays: Int? { SeasonBadge.daysRemaining(for: pack) }
+
     var body: some View {
         HStack(spacing: Theme.Spacing.m) {
             cover
@@ -28,6 +32,9 @@ struct PackCard: View {
                         Image(systemName: "crown.fill")
                             .font(.caption2)
                             .foregroundStyle(.yellow)
+                    }
+                    if let closingDays {
+                        SeasonBadge(daysRemaining: closingDays)
                     }
                 }
                 Text(pack.blurb)
@@ -74,6 +81,7 @@ struct PackCard: View {
     private var accessibilityLabel: String {
         var parts = [pack.title, pack.blurb]
         if isLocked { parts.append("Premium") }
+        if let closingDays { parts.append(SeasonBadge.text(daysRemaining: closingDays)) }
         parts.append(progress.isComplete
             ? "Complete"
             : "\(progress.solved) of \(progress.total) solved")

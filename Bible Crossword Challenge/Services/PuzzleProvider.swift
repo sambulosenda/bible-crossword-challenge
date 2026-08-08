@@ -183,7 +183,7 @@ final class PuzzleProvider {
 
     /// Packs whose seasonal window includes `date` (non-seasonal always shown),
     /// preserving display order.
-    func availablePacks(on date: Date = Date()) -> [PuzzlePack] {
+    func availablePacks(on date: Date = SeasonClock.now) -> [PuzzlePack] {
         packs.filter { $0.isAvailable(on: date) }
     }
 }

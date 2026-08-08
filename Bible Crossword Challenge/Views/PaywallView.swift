@@ -25,6 +25,11 @@ struct PaywallView: View {
     /// entry point's view → purchase conversion can be compared.
     let source: String
 
+    /// What the player just ran into, when the entry point can name it — today
+    /// only the seasonal pack behind `pack_locked`. The promise for a pack that
+    /// leaves in a fortnight is not the promise for the shelf as a whole.
+    var subject: String? = nil
+
     @Environment(StoreService.self) private var store
     @Environment(\.analytics) private var analytics
     @Environment(\.puzzleProvider) private var puzzleProvider
@@ -218,6 +223,9 @@ struct PaywallView: View {
         case .packCompletion:
             return "The rest of the pack is waiting."
         case .packLocked:
+            // A seasonal pack states its own constraint; an evergreen one has
+            // none to state, and inventing urgency for it would be a lie.
+            if let subject { return "\(subject) is only here this season." }
             return "The collections are waiting."
         case .homeCard:
             return "Make it part of the morning."

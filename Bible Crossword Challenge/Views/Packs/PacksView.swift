@@ -12,6 +12,9 @@ import SwiftData
 
 struct PacksView: View {
     let profile: PlayerProfile
+    /// Held by `RootView` so a season-opening notification can push its pack
+    /// onto this tab, the way the Today tab's path takes widget deep links.
+    @Binding var path: NavigationPath
 
     @Environment(\.puzzleProvider) private var puzzleProvider
     @Environment(StoreService.self) private var store
@@ -27,7 +30,7 @@ struct PacksView: View {
     private var evergreenPacks: [PuzzlePack] { packs.filter { !$0.isSeasonal } }
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             Group {
                 if packs.isEmpty {
                     ContentUnavailableView(
@@ -40,8 +43,8 @@ struct PacksView: View {
                 }
             }
             .navigationTitle("Packs")
-            .navigationDestination(for: PuzzlePack.self) { pack in
-                PackDetailView(pack: pack, profile: profile)
+            .navigationDestination(for: PackRoute.self) { route in
+                PackDetailView(pack: route.pack, profile: profile, source: route.source)
             }
             .navigationDestination(for: Puzzle.self) { puzzle in
                 CrosswordGameView(puzzle: puzzle, profile: profile)
@@ -72,7 +75,7 @@ struct PacksView: View {
                     Text(title).kicker().padding(.horizontal, Theme.Spacing.xs)
                 }
                 ForEach(packs) { pack in
-                    NavigationLink(value: pack) {
+                    NavigationLink(value: PackRoute(pack: pack, source: .packs)) {
                         PackCard(
                             pack: pack,
                             progress: PackProgress(pack: pack, recordsByID: recordsByID),

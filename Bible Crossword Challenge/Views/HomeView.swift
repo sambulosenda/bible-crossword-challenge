@@ -169,8 +169,8 @@ struct HomeView: View {
             .navigationDestination(for: Puzzle.self) { puzzle in
                 CrosswordGameView(puzzle: puzzle, profile: profile)
             }
-            .navigationDestination(for: PuzzlePack.self) { pack in
-                PackDetailView(pack: pack, profile: profile)
+            .navigationDestination(for: PackRoute.self) { route in
+                PackDetailView(pack: route.pack, profile: profile, source: route.source)
             }
         }
     }
@@ -458,7 +458,7 @@ private struct CollectionsCarousel: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: Theme.Spacing.m) {
                     ForEach(packs) { pack in
-                        NavigationLink(value: pack) {
+                        NavigationLink(value: PackRoute(pack: pack, source: .home)) {
                             PackTile(
                                 pack: pack,
                                 progress: PackProgress(pack: pack, recordsByID: recordsByID),
@@ -485,6 +485,10 @@ private struct PackTile: View {
 
     @ScaledMetric(relativeTo: .title) private var coverSize = 44
 
+    /// Days left when the pack's window is closing. The tile's own `Spacer`
+    /// absorbs the extra line, so the carousel's fixed height still holds.
+    private var closingDays: Int? { SeasonBadge.daysRemaining(for: pack) }
+
     var body: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.s) {
             HStack {
@@ -507,6 +511,10 @@ private struct PackTile: View {
                 .lineLimit(2)
                 .fixedSize(horizontal: false, vertical: true)
                 .frame(maxWidth: .infinity, alignment: .leading)
+
+            if let closingDays {
+                SeasonBadge(daysRemaining: closingDays)
+            }
 
             Spacer(minLength: 0)
 
@@ -533,6 +541,7 @@ private struct PackTile: View {
     private var accessibilityLabel: String {
         var parts = [pack.title]
         if isLocked { parts.append("Premium") }
+        if let closingDays { parts.append(SeasonBadge.text(daysRemaining: closingDays)) }
         parts.append(progress.isComplete ? "Complete" : "\(progress.solved) of \(progress.total) solved")
         return parts.joined(separator: ". ")
     }

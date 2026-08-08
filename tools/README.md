@@ -11,6 +11,12 @@ the app.
   candidate words; the generator only uses the ones that interlock.
 - `generate_puzzles.py` — deterministically builds valid crossword grids from
   the specs and writes the app's `puzzles.json`.
+- `validate_content.py` — checks what actually shipped: every clue's answer
+  matches the letters in its solution grid, pack membership resolves, seasonal
+  windows parse, pack-exclusive puzzles stay out of the daily pool, every
+  shipped id is written back into its spec. Run it before every content commit.
+  (The app's own tests build a synthetic puzzle, so this is the only thing that
+  reads the bundled grids.)
 
 ## Regenerate the bundled puzzles
 ```bash
@@ -22,6 +28,14 @@ The generator:
 - pads/centers each grid to a PRD size (10/12/15),
 - assigns sequential `id` (`daily-001`…) and `publishDate` (from 2026-07-01),
 - prints a summary and any puzzles it had to drop.
+
+Then check the result:
+```bash
+python3 tools/validate_content.py
+```
+It reads `puzzles.json`, `packs.json` and `puzzle_specs.json` and exits non-zero
+on anything the app would swallow silently. Warnings (answer overlap inside a
+pack) are advisory.
 
 ## Add more puzzles
 Append new objects to `puzzle_specs.json` (give each ~16–20 distinct A–Z
@@ -48,6 +62,70 @@ rotation order and `publishDate` are cosmetic and may shift; ids must not.)
 `PuzzleProvider.dailyPuzzle(for:)` shows `puzzles[(daysSinceEpoch) % count]`,
 epoch = 2026-07-01. With 82 puzzles the daily puzzle is unique for ~82 days
 before repeating.
+
+## Ship a pack
+
+The whole checklist, in order. Nothing here needs knowledge that isn't in this
+file — that's the point. The calendar of what to ship and when is
+`docs/seasonal-pack-calendar.md`; how packs work is `docs/themed-packs-spec.md`.
+
+1. **Author the specs.** Append one object per puzzle to `puzzle_specs.json`,
+   each with `"pack": "<slug>"` and **no** `"id"`. Same shape as a daily
+   otherwise: ~16–20 answers, 3–9 letters, rich in common letters. Keep the
+   slug identical across every puzzle in the pack — it becomes the id prefix.
+2. **Generate.**
+   ```bash
+   python3 tools/generate_puzzles.py tools/puzzle_specs.json \
+     "Bible Crossword Challenge/Resources/puzzles.json"
+   ```
+   Dailies and minis are built first with unchanged parameters, so `git diff`
+   on `puzzles.json` must show **only added lines**. Anything else means an
+   existing puzzle moved — stop and find out why before committing.
+3. **Write the ids back.** The generator assigned `pack-<slug>-001`… Copy each
+   into its spec's `"id"` field. This is not optional: a spec without an id is
+   renumbered the next time the bank is reordered, and the id is the only link
+   to a player's saved progress.
+4. **Add the pack to `Resources/packs.json`:**
+   ```json
+   {
+     "id": "easter",
+     "title": "Easter",
+     "blurb": "One line. What the collection is, not why it's good.",
+     "coverSymbol": "sunrise",
+     "accentHex": "#C8912B",
+     "isPremium": true,
+     "puzzleIDs": ["pack-easter-001", "pack-easter-002"],
+     "season": { "kind": "easter", "from": -7, "to": 7 }
+   }
+   ```
+   `puzzleIDs` is the membership *and* the play order. `season` is `null` for an
+   evergreen collection; see the season shapes below.
+5. **Validate.** `python3 tools/validate_content.py` — must print `OK`.
+6. **Test.** `xcodebuild test -scheme "Bible Crossword Challenge" \
+   -destination 'platform=iOS Simulator,name=iPhone 17 Pro'`. `PacksTests`
+   covers pack resolution, pool isolation and every season shape against the
+   bundled files, so a bad pack fails there rather than on a device.
+7. **Look at it.** Run the app, open the Packs tab, confirm the pack renders
+   with its cover, blurb and progress bar. A seasonal pack out of window is
+   *hidden by design* — to see it, move the simulator's date into the window.
+8. **Update the calendar.** Tick the row in `docs/seasonal-pack-calendar.md`.
+
+### Season shapes
+
+`season` on a pack is one of three rules (`PackSeason` in
+`Models/PuzzlePack.swift`). Two of them recur for ever; only the first expires.
+
+| Shape | JSON | Use for |
+|---|---|---|
+| One-off | `{"kind":"dates","from":"2026-07-01","to":"2026-07-07"}` | A launch event. Expires permanently. |
+| Every year | `{"kind":"annual","from":"12-01","to":"12-26"}` | A fixed feast. May wrap the new year (`"12-26"` → `"01-06"`). |
+| Relative to Easter | `{"kind":"easter","from":-46,"to":-1}` | Anything that moves with Easter: Lent `-46…-1`, Holy Week `-7…0`, Eastertide `0…7`. |
+
+**Never use `dates` for a recurring season.** It will work for one year and then
+the pack disappears for good, with nothing in the app to say so.
+
+Out-of-window seasonal packs are hidden everywhere — Home, Collections, search.
+That is the intended behaviour, not a bug to report.
 
 ## Minis
 Specs with `"kind": "mini"` build the Daily Mini pool: 7x7 grids, words 3-7

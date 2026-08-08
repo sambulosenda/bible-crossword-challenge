@@ -11,6 +11,215 @@
 
 import SwiftUI
 
+// MARK: - Clock
+
+/// "Now", for anything gated on a season.
+///
+/// A seasonal surface is visible a few weeks a year, which makes it the hardest
+/// thing in the app to look at and the easiest to ship broken — the countdown
+/// badge, the paywall's named pack and the opening notice are all unreachable
+/// on an ordinary August afternoon. In DEBUG a launch argument moves the clock:
+/// `-uiSeasonDate 2026-12-20`. Same family as `-uiSeedShowcase`.
+enum SeasonClock {
+    nonisolated static var now: Date {
+        #if DEBUG
+        if let override { return override }
+        #endif
+        return Date()
+    }
+
+    #if DEBUG
+    nonisolated static let override: Date? = {
+        let args = ProcessInfo.processInfo.arguments
+        guard let flag = args.firstIndex(of: "-uiSeasonDate"), flag + 1 < args.count else {
+            return nil
+        }
+        let parts = args[flag + 1].split(separator: "-").compactMap { Int($0) }
+        guard parts.count == 3 else { return nil }
+        return Calendar.current.date(
+            from: DateComponents(year: parts[0], month: parts[1], day: parts[2], hour: 12)
+        )
+    }()
+    #endif
+}
+
+// MARK: - Season
+
+/// When a pack is in season.
+///
+/// The obvious way to gate a seasonal pack is a pair of absolute dates, and it
+/// is almost always wrong: an Advent pack dated 2026-12-01…2026-12-26 is gone
+/// for good on Boxing Day 2026, silently, with nothing in the app to say so —
+/// and Easter can't be written down that way at all, because it moves. A feast
+/// is a *rule*, not an event, so the recurring cases store the rule and resolve
+/// a concrete window for whichever year is being asked about.
+enum PackSeason: Hashable, Codable {
+    /// A genuinely one-off window — ISO "yyyy-MM-dd", inclusive both ends.
+    /// This one *does* expire permanently, which is the point: a launch event
+    /// or an anniversary happens once.
+    case dates(from: String, to: String)
+
+    /// The same calendar days every year — "MM-dd", inclusive both ends. A
+    /// window may wrap the new year ("12-26" → "01-06").
+    case annual(from: String, to: String)
+
+    /// Days relative to Easter Sunday, which moves between 22 March and
+    /// 25 April. Lent is `-46 ... -1`, Holy Week `-7 ... 0`, Eastertide `0 ... 7`.
+    case easter(from: Int, to: Int)
+}
+
+extension PackSeason {
+    // JSON shape: {"kind": "annual", "from": "12-01", "to": "12-26"}. A
+    // discriminator rather than a shape-sniffing decoder, so a typo in an
+    // authored pack fails loudly at decode instead of quietly never opening.
+    private enum CodingKeys: String, CodingKey { case kind, from, to }
+    private enum Kind: String, Codable { case dates, annual, easter }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        switch try container.decode(Kind.self, forKey: .kind) {
+        case .dates:
+            self = .dates(from: try container.decode(String.self, forKey: .from),
+                          to: try container.decode(String.self, forKey: .to))
+        case .annual:
+            self = .annual(from: try container.decode(String.self, forKey: .from),
+                           to: try container.decode(String.self, forKey: .to))
+        case .easter:
+            self = .easter(from: try container.decode(Int.self, forKey: .from),
+                           to: try container.decode(Int.self, forKey: .to))
+        }
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        switch self {
+        case let .dates(from, to):
+            try container.encode(Kind.dates, forKey: .kind)
+            try container.encode(from, forKey: .from)
+            try container.encode(to, forKey: .to)
+        case let .annual(from, to):
+            try container.encode(Kind.annual, forKey: .kind)
+            try container.encode(from, forKey: .from)
+            try container.encode(to, forKey: .to)
+        case let .easter(from, to):
+            try container.encode(Kind.easter, forKey: .kind)
+            try container.encode(from, forKey: .from)
+            try container.encode(to, forKey: .to)
+        }
+    }
+}
+
+extension PackSeason {
+    /// The window this season resolves to when anchored on `year`, or `nil` when
+    /// it resolves to none there (a `.dates` season belonging to another year,
+    /// or an unparseable value). `.annual` and `.easter` anchor on the year the
+    /// window *starts*, so a wrapping window belongs to its opening year.
+    func window(anchoredTo year: Int, calendar: Calendar) -> ClosedRange<Date>? {
+        switch self {
+        case let .dates(from, to):
+            guard let start = Self.day(iso: from, calendar: calendar),
+                  let end = Self.day(iso: to, calendar: calendar),
+                  calendar.component(.year, from: start) == year,
+                  start <= end
+            else { return nil }
+            return start...end
+
+        case let .annual(from, to):
+            guard let open = Self.monthDay(from), let close = Self.monthDay(to),
+                  let start = Self.day(year: year, monthDay: open, calendar: calendar)
+            else { return nil }
+            // An end that falls earlier in the calendar than the start wraps
+            // into the next year (Christmastide: 12-26 → 01-06).
+            let closingYear = close < open ? year + 1 : year
+            guard let end = Self.day(year: closingYear, monthDay: close, calendar: calendar)
+            else { return nil }
+            return start...end
+
+        case let .easter(from, to):
+            guard from <= to,
+                  let easter = Self.easterSunday(year: year, calendar: calendar),
+                  let start = calendar.date(byAdding: .day, value: from, to: easter),
+                  let end = calendar.date(byAdding: .day, value: to, to: easter)
+            else { return nil }
+            return calendar.startOfDay(for: start)...calendar.startOfDay(for: end)
+        }
+    }
+
+    /// The window running on `date`, or `nil` when the season is off that day.
+    func window(containing date: Date, calendar: Calendar) -> ClosedRange<Date>? {
+        let day = calendar.startOfDay(for: date)
+        let year = calendar.component(.year, from: day)
+        // A running window can have opened last year (Christmastide) or, for a
+        // date in late December, next year — so check the neighbours too.
+        for anchor in [year - 1, year, year + 1] {
+            if let window = window(anchoredTo: anchor, calendar: calendar), window.contains(day) {
+                return window
+            }
+        }
+        return nil
+    }
+
+    func contains(_ date: Date, calendar: Calendar) -> Bool {
+        window(containing: date, calendar: calendar) != nil
+    }
+
+    /// The first day of the next window that opens on or after `date`, or `nil`
+    /// when the season will never run again — which only a `.dates` season can
+    /// be, since the recurring ones always come back around.
+    func nextStart(onOrAfter date: Date, calendar: Calendar) -> Date? {
+        let day = calendar.startOfDay(for: date)
+        let year = calendar.component(.year, from: day)
+        return (0...2)
+            .compactMap { window(anchoredTo: year + $0, calendar: calendar)?.lowerBound }
+            .filter { $0 >= day }
+            .min()
+    }
+
+    /// Western (Gregorian) Easter Sunday — the anonymous Gregorian algorithm
+    /// (Meeus/Jones/Butcher). Pure arithmetic valid for any Gregorian year, so
+    /// the one moveable feast in the calendar needs no table to keep up to date.
+    static func easterSunday(year: Int, calendar: Calendar) -> Date? {
+        let a = year % 19
+        let b = year / 100
+        let c = year % 100
+        let d = b / 4
+        let e = b % 4
+        let f = (b + 8) / 25
+        let g = (b - f + 1) / 3
+        let h = (19 * a + b - d - g + 15) % 30
+        let i = c / 4
+        let k = c % 4
+        let l = (32 + 2 * e + 2 * i - h - k) % 7
+        let m = (a + 11 * h + 22 * l) / 451
+        let month = (h + l - 7 * m + 114) / 31
+        let day = ((h + l - 7 * m + 114) % 31) + 1
+        return Self.day(year: year, monthDay: (month, day), calendar: calendar)
+    }
+
+    private static func day(iso: String, calendar: Calendar) -> Date? {
+        let parts = iso.split(separator: "-").compactMap { Int($0) }
+        guard parts.count == 3 else { return nil }
+        return day(year: parts[0], monthDay: (parts[1], parts[2]), calendar: calendar)
+    }
+
+    private static func day(year: Int, monthDay: (Int, Int), calendar: Calendar) -> Date? {
+        calendar.date(from: DateComponents(year: year, month: monthDay.0, day: monthDay.1))
+            .map { calendar.startOfDay(for: $0) }
+    }
+
+    /// "12-01" → (12, 1). Rejects anything that isn't a plausible month/day, so
+    /// a mistyped season is caught by the packs.json integrity test.
+    private static func monthDay(_ value: String) -> (Int, Int)? {
+        let parts = value.split(separator: "-").compactMap { Int($0) }
+        guard parts.count == 2, (1...12).contains(parts[0]), (1...31).contains(parts[1]) else {
+            return nil
+        }
+        return (parts[0], parts[1])
+    }
+}
+
+// MARK: - Pack
+
 struct PuzzlePack: Codable, Identifiable, Hashable {
     /// Stable slug, e.g. "life-of-david". Used for analytics and reverse lookup.
     let id: String
@@ -24,40 +233,80 @@ struct PuzzlePack: Codable, Identifiable, Hashable {
     let isPremium: Bool
     /// Ordered puzzle ids — the single source of truth for membership.
     let puzzleIDs: [String]
-    /// Seasonal gating as ISO "yyyy-MM-dd" (inclusive). `nil` means always available.
-    let availableFrom: String?
-    let availableTo: String?
+    /// When the pack is in season. `nil` for an evergreen collection, which is
+    /// always available.
+    let season: PackSeason?
 
     /// Resolved tint, honouring `accentHex` when it parses.
     var accent: Color {
         accentHex.flatMap(Color.init(hex:)) ?? Theme.accent
     }
 
-    /// A pack is seasonal when it declares any availability window.
-    var isSeasonal: Bool { availableFrom != nil || availableTo != nil }
+    /// A pack is seasonal when it declares a season at all.
+    var isSeasonal: Bool { season != nil }
 
-    /// True when `date` falls within `[availableFrom, availableTo]`. Non-seasonal
-    /// packs are always available. A malformed date is treated as no bound.
-    func isAvailable(on date: Date = Date(), calendar: Calendar = .current) -> Bool {
-        let day = calendar.startOfDay(for: date)
-        if let from = Self.date(availableFrom, calendar: calendar),
-           day < calendar.startOfDay(for: from) {
-            return false
-        }
-        if let to = Self.date(availableTo, calendar: calendar),
-           day > calendar.startOfDay(for: to) {
-            return false
-        }
-        return true
+    /// Whether the pack shows on `date`. Out-of-window seasonal packs are hidden
+    /// outright rather than teased — a locked "returns in December" row is a
+    /// dead end on every surface that would carry it.
+    func isAvailable(on date: Date = SeasonClock.now, calendar: Calendar = .current) -> Bool {
+        guard let season else { return true }
+        return season.contains(date, calendar: calendar)
     }
 
-    private static func date(_ iso: String?, calendar: Calendar) -> Date? {
-        guard let iso else { return nil }
-        var f = DateComponents()
-        let parts = iso.split(separator: "-").compactMap { Int($0) }
-        guard parts.count == 3 else { return nil }
-        f.year = parts[0]; f.month = parts[1]; f.day = parts[2]
-        return calendar.date(from: f)
+    /// The last day of the window the pack is in right now; `nil` when it's
+    /// evergreen or out of season.
+    func seasonEnd(on date: Date = SeasonClock.now, calendar: Calendar = .current) -> Date? {
+        season?.window(containing: date, calendar: calendar)?.upperBound
+    }
+
+    /// Whole days left in the current window, counting today — `0` on the last
+    /// day. `nil` when the pack is evergreen or out of season.
+    func daysRemaining(on date: Date = SeasonClock.now, calendar: Calendar = .current) -> Int? {
+        guard let end = seasonEnd(on: date, calendar: calendar) else { return nil }
+        return calendar.dateComponents([.day], from: calendar.startOfDay(for: date), to: end).day
+    }
+
+    /// The next day this pack opens, on or after `date`. A pack already weeks
+    /// into its season reports next year's opening, not today's — callers ask
+    /// this to find *upcoming* openings, and one already under way isn't news.
+    func nextOpening(onOrAfter date: Date = SeasonClock.now, calendar: Calendar = .current) -> Date? {
+        season?.nextStart(onOrAfter: date, calendar: calendar)
+    }
+}
+
+// MARK: - Openings
+
+/// A seasonal pack and the day its window opens. Drives the one-off "the season
+/// has begun" notification.
+struct PackOpening: Hashable {
+    let pack: PuzzlePack
+    let opensOn: Date
+}
+
+extension PuzzlePack {
+    /// The packs among `packs` whose season opens between `date` and `days`
+    /// later (inclusive), earliest first.
+    ///
+    /// Kept as pure date arithmetic so the scheduling rule is testable without
+    /// standing up a notification centre.
+    static func openings(
+        in packs: [PuzzlePack],
+        from date: Date = SeasonClock.now,
+        within days: Int,
+        calendar: Calendar = .current
+    ) -> [PackOpening] {
+        let start = calendar.startOfDay(for: date)
+        guard days >= 0, let horizon = calendar.date(byAdding: .day, value: days, to: start) else {
+            return []
+        }
+        return packs
+            .compactMap { pack -> PackOpening? in
+                guard let opensOn = pack.nextOpening(onOrAfter: start, calendar: calendar),
+                      opensOn <= horizon
+                else { return nil }
+                return PackOpening(pack: pack, opensOn: opensOn)
+            }
+            .sorted { $0.opensOn < $1.opensOn }
     }
 }
 

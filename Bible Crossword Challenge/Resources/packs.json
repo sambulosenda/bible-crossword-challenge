@@ -7,8 +7,7 @@
     "accentHex": null,
     "isPremium": false,
     "puzzleIDs": ["daily-001", "daily-010", "mini-001", "daily-014", "mini-003"],
-    "availableFrom": null,
-    "availableTo": null
+    "season": null
   },
   {
     "id": "life-of-david",
@@ -18,8 +17,7 @@
     "accentHex": "#8A6D3B",
     "isPremium": true,
     "puzzleIDs": ["daily-004", "daily-013", "daily-022", "daily-035"],
-    "availableFrom": null,
-    "availableTo": null
+    "season": null
   },
   {
     "id": "parables-of-jesus",
@@ -29,8 +27,7 @@
     "accentHex": null,
     "isPremium": true,
     "puzzleIDs": ["daily-021", "daily-024", "daily-038", "daily-056"],
-    "availableFrom": null,
-    "availableTo": null
+    "season": null
   },
   {
     "id": "psalm-23",
@@ -40,8 +37,7 @@
     "accentHex": "#2E6E8E",
     "isPremium": true,
     "puzzleIDs": ["pack-psalm-23-001", "pack-psalm-23-002", "pack-psalm-23-003", "pack-psalm-23-004", "pack-psalm-23-005"],
-    "availableFrom": null,
-    "availableTo": null
+    "season": null
   },
   {
     "id": "advent",
@@ -51,7 +47,6 @@
     "accentHex": "#1F6F54",
     "isPremium": true,
     "puzzleIDs": ["daily-019", "daily-028"],
-    "availableFrom": "2026-12-01",
-    "availableTo": "2026-12-26"
+    "season": { "kind": "annual", "from": "12-01", "to": "12-26" }
   }
 ]

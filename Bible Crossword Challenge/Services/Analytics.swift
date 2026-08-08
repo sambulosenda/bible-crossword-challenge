@@ -75,7 +75,11 @@ enum AnalyticsEvent {
     case paywallCTATapped(plan: String, source: String, offersTrial: Bool)
     case notificationPermission(granted: Bool)
     case reminderSettingChanged(enabled: Bool)
-    case packOpened(id: String)
+    /// `source` names the surface that pushed the pack (`home`, `packs`,
+    /// `notification`) — the question a seasonal pack raises is not how many
+    /// people opened it but which surface got them there, and the Home carousel
+    /// and the Packs tab were previously indistinguishable.
+    case packOpened(id: String, source: String)
     case packCompleted(id: String)
     case challengeSent(puzzleID: String)
     case challengeOpened(puzzleID: String)
@@ -186,8 +190,8 @@ enum AnalyticsEvent {
             return ["granted": granted]
         case .reminderSettingChanged(let enabled):
             return ["enabled": enabled]
-        case .packOpened(let id):
-            return ["pack_id": id]
+        case .packOpened(let id, let source):
+            return ["pack_id": id, "source": source]
         case .packCompleted(let id):
             return ["pack_id": id]
         case .challengeSent(let id):

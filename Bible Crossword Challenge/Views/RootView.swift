@@ -34,6 +34,9 @@ struct RootView: View {
     /// push the daily puzzle onto it. Type-erased so the Today feed can push both
     /// puzzles and pack details.
     @State private var todayPath = NavigationPath()
+    /// Navigation stack for the Packs tab, held here for the same reason as
+    /// `todayPath`: a season-opening notification deep-links into a pack.
+    @State private var packsPath = NavigationPath()
     // Sorted so `first` is the oldest profile — the survivor SyncMerge keeps
     // when CloudKit sync delivers a duplicate from another device.
     @Query(sort: \PlayerProfile.createdAt) private var profiles: [PlayerProfile]
@@ -106,6 +109,10 @@ struct RootView: View {
             // prompt is still unspent.
             await notifications.refreshStatus()
             showReminderPrompt = shouldAskAgain(profile)
+            // A cold launch from a notification tap sets `pendingURL` before
+            // this view exists, so the change never lands on `onChange` —
+            // whatever is already waiting has to be drained by hand.
+            drainPendingNotificationURL()
         }
         .onChange(of: scenePhase) { _, phase in
             // Returning to the foreground may cross midnight or land after a solve
@@ -127,6 +134,12 @@ struct RootView: View {
         }
         .onOpenURL { url in
             handleDeepLink(url)
+        }
+        // A tapped notification arrives through the notification-centre
+        // delegate rather than `onOpenURL`, so it's handed here as a URL and
+        // routed by the same code — one definition of where a link goes.
+        .onChange(of: notifications.pendingURL) { _, _ in
+            drainPendingNotificationURL()
         }
         // Universal links (https://biblecrosswordchallenge.com/challenge/…)
         // arrive as a web-browsing activity rather than through onOpenURL.
@@ -199,8 +212,16 @@ struct RootView: View {
         return !Calendar.current.isDateInToday(profile.createdAt)
     }
 
-    /// Deep-link entry: friend challenges (`challenge`) and widget taps
-    /// (`play-daily`, see `StreakEntry.deepLinkURL`).
+    /// Routes whatever a notification tap left behind, exactly once.
+    private func drainPendingNotificationURL() {
+        guard let url = notifications.pendingURL else { return }
+        notifications.pendingURL = nil
+        handleDeepLink(url)
+    }
+
+    /// Deep-link entry: friend challenges (`challenge`), widget taps
+    /// (`play-daily`, see `StreakEntry.deepLinkURL`), and notification taps
+    /// (`pack`, from a season opening).
     private func handleDeepLink(_ url: URL) {
         guard url.scheme == "biblecrossword" else { return }
 
@@ -235,6 +256,19 @@ struct RootView: View {
            let puzzle = puzzleProvider.puzzle(id: id) {
             selectedTab = .today
             todayPath = NavigationPath([puzzle])
+            return
+        }
+
+        // A collection (`biblecrossword://pack?id=…`) — the season-opening
+        // notification's target. Gated on the pack being in season, since a
+        // notification can outlive its window (scheduled, then opened days
+        // later) and the pack it names would be nowhere else in the app.
+        if url.host() == "pack",
+           let id = URLComponents(url: url, resolvingAgainstBaseURL: false)?
+               .queryItems?.first(where: { $0.name == "id" })?.value,
+           let pack = puzzleProvider.pack(id: id), pack.isAvailable() {
+            selectedTab = .packs
+            packsPath = NavigationPath([PackRoute(pack: pack, source: .notification)])
             return
         }
 
@@ -287,7 +321,7 @@ struct RootView: View {
                 HomeView(profile: profile, path: $todayPath)
             }
             Tab("Packs", systemImage: "square.stack.3d.up", value: RootTab.packs) {
-                PacksView(profile: profile)
+                PacksView(profile: profile, path: $packsPath)
             }
             Tab("Library", systemImage: "books.vertical", value: RootTab.library) {
                 LibraryView(profile: profile)
