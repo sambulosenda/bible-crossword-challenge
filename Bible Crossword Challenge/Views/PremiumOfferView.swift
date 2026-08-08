@@ -71,6 +71,22 @@ struct PremiumOfferView: View {
     /// pages do. Nil on the sheet, which is already an animated presentation.
     var entranceActive: Bool? = nil
 
+    /// Whether to name the collections this player can't open yet.
+    ///
+    /// A flag rather than a slot the caller fills, because the strip is built
+    /// from the same two environment values everything else here reads, and
+    /// belongs beside the benefit line it makes concrete. What varies is only
+    /// whether a surface wants it: the sheet does, onboarding doesn't. A player
+    /// three minutes into their first run has no relationship with the packs
+    /// yet, so a list of things they can't have reads as a wall rather than as
+    /// content withheld — and ticket 08 scopes the strip to the sheet anyway.
+    var showsLockedPacks: Bool = false
+
+    /// The pack the player just bounced off, when they came from one. It sorts
+    /// to the front of the strip, so the collection that sent them here is the
+    /// first one they see.
+    var highlightedPackID: String? = nil
+
     @Environment(StoreService.self) private var store
     @Environment(\.puzzleProvider) private var puzzleProvider
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
@@ -82,6 +98,7 @@ struct PremiumOfferView: View {
         VStack(spacing: Theme.Spacing.m) {
             staggered(headlineBlock, delay: 0.05)
             staggered(featureList, delay: 0.14)
+            staggered(lockedPackStrip, delay: 0.17)
 
             if store.isPremium {
                 premiumBadge
@@ -197,6 +214,97 @@ struct PremiumOfferView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(Theme.Spacing.m)
         .elevatedCard()
+    }
+
+    // MARK: - Withheld collections
+
+    /// How many packs the strip names before it starts counting instead.
+    private static let namedPackLimit = 3
+
+    /// The collections this player can't open yet, named rather than counted.
+    ///
+    /// The benefits list one block up says "All 7 packs, and every new one",
+    /// and a number is only a claim — the reader has to take it on trust and
+    /// has no idea whether the seven are worth having. Three titles are
+    /// evidence, and they're the app's own content rather than a promise about
+    /// it. This is the strip `PaywallView`'s header comment has described since
+    /// it was written ("then the named packs they can't open yet") and which
+    /// the screen never actually had.
+    ///
+    /// Deliberately not tappable. Every other surface that lists packs pushes
+    /// pack detail, but this one is a sheet whose whole job is a single
+    /// decision, and pack detail is where half these players just came from —
+    /// its own locked CTA reopens this very paywall. A preview that goes
+    /// nowhere is the honest shape here; the strip is evidence, not navigation.
+    @ViewBuilder
+    private var lockedPackStrip: some View {
+        let locked = lockedPacks
+        if !locked.isEmpty {
+            let named = Array(locked.prefix(Self.namedPackLimit))
+            let remainder = locked.count - named.count
+            VStack(alignment: .leading, spacing: Theme.Spacing.s) {
+                Text("Locked collections").kicker()
+                ForEach(named) { pack in
+                    // `.top` for the same reason the benefits list uses it: a
+                    // title that wraps at large text sizes should keep its
+                    // symbol beside the first line, not floating between two.
+                    HStack(alignment: .top, spacing: Theme.Spacing.m) {
+                        // The pack's own symbol and tint, as the Packs tab
+                        // draws them. Uniform accent discs here would have made
+                        // the strip a second benefits list; the collections
+                        // already have identities, and using them is what says
+                        // "real content" rather than "more bullet points".
+                        Image(systemName: pack.coverSymbol)
+                            .font(.footnote.weight(.bold))
+                            .foregroundStyle(pack.accent)
+                            .frame(width: checkSize, height: checkSize)
+                            .background(pack.accent.opacity(0.14), in: .circle)
+                        Text(pack.title)
+                            .font(.body.weight(.semibold))
+                            .fixedSize(horizontal: false, vertical: true)
+                        Spacer(minLength: 0)
+                    }
+                }
+                // Says the strip is a sample and how much it's leaving out,
+                // rather than letting three titles imply three packs.
+                if remainder > 0 {
+                    Text("and \(remainder) more")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(Theme.Spacing.m)
+            .elevatedCard()
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(lockedPacksLabel(named: named, remainder: remainder))
+        }
+    }
+
+    /// The premium packs on offer today, the one they came from first.
+    ///
+    /// `availablePacks` rather than every premium pack: an out-of-season
+    /// collection is hidden outright everywhere else in the app rather than
+    /// teased, because a locked "returns in December" row is a dead end — and
+    /// it would be a worse one here, where the whole point is that paying fixes
+    /// it. Paying does not fix December.
+    private var lockedPacks: [PuzzlePack] {
+        guard showsLockedPacks, !store.isPremium else { return [] }
+        var locked = puzzleProvider.availablePacks().filter(\.isPremium)
+        if let highlightedPackID,
+           let index = locked.firstIndex(where: { $0.id == highlightedPackID }) {
+            locked.insert(locked.remove(at: index), at: 0)
+        }
+        return locked
+    }
+
+    /// One spoken sentence for the whole strip. Read row by row it's a list of
+    /// bare titles with no hint of why they're being read out.
+    private func lockedPacksLabel(named: [PuzzlePack], remainder: Int) -> String {
+        var label = "Premium collections locked. "
+            + named.map(\.title).joined(separator: ", ")
+        if remainder > 0 { label += ", and \(remainder) more" }
+        return label + "."
     }
 
     private var premiumBadge: some View {

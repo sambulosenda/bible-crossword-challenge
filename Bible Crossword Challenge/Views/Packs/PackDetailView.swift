@@ -79,7 +79,11 @@ struct PackDetailView: View {
         .sheet(isPresented: $showPaywall) {
             // A seasonal pack gets its name into the promise: "the collections
             // are waiting" is true all year, and this one isn't.
-            PaywallView(source: "pack_locked", subject: pack.isSeasonal ? pack.title : nil)
+            PaywallView(
+                source: "pack_locked",
+                subject: pack.isSeasonal ? pack.title : nil,
+                contextPackID: pack.id
+            )
         }
         // packCompleted is logged where it happens — the game screen's
         // completion hook — so it fires exactly once, even if this view is

@@ -30,6 +30,15 @@ struct PaywallView: View {
     /// leaves in a fortnight is not the promise for the shelf as a whole.
     var subject: String? = nil
 
+    /// The pack the player just ran into, when they came from one. Only used to
+    /// sort that collection to the front of the locked-pack strip.
+    ///
+    /// Separate from `subject`, which is deliberately nil for evergreen packs —
+    /// it exists to write a headline about a season running out, and an
+    /// evergreen pack has no season to run out. The strip wants the pack in
+    /// every case, so it needs its own parameter rather than a title to match on.
+    var contextPackID: String? = nil
+
     @Environment(StoreService.self) private var store
     @Environment(\.analytics) private var analytics
     @Environment(\.puzzleProvider) private var puzzleProvider
@@ -57,7 +66,9 @@ struct PaywallView: View {
                 PremiumOfferView(
                     headline: headlineText,
                     progressLine: progressLine,
-                    selectedID: $selectedID
+                    selectedID: $selectedID,
+                    showsLockedPacks: true,
+                    highlightedPackID: contextPackID
                 )
                 .padding(.horizontal, Theme.Spacing.l)
                 .padding(.top, Theme.Spacing.s)
