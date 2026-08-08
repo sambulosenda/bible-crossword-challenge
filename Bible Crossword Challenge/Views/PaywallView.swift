@@ -158,12 +158,9 @@ struct PaywallView: View {
                 .multilineTextAlignment(.center)
 
             if let trial = trialHeadline {
-                // "Free" carries the accent on its own so the offer survives a
-                // glance, the way a coloured word in a headline does — without
-                // tinting the whole line, which would read as a warning.
-                (Text("Start with a ")
-                    + Text(trial).foregroundColor(Theme.accent).bold()
-                    + Text(" — pay nothing today"))
+                // Shared with onboarding's premium page rather than restated —
+                // see `PremiumCopy.trialSubhead`.
+                PremiumCopy.trialSubhead(trial)
                     .font(.subheadline.weight(.medium))
                     .multilineTextAlignment(.center)
             }
@@ -605,9 +602,8 @@ struct PaywallView: View {
     /// directly underneath either way.
     private var ctaTitle: String {
         guard let product = selectedProduct else { return "Continue" }
-        // "Start 7-day free trial", not a generic "Start Free Trial" — the
-        // length is the most persuasive part and it's already to hand.
-        if let trial = store.introOfferText(for: product) { return "Start \(trial)" }
+        // Shared with onboarding's premium page — see `PremiumCopy.trialCTA`.
+        if let trial = store.introOfferText(for: product) { return PremiumCopy.trialCTA(trial) }
         if store.periodText(for: product) != nil {
             return "Unlock \(puzzleProvider.totalPuzzleCount) puzzles"
         }
@@ -685,6 +681,34 @@ enum PremiumCopy {
     /// paywall it opens (`source: "archive"`) are one tap apart — a different
     /// headline on each made a single journey look like two pitches.
     static let archive = "Every puzzle, back to the first."
+
+    /// The trial CTA, e.g. "Start 3-day free trial" — never a bare "Start Free
+    /// Trial". The length is the most persuasive part of the offer and the
+    /// store already hands it over, so spending the button on a generic phrase
+    /// throws away the one number that closes.
+    ///
+    /// Pass `StoreService.introOfferText(for:)` straight in; the duration comes
+    /// from StoreKit rather than any string written here, so a change to the
+    /// configured offer can't leave the copy claiming the old length.
+    static func trialCTA(_ trial: String) -> String { "Start \(trial)" }
+
+    /// "Start with a 3-day free trial — pay nothing today", said above the fold
+    /// on both surfaces that open the offer.
+    ///
+    /// The length carries the accent on its own so the offer survives a glance,
+    /// the way a coloured word in a headline does — without tinting the whole
+    /// line, which would read as a warning.
+    static func trialSubhead(_ trial: String) -> Text {
+        Text("Start with a ")
+            + Text(trial).foregroundStyle(Theme.accent).bold()
+            + Text(" — pay nothing today")
+    }
+
+    /// Said in the trial's place when there is no introductory offer — because
+    /// the player has already used theirs, or none is configured. Without it
+    /// the no-trial path has nothing above the fold about what costs nothing,
+    /// and the free tier is the reason the ask can stay soft.
+    static let freeDailyReassurance = "The daily puzzle stays free either way."
 }
 
 /// A premium benefit: what you get, then what that actually means.

@@ -39,6 +39,10 @@ struct OnboardingView: View {
     @State private var didLogFirstSolve = false
     @FocusState private var nameFocused: Bool
 
+    /// Matches `PaywallView.checkSize` in intent: the benefit badge grows with
+    /// the player's text size instead of being pinned to a point value.
+    @ScaledMetric(relativeTo: .body) private var benefitIconSize: CGFloat = 34
+
     /// Typed separately from `profile.username` so the field can start empty:
     /// a new profile is created with the placeholder name "Friend", and showing
     /// that as prefilled text makes the player delete it before they can type.
@@ -141,13 +145,22 @@ struct OnboardingView: View {
         .ignoresSafeArea()
     }
 
-    /// Five ink segments instead of dots: it reads as progress rather than
+    /// Four ink segments instead of dots: it reads as progress rather than
     /// decoration, and it tells the player up front how short this is.
+    ///
+    /// Four, not five — the premium page is deliberately not a step. Filling a
+    /// fifth segment on the offer framed paying as the way to finish setting
+    /// the app up, which is both untrue (the free daily is the whole product
+    /// for most players) and the kind of bait-and-switch that earns a one-star
+    /// review. Setup finishes at four, and the bar goes gold to mark what
+    /// follows as a bonus — the same gold the canvas wash already turns on that
+    /// page, so the two read as one signal.
     private var progressBar: some View {
-        HStack(spacing: 5) {
-            ForEach(0...lastPage, id: \.self) { i in
+        let onOffer = page == lastPage
+        return HStack(spacing: 5) {
+            ForEach(0..<lastPage, id: \.self) { i in
                 Capsule()
-                    .fill(i <= page ? Theme.ink : Color.primary.opacity(0.10))
+                    .fill(onOffer ? Theme.badgeRim : (i <= page ? Theme.ink : Color.primary.opacity(0.10)))
                     .frame(height: 4)
             }
         }
@@ -155,7 +168,11 @@ struct OnboardingView: View {
         .padding(.top, Theme.Spacing.s)
         .animation(.spring(duration: 0.35), value: page)
         .accessibilityElement()
-        .accessibilityLabel("Step \(page + 1) of \(lastPage + 1)")
+        .accessibilityLabel(
+            onOffer
+                ? "Setup complete. Premium offer, optional."
+                : "Step \(page + 1) of \(lastPage)"
+        )
     }
 
     // MARK: - Pages
@@ -342,10 +359,26 @@ struct OnboardingView: View {
                 // `PremiumCopy.promise`. The explicit line break went with it:
                 // the sentence wraps to the same two lines at this width, and a
                 // hardcoded break is what stops shared copy staying shared.
-                Text(PremiumCopy.promise)
+                Text(premiumHeadline)
                     .font(.scripture(.largeTitle, weight: .semibold))
                     .multilineTextAlignment(.center)
                     .entrance(active: active, delay: 0.10, reduceMotion: reduceMotion)
+
+                // The offer, above the benefits card rather than only down on
+                // the button. A player deciding whether to read on shouldn't
+                // have to look at the CTA to find out the trial costs nothing.
+                Group {
+                    if let trialText {
+                        PremiumCopy.trialSubhead(trialText)
+                    } else {
+                        // No trial to lead with, so lead with what stays free.
+                        Text(PremiumCopy.freeDailyReassurance)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                .font(.subheadline.weight(.medium))
+                .multilineTextAlignment(.center)
+                .entrance(active: active, delay: 0.14, reduceMotion: reduceMotion)
             }
 
             VStack(alignment: .leading, spacing: Theme.Spacing.m) {
@@ -395,9 +428,13 @@ struct OnboardingView: View {
     private func benefit(_ icon: String, _ title: String, _ detail: String) -> some View {
         HStack(alignment: .top, spacing: Theme.Spacing.m) {
             Image(systemName: icon)
-                .font(.system(size: 17, weight: .semibold))
+                // Both the disc and the glyph scale, as the paywall's check
+                // circles do. At a fixed 34pt the disc stayed put while the
+                // title beside it grew, so at accessibility sizes the row read
+                // as a bullet dot rather than the paywall's matching badge.
+                .font(.body.weight(.semibold))
                 .foregroundStyle(Theme.accent)
-                .frame(width: 34, height: 34)
+                .frame(width: benefitIconSize, height: benefitIconSize)
                 .background(Theme.accent.opacity(0.12), in: .circle)
             VStack(alignment: .leading, spacing: 2) {
                 Text(title).font(.headline)
@@ -456,6 +493,13 @@ struct OnboardingView: View {
         .padding(.horizontal, Theme.Spacing.l)
         .padding(.top, Theme.Spacing.m)
         .padding(.bottom, Theme.Spacing.s)
+        // Take the height these labels actually need instead of being
+        // compressed by the TabView above. Without this the controls are the
+        // only thing that gives at accessibility text sizes, and the buttons
+        // truncate rather than wrap — "Start 3-day fr…" on the one control
+        // that has to state the offer exactly. The pages absorb the loss
+        // instead, which they can: each is its own ScrollView.
+        .fixedSize(horizontal: false, vertical: true)
         .animation(.easeInOut, value: page)
         .animation(.easeInOut, value: solved)
     }
@@ -469,7 +513,7 @@ struct OnboardingView: View {
                 if store.purchaseInFlight {
                     ProgressView().tint(Theme.onInk)
                 } else {
-                    Text(trialText == nil ? "Unlock Premium" : "Start Free Trial")
+                    Text(premiumCTATitle)
                 }
             }
         }
@@ -503,6 +547,26 @@ struct OnboardingView: View {
     private var trialText: String? {
         guard let yearly = store.yearly else { return nil }
         return store.introOfferText(for: yearly)
+    }
+
+    /// The promise, aware of what the player just did.
+    ///
+    /// Someone who solved the first clue thirty seconds ago has already had the
+    /// product demonstrated to them, and the generic promise ignores it. Someone
+    /// who skipped hasn't, so they still get the promise cold.
+    ///
+    /// Deliberately no numbers: the most they can have solved is the onboarding
+    /// mini, and a tally of one reads as a tally of nothing.
+    private var premiumHeadline: String {
+        solved ? "You got the idea.\nKeep it going." : PremiumCopy.promise
+    }
+
+    /// "Start 3-day free trial" when there's an offer, plain unlock copy when
+    /// there isn't — shared with the paywall so the two can't drift, and driven
+    /// by StoreKit so it can never advertise a length that isn't configured.
+    private var premiumCTATitle: String {
+        guard let trialText else { return "Unlock Premium" }
+        return PremiumCopy.trialCTA(trialText)
     }
 
     private var priceLine: String {
