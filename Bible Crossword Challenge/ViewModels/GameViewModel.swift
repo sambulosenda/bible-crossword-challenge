@@ -516,6 +516,43 @@ final class GameViewModel {
         showErrors = true
         onEntryChanged?()
     }
+
+    /// Development-only: fill roughly `fraction` of the grid correctly, leaving
+    /// the rest empty — the mid-solve state App Store screenshots need.
+    ///
+    /// Fills *whole answers* rather than a scattering of letters, because that
+    /// is what a real half-finished grid looks like: someone works a clue at a
+    /// time, so the empty cells cluster into the words they haven't cracked yet.
+    /// A percentage of randomly-chosen cells reads as a bug, not as progress.
+    ///
+    /// Selection lands on the first word still outstanding, so the clue bar
+    /// shows something being worked on rather than something already solved.
+    func fillPartial(fraction: Double = 0.5) {
+        let playable = grid.flatMap { $0 }.filter { !$0.isBlock }.count
+        guard playable > 0 else { return }
+        let target = Int((Double(playable) * fraction).rounded())
+
+        var filled = 0
+        for slot in acrossSlots {
+            guard filled < target else { break }
+            for (i, pos) in slot.positions.enumerated() {
+                guard grid[pos.row][pos.col].entry == nil else { continue }
+                grid[pos.row][pos.col].entry = Array(slot.answer)[i]
+                filled += 1
+            }
+        }
+
+        seedSolvedSlots()
+        // Green ticks on what's done. Every filled letter came from the answer,
+        // so this can only render as correct.
+        showErrors = true
+        if let next = acrossSlots.first(where: { !slotSolved($0) }) {
+            direction = .across
+            selected = next.positions.first { grid[$0.row][$0.col].entry == nil }
+                ?? next.positions[0]
+        }
+        onEntryChanged?()
+    }
     #endif
 
     // MARK: - Resume snapshot

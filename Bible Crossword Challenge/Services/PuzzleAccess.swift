@@ -42,7 +42,7 @@ struct PuzzleAccess {
 
     init(
         provider: PuzzleProvider,
-        date: Date = Date(),
+        date: Date = RotationClock.now,
         calendar: Calendar = .current,
         windowLength: Int = PuzzleAccess.windowLength
     ) {

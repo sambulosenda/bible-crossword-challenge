@@ -181,10 +181,23 @@ struct CrosswordGameView: View {
             #if DEBUG
             // Screenshot helpers, triggered by launch arguments — no visible UI.
             let args = ProcessInfo.processInfo.arguments
+            // Put a believable clock on the shot. A puzzle auto-solved at launch
+            // finishes in about three seconds, which is the one detail that
+            // gives a staged screenshot away — the completion screen leads with
+            // the time. Seeded before the fill helpers, since solving reads it.
+            if let flag = args.firstIndex(of: "-uiElapsed"), flag + 1 < args.count,
+               let seconds = Int(args[flag + 1]) {
+                vm.seedElapsed(seconds)
+            }
             if args.contains("-uiFillSolved") {
                 vm.fillSolvedNoComplete()
             } else if args.contains("-uiAutoSolve") {
                 vm.autoSolve()
+            } else if args.contains("-uiFillPartial") {
+                // Optional fraction: `-uiFillPartial 0.55`. Defaults to half.
+                let fraction = args.firstIndex(of: "-uiFillPartial")
+                    .flatMap { $0 + 1 < args.count ? Double(args[$0 + 1]) : nil } ?? 0.5
+                vm.fillPartial(fraction: fraction)
             }
             #endif
         }

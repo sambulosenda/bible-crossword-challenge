@@ -9,6 +9,41 @@
 
 import Foundation
 
+/// The "today" the daily rotation is measured against.
+///
+/// The rotation is deterministic from the calendar day, which is exactly right
+/// in production and exactly wrong when capturing App Store screenshots: the
+/// story the shot needs is served on whichever day the pool says, and most of
+/// the catalogue is months away. In DEBUG a launch argument moves the day:
+/// `-uiRotationDate 2026-10-04`. Same family as `-uiSeasonDate` and
+/// `-uiSeedShowcase`.
+///
+/// Deliberately separate from `SeasonClock`: a seasonal pack window and the
+/// daily rotation are independent axes, and a screenshot often needs to pin one
+/// without disturbing the other.
+enum RotationClock {
+    nonisolated static var now: Date {
+        #if DEBUG
+        if let override { return override }
+        #endif
+        return Date()
+    }
+
+    #if DEBUG
+    nonisolated static let override: Date? = {
+        let args = ProcessInfo.processInfo.arguments
+        guard let flag = args.firstIndex(of: "-uiRotationDate"), flag + 1 < args.count else {
+            return nil
+        }
+        let parts = args[flag + 1].split(separator: "-").compactMap { Int($0) }
+        guard parts.count == 3 else { return nil }
+        return Calendar.current.date(
+            from: DateComponents(year: parts[0], month: parts[1], day: parts[2], hour: 12)
+        )
+    }()
+    #endif
+}
+
 final class PuzzleProvider {
     static let shared = PuzzleProvider()
 
@@ -100,12 +135,12 @@ final class PuzzleProvider {
     }
 
     /// Deterministic daily puzzle: rotates through the bundled set by calendar day.
-    func dailyPuzzle(for date: Date = Date(), calendar: Calendar = .current) -> Puzzle? {
+    func dailyPuzzle(for date: Date = RotationClock.now, calendar: Calendar = .current) -> Puzzle? {
         rotated(puzzles, for: date, calendar: calendar)
     }
 
     /// Today's Mini — the quick 7×7, rotating through its own pool.
-    func dailyMini(for date: Date = Date(), calendar: Calendar = .current) -> Puzzle? {
+    func dailyMini(for date: Date = RotationClock.now, calendar: Calendar = .current) -> Puzzle? {
         rotated(minis, for: date, calendar: calendar)
     }
 
@@ -116,7 +151,7 @@ final class PuzzleProvider {
 
     /// Whole days from the content epoch to `date`. Negative before the epoch;
     /// callers wrap it into a pool with `index(in:for:calendar:)`.
-    func dayIndex(for date: Date = Date(), calendar: Calendar = .current) -> Int {
+    func dayIndex(for date: Date = RotationClock.now, calendar: Calendar = .current) -> Int {
         let startToday = calendar.startOfDay(for: date)
         let startEpoch = calendar.startOfDay(for: epoch)
         return calendar.dateComponents([.day], from: startEpoch, to: startToday).day ?? 0
@@ -137,7 +172,7 @@ final class PuzzleProvider {
     /// currently in play, and that answer stays defined after the pool wraps.
     func rotationWindow(
         _ pool: [Puzzle],
-        for date: Date = Date(),
+        for date: Date = RotationClock.now,
         calendar: Calendar = .current,
         length: Int
     ) -> [Puzzle] {
