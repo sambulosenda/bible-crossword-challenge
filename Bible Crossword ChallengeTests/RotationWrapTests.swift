@@ -51,19 +51,21 @@ struct RotationWrapTests {
     @Test func theDailyPoolWrapsAfterItsOwnLength() {
         let provider = PuzzleProvider.shared
         let pool = provider.puzzles
-        #expect(pool.count == 82, "daily pool changed — the wrap date has moved")
+        #expect(pool.count == 92, "daily pool changed — the wrap date has moved")
 
         #expect(provider.dailyPuzzle(for: epochPlus(pool.count))?.id == pool.first?.id)
         #expect(provider.dailyPuzzle(for: epochPlus(pool.count - 1))?.id != pool.first?.id)
     }
 
     /// The pool length turned into the calendar date the roadmap plans around.
-    @Test func theDailyWrapLandsOn21September2026() {
+    /// It was 21 September at 82 dailies; ten more moved it to 1 October, and
+    /// every daily added from here moves it another day.
+    @Test func theDailyWrapLandsOn1October2026() {
         let wrap = epochPlus(PuzzleProvider.shared.puzzles.count)
         let parts = Calendar.current.dateComponents([.year, .month, .day], from: wrap)
         #expect(parts.year == 2026)
-        #expect(parts.month == 9)
-        #expect(parts.day == 21)
+        #expect(parts.month == 10)
+        #expect(parts.day == 1)
     }
 
     @Test func theMiniPoolWrapsAfterItsOwnLength() {

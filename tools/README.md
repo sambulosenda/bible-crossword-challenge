@@ -55,8 +55,47 @@ auto-assigns ids to specs that lack one, so adding new puzzles never renumbers
 existing ones.
 
 Never change or remove an existing spec's `id`, and never reuse a retired id —
-doing so silently reassigns players' completions to the wrong puzzles. (Daily
-rotation order and `publishDate` are cosmetic and may shift; ids must not.)
+doing so silently reassigns players' completions to the wrong puzzles.
+`publishDate` is cosmetic and may shift.
+
+## Rotation order is NOT cosmetic
+
+This file used to say it was. It is the second thing, after ids, that must not
+move.
+
+The app serves the daily by **position**, not by id:
+
+```swift
+index = daysSinceEpoch % pool.count   // PuzzleProvider.rotated
+```
+
+`pool` is the array in `puzzles.json`, in file order. Reorder it and every
+existing player is served a different puzzle on every future day, with the
+rotation no longer lining up with what they have already solved. No id changed,
+no test failed, nothing looked wrong in review — the whole pool just quietly
+shifted under everyone.
+
+The generator used to sort every spec by (difficulty, title), which is stable
+only while the bank never grows: the first new easy puzzle with an early title
+sorted to index 0 and pushed all 82 dailies down one. It now orders by the
+previous `puzzles.json` — whatever already shipped keeps its position, new specs
+append after it.
+
+So the step-2 check is a real safety gate, not a formality:
+
+```bash
+git diff --numstat "Bible Crossword Challenge/Resources/puzzles.json"
+```
+
+**Deletions must be zero.** Anything else means a shipped puzzle moved. Stop.
+
+Two consequences worth knowing:
+- **Don't delete `puzzles.json` and regenerate from scratch.** It is the record
+  of the order players are living in; without it the generator has nothing to
+  preserve and will fall back to sorting.
+- `RotationWrapTests` asserts both pool sizes and both wrap dates, so adding
+  content fails the suite until the new dates are recorded in
+  `roadmap/README.md`. That failure is the feature.
 
 ## Daily rotation
 `PuzzleProvider.dailyPuzzle(for:)` shows `puzzles[(daysSinceEpoch) % count]`,

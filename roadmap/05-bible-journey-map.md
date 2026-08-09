@@ -42,8 +42,14 @@ work. `BibleJourney.book(for:)` is the one place to widen if clue coverage grows
 - [x] An unrecognised reference costs that puzzle its place and nothing else —
       no crash, no zeroed progress (tested)
 
-**Content shape** — 32 of 66 books have puzzles; OT 21/39, NT 11/27. Eighteen
-books have ≥3 puzzles; fourteen have only 1–2. Both numbers drive T2's design.
+**Content shape** — 32 of 66 books had puzzles when this shipped; OT 21/39, NT
+11/27. Eighteen books had ≥3 puzzles; fourteen had only 1–2. Both numbers drive
+T2's design.
+
+Now **42 of 66** (OT 26/39, NT 16/27): epic 13's first content batch deliberately
+targeted books with nothing in them, so pushing the rotation wrap out also filled
+the map. Worth repeating for the next batch — the NT epistles were completely
+absent despite holding the most-quoted verses in the Bible.
 
 ---
 

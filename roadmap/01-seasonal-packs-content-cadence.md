@@ -4,7 +4,7 @@
 **Goal:** Retention + Premium  
 **Status:** `[x]` — all six tickets closed 2026-08-08  
 **Depends on:** Existing pack system (`packs.json`, `PuzzlePack`, dedicated `pack-*` puzzles)  
-**Related:** `docs/themed-packs-spec.md`, `docs/seasonal-pack-calendar.md`
+**Related:** `docs/themed-packs-spec.md`, `docs/seasonal-pack-calendar.md`, **`14-premium-content-value.md`** (catalog floor / exclusive depth beyond seasonal ship)
 
 ## Decisions (2026-08-08)
 

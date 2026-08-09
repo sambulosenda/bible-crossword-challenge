@@ -130,20 +130,44 @@ at.
 
 ### T3 — Push the wrap out with content
 
-**Status:** `[ ]`
+**Status:** `[~]` — 10 dailies added, wrap **2026-09-21 → 2026-10-01**. Ongoing.
 
 This is the actual fix; T2 is the permanent safety net, because any finite pool
 wraps eventually.
 
-- [ ] Decide the cadence in 01 — how many dailies per month, and the buffer to
-      keep ahead of the rotation
-- [ ] Add dailies before **2026-09-21**; every puzzle added moves the wrap a day
-- [ ] Ids are content-stable and append-only — new specs get no `id`, the
-      generator assigns; `puzzles.json` diff must show additions only
+- [x] First batch: 10 dailies (`daily-083`…`daily-092`), 20 clues each
+- [x] `puzzles.json` diff is additions-only; the existing 82 keep their exact
+      positions and today's puzzle is unchanged
+- [ ] Keep going — the mini pool now wraps **first**, on 2026-09-29
+
+**A generator bug had to be fixed first, and it is the reason this ticket was
+more dangerous than it looked.** `process()` sorted *every* spec by
+(difficulty, title) under a comment reading "for stable daily rotation". That is
+stable only while the bank never grows: the first new easy puzzle with an early
+title landed at **index 0** and shifted the whole pool down. Since the daily is
+served by position — `daysSinceEpoch % pool.count` — adding a single daily would
+have changed which puzzle every existing player is served on every future day,
+and decoupled the rotation from what they had already solved. Adding content was
+the one thing this ticket asked for and the one thing the tool could not
+survive.
+
+Ordering now comes from the previous `puzzles.json`: whatever already shipped
+keeps its position, new specs append. Reading the real order rather than sorting
+by id matters because the two disagree — dailies happen to sit in id order, the
+minis do not (`mini-031` ships first). It also survives the ids being written
+back into the specs, which is when a "does it have an id yet" test would quietly
+stop working.
+
+**Books opened.** The ten were chosen to land in books with no puzzle at all, so
+the same work moves the journey map: Romans, Philippians, 1 John, James,
+1 Peter, Ecclesiastes, Jeremiah, Lamentations, Malachi, Deuteronomy. Coverage
+**32 → 42 of 66** (OT 26/39, NT 16/27). The NT epistles were entirely absent
+despite holding the most-quoted verses in the book.
 
 **Acceptance**
-- Wrap date is beyond the next planned release cycle, with the current date and
-  pool size recorded here when it changes
+- [x] Current date and pool size recorded — here, in `roadmap/README.md`, and in
+      `RotationWrapTests`, which fails until they are re-recorded
+- [ ] Wrap beyond the next planned release cycle — 1 October is not yet that
 
 ---
 

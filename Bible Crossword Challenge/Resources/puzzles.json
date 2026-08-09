@@ -15131,6 +15131,2068 @@
     ]
   },
   {
+    "id": "daily-083",
+    "title": "All Things Work Together",
+    "difficulty": "easy",
+    "verse": "And we know that all things work together for good to them that love God, to them who are the called according to his purpose.",
+    "reference": "Romans 8:28",
+    "publishDate": "2026-09-21",
+    "size": 15,
+    "grid": [
+      "..........HEIRS",
+      "GOSPEL....O....",
+      "L.........P....",
+      "O..L.....PEACE.",
+      "ROMANS.F.U.....",
+      "Y..W.A.ABRAHAM.",
+      ".....V.I.P.....",
+      "...CREATION...P",
+      "...A.D.H.S..P.A",
+      "...L....SERVANT",
+      "...L....P.O.U.I",
+      "...E....I.M.L.E",
+      "...D....R.E...N",
+      ".......SIN....C",
+      "........T.GRACE"
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 10,
+        "text": "Children of God are these, and joint ones with Christ",
+        "answer": "HEIRS",
+        "reference": "Romans 8:17"
+      },
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 10,
+        "text": "What is not seen, and so is awaited with patience",
+        "answer": "HOPE",
+        "reference": "Romans 8:25"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 1,
+        "col": 0,
+        "text": "The good news the apostle was not ashamed of",
+        "answer": "GOSPEL",
+        "reference": "Romans 1:16"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 1,
+        "col": 0,
+        "text": "What shall be revealed in us, outweighing present suffering",
+        "answer": "GLORY",
+        "reference": "Romans 8:18"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 3,
+        "col": 3,
+        "text": "What was weak through the flesh, and could not justify",
+        "answer": "LAW",
+        "reference": "Romans 8:3"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 9,
+        "text": "What we have with God, being justified by belief",
+        "answer": "PEACE",
+        "reference": "Romans 5:1"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 3,
+        "col": 9,
+        "text": "The divine intent by which the called are gathered",
+        "answer": "PURPOSE",
+        "reference": "Romans 8:28"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 4,
+        "col": 0,
+        "text": "The name this epistle goes by",
+        "answer": "ROMANS",
+        "reference": "Romans 1:1"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 4,
+        "col": 5,
+        "text": "What confessing with the mouth and believing brings",
+        "answer": "SAVED",
+        "reference": "Romans 10:9"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 4,
+        "col": 7,
+        "text": "That by which the just shall live, says the apostle",
+        "answer": "FAITH",
+        "reference": "Romans 1:17"
+      },
+      {
+        "number": 8,
+        "direction": "across",
+        "row": 5,
+        "col": 7,
+        "text": "Father of the faithful, counted righteous by belief",
+        "answer": "ABRAHAM",
+        "reference": "Romans 4:3"
+      },
+      {
+        "number": 9,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "The whole of it groaneth and travaileth together until now",
+        "answer": "CREATION",
+        "reference": "Romans 8:22"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 7,
+        "col": 3,
+        "text": "What those who love God are, according to his purpose",
+        "answer": "CALLED",
+        "reference": "Romans 8:28"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 7,
+        "col": 14,
+        "text": "What tribulation worketh, leading on to experience",
+        "answer": "PATIENCE",
+        "reference": "Romans 5:3"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 8,
+        "col": 12,
+        "text": "Writer of this epistle, a servant of Jesus Christ",
+        "answer": "PAUL",
+        "reference": "Romans 1:1"
+      },
+      {
+        "number": 12,
+        "direction": "across",
+        "row": 9,
+        "col": 8,
+        "text": "What the apostle calls himself at the letter's opening",
+        "answer": "SERVANT",
+        "reference": "Romans 1:1"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 9,
+        "col": 8,
+        "text": "The Helper who maketh intercession with groanings",
+        "answer": "SPIRIT",
+        "reference": "Romans 8:26"
+      },
+      {
+        "number": 13,
+        "direction": "down",
+        "row": 9,
+        "col": 10,
+        "text": "City whose beloved of God received this letter",
+        "answer": "ROME",
+        "reference": "Romans 1:7"
+      },
+      {
+        "number": 14,
+        "direction": "across",
+        "row": 13,
+        "col": 7,
+        "text": "What entered the world by one man, and death by it",
+        "answer": "SIN",
+        "reference": "Romans 5:12"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 14,
+        "col": 10,
+        "text": "Unmerited favour, in which we stand by faith",
+        "answer": "GRACE",
+        "reference": "Romans 5:2"
+      }
+    ]
+  },
+  {
+    "id": "daily-084",
+    "title": "God Is Love",
+    "difficulty": "easy",
+    "verse": "He that loveth not knoweth not God; for God is love.",
+    "reference": "1 John 4:8",
+    "publishDate": "2026-09-22",
+    "size": 15,
+    "grid": [
+      ".....A........B",
+      ".....B.....FEAR",
+      ".....I....W.T.O",
+      "...W.D...LIFE.T",
+      "C.LOVE....T.R.H",
+      "O..R...BORN.N.E",
+      "N..L.T..V.E.A.R",
+      "F..DARKNESS.L..",
+      "E.L..U..R.S..C.",
+      "SPIRIT..C....L.",
+      "S.G..H.FORGIVE.",
+      "..H.....M....A.",
+      "..T.FATHER.SON.",
+      ".............S.",
+      ".......CHILDREN"
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 5,
+        "text": "To continue in him, that we may have confidence",
+        "answer": "ABIDE",
+        "reference": "1 John 2:28"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 14,
+        "text": "He that loveth not his own cannot love God",
+        "answer": "BROTHER",
+        "reference": "1 John 4:20"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 1,
+        "col": 11,
+        "text": "What perfect love casteth out, for it hath torment",
+        "answer": "FEAR",
+        "reference": "1 John 4:18"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 1,
+        "col": 12,
+        "text": "The life promised us, which is in his Son",
+        "answer": "ETERNAL",
+        "reference": "1 John 5:11"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 2,
+        "col": 10,
+        "text": "There are three that bear this in earth",
+        "answer": "WITNESS",
+        "reference": "1 John 5:8"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 3,
+        "col": 3,
+        "text": "Love not this, neither the things that are in it",
+        "answer": "WORLD",
+        "reference": "1 John 2:15"
+      },
+      {
+        "number": 7,
+        "direction": "across",
+        "row": 3,
+        "col": 9,
+        "text": "What he that hath the Son possesses",
+        "answer": "LIFE",
+        "reference": "1 John 5:12"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 4,
+        "col": 0,
+        "text": "If we do this with our sins, he is faithful and just",
+        "answer": "CONFESS",
+        "reference": "1 John 1:9"
+      },
+      {
+        "number": 9,
+        "direction": "across",
+        "row": 4,
+        "col": 2,
+        "text": "The very nature of God, and the mark of those born of him",
+        "answer": "LOVE",
+        "reference": "1 John 4:8"
+      },
+      {
+        "number": 10,
+        "direction": "across",
+        "row": 5,
+        "col": 7,
+        "text": "Every one that loveth is this of God, and knoweth him",
+        "answer": "BORN",
+        "reference": "1 John 4:7"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 5,
+        "col": 8,
+        "text": "What the young men have done to the wicked one",
+        "answer": "OVERCOME",
+        "reference": "1 John 2:13"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 6,
+        "col": 5,
+        "text": "If we say we have no sin, this is not in us",
+        "answer": "TRUTH",
+        "reference": "1 John 1:8"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "What is not in God at all, for he is light",
+        "answer": "DARKNESS",
+        "reference": "1 John 1:5"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 8,
+        "col": 2,
+        "text": "God is this, and in him is no darkness at all",
+        "answer": "LIGHT",
+        "reference": "1 John 1:5"
+      },
+      {
+        "number": 15,
+        "direction": "down",
+        "row": 8,
+        "col": 13,
+        "text": "What the blood of Jesus Christ does from all sin",
+        "answer": "CLEANSE",
+        "reference": "1 John 1:7"
+      },
+      {
+        "number": 16,
+        "direction": "across",
+        "row": 9,
+        "col": 0,
+        "text": "Try every one, whether it be of God",
+        "answer": "SPIRIT",
+        "reference": "1 John 4:1"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 10,
+        "col": 7,
+        "text": "What God is faithful and just to do with our sins",
+        "answer": "FORGIVE",
+        "reference": "1 John 1:9"
+      },
+      {
+        "number": 18,
+        "direction": "across",
+        "row": 12,
+        "col": 4,
+        "text": "What manner of love he bestowed, that we be called sons",
+        "answer": "FATHER",
+        "reference": "1 John 3:1"
+      },
+      {
+        "number": 19,
+        "direction": "across",
+        "row": 12,
+        "col": 11,
+        "text": "He that hath him hath life; he that hath him not hath not life",
+        "answer": "SON",
+        "reference": "1 John 5:12"
+      },
+      {
+        "number": 20,
+        "direction": "across",
+        "row": 14,
+        "col": 7,
+        "text": "What we are called, and are, by the Father's love",
+        "answer": "CHILDREN",
+        "reference": "1 John 3:1"
+      }
+    ]
+  },
+  {
+    "id": "daily-085",
+    "title": "Through Christ Which Strengtheneth",
+    "difficulty": "easy",
+    "verse": "I can do all things through Christ which strengtheneth me.",
+    "reference": "Philippians 4:13",
+    "publishDate": "2026-09-23",
+    "size": 15,
+    "grid": [
+      ".....T.........",
+      "..P.JOY....M...",
+      "..R..N....GAIN.",
+      "..A..G.....R...",
+      "..Y..U.THANKS..",
+      ".PEACE....A.E..",
+      "..R.H...M.M.R.P",
+      "....REJOICE.V.R",
+      "....I...N...A.E",
+      "....S...D.BONDS",
+      ".CONTENT....T.S",
+      ".R.....R.......",
+      "LOSS..HUMBLE...",
+      ".W.....E.......",
+      "KNEE..........."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 5,
+        "text": "Every one shall confess that Jesus Christ is Lord",
+        "answer": "TONGUE",
+        "reference": "Philippians 2:11"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 1,
+        "col": 2,
+        "text": "With supplication, how requests are made known to God",
+        "answer": "PRAYER",
+        "reference": "Philippians 4:6"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 1,
+        "col": 4,
+        "text": "What the apostle calls the Philippians, with his crown",
+        "answer": "JOY",
+        "reference": "Philippians 4:1"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 1,
+        "col": 11,
+        "text": "What is pressed toward, for the prize of the high calling",
+        "answer": "MARK",
+        "reference": "Philippians 3:14"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 2,
+        "col": 10,
+        "text": "To die is this, for to live is Christ",
+        "answer": "GAIN",
+        "reference": "Philippians 1:21"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 4,
+        "col": 7,
+        "text": "Giving of this accompanies prayer and supplication",
+        "answer": "THANKS",
+        "reference": "Philippians 4:6"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 4,
+        "col": 10,
+        "text": "What is above every other, given unto Jesus",
+        "answer": "NAME",
+        "reference": "Philippians 2:9"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 4,
+        "col": 12,
+        "text": "The form Christ took, made in the likeness of men",
+        "answer": "SERVANT",
+        "reference": "Philippians 2:7"
+      },
+      {
+        "number": 9,
+        "direction": "across",
+        "row": 5,
+        "col": 1,
+        "text": "What passeth all understanding and keeps the heart",
+        "answer": "PEACE",
+        "reference": "Philippians 4:7"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 5,
+        "col": 4,
+        "text": "The one through whom the apostle can do all things",
+        "answer": "CHRIST",
+        "reference": "Philippians 4:13"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 6,
+        "col": 8,
+        "text": "Let this be in you which was also in Christ Jesus",
+        "answer": "MIND",
+        "reference": "Philippians 2:5"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 6,
+        "col": 14,
+        "text": "What the apostle does toward the mark, for the prize",
+        "answer": "PRESS",
+        "reference": "Philippians 3:14"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 7,
+        "col": 4,
+        "text": "The repeated command: do this in the Lord alway",
+        "answer": "REJOICE",
+        "reference": "Philippians 4:4"
+      },
+      {
+        "number": 14,
+        "direction": "across",
+        "row": 9,
+        "col": 10,
+        "text": "The apostle's chains, which fell out to further the gospel",
+        "answer": "BONDS",
+        "reference": "Philippians 1:12"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 10,
+        "col": 1,
+        "text": "What the apostle learned to be in whatsoever state",
+        "answer": "CONTENT",
+        "reference": "Philippians 4:11"
+      },
+      {
+        "number": 15,
+        "direction": "down",
+        "row": 10,
+        "col": 1,
+        "text": "What the apostle calls the Philippians, with his joy",
+        "answer": "CROWN",
+        "reference": "Philippians 4:1"
+      },
+      {
+        "number": 16,
+        "direction": "down",
+        "row": 10,
+        "col": 7,
+        "text": "Whatsoever things are this, think on them",
+        "answer": "TRUE",
+        "reference": "Philippians 4:8"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 12,
+        "col": 0,
+        "text": "What the apostle counted all things but, for Christ",
+        "answer": "LOSS",
+        "reference": "Philippians 3:8"
+      },
+      {
+        "number": 18,
+        "direction": "across",
+        "row": 12,
+        "col": 6,
+        "text": "What Christ did to himself, obedient unto death",
+        "answer": "HUMBLE",
+        "reference": "Philippians 2:8"
+      },
+      {
+        "number": 19,
+        "direction": "across",
+        "row": 14,
+        "col": 0,
+        "text": "Every one shall bow at the name of Jesus",
+        "answer": "KNEE",
+        "reference": "Philippians 2:10"
+      }
+    ]
+  },
+  {
+    "id": "daily-086",
+    "title": "A Time to Every Purpose",
+    "difficulty": "medium",
+    "verse": "To every thing there is a season, and a time to every purpose under the heaven.",
+    "reference": "Ecclesiastes 3:1",
+    "publishDate": "2026-09-24",
+    "size": 15,
+    "grid": [
+      "...WISDOM......",
+      "........O...S..",
+      "..FOLLY.U...O..",
+      "....A...RIVER..",
+      "....B.SUN...R.M",
+      "....O.P...B.O.I",
+      "....U.E...O.WAR",
+      "...PREACHER...T",
+      ".S.E..K.E.N...H",
+      ".E.A....A..S...",
+      "DANCE...VANITY.",
+      ".S.E....E..L...",
+      ".O...PLANT.V...",
+      ".N........REAP.",
+      "...........R..."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 3,
+        "text": "In much of it is much grief, saith the Preacher",
+        "answer": "WISDOM",
+        "reference": "Ecclesiastes 1:18"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 8,
+        "text": "A time to do this, and a time to dance",
+        "answer": "MOURN",
+        "reference": "Ecclesiastes 3:4"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 1,
+        "col": 12,
+        "text": "He that increaseth knowledge increaseth it",
+        "answer": "SORROW",
+        "reference": "Ecclesiastes 1:18"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 2,
+        "col": 2,
+        "text": "What the Preacher gave his heart to know, with madness",
+        "answer": "FOLLY",
+        "reference": "Ecclesiastes 1:17"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 2,
+        "col": 4,
+        "text": "What profit hath a man of all his, under the sun?",
+        "answer": "LABOUR",
+        "reference": "Ecclesiastes 1:3"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 3,
+        "col": 8,
+        "text": "All of them run into the sea, yet the sea is not full",
+        "answer": "RIVER",
+        "reference": "Ecclesiastes 1:7"
+      },
+      {
+        "number": 7,
+        "direction": "across",
+        "row": 4,
+        "col": 6,
+        "text": "There is no new thing under it",
+        "answer": "SUN",
+        "reference": "Ecclesiastes 1:9"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 4,
+        "col": 6,
+        "text": "A time to keep silence, and a time to do this",
+        "answer": "SPEAK",
+        "reference": "Ecclesiastes 3:7"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 4,
+        "col": 14,
+        "text": "Of laughter the Preacher said it is mad, and of this, what doeth it?",
+        "answer": "MIRTH",
+        "reference": "Ecclesiastes 2:2"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 5,
+        "col": 10,
+        "text": "A time to be this, and a time to die",
+        "answer": "BORN",
+        "reference": "Ecclesiastes 3:2"
+      },
+      {
+        "number": 10,
+        "direction": "across",
+        "row": 6,
+        "col": 12,
+        "text": "A time of it, and a time of peace",
+        "answer": "WAR",
+        "reference": "Ecclesiastes 3:8"
+      },
+      {
+        "number": 11,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "The son of David, king in Jerusalem, who speaks this book",
+        "answer": "PREACHER",
+        "reference": "Ecclesiastes 1:1"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 7,
+        "col": 3,
+        "text": "A time of it, and a time of war",
+        "answer": "PEACE",
+        "reference": "Ecclesiastes 3:8"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 7,
+        "col": 8,
+        "text": "Under it, every purpose has its time",
+        "answer": "HEAVEN",
+        "reference": "Ecclesiastes 3:1"
+      },
+      {
+        "number": 13,
+        "direction": "down",
+        "row": 8,
+        "col": 1,
+        "text": "To every thing under heaven there is one",
+        "answer": "SEASON",
+        "reference": "Ecclesiastes 3:1"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 9,
+        "col": 11,
+        "text": "He that loveth it shall not be satisfied with it",
+        "answer": "SILVER",
+        "reference": "Ecclesiastes 5:10"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 10,
+        "col": 0,
+        "text": "A time to mourn, and a time to do this",
+        "answer": "DANCE",
+        "reference": "Ecclesiastes 3:4"
+      },
+      {
+        "number": 16,
+        "direction": "across",
+        "row": 10,
+        "col": 8,
+        "text": "The Preacher's verdict on all things under the sun",
+        "answer": "VANITY",
+        "reference": "Ecclesiastes 1:2"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 12,
+        "col": 5,
+        "text": "A time to do this, and a time to pluck up",
+        "answer": "PLANT",
+        "reference": "Ecclesiastes 3:2"
+      },
+      {
+        "number": 18,
+        "direction": "across",
+        "row": 13,
+        "col": 10,
+        "text": "He that regardeth the clouds shall not do this",
+        "answer": "REAP",
+        "reference": "Ecclesiastes 11:4"
+      }
+    ]
+  },
+  {
+    "id": "daily-087",
+    "title": "Casting All Your Care",
+    "difficulty": "medium",
+    "verse": "Casting all your care upon him; for he careth for you.",
+    "reference": "1 Peter 5:7",
+    "publishDate": "2026-09-25",
+    "size": 15,
+    "grid": [
+      "...SOBER.SILVER",
+      ".F.U....G..I...",
+      ".E.F....R..V...",
+      ".A.F.STRANGER..",
+      "PRIEST..C..L...",
+      "...R.O..E..Y...",
+      ".....N.C.C.....",
+      "...SHEPHERD....",
+      "....O..A.O.....",
+      ".F..L..R.WATCH.",
+      "GLORY.LION...U.",
+      ".O.....T.....M.",
+      ".C..OBEY.....B.",
+      ".K...........L.",
+      ".........CHOSEN"
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 3,
+        "text": "Be this, and vigilant, for your adversary walketh about",
+        "answer": "SOBER",
+        "reference": "1 Peter 5:8"
+      },
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 3,
+        "text": "To do this for righteousness' sake is to be happy",
+        "answer": "SUFFER",
+        "reference": "1 Peter 3:14"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 0,
+        "col": 9,
+        "text": "Not with this were ye redeemed, nor with gold",
+        "answer": "SILVER",
+        "reference": "1 Peter 1:18"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 0,
+        "col": 11,
+        "text": "The kind of stones believers are, built a spiritual house",
+        "answer": "LIVELY",
+        "reference": "1 Peter 2:5"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 1,
+        "col": 1,
+        "text": "Give an answer with meekness and this, to every man",
+        "answer": "FEAR",
+        "reference": "1 Peter 3:15"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 1,
+        "col": 8,
+        "text": "God giveth it to the lowly, but resisteth the proud",
+        "answer": "GRACE",
+        "reference": "1 Peter 5:5"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 3,
+        "col": 5,
+        "text": "What Peter calls those scattered abroad",
+        "answer": "STRANGER",
+        "reference": "1 Peter 1:1"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 3,
+        "col": 5,
+        "text": "Christ is the chief corner one, elect and precious",
+        "answer": "STONE",
+        "reference": "1 Peter 2:6"
+      },
+      {
+        "number": 7,
+        "direction": "across",
+        "row": 4,
+        "col": 0,
+        "text": "What every believer is, offering spiritual sacrifices",
+        "answer": "PRIEST",
+        "reference": "1 Peter 2:5"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 6,
+        "col": 7,
+        "text": "Fervent above all things, for it covereth a multitude of sins",
+        "answer": "CHARITY",
+        "reference": "1 Peter 4:8"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 6,
+        "col": 9,
+        "text": "Of glory that fadeth not away, given to faithful elders",
+        "answer": "CROWN",
+        "reference": "1 Peter 5:4"
+      },
+      {
+        "number": 10,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "The chief one, who shall appear and give a crown of glory",
+        "answer": "SHEPHERD",
+        "reference": "1 Peter 5:4"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 7,
+        "col": 4,
+        "text": "Be this in all manner of conversation, for he is",
+        "answer": "HOLY",
+        "reference": "1 Peter 1:15"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 9,
+        "col": 1,
+        "text": "What the elders are to feed, taking the oversight",
+        "answer": "FLOCK",
+        "reference": "1 Peter 5:2"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 9,
+        "col": 9,
+        "text": "Be sober, and do this unto prayer",
+        "answer": "WATCH",
+        "reference": "1 Peter 4:7"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 9,
+        "col": 13,
+        "text": "Be this under the mighty hand of God, to be exalted",
+        "answer": "HUMBLE",
+        "reference": "1 Peter 5:6"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 10,
+        "col": 0,
+        "text": "What shall be revealed, that ye may be glad with joy",
+        "answer": "GLORY",
+        "reference": "1 Peter 4:13"
+      },
+      {
+        "number": 16,
+        "direction": "across",
+        "row": 10,
+        "col": 6,
+        "text": "The devil walketh about as a roaring one, seeking to devour",
+        "answer": "LION",
+        "reference": "1 Peter 5:8"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 12,
+        "col": 4,
+        "text": "To do this to the truth, purifying the soul",
+        "answer": "OBEY",
+        "reference": "1 Peter 1:22"
+      },
+      {
+        "number": 18,
+        "direction": "across",
+        "row": 14,
+        "col": 9,
+        "text": "A generation so described, a royal priesthood",
+        "answer": "CHOSEN",
+        "reference": "1 Peter 2:9"
+      }
+    ]
+  },
+  {
+    "id": "daily-088",
+    "title": "Faith Without Works",
+    "difficulty": "medium",
+    "verse": "For as the body without the spirit is dead, so faith without works is dead also.",
+    "reference": "James 2:26",
+    "publishDate": "2026-09-26",
+    "size": 15,
+    "grid": [
+      ".....P..VAPOUR.",
+      "HEARER.D.....I.",
+      ".....ANOINT..C.",
+      ".....Y.E..O..H.",
+      "HUMBLE.RAIN..E.",
+      ".....R....GLASS",
+      "W...F..M..U....",
+      "I..PATIENCE....",
+      "S...I..R.R...R.",
+      "DOUBT..C.O.B.E.",
+      "O...H..Y.WORKS.",
+      "M........N.I.I.",
+      "...........D.S.",
+      ".......DEVIL.T.",
+      "...........E..."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 5,
+        "text": "The effectual fervent one of a righteous man availeth much",
+        "answer": "PRAYER",
+        "reference": "James 5:16"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 0,
+        "col": 8,
+        "text": "What your life is, appearing for a little time",
+        "answer": "VAPOUR",
+        "reference": "James 4:14"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 0,
+        "col": 13,
+        "text": "Corrupted treasure whose rust shall be a witness",
+        "answer": "RICHES",
+        "reference": "James 5:2"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 1,
+        "col": 0,
+        "text": "One who listens to the word only, deceiving himself",
+        "answer": "HEARER",
+        "reference": "James 1:22"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 1,
+        "col": 7,
+        "text": "Be this of the word, and not a hearer only",
+        "answer": "DOER",
+        "reference": "James 1:22"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 2,
+        "col": 5,
+        "text": "What the elders do with oil in the name of the Lord",
+        "answer": "ANOINT",
+        "reference": "James 5:14"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 2,
+        "col": 10,
+        "text": "A little member that boasteth great things, and is a fire",
+        "answer": "TONGUE",
+        "reference": "James 3:5"
+      },
+      {
+        "number": 8,
+        "direction": "across",
+        "row": 4,
+        "col": 0,
+        "text": "Whom God giveth grace, while resisting the proud",
+        "answer": "HUMBLE",
+        "reference": "James 4:6"
+      },
+      {
+        "number": 9,
+        "direction": "across",
+        "row": 4,
+        "col": 7,
+        "text": "The early and latter one the husbandman waiteth for",
+        "answer": "RAIN",
+        "reference": "James 5:7"
+      },
+      {
+        "number": 10,
+        "direction": "across",
+        "row": 5,
+        "col": 10,
+        "text": "A man beholds his natural face in it, then forgets",
+        "answer": "GLASS",
+        "reference": "James 1:23"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 6,
+        "col": 0,
+        "text": "If any lack it, let him ask of God, who giveth liberally",
+        "answer": "WISDOM",
+        "reference": "James 1:5"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 6,
+        "col": 4,
+        "text": "Without works it is dead, being alone",
+        "answer": "FAITH",
+        "reference": "James 2:17"
+      },
+      {
+        "number": 13,
+        "direction": "down",
+        "row": 6,
+        "col": 7,
+        "text": "It rejoiceth against judgment",
+        "answer": "MERCY",
+        "reference": "James 2:13"
+      },
+      {
+        "number": 14,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "What the trying of your faith worketh",
+        "answer": "PATIENCE",
+        "reference": "James 1:3"
+      },
+      {
+        "number": 15,
+        "direction": "down",
+        "row": 7,
+        "col": 9,
+        "text": "Of life, promised to the man that endureth temptation",
+        "answer": "CROWN",
+        "reference": "James 1:12"
+      },
+      {
+        "number": 16,
+        "direction": "down",
+        "row": 8,
+        "col": 13,
+        "text": "Do this to the devil, and he will flee from you",
+        "answer": "RESIST",
+        "reference": "James 4:7"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 9,
+        "col": 0,
+        "text": "To ask wavering, like a wave driven of the wind",
+        "answer": "DOUBT",
+        "reference": "James 1:6"
+      },
+      {
+        "number": 18,
+        "direction": "down",
+        "row": 9,
+        "col": 11,
+        "text": "What a religious man must do to his tongue",
+        "answer": "BRIDLE",
+        "reference": "James 1:26"
+      },
+      {
+        "number": 19,
+        "direction": "across",
+        "row": 10,
+        "col": 9,
+        "text": "What show belief to be alive rather than dead",
+        "answer": "WORKS",
+        "reference": "James 2:18"
+      },
+      {
+        "number": 20,
+        "direction": "across",
+        "row": 13,
+        "col": 7,
+        "text": "The one who flees when he is withstood",
+        "answer": "DEVIL",
+        "reference": "James 4:7"
+      }
+    ]
+  },
+  {
+    "id": "daily-089",
+    "title": "Thoughts of Peace",
+    "difficulty": "medium",
+    "verse": "For I know the thoughts that I think toward you, saith the LORD, thoughts of peace, and not of evil, to give you an expected end.",
+    "reference": "Jeremiah 29:11",
+    "publishDate": "2026-09-27",
+    "size": 15,
+    "grid": [
+      "F..........S...",
+      "I..H.......CLAY",
+      "GILEAD.....R...",
+      "...A.......I...",
+      "..PROPHET..B..S",
+      ".H.T..O...PEACE",
+      ".A....P.B.O.L.V",
+      ".M.COVENANT.M.E",
+      ".M.A.E..L.T.O.N",
+      "WEEP.S..M.E.N.T",
+      ".R.T.S....R.D.Y",
+      "..FIRE.........",
+      "...V.L.........",
+      ".SEEK..........",
+      "..............."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 0,
+        "text": "Two baskets of this fruit, one very good and one very bad",
+        "answer": "FIG",
+        "reference": "Jeremiah 24:1"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 11,
+        "text": "Baruch, who wrote the words from the prophet's mouth",
+        "answer": "SCRIBE",
+        "reference": "Jeremiah 36:4"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 1,
+        "col": 3,
+        "text": "Deceitful above all things, and desperately wicked",
+        "answer": "HEART",
+        "reference": "Jeremiah 17:9"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 1,
+        "col": 11,
+        "text": "What the house of Israel is in the potter's hand",
+        "answer": "CLAY",
+        "reference": "Jeremiah 18:6"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 2,
+        "col": 0,
+        "text": "The region whose healing ointment the prophet asks after",
+        "answer": "GILEAD",
+        "reference": "Jeremiah 8:22"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 4,
+        "col": 2,
+        "text": "What God ordained Jeremiah to be unto the nations",
+        "answer": "PROPHET",
+        "reference": "Jeremiah 1:5"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 4,
+        "col": 6,
+        "text": "An expected end, giving this to the captives",
+        "answer": "HOPE",
+        "reference": "Jeremiah 29:11"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 4,
+        "col": 14,
+        "text": "The number of years appointed for the captivity",
+        "answer": "SEVENTY",
+        "reference": "Jeremiah 29:10"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 5,
+        "col": 1,
+        "text": "What breaketh the rock in pieces, as God's word is likened",
+        "answer": "HAMMER",
+        "reference": "Jeremiah 23:29"
+      },
+      {
+        "number": 10,
+        "direction": "across",
+        "row": 5,
+        "col": 10,
+        "text": "God's thoughts toward his people, and not of evil",
+        "answer": "PEACE",
+        "reference": "Jeremiah 29:11"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 5,
+        "col": 10,
+        "text": "The craftsman at his wheel, a picture of God's hand on Israel",
+        "answer": "POTTER",
+        "reference": "Jeremiah 18:3"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 5,
+        "col": 12,
+        "text": "The rod the prophet saw in his first vision",
+        "answer": "ALMOND",
+        "reference": "Jeremiah 1:11"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 6,
+        "col": 8,
+        "text": "Is there none in Gilead? asks the prophet",
+        "answer": "BALM",
+        "reference": "Jeremiah 8:22"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "The new one God would make, written in the heart",
+        "answer": "COVENANT",
+        "reference": "Jeremiah 31:33"
+      },
+      {
+        "number": 13,
+        "direction": "down",
+        "row": 7,
+        "col": 3,
+        "text": "What the people were carried away to be",
+        "answer": "CAPTIVE",
+        "reference": "Jeremiah 29:14"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 7,
+        "col": 5,
+        "text": "What was marred in the potter's hand, and made again",
+        "answer": "VESSEL",
+        "reference": "Jeremiah 18:4"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 9,
+        "col": 0,
+        "text": "What the prophet is remembered for doing over his people",
+        "answer": "WEEP",
+        "reference": "Jeremiah 9:1"
+      },
+      {
+        "number": 16,
+        "direction": "across",
+        "row": 11,
+        "col": 2,
+        "text": "God's word is like this, and like a hammer",
+        "answer": "FIRE",
+        "reference": "Jeremiah 23:29"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 13,
+        "col": 1,
+        "text": "Do this for me with all your heart, and ye shall find me",
+        "answer": "SEEK",
+        "reference": "Jeremiah 29:13"
+      }
+    ]
+  },
+  {
+    "id": "daily-090",
+    "title": "I Change Not",
+    "difficulty": "hard",
+    "verse": "For I am the LORD, I change not; therefore ye sons of Jacob are not consumed.",
+    "reference": "Malachi 3:6",
+    "publishDate": "2026-09-28",
+    "size": 15,
+    "grid": [
+      ".W..C..........",
+      ".I..U....ELIJAH",
+      ".N..R.......A..",
+      ".D..S.......C..",
+      ".OFFERING.C.O..",
+      ".W.....A.ROBBED",
+      ".S..R..M..V....",
+      "W..MESSENGER..B",
+      "I...F.....N...L",
+      "N..TITHE.LAMB.E",
+      "G.A.N.....N...S",
+      "SILVER..FATHERS",
+      "..T.R.........I",
+      "..A...........N",
+      ".PRIEST.HEALING"
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 1,
+        "text": "Of heaven, opened for those who bring the tithe",
+        "answer": "WINDOWS",
+        "reference": "Malachi 3:10"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 4,
+        "text": "What the whole nation was under, for robbing God",
+        "answer": "CURSE",
+        "reference": "Malachi 3:9"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 1,
+        "col": 9,
+        "text": "The prophet to be sent before the great and dreadful day",
+        "answer": "ELIJAH",
+        "reference": "Malachi 4:5"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 1,
+        "col": 12,
+        "text": "Whose sons are not consumed, for the LORD changeth not",
+        "answer": "JACOB",
+        "reference": "Malachi 3:6"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 4,
+        "col": 1,
+        "text": "With tithes, what was withheld, and so God was robbed",
+        "answer": "OFFERING",
+        "reference": "Malachi 3:8"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 4,
+        "col": 7,
+        "text": "A book of remembrance was written for them that feared it",
+        "answer": "NAME",
+        "reference": "Malachi 3:16"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 4,
+        "col": 10,
+        "text": "The one with Levi, which the priests had corrupted",
+        "answer": "COVENANT",
+        "reference": "Malachi 2:8"
+      },
+      {
+        "number": 8,
+        "direction": "across",
+        "row": 5,
+        "col": 9,
+        "text": "Will a man do this to God? Yet ye have",
+        "answer": "ROBBED",
+        "reference": "Malachi 3:8"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 6,
+        "col": 4,
+        "text": "He shall sit as one of silver, purifying the sons of Levi",
+        "answer": "REFINER",
+        "reference": "Malachi 3:3"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 7,
+        "col": 0,
+        "text": "Where the Sun of righteousness carries healing",
+        "answer": "WINGS",
+        "reference": "Malachi 4:2"
+      },
+      {
+        "number": 11,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "The one sent to prepare the way before the LORD",
+        "answer": "MESSENGER",
+        "reference": "Malachi 3:1"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 7,
+        "col": 14,
+        "text": "Poured out till there is not room enough to receive it",
+        "answer": "BLESSING",
+        "reference": "Malachi 3:10"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 9,
+        "col": 3,
+        "text": "Bring all of it into the storehouse, saith the LORD",
+        "answer": "TITHE",
+        "reference": "Malachi 3:10"
+      },
+      {
+        "number": 14,
+        "direction": "across",
+        "row": 9,
+        "col": 9,
+        "text": "The blemished offering the LORD refused from their flocks",
+        "answer": "LAMB",
+        "reference": "Malachi 1:8"
+      },
+      {
+        "number": 15,
+        "direction": "down",
+        "row": 10,
+        "col": 2,
+        "text": "Polluted bread was offered upon it, saith the LORD",
+        "answer": "ALTAR",
+        "reference": "Malachi 1:7"
+      },
+      {
+        "number": 16,
+        "direction": "across",
+        "row": 11,
+        "col": 0,
+        "text": "What is purified by the refiner, as the sons of Levi are",
+        "answer": "SILVER",
+        "reference": "Malachi 3:3"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 11,
+        "col": 8,
+        "text": "Their hearts shall be turned to the children",
+        "answer": "FATHERS",
+        "reference": "Malachi 4:6"
+      },
+      {
+        "number": 18,
+        "direction": "across",
+        "row": 14,
+        "col": 1,
+        "text": "His lips should keep knowledge, being the LORD's messenger",
+        "answer": "PRIEST",
+        "reference": "Malachi 2:7"
+      },
+      {
+        "number": 19,
+        "direction": "across",
+        "row": 14,
+        "col": 8,
+        "text": "In his wings, for them that fear his name",
+        "answer": "HEALING",
+        "reference": "Malachi 4:2"
+      }
+    ]
+  },
+  {
+    "id": "daily-091",
+    "title": "New Every Morning",
+    "difficulty": "hard",
+    "verse": "They are new every morning: great is thy faithfulness.",
+    "reference": "Lamentations 3:23",
+    "publishDate": "2026-09-29",
+    "size": 15,
+    "grid": [
+      "....CONSUMED...",
+      ".......I...E.B.",
+      ".......L...S.R.",
+      "....M..E..HOPE.",
+      "....O..N.G.L.A.",
+      "...GREAT.A.A.D.",
+      "W.A.N.S..L.T...",
+      "O.FAITHFUL.E...",
+      "R.F.N.E...P....",
+      "M.L.G.SORROW...",
+      "WAIT.M....R....",
+      "O.C..E....T.Y..",
+      "O.TEARS..WIDOW.",
+      "D....C....O.K..",
+      ".....Y.ZION.E.."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 4,
+        "text": "What we are not, because of the LORD's mercies",
+        "answer": "CONSUMED",
+        "reference": "Lamentations 3:22"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 7,
+        "text": "He sitteth alone and keepeth this, having borne the yoke",
+        "answer": "SILENT",
+        "reference": "Lamentations 3:28"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 0,
+        "col": 11,
+        "text": "How the city is left, her gates sunk into the ground",
+        "answer": "DESOLATE",
+        "reference": "Lamentations 1:4"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 1,
+        "col": 13,
+        "text": "The people sigh and seek it, giving treasures for meat",
+        "answer": "BREAD",
+        "reference": "Lamentations 1:11"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 3,
+        "col": 4,
+        "text": "When his compassions are made new",
+        "answer": "MORNING",
+        "reference": "Lamentations 3:23"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 3,
+        "col": 10,
+        "text": "What the mourner recalls to mind, and therefore endures",
+        "answer": "HOPE",
+        "reference": "Lamentations 3:21"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 4,
+        "col": 9,
+        "text": "With wormwood, the bitterness the mourner recalls",
+        "answer": "GALL",
+        "reference": "Lamentations 3:19"
+      },
+      {
+        "number": 8,
+        "direction": "across",
+        "row": 5,
+        "col": 3,
+        "text": "How the mourner calls God's faithfulness",
+        "answer": "GREAT",
+        "reference": "Lamentations 3:23"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 5,
+        "col": 6,
+        "text": "He hath covered me with these, in the dust",
+        "answer": "ASHES",
+        "reference": "Lamentations 3:16"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 6,
+        "col": 0,
+        "text": "With gall, the bitterness of the mourner's affliction",
+        "answer": "WORMWOOD",
+        "reference": "Lamentations 3:19"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 6,
+        "col": 2,
+        "text": "He doth not do this willingly to the children of men",
+        "answer": "AFFLICT",
+        "reference": "Lamentations 3:33"
+      },
+      {
+        "number": 12,
+        "direction": "across",
+        "row": 7,
+        "col": 2,
+        "text": "How the mourner describes God's unfailing steadfastness",
+        "answer": "FAITHFUL",
+        "reference": "Lamentations 3:23"
+      },
+      {
+        "number": 13,
+        "direction": "down",
+        "row": 8,
+        "col": 10,
+        "text": "The LORD is this of my soul, therefore will I hope",
+        "answer": "PORTION",
+        "reference": "Lamentations 3:24"
+      },
+      {
+        "number": 14,
+        "direction": "across",
+        "row": 9,
+        "col": 6,
+        "text": "Is any like unto mine? asks the mourning city",
+        "answer": "SORROW",
+        "reference": "Lamentations 1:12"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 10,
+        "col": 0,
+        "text": "Good that a man should quietly do this for salvation",
+        "answer": "WAIT",
+        "reference": "Lamentations 3:26"
+      },
+      {
+        "number": 16,
+        "direction": "down",
+        "row": 10,
+        "col": 5,
+        "text": "It is of the LORD's that we are not consumed",
+        "answer": "MERCY",
+        "reference": "Lamentations 3:22"
+      },
+      {
+        "number": 17,
+        "direction": "down",
+        "row": 11,
+        "col": 12,
+        "text": "It is good that a man bear it in his youth",
+        "answer": "YOKE",
+        "reference": "Lamentations 3:27"
+      },
+      {
+        "number": 18,
+        "direction": "across",
+        "row": 12,
+        "col": 2,
+        "text": "On her cheeks in the night, with none to comfort her",
+        "answer": "TEARS",
+        "reference": "Lamentations 1:2"
+      },
+      {
+        "number": 19,
+        "direction": "across",
+        "row": 12,
+        "col": 9,
+        "text": "How the once-great city now sits, that was full of people",
+        "answer": "WIDOW",
+        "reference": "Lamentations 1:1"
+      },
+      {
+        "number": 20,
+        "direction": "across",
+        "row": 14,
+        "col": 7,
+        "text": "The daughter whose ways mourn, none coming to her feasts",
+        "answer": "ZION",
+        "reference": "Lamentations 1:4"
+      }
+    ]
+  },
+  {
+    "id": "daily-092",
+    "title": "With All Thine Heart",
+    "difficulty": "hard",
+    "verse": "And thou shalt love the LORD thy God with all thine heart, and with all thy soul, and with all thy might.",
+    "reference": "Deuteronomy 6:5",
+    "publishDate": "2026-09-30",
+    "size": 15,
+    "grid": [
+      "..J............",
+      "R.O........C.S.",
+      "E.R...JOSHUA.O.",
+      "M.D........N.U.",
+      "E.A.....ISRAEL.",
+      "MANNA....T.A...",
+      "B..E.H...O.N...",
+      "E..BLESSING....",
+      "R..O.A.T.E.....",
+      ".....R.A.....O.",
+      ".MIGHT.TEACH.B.",
+      ".O.....U...O.E.",
+      ".S.....T.FORTY.",
+      ".E.CURSE...E...",
+      ".S.......TABLES"
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 2,
+        "text": "The river to be crossed to possess the land",
+        "answer": "JORDAN",
+        "reference": "Deuteronomy 9:1"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 1,
+        "col": 0,
+        "text": "What they must do of the way the LORD led them forty years",
+        "answer": "REMEMBER",
+        "reference": "Deuteronomy 8:2"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 1,
+        "col": 11,
+        "text": "The land flowing with milk and honey, promised to the fathers",
+        "answer": "CANAAN",
+        "reference": "Deuteronomy 6:3"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 1,
+        "col": 13,
+        "text": "With heart and might, the whole of a person commanded to love",
+        "answer": "SOUL",
+        "reference": "Deuteronomy 6:5"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 2,
+        "col": 6,
+        "text": "The one charged to bring the people into the land",
+        "answer": "JOSHUA",
+        "reference": "Deuteronomy 31:7"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 4,
+        "col": 8,
+        "text": "Hear, O nation: the LORD our God is one LORD",
+        "answer": "ISRAEL",
+        "reference": "Deuteronomy 6:4"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 4,
+        "col": 9,
+        "text": "The material of the two tables carried down the mount",
+        "answer": "STONE",
+        "reference": "Deuteronomy 9:10"
+      },
+      {
+        "number": 8,
+        "direction": "across",
+        "row": 5,
+        "col": 0,
+        "text": "What God fed them, that man live not by bread alone",
+        "answer": "MANNA",
+        "reference": "Deuteronomy 8:3"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 5,
+        "col": 3,
+        "text": "The height from which the land was viewed but not entered",
+        "answer": "NEBO",
+        "reference": "Deuteronomy 34:1"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 6,
+        "col": 5,
+        "text": "Love the LORD thy God with all of it",
+        "answer": "HEART",
+        "reference": "Deuteronomy 6:5"
+      },
+      {
+        "number": 11,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "Set before them this day, together with a curse",
+        "answer": "BLESSING",
+        "reference": "Deuteronomy 11:26"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 7,
+        "col": 7,
+        "text": "A decree of the LORD, to be taught unto the children",
+        "answer": "STATUTE",
+        "reference": "Deuteronomy 6:1"
+      },
+      {
+        "number": 13,
+        "direction": "down",
+        "row": 9,
+        "col": 13,
+        "text": "To hearken diligently unto the voice of the LORD",
+        "answer": "OBEY",
+        "reference": "Deuteronomy 28:1"
+      },
+      {
+        "number": 14,
+        "direction": "across",
+        "row": 10,
+        "col": 1,
+        "text": "The third measure of love commanded, with heart and soul",
+        "answer": "MIGHT",
+        "reference": "Deuteronomy 6:5"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 10,
+        "col": 1,
+        "text": "The lawgiver who rehearsed the law before Israel",
+        "answer": "MOSES",
+        "reference": "Deuteronomy 1:1"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 10,
+        "col": 7,
+        "text": "Do this diligently to thy children, and talk of them at home",
+        "answer": "TEACH",
+        "reference": "Deuteronomy 6:7"
+      },
+      {
+        "number": 16,
+        "direction": "down",
+        "row": 10,
+        "col": 11,
+        "text": "The mount where the LORD spake out of the midst of the fire",
+        "answer": "HOREB",
+        "reference": "Deuteronomy 4:15"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 12,
+        "col": 9,
+        "text": "The number of years in the wilderness, humbling them",
+        "answer": "FORTY",
+        "reference": "Deuteronomy 8:2"
+      },
+      {
+        "number": 18,
+        "direction": "across",
+        "row": 13,
+        "col": 3,
+        "text": "The alternative set before them, if they will not obey",
+        "answer": "CURSE",
+        "reference": "Deuteronomy 11:28"
+      },
+      {
+        "number": 19,
+        "direction": "across",
+        "row": 14,
+        "col": 9,
+        "text": "Of stone, whereon the commandments were written",
+        "answer": "TABLES",
+        "reference": "Deuteronomy 9:10"
+      }
+    ]
+  },
+  {
     "id": "mini-031",
     "title": "A Bride for Isaac",
     "difficulty": "easy",

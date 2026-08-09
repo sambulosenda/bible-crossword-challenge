@@ -303,16 +303,59 @@ def id_num(pid, prefix="daily"):
     m = re.match(rf"{prefix}-(\d+)$", pid or "")
     return int(m.group(1)) if m else 0
 
-def process(specs, out, fails, prefix, build_kwargs, extra_fields=None):
+def load_shipped_order(path):
+    """`id` -> position in the puzzles.json that is already shipping.
+
+    The rotation is positional, so the file that shipped is the record of what
+    every existing player is being served on any given day. Regenerating must
+    reproduce it exactly and append to it, never reorder it. Missing or
+    unreadable (a first build) means there is nothing to preserve yet."""
+    try:
+        with open(path) as f:
+            return {p["id"]: i for i, p in enumerate(json.load(f))}
+    except (OSError, ValueError, KeyError, TypeError):
+        return {}
+
+
+def process(specs, out, fails, prefix, build_kwargs, shipped_order, extra_fields=None):
     """Builds one kind of puzzle. IDs are content-stable: a spec's explicit
     "id" is the permanent link to a user's saved PuzzleRecord, so it must NOT
     change when the bank grows. Specs without an id (newly authored) get the
     next free {prefix}-NNN above the current maximum, never renumbering
     existing puzzles."""
     import datetime
-    # deterministic order by difficulty then title for stable daily rotation
+    # Deterministic order, and — more importantly — an *append-only* one.
+    #
+    # The daily is served by position, not by id: `index = daysSinceEpoch %
+    # pool.count` indexes this array. Sorting every spec by (difficulty, title)
+    # was stable only while the bank never grew: one new easy puzzle whose title
+    # sorts early landed at index 0 and shifted the whole pool down, changing
+    # which puzzle every existing player is served on every future day, and
+    # decoupling the rotation from what they had already played.
+    #
+    # Anything already shipped keeps the position it already ships in; anything
+    # new is appended after it, ordered by difficulty then title.
+    #
+    # The daily is served by position, not by id — `index = daysSinceEpoch %
+    # pool.count` indexes this array — so the order here *is* the rotation.
+    # Sorting every spec by (difficulty, title) was stable only while the bank
+    # never grew: one new easy puzzle with an early title landed at index 0 and
+    # shifted the whole pool down, changing which puzzle every existing player
+    # is served on every future day and decoupling the rotation from what they
+    # had already played.
+    #
+    # `shipped_order` comes from the previous puzzles.json rather than from the
+    # ids, because the two disagree: the dailies happen to sit in id order, the
+    # minis do not (mini-031 ships first). Reading the real order is the only
+    # rule that holds for both, and it keeps holding after the ids are written
+    # back into the specs, which is when a "does it have an id yet" test would
+    # quietly stop working.
     order = {"easy": 0, "medium": 1, "hard": 2}
-    specs.sort(key=lambda s: (order.get(s.get("difficulty"), 1), s.get("title", "")))
+    specs.sort(key=lambda s: (
+        (0, shipped_order[s["id"]], "")
+        if s.get("id") in shipped_order
+        else (1, order.get(s.get("difficulty"), 1), s.get("title", ""))
+    ))
 
     reserved = {s["id"] for s in specs if s.get("id")}
     next_free = max((id_num(i, prefix) for i in reserved), default=0) + 1
@@ -367,18 +410,21 @@ def main():
     dailies = [s for s in specs if s.get("kind") != "mini" and not s.get("pack")]
     minis = [s for s in specs if s.get("kind") == "mini"]
     packed = [s for s in specs if s.get("pack") and s.get("kind") != "mini"]
-    process(dailies, out, fails, "daily", {})
+    # Read before writing: the file about to be overwritten is the record of the
+    # order every existing player's rotation follows.
+    shipped_order = load_shipped_order(sys.argv[2])
+    process(dailies, out, fails, "daily", {}, shipped_order)
     process(minis, out, fails, "mini", {
         "min_words": 5, "max_words": 10,
         "canvas": MINI_CANVAS, "allowed_sizes": MINI_SIZES, "max_word_len": 7,
-    }, extra_fields={"kind": "mini"})
+    }, shipped_order, extra_fields={"kind": "mini"})
     # Pack-exclusive puzzles: full-size build, ids numbered per pack slug so
     # each pack grows independently. Slugs sorted for deterministic output.
     by_slug = {}
     for s in packed:
         by_slug.setdefault(s["pack"], []).append(s)
     for slug in sorted(by_slug):
-        process(by_slug[slug], out, fails, f"pack-{slug}", {})
+        process(by_slug[slug], out, fails, f"pack-{slug}", {}, shipped_order)
     json.dump(out, open(sys.argv[2], "w"), indent=2)
     sizes = {}
     diffs = {}
