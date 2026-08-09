@@ -170,11 +170,20 @@ struct PremiumOfferView: View {
         }
     }
 
-    /// The yearly plan's introductory offer, when there is one and the player
-    /// hasn't already used theirs.
+    /// The introductory offer on the *selected* plan, when there is one and the
+    /// player hasn't already used theirs.
+    ///
+    /// Keyed to the selection for the same reason `trialTimeline` is: only
+    /// yearly carries an introductory offer, so reading it off `store.yearly`
+    /// left "Start with a 3-day free trial" standing at the top of the page
+    /// while the player had monthly selected — and the CTA underneath said
+    /// "Unlock 228 puzzles" and the line under *that* said the charge begins
+    /// today. One screen, making an offer at the top that the button at the
+    /// bottom refused. Selecting monthly now falls through to what stays free
+    /// either way, which is the honest promise for a plan with no trial.
     private var trialText: String? {
-        guard let yearly = store.yearly else { return nil }
-        return store.introOfferText(for: yearly)
+        guard let selectedProduct else { return nil }
+        return store.introOfferText(for: selectedProduct)
     }
 
     // MARK: - Benefits
