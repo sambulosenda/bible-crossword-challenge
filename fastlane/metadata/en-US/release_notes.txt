@@ -1,6 +1,11 @@
 Thanks for playing Bible Crossword Challenge! This update includes:
 
-• Solved clues in the First Steps pack now name the passage they come from — tap the reference to read it
-• 60 new Mini puzzles, taking the Mini bank to 90
-• Rebuilt Premium screens that say exactly what you get, with honest counts
-• Daily reminders now finish switching on after a trip to Settings
+• Your Journey — a map of the books of the Bible you've been through, and the ones still ahead
+• Challenge family and friends: send a board in a link, then compare how you both did
+• Two new collections, Out of Egypt and Women of the Bible, plus seasonal packs for Lent, Easter, Advent and Christmas
+• 51 new puzzles, taking the library to 228
+• The last week of puzzles is free to play in the Library, and anything you've started stays yours
+• A rebuilt results screen that reports your solve, and a way back into your streak when a day gets away from you
+• Every collection now shows which books of the Bible it covers
+• Premium screens name the collections you haven't opened yet, show the price per month, and say exactly when a free trial ends
+• Fixed: streaks of 10 or more now show in full, and VoiceOver reads the settings rows again
