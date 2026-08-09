@@ -112,7 +112,16 @@ struct PackDetailView: View {
 
             seasonLine
 
-            if progress.isComplete {
+            // Locked, the header states the pack's size rather than the
+            // player's progress through it — see `PackCard` for why. This
+            // screen said it louder: "Pack complete — every puzzle solved",
+            // directly above a Premium Collection lock and an Unlock button.
+            if isLocked {
+                Text("\(progress.total) puzzle\(progress.total == 1 ? "" : "s")")
+                    .font(.caption.weight(.medium))
+                    .foregroundStyle(.secondary)
+                    .monospacedDigit()
+            } else if progress.isComplete {
                 Label("Pack complete — every puzzle solved", systemImage: "checkmark.seal.fill")
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(.green)

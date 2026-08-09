@@ -43,7 +43,24 @@ struct PackCard: View {
                     .lineLimit(2)
                     .fixedSize(horizontal: false, vertical: true)
 
-                if progress.isComplete {
+                // A locked pack states its size, not the player's progress
+                // through it. Some Premium packs are still assembled from
+                // puzzles that also run in the daily rotation, so a free player
+                // who has been solving dailies accumulates real progress inside
+                // a collection they cannot open — and once they had solved all
+                // of them the card rendered "Complete", with a green seal, next
+                // to the crown. A Premium collection marked finished and locked
+                // is the strongest possible argument that Premium is charging
+                // for something the player already has. Whether that overlap
+                // should exist at all is ticket 14; this is the display not
+                // volunteering it either way.
+                if isLocked {
+                    Text(puzzleCountText)
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                        .monospacedDigit()
+                        .padding(.top, 2)
+                } else if progress.isComplete {
                     Label("Complete", systemImage: "checkmark.seal.fill")
                         .font(.caption.weight(.semibold))
                         .foregroundStyle(.green)
@@ -78,13 +95,25 @@ struct PackCard: View {
             .background(pack.accent.opacity(0.14), in: .rect(cornerRadius: 14, style: .continuous))
     }
 
+    /// "5 puzzles" — what a locked pack says in place of progress.
+    private var puzzleCountText: String {
+        "\(progress.total) puzzle\(progress.total == 1 ? "" : "s")"
+    }
+
     private var accessibilityLabel: String {
         var parts = [pack.title, pack.blurb]
         if isLocked { parts.append("Premium") }
         if let closingDays { parts.append(SeasonBadge.text(daysRemaining: closingDays)) }
-        parts.append(progress.isComplete
-            ? "Complete"
-            : "\(progress.solved) of \(progress.total) solved")
+        // Matches what's drawn: reading out progress the card no longer shows
+        // would put the locked-and-complete contradiction back, in the one
+        // place a sighted player can't see it to report it.
+        if isLocked {
+            parts.append(puzzleCountText)
+        } else {
+            parts.append(progress.isComplete
+                ? "Complete"
+                : "\(progress.solved) of \(progress.total) solved")
+        }
         return parts.joined(separator: ". ")
     }
 }
