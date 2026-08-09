@@ -3,7 +3,7 @@
 **Priority:** high (conversion *after* craft is done)  
 **Status:** `[x]` — T0–T6 done, T7 checked and declined on data. The catalog
 work is finished; whether it moves trial→paid is unproven until it ships and a
-month of clean data exists (see T7's caveat on internal traffic).  
+month of data exists (internal-traffic filtering was set up on 2026-08-09; see T7).  
 **Type:** content + light eng  
 **Estimate:** L (ongoing cadence, not one PR)  
 **Related:** `01-seasonal-packs-content-cadence.md`, paywall `PremiumBenefit` (“All N packs, and every new one”), `docs/themed-packs-spec.md`  
@@ -544,19 +544,20 @@ met. Nothing was built.
 The task is explicitly conditional: *"Only if conversion data shows pack_locked
 underperforms."* So the work was to answer that question, not to assume it.
 
-**PostHog, 30 days to 2026-08-09, paywall by entry point:**
+**PostHog, 30 days to 2026-08-09, paywall by entry point.** Internal traffic
+excluded — see the correction below; these are the clean figures.
 
 | source | opens | share | CTA taps | purchases | open→buy |
 |---|---:|---:|---:|---:|---:|
-| onboarding | 122 | 41% | 9 | 2 | 1.6% |
-| hint_limit | 97 | 33% | 1 | 2 | 2.1% |
-| completion | 48 | 16% | 0 | 0 | 0% |
-| **pack_locked** | **13** | **4%** | **0** | **1** | **7.7%** |
+| onboarding | 111 | 40% | 8 | 2 | 1.8% |
+| hint_limit | 97 | 35% | 1 | 2 | 2.1% |
+| completion | 48 | 17% | 0 | 0 | 0% |
 | home_card | 11 | 4% | 1 | 2 | 18% |
+| **pack_locked** | **9** | **3%** | **0** | **1** | **11%** |
 | archive | 3 | 1% | 1 | 0 | 0% |
 | profile | 1 | <1% | 0 | 0 | 0% |
 
-**`pack_locked` does not underperform.** At 1 purchase in 13 opens it sits above
+**`pack_locked` does not underperform.** At 1 purchase in 9 opens it sits above
 both of the high-volume sources. The gate is not met, so the default stands:
 full pack lock, `first-steps` free.
 
@@ -581,17 +582,31 @@ Three further reasons not to build it, independent of the numbers:
    worth having, and it is ticket 07's ground, not this one's.
 
 **Reopen when** `pack_locked` has ~200+ opens with a rate that is clearly below
-`hint_limit` on the same window. On current volume (~13/month) that is a year
+`hint_limit` on the same window. On current volume (~9/month) that is well over a year
 away — realistically this stays closed unless pack traffic grows a lot, which
 T4's shelf may itself cause.
 
-> **Data-quality caveat, and it is not small.** Internal and test filtering is
-> still unset on this project, and *this session's own simulator testing is in
-> the numbers* — today's 15 opens across 9 "people" include several fresh
-> installs I made while verifying T0–T6. Add the note that pre-2026-07-28 data
-> carries simulator traffic too. Before any paywall decision is made on these
-> events, internal traffic needs excluding; otherwise the next person to read
-> this table will be measuring us.
+> **Correction — the first version of this caveat was wrong, and the fix is
+> now in place.**
+>
+> It claimed *"this session's own simulator testing is in the numbers."* It is
+> not. `AnalyticsEnvironment.isSuppressedSimulatorRun` drops every simulator
+> event unless the app is launched with `-analyticsAllowSimulator`, which the
+> verification runs never passed — they sent nothing at all. The debug/simulator
+> stream in the data stops on **2026-08-04**, which is when that guard landed.
+>
+> The broader point held, though: internal traffic *was* in the table, from
+> debug runs before that date. **15 of 295 `paywall_opened` events were
+> internal**, including 4 of `pack_locked`'s 13. The figures above are the
+> re-run with those excluded; the conclusion does not change, since no purchase
+> was ever internal — you cannot complete a sandbox buy from a simulator run.
+>
+> **Filtering is no longer unset.** Project 137822 now carries two rules,
+> `build_type is_not debug` and `$device_model is_not arm64`, with
+> `test_account_filters_default_checked` on so insights apply them by default.
+> Both are needed: `register()` can only run after `setup()`, and the SDK emits
+> `Application Installed` during setup, so 13 of 14 simulator installs carry no
+> `build_type` and only the device rule catches them.
 
 ---
 

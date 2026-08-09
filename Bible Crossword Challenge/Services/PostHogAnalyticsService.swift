@@ -70,10 +70,19 @@ struct PostHogAnalyticsService: AnalyticsService {
 
         #if DEBUG
         // Simulator runs no longer get this far, so what's left is a debug
-        // build on a real device — our own phones. Stamped so a "filter
-        // internal and test users" rule on `build_type` can exclude them. The
-        // rule has to be added in project settings; this only supplies the
-        // property.
+        // build on a real device — our own phones. Stamped so the project's
+        // "filter internal and test users" rules can exclude them.
+        //
+        // Those rules now exist (project 137822, set 2026-08-09):
+        // `build_type is_not debug` and `$device_model is_not arm64`, with
+        // new insights defaulting to applying them.
+        //
+        // Both are needed, and the second is not redundant. `register` can
+        // only run *after* `setup`, and the SDK captures `Application
+        // Installed` during setup — so that one event escapes without this
+        // property. In the recorded history that is 13 of 14 simulator
+        // installs carrying no `build_type` at all; only `$device_model`
+        // catches them.
         PostHogSDK.shared.register(["build_type": "debug"])
         #endif
 
