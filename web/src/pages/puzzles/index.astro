@@ -7,7 +7,7 @@ import { SITE } from '../../consts';
 
 const title = 'Bible Crossword Puzzles by Theme — Bible Crossword Challenge';
 const description =
-  'Browse 80+ hand-crafted Bible crossword puzzles by theme, from Noah’s Ark to the Book of Revelation. Clues rooted in the King James Version. Free on iOS.';
+  `Browse ${PUZZLE_COUNT} hand-crafted Bible crossword puzzles by theme, from Noah’s Ark to the Book of Revelation. Clues rooted in the King James Version. Free on iOS.`;
 
 const featured = FEATURED;
 const archive = ARCHIVE;
@@ -96,7 +96,7 @@ const itemListLd = {
         </div>
 
         <h2>The full archive</h2>
-        <div class="prose"><p>The daily puzzle is always free. Premium unlocks the complete archive — every puzzle below, plus 30 mini puzzles for quick play.</p></div>
+        <div class="prose"><p>The daily puzzle is always free. Premium unlocks the complete archive — every puzzle below, plus {MINI_COUNT} mini puzzles for quick play.</p></div>
         {archive.map((group) => (
           <div class="arch-group">
             <h3>{group.tier}</h3>

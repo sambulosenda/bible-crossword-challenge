@@ -470,16 +470,67 @@ the next slip is caught by a check rather than by an audit.
 
 ### T6 — Align marketing claims with shelf
 
-**Status:** `[ ]`  
+**Status:** `[x]`  
 **Estimate:** S
 
-- [ ] When pack count &lt; target, avoid marketing “dozens of collections” elsewhere
-- [ ] Keep paywall live count (honest)
-- [ ] ASC / website descriptions: packs + archive + hints, not inflated pack numbers
-- [ ] Revisit benefit string only if needed: e.g. “Themed collections, growing every season” if count still small — prefer **shipping packs** over watering down copy
+**The premise was wrong in an interesting way.** This task was written to guard
+against *over*-claiming — "dozens of collections", "100+". Nothing anywhere
+over-claims on packs; the website does not mention collections at all. What the
+audit found was the opposite failure: **every quantity claim was stale and far
+too low**, frozen at the 82-puzzle era.
+
+| Surface | Claimed | Actual |
+|---|---|---|
+| App Store description, ×6 locales | 80+ puzzles | 228 |
+| Website, 81 files | 80+ puzzles | 92 full-size |
+| `archive.ts` tier headings | 28 / 35 / 19 | 31 / 39 / 22 |
+| `archive.ts` `MINI_COUNT` | 30 | **90** |
+| `/puzzles/` page | "plus 30 mini puzzles" | 90 |
+
+- [x] No inflated pack numbers anywhere — there were none to remove
+- [x] Paywall count stays live (`PremiumBenefit` interpolates, verified in T4:
+      228 puzzles / 9 packs)
+- [x] ASC and website now state packs + archive truthfully
+- [x] Benefit string **not** watered down — the shelf grew instead, which is
+      what this task asked for
+
+**One real over-claim, and it was not about packs.** Promotional text in all six
+locales ended *"New puzzle added daily!"*. The daily rotates a fixed pool; it is
+not added to daily, and **the pool wraps on 2026-10-01** — the entire subject of
+ticket 13. From that date a daily player starts seeing repeats while the App
+Store promises new content every day. Replaced with "Free every day." (154 chars,
+under the 170 limit).
+
+**Fixed so it cannot drift again, rather than retyped**
+
+The website's `ARCHIVE` is a hand-maintained mirror of the app's dailies, and it
+was a *perfect subset* — 82 of 92 titles, zero difficulty or verse mismatches.
+It had simply never been updated when ticket 13 shipped ten dailies. So the
+drift was structural, not sloppy:
+
+- The ten missing dailies added; the site now lists all 92.
+- Tier headings are **computed from the lists they label** (`Easy · ${n} puzzles`)
+  instead of being literals typed beside them.
+- Every `80+` in templates now interpolates `PUZZLE_COUNT`; the `/puzzles/` page
+  uses `MINI_COUNT`.
+- The 81 content JSON files can't import a constant, so the number came **out**
+  of them — "Every puzzle, Genesis to Revelation". A figure typed into 81 files
+  is a figure that will be wrong in 81 places.
+- App Store copy uses **"200+"**, deliberately round and low: it is true at 228,
+  consistent with the in-app count, and survives the next few content drops.
+  A fastlane description cannot import anything, so the only defence is a number
+  that ages well.
+
+**Still hand-maintained:** `MINI_COUNT` and the `ARCHIVE` title list. Both are
+retyped from `puzzles.json` and will drift again — the honest fix is generating
+`archive.ts` from the bundle, which is a bigger change than this task. Recorded
+here so the next drift is expected rather than discovered.
 
 **Acceptance**
-- No external claim exceeds actual Premium pack count by hand-wavy “100+ collections”
+- [x] No external claim exceeds the real figures — and none understates them now
+- [x] `npm run build` passes, 86 pages; rendered output verified as 92 full-size,
+      90 minis, tiers 31/39/22
+- [x] Promotional text within the 170-char limit in all six locales
 
 ---
 
@@ -502,7 +553,7 @@ the next slip is caught by a check rather than by an audit.
 | **P1** | ~~T2 David + Parables exclusive expansion~~ **done** | Overlay packs earn the lock |
 | **P2** | ~~T3 seasonal density check/fix~~ **done** (became a clue-quality audit) | Seasonal Premium not thin |
 | **P3** | ~~T4 two new evergreen packs~~ **done** | Catalog floor met |
-| **P4** | ~~T5 cadence~~ **done** + T6 claims | Sustainable, honest growth |
+| **P4** | ~~T5 cadence + T6 claims~~ **done** | Sustainable, honest growth |
 
 ## Dependencies
 

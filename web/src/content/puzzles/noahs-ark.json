@@ -6,7 +6,7 @@
   "description": "Solve a Noah's Ark Bible crossword: the flood, the dove, and the ark of Genesis 6–9 in a 15×15 grid of KJV-rooted clues. Free daily puzzles on iPhone and iPad.",
   "prose": [
     "Forty days of rain, an ark of gopher wood, and a dove carrying an olive leaf — the flood story is one of the most vivid in all of Scripture, and it makes a wonderful crossword. In <em>Noah and the Flood</em>, every clue comes straight from Genesis 6–9: the animals gathered two by two, the single door in the ark's side, the waters that covered the earth for a hundred and fifty days.",
-    "It's one of 80+ hand-crafted puzzles in Bible Crossword Challenge, and if you're short on time, the archive also holds a quick 7×7 mini on the same story. Finish the grid and it closes the way every puzzle does — on the verse behind the theme."
+    "It's one of the hand-crafted puzzles in Bible Crossword Challenge, and if you're short on time, the archive also holds a quick 7×7 mini on the same story. Finish the grid and it closes the way every puzzle does — on the verse behind the theme."
   ],
   "clues": [
     {
@@ -59,7 +59,7 @@
       "href": "/puzzles/",
       "eyebrow": "The full archive",
       "name": "All puzzle themes",
-      "sub": "80+ puzzles, Genesis to Revelation"
+      "sub": "Every puzzle, Genesis to Revelation"
     }
   ]
 }

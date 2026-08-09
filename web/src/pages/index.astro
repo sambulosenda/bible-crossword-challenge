@@ -4,6 +4,7 @@ import AppStoreButton from '../components/AppStoreButton.astro';
 import AppRating from '../components/AppRating.astro';
 import { getAppRating } from '../lib/app-store';
 import { SITE, APP_STORE_URL, APP_STORE_ID } from '../consts';
+import { PUZZLE_COUNT } from '../data/archive';
 
 // Read once at build time; null when Apple is unreachable or has no ratings yet.
 const rating = await getAppRating(APP_STORE_ID);
@@ -22,7 +23,7 @@ const features = {
   ],
   down: [
     { n: '1D', answer: 'HINTS', enum: '(5)', text: 'Fair nudges that unstick you without spoiling it' },
-    { n: '3D', answer: 'ARCHIVE', enum: '(7)', text: "Where 80+ puzzles live, from Noah's Ark to Easter morning" },
+    { n: '3D', answer: 'ARCHIVE', enum: '(7)', text: `Where ${PUZZLE_COUNT} puzzles live, from Noah's Ark to Easter morning` },
     { n: '5D', answer: 'OFFLINE', enum: '(7)', text: 'Works on a plane, in the pew, or anywhere else' },
   ],
 };
@@ -37,7 +38,7 @@ const screens = [
 
 const faqs = [
   { q: 'Is Bible Crossword Challenge free?', a: 'Yes — download and play the daily puzzle for free. Premium unlocks the full archive and extras.' },
-  { q: 'Is there a new Bible crossword puzzle every day?', a: "Yes. A fresh daily Bible crossword arrives at midnight, and the archive holds 80+ hand-crafted puzzles across the whole Bible — from Noah's Ark to Easter morning." },
+  { q: 'Is there a new Bible crossword puzzle every day?', a: `Yes. A fresh daily Bible crossword arrives at midnight, and the archive holds ${PUZZLE_COUNT} hand-crafted puzzles across the whole Bible — from Noah's Ark to Easter morning.` },
   { q: 'How difficult are the puzzles?', a: 'They are made for everyone — lifelong believers and casual solvers alike. If a clue has you stuck, smart hints nudge you along without spoiling the answer.' },
   { q: 'Do I need an account?', a: 'No. The app works fully offline and your progress is saved on your device — and synced privately through iCloud if you play on more than one.' },
   { q: 'Which Bible translation do the verses use?', a: 'All verses are drawn from the King James Version (KJV).' },
@@ -74,7 +75,7 @@ const softwareLd = {
   },
   featureList: [
     'A new hand-crafted Bible crossword every day at midnight',
-    'Archive of 80+ themed puzzles, from Genesis to Revelation',
+    `Archive of ${PUZZLE_COUNT} themed puzzles, from Genesis to Revelation`,
     'Every puzzle closes on the King James Version verse behind its theme',
     'Stepped hints — check a letter, reveal a letter, reveal a word',
     'Daily streaks and twelve achievements',
@@ -223,7 +224,7 @@ const faqLd = {
         </div>
         <div class="prose reveal" data-delay="120">
           <p>Bible Crossword Challenge is a Christian word game built around one simple habit: a daily Bible crossword you can finish with your morning coffee. Every clue is rooted in Scripture — the people, places, miracles, and verses of the King James Version — so each grid you solve leaves a little more of the Word with you.</p>
-          <p>Beyond the daily puzzle, an <a href="/puzzles/">archive of 80+ hand-crafted Bible crosswords</a> covers the whole story: <a href="/puzzles/noahs-ark/">Noah's Ark</a>, <a href="/puzzles/david-and-goliath/">David &amp; Goliath</a>, the Exodus, the Parables, <a href="/puzzles/christmas/">the Christmas Story</a>, <a href="/puzzles/easter/">Easter and the Resurrection</a>, and many more. Puzzles work fully offline on iPhone and iPad, sync through iCloud, and every one ends on the verse behind its theme.</p>
+          <p>Beyond the daily puzzle, an <a href="/puzzles/">archive of {PUZZLE_COUNT} hand-crafted Bible crosswords</a> covers the whole story: <a href="/puzzles/noahs-ark/">Noah's Ark</a>, <a href="/puzzles/david-and-goliath/">David &amp; Goliath</a>, the Exodus, the Parables, <a href="/puzzles/christmas/">the Christmas Story</a>, <a href="/puzzles/easter/">Easter and the Resurrection</a>, and many more. Puzzles work fully offline on iPhone and iPad, sync through iCloud, and every one ends on the verse behind its theme.</p>
           <p>Whether you love Scripture, love crosswords, or both, <a href={APP_STORE_URL} rel="noopener">download Bible Crossword Challenge free on the App Store</a> and start today's puzzle.</p>
         </div>
       </div>
