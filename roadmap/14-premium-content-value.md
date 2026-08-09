@@ -115,8 +115,8 @@ Make Premium feel worth yearly/lifetime **on content alone** (hints + archive re
 - [x] **≥5 evergreen Premium packs** that are not pure overlays — **5 of 5**:
       Psalm 23, plus David and Parables fixed in T2, plus Out of Egypt and Women
       of the Bible added in T4
-- [~] **≥4 seasonal packs** with windows — all four exist and are 100% exclusive;
-      **density verified, quality not** (T3 still open)
+- [x] **≥4 seasonal packs** with windows — all four exist, 100% exclusive,
+      gates verified as recurring shapes, and clue quality audited in T3
 - [x] **≥40 dedicated `pack-*` puzzles** total — **46**, from 26
 - [x] No Premium pack ships with **&lt;4 puzzles** — smallest is 5
 - [ ] At least **2 new packs per quarter** after floor (cadence), announced in release notes / Today surface — T5
@@ -277,16 +277,79 @@ dailies sitting where they belong in the life rather than bunched at the front.
 
 ### T3 — Expand exclusive depth on existing dedicated packs
 
-**Status:** `[ ]`  
+**Status:** `[x]`  
 **Estimate:** M
 
-- [ ] Psalm 23: already 5 — optional +1–2 if thin; or leave and focus elsewhere
-- [ ] Lent / Easter / Advent / Christmas: ensure each **≥5** solid exclusives (Advent has 6 — good; audit quality)
-- [ ] Fill any stub/weak clues found in audit
+The counts were never the problem — every pack already met ≥5. This turned into
+the clue-quality audit the task actually asked for, run over all **46 exclusive
+puzzles / 802 clues**.
+
+- [x] **Seasonal gates verified.** All four use recurring shapes — Lent
+      `easter -46…-1`, Easter `easter -7…7`, Advent `annual 12-01…12-26`,
+      Christmas `annual 12-26…01-06`. **None uses `kind: "dates"`**, which is
+      the shape the README warns expires permanently after one year.
+- [x] **Counts confirmed:** Lent 5, Easter 5, Advent 6, Christmas 5, Psalm 23 5.
+- [x] **Difficulty mix** — every Premium pack now carries a hard, except Out of
+      Egypt (see below).
+- [x] **Stub/weak clues fixed — 16 edits across 12 puzzles.**
+
+**What the audit found**
+
+| Issue | Count | Where |
+|---|---:|---|
+| Clue duplicated verbatim elsewhere in the bank | 6 | 5 self-inflicted in T2/T4, 1 pre-existing |
+| Clue containing its own answer's stem | 1 | `pack-parables-of-jesus-003` SEVENTY |
+| Dictionary definitions with no anchor in the text | 8 | all in Psalm 23 |
+
+1. **Six duplicated clues.** Five were mine, written in T2/T4 without sight of
+   the mini bank and converging on the same KJV phrasing — e.g. SINAI "the mount
+   that was altogether on a smoke" already existed word-for-word as `mini-030`.
+   The sixth is pre-existing and worse, because both sides are Premium:
+   `pack-advent-004` and `pack-christmas-004` gave DREAM the identical clue,
+   though they are different dreams (Matthew 1:20, take Mary; Matthew 2:13, flee
+   to Egypt). Both now say which.
+2. **One self-revealing clue.** SEVENTY was clued "____ times seven, said
+   Jesus" — the answer's own stem sitting in the clue. Now "Ten times the number
+   Peter proposed, in the Lord's answer".
+3. **Psalm 23's filler.** See below.
+
+**The real finding: Psalm 23 is structurally stretched.**
+
+It is a six-verse psalm carrying 5 puzzles × ~15 answers ≈ **77 answers**. There
+is not that much Psalm 23, so roughly a third of the fill is thematic padding —
+MEADOW, GRASS, BROOK, CALM, QUIET, REVIVE, RENEW, COURAGE, PROTECT, NEAR,
+STRENGTH, FEAST — words that never appear in the psalm, several of which had
+pure dictionary clues ("To make fresh again", "A grassy field for grazing")
+with no scripture in them at all. Every other pack draws on a whole narrative
+and has real vocabulary to spare.
+
+I rewrote the eight worst to anchor them in the psalm rather than defining them,
+which is the honest fix available without touching grids. **It does not solve
+the underlying problem**, and the ticket's suggestion to add "+1–2 if thin" is
+backwards — Psalm 23 is thin *because* it is already stretched over five
+puzzles. Options if it needs revisiting, none of which are this ticket:
+broaden the pack's remit to the shepherd psalms (23, 100, 95, John 10), or
+accept it as the shortest pack and never grow it.
+
+**Deliberately not done**
+
+- **No new puzzles.** T3 asked for depth where counts were already met; adding
+  more to Psalm 23 would deepen the exact problem the audit found.
+- **Out of Egypt has no hard puzzle**, unlike every other pack. Not forced: it
+  is the best-known narrative in the Old Testament and nothing in it is honestly
+  hard. `difficulty` feeds the `hardCompleted` achievement, so mislabelling a
+  medium puzzle to even up a table would inflate a real player stat.
+  Women of the Bible *did* get one — Esther, on vocabulary (MORDECAI, SHUSHAN,
+  VASHTI, PURIM), which is defensible on its own terms.
 
 **Acceptance**
-- Every seasonal Premium pack meets ≥5 exclusive puzzles
-- Seasonal gates still correct (`season` in packs.json)
+- [x] Every seasonal Premium pack has ≥5 exclusive puzzles
+- [x] Seasonal gates correct, and none of the expiring `dates` kind
+- [x] Zero duplicated clue texts involving a pack exclusive (was 6)
+- [x] Zero clues containing their own answer (was 1)
+- [x] Grids and answer sets **byte-identical** — clue text and one difficulty
+      label are the only changes; both rotation pools untouched
+- [x] `validate_content.py` OK; 170 tests pass
 
 ---
 
@@ -377,7 +440,7 @@ extra wiring.
 |-------|-------------|-----------|
 | **P0** | ~~T1 audit~~ **done** + T0 display fix **done** | Next packs prioritized |
 | **P1** | ~~T2 David + Parables exclusive expansion~~ **done** | Overlay packs earn the lock |
-| **P2** | T3 seasonal density check/fix | Seasonal Premium not thin |
+| **P2** | ~~T3 seasonal density check/fix~~ **done** (became a clue-quality audit) | Seasonal Premium not thin |
 | **P3** | ~~T4 two new evergreen packs~~ **done** | Catalog floor met |
 | **P4** | T5 cadence + T6 claims | Sustainable, honest growth |
 
