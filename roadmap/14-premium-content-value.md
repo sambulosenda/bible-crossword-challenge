@@ -56,14 +56,17 @@ should be per-pack, not aggregate** (see Success metrics).
 
 ### Two consequences found on 2026-08-09
 
-**1. The paywall strip now names the weakest packs.** Ticket 08's locked-pack
+**1. The paywall strip now names the weakest packs.** ~~Ticket 08's locked-pack
 strip ships as of `62e3db1`, and it excludes out-of-season packs. From roughly
 January to Lent, and from Easter to Advent, the three evergreen packs are the
 *entire* strip — so for most of the year the paywall's named evidence for
 Premium is David, Parables, Psalm 23, and two of those three contain nothing a
-free player can't already play. The strip made the shelf more visible, which is
-right, but it means T2 is no longer a tidy-up: it is the content behind the
-main sales surface.
+free player can't already play.~~ **Resolved by T2 + T4.** The out-of-season
+months now have five evergreen packs to draw on, all majority-exclusive, and
+the strip names three of them plus "and 2 more" instead of being the whole
+shelf. The observation stands as a rule though: **the strip is only ever as
+good as the evergreen shelf**, because for most of the calendar year that is
+all it can show.
 
 **2. Locked packs could render "Complete".** `PackCard` and `PackDetailView`
 both drew progress from the player's own records with no lock branch. Because
@@ -109,12 +112,14 @@ Make Premium feel worth yearly/lifetime **on content alone** (hints + archive re
 
 ### Catalog floor (v1 done when)
 
-- [ ] **≥5 evergreen Premium packs** that are not pure overlays  
-  Today solid exclusive: Psalm 23. David + Parables need exclusive expansion or demotion from “hero” sell.
-- [ ] **≥4 seasonal packs** with windows (Lent/Easter/Advent/Christmas exist — verify density + quality, not just presence)
-- [ ] **≥40 dedicated `pack-*` puzzles** total (from ~26)
-- [ ] No Premium pack ships with **&lt;4 puzzles**
-- [ ] At least **2 new packs per quarter** after floor (cadence), announced in release notes / Today surface
+- [x] **≥5 evergreen Premium packs** that are not pure overlays — **5 of 5**:
+      Psalm 23, plus David and Parables fixed in T2, plus Out of Egypt and Women
+      of the Bible added in T4
+- [~] **≥4 seasonal packs** with windows — all four exist and are 100% exclusive;
+      **density verified, quality not** (T3 still open)
+- [x] **≥40 dedicated `pack-*` puzzles** total — **46**, from 26
+- [x] No Premium pack ships with **&lt;4 puzzles** — smallest is 5
+- [ ] At least **2 new packs per quarter** after floor (cadence), announced in release notes / Today surface — T5
 
 ### Quality bar (every new pack)
 
@@ -244,22 +249,29 @@ dailies sitting where they belong in the life rather than bunched at the front.
       answers accept and advance
 - [x] Journey tags picked up 2 Samuel automatically from the new content
 
-> **Generator note for the next pack.** Adding a *new pack slug* moves the
-> pack block in `puzzles.json`, because `main()` iterates `sorted(by_slug)` —
-> `life-of-david` and `parables-of-jesus` sort before `psalm-23`, so five
-> shipped psalm-23 entries changed index.
+> **Generator note for the next pack — the README's diff gate is unreliable
+> here, in both directions.** Adding a *new pack slug* moves the pack block in
+> `puzzles.json`, because `main()` iterates `sorted(by_slug)`, and where the new
+> slug lands alphabetically decides how big the churn looks. T2 and T4 landed on
+> opposite sides of it:
 >
-> This turned out **not** to trip the README's "deletions must be zero" gate:
-> git matched the moved block as context and reported 1568 insertions, 0
-> deletions. So the gate is weaker than it reads — it catches a *rewritten*
-> pool, not a *moved* one, and a future change that shifts entries could pass
-> it. It would have been a false alarm here anyway: pack puzzles are excluded
-> from both rotation pools (`PuzzleProvider` filters `id.hasPrefix("pack-")`
-> and `isMini`), so their file position is inert.
+> | | new slugs | `git diff --numstat` | gate says |
+> |---|---|---|---|
+> | **T2** | `life-of-david`, `parables-of-jesus` (after `lent`) | 1568 ins, **0 del** | pass |
+> | **T4** | `exodus` (before `lent`), `women-of-the-bible` | 3482 ins, **1922 del** | **fail** |
 >
-> The invariant worth checking directly, and what was checked here, is that the
-> **daily and mini id sequences are unchanged and no shipped puzzle's content
-> differs** — verified against `HEAD` rather than inferred from the diff.
+> Both were equally safe. T4 only looks worse because `exodus` sorts early and
+> git could not match the displaced block as context. So the gate **misses a
+> real move** (T2) and **false-alarms on a harmless one** (T4) — it is a proxy
+> for "did a shipped puzzle move", and a poor one once packs are in the file.
+>
+> It stays useful for *dailies and minis*, which is what it was written for.
+> For pack work, check the invariant directly instead, as both tickets did:
+> **the daily and mini id sequences are unchanged, no shipped id is dropped, and
+> no shipped puzzle's content differs** — compared against `HEAD`, not inferred
+> from the diff. Pack puzzles are excluded from both rotation pools
+> (`PuzzleProvider` filters `id.hasPrefix("pack-")` and `isMini`), so their file
+> position is inert by construction.
 
 ---
 
@@ -280,28 +292,41 @@ dailies sitting where they belong in the life rather than bunched at the front.
 
 ### T4 — Ship 2 new evergreen Premium packs
 
-**Status:** `[ ]`  
+**Status:** `[x]`  
 **Estimate:** L
 
-Suggested themes (pick 2; faith + crossword-friendly):
+Chose **Exodus / Wilderness** (`exodus`, "Out of Egypt") and **Women of the
+Bible** (`women-of-the-bible`), 5 puzzles each, 16 clues each.
 
-| Idea | Why |
-|------|-----|
-| Names of God / “I AM” | High search, clear answer set |
-| Women of the Bible | Underserved, strong share |
-| Exodus / Wilderness | Narrative arc pack |
-| Acts / Early Church | NT depth beyond Gospels |
-| Proverbs wisdom | Short answers, good minis hybrid |
+| Idea | Verdict |
+|------|---------|
+| Exodus / Wilderness | **Shipped.** Best-known narrative arc in the OT, and the vocabulary interlocks better than anything else on the list — plagues, sea, manna, Sinai are all short and common-lettered |
+| Women of the Bible | **Shipped.** The ticket's "underserved, strong share" holds, and it was the only candidate that adds *four* books nothing else covers (Ruth, Esther, Judges, and Hannah's 1 Samuel) |
+| Names of God / “I AM” | Skipped. Best ASO case of the five, but the answers are abstract and repetitive, and the strongest ones (EL SHADDAI, JEHOVAH JIREH) are multi-word — the generator takes single A–Z runs of 3–9. Revisit as a *mini* pack, where short answers suit |
+| Acts / Early Church | Skipped for now. Good NT depth, but proper-noun heavy, so clues lean on recall rather than reading |
+| Proverbs wisdom | Skipped. Short answers, but no narrative spine — it would read as a word list rather than a collection |
 
-- [ ] Spec → generate → edit → `packs.json` entry `isPremium: true`
-- [ ] 5–7 `pack-*` puzzles each
-- [ ] Home carousel / Packs tab discovery (existing UI)
-- [ ] Release notes: “New collection: …”
+- [x] Spec → generate → ids written back → `packs.json` entry `isPremium: true`
+- [x] 5 `pack-*` puzzles each (46 dedicated total, from 36)
+- [x] Packs tab discovery — both render with cover, blurb and size
+- [ ] Release notes "New collection: …" — **not done**, belongs with the release
+
+**Books added to the journey map:** Exodus (from Out of Egypt), and Ruth, Esther,
+Judges, Luke, 1 Samuel across Women of the Bible. Verified on device: the pack
+detail's "Finishing this adds Exodus to your journey" picked the tag up with no
+extra wiring.
 
 **Acceptance**
-- Two new packs live in production build
-- Not seasonal-gated (always available)
-- Appear in paywall locked strip
+- [x] Both packs live in the build, `season: null`, always available
+- [x] Both appear in the paywall locked strip — verified: opening the paywall
+      from Out of Egypt lists it first, then David and Parables, then **"and 2
+      more"**. That remainder line had never been reachable before (three
+      evergreen packs meant it never had a surplus to count).
+- [x] Live counts followed: paywall kicker 208 → **228 puzzles**, benefit line
+      "All 7 packs" → **"All 9 packs, and every new one"**
+- [x] Daily and mini pools byte-identical against `HEAD`; zero shipped puzzles
+      changed; `validate_content.py` OK; 170 tests pass
+- [x] Played `pack-exodus-002` on device — AARON accepted, advanced to JETHRO
 
 ---
 
@@ -353,7 +378,7 @@ Suggested themes (pick 2; faith + crossword-friendly):
 | **P0** | ~~T1 audit~~ **done** + T0 display fix **done** | Next packs prioritized |
 | **P1** | ~~T2 David + Parables exclusive expansion~~ **done** | Overlay packs earn the lock |
 | **P2** | T3 seasonal density check/fix | Seasonal Premium not thin |
-| **P3** | T4 two new evergreen packs | Catalog floor met |
+| **P3** | ~~T4 two new evergreen packs~~ **done** | Catalog floor met |
 | **P4** | T5 cadence + T6 claims | Sustainable, honest growth |
 
 ## Dependencies

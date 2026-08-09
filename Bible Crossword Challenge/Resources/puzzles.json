@@ -25781,6 +25781,786 @@
     ]
   },
   {
+    "id": "pack-exodus-001",
+    "title": "Bread from Heaven",
+    "difficulty": "easy",
+    "verse": "Behold, I will rain bread from heaven for you",
+    "reference": "Exodus 16:4",
+    "publishDate": "2026-07-01",
+    "size": 15,
+    "grid": [
+      "...............",
+      "...............",
+      "....C......G...",
+      "MANNA....QUAIL.",
+      "U...M......T...",
+      "R...P......H...",
+      "MELT...HUNGER..",
+      "U..A...E...R...",
+      "R..SABBATH..B..",
+      "...T...V.OMER..",
+      "DESERT.E.N..E..",
+      "E......N.E..A..",
+      "WORM.....Y..D..",
+      "...............",
+      "..............."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 2,
+        "col": 4,
+        "text": "Where the quails fell at evening",
+        "answer": "CAMP"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 2,
+        "col": 11,
+        "text": "What they did every morning, every man his portion",
+        "answer": "GATHER"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "What they called it, for they knew not what it was",
+        "answer": "MANNA"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 3,
+        "col": 0,
+        "text": "What the whole congregation did against Moses",
+        "answer": "MURMUR"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 9,
+        "text": "They came up at even and covered the camp",
+        "answer": "QUAIL"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 6,
+        "col": 0,
+        "text": "What the manna did when the sun waxed hot",
+        "answer": "MELT"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 6,
+        "col": 3,
+        "text": "It was like wafers made with honey",
+        "answer": "TASTE"
+      },
+      {
+        "number": 7,
+        "direction": "across",
+        "row": 6,
+        "col": 7,
+        "text": "What they feared would kill them in the wilderness",
+        "answer": "HUNGER"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 6,
+        "col": 7,
+        "text": "Where the bread came from",
+        "answer": "HEAVEN"
+      },
+      {
+        "number": 8,
+        "direction": "across",
+        "row": 8,
+        "col": 3,
+        "text": "On its eve they gathered twice as much",
+        "answer": "SABBATH"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 8,
+        "col": 9,
+        "text": "What the manna tasted of",
+        "answer": "HONEY"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 8,
+        "col": 12,
+        "text": "What the LORD rained from heaven",
+        "answer": "BREAD"
+      },
+      {
+        "number": 11,
+        "direction": "across",
+        "row": 9,
+        "col": 9,
+        "text": "The measure each man gathered for his household",
+        "answer": "OMER"
+      },
+      {
+        "number": 12,
+        "direction": "across",
+        "row": 10,
+        "col": 0,
+        "text": "The waste place between Elim and Sinai",
+        "answer": "DESERT"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 10,
+        "col": 0,
+        "text": "When it was gone, the small round thing lay beneath",
+        "answer": "DEW"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 12,
+        "col": 0,
+        "text": "What bred in the manna kept till morning",
+        "answer": "WORM"
+      }
+    ]
+  },
+  {
+    "id": "pack-exodus-002",
+    "title": "The Burning Bush",
+    "difficulty": "easy",
+    "verse": "And God said unto Moses, I AM THAT I AM",
+    "reference": "Exodus 3:14",
+    "publishDate": "2026-07-02",
+    "size": 15,
+    "grid": [
+      "...S.....AARON.",
+      "JETHRO....N....",
+      "...O....M.G....",
+      "...E..VOICE....",
+      ".BUSH...D.L....",
+      "....O.L.I......",
+      "....R.E.A......",
+      "...SERPENT.....",
+      "....B.R........",
+      ".....ROD...F...",
+      "......U..HOLY..",
+      "....MOSES..A...",
+      "........E..M...",
+      "......TONGUE...",
+      "........D......"
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 3,
+        "text": "Put them off thy feet, for the place is holy",
+        "answer": "SHOES"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 0,
+        "col": 9,
+        "text": "The brother given to Moses to be his spokesman",
+        "answer": "AARON"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 0,
+        "col": 10,
+        "text": "The messenger of the LORD who appeared in the flame",
+        "answer": "ANGEL"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 1,
+        "col": 0,
+        "text": "Moses' father in law, priest of Midian",
+        "answer": "JETHRO"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 2,
+        "col": 8,
+        "text": "The land where Moses kept a flock in exile",
+        "answer": "MIDIAN"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 3,
+        "col": 6,
+        "text": "What called to Moses out of the midst of the bush",
+        "answer": "VOICE"
+      },
+      {
+        "number": 7,
+        "direction": "across",
+        "row": 4,
+        "col": 1,
+        "text": "It burned with fire and was not consumed",
+        "answer": "BUSH"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 4,
+        "col": 4,
+        "text": "The mountain of God where Moses was called",
+        "answer": "HOREB"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 5,
+        "col": 6,
+        "text": "What Moses' hand became, white as snow, then was restored",
+        "answer": "LEPROUS"
+      },
+      {
+        "number": 10,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "What the rod became on the ground",
+        "answer": "SERPENT"
+      },
+      {
+        "number": 11,
+        "direction": "across",
+        "row": 9,
+        "col": 5,
+        "text": "Cast down, it became a serpent",
+        "answer": "ROD"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 9,
+        "col": 11,
+        "text": "What the angel appeared in, out of the midst of the bush",
+        "answer": "FLAME"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 10,
+        "col": 9,
+        "text": "What the ground was where Moses stood",
+        "answer": "HOLY"
+      },
+      {
+        "number": 14,
+        "direction": "across",
+        "row": 11,
+        "col": 4,
+        "text": "The shepherd who turned aside to see the great sight",
+        "answer": "MOSES"
+      },
+      {
+        "number": 15,
+        "direction": "down",
+        "row": 11,
+        "col": 8,
+        "text": "Moses asked God to ____ another in his place",
+        "answer": "SEND"
+      },
+      {
+        "number": 16,
+        "direction": "across",
+        "row": 13,
+        "col": 6,
+        "text": "Moses pleaded he was slow of speech and of this",
+        "answer": "TONGUE"
+      }
+    ]
+  },
+  {
+    "id": "pack-exodus-003",
+    "title": "The Sea Divided",
+    "difficulty": "easy",
+    "verse": "The LORD shall fight for you, and ye shall hold your peace.",
+    "reference": "Exodus 14:14",
+    "publishDate": "2026-07-03",
+    "size": 15,
+    "grid": [
+      "...F.A.........",
+      "...I.R.........",
+      "...R.M......M..",
+      "...EGYPT....I..",
+      "......I...HORSE",
+      "....WALL..O.I..",
+      "......L.D.SEA..",
+      "....CHARIOT.M..",
+      "......R.V......",
+      "C.......I......",
+      "L.......DRY....",
+      "O...SHORE......",
+      "U...O..........",
+      "DROWN..........",
+      "....G.........."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 3,
+        "text": "What the pillar was by night, to give them light",
+        "answer": "FIRE"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 5,
+        "text": "What pursued Israel to the water's edge",
+        "answer": "ARMY"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 2,
+        "col": 12,
+        "text": "The prophetess who took a timbrel and sang",
+        "answer": "MIRIAM"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 3,
+        "text": "The land left behind that night",
+        "answer": "EGYPT"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 3,
+        "col": 6,
+        "text": "Of cloud by day, of fire by night",
+        "answer": "PILLAR"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 4,
+        "col": 10,
+        "text": "The ____ and his rider hath he thrown into the sea",
+        "answer": "HORSE"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 4,
+        "col": 10,
+        "text": "Pharaoh's whole army, troubled in the morning watch",
+        "answer": "HOST"
+      },
+      {
+        "number": 7,
+        "direction": "across",
+        "row": 5,
+        "col": 4,
+        "text": "The waters were this to them on the right hand and the left",
+        "answer": "WALL"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 6,
+        "col": 8,
+        "text": "What the LORD did to the waters by a strong east wind",
+        "answer": "DIVIDE"
+      },
+      {
+        "number": 9,
+        "direction": "across",
+        "row": 6,
+        "col": 10,
+        "text": "It was divided, and Israel went through",
+        "answer": "SEA"
+      },
+      {
+        "number": 10,
+        "direction": "across",
+        "row": 7,
+        "col": 4,
+        "text": "Six hundred chosen ones pursued Israel",
+        "answer": "CHARIOT"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 9,
+        "col": 0,
+        "text": "It went before them, and came between the two camps",
+        "answer": "CLOUD"
+      },
+      {
+        "number": 12,
+        "direction": "across",
+        "row": 10,
+        "col": 8,
+        "text": "The ground Israel walked on in the midst of the sea",
+        "answer": "DRY"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 11,
+        "col": 4,
+        "text": "Where Israel saw the Egyptians dead",
+        "answer": "SHORE"
+      },
+      {
+        "number": 13,
+        "direction": "down",
+        "row": 11,
+        "col": 4,
+        "text": "What Moses and Israel sang on the far shore",
+        "answer": "SONG"
+      },
+      {
+        "number": 14,
+        "direction": "across",
+        "row": 13,
+        "col": 0,
+        "text": "What the sea did to the host that followed",
+        "answer": "DROWN"
+      }
+    ]
+  },
+  {
+    "id": "pack-exodus-004",
+    "title": "Let My People Go",
+    "difficulty": "medium",
+    "verse": "and when I see the blood, I will pass over you",
+    "reference": "Exodus 12:13",
+    "publishDate": "2026-07-04",
+    "size": 15,
+    "grid": [
+      ".........HAIL..",
+      "............O..",
+      ".PHARAOH....C..",
+      ".L.....A..F.U..",
+      ".A.....R..R.S..",
+      ".G.....D.POSTS.",
+      ".U..P..E..G....",
+      ".E.DARKNESS....",
+      "....S....L.....",
+      "....S...LAMB...",
+      "F..DOOR..Y.LICE",
+      "L...V......O...",
+      "ISRAEL.....O...",
+      "E...R......D...",
+      "S.............."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 9,
+        "text": "It fell mingled with fire upon all the land",
+        "answer": "HAIL"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 12,
+        "text": "It ate every herb the hail had left",
+        "answer": "LOCUST"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 2,
+        "col": 1,
+        "text": "The king who would not let the people go",
+        "answer": "PHARAOH"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 2,
+        "col": 1,
+        "text": "One of the ten judgments upon Egypt",
+        "answer": "PLAGUE"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 2,
+        "col": 7,
+        "text": "What Pharaoh did to his heart, again and again",
+        "answer": "HARDEN"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 3,
+        "col": 10,
+        "text": "The second plague, which came up upon the land",
+        "answer": "FROGS"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 5,
+        "col": 9,
+        "text": "The two side ones of the door, marked with blood",
+        "answer": "POSTS"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 6,
+        "col": 4,
+        "text": "The feast named for what the destroyer did",
+        "answer": "PASSOVER"
+      },
+      {
+        "number": 8,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "Three days of it, which might be felt",
+        "answer": "DARKNESS"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 7,
+        "col": 9,
+        "text": "What Israel was told to do to the lamb at even",
+        "answer": "SLAY"
+      },
+      {
+        "number": 10,
+        "direction": "across",
+        "row": 9,
+        "col": 8,
+        "text": "Without blemish, taken for every house",
+        "answer": "LAMB"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 9,
+        "col": 11,
+        "text": "The river became it, and the fish died",
+        "answer": "BLOOD"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 10,
+        "col": 0,
+        "text": "Swarms of them filled the houses of Egypt",
+        "answer": "FLIES"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 10,
+        "col": 3,
+        "text": "Its posts were struck with blood that night",
+        "answer": "DOOR"
+      },
+      {
+        "number": 14,
+        "direction": "across",
+        "row": 10,
+        "col": 11,
+        "text": "The plague that came of the dust of the earth",
+        "answer": "LICE"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 12,
+        "col": 0,
+        "text": "The people Pharaoh would not release",
+        "answer": "ISRAEL"
+      }
+    ]
+  },
+  {
+    "id": "pack-exodus-005",
+    "title": "The Mount and the Calf",
+    "difficulty": "medium",
+    "verse": "Thou shalt have no other gods before me.",
+    "reference": "Exodus 20:3",
+    "publishDate": "2026-07-05",
+    "size": 15,
+    "grid": [
+      ".........C.....",
+      ".........A.....",
+      ".......GOLD....",
+      ".......R.F.....",
+      "..C...LAW......",
+      "SMOKE..V....H..",
+      "I.M....E..T.O..",
+      "N.M.THUNDER.N..",
+      "A.A.A.....U.O..",
+      "I.N.BREAK.MOUNT",
+      ".IDOL.....P.R..",
+      ".M..E.....E....",
+      ".A..STONE.T....",
+      ".G.............",
+      ".E............."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 9,
+        "text": "What Aaron fashioned while Moses was in the mount",
+        "answer": "CALF"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 2,
+        "col": 7,
+        "text": "The earrings melted down to make the idol",
+        "answer": "GOLD"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 2,
+        "col": 7,
+        "text": "Thou shalt not make unto thee any ____ image",
+        "answer": "GRAVEN"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 4,
+        "col": 2,
+        "text": "One of ten words spoken from the mount",
+        "answer": "COMMAND"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 4,
+        "col": 6,
+        "text": "What was given at Sinai",
+        "answer": "LAW"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 5,
+        "col": 0,
+        "text": "It ascended as of a furnace from the mountain",
+        "answer": "SMOKE"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 5,
+        "col": 0,
+        "text": "The mount that was altogether on a smoke",
+        "answer": "SINAI"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 5,
+        "col": 12,
+        "text": "____ thy father and thy mother",
+        "answer": "HONOUR"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 6,
+        "col": 10,
+        "text": "Its voice sounded long and waxed louder",
+        "answer": "TRUMPET"
+      },
+      {
+        "number": 8,
+        "direction": "across",
+        "row": 7,
+        "col": 4,
+        "text": "With lightnings, it came upon the mount",
+        "answer": "THUNDER"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 7,
+        "col": 4,
+        "text": "Two of stone, written with the finger of God",
+        "answer": "TABLES"
+      },
+      {
+        "number": 9,
+        "direction": "across",
+        "row": 9,
+        "col": 4,
+        "text": "What Moses did to the tables when he saw the calf",
+        "answer": "BREAK"
+      },
+      {
+        "number": 10,
+        "direction": "across",
+        "row": 9,
+        "col": 10,
+        "text": "Where Moses went up, and stayed forty days",
+        "answer": "MOUNT"
+      },
+      {
+        "number": 11,
+        "direction": "across",
+        "row": 10,
+        "col": 1,
+        "text": "What the people danced before at the mount's foot",
+        "answer": "IDOL"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 10,
+        "col": 1,
+        "text": "What must not be made or bowed down to",
+        "answer": "IMAGE"
+      },
+      {
+        "number": 12,
+        "direction": "across",
+        "row": 12,
+        "col": 4,
+        "text": "What the tables were made of",
+        "answer": "STONE"
+      }
+    ]
+  },
+  {
     "id": "pack-lent-002",
     "title": "Forty Days in the Wilderness",
     "difficulty": "easy",
@@ -29033,6 +29813,786 @@
         "col": 8,
         "text": "The confident word that opens the psalm's last verse",
         "answer": "SURELY"
+      }
+    ]
+  },
+  {
+    "id": "pack-women-of-the-bible-001",
+    "title": "For This Child I Prayed",
+    "difficulty": "easy",
+    "verse": "For this child I prayed; and the LORD hath given me my petition which I asked of him",
+    "reference": "1 Samuel 1:27",
+    "publishDate": "2026-07-01",
+    "size": 15,
+    "grid": [
+      "..B............",
+      "PRAYED....E....",
+      "..R....CHILD...",
+      "..R.G.....K..T.",
+      "S.E.R....SAMUEL",
+      "HANNAH..L.N..M.",
+      "I...C.B.E.A..P.",
+      "L..PENINNAH..L.",
+      "O..E..T.D....E.",
+      "H..T..T........",
+      ".ELI.WEEP......",
+      "...T..R........",
+      "...I...........",
+      "..VOW..........",
+      "...N..........."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 2,
+        "text": "What Hannah was, year after year",
+        "answer": "BARREN"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 1,
+        "col": 0,
+        "text": "What Hannah did for this child",
+        "answer": "PRAYED"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 1,
+        "col": 10,
+        "text": "Her husband, who loved her though she had no child",
+        "answer": "ELKANAH"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 2,
+        "col": 7,
+        "text": "The one she prayed for at Shiloh",
+        "answer": "CHILD"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 3,
+        "col": 4,
+        "text": "Let thine handmaid find ____ in thy sight",
+        "answer": "GRACE"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 3,
+        "col": 13,
+        "text": "The house where she poured out her soul",
+        "answer": "TEMPLE"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 4,
+        "col": 0,
+        "text": "Where the house of the LORD then stood",
+        "answer": "SHILOH"
+      },
+      {
+        "number": 8,
+        "direction": "across",
+        "row": 4,
+        "col": 9,
+        "text": "The son she asked for, and gave back",
+        "answer": "SAMUEL"
+      },
+      {
+        "number": 9,
+        "direction": "across",
+        "row": 5,
+        "col": 0,
+        "text": "She prayed in bitterness of soul, and only her lips moved",
+        "answer": "HANNAH"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 5,
+        "col": 8,
+        "text": "As long as he liveth he shall be ____ to the LORD",
+        "answer": "LEND"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 6,
+        "col": 6,
+        "text": "The state of her soul as she prayed",
+        "answer": "BITTER"
+      },
+      {
+        "number": 12,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "The other wife, who provoked her sore",
+        "answer": "PENINNAH"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 7,
+        "col": 3,
+        "text": "What the LORD granted her, which she had asked",
+        "answer": "PETITION"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 10,
+        "col": 1,
+        "text": "The priest who thought she had been drinking",
+        "answer": "ELI"
+      },
+      {
+        "number": 14,
+        "direction": "across",
+        "row": 10,
+        "col": 5,
+        "text": "What she did, and would not eat",
+        "answer": "WEEP"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 13,
+        "col": 2,
+        "text": "What Hannah made, to lend her son to the LORD",
+        "answer": "VOW"
+      }
+    ]
+  },
+  {
+    "id": "pack-women-of-the-bible-002",
+    "title": "Whither Thou Goest",
+    "difficulty": "easy",
+    "verse": "thy people shall be my people, and thy God my God",
+    "reference": "Ruth 1:16",
+    "publishDate": "2026-07-02",
+    "size": 15,
+    "grid": [
+      "...............",
+      ".....N.....C.O.",
+      "...MOAB....O.B.",
+      ".....O...BARLEY",
+      ".....M...O.N.D.",
+      "....KINSMAN....",
+      "W..G...H.Z.....",
+      "I.CLEAVE...RUTH",
+      "D..E...A...E...",
+      "ORPAH..FIELD...",
+      "W..N.......E...",
+      ".......HARVEST.",
+      "...........M...",
+      "...............",
+      "..............."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 1,
+        "col": 5,
+        "text": "She went out full and came home empty",
+        "answer": "NAOMI"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 1,
+        "col": 11,
+        "text": "What Boaz bade the reapers let fall for her",
+        "answer": "CORN"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 1,
+        "col": 13,
+        "text": "The son born to Ruth, grandfather of David",
+        "answer": "OBED"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 2,
+        "col": 3,
+        "text": "The country Ruth left to follow Naomi",
+        "answer": "MOAB"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 3,
+        "col": 9,
+        "text": "The grain of the harvest she gleaned",
+        "answer": "BARLEY"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 3,
+        "col": 9,
+        "text": "The mighty man of wealth in whose field she gleaned",
+        "answer": "BOAZ"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 5,
+        "col": 4,
+        "text": "A near relative with the right to redeem",
+        "answer": "KINSMAN"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 5,
+        "col": 7,
+        "text": "A bound bundle of the harvest",
+        "answer": "SHEAF"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 6,
+        "col": 0,
+        "text": "What both women were when they returned",
+        "answer": "WIDOW"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 6,
+        "col": 3,
+        "text": "To gather what the reapers leave behind",
+        "answer": "GLEAN"
+      },
+      {
+        "number": 10,
+        "direction": "across",
+        "row": 7,
+        "col": 2,
+        "text": "What Ruth did to Naomi, and would not leave her",
+        "answer": "CLEAVE"
+      },
+      {
+        "number": 11,
+        "direction": "across",
+        "row": 7,
+        "col": 11,
+        "text": "The Moabitess who clave unto her mother in law",
+        "answer": "RUTH"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 7,
+        "col": 11,
+        "text": "What the near kinsman had the right to do",
+        "answer": "REDEEM"
+      },
+      {
+        "number": 12,
+        "direction": "across",
+        "row": 9,
+        "col": 0,
+        "text": "The other daughter in law, who kissed and turned back",
+        "answer": "ORPAH"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 9,
+        "col": 7,
+        "text": "Boaz's, where her lot happened to fall",
+        "answer": "FIELD"
+      },
+      {
+        "number": 14,
+        "direction": "across",
+        "row": 11,
+        "col": 7,
+        "text": "The season Ruth came to Bethlehem in",
+        "answer": "HARVEST"
+      }
+    ]
+  },
+  {
+    "id": "pack-women-of-the-bible-003",
+    "title": "Deborah and Jael",
+    "difficulty": "medium",
+    "verse": "And Deborah, a prophetess, the wife of Lapidoth, she judged Israel at that time.",
+    "reference": "Judges 4:4",
+    "publishDate": "2026-07-03",
+    "size": 15,
+    "grid": [
+      "............H..",
+      "............A..",
+      ".KISHON.....M..",
+      "......A..PALM..",
+      "......I..R..E..",
+      "...JAEL..O..R..",
+      "...U...A.P...C.",
+      "...DEBORAH...H.",
+      "SONG.A.I.E...A.",
+      "I..E.R.S.TABOR.",
+      "S....A.E.....I.",
+      "E.MILK.......O.",
+      "R.........TENT.",
+      "A..............",
+      "..............."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 12,
+        "text": "The workman's tool in Jael's right hand",
+        "answer": "HAMMER"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 2,
+        "col": 1,
+        "text": "The river that swept the enemy away",
+        "answer": "KISHON"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 2,
+        "col": 6,
+        "text": "What Jael took in her hand, and the hammer in the other",
+        "answer": "NAIL"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 9,
+        "text": "The tree Deborah sat under, between Ramah and Bethel",
+        "answer": "PALM"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 3,
+        "col": 9,
+        "text": "What Deborah was, as well as judge",
+        "answer": "PROPHET"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 5,
+        "col": 3,
+        "text": "The wife of Heber, who met Sisera at her tent",
+        "answer": "JAEL"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 5,
+        "col": 3,
+        "text": "What Deborah did for Israel at that time",
+        "answer": "JUDGE"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 6,
+        "col": 7,
+        "text": "Up, for this is the day, said Deborah to Barak",
+        "answer": "ARISE"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 6,
+        "col": 13,
+        "text": "Nine hundred of iron, and they availed nothing",
+        "answer": "CHARIOT"
+      },
+      {
+        "number": 8,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "The prophetess who judged Israel under a palm tree",
+        "answer": "DEBORAH"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 7,
+        "col": 5,
+        "text": "The captain who would not go up without her",
+        "answer": "BARAK"
+      },
+      {
+        "number": 10,
+        "direction": "across",
+        "row": 8,
+        "col": 0,
+        "text": "What Deborah and Barak sang on that day",
+        "answer": "SONG"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 8,
+        "col": 0,
+        "text": "The captain of Jabin's host, who fled on foot",
+        "answer": "SISERA"
+      },
+      {
+        "number": 11,
+        "direction": "across",
+        "row": 9,
+        "col": 9,
+        "text": "The mount Barak drew ten thousand men to",
+        "answer": "TABOR"
+      },
+      {
+        "number": 12,
+        "direction": "across",
+        "row": 11,
+        "col": 2,
+        "text": "Jael gave it when Sisera asked for water",
+        "answer": "MILK"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 12,
+        "col": 10,
+        "text": "Where Jael covered Sisera with a mantle",
+        "answer": "TENT"
+      }
+    ]
+  },
+  {
+    "id": "pack-women-of-the-bible-004",
+    "title": "For Such a Time as This",
+    "difficulty": "medium",
+    "verse": "who knoweth whether thou art come to the kingdom for such a time as this?",
+    "reference": "Esther 4:14",
+    "publishDate": "2026-07-04",
+    "size": 15,
+    "grid": [
+      ".....FAST......",
+      ".......C.......",
+      ".G.....E.......",
+      ".A.....PURIM...",
+      ".L..P..T.......",
+      ".L..E..R.V.....",
+      ".O.MORDECAI...B",
+      ".W..P.E..S....A",
+      ".SEAL.C.SHUSHAN",
+      "..S.E.R..T..A.Q",
+      "LOTS.PERSIA.M.U",
+      "..H...E.....A.E",
+      "..E.....QUEEN.T",
+      "..R............",
+      "..............."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 5,
+        "text": "Three days, neither eat nor drink, said Esther",
+        "answer": "FAST"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 7,
+        "text": "Held out, it meant she would live",
+        "answer": "SCEPTRE"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 2,
+        "col": 1,
+        "text": "Built for Mordecai, used for its builder",
+        "answer": "GALLOWS"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 7,
+        "text": "The feast that keeps the memory of the deliverance",
+        "answer": "PURIM"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 4,
+        "col": 4,
+        "text": "My ____ at my request, said Esther, asking for their lives",
+        "answer": "PEOPLE"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 5,
+        "col": 9,
+        "text": "The queen who refused to come at the king's word",
+        "answer": "VASHTI"
+      },
+      {
+        "number": 7,
+        "direction": "across",
+        "row": 6,
+        "col": 3,
+        "text": "Her cousin, who sat in the king's gate",
+        "answer": "MORDECAI"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 6,
+        "col": 6,
+        "text": "The writing sealed with the king's ring",
+        "answer": "DECREE"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 6,
+        "col": 14,
+        "text": "The feast where she made her request known",
+        "answer": "BANQUET"
+      },
+      {
+        "number": 10,
+        "direction": "across",
+        "row": 8,
+        "col": 1,
+        "text": "What the king's ring did to a decree",
+        "answer": "SEAL"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 8,
+        "col": 2,
+        "text": "The queen who went in unto the king unbidden",
+        "answer": "ESTHER"
+      },
+      {
+        "number": 12,
+        "direction": "across",
+        "row": 8,
+        "col": 8,
+        "text": "The palace city where the decree went out",
+        "answer": "SHUSHAN"
+      },
+      {
+        "number": 13,
+        "direction": "down",
+        "row": 8,
+        "col": 12,
+        "text": "The enemy who plotted against the Jews",
+        "answer": "HAMAN"
+      },
+      {
+        "number": 14,
+        "direction": "across",
+        "row": 10,
+        "col": 0,
+        "text": "Cast by Haman to choose the day; Purim is named for them",
+        "answer": "LOTS"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 10,
+        "col": 5,
+        "text": "The kingdom of Ahasuerus",
+        "answer": "PERSIA"
+      },
+      {
+        "number": 16,
+        "direction": "across",
+        "row": 12,
+        "col": 8,
+        "text": "What Esther was made in Vashti's place",
+        "answer": "QUEEN"
+      }
+    ]
+  },
+  {
+    "id": "pack-women-of-the-bible-005",
+    "title": "One Thing Is Needful",
+    "difficulty": "medium",
+    "verse": "But one thing is needful: and Mary hath chosen that good part",
+    "reference": "Luke 10:42",
+    "publishDate": "2026-07-05",
+    "size": 15,
+    "grid": [
+      "..S............",
+      "..I............",
+      "..S............",
+      "..T............",
+      "..E.......W.H..",
+      "MARTHA..CHOSEN.",
+      "....O..F..R.A..",
+      "...CUMBERED.R..",
+      ".B..S..E.....N.",
+      "SERVE..TROUBLED",
+      ".T...........E.",
+      ".H.M......P..D.",
+      "LAZARUS...A..F.",
+      ".N.R....CAREFUL",
+      ".Y.Y......T..L."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 2,
+        "text": "What Martha called Mary, asking for help",
+        "answer": "SISTER"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 4,
+        "col": 10,
+        "text": "What Mary heard, sitting at his feet",
+        "answer": "WORD"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 4,
+        "col": 12,
+        "text": "What Mary did, sitting at his feet",
+        "answer": "HEAR"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 5,
+        "col": 0,
+        "text": "She was cumbered about much serving",
+        "answer": "MARTHA"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 5,
+        "col": 4,
+        "text": "Martha received him into hers",
+        "answer": "HOUSE"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 5,
+        "col": 8,
+        "text": "Mary hath ____ that good part",
+        "answer": "CHOSEN"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 6,
+        "col": 7,
+        "text": "Where Mary sat to listen",
+        "answer": "FEET"
+      },
+      {
+        "number": 8,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "What Martha was, about much serving",
+        "answer": "CUMBERED"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 8,
+        "col": 1,
+        "text": "The village where the sisters kept their house",
+        "answer": "BETHANY"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 8,
+        "col": 13,
+        "text": "One thing only is this, said Jesus",
+        "answer": "NEEDFUL"
+      },
+      {
+        "number": 11,
+        "direction": "across",
+        "row": 9,
+        "col": 0,
+        "text": "What Martha was busy doing",
+        "answer": "SERVE"
+      },
+      {
+        "number": 12,
+        "direction": "across",
+        "row": 9,
+        "col": 7,
+        "text": "Thou art careful and ____ about many things",
+        "answer": "TROUBLED"
+      },
+      {
+        "number": 13,
+        "direction": "down",
+        "row": 11,
+        "col": 3,
+        "text": "She sat at Jesus' feet and heard his word",
+        "answer": "MARY"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 11,
+        "col": 10,
+        "text": "The good one, which shall not be taken away",
+        "answer": "PART"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 12,
+        "col": 0,
+        "text": "Their brother, whom Jesus loved",
+        "answer": "LAZARUS"
+      },
+      {
+        "number": 16,
+        "direction": "across",
+        "row": 13,
+        "col": 8,
+        "text": "____ and troubled about many things",
+        "answer": "CAREFUL"
       }
     ]
   }

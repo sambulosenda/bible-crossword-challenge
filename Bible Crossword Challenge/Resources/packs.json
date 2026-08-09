@@ -151,5 +151,37 @@
       "from": "12-26",
       "to": "01-06"
     }
+  },
+  {
+    "id": "exodus",
+    "title": "Out of Egypt",
+    "blurb": "From the burning bush to the mount, the road out of Egypt.",
+    "coverSymbol": "flame",
+    "accentHex": "#A94E32",
+    "isPremium": true,
+    "puzzleIDs": [
+      "pack-exodus-002",
+      "pack-exodus-004",
+      "pack-exodus-003",
+      "pack-exodus-001",
+      "pack-exodus-005"
+    ],
+    "season": null
+  },
+  {
+    "id": "women-of-the-bible",
+    "title": "Women of the Bible",
+    "blurb": "Five women whose choices turned the story.",
+    "coverSymbol": "person.2",
+    "accentHex": "#8E3B5E",
+    "isPremium": true,
+    "puzzleIDs": [
+      "pack-women-of-the-bible-002",
+      "pack-women-of-the-bible-003",
+      "pack-women-of-the-bible-001",
+      "pack-women-of-the-bible-004",
+      "pack-women-of-the-bible-005"
+    ],
+    "season": null
   }
 ]

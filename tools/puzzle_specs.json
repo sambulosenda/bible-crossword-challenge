@@ -16229,5 +16229,755 @@
       }
     ],
     "id": "pack-parables-of-jesus-004"
+  },
+  {
+    "pack": "exodus",
+    "title": "The Burning Bush",
+    "theme": "Exodus 3 — the call of Moses at Horeb",
+    "difficulty": "easy",
+    "verse": "And God said unto Moses, I AM THAT I AM",
+    "reference": "Exodus 3:14",
+    "words": [
+      {
+        "answer": "BUSH",
+        "clue": "It burned with fire and was not consumed"
+      },
+      {
+        "answer": "FLAME",
+        "clue": "What the angel appeared in, out of the midst of the bush"
+      },
+      {
+        "answer": "HOREB",
+        "clue": "The mountain of God where Moses was called"
+      },
+      {
+        "answer": "MIDIAN",
+        "clue": "The land where Moses kept a flock in exile"
+      },
+      {
+        "answer": "JETHRO",
+        "clue": "Moses' father in law, priest of Midian"
+      },
+      {
+        "answer": "SHOES",
+        "clue": "Put them off thy feet, for the place is holy"
+      },
+      {
+        "answer": "HOLY",
+        "clue": "What the ground was where Moses stood"
+      },
+      {
+        "answer": "VOICE",
+        "clue": "What called to Moses out of the midst of the bush"
+      },
+      {
+        "answer": "ROD",
+        "clue": "Cast down, it became a serpent"
+      },
+      {
+        "answer": "SERPENT",
+        "clue": "What the rod became on the ground"
+      },
+      {
+        "answer": "LEPROUS",
+        "clue": "What Moses' hand became, white as snow, then was restored"
+      },
+      {
+        "answer": "AARON",
+        "clue": "The brother given to Moses to be his spokesman"
+      },
+      {
+        "answer": "TONGUE",
+        "clue": "Moses pleaded he was slow of speech and of this"
+      },
+      {
+        "answer": "SEND",
+        "clue": "Moses asked God to ____ another in his place"
+      },
+      {
+        "answer": "MOSES",
+        "clue": "The shepherd who turned aside to see the great sight"
+      },
+      {
+        "answer": "ANGEL",
+        "clue": "The messenger of the LORD who appeared in the flame"
+      }
+    ],
+    "id": "pack-exodus-002"
+  },
+  {
+    "pack": "exodus",
+    "title": "Let My People Go",
+    "theme": "Exodus 7-12 — the plagues and the passover",
+    "difficulty": "medium",
+    "verse": "and when I see the blood, I will pass over you",
+    "reference": "Exodus 12:13",
+    "words": [
+      {
+        "answer": "PHARAOH",
+        "clue": "The king who would not let the people go"
+      },
+      {
+        "answer": "PLAGUE",
+        "clue": "One of the ten judgments upon Egypt"
+      },
+      {
+        "answer": "FROGS",
+        "clue": "The second plague, which came up upon the land"
+      },
+      {
+        "answer": "LICE",
+        "clue": "The plague that came of the dust of the earth"
+      },
+      {
+        "answer": "FLIES",
+        "clue": "Swarms of them filled the houses of Egypt"
+      },
+      {
+        "answer": "HAIL",
+        "clue": "It fell mingled with fire upon all the land"
+      },
+      {
+        "answer": "LOCUST",
+        "clue": "It ate every herb the hail had left"
+      },
+      {
+        "answer": "DARKNESS",
+        "clue": "Three days of it, which might be felt"
+      },
+      {
+        "answer": "BLOOD",
+        "clue": "The river became it, and the fish died"
+      },
+      {
+        "answer": "LAMB",
+        "clue": "Without blemish, taken for every house"
+      },
+      {
+        "answer": "DOOR",
+        "clue": "Its posts were struck with blood that night"
+      },
+      {
+        "answer": "POSTS",
+        "clue": "The two side ones of the door, marked with blood"
+      },
+      {
+        "answer": "PASSOVER",
+        "clue": "The feast named for what the destroyer did"
+      },
+      {
+        "answer": "HARDEN",
+        "clue": "What Pharaoh did to his heart, again and again"
+      },
+      {
+        "answer": "ISRAEL",
+        "clue": "The people Pharaoh would not release"
+      },
+      {
+        "answer": "SLAY",
+        "clue": "What Israel was told to do to the lamb at even"
+      }
+    ],
+    "id": "pack-exodus-004"
+  },
+  {
+    "pack": "exodus",
+    "title": "The Sea Divided",
+    "theme": "Exodus 14-15 — through the sea on dry ground",
+    "difficulty": "easy",
+    "verse": "The LORD shall fight for you, and ye shall hold your peace.",
+    "reference": "Exodus 14:14",
+    "words": [
+      {
+        "answer": "SEA",
+        "clue": "It was divided, and Israel went through"
+      },
+      {
+        "answer": "DIVIDE",
+        "clue": "What the LORD did to the waters by a strong east wind"
+      },
+      {
+        "answer": "WALL",
+        "clue": "The waters were this to them on the right hand and the left"
+      },
+      {
+        "answer": "DRY",
+        "clue": "The ground Israel walked on in the midst of the sea"
+      },
+      {
+        "answer": "CHARIOT",
+        "clue": "Six hundred chosen ones pursued Israel"
+      },
+      {
+        "answer": "HORSE",
+        "clue": "The ____ and his rider hath he thrown into the sea"
+      },
+      {
+        "answer": "PILLAR",
+        "clue": "Of cloud by day, of fire by night"
+      },
+      {
+        "answer": "CLOUD",
+        "clue": "It went before them, and came between the two camps"
+      },
+      {
+        "answer": "FIRE",
+        "clue": "What the pillar was by night, to give them light"
+      },
+      {
+        "answer": "MIRIAM",
+        "clue": "The prophetess who took a timbrel and sang"
+      },
+      {
+        "answer": "SONG",
+        "clue": "What Moses and Israel sang on the far shore"
+      },
+      {
+        "answer": "DROWN",
+        "clue": "What the sea did to the host that followed"
+      },
+      {
+        "answer": "HOST",
+        "clue": "Pharaoh's whole army, troubled in the morning watch"
+      },
+      {
+        "answer": "SHORE",
+        "clue": "Where Israel saw the Egyptians dead"
+      },
+      {
+        "answer": "ARMY",
+        "clue": "What pursued Israel to the water's edge"
+      },
+      {
+        "answer": "EGYPT",
+        "clue": "The land left behind that night"
+      }
+    ],
+    "id": "pack-exodus-003"
+  },
+  {
+    "pack": "exodus",
+    "title": "Bread from Heaven",
+    "theme": "Exodus 16 — manna in the wilderness",
+    "difficulty": "easy",
+    "verse": "Behold, I will rain bread from heaven for you",
+    "reference": "Exodus 16:4",
+    "words": [
+      {
+        "answer": "MANNA",
+        "clue": "What they called it, for they knew not what it was"
+      },
+      {
+        "answer": "QUAIL",
+        "clue": "They came up at even and covered the camp"
+      },
+      {
+        "answer": "DEW",
+        "clue": "When it was gone, the small round thing lay beneath"
+      },
+      {
+        "answer": "OMER",
+        "clue": "The measure each man gathered for his household"
+      },
+      {
+        "answer": "MURMUR",
+        "clue": "What the whole congregation did against Moses"
+      },
+      {
+        "answer": "HUNGER",
+        "clue": "What they feared would kill them in the wilderness"
+      },
+      {
+        "answer": "SABBATH",
+        "clue": "On its eve they gathered twice as much"
+      },
+      {
+        "answer": "GATHER",
+        "clue": "What they did every morning, every man his portion"
+      },
+      {
+        "answer": "BREAD",
+        "clue": "What the LORD rained from heaven"
+      },
+      {
+        "answer": "HEAVEN",
+        "clue": "Where the bread came from"
+      },
+      {
+        "answer": "WORM",
+        "clue": "What bred in the manna kept till morning"
+      },
+      {
+        "answer": "MELT",
+        "clue": "What the manna did when the sun waxed hot"
+      },
+      {
+        "answer": "CAMP",
+        "clue": "Where the quails fell at evening"
+      },
+      {
+        "answer": "DESERT",
+        "clue": "The waste place between Elim and Sinai"
+      },
+      {
+        "answer": "TASTE",
+        "clue": "It was like wafers made with honey"
+      },
+      {
+        "answer": "HONEY",
+        "clue": "What the manna tasted of"
+      }
+    ],
+    "id": "pack-exodus-001"
+  },
+  {
+    "pack": "exodus",
+    "title": "The Mount and the Calf",
+    "theme": "Exodus 19-32 — the law given and broken",
+    "difficulty": "medium",
+    "verse": "Thou shalt have no other gods before me.",
+    "reference": "Exodus 20:3",
+    "words": [
+      {
+        "answer": "SINAI",
+        "clue": "The mount that was altogether on a smoke"
+      },
+      {
+        "answer": "THUNDER",
+        "clue": "With lightnings, it came upon the mount"
+      },
+      {
+        "answer": "TRUMPET",
+        "clue": "Its voice sounded long and waxed louder"
+      },
+      {
+        "answer": "TABLES",
+        "clue": "Two of stone, written with the finger of God"
+      },
+      {
+        "answer": "STONE",
+        "clue": "What the tables were made of"
+      },
+      {
+        "answer": "COMMAND",
+        "clue": "One of ten words spoken from the mount"
+      },
+      {
+        "answer": "GRAVEN",
+        "clue": "Thou shalt not make unto thee any ____ image"
+      },
+      {
+        "answer": "IMAGE",
+        "clue": "What must not be made or bowed down to"
+      },
+      {
+        "answer": "CALF",
+        "clue": "What Aaron fashioned while Moses was in the mount"
+      },
+      {
+        "answer": "GOLD",
+        "clue": "The earrings melted down to make the idol"
+      },
+      {
+        "answer": "IDOL",
+        "clue": "What the people danced before at the mount's foot"
+      },
+      {
+        "answer": "BREAK",
+        "clue": "What Moses did to the tables when he saw the calf"
+      },
+      {
+        "answer": "MOUNT",
+        "clue": "Where Moses went up, and stayed forty days"
+      },
+      {
+        "answer": "SMOKE",
+        "clue": "It ascended as of a furnace from the mountain"
+      },
+      {
+        "answer": "LAW",
+        "clue": "What was given at Sinai"
+      },
+      {
+        "answer": "HONOUR",
+        "clue": "____ thy father and thy mother"
+      }
+    ],
+    "id": "pack-exodus-005"
+  },
+  {
+    "pack": "women-of-the-bible",
+    "title": "Whither Thou Goest",
+    "theme": "Ruth — the Moabitess who would not turn back",
+    "difficulty": "easy",
+    "verse": "thy people shall be my people, and thy God my God",
+    "reference": "Ruth 1:16",
+    "words": [
+      {
+        "answer": "RUTH",
+        "clue": "The Moabitess who clave unto her mother in law"
+      },
+      {
+        "answer": "NAOMI",
+        "clue": "She went out full and came home empty"
+      },
+      {
+        "answer": "ORPAH",
+        "clue": "The other daughter in law, who kissed and turned back"
+      },
+      {
+        "answer": "MOAB",
+        "clue": "The country Ruth left to follow Naomi"
+      },
+      {
+        "answer": "BOAZ",
+        "clue": "The mighty man of wealth in whose field she gleaned"
+      },
+      {
+        "answer": "GLEAN",
+        "clue": "To gather what the reapers leave behind"
+      },
+      {
+        "answer": "BARLEY",
+        "clue": "The grain of the harvest she gleaned"
+      },
+      {
+        "answer": "KINSMAN",
+        "clue": "A near relative with the right to redeem"
+      },
+      {
+        "answer": "REDEEM",
+        "clue": "What the near kinsman had the right to do"
+      },
+      {
+        "answer": "SHEAF",
+        "clue": "A bound bundle of the harvest"
+      },
+      {
+        "answer": "HARVEST",
+        "clue": "The season Ruth came to Bethlehem in"
+      },
+      {
+        "answer": "WIDOW",
+        "clue": "What both women were when they returned"
+      },
+      {
+        "answer": "CLEAVE",
+        "clue": "What Ruth did to Naomi, and would not leave her"
+      },
+      {
+        "answer": "OBED",
+        "clue": "The son born to Ruth, grandfather of David"
+      },
+      {
+        "answer": "FIELD",
+        "clue": "Boaz's, where her lot happened to fall"
+      },
+      {
+        "answer": "CORN",
+        "clue": "What Boaz bade the reapers let fall for her"
+      }
+    ],
+    "id": "pack-women-of-the-bible-002"
+  },
+  {
+    "pack": "women-of-the-bible",
+    "title": "For Such a Time as This",
+    "theme": "Esther — a queen who risked the sceptre",
+    "difficulty": "medium",
+    "verse": "who knoweth whether thou art come to the kingdom for such a time as this?",
+    "reference": "Esther 4:14",
+    "words": [
+      {
+        "answer": "ESTHER",
+        "clue": "The queen who went in unto the king unbidden"
+      },
+      {
+        "answer": "MORDECAI",
+        "clue": "Her cousin, who sat in the king's gate"
+      },
+      {
+        "answer": "HAMAN",
+        "clue": "The enemy who plotted against the Jews"
+      },
+      {
+        "answer": "SHUSHAN",
+        "clue": "The palace city where the decree went out"
+      },
+      {
+        "answer": "PERSIA",
+        "clue": "The kingdom of Ahasuerus"
+      },
+      {
+        "answer": "QUEEN",
+        "clue": "What Esther was made in Vashti's place"
+      },
+      {
+        "answer": "SCEPTRE",
+        "clue": "Held out, it meant she would live"
+      },
+      {
+        "answer": "BANQUET",
+        "clue": "The feast where she made her request known"
+      },
+      {
+        "answer": "FAST",
+        "clue": "Three days, neither eat nor drink, said Esther"
+      },
+      {
+        "answer": "GALLOWS",
+        "clue": "Built for Mordecai, used for its builder"
+      },
+      {
+        "answer": "DECREE",
+        "clue": "The writing sealed with the king's ring"
+      },
+      {
+        "answer": "VASHTI",
+        "clue": "The queen who refused to come at the king's word"
+      },
+      {
+        "answer": "PURIM",
+        "clue": "The feast that keeps the memory of the deliverance"
+      },
+      {
+        "answer": "SEAL",
+        "clue": "What the king's ring did to a decree"
+      },
+      {
+        "answer": "LOTS",
+        "clue": "Cast by Haman to choose the day; Purim is named for them"
+      },
+      {
+        "answer": "PEOPLE",
+        "clue": "My ____ at my request, said Esther, asking for their lives"
+      }
+    ],
+    "id": "pack-women-of-the-bible-004"
+  },
+  {
+    "pack": "women-of-the-bible",
+    "title": "Deborah and Jael",
+    "theme": "Judges 4-5 — a prophetess judged Israel",
+    "difficulty": "medium",
+    "verse": "And Deborah, a prophetess, the wife of Lapidoth, she judged Israel at that time.",
+    "reference": "Judges 4:4",
+    "words": [
+      {
+        "answer": "DEBORAH",
+        "clue": "The prophetess who judged Israel under a palm tree"
+      },
+      {
+        "answer": "BARAK",
+        "clue": "The captain who would not go up without her"
+      },
+      {
+        "answer": "JAEL",
+        "clue": "The wife of Heber, who met Sisera at her tent"
+      },
+      {
+        "answer": "SISERA",
+        "clue": "The captain of Jabin's host, who fled on foot"
+      },
+      {
+        "answer": "PALM",
+        "clue": "The tree Deborah sat under, between Ramah and Bethel"
+      },
+      {
+        "answer": "TENT",
+        "clue": "Where Jael covered Sisera with a mantle"
+      },
+      {
+        "answer": "NAIL",
+        "clue": "What Jael took in her hand, and the hammer in the other"
+      },
+      {
+        "answer": "HAMMER",
+        "clue": "The workman's tool in Jael's right hand"
+      },
+      {
+        "answer": "KISHON",
+        "clue": "The river that swept the enemy away"
+      },
+      {
+        "answer": "TABOR",
+        "clue": "The mount Barak drew ten thousand men to"
+      },
+      {
+        "answer": "PROPHET",
+        "clue": "What Deborah was, as well as judge"
+      },
+      {
+        "answer": "JUDGE",
+        "clue": "What Deborah did for Israel at that time"
+      },
+      {
+        "answer": "SONG",
+        "clue": "What Deborah and Barak sang on that day"
+      },
+      {
+        "answer": "CHARIOT",
+        "clue": "Nine hundred of iron, and they availed nothing"
+      },
+      {
+        "answer": "MILK",
+        "clue": "Jael gave it when Sisera asked for water"
+      },
+      {
+        "answer": "ARISE",
+        "clue": "Up, for this is the day, said Deborah to Barak"
+      }
+    ],
+    "id": "pack-women-of-the-bible-003"
+  },
+  {
+    "pack": "women-of-the-bible",
+    "title": "For This Child I Prayed",
+    "theme": "1 Samuel 1-2 — Hannah at Shiloh",
+    "difficulty": "easy",
+    "verse": "For this child I prayed; and the LORD hath given me my petition which I asked of him",
+    "reference": "1 Samuel 1:27",
+    "words": [
+      {
+        "answer": "HANNAH",
+        "clue": "She prayed in bitterness of soul, and only her lips moved"
+      },
+      {
+        "answer": "ELKANAH",
+        "clue": "Her husband, who loved her though she had no child"
+      },
+      {
+        "answer": "PENINNAH",
+        "clue": "The other wife, who provoked her sore"
+      },
+      {
+        "answer": "SHILOH",
+        "clue": "Where the house of the LORD then stood"
+      },
+      {
+        "answer": "ELI",
+        "clue": "The priest who thought she had been drinking"
+      },
+      {
+        "answer": "VOW",
+        "clue": "What Hannah made, to lend her son to the LORD"
+      },
+      {
+        "answer": "PRAYED",
+        "clue": "What Hannah did for this child"
+      },
+      {
+        "answer": "PETITION",
+        "clue": "What the LORD granted her, which she had asked"
+      },
+      {
+        "answer": "BARREN",
+        "clue": "What Hannah was, year after year"
+      },
+      {
+        "answer": "TEMPLE",
+        "clue": "The house where she poured out her soul"
+      },
+      {
+        "answer": "LEND",
+        "clue": "As long as he liveth he shall be ____ to the LORD"
+      },
+      {
+        "answer": "SAMUEL",
+        "clue": "The son she asked for, and gave back"
+      },
+      {
+        "answer": "CHILD",
+        "clue": "The one she prayed for at Shiloh"
+      },
+      {
+        "answer": "WEEP",
+        "clue": "What she did, and would not eat"
+      },
+      {
+        "answer": "BITTER",
+        "clue": "The state of her soul as she prayed"
+      },
+      {
+        "answer": "GRACE",
+        "clue": "Let thine handmaid find ____ in thy sight"
+      }
+    ],
+    "id": "pack-women-of-the-bible-001"
+  },
+  {
+    "pack": "women-of-the-bible",
+    "title": "One Thing Is Needful",
+    "theme": "Luke 10 — Mary and Martha at Bethany",
+    "difficulty": "medium",
+    "verse": "But one thing is needful: and Mary hath chosen that good part",
+    "reference": "Luke 10:42",
+    "words": [
+      {
+        "answer": "MARTHA",
+        "clue": "She was cumbered about much serving"
+      },
+      {
+        "answer": "MARY",
+        "clue": "She sat at Jesus' feet and heard his word"
+      },
+      {
+        "answer": "BETHANY",
+        "clue": "The village where the sisters kept their house"
+      },
+      {
+        "answer": "LAZARUS",
+        "clue": "Their brother, whom Jesus loved"
+      },
+      {
+        "answer": "SERVE",
+        "clue": "What Martha was busy doing"
+      },
+      {
+        "answer": "CUMBERED",
+        "clue": "What Martha was, about much serving"
+      },
+      {
+        "answer": "NEEDFUL",
+        "clue": "One thing only is this, said Jesus"
+      },
+      {
+        "answer": "CHOSEN",
+        "clue": "Mary hath ____ that good part"
+      },
+      {
+        "answer": "FEET",
+        "clue": "Where Mary sat to listen"
+      },
+      {
+        "answer": "HEAR",
+        "clue": "What Mary did, sitting at his feet"
+      },
+      {
+        "answer": "TROUBLED",
+        "clue": "Thou art careful and ____ about many things"
+      },
+      {
+        "answer": "PART",
+        "clue": "The good one, which shall not be taken away"
+      },
+      {
+        "answer": "SISTER",
+        "clue": "What Martha called Mary, asking for help"
+      },
+      {
+        "answer": "HOUSE",
+        "clue": "Martha received him into hers"
+      },
+      {
+        "answer": "CAREFUL",
+        "clue": "____ and troubled about many things"
+      },
+      {
+        "answer": "WORD",
+        "clue": "What Mary heard, sitting at his feet"
+      }
+    ],
+    "id": "pack-women-of-the-bible-005"
   }
 ]
