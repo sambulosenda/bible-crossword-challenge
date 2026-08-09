@@ -64,6 +64,89 @@ seasonal packs a year is already 26 new puzzles on top of the daily bank, and a
 calendar that isn't met is worse than a shorter one that is. Revisit once two
 consecutive packs have shipped on time.
 
+## Cadence: two new packs a quarter
+
+Ticket 14 T5. The paywall promises "and every new one", and that only means
+something if new ones keep arriving — so the target is **two newly authored
+packs per quarter**, tracked here rather than in anyone's head.
+
+**A recurring pack counts once.** Advent returning in December 2027 is not a new
+pack; it is the same five puzzles a returning player already solved. Only the
+year a pack is *authored* fills a slot. This is the whole reason the ledger
+below is separate from the seasonal table above — that table describes what is
+*in season*, which repeats for ever, and this one describes what is *new*, which
+by definition cannot.
+
+| Quarter | Slot 1 | Slot 2 | Status |
+|---|---|---|---|
+| 2026 Q3 | `exodus` — Out of Egypt | `women-of-the-bible` — Women of the Bible | `[x]` both shipped 9 Aug |
+| 2026 Q4 | `creation` — Wonders of Creation (see below) | `acts` — The Early Church | `[ ]` |
+| 2027 Q1 | `joseph` — Coat and Famine (Genesis 37–50) | `names-of-god` — mini pack | `[ ]` |
+
+Slot 2 of Q4 and both of Q1 are named so the quarter does not open with an empty
+brief. Change them freely — the point is that a name exists to argue with.
+
+- **`acts`** — Pentecost, Stephen, the Damascus road, Peter and Cornelius, the
+  Philippian jail. Rejected for Q3 as proper-noun heavy; that is survivable in a
+  pack of five where clues can lean on the narrative rather than recall.
+- **`joseph`** — the strongest untouched narrative arc left in Genesis, and it
+  pairs with `exodus` as its prequel.
+- **`names-of-god`** — the best search case of the T4 candidates and the worst
+  fit for a full-size grid: its strongest answers are multi-word (EL SHADDAI,
+  JEHOVAH JIREH) and the generator places single A–Z runs of 3–9 letters. As a
+  **mini** pack (7×7, 3–7 letter answers) the constraint stops being a problem.
+  Minis have never been packaged as a pack before, so treat this slot as
+  carrying an eng question, not just content.
+
+### `creation` missed its 2026 window
+
+The seasonal table lists `creation` as `annual(07-01, 08-15)`, ship-by 1 June.
+As of **9 August 2026 it does not exist in `packs.json`**, and this year's window
+closes on the 15th — six days, less than App Review turnaround. **The 2026 run is
+gone.** It recurs, so nothing is lost permanently, but the summer quarter shipped
+no seasonal pack at all.
+
+Recorded rather than quietly re-dated, because it is the first real test of this
+calendar and the calendar lost. Two consequences:
+
+1. `creation` moves to a **2026 Q4 slot** above — authored out of window, so it
+   is ready and idle when 1 July 2027 comes round, rather than being authored
+   against a deadline again.
+2. The ship-by dates in the table above are the *content* deadline. They were
+   already generous; what was missing was anyone checking them. See the
+   pre-quarter review below.
+
+### Pre-quarter review
+
+Two weeks before each quarter opens, check three things and write the answer
+into this file:
+
+- Do both slots for the coming quarter have a named pack and a one-line brief?
+- Is any seasonal pack's ship-by date inside the coming quarter, and is it
+  authored?
+- Did the previous quarter's slots actually ship? If not, they carry forward and
+  the quarter after gets no new names until the debt clears.
+
+## Announcing a new pack
+
+Two surfaces, both required, because they reach different people.
+
+1. **In app — automatic.** Set `"addedOn": "YYYY-MM-DD"` on the pack in
+   `packs.json` to the day the build goes live. `PuzzlePack.isNew(on:)` turns it
+   into a **New** badge on the Packs tab and the Home carousel for
+   `PuzzlePack.newDays` (14), and sorts the pack to the front of the carousel
+   while it lasts. Omit the field and the pack simply never reads as new — which
+   is the right default for anything backfilled.
+   - A pack that is both new and closing shows **"Last day"**, not "New": see
+     `PackBadge`. Ranked, not stacked — the row holds one capsule.
+   - `addedOn` is the *release* date, not the day the JSON was written. A pack
+     that sits in `main` for three weeks before a release would otherwise burn
+     most of its badge before anyone can see it.
+2. **App Store "What's New" — manual.** Every release that adds a pack names it.
+   "New collection: Women of the Bible — five women whose choices turned the
+   story." This is the only channel that reaches a lapsed player, who by
+   definition is not opening the app to see the badge.
+
 ## Per-pack briefs
 
 ### `lent` — Lent ✅ shipped

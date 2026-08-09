@@ -16,9 +16,9 @@ struct PackCard: View {
 
     @ScaledMetric(relativeTo: .title) private var iconSize = 52
 
-    /// Days left when the pack's window is closing — drives both the badge and
-    /// the spoken label, so they can't say different things.
-    private var closingDays: Int? { SeasonBadge.daysRemaining(for: pack) }
+    /// The one badge this row shows, if any — drives both the capsule and the
+    /// spoken label, so they can't say different things.
+    private var packBadge: PackBadge? { PackBadge.forPack(pack) }
 
     var body: some View {
         HStack(spacing: Theme.Spacing.m) {
@@ -33,8 +33,8 @@ struct PackCard: View {
                             .font(.caption2)
                             .foregroundStyle(.yellow)
                     }
-                    if let closingDays {
-                        SeasonBadge(daysRemaining: closingDays)
+                    if let packBadge {
+                        packBadge
                     }
                 }
                 Text(pack.blurb)
@@ -103,7 +103,7 @@ struct PackCard: View {
     private var accessibilityLabel: String {
         var parts = [pack.title, pack.blurb]
         if isLocked { parts.append("Premium") }
-        if let closingDays { parts.append(SeasonBadge.text(daysRemaining: closingDays)) }
+        if let packBadge { parts.append(packBadge.label) }
         // Matches what's drawn: reading out progress the card no longer shows
         // would put the locked-and-complete contradiction back, in the one
         // place a sighted player can't see it to report it.

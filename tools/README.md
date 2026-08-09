@@ -134,11 +134,20 @@ file — that's the point. The calendar of what to ship and when is
      "accentHex": "#C8912B",
      "isPremium": true,
      "puzzleIDs": ["pack-easter-001", "pack-easter-002"],
-     "season": { "kind": "easter", "from": -7, "to": 7 }
+     "season": { "kind": "easter", "from": -7, "to": 7 },
+     "addedOn": "2027-02-21"
    }
    ```
    `puzzleIDs` is the membership *and* the play order. `season` is `null` for an
    evergreen collection; see the season shapes below.
+
+   `addedOn` is the day the build goes **live**, and it is what puts a **New**
+   badge on the pack for a fortnight (`PuzzlePack.newDays`) on the Packs tab and
+   the Home carousel, and sorts it to the front of that carousel meanwhile. Set
+   it at release, not when you write the JSON — a pack that waits three weeks in
+   `main` for a release would otherwise spend most of its badge unseen. Omit it
+   and the pack is simply never new, which is correct for anything backfilled.
+   Announcing a pack is covered in `docs/seasonal-pack-calendar.md`.
 5. **Validate.** `python3 tools/validate_content.py` — must print `OK`.
 6. **Test.** `xcodebuild test -scheme "Bible Crossword Challenge" \
    -destination 'platform=iOS Simulator,name=iPhone 17 Pro'`. `PacksTests`

@@ -237,6 +237,18 @@ struct PuzzlePack: Codable, Identifiable, Hashable {
     /// always available.
     let season: PackSeason?
 
+    /// The day this collection first shipped, ISO "yyyy-MM-dd". Drives the
+    /// "New" badge for a fortnight and nothing else.
+    ///
+    /// Optional because every pack that shipped before the field existed has no
+    /// honest answer to give — and backfilling one would announce four packs as
+    /// new to everybody at once. A pack without it is simply never new.
+    ///
+    /// Deliberately not derived from `publishDate` on the member puzzles:
+    /// `tools/README.md` calls that field cosmetic and free to shift, so a
+    /// regeneration could quietly re-announce a two-year-old collection.
+    let addedOn: String?
+
     /// Resolved tint, honouring `accentHex` when it parses.
     var accent: Color {
         accentHex.flatMap(Color.init(hex:)) ?? Theme.accent
@@ -264,6 +276,38 @@ struct PuzzlePack: Codable, Identifiable, Hashable {
     func daysRemaining(on date: Date = SeasonClock.now, calendar: Calendar = .current) -> Int? {
         guard let end = seasonEnd(on: date, calendar: calendar) else { return nil }
         return calendar.dateComponents([.day], from: calendar.startOfDay(for: date), to: end).day
+    }
+
+    /// How long a pack wears the "New" badge. A fortnight: long enough that
+    /// someone who plays weekly still catches it, short enough that "new" keeps
+    /// meaning it. Matched to `SeasonBadge.noticeDays` so the two badges live on
+    /// the same clock.
+    static let newDays = 14
+
+    /// Whether the collection shipped inside the last `newDays`.
+    ///
+    /// A player installing the app long after a pack landed never sees the
+    /// badge, which is right — everything is new to them, so nothing is.
+    func isNew(on date: Date = SeasonClock.now, calendar: Calendar = .current) -> Bool {
+        guard let addedOn, let added = Self.day(iso: addedOn, calendar: calendar) else {
+            return false
+        }
+        let today = calendar.startOfDay(for: date)
+        guard let days = calendar.dateComponents([.day], from: added, to: today).day else {
+            return false
+        }
+        // A future date reads as not-yet-new rather than new for ever, so a
+        // typo'd year can't pin the badge on permanently.
+        return (0..<Self.newDays).contains(days)
+    }
+
+    /// ISO "yyyy-MM-dd" → that day at midnight. Same shape as `PackSeason`'s
+    /// own parser, which is private to it.
+    private static func day(iso: String, calendar: Calendar) -> Date? {
+        let parts = iso.split(separator: "-").compactMap { Int($0) }
+        guard parts.count == 3 else { return nil }
+        return calendar.date(from: DateComponents(year: parts[0], month: parts[1], day: parts[2]))
+            .map { calendar.startOfDay(for: $0) }
     }
 
     /// The next day this pack opens, on or after `date`. A pack already weeks

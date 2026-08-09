@@ -166,7 +166,8 @@
       "pack-exodus-001",
       "pack-exodus-005"
     ],
-    "season": null
+    "season": null,
+    "addedOn": "2026-08-09"
   },
   {
     "id": "women-of-the-bible",
@@ -182,6 +183,7 @@
       "pack-women-of-the-bible-004",
       "pack-women-of-the-bible-005"
     ],
-    "season": null
+    "season": null,
+    "addedOn": "2026-08-09"
   }
 ]

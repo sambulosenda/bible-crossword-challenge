@@ -386,15 +386,64 @@ struct PacksTests {
     }
 }
 
+/// The "New" badge window. Date arithmetic gated on a shipped constant, which
+/// is the shape of bug this file exists to catch.
+struct NewPackBadgeTests {
+    private func pack(addedOn: String?) -> PuzzlePack {
+        .fixture(id: "p", puzzleIDs: ["x"], addedOn: addedOn)
+    }
+
+    @Test func aPackWithNoAddedDateIsNeverNew() {
+        // Every pack that shipped before the field existed. Backfilling would
+        // announce the whole back catalogue at once.
+        #expect(pack(addedOn: nil).isNew(on: day(2026, 8, 9), calendar: utc) == false)
+    }
+
+    @Test func aPackIsNewOnTheDayItShips() {
+        #expect(pack(addedOn: "2026-08-09").isNew(on: day(2026, 8, 9), calendar: utc))
+    }
+
+    @Test func aPackIsStillNewOnTheLastDayOfTheWindow() {
+        // 14-day window, counted from day 0, so day 13 is the last one.
+        #expect(pack(addedOn: "2026-08-09").isNew(on: day(2026, 8, 22), calendar: utc))
+    }
+
+    @Test func aPackStopsBeingNewWhenTheWindowLapses() {
+        #expect(pack(addedOn: "2026-08-09").isNew(on: day(2026, 8, 23), calendar: utc) == false)
+    }
+
+    @Test func aFutureDateIsNotYetNewRatherThanNewForever() {
+        // A mistyped year must not pin the badge on permanently.
+        #expect(pack(addedOn: "2027-08-09").isNew(on: day(2026, 8, 9), calendar: utc) == false)
+    }
+
+    @Test func anUnparseableDateIsIgnored() {
+        #expect(pack(addedOn: "not-a-date").isNew(on: day(2026, 8, 9), calendar: utc) == false)
+    }
+
+    @Test func closingBeatsNewWhenBothApply() {
+        // A seasonal pack shipped part-way through its own window is both. The
+        // row holds one badge, and the one that stops being actionable wins.
+        let seasonal = PuzzlePack.fixture(
+            id: "s", puzzleIDs: ["x"],
+            season: .annual(from: "08-01", to: "08-15"), addedOn: "2026-08-09"
+        )
+        let badge = PackBadge.forPack(seasonal, on: day(2026, 8, 9))
+        if case .closing = badge {} else {
+            Issue.record("expected closing to win, got \(String(describing: badge))")
+        }
+    }
+}
+
 private extension PuzzlePack {
     static let fixtureEvergreen = PuzzlePack.fixture(id: "e", puzzleIDs: ["x"])
 
     static func fixture(
-        id: String, puzzleIDs: [String], season: PackSeason? = nil
+        id: String, puzzleIDs: [String], season: PackSeason? = nil, addedOn: String? = nil
     ) -> PuzzlePack {
         PuzzlePack(
             id: id, title: id, blurb: "", coverSymbol: "star", accentHex: nil,
-            isPremium: false, puzzleIDs: puzzleIDs, season: season
+            isPremium: false, puzzleIDs: puzzleIDs, season: season, addedOn: addedOn
         )
     }
 }

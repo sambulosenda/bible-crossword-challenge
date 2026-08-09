@@ -37,11 +37,19 @@ struct HomeView: View {
     private var dailyPuzzle: Puzzle? { puzzleProvider.dailyPuzzle() }
     private var dailyMini: Puzzle? { puzzleProvider.dailyMini() }
 
-    /// Packs available today (seasonal ones only surface in-window), seasonal
-    /// first so a timely pack leads the carousel.
+    /// Packs available today (seasonal ones only surface in-window), ordered so
+    /// the timely ones lead the carousel: closing seasons first, then anything
+    /// that has just arrived, then the standing shelf.
+    ///
+    /// A "New" badge on the fifth tile of a horizontal carousel is a badge
+    /// nobody sees — it takes three swipes to reach, which is exactly the
+    /// discovery problem the badge exists to solve. Same reasoning that already
+    /// put seasonal packs at the front.
     private var collectionPacks: [PuzzlePack] {
         let available = puzzleProvider.availablePacks()
-        return available.filter(\.isSeasonal) + available.filter { !$0.isSeasonal }
+        let seasonal = available.filter(\.isSeasonal)
+        let rest = available.filter { !$0.isSeasonal }
+        return seasonal + rest.filter { $0.isNew() } + rest.filter { !$0.isNew() }
     }
 
     /// Shared record lookup for pack-progress calculation in the carousel.
@@ -596,9 +604,16 @@ private struct PackTile: View {
 
     @ScaledMetric(relativeTo: .title) private var coverSize = 44
 
-    /// Days left when the pack's window is closing. The tile's own `Spacer`
-    /// absorbs the extra line, so the carousel's fixed height still holds.
-    private var closingDays: Int? { SeasonBadge.daysRemaining(for: pack) }
+    /// The tile is a fixed size so the carousel's rows line up, which means the
+    /// tallest combination has to fit: a two-line title *and* a badge under it.
+    /// At 150 that combination overflowed the card — "Women of the Bible" with a
+    /// New badge pushed its puzzle count out past the bottom edge. Scaled rather
+    /// than a larger constant, because the text inside it scales.
+    @ScaledMetric(relativeTo: .subheadline) private var tileHeight = 176
+
+    /// The one badge this tile shows, if any. The tile's own `Spacer` absorbs
+    /// the extra line, so the carousel's fixed height still holds.
+    private var packBadge: PackBadge? { PackBadge.forPack(pack) }
 
     var body: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.s) {
@@ -623,13 +638,22 @@ private struct PackTile: View {
                 .fixedSize(horizontal: false, vertical: true)
                 .frame(maxWidth: .infinity, alignment: .leading)
 
-            if let closingDays {
-                SeasonBadge(daysRemaining: closingDays)
+            if let packBadge {
+                packBadge
             }
 
             Spacer(minLength: 0)
 
-            if progress.isComplete {
+            // Same rule as `PackCard`: a locked collection states its size, not
+            // the player's progress through it. This tile was missed when that
+            // landed, so the carousel could still show a crowned pack as
+            // "Complete" — the one surface where it sat on the home screen.
+            if isLocked {
+                Text("\(progress.total) puzzle\(progress.total == 1 ? "" : "s")")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+                    .monospacedDigit()
+            } else if progress.isComplete {
                 Label("Complete", systemImage: "checkmark.seal.fill")
                     .font(.caption2.weight(.semibold))
                     .foregroundStyle(.green)
@@ -642,7 +666,7 @@ private struct PackTile: View {
             }
         }
         .padding(Theme.Spacing.m)
-        .frame(width: 160, height: 150, alignment: .topLeading)
+        .frame(width: 160, height: tileHeight, alignment: .topLeading)
         .elevatedCard()
         .accessibilityElement(children: .ignore)
         .accessibilityAddTraits(.isButton)
@@ -652,8 +676,10 @@ private struct PackTile: View {
     private var accessibilityLabel: String {
         var parts = [pack.title]
         if isLocked { parts.append("Premium") }
-        if let closingDays { parts.append(SeasonBadge.text(daysRemaining: closingDays)) }
-        parts.append(progress.isComplete ? "Complete" : "\(progress.solved) of \(progress.total) solved")
+        if let packBadge { parts.append(packBadge.label) }
+        parts.append(isLocked
+            ? "\(progress.total) puzzle\(progress.total == 1 ? "" : "s")"
+            : (progress.isComplete ? "Complete" : "\(progress.solved) of \(progress.total) solved"))
         return parts.joined(separator: ". ")
     }
 }

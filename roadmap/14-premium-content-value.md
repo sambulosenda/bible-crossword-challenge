@@ -119,7 +119,7 @@ Make Premium feel worth yearly/lifetime **on content alone** (hints + archive re
       gates verified as recurring shapes, and clue quality audited in T3
 - [x] **≥40 dedicated `pack-*` puzzles** total — **46**, from 26
 - [x] No Premium pack ships with **&lt;4 puzzles** — smallest is 5
-- [ ] At least **2 new packs per quarter** after floor (cadence), announced in release notes / Today surface — T5
+- [x] At least **2 new packs per quarter** after floor (cadence), announced in release notes / Today surface — ledger, named slots and the New badge shipped in T5; the cadence itself is only proven by keeping it
 
 ### Quality bar (every new pack)
 
@@ -158,6 +158,15 @@ to precisely the engaged free players most likely to convert.
 
 **This is a plaster, not the fix.** It stops the app *saying* the quiet part.
 T2 is what stops it being true.
+
+> **T0 shipped incomplete — corrected in T5.** It fixed the two surfaces it
+> went looking for and missed a third: `PackTile`, the Home carousel, which had
+> the identical unguarded progress branch. So for four commits a crowned pack
+> could still read "Complete" on the home screen — the most visible of the
+> three. Found only because T5 touched the same view for the New badge, not by
+> any check here. The lesson is cheap to state: **`isLocked` progress rules
+> belong to every surface that draws a pack**, and there are three
+> (`PackCard`, `PackDetailView`, `PackTile`).
 
 ---
 
@@ -395,16 +404,67 @@ extra wiring.
 
 ### T5 — “New packs” is real (cadence + surface)
 
-**Status:** `[ ]`  
+**Status:** `[x]`  
 **Estimate:** S eng + process
 
-- [ ] Quarterly content calendar (can merge with 01): Q target = 2 packs
-- [ ] Optional Home/Profile line when a pack is new (e.g. 14 days after `availableFrom` or a `newUntil` field — only if cheap; else release-notes only)
-- [ ] App Store “What’s New” always names new packs when shipping
+- [x] **Quarterly cadence** written into `docs/seasonal-pack-calendar.md` rather
+      than a new file, since that is where anyone shipping a pack already looks
+- [x] **In-app “New” affordance** — it was cheap, so it exists rather than
+      falling back to release-notes-only
+- [x] **App Store “What’s New”** rule recorded, with the reason it can't be
+      dropped in favour of the badge
+
+**The eng, smaller than the ticket feared**
+
+`PuzzlePack.addedOn` (optional ISO date) + `isNew(on:)` over a 14-day window
+matched to `SeasonBadge.noticeDays`. The badge shows on the Packs tab and the
+Home carousel, and a new pack sorts to the **front** of that carousel while it
+lasts — a badge on the fifth tile of a horizontal strip is three swipes away,
+which is the discovery problem the badge exists to solve.
+
+- **Optional, and not backfilled.** Packs that shipped before the field have no
+  honest answer, and dating them would announce the whole back catalogue at
+  once. No `addedOn`, never new.
+- **Not derived from `publishDate`.** `tools/README.md` calls that field
+  cosmetic and free to shift, so a regeneration could re-announce a two-year-old
+  pack.
+- **Ranked against the season badge, not stacked** (`PackBadge`): a seasonal
+  pack shipped mid-window is both new and closing, and the row holds one
+  capsule. "Last day" wins — "New" will still be true tomorrow.
+- 7 tests cover the window edges, a future date, an unparseable date, and the
+  ranking. 170 → **177 tests**.
+
+**Two defects found while doing it**
+
+1. **T0 was incomplete.** `PackTile` in the Home carousel had the same
+   locked-pack progress bug fixed in `PackCard` and `PackDetailView` — so a
+   crowned pack could still read "Complete" on the home screen, the most visible
+   surface of the three. Fixed here.
+2. **The tile overflowed.** Adding a badge to a fixed 150pt tile pushed the
+   puzzle count outside the card whenever the title also wrapped to two lines
+   ("Women of the Bible"). Height is now a `@ScaledMetric` 176.
+
+**The cadence, and a miss it turned up**
+
+Two newly authored packs per quarter, with the rule that **a recurring seasonal
+pack counts only in the year it is authored** — Advent returning in 2027 is not
+new to anyone who played it in 2026. Named slots now exist for 2026 Q4
+(`creation`, `acts`) and 2027 Q1 (`joseph`, `names-of-god`), each with a brief.
+
+Writing that ledger surfaced that **`creation` missed its 2026 window**: the
+calendar has it as `annual(07-01, 08-15)` with a 1 June ship-by, and it does not
+exist in `packs.json`. As of 9 August the window closes in six days, less than
+App Review turnaround — the summer quarter shipped no seasonal pack. Recorded in
+the calendar rather than quietly re-dated, moved to a Q4 slot so it is authored
+out of window and idle before 1 July 2027, and a **pre-quarter review** added so
+the next slip is caught by a check rather than by an audit.
 
 **Acceptance**
-- Next two quarters have named pack slots before the quarter starts
-- Players can discover “what’s new” without reading the App Store only
+- [x] Next two quarters have named pack slots with briefs
+- [x] Players can discover what's new without the App Store — verified on device:
+      both new packs badged on the Packs tab, and leading the Home carousel with
+      badges visible without scrolling
+- [x] 177 tests pass
 
 ---
 
@@ -442,7 +502,7 @@ extra wiring.
 | **P1** | ~~T2 David + Parables exclusive expansion~~ **done** | Overlay packs earn the lock |
 | **P2** | ~~T3 seasonal density check/fix~~ **done** (became a clue-quality audit) | Seasonal Premium not thin |
 | **P3** | ~~T4 two new evergreen packs~~ **done** | Catalog floor met |
-| **P4** | T5 cadence + T6 claims | Sustainable, honest growth |
+| **P4** | ~~T5 cadence~~ **done** + T6 claims | Sustainable, honest growth |
 
 ## Dependencies
 

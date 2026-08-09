@@ -60,12 +60,67 @@ struct SeasonBadge: View {
     }
 }
 
+/// "New" on a collection that shipped in the last fortnight.
+///
+/// The cadence this marks is only worth keeping if a returning player can see
+/// it without reading the App Store release notes — which is the whole point of
+/// promising "and every new one" on the paywall.
+struct NewPackBadge: View {
+    var body: some View {
+        Text("New")
+            .font(.caption2.weight(.bold))
+            .textCase(.uppercase)
+            .foregroundStyle(Theme.accent)
+            .lineLimit(1)
+            .fixedSize(horizontal: true, vertical: false)
+            .padding(.horizontal, Theme.Spacing.s)
+            .padding(.vertical, 3)
+            .background(Theme.accent.opacity(0.12), in: .capsule)
+    }
+}
+
+/// Which badge a pack row shows, when more than one could apply.
+///
+/// A pack can be both new and closing — a seasonal collection first shipped
+/// part-way through its own window is exactly that. Two capsules beside a title
+/// and a crown is more than the row can hold, so they are ranked rather than
+/// stacked: **closing wins**. "New" is an invitation and will still be true
+/// tomorrow; "Last day" stops being actionable the moment it lapses.
+enum PackBadge {
+    case closing(days: Int)
+    case new
+
+    static func forPack(_ pack: PuzzlePack, on date: Date = SeasonClock.now) -> PackBadge? {
+        if let days = SeasonBadge.daysRemaining(for: pack, on: date) { return .closing(days: days) }
+        if pack.isNew(on: date) { return .new }
+        return nil
+    }
+
+    /// The spoken form, so card accessibility labels say what the badge says.
+    var label: String {
+        switch self {
+        case let .closing(days): SeasonBadge.text(daysRemaining: days)
+        case .new: "New"
+        }
+    }
+}
+
+extension PackBadge: View {
+    var body: some View {
+        switch self {
+        case let .closing(days): SeasonBadge(daysRemaining: days)
+        case .new: NewPackBadge()
+        }
+    }
+}
+
 #Preview {
     VStack(alignment: .leading, spacing: Theme.Spacing.m) {
         SeasonBadge(daysRemaining: 12)
         SeasonBadge(daysRemaining: 3)
         SeasonBadge(daysRemaining: 1)
         SeasonBadge(daysRemaining: 0)
+        NewPackBadge()
     }
     .padding()
     .background(Theme.background)
