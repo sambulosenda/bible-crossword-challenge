@@ -267,10 +267,16 @@ struct PremiumOfferView: View {
                 }
                 // Says the strip is a sample and how much it's leaving out,
                 // rather than letting three titles imply three packs.
+                //
+                // Indented onto the titles' own column rather than sitting
+                // flush with the card's padding: it continues the list, and
+                // flush left it hung out past every row above it — the one
+                // ragged edge on an otherwise squared-off card.
                 if remainder > 0 {
                     Text("and \(remainder) more")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
+                        .padding(.leading, checkSize + Theme.Spacing.m)
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -358,15 +364,17 @@ struct PremiumOfferView: View {
                     planCard(product)
                 }
             }
+            // The cards are height-flexible so the pair can match the taller of
+            // the two (see `planCard`). Flexible is contagious: onboarding puts
+            // this offer in a page that proposes at least the full screen
+            // height, and without this the row would swallow every spare point
+            // of it and draw two enormous cards. Pinned to its ideal height,
+            // the flexibility does its job inside the row and stops there.
+            .fixedSize(horizontal: false, vertical: true)
             if let lifetime = store.products.first(where: { $0.id == StoreService.lifetimeID }) {
                 lifetimeRow(lifetime)
             }
         }
-        // Room for the savings pill, which straddles the yearly card's top edge
-        // rather than sitting inside it. Without this it would ride up into the
-        // benefits card above. Stacked, the pill is back in the flow and there
-        // is nothing hanging over the edge to make room for.
-        .padding(.top, stacksPlans ? 0 : 10)
         // Spring the selection between plans instead of snapping.
         .animation(.snappy(duration: 0.2), value: selectedID)
     }
@@ -381,19 +389,13 @@ struct PremiumOfferView: View {
         return Button {
             selectedID = product.id
         } label: {
-            VStack(alignment: .leading, spacing: 4) {
-                // Stacked, the badge is just the card's first line. It costs a
-                // row, but only on the card that has one to show — full-width
-                // cards don't share a baseline, so monthly needs no phantom
-                // copy to stay level with yearly.
-                if stacksPlans, let text = badgeText(product) {
-                    savingsPill(text)
-                }
+            VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
+                badgeSlot(product)
                 // The same mark the lifetime row below has always used. The two
                 // used to speak different languages — cards signalled selection
                 // with a tint and a border, the row with a radio — so one screen
                 // asked the player to learn "selected" twice.
-                HStack(spacing: 6) {
+                HStack(spacing: Theme.Spacing.s) {
                     selectionMark(selected)
                     Text(planTitle(product))
                         .font(.subheadline.weight(.semibold))
@@ -410,13 +412,14 @@ struct PremiumOfferView: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(Theme.Spacing.m)
+            // Side by side, the pair shares a bottom edge even when one card
+            // needs a second line and the other doesn't — which is what larger
+            // text sizes do to "$1.99/month" while "$9.99/year" still fits.
+            // Two cards ending at different heights is the first thing the eye
+            // catches on a row of two. Stacked they are full width and follow
+            // one another, so there is nothing to equalise.
+            .frame(maxHeight: stacksPlans ? nil : .infinity, alignment: .topLeading)
             .planChrome(selected: selected)
-            // The pill straddles the top edge instead of occupying a row inside
-            // the card. As a row it had to be laid out on *both* cards — an
-            // invisible copy on monthly — just to keep their baselines level,
-            // which cost each card a line to say nothing on one of them. On the
-            // border it costs no height at all, and the cards match by default.
-            .overlay(alignment: .top) { straddlingBadge(product) }
         }
         .buttonStyle(PressableCardStyle())
         .accessibilityElement(children: .combine)
@@ -438,8 +441,9 @@ struct PremiumOfferView: View {
                     .fixedSize(horizontal: false, vertical: true)
                 Spacer(minLength: 0)
             }
-            .padding(.horizontal, Theme.Spacing.m)
-            .padding(.vertical, Theme.Spacing.m)
+            // The same inset the plan cards use, so the three options share one
+            // left edge down the whole group.
+            .padding(Theme.Spacing.m)
             .frame(maxWidth: .infinity, alignment: .leading)
             // Same chrome as the cards above. Unselected it used to be bare
             // paper with no edge at all, so until you tapped it the third option
@@ -468,23 +472,31 @@ struct PremiumOfferView: View {
             .background(Theme.ink, in: .capsule)
     }
 
-    /// The pill straddling the card's top edge — the side-by-side layout only.
+    /// The badge's row inside the card — the pill on yearly, and the same row
+    /// held empty on monthly so the two columns line up.
     ///
-    /// Straddling costs the card no height, which is the whole reason the badge
-    /// left the card: side by side, a pill that takes a row has to take one on
-    /// *both* cards (invisibly on monthly) or the two stop lining up.
+    /// The pill used to straddle the card's top border instead, centred on the
+    /// edge, to save the card a row. It cost more than it saved: the black pill
+    /// cut through the selected card's accent border, so the one element meant
+    /// to look deliberate was the one that read as a collision — and the space
+    /// it hung in was a hardcoded 10pt guess at half its own height, which is
+    /// only correct at one text size. Larger type grew the pill into the card
+    /// above.
     ///
-    /// It can only hang over the edge while it's shorter than the card's own top
-    /// padding, and at accessibility text sizes it isn't: the pill grows with
-    /// the label until its lower half reaches down over "Yearly". Stacked, the
-    /// cards are full width and no longer share a baseline, so nothing is gained
-    /// by keeping the badge out of the flow — see `planCard`.
+    /// In the flow it costs a row, and the reserved copy on monthly is what
+    /// keeps "Yearly" and "Monthly" — and every line under them — on one
+    /// baseline. Stacked, the cards are full width and share no baseline, so
+    /// only the card with something to say spends the row.
     @ViewBuilder
-    private func straddlingBadge(_ product: Product) -> some View {
-        if !stacksPlans, let text = badgeText(product) {
+    private func badgeSlot(_ product: Product) -> some View {
+        if let text = badgeText(product) {
             savingsPill(text)
-                // Centres the pill *on* the edge rather than below it.
-                .alignmentGuide(.top) { $0[VerticalAlignment.center] }
+        } else if !stacksPlans {
+            // A real pill, hidden: only its height is being borrowed, and
+            // taking it from the same view is what keeps the reservation
+            // correct as the text size grows. Hidden also keeps the phantom
+            // out of VoiceOver, which would otherwise read the badge twice.
+            savingsPill("SAVE").hidden()
         }
     }
 
