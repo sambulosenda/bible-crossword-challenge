@@ -458,6 +458,12 @@ private struct StreakFlameView: View {
                 .monospacedDigit()
                 .contentTransition(.numericText(value: Double(streak)))
         }
+        // The toolbar lays this item out inside a circular glass background
+        // sized for its ideal width, and without this it hands the HStack a
+        // one-digit budget: every streak of 10 or more was rendering clipped to
+        // its first digit, so the players with the most to be proud of were the
+        // only ones shown the wrong number.
+        .fixedSize()
         .foregroundStyle(streak > 0 ? Color.orange : Color.secondary)
         .animation(.snappy, value: streak)
         .phaseAnimator([1.0, 1.35], trigger: pulseTick) { content, scale in
