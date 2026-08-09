@@ -1,7 +1,9 @@
 # Ticket 14 — Premium content value (earn the paywall claim)
 
 **Priority:** high (conversion *after* craft is done)  
-**Status:** `[ ]`  
+**Status:** `[x]` — T0–T6 done, T7 checked and declined on data. The catalog
+work is finished; whether it moves trial→paid is unproven until it ships and a
+month of clean data exists (see T7's caveat on internal traffic).  
 **Type:** content + light eng  
 **Estimate:** L (ongoing cadence, not one PR)  
 **Related:** `01-seasonal-packs-content-cadence.md`, paywall `PremiumBenefit` (“All N packs, and every new one”), `docs/themed-packs-spec.md`  
@@ -536,12 +538,60 @@ here so the next drift is expected rather than discovered.
 
 ### T7 — Optional: free teaser puzzle in each Premium pack
 
-**Status:** `[ ]`  
-**Estimate:** S eng
+**Status:** `[—]` **Not doing.** Gate condition checked against live data and not
+met. Nothing was built.
 
-- [ ] First puzzle of each Premium pack playable free (taste) → rest locked
-- [ ] Or one shared free teaser pack only  
-**Only if** conversion data shows pack_locked underperforms; default is full pack lock + First Steps free.
+The task is explicitly conditional: *"Only if conversion data shows pack_locked
+underperforms."* So the work was to answer that question, not to assume it.
+
+**PostHog, 30 days to 2026-08-09, paywall by entry point:**
+
+| source | opens | share | CTA taps | purchases | open→buy |
+|---|---:|---:|---:|---:|---:|
+| onboarding | 122 | 41% | 9 | 2 | 1.6% |
+| hint_limit | 97 | 33% | 1 | 2 | 2.1% |
+| completion | 48 | 16% | 0 | 0 | 0% |
+| **pack_locked** | **13** | **4%** | **0** | **1** | **7.7%** |
+| home_card | 11 | 4% | 1 | 2 | 18% |
+| archive | 3 | 1% | 1 | 0 | 0% |
+| profile | 1 | <1% | 0 | 0 | 0% |
+
+**`pack_locked` does not underperform.** At 1 purchase in 13 opens it sits above
+both of the high-volume sources. The gate is not met, so the default stands:
+full pack lock, `first-steps` free.
+
+**But do not read that table as evidence either.** Eight purchases across every
+source in thirty days is not enough to rank anything — `pack_locked`'s rate is
+one purchase, and losing it would take the row to 0%. The honest summary is that
+**no paywall source can be compared on this data yet**, in either direction.
+
+Three further reasons not to build it, independent of the numbers:
+
+1. **The calendar already decided against it.** `docs/seasonal-pack-calendar.md`:
+   "No free teaser inside a Premium pack… a seasonal pack whose first puzzle is
+   free would be a second free surface with none of the same purpose." T7 would
+   contradict a documented product decision, which at minimum needs settling
+   first rather than shipping past it.
+2. **A taste already exists.** `PuzzleAccess` gives a rolling 7-day window per
+   pool plus anything already started, on top of the free `first-steps` pack. A
+   pack teaser would be a third free surface, not the first.
+3. **The leverage is elsewhere.** `pack_locked` is 4% of paywall traffic.
+   Doubling its conversion would be worth roughly one extra purchase a month.
+   Onboarding is 41% of opens at 1.6% — that is where a point of conversion is
+   worth having, and it is ticket 07's ground, not this one's.
+
+**Reopen when** `pack_locked` has ~200+ opens with a rate that is clearly below
+`hint_limit` on the same window. On current volume (~13/month) that is a year
+away — realistically this stays closed unless pack traffic grows a lot, which
+T4's shelf may itself cause.
+
+> **Data-quality caveat, and it is not small.** Internal and test filtering is
+> still unset on this project, and *this session's own simulator testing is in
+> the numbers* — today's 15 opens across 9 "people" include several fresh
+> installs I made while verifying T0–T6. Add the note that pre-2026-07-28 data
+> carries simulator traffic too. Before any paywall decision is made on these
+> events, internal traffic needs excluding; otherwise the next person to read
+> this table will be measuring us.
 
 ---
 
