@@ -26713,6 +26713,1574 @@
     ]
   },
   {
+    "id": "pack-life-of-david-001",
+    "title": "The Ark Comes Home",
+    "difficulty": "easy",
+    "verse": "And David danced before the LORD with all his might",
+    "reference": "2 Samuel 6:14",
+    "publishDate": "2026-07-01",
+    "size": 15,
+    "grid": [
+      "...............",
+      ".....SHOUT.....",
+      "...G....Z......",
+      "..CART..Z......",
+      "...T.I..A......",
+      "...E.MIGHT...T.",
+      ".....B....C.ARK",
+      ".....R....Y..U.",
+      "...OBEDEDOM..M.",
+      "B..X.L.P..B..P.",
+      "LINEN..H.DANCE.",
+      "E..N..JOY.L..T.",
+      "S......D.......",
+      "S..............",
+      "..............."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 1,
+        "col": 5,
+        "text": "The people's cry as the ark came home",
+        "answer": "SHOUT"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 1,
+        "col": 8,
+        "text": "He put out his hand to steady the ark, and died",
+        "answer": "UZZAH"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 2,
+        "col": 3,
+        "text": "Entry to the city the ark passed through",
+        "answer": "GATE"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 2,
+        "text": "The new conveyance that carried the ark at first",
+        "answer": "CART"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 3,
+        "col": 5,
+        "text": "Hand drum sounded before the LORD",
+        "answer": "TIMBREL"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 5,
+        "col": 5,
+        "text": "The measure of David's dancing",
+        "answer": "MIGHT"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 5,
+        "col": 13,
+        "text": "It sounded as the ark went up",
+        "answer": "TRUMPET"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 6,
+        "col": 10,
+        "text": "Clashing instrument in the procession",
+        "answer": "CYMBAL"
+      },
+      {
+        "number": 9,
+        "direction": "across",
+        "row": 6,
+        "col": 12,
+        "text": "The holy chest brought up to the city with shouting",
+        "answer": "ARK"
+      },
+      {
+        "number": 10,
+        "direction": "across",
+        "row": 8,
+        "col": 3,
+        "text": "In his house the ark rested three months, and he was blessed",
+        "answer": "OBEDEDOM"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 8,
+        "col": 3,
+        "text": "The beasts that drew the new cart, and stumbled",
+        "answer": "OXEN"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 8,
+        "col": 7,
+        "text": "The priestly garment the king girded on",
+        "answer": "EPHOD"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 9,
+        "col": 0,
+        "text": "What David did to the people in the name of the LORD",
+        "answer": "BLESS"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 10,
+        "col": 0,
+        "text": "The cloth of the ephod David wore that day",
+        "answer": "LINEN"
+      },
+      {
+        "number": 14,
+        "direction": "across",
+        "row": 10,
+        "col": 9,
+        "text": "What David did before the LORD with all his might",
+        "answer": "DANCE"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 11,
+        "col": 6,
+        "text": "The temper of the whole procession",
+        "answer": "JOY"
+      }
+    ]
+  },
+  {
+    "id": "pack-life-of-david-002",
+    "title": "The Arrow and the Oath",
+    "difficulty": "easy",
+    "verse": "Go in peace, forasmuch as we have sworn both of us in the name of the LORD",
+    "reference": "1 Samuel 20:42",
+    "publishDate": "2026-07-02",
+    "size": 15,
+    "grid": [
+      "...............",
+      "...KINDNESS....",
+      "...N.....W.....",
+      "..MICHAL.OATH..",
+      "...T.....R.....",
+      ".....FRIEND....",
+      "........S......",
+      "....B.P.C......",
+      ".I.COVENANT....",
+      ".M..W.A.P.O.A..",
+      ".A....C.E.K.R..",
+      ".GIRDLE...E.R..",
+      ".E...A..WINDOW.",
+      ".....D......W..",
+      "..............."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 1,
+        "col": 3,
+        "text": "What David swore to show Jonathan's house for ever",
+        "answer": "KINDNESS"
+      },
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 1,
+        "col": 3,
+        "text": "How Jonathan's soul was joined to David's",
+        "answer": "KNIT"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 1,
+        "col": 9,
+        "text": "What the two friends had done in the LORD's name",
+        "answer": "SWORN"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 3,
+        "col": 2,
+        "text": "Saul's daughter, who let David down through a window",
+        "answer": "MICHAL"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 9,
+        "text": "A solemn promise sworn in the name of the LORD",
+        "answer": "OATH"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 5,
+        "col": 5,
+        "text": "What Jonathan was to David above his own crown",
+        "answer": "FRIEND"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 5,
+        "col": 8,
+        "text": "To slip away from those who seek your life",
+        "answer": "ESCAPE"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 7,
+        "col": 4,
+        "text": "What Jonathan carried to the field as his pretext",
+        "answer": "BOW"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 7,
+        "col": 6,
+        "text": "How Jonathan told David to go",
+        "answer": "PEACE"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 8,
+        "col": 1,
+        "text": "Laid in the bed to make it seem David slept there",
+        "answer": "IMAGE"
+      },
+      {
+        "number": 10,
+        "direction": "across",
+        "row": 8,
+        "col": 3,
+        "text": "The binding agreement between the two friends",
+        "answer": "COVENANT"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 8,
+        "col": 10,
+        "text": "A sign agreed between friends",
+        "answer": "TOKEN"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 9,
+        "col": 12,
+        "text": "Shot beyond the lad, it carried the warning",
+        "answer": "ARROW"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 11,
+        "col": 1,
+        "text": "Belt given to David with the robe and the sword",
+        "answer": "GIRDLE"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 11,
+        "col": 5,
+        "text": "The boy sent to fetch the arrows",
+        "answer": "LAD"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 12,
+        "col": 8,
+        "text": "David's way of escape from his own house",
+        "answer": "WINDOW"
+      }
+    ]
+  },
+  {
+    "id": "pack-life-of-david-003",
+    "title": "Create in Me a Clean Heart",
+    "difficulty": "medium",
+    "verse": "Create in me a clean heart, O God; and renew a right spirit within me.",
+    "reference": "Psalm 51:10",
+    "publishDate": "2026-07-03",
+    "size": 15,
+    "grid": [
+      "...............",
+      "...S...........",
+      "...PURGE.......",
+      "B..I...........",
+      "L.BROKEN.......",
+      "O..I....C......",
+      "TRUTH.SNOW.R...",
+      "....E...N..E...",
+      "...SALVATION.H.",
+      "..T.R...R..E.Y.",
+      "CREATE..I..WASH",
+      "..A.....T....S.",
+      "..C...CLEAN..O.",
+      "UPHOLD.......P.",
+      "..............."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 1,
+        "col": 3,
+        "text": "What the psalmist asks God to renew, and not take away",
+        "answer": "SPIRIT"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 2,
+        "col": 3,
+        "text": "To cleanse away what defiles",
+        "answer": "PURGE"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 3,
+        "col": 0,
+        "text": "What the psalmist asks God to do to his transgressions",
+        "answer": "BLOT"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 4,
+        "col": 2,
+        "text": "The sacrifice of God is a ____ spirit",
+        "answer": "BROKEN"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 5,
+        "col": 8,
+        "text": "The kind of heart God will not despise",
+        "answer": "CONTRITE"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 6,
+        "col": 0,
+        "text": "What God desires in the inward parts",
+        "answer": "TRUTH"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 6,
+        "col": 4,
+        "text": "What the psalmist asks to have made new",
+        "answer": "HEART"
+      },
+      {
+        "number": 8,
+        "direction": "across",
+        "row": 6,
+        "col": 6,
+        "text": "Wash me, and I shall be whiter than this",
+        "answer": "SNOW"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 6,
+        "col": 11,
+        "text": "To make right again within",
+        "answer": "RENEW"
+      },
+      {
+        "number": 10,
+        "direction": "across",
+        "row": 8,
+        "col": 3,
+        "text": "Restore unto me the joy of thy ____",
+        "answer": "SALVATION"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 8,
+        "col": 13,
+        "text": "Purge me with it, and I shall be clean",
+        "answer": "HYSSOP"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 9,
+        "col": 2,
+        "text": "Then will I ____ transgressors thy ways",
+        "answer": "TEACH"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 10,
+        "col": 0,
+        "text": "The psalmist's verb for what only God can do to a heart",
+        "answer": "CREATE"
+      },
+      {
+        "number": 14,
+        "direction": "across",
+        "row": 10,
+        "col": 11,
+        "text": "To cleanse thoroughly from iniquity",
+        "answer": "WASH"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 12,
+        "col": 6,
+        "text": "The kind of heart the psalmist asks God to create",
+        "answer": "CLEAN"
+      },
+      {
+        "number": 16,
+        "direction": "across",
+        "row": 13,
+        "col": 0,
+        "text": "To sustain with a free spirit",
+        "answer": "UPHOLD"
+      }
+    ]
+  },
+  {
+    "id": "pack-life-of-david-004",
+    "title": "The Cave of Adullam",
+    "difficulty": "medium",
+    "verse": "The LORD is my rock, and my fortress, and my deliverer;",
+    "reference": "2 Samuel 22:2",
+    "publishDate": "2026-07-04",
+    "size": 15,
+    "grid": [
+      ".Z.............",
+      ".I...ADULLAM...",
+      "SPARE......A.A.",
+      ".H..N......S.B.",
+      "....G.D.CAPTAIN",
+      "....E.E.A..E.A.",
+      "R...D.B.V..R.T.",
+      "E..DISTRESS..H.",
+      "FLEE...O.K...A.",
+      "U..L...C.I...R.",
+      "G.HIDE.K.R.....",
+      "E..V.....T.....",
+      "...E...........",
+      ".FORTRESS......",
+      "..............."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 1,
+        "text": "Wilderness whose people twice betrayed David's hiding place",
+        "answer": "ZIPH"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 1,
+        "col": 5,
+        "text": "The cave's town, David's stronghold in his flight",
+        "answer": "ADULLAM"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 1,
+        "col": 11,
+        "text": "What David still called Saul, even while hunted by him",
+        "answer": "MASTER"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 2,
+        "col": 0,
+        "text": "What David did to Saul, twice, when he might have struck",
+        "answer": "SPARE"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 2,
+        "col": 4,
+        "text": "Wilderness of the wild goats, where David spared the king",
+        "answer": "ENGEDI"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 2,
+        "col": 13,
+        "text": "The priest who escaped Nob and fled to David",
+        "answer": "ABIATHAR"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 4,
+        "col": 6,
+        "text": "What many of David's four hundred were in",
+        "answer": "DEBT"
+      },
+      {
+        "number": 8,
+        "direction": "across",
+        "row": 4,
+        "col": 8,
+        "text": "What David became over the men who gathered to him",
+        "answer": "CAPTAIN"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 4,
+        "col": 8,
+        "text": "The hollow in the rock where David gathered his first followers",
+        "answer": "CAVE"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 6,
+        "col": 0,
+        "text": "Shelter sought by the hunted",
+        "answer": "REFUGE"
+      },
+      {
+        "number": 10,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "The state of the men who came down to David",
+        "answer": "DISTRESS"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 7,
+        "col": 3,
+        "text": "To rescue out of the hand of an enemy",
+        "answer": "DELIVER"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 7,
+        "col": 7,
+        "text": "David's name for the LORD, his sure defence",
+        "answer": "ROCK"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 7,
+        "col": 9,
+        "text": "The hem David cut off instead of taking a life",
+        "answer": "SKIRT"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 8,
+        "col": 0,
+        "text": "To run from a pursuer, as David did for years",
+        "answer": "FLEE"
+      },
+      {
+        "number": 14,
+        "direction": "across",
+        "row": 10,
+        "col": 2,
+        "text": "What a hunted man does in the wilderness",
+        "answer": "HIDE"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 13,
+        "col": 1,
+        "text": "A stronghold; David's word for God in his song",
+        "answer": "FORTRESS"
+      }
+    ]
+  },
+  {
+    "id": "pack-life-of-david-005",
+    "title": "Thou Art the Man",
+    "difficulty": "medium",
+    "verse": "And Nathan said to David, Thou art the man.",
+    "reference": "2 Samuel 12:7",
+    "publishDate": "2026-07-05",
+    "size": 15,
+    "grid": [
+      ".......POOR....",
+      ".......A.....J.",
+      "URIAH..RICH..U.",
+      ".E.....A.....D.",
+      ".SIN...B...H.G.",
+      ".T.A.L.L...EWE.",
+      ".O.TRAVELLER...",
+      ".R.H.M.....D...",
+      ".E.A.BOSOM.....",
+      "...N...O.......",
+      "....FOURFOLD...",
+      ".......R.......",
+      "......CONFESS..",
+      ".......W.......",
+      "..............."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 7,
+        "text": "The man in the parable who had nothing but one ewe",
+        "answer": "POOR"
+      },
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 7,
+        "text": "A story told to carry a truth past a man's defences",
+        "answer": "PARABLE"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 1,
+        "col": 13,
+        "text": "What David unwittingly did to himself, hearing the tale",
+        "answer": "JUDGE"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 2,
+        "col": 0,
+        "text": "The Hittite whose wife the king took",
+        "answer": "URIAH"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 2,
+        "col": 1,
+        "text": "What the rich man must do for the lamb, said David",
+        "answer": "RESTORE"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 2,
+        "col": 7,
+        "text": "The man in the parable with exceeding many flocks",
+        "answer": "RICH"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 4,
+        "col": 1,
+        "text": "What David at last acknowledged against the LORD",
+        "answer": "SIN"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 4,
+        "col": 3,
+        "text": "The prophet who told the king a story about a lamb",
+        "answer": "NATHAN"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 4,
+        "col": 11,
+        "text": "The rich man had many, and spared them all",
+        "answer": "HERD"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 5,
+        "col": 5,
+        "text": "It ate of the poor man's own meat and lay in his bosom",
+        "answer": "LAMB"
+      },
+      {
+        "number": 10,
+        "direction": "across",
+        "row": 5,
+        "col": 11,
+        "text": "The poor man's one little sheep in the prophet's tale",
+        "answer": "EWE"
+      },
+      {
+        "number": 11,
+        "direction": "across",
+        "row": 6,
+        "col": 3,
+        "text": "The guest the rich man would not feed from his own flock",
+        "answer": "TRAVELLER"
+      },
+      {
+        "number": 12,
+        "direction": "across",
+        "row": 8,
+        "col": 5,
+        "text": "Where the poor man's lamb lay, as a daughter",
+        "answer": "BOSOM"
+      },
+      {
+        "number": 13,
+        "direction": "down",
+        "row": 8,
+        "col": 7,
+        "text": "What followed the king's sin into his own house",
+        "answer": "SORROW"
+      },
+      {
+        "number": 14,
+        "direction": "across",
+        "row": 10,
+        "col": 4,
+        "text": "The measure of restitution David pronounced",
+        "answer": "FOURFOLD"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 12,
+        "col": 6,
+        "text": "To own a wrong rather than hide it",
+        "answer": "CONFESS"
+      }
+    ]
+  },
+  {
+    "id": "pack-parables-of-jesus-001",
+    "title": "The Rich Fool",
+    "difficulty": "easy",
+    "verse": "a man's life consisteth not in the abundance of the things which he possesseth",
+    "reference": "Luke 12:15",
+    "publishDate": "2026-07-01",
+    "size": 15,
+    "grid": [
+      ".......GREATER.",
+      "........I....E.",
+      "........C....Q.",
+      "........H..SOUL",
+      "..BUILD....T.I.",
+      "......R....O.R.",
+      "......I.E..R.E.",
+      "N..ABUNDANCE.D.",
+      "I...E.K.S.O....",
+      "GOODS...E.V....",
+      "H...T.....E....",
+      "T..FOOL...T....",
+      "....W.I........",
+      "......F........",
+      "....PLENTY....."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 7,
+        "text": "The size of the barns he would build",
+        "answer": "GREATER"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 8,
+        "text": "What the man was toward himself, but not toward God",
+        "answer": "RICH"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 0,
+        "col": 13,
+        "text": "What was done to his soul that very night",
+        "answer": "REQUIRED"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 11,
+        "text": "Thy ____ shall be required of thee this night",
+        "answer": "SOUL"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 3,
+        "col": 11,
+        "text": "What he meant to do with all his fruits",
+        "answer": "STORE"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 4,
+        "col": 2,
+        "text": "What he purposed to do with greater barns",
+        "answer": "BUILD"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 4,
+        "col": 6,
+        "text": "Eat, ____, and be merry, said the fool to his soul",
+        "answer": "DRINK"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 6,
+        "col": 8,
+        "text": "Take thine ____, eat, drink, and be merry",
+        "answer": "EASE"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 7,
+        "col": 0,
+        "text": "When his soul was required of him",
+        "answer": "NIGHT"
+      },
+      {
+        "number": 9,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "Life consisteth not in this, said Jesus",
+        "answer": "ABUNDANCE"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 7,
+        "col": 4,
+        "text": "To lay up in store, as he had no room to do",
+        "answer": "BESTOW"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 7,
+        "col": 10,
+        "text": "To crave what is another's; Jesus said beware of it",
+        "answer": "COVET"
+      },
+      {
+        "number": 12,
+        "direction": "across",
+        "row": 9,
+        "col": 0,
+        "text": "What the rich man had no room to bestow",
+        "answer": "GOODS"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 11,
+        "col": 3,
+        "text": "What God called the man who stored for many years",
+        "answer": "FOOL"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 11,
+        "col": 6,
+        "text": "It does not consist in the things a man possesses",
+        "answer": "LIFE"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 14,
+        "col": 4,
+        "text": "What his ground brought forth",
+        "answer": "PLENTY"
+      }
+    ]
+  },
+  {
+    "id": "pack-parables-of-jesus-002",
+    "title": "The Ten Virgins",
+    "difficulty": "easy",
+    "verse": "Watch therefore, for ye know neither the day nor the hour wherein the Son of man cometh.",
+    "reference": "Matthew 25:13",
+    "publishDate": "2026-07-02",
+    "size": 15,
+    "grid": [
+      "...............",
+      "..B........T...",
+      "MARRIAGE.F.A...",
+      "..I......O.R...",
+      "..D......O.R...",
+      ".VESSEL..L.I...",
+      "...L....WISE...",
+      "W..U...V.S.D..C",
+      "A..MIDNIGHT...R",
+      "T..B.O.R..READY",
+      "C..E.O.G..I....",
+      "HOUR.R.I..M....",
+      ".......N.......",
+      ".......SHUT....",
+      "..............."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 1,
+        "col": 2,
+        "text": "The one the wedding is for",
+        "answer": "BRIDE"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 1,
+        "col": 11,
+        "text": "What the bridegroom did while they slept",
+        "answer": "TARRIED"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 2,
+        "col": 0,
+        "text": "The feast the ready went in to",
+        "answer": "MARRIAGE"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 2,
+        "col": 9,
+        "text": "The five who took no oil with them",
+        "answer": "FOOLISH"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 5,
+        "col": 1,
+        "text": "What the wise filled against the waiting",
+        "answer": "VESSEL"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 5,
+        "col": 3,
+        "text": "What they all did while the bridegroom tarried",
+        "answer": "SLUMBER"
+      },
+      {
+        "number": 7,
+        "direction": "across",
+        "row": 6,
+        "col": 8,
+        "text": "The five who took oil in their vessels",
+        "answer": "WISE"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 7,
+        "col": 0,
+        "text": "The command that closes the parable",
+        "answer": "WATCH"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 7,
+        "col": 7,
+        "text": "Ten of them took their lamps to meet the bridegroom",
+        "answer": "VIRGINS"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 7,
+        "col": 14,
+        "text": "Behold, the bridegroom cometh",
+        "answer": "CRY"
+      },
+      {
+        "number": 11,
+        "direction": "across",
+        "row": 8,
+        "col": 3,
+        "text": "When the cry was made",
+        "answer": "MIDNIGHT"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 8,
+        "col": 5,
+        "text": "It was shut, and afterward they came",
+        "answer": "DOOR"
+      },
+      {
+        "number": 13,
+        "direction": "down",
+        "row": 8,
+        "col": 10,
+        "text": "What they all rose and did to their lamps",
+        "answer": "TRIM"
+      },
+      {
+        "number": 14,
+        "direction": "across",
+        "row": 9,
+        "col": 10,
+        "text": "What the wise were when he came",
+        "answer": "READY"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 11,
+        "col": 0,
+        "text": "Neither the day nor this is known",
+        "answer": "HOUR"
+      },
+      {
+        "number": 16,
+        "direction": "across",
+        "row": 13,
+        "col": 7,
+        "text": "What happened to the door once the ready went in",
+        "answer": "SHUT"
+      }
+    ]
+  },
+  {
+    "id": "pack-parables-of-jesus-003",
+    "title": "Seventy Times Seven",
+    "difficulty": "medium",
+    "verse": "I say not unto thee, Until seven times: but, Until seventy times seven.",
+    "reference": "Matthew 18:22",
+    "publishDate": "2026-07-03",
+    "size": 15,
+    "grid": [
+      "...L........S..",
+      ".B.O..FORGIVE..",
+      ".E.O........V..",
+      ".S.S........E..",
+      ".O.E.D.TORMENT.",
+      "HUNDRED...O.T..",
+      ".G...B.F..V.Y..",
+      ".H.PATIENCE....",
+      ".T.R.O.L..DEBT.",
+      "...I.R.L.R.....",
+      "...S...O.E.....",
+      "...O...WICKED..",
+      ".KING....K.....",
+      "........FORGAVE",
+      ".........N....."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 3,
+        "text": "What the lord did to the servant, and forgave him",
+        "answer": "LOOSED"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 12,
+        "text": "____ times seven, said Jesus",
+        "answer": "SEVENTY"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 1,
+        "col": 1,
+        "text": "What the servant did, falling down before his lord",
+        "answer": "BESOUGHT"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 1,
+        "col": 6,
+        "text": "What Peter asked how often he must do",
+        "answer": "FORGIVE"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 4,
+        "col": 5,
+        "text": "One who owes what he cannot pay",
+        "answer": "DEBTOR"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 4,
+        "col": 7,
+        "text": "What the unforgiving servant was delivered to",
+        "answer": "TORMENT"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 4,
+        "col": 10,
+        "text": "The lord was ____ with compassion",
+        "answer": "MOVED"
+      },
+      {
+        "number": 8,
+        "direction": "across",
+        "row": 5,
+        "col": 0,
+        "text": "A ____ pence: the fellowservant's whole debt",
+        "answer": "HUNDRED"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 6,
+        "col": 7,
+        "text": "The ____servant who owed a hundred pence",
+        "answer": "FELLOW"
+      },
+      {
+        "number": 10,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "Have ____ with me, and I will pay thee all",
+        "answer": "PATIENCE"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 7,
+        "col": 3,
+        "text": "Where the fellowservant was cast till he should pay",
+        "answer": "PRISON"
+      },
+      {
+        "number": 11,
+        "direction": "across",
+        "row": 8,
+        "col": 10,
+        "text": "What the lord loosed his servant from, and the servant would not",
+        "answer": "DEBT"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 9,
+        "col": 9,
+        "text": "To settle accounts with servants",
+        "answer": "RECKON"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 11,
+        "col": 7,
+        "text": "What the lord called the servant who would not forgive",
+        "answer": "WICKED"
+      },
+      {
+        "number": 14,
+        "direction": "across",
+        "row": 12,
+        "col": 1,
+        "text": "The lord who would take account of his servants",
+        "answer": "KING"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 13,
+        "col": 8,
+        "text": "What the lord did, moved with compassion",
+        "answer": "FORGAVE"
+      }
+    ]
+  },
+  {
+    "id": "pack-parables-of-jesus-004",
+    "title": "The Persistent Widow",
+    "difficulty": "medium",
+    "verse": "men ought always to pray, and not to faint",
+    "reference": "Luke 18:1",
+    "publishDate": "2026-07-04",
+    "size": 15,
+    "grid": [
+      "...C...J...S...",
+      "WIDOW..U...P...",
+      "...N...D..WEARY",
+      ".CITY..G...E...",
+      "...I..FEARED...",
+      "FAINT....E.I...",
+      ".L.U.A.C.G.L...",
+      ".W.ADVERSARY...",
+      ".A.L.E.Y.R.....",
+      ".Y...N...D.....",
+      ".S...G.H.......",
+      ".....ELECT.....",
+      ".......A.......",
+      "......TROUBLE..",
+      "..............."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 3,
+        "text": "The manner of the widow's coming",
+        "answer": "CONTINUAL"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 7,
+        "text": "He feared not God, neither regarded man",
+        "answer": "JUDGE"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 0,
+        "col": 11,
+        "text": "How God will avenge his own elect",
+        "answer": "SPEEDILY"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 1,
+        "col": 0,
+        "text": "She came to the judge continually with her plea",
+        "answer": "WIDOW"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 2,
+        "col": 10,
+        "text": "Lest by her continual coming she make him this",
+        "answer": "WEARY"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 3,
+        "col": 1,
+        "text": "Where there was a judge which feared not God",
+        "answer": "CITY"
+      },
+      {
+        "number": 7,
+        "direction": "across",
+        "row": 4,
+        "col": 6,
+        "text": "What the judge did not do toward God",
+        "answer": "FEARED"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 4,
+        "col": 9,
+        "text": "What the unjust judge did not do to man",
+        "answer": "REGARD"
+      },
+      {
+        "number": 9,
+        "direction": "across",
+        "row": 5,
+        "col": 0,
+        "text": "What men ought not to do, but pray instead",
+        "answer": "FAINT"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 5,
+        "col": 1,
+        "text": "Men ought ____ to pray",
+        "answer": "ALWAYS"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 6,
+        "col": 5,
+        "text": "____ me of mine adversary, said the widow",
+        "answer": "AVENGE"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 6,
+        "col": 7,
+        "text": "What the elect do day and night unto him",
+        "answer": "CRY"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "The one the widow sought justice against",
+        "answer": "ADVERSARY"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 10,
+        "col": 7,
+        "text": "What the Lord said of the unjust judge's words",
+        "answer": "HEAR"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 11,
+        "col": 5,
+        "text": "God's own, who cry day and night unto him",
+        "answer": "ELECT"
+      },
+      {
+        "number": 16,
+        "direction": "across",
+        "row": 13,
+        "col": 6,
+        "text": "Because this widow ____th me, said the judge",
+        "answer": "TROUBLE"
+      }
+    ]
+  },
+  {
+    "id": "pack-parables-of-jesus-005",
+    "title": "Two Men Went Up to Pray",
+    "difficulty": "medium",
+    "verse": "God be merciful to me a sinner.",
+    "reference": "Luke 18:13",
+    "publishDate": "2026-07-05",
+    "size": 15,
+    "grid": [
+      "........ABASED.",
+      ".........R.....",
+      ".....P...E.....",
+      "F....H.PRAY....",
+      "A....A.U.S.....",
+      "SINNER.B.T.....",
+      "T....I.L..H....",
+      "...JUSTIFIED...",
+      "..S..E.C..A.T..",
+      "HUMBLE.A..V.H..",
+      "..O....N..EXALT",
+      ".STOOD....N.N.I",
+      "..E.........K.T",
+      "..............H",
+      ".........TEMPLE"
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 8,
+        "text": "What every one that exalteth himself shall be",
+        "answer": "ABASED"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 9,
+        "text": "What the publican smote as he prayed",
+        "answer": "BREAST"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 2,
+        "col": 5,
+        "text": "He stood and prayed thus with himself",
+        "answer": "PHARISEE"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 3,
+        "col": 0,
+        "text": "I ____ twice in the week, said the Pharisee",
+        "answer": "FAST"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 3,
+        "col": 7,
+        "text": "The errand that took both men up to the temple",
+        "answer": "PRAY"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 3,
+        "col": 7,
+        "text": "He stood afar off and would not lift his eyes",
+        "answer": "PUBLICAN"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 5,
+        "col": 0,
+        "text": "What the publican called himself",
+        "answer": "SINNER"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 6,
+        "col": 10,
+        "text": "The publican would not so much as lift his eyes to it",
+        "answer": "HEAVEN"
+      },
+      {
+        "number": 8,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "The publican went down to his house this, rather than the other",
+        "answer": "JUSTIFIED"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 8,
+        "col": 2,
+        "text": "What he did upon his breast",
+        "answer": "SMOTE"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 8,
+        "col": 12,
+        "text": "God, I ____ thee that I am not as other men",
+        "answer": "THANK"
+      },
+      {
+        "number": 11,
+        "direction": "across",
+        "row": 9,
+        "col": 0,
+        "text": "To bring oneself low; such a man shall be exalted",
+        "answer": "HUMBLE"
+      },
+      {
+        "number": 12,
+        "direction": "across",
+        "row": 10,
+        "col": 10,
+        "text": "What happens to the humble, and not to the proud",
+        "answer": "EXALT"
+      },
+      {
+        "number": 13,
+        "direction": "down",
+        "row": 10,
+        "col": 14,
+        "text": "I give ____s of all that I possess, said the Pharisee",
+        "answer": "TITHE"
+      },
+      {
+        "number": 14,
+        "direction": "across",
+        "row": 11,
+        "col": 1,
+        "text": "How the Pharisee prayed, with himself",
+        "answer": "STOOD"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 14,
+        "col": 9,
+        "text": "Where the two men went up to pray",
+        "answer": "TEMPLE"
+      }
+    ]
+  },
+  {
     "id": "pack-psalm-23-002",
     "title": "Green Pastures",
     "difficulty": "easy",

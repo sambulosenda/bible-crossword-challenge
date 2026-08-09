@@ -6,7 +6,13 @@
     "coverSymbol": "figure.walk",
     "accentHex": null,
     "isPremium": false,
-    "puzzleIDs": ["daily-001", "daily-010", "mini-001", "daily-014", "mini-003"],
+    "puzzleIDs": [
+      "daily-001",
+      "daily-010",
+      "mini-001",
+      "daily-014",
+      "mini-003"
+    ],
     "season": null
   },
   {
@@ -16,7 +22,17 @@
     "coverSymbol": "crown",
     "accentHex": "#8A6D3B",
     "isPremium": true,
-    "puzzleIDs": ["daily-004", "daily-013", "daily-022", "daily-035"],
+    "puzzleIDs": [
+      "daily-004",
+      "daily-013",
+      "pack-life-of-david-002",
+      "pack-life-of-david-004",
+      "pack-life-of-david-001",
+      "pack-life-of-david-005",
+      "pack-life-of-david-003",
+      "daily-022",
+      "daily-035"
+    ],
     "season": null
   },
   {
@@ -26,7 +42,17 @@
     "coverSymbol": "text.book.closed",
     "accentHex": null,
     "isPremium": true,
-    "puzzleIDs": ["daily-021", "daily-024", "daily-038", "daily-056"],
+    "puzzleIDs": [
+      "daily-056",
+      "daily-021",
+      "daily-024",
+      "pack-parables-of-jesus-001",
+      "pack-parables-of-jesus-003",
+      "pack-parables-of-jesus-005",
+      "pack-parables-of-jesus-004",
+      "pack-parables-of-jesus-002",
+      "daily-038"
+    ],
     "season": null
   },
   {
@@ -36,7 +62,13 @@
     "coverSymbol": "water.waves",
     "accentHex": "#2E6E8E",
     "isPremium": true,
-    "puzzleIDs": ["pack-psalm-23-001", "pack-psalm-23-002", "pack-psalm-23-003", "pack-psalm-23-004", "pack-psalm-23-005"],
+    "puzzleIDs": [
+      "pack-psalm-23-001",
+      "pack-psalm-23-002",
+      "pack-psalm-23-003",
+      "pack-psalm-23-004",
+      "pack-psalm-23-005"
+    ],
     "season": null
   },
   {
@@ -53,7 +85,11 @@
       "pack-lent-004",
       "pack-lent-005"
     ],
-    "season": { "kind": "easter", "from": -46, "to": -1 }
+    "season": {
+      "kind": "easter",
+      "from": -46,
+      "to": -1
+    }
   },
   {
     "id": "easter",
@@ -69,7 +105,11 @@
       "pack-easter-004",
       "pack-easter-005"
     ],
-    "season": { "kind": "easter", "from": -7, "to": 7 }
+    "season": {
+      "kind": "easter",
+      "from": -7,
+      "to": 7
+    }
   },
   {
     "id": "advent",
@@ -86,7 +126,11 @@
       "pack-advent-005",
       "pack-advent-006"
     ],
-    "season": { "kind": "annual", "from": "12-01", "to": "12-26" }
+    "season": {
+      "kind": "annual",
+      "from": "12-01",
+      "to": "12-26"
+    }
   },
   {
     "id": "christmas",
@@ -102,6 +146,10 @@
       "pack-christmas-004",
       "pack-christmas-005"
     ],
-    "season": { "kind": "annual", "from": "12-26", "to": "01-06" }
+    "season": {
+      "kind": "annual",
+      "from": "12-26",
+      "to": "01-06"
+    }
   }
 ]

@@ -180,18 +180,86 @@ work is quality notes, which belongs with T3.
 
 ### T2 — Upgrade overlay Premium packs (David, Parables)
 
-**Status:** `[ ]`  
+**Status:** `[x]`  
 **Estimate:** M each
 
-For each of Life of David + Parables of Jesus:
+- [x] Added **5 dedicated `pack-*` puzzles each** (target was ≥3), so both packs
+      also clear the ≥5-exclusives success metric rather than only the T2 floor
+- [x] Membership is majority exclusive: **9 puzzles, 5 exclusive (56%)** per pack
+- [ ] Blurbs unchanged — **not needed.** "From the sheepfold to the throne of
+      Israel" and "The stories that carry the kingdom" describe the collection,
+      which is what a blurb is for here; neither ever claimed exclusivity, so
+      there was no overclaim to walk back. The membership was the problem.
 
-- [ ] Add **≥3 dedicated** `pack-*` puzzles (keep existing dailies as optional extras or migrate membership toward exclusives)
-- [ ] Prefer pack membership majority exclusive
-- [ ] Update blurb if needed (“exclusive journeys” not “themes you already met in daily”)
+**Life of David** (1 & 2 Samuel, Psalms) — the arc the four dailies skip:
+
+| id | title | source |
+|----|-------|--------|
+| `pack-life-of-david-002` | The Arrow and the Oath | 1 Samuel 18–20 |
+| `pack-life-of-david-004` | The Cave of Adullam | 1 Samuel 22–24 |
+| `pack-life-of-david-001` | The Ark Comes Home | 2 Samuel 6 |
+| `pack-life-of-david-005` | Thou Art the Man | 2 Samuel 12 |
+| `pack-life-of-david-003` | Create in Me a Clean Heart | Psalm 51 |
+
+**Parables of Jesus** — five parables none of the dailies touch:
+
+| id | title | source |
+|----|-------|--------|
+| `pack-parables-of-jesus-001` | The Rich Fool | Luke 12 |
+| `pack-parables-of-jesus-003` | Seventy Times Seven | Matthew 18 |
+| `pack-parables-of-jesus-005` | Two Men Went Up to Pray | Luke 18 |
+| `pack-parables-of-jesus-004` | The Persistent Widow | Luke 18 |
+| `pack-parables-of-jesus-002` | The Ten Virgins | Matthew 25 |
+
+**Kept the dailies rather than migrating membership out.** Two reasons found
+while doing it:
+
+1. `PlayerProfile.completedPackIDs` is **append-only** and never recomputed
+   from membership (`PuzzlePack.swift:350`), so neither adding nor removing
+   revokes Pathfinder/Collector. That freed the decision from achievement risk —
+   but pack *progress* is derived, so dropping membership would still have reset
+   the bars of Premium players part-way through either pack.
+2. The overlap is narrower than this ticket assumed. The free tier is a rolling
+   **7-day window per pool** plus anything already started (`PuzzleAccess`), so
+   those four dailies are Premium-gated for 85 of every 92 days. They are not
+   "four free puzzles" — they are four puzzles that were each free for a week.
+
+So the fix isn't removing the dailies, it's that the pack now contains five
+puzzles that are **never** free on any day. Membership only ever grew; the
+`puzzleIDs` writer asserts the old set is a subset of the new one.
+
+**Ordering is narrative, not id order** — `puzzleIDs` is the play order, so
+David reads sheepfold → Jonathan → exile → ark → Nathan → Psalm 51, with the
+dailies sitting where they belong in the life rather than bunched at the front.
 
 **Acceptance**
-- Paywall strip packs are not “4 free dailies with a lock”
-- Pack detail progress reflects new exclusives
+- [x] Paywall strip packs are no longer "4 free dailies with a lock" — each is
+      majority never-free
+- [x] Pack detail lists 9 puzzles and progress reflects them (verified on device)
+- [x] New `pack-*` ids absent from daily and mini rotation — both pools byte
+      identical before/after (92 dailies, 90 minis), zero content changes to any
+      previously shipped puzzle
+- [x] `validate_content.py` OK; 170 tests pass
+- [x] Played `pack-life-of-david-002` on device: real interlocked grid, 15 clues,
+      answers accept and advance
+- [x] Journey tags picked up 2 Samuel automatically from the new content
+
+> **Generator note for the next pack.** Adding a *new pack slug* moves the
+> pack block in `puzzles.json`, because `main()` iterates `sorted(by_slug)` —
+> `life-of-david` and `parables-of-jesus` sort before `psalm-23`, so five
+> shipped psalm-23 entries changed index.
+>
+> This turned out **not** to trip the README's "deletions must be zero" gate:
+> git matched the moved block as context and reported 1568 insertions, 0
+> deletions. So the gate is weaker than it reads — it catches a *rewritten*
+> pool, not a *moved* one, and a future change that shifts entries could pass
+> it. It would have been a false alarm here anyway: pack puzzles are excluded
+> from both rotation pools (`PuzzleProvider` filters `id.hasPrefix("pack-")`
+> and `isMini`), so their file position is inert.
+>
+> The invariant worth checking directly, and what was checked here, is that the
+> **daily and mini id sequences are unchanged and no shipped puzzle's content
+> differs** — verified against `HEAD` rather than inferred from the diff.
 
 ---
 
@@ -283,7 +351,7 @@ Suggested themes (pick 2; faith + crossword-friendly):
 | Phase | Deliverable | Done when |
 |-------|-------------|-----------|
 | **P0** | ~~T1 audit~~ **done** + T0 display fix **done** | Next packs prioritized |
-| **P1** | T2 David + Parables exclusive expansion | Overlay packs earn the lock |
+| **P1** | ~~T2 David + Parables exclusive expansion~~ **done** | Overlay packs earn the lock |
 | **P2** | T3 seasonal density check/fix | Seasonal Premium not thin |
 | **P3** | T4 two new evergreen packs | Catalog floor met |
 | **P4** | T5 cadence + T6 claims | Sustainable, honest growth |
