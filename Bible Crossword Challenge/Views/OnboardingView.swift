@@ -37,6 +37,9 @@ struct OnboardingView: View {
     @State private var page = 0
     @State private var didLogPaywallOpen = false
     @State private var didLogFirstSolve = false
+    /// Whether the reminders ask has been answered — either way. Gates the
+    /// swipe off that page; see `remindersLocked`.
+    @State private var didAnswerReminders = false
     @FocusState private var nameFocused: Bool
 
     /// Which plan the premium page has selected. Lives here rather than in
@@ -75,6 +78,26 @@ struct OnboardingView: View {
         )
     }
 
+    /// Whether the reminders page is holding the swipe until it gets an answer.
+    ///
+    /// Every other page may be swiped past, because on every other page a swipe
+    /// and the button below it do the same thing. On this one they don't: the
+    /// button opens the system permission dialog, and a swipe silently skips an
+    /// ask that iOS only ever allows once. Measured 2026-08-11, 141 players
+    /// reached this page and only 68 answered it — the other 73 swiped by, and
+    /// with them went every notification the app could ever send.
+    ///
+    /// So the page waits. "Not now" is right there and takes one tap, so this
+    /// is a question that must be answered, not a wall: the page cannot be
+    /// left by accident, only on purpose.
+    ///
+    /// Scoped to the unanswered state rather than the page, so swiping *back*
+    /// to re-read something and forward again still works once answered, and a
+    /// programmatic `advance()` is unaffected either way.
+    private var remindersLocked: Bool {
+        page == 3 && !didAnswerReminders
+    }
+
     var body: some View {
         VStack(spacing: 0) {
             progressBar
@@ -87,6 +110,22 @@ struct OnboardingView: View {
                 premiumPage.tag(4)
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
+            // Swallows the page-turn drag while the reminders page is waiting
+            // for an answer. `.scrollDisabled` looks like the right tool and
+            // does nothing here — a paged TabView is not a ScrollView as far as
+            // that modifier is concerned (verified on iOS 26: the swipe went
+            // straight through). A high-priority drag beats the TabView's own
+            // pan before it starts, so the page doesn't move at all rather than
+            // sliding and snapping back.
+            //
+            // `.all` rather than `.gesture`: the mask has to keep subview
+            // gestures alive, or the time picker on that very page stops
+            // opening — and setting the time is half of what the page is for.
+            // A tap isn't a drag, so it still reaches the picker.
+            .highPriorityGesture(
+                DragGesture(),
+                including: remindersLocked ? .all : .subviews
+            )
             .animation(.easeInOut, value: page)
 
             controls
@@ -427,6 +466,7 @@ struct OnboardingView: View {
                 Button("Remind me at \(reminderTimeText)") { enableReminders() }
                     .buttonStyle(.pillProminent)
                 Button("Not now") {
+                    didAnswerReminders = true
                     analytics.log(.reminderDeclined(source: "onboarding"))
                     advance()
                 }
@@ -636,6 +676,10 @@ struct OnboardingView: View {
     }
 
     private func enableReminders() {
+        // Marked on the tap, not on the system dialog's answer: the tap is the
+        // player answering *this* page, and whatever iOS goes on to return, the
+        // page has done its job and must not keep holding the swipe.
+        didAnswerReminders = true
         Task {
             let granted = await notifications.requestAuthorization()
             analytics.log(.notificationPermission(granted: granted))
