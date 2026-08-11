@@ -2,8 +2,11 @@
 //  NotificationService.swift
 //  Bible Crossword Challenge
 //
-//  Schedules the daily reminder and streak-risk nudge as local notifications —
-//  no server, no APNs.
+//  Schedules the daily reminder, streak-risk nudge and season openings as local
+//  notifications — no server, no APNs.
+//  A lapse of three days, a week, or a fortnight rewrites that day's reminder
+//  rather than adding one (see `winBack`), so the number of notifications a
+//  player gets never depends on how long they have been away.
 //  Because a local notification can't recompute state at fire time, we instead
 //  reschedule the next two weeks whenever the app's state changes (launch,
 //  foreground, puzzle completion, settings change). The next reminder is the one
@@ -88,7 +91,8 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
 
     /// Convenience that derives streak context from the profile.
     func reschedule(for profile: PlayerProfile, enabled: Bool, minutes: Int) async {
-        let completedToday = Calendar.current.isDate(
+        let calendar = Calendar.current
+        let completedToday = calendar.isDate(
             profile.lastCompletedDate ?? .distantPast, inSameDayAs: Date()
         )
         await reschedule(
@@ -96,8 +100,24 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
             minutes: minutes,
             streak: profile.currentStreak,
             completedToday: completedToday,
-            freezes: profile.streakFreezes
+            freezes: profile.streakFreezes,
+            daysSinceLastSolve: Self.daysSinceLastSolve(profile.lastCompletedDate, calendar: calendar)
         )
+    }
+
+    /// Whole days between the last solve and today, or `nil` for a player who
+    /// has never finished a puzzle.
+    ///
+    /// `nil` rather than a large number on purpose: someone who has never solved
+    /// anything has nothing to come back *to*, and the win-back copy below reads
+    /// as nonsense addressed to them. They get the ordinary rotation.
+    static func daysSinceLastSolve(_ lastCompleted: Date?, calendar: Calendar = .current) -> Int? {
+        guard let lastCompleted else { return nil }
+        return calendar.dateComponents(
+            [.day],
+            from: calendar.startOfDay(for: lastCompleted),
+            to: calendar.startOfDay(for: Date())
+        ).day
     }
 
     /// Clears our pending reminders and, when enabled + authorized, schedules one
@@ -109,7 +129,7 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
     /// `PuzzleProvider.shared` is main-actor isolated. Tests pass their own.
     func reschedule(
         enabled: Bool, minutes: Int, streak: Int, completedToday: Bool, freezes: Int = 0,
-        packs: [PuzzlePack]? = nil
+        daysSinceLastSolve: Int? = nil, packs: [PuzzlePack]? = nil
     ) async {
         let packs = packs ?? PuzzleProvider.shared.packs
         center.removeAllPendingNotificationRequests()
@@ -131,9 +151,17 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
             if dayOffset == 0 && completedToday { continue }
 
             let content = UNMutableNotificationContent()
+            // How long the lapse will have run by the day this one fires. The
+            // premise is that they don't solve in between — and if they do,
+            // `reschedule` runs again and recomputes the whole horizon, so the
+            // projection can never outlive the thing it assumed.
+            let projectedLapse = daysSinceLastSolve.map { $0 + dayOffset }
             if dayOffset == 0 && streak > 0 && !completedToday {
                 content.title = "Keep your streak alive 🔥"
                 content.body = "You're on a \(streak)-day streak. Solve today's Bible puzzle to keep it going."
+            } else if let projectedLapse, let winBack = Self.winBack(lapseDays: projectedLapse) {
+                content.title = winBack.title
+                content.body = winBack.body
             } else {
                 content.title = "Today's puzzle is ready"
                 content.body = Self.prompts[dayOffset % Self.prompts.count]
@@ -243,6 +271,47 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
         "Your daily Bible crossword is here — can you solve it?",
         "Sharpen your Scripture knowledge with today's puzzle.",
     ]
+
+    /// Copy for the day a lapse reaches three days, a week, or a fortnight —
+    /// `nil` on every other day, which is most of them.
+    ///
+    /// This *replaces* the day's reminder rather than adding a second one. The
+    /// daily reminder already fires every day of the horizon, so a lapsed player
+    /// is being spoken to regardless; the problem was never reach, it was that
+    /// after a week of ignoring "Today's puzzle is ready" the sentence has
+    /// stopped carrying information. Stacking a win-back notification on top
+    /// would put two lock-screen entries on the day someone is already least
+    /// pleased to hear from us, which is how a reminder becomes an uninstall.
+    ///
+    /// Marked days only, not "3 or more": the generic rotation still runs in
+    /// between, so the lapse copy stays occasional and keeps its weight.
+    ///
+    /// No streak numbers anywhere in here. By day three the streak is already
+    /// gone, and opening with what they lost is an odd way to ask someone back.
+    /// Each line names how little it costs to return instead — and by day
+    /// fourteen says outright that there is nothing to catch up on, because
+    /// believing otherwise is the actual reason people don't reopen a daily app.
+    static func winBack(lapseDays: Int) -> (title: String, body: String)? {
+        switch lapseDays {
+        case 3:
+            return (
+                "Your puzzle is still here",
+                "It's been a few days. Today's Bible crossword takes about five minutes."
+            )
+        case 7:
+            return (
+                "A week of verses waiting",
+                "Come back to Scripture one clue at a time — today's puzzle is ready when you are."
+            )
+        case 14:
+            return (
+                "Still here whenever you are",
+                "No streak to rebuild and nothing to catch up on. Just today's verse and a fresh crossword."
+            )
+        default:
+            return nil
+        }
+    }
 }
 
 // MARK: - Reminder time <-> minutes-from-midnight
