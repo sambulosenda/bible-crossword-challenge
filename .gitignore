@@ -28,3 +28,10 @@ fastlane/.env
 # bundler
 vendor/bundle
 .bundle
+
+# Argent MCP workspace
+.argent/
+
+# Local asset workspaces
+promo-video/
+simulator-screenshots/
