@@ -5,11 +5,12 @@
 //  Premium upgrade screen, in the app's native language: paper canvas, serif
 //  hero, surface cards, the accent for selection and an ink CTA.
 //
-//  Order: promise, the player's own progress, benefits, then the named packs
-//  they can't open yet — showing the content withheld rather than only the
-//  content on offer. Then stacked plan cards (yearly with any free trial +
-//  savings badge, monthly, and a one-time lifetime unlock), then the CTA and
-//  its subtext. Purchase/restore go through StoreService (StoreKit 2).
+//  Order: promise, the player's own progress, benefits, and — from pack entry
+//  points only — the named packs they can't open yet, showing the content
+//  withheld rather than only the content on offer. Then stacked plan cards
+//  (yearly with any free trial + savings badge, monthly, and a one-time
+//  lifetime unlock), then the CTA and its subtext. Purchase/restore go
+//  through StoreService (StoreKit 2).
 //
 //  Always presented as a sheet. Pushed onto a navigation stack it collides
 //  with the back button and the tab bar.
@@ -67,7 +68,7 @@ struct PaywallView: View {
                     headline: headlineText,
                     progressLine: progressLine,
                     selectedID: $selectedID,
-                    showsLockedPacks: true,
+                    showsLockedPacks: showsLockedPacks,
                     highlightedPackID: contextPackID
                 )
                 .padding(.horizontal, Theme.Spacing.l)
@@ -145,6 +146,18 @@ struct PaywallView: View {
     }
 
     private static let defaultHeadline = PremiumCopy.promise
+
+    /// The locked-pack strip only shows when the player just bounced off a
+    /// pack — there it's evidence about the very thing they asked for. From
+    /// every other entry point it was a second icon-row list stacked under the
+    /// benefits, eight rows of prose standing between the promise and the
+    /// price, about content the player hadn't expressed any interest in.
+    private var showsLockedPacks: Bool {
+        switch Entry(rawValue: source) {
+        case .packLocked, .packCompletion: return true
+        default: return false
+        }
+    }
 
     /// The promise, chosen by where the player came from. Someone who just hit
     /// a hint wall and someone browsing from their profile are asking different
@@ -374,19 +387,7 @@ enum PremiumCopy {
     /// configured offer can't leave the copy claiming the old length.
     static func trialCTA(_ trial: String) -> String { "Start \(trial)" }
 
-    /// "Start with a 3-day free trial — pay nothing today", said above the fold
-    /// on both surfaces that open the offer.
-    ///
-    /// The length carries the accent on its own so the offer survives a glance,
-    /// the way a coloured word in a headline does — without tinting the whole
-    /// line, which would read as a warning.
-    static func trialSubhead(_ trial: String) -> Text {
-        Text("Start with a ")
-            + Text(trial).foregroundStyle(Theme.accent).bold()
-            + Text(" — pay nothing today")
-    }
-
-    /// Said in the trial's place when there is no introductory offer — because
+    /// Said under the headline when there is no introductory offer — because
     /// the player has already used theirs, or none is configured. Without it
     /// the no-trial path has nothing above the fold about what costs nothing,
     /// and the free tier is the reason the ask can stay soft.

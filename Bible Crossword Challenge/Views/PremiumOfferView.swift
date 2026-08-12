@@ -107,6 +107,7 @@ struct PremiumOfferView: View {
             } else {
                 staggered(plans, delay: 0.20)
                 staggered(trialTimeline, delay: 0.26)
+                staggered(socialProof, delay: 0.30)
             }
         }
     }
@@ -133,33 +134,29 @@ struct PremiumOfferView: View {
 
     private var headlineBlock: some View {
         VStack(spacing: Theme.Spacing.s) {
-            // The eyebrow carries the fact, the headline carries the reason.
-            // Putting a number in both just says the same thing twice.
-            Text("Premium · \(puzzleProvider.totalPuzzleCount) puzzles")
+            // A bare label: the puzzle count already leads the benefits list
+            // one block down, and stating it up here as well meant the screen's
+            // first two numbers were the same number.
+            Text("Premium")
                 .kicker()
             Text(headline)
                 .font(.scripture(.largeTitle, weight: .semibold))
                 .multilineTextAlignment(.center)
 
-            // The offer above the benefits, not only down on the button: a
-            // player deciding whether to read on shouldn't have to look at the
-            // CTA to find out that today costs nothing.
-            //
-            // The no-trial path states what stays free instead. That fallback
-            // used to be onboarding's alone, and the sheet had nothing at all
-            // above the fold for a player who'd already used their trial — the
-            // free tier is the reason the ask can stay soft, so it's worth
-            // saying on both.
-            Group {
-                if let trial = trialText {
-                    PremiumCopy.trialSubhead(trial)
-                } else {
-                    Text(PremiumCopy.freeDailyReassurance)
-                        .foregroundStyle(.secondary)
-                }
+            // Only the no-trial path gets a subhead. When a trial exists the
+            // page already states it three times — the timeline, the CTA and
+            // the commitment line — and the fourth copy up here was the
+            // weakest of them: an adjective ("3-day free trial") where the
+            // timeline below answers the actual question, which is when money
+            // starts. A player with no trial left still needs something above
+            // the fold about what costs nothing, so the free tier keeps its
+            // line.
+            if trialText == nil {
+                Text(PremiumCopy.freeDailyReassurance)
+                    .font(.subheadline.weight(.medium))
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
             }
-            .font(.subheadline.weight(.medium))
-            .multilineTextAlignment(.center)
 
             if let progressLine {
                 Text(progressLine)
@@ -173,14 +170,11 @@ struct PremiumOfferView: View {
     /// The introductory offer on the *selected* plan, when there is one and the
     /// player hasn't already used theirs.
     ///
-    /// Keyed to the selection for the same reason `trialTimeline` is: only
-    /// yearly carries an introductory offer, so reading it off `store.yearly`
-    /// left "Start with a 3-day free trial" standing at the top of the page
-    /// while the player had monthly selected — and the CTA underneath said
-    /// "Unlock 228 puzzles" and the line under *that* said the charge begins
-    /// today. One screen, making an offer at the top that the button at the
-    /// bottom refused. Selecting monthly now falls through to what stays free
-    /// either way, which is the honest promise for a plan with no trial.
+    /// Keyed to the selection rather than to `store.yearly`: only yearly
+    /// carries an introductory offer, so an unkeyed read would show the
+    /// free-tier reassurance to a trial-holder the moment they tapped monthly
+    /// — which is correct, and stops the header describing an offer the CTA
+    /// underneath isn't making.
     private var trialText: String? {
         guard let selectedProduct else { return nil }
         return store.introOfferText(for: selectedProduct)
@@ -513,6 +507,30 @@ struct PremiumOfferView: View {
     /// can't hold a price and a per-month figure once the text gets large.
     private var stacksPlans: Bool { dynamicTypeSize.isAccessibilitySize }
 
+    // MARK: - Social proof
+
+    /// The one external voice on the page, kept to a single line and sitting
+    /// with the plans rather than up in the header — trust matters most at the
+    /// moment of paying, not the moment of reading.
+    ///
+    /// The number is hand-written, so it can go stale the way no other figure
+    /// on this screen can (every price and count is read from StoreKit or the
+    /// bundle). Check it against App Store Connect whenever release copy is
+    /// touched, and drop the line entirely rather than round up.
+    ///
+    /// In the non-premium branch deliberately: it argues for a purchase, and a
+    /// player who already paid or is looking at a retry card isn't being asked
+    /// for one.
+    private var socialProof: some View {
+        Text("★ 4.8 on the App Store")
+            .font(.footnote.weight(.medium))
+            .foregroundStyle(.secondary)
+            .frame(maxWidth: .infinity)
+            // VoiceOver reads the bare glyph as "black star", which turns the
+            // line into noise for exactly the reader it should reassure.
+            .accessibilityLabel("Rated 4.8 on the App Store")
+    }
+
     // MARK: - Trial timeline
 
     /// What actually happens if they tap the button: access today, money on a
@@ -540,7 +558,9 @@ struct PremiumOfferView: View {
                 timelineStep(
                     icon: "lock.open.fill",
                     title: "Today",
-                    detail: "Full access to all \(puzzleProvider.totalPuzzleCount) puzzles. You pay nothing.",
+                    // No puzzle count: the benefits list two blocks up owns
+                    // that number, and this line's one job is "you pay nothing".
+                    detail: "Full access. You pay nothing.",
                     isLast: false
                 )
                 timelineStep(
