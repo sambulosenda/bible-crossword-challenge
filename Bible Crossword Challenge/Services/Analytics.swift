@@ -111,6 +111,11 @@ enum AnalyticsEvent {
     /// second whether finishing a puzzle actually sends anyone to Scripture.
     /// Both were unmeasured, so any claim about either was a guess.
     case scriptureOpened(reference: String, source: String)
+    /// The mini→daily chain: the completion screen's offer to roll straight
+    /// into today's full puzzle. Completing a puzzle on day one is the
+    /// strongest D1 retention signal we have, so the button is measured
+    /// directly rather than inferred from back-to-back `daily_puzzle_started`.
+    case completionChainTapped(fromPuzzleID: String, toPuzzleID: String)
 
     var name: String {
         switch self {
@@ -143,6 +148,7 @@ enum AnalyticsEvent {
         case .familyBoardOpened: return "family_board_opened"
         case .familyBoardShared: return "family_board_shared"
         case .scriptureOpened: return "scripture_opened"
+        case .completionChainTapped: return "completion_chain_tapped"
         }
     }
 
@@ -235,6 +241,8 @@ enum AnalyticsEvent {
             return ["puzzle_id": id, "size": size]
         case .scriptureOpened(let reference, let source):
             return ["reference": reference, "source": source]
+        case .completionChainTapped(let from, let to):
+            return ["from_puzzle_id": from, "to_puzzle_id": to]
         }
     }
 }

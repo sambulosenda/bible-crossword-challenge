@@ -71,6 +71,14 @@ struct CompletionView: View {
     /// when the player isn't part of one. Captured on appear so the card can't
     /// appear or re-rank mid-view.
     @State private var board: FamilyBoardService.Board?
+    /// Today's full daily, when this solve was a Mini and the daily is still
+    /// unsolved — the highest-value next step this screen can offer, so it
+    /// takes the primary slot. Captured on appear.
+    @State private var chainTarget: Puzzle?
+    /// This week's Game Center standing, fetched after a Mini solve so the
+    /// leaderboard button can say where the player sits instead of just that
+    /// a board exists. Nil until it loads (or when it can't).
+    @State private var weeklyRank: (rank: Int, total: Int)?
     @Environment(\.displayScale) private var displayScale
     @Environment(\.openURL) private var openURL
     @Environment(\.gameCenter) private var gameCenter
@@ -165,6 +173,8 @@ struct CompletionView: View {
             loadFamilyBoard()
             loadWeek()
             loadPackContext()
+            loadChainTarget()
+            loadWeeklyRank()
             maybeAutoShowPaywall()
         }
         .sheet(item: $paywallEntry) { entry in
@@ -728,6 +738,37 @@ struct CompletionView: View {
         return parts.joined(separator: ". ")
     }
 
+    /// The mini→daily chain target: today's full puzzle, offered only when this
+    /// solve was a Mini and the daily hasn't been solved yet. Day-one puzzle
+    /// completion is the strongest D1 signal we have; this is the moment the
+    /// appetite for "one more" exists, so the next solve is one tap away.
+    private func loadChainTarget() {
+        guard puzzle.isMini,
+              let daily = puzzleProvider.dailyPuzzle(),
+              daily.id != puzzle.id
+        else { return }
+        let records = (try? context.fetch(FetchDescriptor<PuzzleRecord>())) ?? []
+        guard !records.contains(where: { $0.puzzleID == daily.id && $0.isCompleted }) else { return }
+        chainTarget = daily
+    }
+
+    /// Fetch this week's standing for the leaderboard button. The solve's score
+    /// was submitted moments ago, so give Game Center a beat to fold it in;
+    /// if the fetch loses that race the button just keeps its generic title.
+    private func loadWeeklyRank() {
+        guard puzzle.isMini, gameCenter.isAuthenticated else { return }
+        Task {
+            try? await Task.sleep(for: .seconds(1))
+            weeklyRank = await gameCenter.weeklyMiniRank()
+        }
+    }
+
+    /// The leaderboard button's title: the player's own standing once it loads.
+    private var weeklyRankTitle: String {
+        guard let weeklyRank else { return "Weekly Leaderboard" }
+        return "#\(weeklyRank.rank) of \(weeklyRank.total) this week"
+    }
+
     /// Weekdays with a completed puzzle in the current week, for the week row.
     /// Read once on appear — this solve's record is already written and saved by
     /// the time the cover presents, so today's dot is lit.
@@ -897,6 +938,26 @@ struct CompletionView: View {
 
     private var actions: some View {
         VStack(spacing: Theme.Spacing.m) {
+            // A Mini solved with today's full puzzle still open: the next solve
+            // is worth more than the share, so the chain takes the primary slot
+            // and Share steps down for this one screen.
+            if let chainTarget {
+                Button {
+                    analytics.log(.completionChainTapped(
+                        fromPuzzleID: puzzle.id, toPuzzleID: chainTarget.id
+                    ))
+                    if let url = URL(string: "biblecrossword://puzzle?id=\(chainTarget.id)") {
+                        openURL(url)
+                        onHome()
+                    }
+                } label: {
+                    Label("Play Today's Full Puzzle", systemImage: "play.fill")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.pillProminent)
+                .accessibilityHint("Closes this screen and opens today's full-size puzzle")
+            }
+
             Group {
                 if let shareImage {
                     ShareLink(
@@ -909,7 +970,7 @@ struct CompletionView: View {
                     ShareLink(item: shareCaption) { shareLabel }
                 }
             }
-            .buttonStyle(.pillProminent)
+            .buttonStyle(PillButtonStyle(emphasis: chainTarget == nil ? .primary : .tonal))
 
             // A challenge that arrived for this puzzle already offers "Send
             // Result Back" in the result card — don't double up the CTA.
@@ -932,17 +993,18 @@ struct CompletionView: View {
             }
 
             // Minis race the clock against everyone — surface this week's
-            // standings while the solve is fresh. Hidden when the player
-            // isn't signed in to Game Center.
+            // standings while the solve is fresh, with the player's own rank
+            // once Game Center reports it. Hidden when not signed in.
             if puzzle.isMini && gameCenter.isAuthenticated {
                 Button {
                     gameCenter.showWeeklyMiniLeaderboard()
                 } label: {
-                    Label("Weekly Leaderboard", systemImage: "trophy")
+                    Label(weeklyRankTitle, systemImage: "trophy")
                         .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.bordered)
                 .controlSize(.large)
+                .accessibilityHint("Opens the weekly Mini leaderboard")
             }
 
             Button {

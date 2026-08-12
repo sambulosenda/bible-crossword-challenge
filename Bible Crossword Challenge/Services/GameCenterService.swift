@@ -95,6 +95,29 @@ final class GameCenterService {
         Task { await submit(seconds) }
     }
 
+    /// The local player's standing on this week's Mini board — rank plus field
+    /// size, for the completion screen's leaderboard button. Nil when signed
+    /// out, offline, or the player has no score in this week's occurrence yet
+    /// (a just-submitted score can take Game Center a moment to fold in).
+    func weeklyMiniRank() async -> (rank: Int, total: Int)? {
+        guard GKLocalPlayer.local.isAuthenticated else { return nil }
+        do {
+            guard let board = try await GKLeaderboard
+                .loadLeaderboards(IDs: [Self.weeklyMiniLeaderboardID]).first
+            else { return nil }
+            let (local, _, total) = try await board.loadEntries(
+                for: .global, timeScope: .week, range: NSRange(location: 1, length: 1)
+            )
+            guard let local, local.rank > 0 else { return nil }
+            return (local.rank, total)
+        } catch {
+            #if DEBUG
+            print("🎮 Game Center rank: \(error.localizedDescription)")
+            #endif
+            return nil
+        }
+    }
+
     /// Presents the system leaderboard UI for the weekly Mini board.
     /// (GKGameCenterViewController is deprecated; the access-point trigger is
     /// the sanctioned presentation path and needs no hosting controller.)
