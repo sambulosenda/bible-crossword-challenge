@@ -14,6 +14,10 @@ struct CellView: View, Equatable {
     let isSelected: Bool
     let isInWord: Bool
     let showError: Bool
+    /// Whether a correct entry paints green. Split from `showError` because
+    /// auto-check marks only mistakes — green-on-correct everywhere would turn
+    /// the mode into an answer oracle; the manual check shows both.
+    let showCorrect: Bool
     /// Transient green pulse shown when the cell's word was just completed.
     let flash: Bool
     let onTap: () -> Void
@@ -27,6 +31,7 @@ struct CellView: View, Equatable {
             && lhs.isSelected == rhs.isSelected
             && lhs.isInWord == rhs.isInWord
             && lhs.showError == rhs.showError
+            && lhs.showCorrect == rhs.showCorrect
             && lhs.flash == rhs.flash
     }
 
@@ -35,7 +40,7 @@ struct CellView: View, Equatable {
     }
 
     private var correctVisible: Bool {
-        showError && cell.entry != nil && cell.isCorrect
+        showCorrect && cell.entry != nil && cell.isCorrect
     }
 
     var body: some View {

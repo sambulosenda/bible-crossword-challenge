@@ -38,7 +38,10 @@ struct CrosswordGridView: View {
                                 side: side,
                                 isSelected: vm.selected == pos,
                                 isInWord: activeWord.contains(pos),
-                                showError: vm.showErrors,
+                                // Auto-check marks mistakes continuously; only
+                                // the manual check also greens correct letters.
+                                showError: vm.showErrors || vm.autoCheck,
+                                showCorrect: vm.showErrors,
                                 flash: flashing.contains(pos),
                                 onTap: { vm.select(pos) }
                             )

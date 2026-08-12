@@ -27,6 +27,10 @@ struct CrosswordGameView: View {
 
     @AppStorage("remindersEnabled") private var remindersEnabled = false
     @AppStorage("reminderMinutes") private var reminderMinutes = ReminderTime.defaultMinutes
+    /// Marks wrong letters as they're typed. Seeded per player on first entry
+    /// (see `GameViewModel.seedAutoCheckIfNeeded`), toggleable from the hint
+    /// menu and Profile → Gameplay.
+    @AppStorage("autoCheckErrors") private var autoCheckErrors = false
 
     @State private var vm: GameViewModel
     @State private var showClues = false
@@ -54,6 +58,9 @@ struct CrosswordGameView: View {
     /// When entering a challenge for an already-solved puzzle, the time to show
     /// on the (immediate) completion screen — the prior solve, not a fresh 0.
     @State private var challengeReplaySeconds: Int?
+    /// Abandonment fires once per visit to this screen, but every departure
+    /// path (window detach, onDisappear) can fire more than once for one exit.
+    @State private var didLogAbandon = false
     /// Keeps the screen focused so a hardware keyboard can type into the grid.
     @FocusState private var gridFocused: Bool
 
@@ -94,6 +101,7 @@ struct CrosswordGameView: View {
                 if !attached {
                     vm.pauseTimer()
                     saveProgress()
+                    logAbandonIfNeeded()
                 }
             }
         )
@@ -160,9 +168,14 @@ struct CrosswordGameView: View {
         }
         .task {
             gridFocused = true
+            GameViewModel.seedAutoCheckIfNeeded(totalCompleted: profile.totalPuzzlesCompleted)
+            // Straight from defaults, not the property wrapper: @AppStorage may
+            // not observe a write made earlier in this same runloop turn.
+            vm.autoCheck = UserDefaults.standard.bool(forKey: "autoCheckErrors")
             vm.onComplete = { seconds in handleCompletion(seconds: seconds) }
             let rec = loadOrCreateRecord()
             incomingChallenge = challengeService.pending(for: puzzle.id)
+            let isResume = !rec.isCompleted && (!rec.entries.isEmpty || rec.elapsedSeconds > 0)
             if rec.isCompleted, incomingChallenge != nil {
                 // Already solved this puzzle — jump straight to the comparison
                 // rather than replaying (a replay knows the answers and would
@@ -177,7 +190,7 @@ struct CrosswordGameView: View {
                     vm.restore(rec.entries)
                 }
             }
-            analytics.log(.dailyPuzzleStarted(puzzleID: puzzle.id))
+            analytics.log(.dailyPuzzleStarted(puzzleID: puzzle.id, isResume: isResume))
             #if DEBUG
             // Screenshot helpers, triggered by launch arguments — no visible UI.
             let args = ProcessInfo.processInfo.arguments
@@ -214,9 +227,13 @@ struct CrosswordGameView: View {
                 break
             }
         }
+        .onChange(of: autoCheckErrors) { _, enabled in
+            vm.autoCheck = enabled
+        }
         .onDisappear {
             vm.pauseTimer()
             saveProgress()
+            logAbandonIfNeeded()
         }
     }
 
@@ -245,6 +262,11 @@ struct CrosswordGameView: View {
                     }
                 }
                 Section {
+                    // Persistent as-you-type marking; the one-shot check below
+                    // stays for players who keep it off.
+                    Toggle(isOn: $autoCheckErrors) {
+                        Label("Auto-Check", systemImage: "checkmark.seal")
+                    }
                     Toggle(isOn: Binding(
                         get: { vm.showErrors },
                         set: { _ in vm.toggleCheck() }
@@ -441,6 +463,25 @@ struct CrosswordGameView: View {
         let rec = PuzzleRecord(puzzleID: id)
         context.insert(rec)
         return rec
+    }
+
+    /// Records the mid-solve departure. Guards, in order: the completion cover
+    /// detaching the grid from the window is not an abandon; a challenge replay
+    /// jumps straight to the results with an untouched grid; and both departure
+    /// paths can fire for one exit, so this only ever logs once per visit.
+    private func logAbandonIfNeeded() {
+        guard !vm.isComplete, challengeReplaySeconds == nil, !didLogAbandon else { return }
+        didLogAbandon = true
+        let total = vm.totalPlayableCount
+        let percent = total > 0
+            ? Int((Double(vm.filledPlayableCount) / Double(total) * 100).rounded())
+            : 0
+        analytics.log(.puzzleAbandoned(
+            puzzleID: puzzle.id,
+            fillPercent: percent,
+            seconds: vm.elapsed(),
+            hintsUsed: vm.hintsUsed
+        ))
     }
 
     private func saveProgress() {

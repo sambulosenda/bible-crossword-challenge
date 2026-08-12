@@ -11,6 +11,38 @@ struct ClueBarView: View {
     @Bindable var vm: GameViewModel
 
     var body: some View {
+        VStack(spacing: 0) {
+            if let nudge = endgameNudge {
+                Text(nudge)
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(Theme.accent)
+                    .frame(maxWidth: .infinity)
+                    .padding(.top, Theme.Spacing.xs)
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
+            }
+            clueRow
+        }
+        .animation(.snappy, value: endgameNudge)
+        .padding(.horizontal, Theme.Spacing.xs)
+        .padding(.vertical, Theme.Spacing.xs)
+        .background(Color(.secondarySystemBackground))
+        .overlay(alignment: .bottom) { progressStrip }
+    }
+
+    /// Endgame encouragement for the full-size grids. Fires when the last one
+    /// or two words are all that's left — the point where quitting means
+    /// forfeiting an almost-finished puzzle, which is worth saying out loud.
+    /// Minis don't get it: with five clues it would appear mid-solve.
+    private var endgameNudge: String? {
+        guard !vm.puzzle.isMini, !vm.isComplete else { return nil }
+        switch vm.remainingClueCount {
+        case 1: return "Last clue — you've got this!"
+        case 2: return "Only 2 clues to go!"
+        default: return nil
+        }
+    }
+
+    private var clueRow: some View {
         HStack(spacing: Theme.Spacing.s) {
             Button {
                 vm.advanceClue(by: -1)
@@ -58,10 +90,6 @@ struct ClueBarView: View {
             }
             .accessibilityLabel("Next clue")
         }
-        .padding(.horizontal, Theme.Spacing.xs)
-        .padding(.vertical, Theme.Spacing.xs)
-        .background(Color(.secondarySystemBackground))
-        .overlay(alignment: .bottom) { progressStrip }
     }
 
     /// Fraction of playable cells filled. Deliberately counts *filled*, not

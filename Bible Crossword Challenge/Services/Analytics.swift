@@ -18,8 +18,21 @@ enum AnalyticsEvent {
     case onboardingStep(index: Int, name: String)
     case onboardingFirstSolve(solved: Bool, attempts: Int)
     case onboardingCompleted(solvedFirstClue: Bool)
-    case dailyPuzzleStarted(puzzleID: String)
+    /// Fires on every entry to the game screen, so `isResume` is what makes it
+    /// readable: without it a player who opens the daily four times counts as
+    /// four starts, and the start→completion rate reads a third lower than it
+    /// is. A fresh start is `isResume: false`; everything else is the same
+    /// attempt continuing.
+    case dailyPuzzleStarted(puzzleID: String, isResume: Bool)
     case dailyPuzzleCompleted(puzzleID: String, seconds: Int)
+    /// Leaving the game screen mid-solve — the other half of the start→complete
+    /// funnel, which previously had no shape: 55% of starters didn't finish and
+    /// nothing said whether they bounced at the empty grid or gave up at 80%.
+    /// `fillPercent` is where they stopped, `seconds` how long they tried,
+    /// `hintsUsed` this sitting's hints. Fires when the screen leaves the
+    /// window, so a quit via app-kill from the background is not counted — the
+    /// numbers are a floor, not a census.
+    case puzzleAbandoned(puzzleID: String, fillPercent: Int, seconds: Int, hintsUsed: Int)
     case hintUsed(type: String)
     case streakUpdated(streak: Int)
     // The two halves of a lost streak. `streakBroken` fires once, on the launch
@@ -125,6 +138,7 @@ enum AnalyticsEvent {
         case .onboardingCompleted: return "onboarding_completed"
         case .dailyPuzzleStarted: return "daily_puzzle_started"
         case .dailyPuzzleCompleted: return "daily_puzzle_completed"
+        case .puzzleAbandoned: return "puzzle_abandoned"
         case .hintUsed: return "hint_used"
         case .streakUpdated: return "streak_updated"
         case .streakBroken: return "streak_broken"
@@ -201,10 +215,17 @@ enum AnalyticsEvent {
                 // is configured, and would be a different number.
                 "offers_trial": offersTrial,
             ]
-        case .dailyPuzzleStarted(let id):
-            return ["puzzle_id": id]
+        case .dailyPuzzleStarted(let id, let isResume):
+            return ["puzzle_id": id, "is_resume": isResume]
         case .dailyPuzzleCompleted(let id, let seconds):
             return ["puzzle_id": id, "seconds": seconds]
+        case .puzzleAbandoned(let id, let fillPercent, let seconds, let hintsUsed):
+            return [
+                "puzzle_id": id,
+                "fill_percent": fillPercent,
+                "seconds": seconds,
+                "hints_used": hintsUsed,
+            ]
         case .hintUsed(let type):
             return ["type": type]
         case .streakUpdated(let streak):

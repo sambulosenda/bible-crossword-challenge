@@ -30,6 +30,12 @@ final class GameViewModel {
     var selected: GridPos
     var direction: ClueDirection
     var showErrors: Bool = false
+    /// Persistent as-you-type mistake marking, mirrored from the
+    /// "autoCheckErrors" default by the owning view. Unlike the manual check
+    /// (`showErrors`, cleared on the next keystroke), this stays on and marks
+    /// only *wrong* letters — correct ones earn nothing until the word
+    /// completes, so it can't be milked as a free answer-by-color oracle.
+    var autoCheck: Bool = false
     private(set) var hintsUsed: Int = 0
     private(set) var isComplete: Bool = false
 
@@ -435,6 +441,13 @@ final class GameViewModel {
         }
     }
 
+    /// Words not yet fully correct. Drives the "2 clues to go" encouragement —
+    /// counts *solved* words (not filled), so a grid full of guesses doesn't
+    /// congratulate anyone.
+    var remainingClueCount: Int {
+        allSlots.count - solvedSlotIDs.count
+    }
+
     var filledPlayableCount: Int {
         grid.reduce(0) { acc, row in
             acc + row.filter { !$0.isBlock && $0.entry != nil }.count
@@ -571,6 +584,18 @@ final class GameViewModel {
             }
         }
         return out
+    }
+
+    /// Seeds the "autoCheckErrors" default the first time it's consulted:
+    /// ON for a player still inside their first three solves, OFF for anyone
+    /// who learned the grid without it — flipping a veteran's game behavior
+    /// under them is worse than making a beginner find a toggle. Called from
+    /// every surface that reads the key, so whichever screen is seen first
+    /// (game or Profile) agrees with the others.
+    static func seedAutoCheckIfNeeded(totalCompleted: Int) {
+        let defaults = UserDefaults.standard
+        guard defaults.object(forKey: "autoCheckErrors") == nil else { return }
+        defaults.set(totalCompleted < 3, forKey: "autoCheckErrors")
     }
 
     func restore(_ entries: [String: String]) {

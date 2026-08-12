@@ -34,6 +34,9 @@ struct ProfileView: View {
     /// finishes the opt-in if they come back having allowed them.
     @AppStorage("pendingReminderOptIn") private var pendingReminderOptIn = false
     @AppStorage("reminderMinutes") private var reminderMinutes = ReminderTime.defaultMinutes
+    /// Mirrors the in-game hint-menu toggle; seeded per player on first read
+    /// (see `GameViewModel.seedAutoCheckIfNeeded`).
+    @AppStorage("autoCheckErrors") private var autoCheckErrors = false
     @State private var showPaywall = false
     @State private var showManageSubscriptions = false
     @State private var showRename = false
@@ -69,6 +72,7 @@ struct ProfileView: View {
                     challengesSection
                     premiumSection
                     preferencesSection
+                    gameplaySection
                     remindersSection
                     aboutSection
                     #if DEBUG
@@ -259,6 +263,24 @@ struct ProfileView: View {
                     gameCenter.showWeeklyMiniLeaderboard()
                 }
             }
+        }
+    }
+
+    // MARK: - Gameplay
+
+    private var gameplaySection: some View {
+        SettingsSection("Gameplay") {
+            Toggle(isOn: $autoCheckErrors) {
+                SettingsRowLabel(title: "Auto-check mistakes", symbol: "checkmark.seal.fill", tint: .green)
+            }
+            .settingsRowInsets()
+            .task {
+                // Whichever screen reads the key first seeds the per-player
+                // default, so this toggle and the in-game menu always agree.
+                GameViewModel.seedAutoCheckIfNeeded(totalCompleted: profile.totalPuzzlesCompleted)
+            }
+        } footer: {
+            Text("Marks wrong letters as you type. Turn off for a classic solve with no help.")
         }
     }
 

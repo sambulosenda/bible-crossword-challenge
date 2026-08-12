@@ -101,15 +101,15 @@ struct HomeView: View {
         let record = daily.flatMap { d in records.first { $0.puzzleID == d.id } }
         let mini = dailyMini
         let miniRecord = mini.flatMap { m in records.first { $0.puzzleID == m.id } }
-        let leadsWithMini = profile.totalPuzzlesCompleted == 0 && mini != nil
+        let leadsWithMini = profile.totalPuzzlesCompleted < 3 && mini != nil
 
         return NavigationStack(path: $path) {
             ScrollView {
                 VStack(spacing: Theme.Spacing.l) {
                     TodayHeader(verse: verseOfTheDay(excluding: daily))
 
-                    // A player who has never finished a puzzle leads with the
-                    // Mini; everyone else leads with the daily, as before.
+                    // A player still inside their first three finishes leads
+                    // with the Mini; everyone else leads with the daily.
                     //
                     // Finishing one puzzle on the first day is what separates a
                     // player who comes back from one who doesn't — measured at
@@ -120,10 +120,12 @@ struct HomeView: View {
                     // in a row underneath it. New players came out of a
                     // two-letter tutorial and were handed a 19-clue grid.
                     //
-                    // This reverses only that first choice. The moment they
-                    // finish anything the screen is the one everybody else has,
-                    // permanently — the daily is the habit, the Mini is just a
-                    // gentler way in.
+                    // Originally only the literal first solve; extended to the
+                    // first three because one Mini finish was handing players
+                    // straight back to the 19-clue cliff on day two, before the
+                    // habit existed. After three finishes the screen is the one
+                    // everybody else has, permanently — the daily is the habit,
+                    // the Mini is just a gentler way in.
                     if leadsWithMini, let mini {
                         LeadPuzzleCard(
                             puzzle: mini,
