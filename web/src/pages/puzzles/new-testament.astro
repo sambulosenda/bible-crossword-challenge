@@ -1,0 +1,6 @@
+---
+import TopicHub from '../../components/TopicHub.astro';
+import { TOPICS } from '../../data/topics';
+const topic = TOPICS.find((t) => t.slug === 'new-testament')!;
+---
+<TopicHub topic={topic} />

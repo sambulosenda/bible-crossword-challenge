@@ -5,10 +5,16 @@
   "private": true,
   "scripts": {
     "dev": "astro dev",
+    "prebuild": "node scripts/generate-printables.mjs",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "printables": "node scripts/generate-printables.mjs"
   },
   "dependencies": {
     "astro": "^5.6.0"
+  },
+  "devDependencies": {
+    "pdfkit": "^0.19.1",
+    "qrcode": "^1.5.4"
   }
 }

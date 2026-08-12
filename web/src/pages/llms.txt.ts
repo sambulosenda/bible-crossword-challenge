@@ -39,6 +39,8 @@ export const GET: APIRoute = async () => {
 
 - [Home](${SITE}/): what the app is, the feature list, and the FAQ.
 - [Puzzles by theme](${SITE}/puzzles/): the full archive of ${PUZZLE_COUNT} puzzles, grouped by difficulty, each with its closing verse.
+- [Printable Bible crosswords](${SITE}/puzzles/printable/): every themed puzzle as a free 3-page PDF — grid, clues, and answer key with verse references. No sign-up; free to print for church, Sunday school, and home use.
+- Browse by topic: [Old Testament](${SITE}/puzzles/old-testament/), [New Testament](${SITE}/puzzles/new-testament/), [Christmas & Easter](${SITE}/puzzles/christmas-and-easter/), [for kids](${SITE}/puzzles/for-kids/).
 - [How to play](${SITE}/how-to-play/): the rules, how hints work, and five tips for solving Bible crosswords.
 - [Privacy policy](${SITE}/privacy/): what is and is not collected.
 

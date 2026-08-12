@@ -9,7 +9,17 @@ import { SITE } from '../consts';
 // changefreq and priority are omitted on purpose — Google ignores both, and
 // lastmod is omitted rather than stamped with the build date, which would claim
 // every page changed on every deploy and get the whole file distrusted.
-const STATIC_PATHS = ['/', '/puzzles/', '/how-to-play/', '/privacy/'];
+const STATIC_PATHS = [
+  '/',
+  '/puzzles/',
+  '/puzzles/printable/',
+  '/puzzles/old-testament/',
+  '/puzzles/new-testament/',
+  '/puzzles/christmas-and-easter/',
+  '/puzzles/for-kids/',
+  '/how-to-play/',
+  '/privacy/',
+];
 
 export const GET: APIRoute = async () => {
   const puzzles = await getCollection('puzzles');

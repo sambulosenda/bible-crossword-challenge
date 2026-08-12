@@ -1,0 +1,113 @@
+---
+// The printable hub: every theme puzzle as a free 3-page PDF (grid, clues,
+// answer key). PDFs are generated at build time by scripts/generate-printables.mjs
+// into /printables/<slug>.pdf — one per theme page, so this list is simply the
+// collection itself.
+import { getCollection } from 'astro:content';
+import Layout from '../../../layouts/Layout.astro';
+import AppStoreButton from '../../../components/AppStoreButton.astro';
+import { SITE } from '../../../consts';
+import { difficultyOf } from '../../../data/topics';
+
+const title = 'Free Printable Bible Crossword Puzzles (PDF, with Answers) — Bible Crossword Challenge';
+const description =
+  'Free printable Bible crossword puzzles as PDFs — grid, clues, and answer key with verse references. For Sunday school, church groups, and home. No sign-up.';
+
+const plain = (s: string) =>
+  s.replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').replace(/&rsquo;/g, '’').trim();
+
+const all = await getCollection('puzzles');
+const themes = all
+  .map((entry) => ({
+    slug: entry.id,
+    href: `/puzzles/${entry.id}/`,
+    pdf: `/printables/${entry.id}.pdf`,
+    heading: entry.data.heading,
+    reference: entry.data.reference,
+    difficulty: difficultyOf(entry.data.meta),
+  }))
+  .sort((a, b) => plain(a.heading).localeCompare(plain(b.heading)));
+
+const groups = ['Easy', 'Medium', 'Hard'].map((tier) => ({
+  tier,
+  items: themes.filter((t) => t.difficulty === tier),
+}));
+
+const breadcrumbLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE}/` },
+    { '@type': 'ListItem', position: 2, name: 'Puzzles', item: `${SITE}/puzzles/` },
+    { '@type': 'ListItem', position: 3, name: 'Printable', item: `${SITE}/puzzles/printable/` },
+  ],
+};
+
+const collectionLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Free printable Bible crossword puzzles',
+  url: `${SITE}/puzzles/printable/`,
+  description,
+  isPartOf: { '@type': 'WebSite', name: 'Bible Crossword Challenge', url: `${SITE}/` },
+  mainEntity: {
+    '@type': 'ItemList',
+    name: 'Printable Bible crossword PDFs',
+    numberOfItems: themes.length,
+    itemListElement: themes.map((t, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      item: {
+        '@type': 'DigitalDocument',
+        name: `${plain(t.heading)} — printable Bible crossword (PDF)`,
+        url: `${SITE}${t.pdf}`,
+        encodingFormat: 'application/pdf',
+        isAccessibleForFree: true,
+        about: `${plain(t.reference)} (King James Version)`,
+      },
+    })),
+  },
+};
+---
+<Layout title={title} description={description} path="/puzzles/printable/">
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(breadcrumbLd)} />
+    <script type="application/ld+json" set:html={JSON.stringify(collectionLd)} />
+  </Fragment>
+
+  <main id="main" class="page">
+    <div class="wrap">
+      <p class="crumbs"><a href="/">Home</a><span>/</span><a href="/puzzles/">Puzzles</a><span>/</span>Printable</p>
+      <p class="eyebrow">Free PDFs · no sign-up</p>
+      <h1>Printable Bible crossword puzzles</h1>
+      <p class="meta-chips"><b>{themes.length}</b> puzzles · grid, clues &amp; answer key in every PDF</p>
+      <div class="prose">
+        <p>Every themed puzzle below is a free, printable PDF: a full crossword grid on the first page, the across and down clues on the second, and a complete answer key — with the verse reference behind each answer — on the last. Print as many copies as you like for Sunday school, church groups, youth ministry, homeschool, or the kitchen table.</p>
+        <p>Each puzzle is hand-crafted around one Bible story or theme, with clues rooted in the King James Version. Prefer to solve on a screen? The same puzzles are in the <a href="/">Bible Crossword Challenge app</a>, with a new daily crossword and fair hints when you're stuck.</p>
+      </div>
+
+      <div class="content-section">
+        {groups.map((group) => (
+          <div class="arch-group">
+            <h3>{group.tier}</h3>
+            <ul class="arch-list">
+              {group.items.map((t) => (
+                <li>
+                  <a href={t.pdf}><span set:html={t.heading} /> (PDF)</a>
+                  <span class="ref"><a href={t.href}>about</a></span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+
+        <h2>How to use them</h2>
+        <div class="prose">
+          <p>Print the first two pages for solvers and keep the answer key for the teacher. Answers are drawn from the story named at the top of each puzzle, so a Bible open to that passage is the only help most groups need. Browse by topic: <a href="/puzzles/old-testament/">Old Testament</a> · <a href="/puzzles/new-testament/">New Testament</a> · <a href="/puzzles/christmas-and-easter/">Christmas &amp; Easter</a> · <a href="/puzzles/for-kids/">for kids</a>.</p>
+        </div>
+
+        <div style="margin-top:34px"><AppStoreButton /></div>
+      </div>
+    </div>
+  </main>
+</Layout>

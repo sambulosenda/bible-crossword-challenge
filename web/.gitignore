@@ -9,3 +9,4 @@ node_modules/
 .env.production
 # macOS
 .DS_Store
+public/printables/
