@@ -1,11 +1,6 @@
 Thanks for playing Bible Crossword Challenge! This update includes:
 
-• Your Journey — a map of the books of the Bible you've been through, and the ones still ahead
-• Challenge family and friends: send a board in a link, then compare how you both did
-• Two new collections, Out of Egypt and Women of the Bible, plus seasonal packs for Lent, Easter, Advent and Christmas
-• 51 new puzzles, taking the library to 228
-• The last week of puzzles is free to play in the Library, and anything you've started stays yours
-• A rebuilt results screen that reports your solve, and a way back into your streak when a day gets away from you
-• Every collection now shows which books of the Bible it covers
-• Premium screens name the collections you haven't opened yet, show the price per month, and say exactly when a free trial ends
-• Fixed: streaks of 10 or more now show in full, and VoiceOver reads the settings rows again
+• Auto-check: wrong letters are marked the moment you type them, so a small slip can't quietly sink a whole grid. On from the start for new players — everyone can switch it on or off in the hint menu or under Profile → Gameplay
+• A word of encouragement when you're one or two clues from the finish
+• Your first three days now lead with the Mini — a gentler way into the daily habit
+• Small fixes and improvements throughout
