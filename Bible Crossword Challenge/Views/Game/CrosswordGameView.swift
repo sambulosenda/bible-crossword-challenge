@@ -61,6 +61,9 @@ struct CrosswordGameView: View {
     /// Abandonment fires once per visit to this screen, but every departure
     /// path (window detach, onDisappear) can fire more than once for one exit.
     @State private var didLogAbandon = false
+    /// The passage a verse hint opened, presented as a local sheet (see the
+    /// `.sheet(item:)` note below for why not `ReaderRouter`).
+    @State private var verseHintTarget: ReaderRouter.Target?
     /// Keeps the screen focused so a hardware keyboard can type into the grid.
     @FocusState private var gridFocused: Bool
 
@@ -128,6 +131,16 @@ struct CrosswordGameView: View {
         }
         .sheet(isPresented: $showPaywall) {
             PaywallView(source: "hint_limit")
+        }
+        // Presented locally like the clue list's reader — the ReaderRouter
+        // cover hangs off the tab bar and would detach this view from its
+        // window, firing the abandonment log for what is just a hint. A sheet
+        // keeps the grid attached (and its TimelineView ticking), so the clock
+        // is gated by `isTimerSuppressed` instead: reading must cost no time.
+        .sheet(item: $verseHintTarget, onDismiss: {
+            vm.isTimerSuppressed = false
+        }) { target in
+            ReaderModal(target: target)
         }
         .fullScreenCover(isPresented: $showCompletion) {
             CompletionView(
@@ -250,6 +263,16 @@ struct CrosswordGameView: View {
         ToolbarItem(placement: .topBarTrailing) {
             Menu {
                 Section("Hints left: \(hintsRemainingText)") {
+                    // Absent (not disabled) when the clue has no reference —
+                    // a dimmed row would advertise a hint most clues can't
+                    // offer yet. See ClueListView for the same discipline.
+                    if vm.activeSlot?.reference != nil {
+                        Button {
+                            useVerseHint()
+                        } label: {
+                            Label("Show the Verse", systemImage: "book")
+                        }
+                    }
                     Button {
                         useHint(.letter)
                     } label: {
@@ -333,6 +356,9 @@ struct CrosswordGameView: View {
         switch type {
         case .letter: didReveal = vm.revealLetter()
         case .word: didReveal = vm.revealWord()
+        // Never routed here — the verse hint reveals nothing, so it has its
+        // own path (`useVerseHint`) with per-clue charging.
+        case .verse: didReveal = false
         }
         guard didReveal else {
             rec.usedHint = priorUsedHint
@@ -341,6 +367,33 @@ struct CrosswordGameView: View {
         if !store.isPremium { profile.consumeHint() }
         analytics.log(.hintUsed(type: type.rawValue))
         saveProgress()
+    }
+
+    /// The third hint: open the passage the answer comes from and let the
+    /// player find the word themselves. Charges the shared quota once per
+    /// clue — re-opening the same passage to re-read it is free.
+    private func useVerseHint() {
+        guard let slot = vm.activeSlot,
+              let reference = slot.reference,
+              let target = ReaderRouter.Target(reference: reference) else { return }
+
+        if !vm.hasVerseHinted(slot) {
+            guard profile.hintsRemaining(isPremium: store.isPremium) > 0 else {
+                showPaywall = true
+                return
+            }
+            let rec = loadOrCreateRecord()
+            rec.usedHint = true
+            vm.markVerseHinted(slot)
+            if !store.isPremium { profile.consumeHint() }
+            analytics.log(.hintUsed(type: HintType.verse.rawValue))
+            saveProgress()
+        }
+
+        analytics.log(.scriptureOpened(reference: reference, source: "hint"))
+        vm.isTimerSuppressed = true
+        vm.pauseTimer()
+        verseHintTarget = target
     }
 
     private func handleCompletion(seconds: Int) {
