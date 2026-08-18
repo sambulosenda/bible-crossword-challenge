@@ -156,15 +156,130 @@ struct DailyReminderPrompt: View {
     private func enable() {
         working = true
         Task {
-            let granted = await notifications.requestAuthorization()
             // Same events as onboarding, so the two asks can be compared
             // directly rather than needing a separate funnel.
-            analytics.log(.notificationPermission(granted: granted))
-            if granted {
-                remindersEnabled = true
-                analytics.log(.reminderSettingChanged(enabled: true))
-                await notifications.reschedule(for: profile, enabled: true, minutes: reminderMinutes)
+            let granted = await ReminderOptIn.enable(
+                source: "prompt", profile: profile,
+                notifications: notifications, analytics: analytics,
+                minutes: reminderMinutes
+            )
+            if granted { remindersEnabled = true }
+            working = false
+            onFinish()
+        }
+    }
+}
+
+// MARK: - Shared accept flow
+
+/// The one place a reminder ask reaches the system dialog. Every surface
+/// (day-2 sheet, completion card, streak card) funnels through here so the
+/// grant is logged with its source and the schedule lands the same way.
+enum ReminderOptIn {
+    /// Returns whether permission was granted. The caller flips its own
+    /// `remindersEnabled` @AppStorage on true — this writes the shared default
+    /// so out-of-view readers agree, but SwiftUI bindings refresh from the
+    /// caller's wrapper.
+    @MainActor
+    static func enable(
+        source: String,
+        profile: PlayerProfile,
+        notifications: NotificationService,
+        analytics: AnalyticsService,
+        minutes: Int
+    ) async -> Bool {
+        let granted = await notifications.requestAuthorization()
+        analytics.log(.notificationPermission(granted: granted, source: source))
+        if granted {
+            UserDefaults.standard.set(true, forKey: "remindersEnabled")
+            analytics.log(.reminderSettingChanged(enabled: true))
+            await notifications.reschedule(for: profile, enabled: true, minutes: minutes)
+        }
+        return granted
+    }
+}
+
+// MARK: - Inline ask card
+
+/// The compact form of the ask for surfaces that are already a screen of their
+/// own (completion, Home). Same preview, same buttons, no time picker — the
+/// stored default time is offered in the button and adjustable in Profile.
+struct ReminderAskCard: View {
+    let profile: PlayerProfile
+    let surface: ReminderAsk.Surface
+    let kicker: String
+    let headline: String
+    /// Called once the ask is answered either way, so the owner can remove the
+    /// card. Impressions are recorded by the owner when it decides to show.
+    let onFinish: () -> Void
+
+    @Environment(\.analytics) private var analytics
+    @Environment(\.notifications) private var notifications
+    @AppStorage("remindersEnabled") private var remindersEnabled = false
+    @AppStorage("reminderMinutes") private var reminderMinutes = ReminderTime.defaultMinutes
+    @State private var working = false
+
+    private var reminderTimeText: String {
+        ReminderTime.date(fromMinutes: reminderMinutes)
+            .formatted(date: .omitted, time: .shortened)
+    }
+
+    var body: some View {
+        VStack(spacing: Theme.Spacing.m) {
+            VStack(spacing: Theme.Spacing.xs) {
+                // Natural case; `kicker()` uppercases for display, so VoiceOver
+                // reads a sentence rather than an acronym-like shout.
+                Text(kicker)
+                    .kicker()
+                Text(headline)
+                    .font(.headline)
+                    .multilineTextAlignment(.center)
             }
+            .frame(maxWidth: .infinity)
+            // One VoiceOver stop for the header pair, like the benefit rows on
+            // the onboarding premium page.
+            .accessibilityElement(children: .combine)
+
+            NotificationPreviewCard()
+
+            Button {
+                enable()
+            } label: {
+                Group {
+                    if working {
+                        ProgressView().tint(Theme.onInk)
+                    } else {
+                        Text("Remind me at \(reminderTimeText)")
+                    }
+                }
+                .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.pillProminent)
+            .disabled(working)
+
+            // Quiet, same weight as the other asks' declines — see the day-2
+            // sheet's note on hard-to-refuse buttons.
+            Button("Not now") {
+                analytics.log(.reminderDeclined(source: surface.rawValue))
+                onFinish()
+            }
+            .font(.subheadline.weight(.semibold))
+            .tint(.secondary)
+            .disabled(working)
+        }
+        .padding(Theme.Spacing.m)
+        .elevatedCard()
+    }
+
+    private func enable() {
+        working = true
+        Task {
+            let granted = await ReminderOptIn.enable(
+                source: surface.rawValue, profile: profile,
+                notifications: notifications, analytics: analytics,
+                minutes: reminderMinutes
+            )
+            if granted { remindersEnabled = true }
             working = false
             onFinish()
         }

@@ -443,7 +443,7 @@ struct ProfileView: View {
             switch notifications.authorizationStatus {
             case .notDetermined:
                 let granted = await notifications.requestAuthorization()
-                analytics.log(.notificationPermission(granted: granted))
+                analytics.log(.notificationPermission(granted: granted, source: "profile"))
                 if granted {
                     analytics.log(.reminderSettingChanged(enabled: true))
                     rescheduleReminders()

@@ -682,7 +682,7 @@ struct OnboardingView: View {
         didAnswerReminders = true
         Task {
             let granted = await notifications.requestAuthorization()
-            analytics.log(.notificationPermission(granted: granted))
+            analytics.log(.notificationPermission(granted: granted, source: "onboarding"))
             if granted {
                 remindersEnabled = true
                 analytics.log(.reminderSettingChanged(enabled: true))
