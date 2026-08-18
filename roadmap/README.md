@@ -28,6 +28,7 @@ Dated work first — 13 has a hard deadline that the rest do not.
 | 11 | Streak break / comeback | D1–D7 retention | [11-streak-comeback.md](./11-streak-comeback.md) |
 | 12 | Ads: ship or strip claims | Free-tier $ / honesty | [12-ads-honesty-or-ship.md](./12-ads-honesty-or-ship.md) |
 | 14 | **Premium content value** — earn “all packs + every new one” | Trial→paid / catalog | [14-premium-content-value.md](./14-premium-content-value.md) |
+| 15 | Verse hint (“Show the Verse”) | Scripture in the solve loop | [15-verse-hint.md](./15-verse-hint.md) |
 
 ## Dated
 

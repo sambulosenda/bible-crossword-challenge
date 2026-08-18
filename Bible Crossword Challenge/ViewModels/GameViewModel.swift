@@ -14,6 +14,10 @@ import Observation
 enum HintType: String {
     case letter
     case word
+    /// Opens the passage the answer comes from instead of touching the grid —
+    /// the player finds the word in Scripture themselves. Only offered on
+    /// clues that carry a `reference`.
+    case verse
 }
 
 @Observable
@@ -56,6 +60,15 @@ final class GameViewModel {
     /// content alive and rendering (ticks keep arriving), and can prewarm
     /// navigation destinations that were never shown; both must not count.
     var isAttachedToWindow = false
+    /// True while the verse-hint reader sheet is up. A sheet leaves the grid
+    /// attached and rendering, so window attachment alone can't stop the
+    /// clock — and time spent reading Scripture must not count against the
+    /// solve.
+    var isTimerSuppressed = false
+
+    /// Slots already charged for a verse hint, so re-opening the same passage
+    /// to re-read it is free.
+    private var verseHintedSlotIDs: Set<String> = []
 
     // Side-effect callbacks owned by the view.
     var onComplete: ((Int) -> Void)?
@@ -346,6 +359,19 @@ final class GameViewModel {
         return true
     }
 
+    /// Whether `slot` was already charged for a verse hint this session —
+    /// re-opening the passage to re-read it is free.
+    func hasVerseHinted(_ slot: Slot) -> Bool {
+        verseHintedSlotIDs.contains(slot.id)
+    }
+
+    /// Record the (first) verse hint on `slot`. The grid is untouched — the
+    /// hint is the reading, not a reveal.
+    func markVerseHinted(_ slot: Slot) {
+        guard verseHintedSlotIDs.insert(slot.id).inserted else { return }
+        hintsUsed += 1
+    }
+
     // MARK: - Word completion tracking
 
     private func slotSolved(_ slot: Slot) -> Bool {
@@ -475,7 +501,7 @@ final class GameViewModel {
     /// timer wasn't rendering counts for at most one tick.
     func tick(now: Date) {
         guard !isComplete else { return }
-        guard isAttachedToWindow else {
+        guard isAttachedToWindow, !isTimerSuppressed else {
             lastTick = nil
             return
         }
