@@ -2,23 +2,33 @@
 //  StoreService.swift
 //  Bible Crossword Challenge
 //
-//  Premium entitlement backed by StoreKit 2. Premium can be obtained three ways,
-//  all sharing one entitlement: an auto-renewable monthly or yearly subscription
-//  (yearly carries a free trial), or a one-time lifetime unlock (non-consumable).
-//  Ownership is derived from `Transaction.currentEntitlements`, which only yields
-//  active subscriptions (incl. an in-progress trial) plus the lifetime purchase.
-//  A background task listens for `Transaction.updates` so entitlements granted or
-//  revoked outside the app (renewals, Ask to Buy, refunds, family sharing) are
-//  reflected automatically.
+//  Premium entitlement backed by RevenueCat (over StoreKit 2). Premium can be
+//  obtained three ways, all sharing the one "pro" entitlement: an auto-renewable
+//  monthly or yearly subscription (yearly carries a free trial), or the legacy
+//  one-time lifetime unlock — removed from sale, but still attached to the
+//  entitlement so past buyers stay premium. Ownership is derived from
+//  `CustomerInfo.entitlements["pro"]`; the customer-info stream keeps it current
+//  when entitlements change outside the app (renewals, Ask to Buy, refunds,
+//  family sharing).
 //
-//  The matching products must exist in App Store Connect with these identifiers.
-//  Local testing uses the bundled `Products.storekit` configuration (referenced
-//  by the scheme).
+//  The paywall views consume StoreKit 2 `Product` values, so this service maps
+//  RevenueCat's current-offering packages back to their underlying
+//  `sk2Product`s and purchases go through the matching package — that keeps
+//  offering/experiment attribution intact on the RevenueCat side without the
+//  views knowing RevenueCat exists.
+//
+//  RevenueCat completes (finishes) transactions itself. The `Transaction.updates`
+//  listener here is analytics-only: it must never call `finish()`.
+//
+//  The matching products must exist in App Store Connect and in the RevenueCat
+//  catalog. Local testing uses the bundled `Products.storekit` configuration
+//  (referenced by the scheme).
 //
 
 import Foundation
 import StoreKit
 import Observation
+import RevenueCat
 
 /// A user-facing alert for a purchase/restore outcome the player must know
 /// about (failure, pending approval, restore result). Nil means nothing to say.
@@ -51,6 +61,11 @@ final class StoreService {
     static let lifetimeID = "com.sambulosendas1.biblecrossword.premium"
     static let allProductIDs = [yearlyID, monthlyID, lifetimeID]
 
+    /// The RevenueCat entitlement every premium product is attached to.
+    static let entitlementID = "pro"
+    /// RevenueCat public SDK key — safe to embed, scoped to client operations.
+    private static let revenueCatAPIKey = "appl_iWdaXgiKMfmIiTcqlsaDKkIdJxQ"
+
     private(set) var isPremium = false
     private(set) var products: [Product] = []
     private(set) var purchaseInFlight = false
@@ -73,6 +88,12 @@ final class StoreService {
     var yearlyPriceText: String { yearly?.displayPrice ?? "£9.99" }
 
     private var updatesTask: Task<Void, Never>?
+    private var customerInfoTask: Task<Void, Never>?
+
+    /// The current offering's package for each store product id, so a purchase
+    /// initiated from a `Product` the views hold can still go through the
+    /// package — which is what ties it to the offering in RevenueCat.
+    private var packagesByProductID: [String: Package] = [:]
 
     private let analytics: any AnalyticsService
 
@@ -98,7 +119,32 @@ final class StoreService {
         let stored = UserDefaults.standard.array(forKey: Self.reportedIDsKey) as? [NSNumber] ?? []
         self.reportedTransactionIDs = Set(stored.map { $0.uint64Value })
 
-        // Reflect entitlement changes that happen outside an explicit purchase.
+        // Configured here rather than in the App initialiser: `@State` property
+        // initialisers run before the App's `init` body, so this is the first
+        // code that needs Purchases and the only place guaranteed to run before
+        // every use. Guarded so previews/tests creating extra services don't
+        // configure twice.
+        if !Purchases.isConfigured {
+            #if DEBUG
+            Purchases.logLevel = .debug
+            #else
+            Purchases.logLevel = .warn
+            #endif
+            Purchases.configure(
+                with: .builder(withAPIKey: Self.revenueCatAPIKey)
+                    .with(storeKitVersion: .storeKit2)
+                    .build()
+            )
+        }
+
+        // Entitlement changes that happen outside an explicit purchase —
+        // renewals, Ask to Buy approvals, refunds, family sharing — arrive here.
+        customerInfoTask = Task { [weak self] in
+            for await info in Purchases.shared.customerInfoStream {
+                self?.apply(info)
+            }
+        }
+        // Analytics-only mirror of raw StoreKit traffic (see `handle`).
         updatesTask = Task { [weak self] in
             for await update in Transaction.updates {
                 await self?.handle(update)
@@ -107,7 +153,10 @@ final class StoreService {
         Task { await refresh() }
     }
 
-    deinit { updatesTask?.cancel() }
+    deinit {
+        updatesTask?.cancel()
+        customerInfoTask?.cancel()
+    }
 
     /// Load products and re-check entitlement. Safe to call repeatedly.
     func refresh() async {
@@ -117,8 +166,18 @@ final class StoreService {
 
     func loadProducts() async {
         do {
-            let loaded = try await Product.products(for: Self.allProductIDs)
-            // Keep a stable display order: yearly, monthly, lifetime.
+            let offerings = try await Purchases.shared.offerings()
+            let packages = offerings.current?.availablePackages ?? []
+            packagesByProductID = Dictionary(
+                packages.compactMap { pkg in
+                    pkg.storeProduct.sk2Product.map { ($0.id, pkg) }
+                },
+                uniquingKeysWith: { first, _ in first }
+            )
+            let loaded = packages.compactMap(\.storeProduct.sk2Product)
+            // Keep a stable display order: yearly, monthly. (Lifetime is off
+            // sale and has no package, so it never appears — matching what
+            // production StoreKit returns for a removed-from-sale product.)
             products = Self.allProductIDs.compactMap { id in loaded.first { $0.id == id } }
             productsLoadFailed = products.isEmpty
         } catch {
@@ -126,7 +185,7 @@ final class StoreService {
             // paywall would otherwise have nothing to sell.
             productsLoadFailed = products.isEmpty
             #if DEBUG
-            print("⚠️ StoreKit: failed to load products — \(error)")
+            print("⚠️ RevenueCat: failed to load offerings — \(error)")
             #endif
         }
     }
@@ -141,42 +200,47 @@ final class StoreService {
         defer { purchaseInFlight = false }
 
         do {
-            let result = try await product.purchase()
-            switch result {
-            case .success(let verification):
-                let transaction = try checkVerified(verification)
-                let isTrial = transaction.offer?.type == .introductory
-                await updateEntitlement()
-                // Report before finishing: a crash between the two would
-                // otherwise drop the sale entirely, whereas re-delivery of an
-                // unfinished transaction is caught by the reported-ID set.
-                report(transaction, acquisition: "in_app")
-                await transaction.finish()
-                // `isPremium` can still be false if the entitlement didn't land
-                // (a revoked or superseded transaction), so report the failure
-                // rather than claiming a sale.
-                return isPremium
-                    ? .purchased(isTrial: isTrial)
-                    : .failed(reason: "entitlement_not_granted")
-            case .userCancelled:
+            // Through the package when the current offering has one, so the
+            // sale carries offering attribution in RevenueCat; a bare product
+            // (not in any offering) still purchases fine without it.
+            let result: PurchaseResultData
+            if let package = packagesByProductID[product.id] {
+                result = try await Purchases.shared.purchase(package: package)
+            } else {
+                result = try await Purchases.shared.purchase(product: StoreProduct(sk2Product: product))
+            }
+
+            if result.userCancelled {
                 // Nothing is coming, so drop the attribution rather than let it
                 // sit and mislabel whatever grant happens to arrive next.
                 pendingSource = nil
                 return .cancelled
-            case .pending:
-                // Ask to Buy / deferred payment — without this the player sees
-                // the button reset and assumes the purchase silently failed.
-                // `pendingSource` deliberately survives: approval can be days
-                // away, and this is the only record of where it started.
-                purchaseNotice = PurchaseNotice(
-                    title: "Purchase Pending",
-                    message: "Your purchase is waiting for approval. Premium unlocks automatically once it's approved."
-                )
-                return .pending
-            @unknown default:
-                pendingSource = nil
-                return .failed(reason: "unknown_result")
             }
+
+            apply(result.customerInfo)
+            let transaction = result.transaction?.sk2Transaction
+            let isTrial = transaction?.offer?.type == .introductory
+                || result.customerInfo.entitlements[Self.entitlementID]?.periodType == .trial
+            if let transaction {
+                // RevenueCat finishes the transaction; we only record the sale.
+                report(transaction, acquisition: "in_app")
+            }
+            // `isPremium` can still be false if the entitlement didn't land
+            // (a revoked or superseded transaction), so report the failure
+            // rather than claiming a sale.
+            return isPremium
+                ? .purchased(isTrial: isTrial)
+                : .failed(reason: "entitlement_not_granted")
+        } catch ErrorCode.paymentPendingError {
+            // Ask to Buy / deferred payment — without this the player sees
+            // the button reset and assumes the purchase silently failed.
+            // `pendingSource` deliberately survives: approval can be days
+            // away, and this is the only record of where it started.
+            purchaseNotice = PurchaseNotice(
+                title: "Purchase Pending",
+                message: "Your purchase is waiting for approval. Premium unlocks automatically once it's approved."
+            )
+            return .pending
         } catch {
             pendingSource = nil
             purchaseNotice = PurchaseNotice(
@@ -184,7 +248,7 @@ final class StoreService {
                 message: "The purchase didn't go through — you haven't been charged. Please try again.\n\n\(error.localizedDescription)"
             )
             #if DEBUG
-            print("⚠️ StoreKit: purchase failed — \(error)")
+            print("⚠️ RevenueCat: purchase failed — \(error)")
             #endif
             return .failed(reason: Self.failureSlug(for: error))
         }
@@ -194,8 +258,23 @@ final class StoreService {
     /// error text: that is localised and unbounded, so it would fragment into
     /// thousands of distinct analytics values that can't be grouped.
     private static func failureSlug(for error: Error) -> String {
+        // RevenueCat wraps most store failures in its own error codes.
+        if let code = error as? ErrorCode {
+            switch code {
+            case .networkError, .offlineConnectionError: return "network"
+            case .purchaseCancelledError: return "cancelled"
+            case .productNotAvailableForPurchaseError: return "product_unavailable"
+            case .purchaseNotAllowedError: return "not_allowed"
+            case .paymentPendingError: return "pending"
+            case .storeProblemError: return "store_problem"
+            case .receiptAlreadyInUseError: return "receipt_in_use"
+            case .ineligibleError: return "ineligible_for_offer"
+            case .invalidPromotionalOfferError: return "invalid_offer_id"
+            default: return "rc_error_\(code.rawValue)"
+            }
+        }
         switch error {
-        case is VerificationResult<Transaction>.VerificationError:
+        case is StoreKit.VerificationResult<Transaction>.VerificationError:
             return "verification_failed"
         case let storeKitError as StoreKitError:
             switch storeKitError {
@@ -225,17 +304,17 @@ final class StoreService {
         }
     }
 
-    /// Restore prior purchases (StoreKit refreshes entitlements from the store).
+    /// Restore prior purchases (RevenueCat re-syncs the receipt with the store).
     /// Always ends in a `purchaseNotice` telling the player what happened,
     /// unless they cancelled the App Store sign-in themselves.
     func restore() async {
         do {
-            try await AppStore.sync()
-            await updateEntitlement()
+            let info = try await Purchases.shared.restorePurchases()
+            apply(info)
             purchaseNotice = isPremium
                 ? PurchaseNotice(title: "Purchases Restored", message: "Welcome back — Premium is active.")
                 : PurchaseNotice(title: "Nothing to Restore", message: "No previous purchases were found for this Apple Account.")
-        } catch StoreKitError.userCancelled {
+        } catch ErrorCode.purchaseCancelledError {
             // Player dismissed the App Store sign-in — not an error.
             await updateEntitlement()
         } catch {
@@ -248,24 +327,24 @@ final class StoreService {
     }
 
     private func updateEntitlement() async {
-        var owned = false
-        for await result in Transaction.currentEntitlements {
-            guard let transaction = try? checkVerified(result) else { continue }
-            if Self.allProductIDs.contains(transaction.productID), transaction.revocationDate == nil {
-                owned = true
-            }
-        }
-        isPremium = owned
+        guard let info = try? await Purchases.shared.customerInfo() else { return }
+        apply(info)
     }
 
-    private func handle(_ result: VerificationResult<Transaction>) async {
+    /// The one place `CustomerInfo` becomes app state.
+    private func apply(_ info: CustomerInfo) {
+        isPremium = info.entitlements[Self.entitlementID]?.isActive == true
+    }
+
+    /// Analytics-only. Everything StoreKit grants without an in-app tap arrives
+    /// here: renewals, Ask to Buy approvals, family sharing, purchases made on
+    /// another device, and any sheet that finished while the app was away.
+    /// RevenueCat owns finishing transactions — calling `finish()` here would
+    /// race its bookkeeping, so this must never do so.
+    private func handle(_ result: StoreKit.VerificationResult<Transaction>) async {
         guard let transaction = try? checkVerified(result) else { return }
         await updateEntitlement()
-        // Everything StoreKit grants without an in-app tap arrives here:
-        // renewals, Ask to Buy approvals, family sharing, purchases made on
-        // another device, and any sheet that finished while the app was away.
         report(transaction, acquisition: "external")
-        await transaction.finish()
     }
 
     // MARK: - Purchase reporting
@@ -339,7 +418,7 @@ final class StoreService {
         )
     }
 
-    private func checkVerified<T>(_ result: VerificationResult<T>) throws -> T {
+    private func checkVerified<T>(_ result: StoreKit.VerificationResult<T>) throws -> T {
         switch result {
         case .unverified(_, let error): throw error
         case .verified(let safe): return safe

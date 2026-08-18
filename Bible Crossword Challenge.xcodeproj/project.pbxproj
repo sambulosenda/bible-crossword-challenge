@@ -187,6 +187,7 @@
 				AA0000010000000000000002 /* FirebaseAnalyticsWithoutAdIdSupport */,
 				AC0000010000000000000002 /* PostHog */,
 				42F868B83D5BFCA01AFC66C8 /* Lottie */,
+				AD0000010000000000000002 /* RevenueCat */,
 			);
 			productName = "Bible Crossword Challenge";
 			productReference = 4F1A3C3E2FE8883C005B59F2 /* Bible Crossword Challenge.app */;
@@ -295,6 +296,7 @@
 				AA0000010000000000000001 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				AC0000010000000000000001 /* XCRemoteSwiftPackageReference "posthog-ios" */,
 				F6D385BEF7023C5038BB08CF /* XCRemoteSwiftPackageReference "lottie-ios" */,
+				AD0000010000000000000001 /* XCRemoteSwiftPackageReference "purchases-ios" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 4F1A3C3F2FE8883C005B59F2 /* Products */;
@@ -794,6 +796,14 @@
 				minimumVersion = 4.5.0;
 			};
 		};
+		AD0000010000000000000001 /* XCRemoteSwiftPackageReference "purchases-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/RevenueCat/purchases-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -811,6 +821,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = AC0000010000000000000001 /* XCRemoteSwiftPackageReference "posthog-ios" */;
 			productName = PostHog;
+		};
+		AD0000010000000000000002 /* RevenueCat */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AD0000010000000000000001 /* XCRemoteSwiftPackageReference "purchases-ios" */;
+			productName = RevenueCat;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
