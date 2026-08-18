@@ -8978,7 +8978,8 @@
         "row": 1,
         "col": 3,
         "text": "Happy and favoured; how each saying begins",
-        "answer": "BLESSED"
+        "answer": "BLESSED",
+        "reference": "Matthew 5:3"
       },
       {
         "number": 3,
@@ -8986,7 +8987,8 @@
         "row": 1,
         "col": 12,
         "text": "Where the reward is great for the persecuted",
-        "answer": "HEAVEN"
+        "answer": "HEAVEN",
+        "reference": "Matthew 5:12"
       },
       {
         "number": 4,
@@ -8994,7 +8996,8 @@
         "row": 3,
         "col": 4,
         "text": "Realm of heaven promised to the poor in spirit",
-        "answer": "KINGDOM"
+        "answer": "KINGDOM",
+        "reference": "Matthew 5:3"
       },
       {
         "number": 5,
@@ -9002,7 +9005,8 @@
         "row": 4,
         "col": 2,
         "text": "Compassion the merciful shall obtain",
-        "answer": "MERCY"
+        "answer": "MERCY",
+        "reference": "Matthew 5:7"
       },
       {
         "number": 6,
@@ -9010,7 +9014,8 @@
         "row": 5,
         "col": 1,
         "text": "The makers of it are called children of God",
-        "answer": "PEACE"
+        "answer": "PEACE",
+        "reference": "Matthew 5:9"
       },
       {
         "number": 7,
@@ -9018,7 +9023,8 @@
         "row": 5,
         "col": 4,
         "text": "What those who mourn shall receive",
-        "answer": "COMFORT"
+        "answer": "COMFORT",
+        "reference": "Matthew 5:4"
       },
       {
         "number": 8,
@@ -9026,7 +9032,8 @@
         "row": 5,
         "col": 10,
         "text": "Gentle and humble; they inherit the earth",
-        "answer": "MEEK"
+        "answer": "MEEK",
+        "reference": "Matthew 5:5"
       },
       {
         "number": 8,
@@ -9034,7 +9041,8 @@
         "row": 5,
         "col": 10,
         "text": "Those who grieve, for they shall be comforted",
-        "answer": "MOURN"
+        "answer": "MOURN",
+        "reference": "Matthew 5:4"
       },
       {
         "number": 9,
@@ -9042,7 +9050,8 @@
         "row": 7,
         "col": 4,
         "text": "They shall obtain the same compassion they give",
-        "answer": "MERCIFUL"
+        "answer": "MERCIFUL",
+        "reference": "Matthew 5:7"
       },
       {
         "number": 10,
@@ -9050,7 +9059,8 @@
         "row": 7,
         "col": 6,
         "text": "Recompense great in heaven for the faithful",
-        "answer": "REWARD"
+        "answer": "REWARD",
+        "reference": "Matthew 5:12"
       },
       {
         "number": 11,
@@ -9058,7 +9068,8 @@
         "row": 7,
         "col": 8,
         "text": "To receive as a possession or birthright",
-        "answer": "INHERIT"
+        "answer": "INHERIT",
+        "reference": "Matthew 5:5"
       },
       {
         "number": 12,
@@ -9066,7 +9077,8 @@
         "row": 7,
         "col": 13,
         "text": "What the meek shall inherit",
-        "answer": "EARTH"
+        "answer": "EARTH",
+        "reference": "Matthew 5:5"
       },
       {
         "number": 13,
@@ -9074,7 +9086,8 @@
         "row": 9,
         "col": 8,
         "text": "Along with thirst, a craving after righteousness",
-        "answer": "HUNGER"
+        "answer": "HUNGER",
+        "reference": "Matthew 5:6"
       },
       {
         "number": 14,
@@ -9082,7 +9095,8 @@
         "row": 10,
         "col": 1,
         "text": "In spirit, theirs is the kingdom of heaven",
-        "answer": "POOR"
+        "answer": "POOR",
+        "reference": "Matthew 5:3"
       },
       {
         "number": 14,
@@ -9090,7 +9104,8 @@
         "row": 10,
         "col": 1,
         "text": "In heart, they shall see God",
-        "answer": "PURE"
+        "answer": "PURE",
+        "reference": "Matthew 5:8"
       },
       {
         "number": 15,
@@ -9098,7 +9113,8 @@
         "row": 13,
         "col": 8,
         "text": "A deep longing, here for righteousness",
-        "answer": "THIRST"
+        "answer": "THIRST",
+        "reference": "Matthew 5:6"
       }
     ]
   },
@@ -9134,7 +9150,8 @@
         "row": 0,
         "col": 0,
         "text": "Plaited into a mocking crown",
-        "answer": "THORNS"
+        "answer": "THORNS",
+        "reference": "John 19:2"
       },
       {
         "number": 1,
@@ -9142,7 +9159,8 @@
         "row": 0,
         "col": 0,
         "text": "Where the body was laid afterward",
-        "answer": "TOMB"
+        "answer": "TOMB",
+        "reference": "Luke 23:53"
       },
       {
         "number": 2,
@@ -9150,7 +9168,8 @@
         "row": 0,
         "col": 5,
         "text": "To endure the pain He bore for many",
-        "answer": "SUFFER"
+        "answer": "SUFFER",
+        "reference": "1 Peter 3:18"
       },
       {
         "number": 3,
@@ -9166,7 +9185,8 @@
         "row": 1,
         "col": 11,
         "text": "Temple curtain torn from top to bottom",
-        "answer": "VEIL"
+        "answer": "VEIL",
+        "reference": "Luke 23:45"
       },
       {
         "number": 5,
@@ -9174,7 +9194,8 @@
         "row": 3,
         "col": 13,
         "text": "Roman who cast lots for the garments",
-        "answer": "SOLDIER"
+        "answer": "SOLDIER",
+        "reference": "John 19:23"
       },
       {
         "number": 6,
@@ -9182,7 +9203,8 @@
         "row": 4,
         "col": 10,
         "text": "Shed for the remission of sins",
-        "answer": "BLOOD"
+        "answer": "BLOOD",
+        "reference": "Matthew 26:28"
       },
       {
         "number": 7,
@@ -9190,7 +9212,8 @@
         "row": 5,
         "col": 0,
         "text": "It covered the land for three hours",
-        "answer": "DARKNESS"
+        "answer": "DARKNESS",
+        "reference": "Luke 23:44"
       },
       {
         "number": 8,
@@ -9198,7 +9221,8 @@
         "row": 5,
         "col": 4,
         "text": "Circlet of thorns set on His head",
-        "answer": "CROWN"
+        "answer": "CROWN",
+        "reference": "John 19:2"
       },
       {
         "number": 8,
@@ -9206,7 +9230,8 @@
         "row": 5,
         "col": 4,
         "text": "Wooden beams on which He was nailed",
-        "answer": "CROSS"
+        "answer": "CROSS",
+        "reference": "Luke 23:26"
       },
       {
         "number": 9,
@@ -9214,7 +9239,8 @@
         "row": 6,
         "col": 10,
         "text": "His mother standing near the cross",
-        "answer": "MARY"
+        "answer": "MARY",
+        "reference": "John 19:25"
       },
       {
         "number": 10,
@@ -9222,7 +9248,8 @@
         "row": 7,
         "col": 3,
         "text": "Place of a skull where He died",
-        "answer": "GOLGOTHA"
+        "answer": "GOLGOTHA",
+        "reference": "John 19:17"
       },
       {
         "number": 11,
@@ -9238,7 +9265,8 @@
         "row": 8,
         "col": 2,
         "text": "Sour drink offered on a sponge",
-        "answer": "VINEGAR"
+        "answer": "VINEGAR",
+        "reference": "Psalm 69:21"
       },
       {
         "number": 13,
@@ -9246,7 +9274,8 @@
         "row": 8,
         "col": 10,
         "text": "Garment placed on Him in mockery",
-        "answer": "ROBE"
+        "answer": "ROBE",
+        "reference": "Luke 23:11"
       },
       {
         "number": 14,
@@ -9254,7 +9283,8 @@
         "row": 9,
         "col": 0,
         "text": "Iron spikes driven through hands and feet",
-        "answer": "NAILS"
+        "answer": "NAILS",
+        "reference": "John 20:25"
       },
       {
         "number": 15,
@@ -9262,7 +9292,8 @@
         "row": 9,
         "col": 6,
         "text": "Roman governor who handed Him over",
-        "answer": "PILATE"
+        "answer": "PILATE",
+        "reference": "Luke 23:1"
       },
       {
         "number": 16,
@@ -9270,7 +9301,8 @@
         "row": 10,
         "col": 5,
         "text": "Part pierced, releasing blood and water",
-        "answer": "SIDE"
+        "answer": "SIDE",
+        "reference": "John 19:34"
       },
       {
         "number": 17,
@@ -9278,7 +9310,8 @@
         "row": 11,
         "col": 0,
         "text": "Weapon that pierced His side",
-        "answer": "SPEAR"
+        "answer": "SPEAR",
+        "reference": "John 19:34"
       },
       {
         "number": 18,
@@ -9286,7 +9319,8 @@
         "row": 14,
         "col": 5,
         "text": "Stalk used to lift the sponge to His mouth",
-        "answer": "REED"
+        "answer": "REED",
+        "reference": "Matthew 27:48"
       }
     ]
   },
@@ -9322,7 +9356,8 @@
         "row": 0,
         "col": 1,
         "text": "They were all of one ___, in one place",
-        "answer": "ACCORD"
+        "answer": "ACCORD",
+        "reference": "Acts 1:14"
       },
       {
         "number": 2,
@@ -9330,7 +9365,8 @@
         "row": 0,
         "col": 6,
         "text": "What the Father had pledged, now fulfilled",
-        "answer": "PROMISE"
+        "answer": "PROMISE",
+        "reference": "Acts 2:33"
       },
       {
         "number": 2,
@@ -9338,7 +9374,8 @@
         "row": 0,
         "col": 6,
         "text": "What they continued in while waiting together",
-        "answer": "PRAYER"
+        "answer": "PRAYER",
+        "reference": "Acts 1:14"
       },
       {
         "number": 3,
@@ -9346,7 +9383,8 @@
         "row": 2,
         "col": 3,
         "text": "Devout men from every nation hearing in their own speech",
-        "answer": "JEWS"
+        "answer": "JEWS",
+        "reference": "Acts 2:5"
       },
       {
         "number": 4,
@@ -9354,7 +9392,8 @@
         "row": 2,
         "col": 8,
         "text": "The Holy Ghost, freely given to those who believe",
-        "answer": "GIFT"
+        "answer": "GIFT",
+        "reference": "Acts 2:38"
       },
       {
         "number": 5,
@@ -9362,7 +9401,8 @@
         "row": 3,
         "col": 0,
         "text": "Strength believers receive when the Spirit comes",
-        "answer": "POWER"
+        "answer": "POWER",
+        "reference": "Acts 1:8"
       },
       {
         "number": 6,
@@ -9370,7 +9410,8 @@
         "row": 4,
         "col": 10,
         "text": "The harvest celebration on which this occurred",
-        "answer": "FEAST"
+        "answer": "FEAST",
+        "reference": "Exodus 23:16"
       },
       {
         "number": 7,
@@ -9378,7 +9419,8 @@
         "row": 5,
         "col": 3,
         "text": "Third Person of the Trinity, poured out on the believers",
-        "answer": "SPIRIT"
+        "answer": "SPIRIT",
+        "reference": "Acts 2:33"
       },
       {
         "number": 8,
@@ -9386,7 +9428,8 @@
         "row": 5,
         "col": 4,
         "text": "Apostle who preached the great sermon that day",
-        "answer": "PETER"
+        "answer": "PETER",
+        "reference": "Acts 2:14"
       },
       {
         "number": 9,
@@ -9394,7 +9437,8 @@
         "row": 7,
         "col": 2,
         "text": "Rushing mighty sound that filled the house",
-        "answer": "WIND"
+        "answer": "WIND",
+        "reference": "Acts 2:2"
       },
       {
         "number": 10,
@@ -9402,7 +9446,8 @@
         "row": 7,
         "col": 4,
         "text": "Languages the disciples suddenly spoke",
-        "answer": "TONGUES"
+        "answer": "TONGUES",
+        "reference": "Acts 2:4"
       },
       {
         "number": 11,
@@ -9410,7 +9455,8 @@
         "row": 7,
         "col": 8,
         "text": "Kind of room where the disciples gathered",
-        "answer": "UPPER"
+        "answer": "UPPER",
+        "reference": "Acts 1:13"
       },
       {
         "number": 12,
@@ -9418,7 +9464,8 @@
         "row": 8,
         "col": 0,
         "text": "Peter lifted up his ___ to address the crowd",
-        "answer": "VOICE"
+        "answer": "VOICE",
+        "reference": "Acts 2:14"
       },
       {
         "number": 13,
@@ -9426,7 +9473,8 @@
         "row": 8,
         "col": 13,
         "text": "What Peter urged the crowd to do, in Jesus' name",
-        "answer": "BAPTIZE"
+        "answer": "BAPTIZE",
+        "reference": "Acts 2:38"
       },
       {
         "number": 14,
@@ -9434,7 +9482,8 @@
         "row": 9,
         "col": 6,
         "text": "Wonders and ___ done by the apostles",
-        "answer": "SIGNS"
+        "answer": "SIGNS",
+        "reference": "Acts 2:43"
       },
       {
         "number": 15,
@@ -9442,7 +9491,8 @@
         "row": 10,
         "col": 5,
         "text": "Cloven flames seen resting on each one",
-        "answer": "FIRE"
+        "answer": "FIRE",
+        "reference": "Acts 2:3"
       },
       {
         "number": 16,
@@ -9450,7 +9500,8 @@
         "row": 11,
         "col": 8,
         "text": "Peter's call to the convicted hearers to turn from sin",
-        "answer": "REPENT"
+        "answer": "REPENT",
+        "reference": "Acts 2:38"
       },
       {
         "number": 17,
@@ -9458,7 +9509,8 @@
         "row": 12,
         "col": 1,
         "text": "From where the sound suddenly came",
-        "answer": "HEAVEN"
+        "answer": "HEAVEN",
+        "reference": "Acts 2:2"
       },
       {
         "number": 18,
@@ -9502,7 +9554,8 @@
         "row": 0,
         "col": 0,
         "text": "Tongue of fire that slew the soldiers",
-        "answer": "FLAME"
+        "answer": "FLAME",
+        "reference": "Daniel 3:22"
       },
       {
         "number": 2,
@@ -9518,7 +9571,8 @@
         "row": 2,
         "col": 10,
         "text": "Flames that did not harm the three",
-        "answer": "FIRE"
+        "answer": "FIRE",
+        "reference": "Daniel 3:25"
       },
       {
         "number": 3,
@@ -9526,7 +9580,8 @@
         "row": 2,
         "col": 10,
         "text": "The mysterious extra figure in the flames",
-        "answer": "FOURTH"
+        "answer": "FOURTH",
+        "reference": "Daniel 3:25"
       },
       {
         "number": 4,
@@ -9534,7 +9589,8 @@
         "row": 3,
         "col": 0,
         "text": "Second of the three faithful captives",
-        "answer": "MESHACH"
+        "answer": "MESHACH",
+        "reference": "Daniel 3:23"
       },
       {
         "number": 5,
@@ -9542,7 +9598,8 @@
         "row": 5,
         "col": 2,
         "text": "Of fire it had not passed on them",
-        "answer": "SMELL"
+        "answer": "SMELL",
+        "reference": "Daniel 3:27"
       },
       {
         "number": 6,
@@ -9550,7 +9607,8 @@
         "row": 5,
         "col": 3,
         "text": "Sound that signaled all to bow",
-        "answer": "MUSIC"
+        "answer": "MUSIC",
+        "reference": "Daniel 3:5"
       },
       {
         "number": 7,
@@ -9558,7 +9616,8 @@
         "row": 5,
         "col": 8,
         "text": "Burning chamber heated seven times more",
-        "answer": "FURNACE"
+        "answer": "FURNACE",
+        "reference": "Daniel 3:19"
       },
       {
         "number": 8,
@@ -9566,7 +9625,8 @@
         "row": 6,
         "col": 0,
         "text": "Act the three Hebrews refused before the idol",
-        "answer": "WORSHIP"
+        "answer": "WORSHIP",
+        "reference": "Daniel 3:12"
       },
       {
         "number": 9,
@@ -9574,7 +9634,8 @@
         "row": 7,
         "col": 3,
         "text": "First of the three Hebrew youths in the flames",
-        "answer": "SHADRACH"
+        "answer": "SHADRACH",
+        "reference": "Daniel 3:23"
       },
       {
         "number": 10,
@@ -9582,7 +9643,8 @@
         "row": 7,
         "col": 6,
         "text": "What God did for the faithful three",
-        "answer": "DELIVER"
+        "answer": "DELIVER",
+        "reference": "Daniel 3:28"
       },
       {
         "number": 11,
@@ -9590,7 +9652,8 @@
         "row": 7,
         "col": 8,
         "text": "Third of the trio cast into the blaze",
-        "answer": "ABEDNEGO"
+        "answer": "ABEDNEGO",
+        "reference": "Daniel 3:20"
       },
       {
         "number": 12,
@@ -9598,7 +9661,8 @@
         "row": 8,
         "col": 14,
         "text": "Province where the three were set over affairs",
-        "answer": "BABYLON"
+        "answer": "BABYLON",
+        "reference": "Daniel 3:12"
       },
       {
         "number": 13,
@@ -9606,7 +9670,8 @@
         "row": 9,
         "col": 12,
         "text": "Ruler who built the idol and cast them in",
-        "answer": "KING"
+        "answer": "KING",
+        "reference": "Daniel 3:13"
       },
       {
         "number": 14,
@@ -9622,7 +9687,8 @@
         "row": 10,
         "col": 10,
         "text": "Dura, where the idol stood",
-        "answer": "PLAIN"
+        "answer": "PLAIN",
+        "reference": "Daniel 3:1"
       },
       {
         "number": 16,
@@ -9630,7 +9696,8 @@
         "row": 11,
         "col": 4,
         "text": "Metal of the towering idol",
-        "answer": "GOLD"
+        "answer": "GOLD",
+        "reference": "Daniel 3:1"
       },
       {
         "number": 17,
@@ -9638,7 +9705,8 @@
         "row": 12,
         "col": 0,
         "text": "What the king did to the three afterward",
-        "answer": "PROMOTE"
+        "answer": "PROMOTE",
+        "reference": "Daniel 3:30"
       },
       {
         "number": 18,
@@ -9646,7 +9714,8 @@
         "row": 12,
         "col": 10,
         "text": "The heavenly one sent into the blaze",
-        "answer": "ANGEL"
+        "answer": "ANGEL",
+        "reference": "Daniel 3:28"
       },
       {
         "number": 19,
@@ -9654,7 +9723,8 @@
         "row": 14,
         "col": 7,
         "text": "How the three were tied before being thrown in",
-        "answer": "BOUND"
+        "answer": "BOUND",
+        "reference": "Daniel 3:23"
       }
     ]
   },
@@ -9690,7 +9760,8 @@
         "row": 0,
         "col": 5,
         "text": "Moral excellence of character",
-        "answer": "VIRTUE"
+        "answer": "VIRTUE",
+        "reference": "2 Peter 1:5"
       },
       {
         "number": 2,
@@ -9698,7 +9769,8 @@
         "row": 0,
         "col": 8,
         "text": "Apostle who wrote this letter",
-        "answer": "PAUL"
+        "answer": "PAUL",
+        "reference": "Galatians 5:2"
       },
       {
         "number": 3,
@@ -9706,7 +9778,8 @@
         "row": 0,
         "col": 11,
         "text": "Self-giving affection; the first fruit listed",
-        "answer": "LOVE"
+        "answer": "LOVE",
+        "reference": "Galatians 5:22"
       },
       {
         "number": 4,
@@ -9714,7 +9787,8 @@
         "row": 1,
         "col": 2,
         "text": "Trust and faithfulness toward God",
-        "answer": "FAITH"
+        "answer": "FAITH",
+        "reference": "Galatians 5:22"
       },
       {
         "number": 5,
@@ -9722,7 +9796,8 @@
         "row": 1,
         "col": 14,
         "text": "Deep inner gladness, second in the list",
-        "answer": "JOY"
+        "answer": "JOY",
+        "reference": "Galatians 5:22"
       },
       {
         "number": 6,
@@ -9730,7 +9805,8 @@
         "row": 3,
         "col": 0,
         "text": "The Holy ___, source of this fruit",
-        "answer": "SPIRIT"
+        "answer": "SPIRIT",
+        "reference": "Galatians 5:22"
       },
       {
         "number": 7,
@@ -9738,7 +9814,8 @@
         "row": 3,
         "col": 10,
         "text": "Compassion withholding deserved penalty",
-        "answer": "MERCY"
+        "answer": "MERCY",
+        "reference": "Galatians 6:16"
       },
       {
         "number": 7,
@@ -9754,7 +9831,8 @@
         "row": 4,
         "col": 8,
         "text": "What the Spirit produces in believers",
-        "answer": "FRUIT"
+        "answer": "FRUIT",
+        "reference": "Galatians 5:22"
       },
       {
         "number": 9,
@@ -9762,7 +9840,8 @@
         "row": 5,
         "col": 2,
         "text": "Confident expectation of good",
-        "answer": "HOPE"
+        "answer": "HOPE",
+        "reference": "Galatians 5:5"
       },
       {
         "number": 10,
@@ -9770,7 +9849,8 @@
         "row": 5,
         "col": 4,
         "text": "Calm freedom from inner strife",
-        "answer": "PEACE"
+        "answer": "PEACE",
+        "reference": "Galatians 5:22"
       },
       {
         "number": 11,
@@ -9778,7 +9858,8 @@
         "row": 6,
         "col": 6,
         "text": "Calm endurance under trial",
-        "answer": "PATIENCE"
+        "answer": "PATIENCE",
+        "reference": "Galatians 5:22"
       },
       {
         "number": 12,
@@ -9786,7 +9867,8 @@
         "row": 7,
         "col": 3,
         "text": "Pauline epistle listing this fruit",
-        "answer": "GALATIANS"
+        "answer": "GALATIANS",
+        "reference": "Galatians 3:1"
       },
       {
         "number": 13,
@@ -9794,7 +9876,8 @@
         "row": 8,
         "col": 2,
         "text": "To live and conduct oneself in the Spirit",
-        "answer": "WALK"
+        "answer": "WALK",
+        "reference": "Galatians 5:25"
       },
       {
         "number": 14,
@@ -9802,7 +9885,8 @@
         "row": 9,
         "col": 0,
         "text": "Unmerited favour from God",
-        "answer": "GRACE"
+        "answer": "GRACE",
+        "reference": "Galatians 5:4"
       },
       {
         "number": 15,
@@ -9810,7 +9894,8 @@
         "row": 11,
         "col": 2,
         "text": "Warm, helpful tenderness to others",
-        "answer": "KINDNESS"
+        "answer": "KINDNESS",
+        "reference": "Galatians 5:22"
       },
       {
         "number": 16,
@@ -9818,7 +9903,8 @@
         "row": 13,
         "col": 1,
         "text": "Moral uprightness and generosity",
-        "answer": "GOODNESS"
+        "answer": "GOODNESS",
+        "reference": "Galatians 5:22"
       }
     ]
   },
@@ -9854,7 +9940,8 @@
         "row": 0,
         "col": 14,
         "text": "What the keeper does for the missing one",
-        "answer": "SEEK"
+        "answer": "SEEK",
+        "reference": "Ezekiel 34:16"
       },
       {
         "number": 2,
@@ -9862,7 +9949,8 @@
         "row": 2,
         "col": 5,
         "text": "To lead along the right path",
-        "answer": "GUIDE"
+        "answer": "GUIDE",
+        "reference": "Psalm 23:3"
       },
       {
         "number": 3,
@@ -9870,7 +9958,8 @@
         "row": 2,
         "col": 12,
         "text": "Sound the sheep recognize and follow",
-        "answer": "VOICE"
+        "answer": "VOICE",
+        "reference": "John 10:4"
       },
       {
         "number": 4,
@@ -9878,7 +9967,8 @@
         "row": 3,
         "col": 7,
         "text": "To bring the scattered flock together",
-        "answer": "GATHER"
+        "answer": "GATHER",
+        "reference": "Isaiah 40:11"
       },
       {
         "number": 5,
@@ -9886,7 +9976,8 @@
         "row": 3,
         "col": 10,
         "text": "A group of grazing animals together",
-        "answer": "FLOCK"
+        "answer": "FLOCK",
+        "reference": "John 10:16"
       },
       {
         "number": 5,
@@ -9894,7 +9985,8 @@
         "row": 3,
         "col": 10,
         "text": "Enclosure where the flock is kept safe",
-        "answer": "FOLD"
+        "answer": "FOLD",
+        "reference": "John 10:16"
       },
       {
         "number": 6,
@@ -9902,7 +9994,8 @@
         "row": 4,
         "col": 1,
         "text": "Color of the restful meadows in Psalm 23",
-        "answer": "GREEN"
+        "answer": "GREEN",
+        "reference": "Psalm 23:2"
       },
       {
         "number": 7,
@@ -9910,7 +10003,8 @@
         "row": 4,
         "col": 3,
         "text": "Grassy ground where the flock feeds",
-        "answer": "PASTURE"
+        "answer": "PASTURE",
+        "reference": "John 10:9"
       },
       {
         "number": 8,
@@ -9918,7 +10012,8 @@
         "row": 6,
         "col": 3,
         "text": "One who tends and guards the flock",
-        "answer": "SHEPHERD"
+        "answer": "SHEPHERD",
+        "reference": "John 10:11"
       },
       {
         "number": 9,
@@ -9926,7 +10021,8 @@
         "row": 7,
         "col": 0,
         "text": "What the keeper provides in green meadows",
-        "answer": "REST"
+        "answer": "REST",
+        "reference": "Song of Solomon 1:7"
       },
       {
         "number": 10,
@@ -9934,7 +10030,8 @@
         "row": 8,
         "col": 5,
         "text": "To wander away from the flock",
-        "answer": "STRAY"
+        "answer": "STRAY",
+        "reference": "Ezekiel 34:16"
       },
       {
         "number": 11,
@@ -9942,7 +10039,8 @@
         "row": 9,
         "col": 0,
         "text": "Woolly animals the keeper watches over",
-        "answer": "SHEEP"
+        "answer": "SHEEP",
+        "reference": "John 10:11"
       },
       {
         "number": 12,
@@ -9950,7 +10048,8 @@
         "row": 9,
         "col": 10,
         "text": "Predator the hireling flees but the keeper fights",
-        "answer": "WOLF"
+        "answer": "WOLF",
+        "reference": "John 10:12"
       },
       {
         "number": 13,
@@ -9974,7 +10073,8 @@
         "row": 10,
         "col": 2,
         "text": "Staff used to defend and guide the flock",
-        "answer": "ROD"
+        "answer": "ROD",
+        "reference": "Psalm 23:4"
       },
       {
         "number": 16,
@@ -9982,7 +10082,8 @@
         "row": 10,
         "col": 4,
         "text": "A young sheep",
-        "answer": "LAMB"
+        "answer": "LAMB",
+        "reference": "Exodus 12:5"
       },
       {
         "number": 17,
@@ -9990,7 +10091,8 @@
         "row": 10,
         "col": 7,
         "text": "Door of the sheepfold, an image of Christ",
-        "answer": "GATE"
+        "answer": "GATE",
+        "reference": "John 10:9"
       },
       {
         "number": 18,
@@ -9998,7 +10100,8 @@
         "row": 10,
         "col": 9,
         "text": "Condition of the one sheep that strayed",
-        "answer": "LOST"
+        "answer": "LOST",
+        "reference": "Luke 15:4"
       },
       {
         "number": 19,
@@ -10006,7 +10109,8 @@
         "row": 12,
         "col": 6,
         "text": "Crook that comforts the wandering sheep",
-        "answer": "STAFF"
+        "answer": "STAFF",
+        "reference": "Psalm 23:4"
       }
     ]
   },
@@ -10042,7 +10146,8 @@
         "row": 0,
         "col": 8,
         "text": "Vessel Jesus said was the new testament in his blood",
-        "answer": "CUP"
+        "answer": "CUP",
+        "reference": "Luke 22:20"
       },
       {
         "number": 2,
@@ -10050,7 +10155,8 @@
         "row": 1,
         "col": 0,
         "text": "Disciple told he would deny Jesus thrice",
-        "answer": "PETER"
+        "answer": "PETER",
+        "reference": "Luke 22:34"
       },
       {
         "number": 3,
@@ -10058,7 +10164,8 @@
         "row": 1,
         "col": 2,
         "text": "The passover meal they kept together",
-        "answer": "FEAST"
+        "answer": "FEAST",
+        "reference": "Luke 22:1"
       },
       {
         "number": 4,
@@ -10066,7 +10173,8 @@
         "row": 1,
         "col": 7,
         "text": "Betrayer whose hand was on the table",
-        "answer": "JUDAS"
+        "answer": "JUDAS",
+        "reference": "Luke 22:3"
       },
       {
         "number": 5,
@@ -10074,7 +10182,8 @@
         "row": 1,
         "col": 11,
         "text": "The evening meal shared before the cross",
-        "answer": "SUPPER"
+        "answer": "SUPPER",
+        "reference": "Luke 22:20"
       },
       {
         "number": 6,
@@ -10082,7 +10191,8 @@
         "row": 1,
         "col": 13,
         "text": "Number of apostles at the meal",
-        "answer": "TWELVE"
+        "answer": "TWELVE",
+        "reference": "Matthew 26:20"
       },
       {
         "number": 7,
@@ -10090,7 +10200,8 @@
         "row": 3,
         "col": 0,
         "text": "What Jesus gave before breaking the bread",
-        "answer": "THANKS"
+        "answer": "THANKS",
+        "reference": "Luke 22:19"
       },
       {
         "number": 8,
@@ -10098,7 +10209,8 @@
         "row": 3,
         "col": 10,
         "text": "Type of room furnished for the meal",
-        "answer": "UPPER"
+        "answer": "UPPER",
+        "reference": "Luke 22:12"
       },
       {
         "number": 9,
@@ -10114,7 +10226,8 @@
         "row": 5,
         "col": 2,
         "text": "Where Jesus sat down with the twelve",
-        "answer": "TABLE"
+        "answer": "TABLE",
+        "reference": "Luke 22:14"
       },
       {
         "number": 11,
@@ -10130,7 +10243,8 @@
         "row": 5,
         "col": 8,
         "text": "Jesus said he'd not drink its fruit till the kingdom",
-        "answer": "VINE"
+        "answer": "VINE",
+        "reference": "Luke 22:18"
       },
       {
         "number": 13,
@@ -10138,7 +10252,8 @@
         "row": 6,
         "col": 7,
         "text": "What Jesus said the bread represented",
-        "answer": "BODY"
+        "answer": "BODY",
+        "reference": "Luke 22:19"
       },
       {
         "number": 14,
@@ -10146,7 +10261,8 @@
         "row": 7,
         "col": 3,
         "text": "Jewish feast at which this meal was held",
-        "answer": "PASSOVER"
+        "answer": "PASSOVER",
+        "reference": "Luke 22:15"
       },
       {
         "number": 15,
@@ -10154,7 +10270,8 @@
         "row": 7,
         "col": 10,
         "text": "'This do in ___ of me' (root word)",
-        "answer": "REMEMBER"
+        "answer": "REMEMBER",
+        "reference": "Luke 22:19"
       },
       {
         "number": 16,
@@ -10162,7 +10279,8 @@
         "row": 7,
         "col": 14,
         "text": "What Peter would do three times before the cock crew",
-        "answer": "DENY"
+        "answer": "DENY",
+        "reference": "Luke 22:61"
       },
       {
         "number": 17,
@@ -10170,7 +10288,8 @@
         "row": 9,
         "col": 1,
         "text": "His body was this, 'for you'",
-        "answer": "GIVEN"
+        "answer": "GIVEN",
+        "reference": "Luke 22:19"
       },
       {
         "number": 18,
@@ -10178,7 +10297,8 @@
         "row": 10,
         "col": 9,
         "text": "What one of the twelve would do to Jesus",
-        "answer": "BETRAY"
+        "answer": "BETRAY",
+        "reference": "Luke 22:4"
       },
       {
         "number": 19,
@@ -10186,7 +10306,8 @@
         "row": 12,
         "col": 10,
         "text": "What the cup of wine represented",
-        "answer": "BLOOD"
+        "answer": "BLOOD",
+        "reference": "Luke 22:20"
       },
       {
         "number": 20,
@@ -10194,7 +10315,8 @@
         "row": 14,
         "col": 9,
         "text": "What Jesus brake and gave to the disciples",
-        "answer": "BREAD"
+        "answer": "BREAD",
+        "reference": "Luke 22:19"
       }
     ]
   },
@@ -10230,7 +10352,8 @@
         "row": 0,
         "col": 0,
         "text": "Harvest yielded by the good soil",
-        "answer": "FRUIT"
+        "answer": "FRUIT",
+        "reference": "Matthew 13:23"
       },
       {
         "number": 2,
@@ -10238,7 +10361,8 @@
         "row": 0,
         "col": 1,
         "text": "What the stony ground seed had none of",
-        "answer": "ROOT"
+        "answer": "ROOT",
+        "reference": "Matthew 13:6"
       },
       {
         "number": 3,
@@ -10246,7 +10370,8 @@
         "row": 0,
         "col": 14,
         "text": "What is cast upon the ground",
-        "answer": "SEED"
+        "answer": "SEED",
+        "reference": "Matthew 13:4"
       },
       {
         "number": 4,
@@ -10254,7 +10379,8 @@
         "row": 1,
         "col": 10,
         "text": "Earthly story with a spiritual meaning",
-        "answer": "PARABLE"
+        "answer": "PARABLE",
+        "reference": "Matthew 13:3"
       },
       {
         "number": 5,
@@ -10262,7 +10388,8 @@
         "row": 2,
         "col": 12,
         "text": "Its heat scorched the rootless plants",
-        "answer": "SUN"
+        "answer": "SUN",
+        "reference": "Matthew 13:6"
       },
       {
         "number": 6,
@@ -10270,7 +10397,8 @@
         "row": 3,
         "col": 1,
         "text": "They sprang up and choked the plants",
-        "answer": "THORNS"
+        "answer": "THORNS",
+        "reference": "Matthew 13:7"
       },
       {
         "number": 7,
@@ -10286,7 +10414,8 @@
         "row": 3,
         "col": 9,
         "text": "The good kind brings forth much fruit",
-        "answer": "GROUND"
+        "answer": "GROUND",
+        "reference": "Matthew 13:5"
       },
       {
         "number": 9,
@@ -10294,7 +10423,8 @@
         "row": 5,
         "col": 4,
         "text": "What thorns do to the growing seed",
-        "answer": "CHOKE"
+        "answer": "CHOKE",
+        "reference": "Matthew 13:7"
       },
       {
         "number": 10,
@@ -10302,7 +10432,8 @@
         "row": 7,
         "col": 2,
         "text": "The reaping of the ripened crop",
-        "answer": "HARVEST"
+        "answer": "HARVEST",
+        "reference": "Matthew 13:30"
       },
       {
         "number": 11,
@@ -10318,7 +10449,8 @@
         "row": 7,
         "col": 4,
         "text": "To dry up and fade for lack of root",
-        "answer": "WITHER"
+        "answer": "WITHER",
+        "reference": "Matthew 13:6"
       },
       {
         "number": 12,
@@ -10326,7 +10458,8 @@
         "row": 7,
         "col": 7,
         "text": "Ground that receives the scattered grain",
-        "answer": "SOIL"
+        "answer": "SOIL",
+        "reference": "Matthew 13:5"
       },
       {
         "number": 13,
@@ -10334,7 +10467,8 @@
         "row": 9,
         "col": 6,
         "text": "Fowls that ate seed by the wayside",
-        "answer": "BIRDS"
+        "answer": "BIRDS",
+        "reference": "Matthew 13:4"
       },
       {
         "number": 14,
@@ -10342,7 +10476,8 @@
         "row": 9,
         "col": 10,
         "text": "To burn under the sun's heat",
-        "answer": "SCORCH"
+        "answer": "SCORCH",
+        "reference": "Matthew 13:6"
       },
       {
         "number": 15,
@@ -10350,7 +10485,8 @@
         "row": 11,
         "col": 9,
         "text": "The one who went forth to scatter seed",
-        "answer": "SOWER"
+        "answer": "SOWER",
+        "reference": "Matthew 13:18"
       },
       {
         "number": 16,
@@ -10358,7 +10494,8 @@
         "row": 12,
         "col": 2,
         "text": "How the seed quickly came up in stony ground",
-        "answer": "SPRANG"
+        "answer": "SPRANG",
+        "reference": "Matthew 13:5"
       },
       {
         "number": 17,
@@ -10366,7 +10503,8 @@
         "row": 14,
         "col": 10,
         "text": "Where the word is received, the inner soil",
-        "answer": "HEART"
+        "answer": "HEART",
+        "reference": "Matthew 13:19"
       }
     ]
   },
@@ -10402,7 +10540,8 @@
         "row": 0,
         "col": 1,
         "text": "Temanite, first of the comforters to speak",
-        "answer": "ELIPHAZ"
+        "answer": "ELIPHAZ",
+        "reference": "Job 4:1"
       },
       {
         "number": 2,
@@ -10410,7 +10549,8 @@
         "row": 0,
         "col": 8,
         "text": "She told him to curse God and die",
-        "answer": "WIFE"
+        "answer": "WIFE",
+        "reference": "Job 2:9"
       },
       {
         "number": 3,
@@ -10418,7 +10558,8 @@
         "row": 1,
         "col": 0,
         "text": "Word for the latter end greater than the first",
-        "answer": "BLESSED"
+        "answer": "BLESSED",
+        "reference": "Job 42:12"
       },
       {
         "number": 4,
@@ -10426,7 +10567,8 @@
         "row": 1,
         "col": 3,
         "text": "Accuser who sought to test the faithful man",
-        "answer": "SATAN"
+        "answer": "SATAN",
+        "reference": "Job 1:6"
       },
       {
         "number": 5,
@@ -10434,7 +10576,8 @@
         "row": 2,
         "col": 13,
         "text": "How God returned double at the end",
-        "answer": "RESTORED"
+        "answer": "RESTORED",
+        "reference": "Job 42:10"
       },
       {
         "number": 6,
@@ -10450,7 +10593,8 @@
         "row": 3,
         "col": 7,
         "text": "Animals carried off by the Chaldeans",
-        "answer": "CAMELS"
+        "answer": "CAMELS",
+        "reference": "Job 1:17"
       },
       {
         "number": 8,
@@ -10458,7 +10602,8 @@
         "row": 4,
         "col": 9,
         "text": "Painful sores covering the afflicted man's body",
-        "answer": "BOILS"
+        "answer": "BOILS",
+        "reference": "Job 2:7"
       },
       {
         "number": 9,
@@ -10466,7 +10611,8 @@
         "row": 4,
         "col": 10,
         "text": "Plowing beasts taken in a raid",
-        "answer": "OXEN"
+        "answer": "OXEN",
+        "reference": "Job 1:14"
       },
       {
         "number": 10,
@@ -10474,7 +10620,8 @@
         "row": 5,
         "col": 5,
         "text": "Three came to comfort but accused instead",
-        "answer": "FRIENDS"
+        "answer": "FRIENDS",
+        "reference": "Job 2:11"
       },
       {
         "number": 11,
@@ -10482,7 +10629,8 @@
         "row": 6,
         "col": 12,
         "text": "Upright man of Uz tested by great loss",
-        "answer": "JOB"
+        "answer": "JOB",
+        "reference": "Job 1:1"
       },
       {
         "number": 12,
@@ -10490,7 +10638,8 @@
         "row": 7,
         "col": 3,
         "text": "From this the LORD answered him",
-        "answer": "WHIRLWIND"
+        "answer": "WHIRLWIND",
+        "reference": "Job 38:1"
       },
       {
         "number": 13,
@@ -10498,7 +10647,8 @@
         "row": 8,
         "col": 1,
         "text": "Younger man who spoke after the three",
-        "answer": "ELIHU"
+        "answer": "ELIHU",
+        "reference": "Job 32:4"
       },
       {
         "number": 14,
@@ -10506,7 +10656,8 @@
         "row": 9,
         "col": 9,
         "text": "Naamathite, third of the visiting friends",
-        "answer": "ZOPHAR"
+        "answer": "ZOPHAR",
+        "reference": "Job 2:11"
       },
       {
         "number": 15,
@@ -10514,7 +10665,8 @@
         "row": 9,
         "col": 11,
         "text": "Trust in God kept through hardship",
-        "answer": "FAITH"
+        "answer": "FAITH",
+        "reference": "Acts 14:22"
       },
       {
         "number": 16,
@@ -10522,7 +10674,8 @@
         "row": 10,
         "col": 0,
         "text": "Shuhite among the three counselors",
-        "answer": "BILDAD"
+        "answer": "BILDAD",
+        "reference": "Job 2:11"
       },
       {
         "number": 17,
@@ -10530,7 +10683,8 @@
         "row": 11,
         "col": 5,
         "text": "Flock consumed by fire from heaven",
-        "answer": "SHEEP"
+        "answer": "SHEEP",
+        "reference": "Job 1:16"
       },
       {
         "number": 18,
@@ -10546,7 +10700,8 @@
         "row": 13,
         "col": 9,
         "text": "What he sat among while scraping his sores",
-        "answer": "ASHES"
+        "answer": "ASHES",
+        "reference": "Job 2:8"
       }
     ]
   },
@@ -10582,7 +10737,8 @@
         "row": 0,
         "col": 3,
         "text": "Son born to Ruth, grandfather of David",
-        "answer": "OBED"
+        "answer": "OBED",
+        "reference": "Ruth 4:17"
       },
       {
         "number": 2,
@@ -10590,7 +10746,8 @@
         "row": 0,
         "col": 10,
         "text": "King descended from Ruth's son",
-        "answer": "DAVID"
+        "answer": "DAVID",
+        "reference": "Ruth 4:17"
       },
       {
         "number": 3,
@@ -10598,7 +10755,8 @@
         "row": 1,
         "col": 9,
         "text": "Bitter name Naomi chose for herself",
-        "answer": "MARA"
+        "answer": "MARA",
+        "reference": "Ruth 1:20"
       },
       {
         "number": 4,
@@ -10606,7 +10764,8 @@
         "row": 1,
         "col": 14,
         "text": "Hunger that drove the family from Bethlehem",
-        "answer": "FAMINE"
+        "answer": "FAMINE",
+        "reference": "Ruth 1:1"
       },
       {
         "number": 5,
@@ -10614,7 +10773,8 @@
         "row": 3,
         "col": 1,
         "text": "Status shared by Ruth and Naomi",
-        "answer": "WIDOW"
+        "answer": "WIDOW",
+        "reference": "Ruth 4:5"
       },
       {
         "number": 6,
@@ -10622,7 +10782,8 @@
         "row": 3,
         "col": 4,
         "text": "The other daughter-in-law who turned back",
-        "answer": "ORPAH"
+        "answer": "ORPAH",
+        "reference": "Ruth 1:14"
       },
       {
         "number": 7,
@@ -10630,7 +10791,8 @@
         "row": 3,
         "col": 8,
         "text": "Grain Ruth gathered in the fields",
-        "answer": "BARLEY"
+        "answer": "BARLEY",
+        "reference": "Ruth 2:17"
       },
       {
         "number": 8,
@@ -10638,7 +10800,8 @@
         "row": 3,
         "col": 12,
         "text": "To gather grain left behind by the reapers",
-        "answer": "GLEAN"
+        "answer": "GLEAN",
+        "reference": "Ruth 2:2"
       },
       {
         "number": 9,
@@ -10646,7 +10809,8 @@
         "row": 4,
         "col": 7,
         "text": "Shoe removed to seal the redemption deal",
-        "answer": "SANDAL"
+        "answer": "SANDAL",
+        "reference": "Ruth 4:8"
       },
       {
         "number": 10,
@@ -10654,7 +10818,8 @@
         "row": 5,
         "col": 1,
         "text": "Worker who cuts the standing grain",
-        "answer": "REAPER"
+        "answer": "REAPER",
+        "reference": "Isaiah 17:5"
       },
       {
         "number": 10,
@@ -10662,7 +10827,8 @@
         "row": 5,
         "col": 1,
         "text": "Moabite widow who clung to her mother-in-law",
-        "answer": "RUTH"
+        "answer": "RUTH",
+        "reference": "Ruth 1:14"
       },
       {
         "number": 11,
@@ -10670,7 +10836,8 @@
         "row": 6,
         "col": 11,
         "text": "Place where Boaz settled the legal matter",
-        "answer": "GATE"
+        "answer": "GATE",
+        "reference": "Ruth 4:1"
       },
       {
         "number": 12,
@@ -10678,7 +10845,8 @@
         "row": 7,
         "col": 4,
         "text": "Reaping season when Ruth met Boaz",
-        "answer": "HARVEST"
+        "answer": "HARVEST",
+        "reference": "Ruth 1:22"
       },
       {
         "number": 13,
@@ -10686,7 +10854,8 @@
         "row": 7,
         "col": 6,
         "text": "To buy back land and raise an heir",
-        "answer": "REDEEM"
+        "answer": "REDEEM",
+        "reference": "Ruth 4:4"
       },
       {
         "number": 14,
@@ -10694,7 +10863,8 @@
         "row": 8,
         "col": 3,
         "text": "Relative with the duty to redeem",
-        "answer": "KINSMAN"
+        "answer": "KINSMAN",
+        "reference": "Ruth 3:9"
       },
       {
         "number": 15,
@@ -10702,7 +10872,8 @@
         "row": 9,
         "col": 2,
         "text": "Place where Ruth labored among the reapers",
-        "answer": "FIELD"
+        "answer": "FIELD",
+        "reference": "Ruth 2:3"
       },
       {
         "number": 16,
@@ -10710,7 +10881,8 @@
         "row": 10,
         "col": 1,
         "text": "What the reapers cut and bound in the field",
-        "answer": "GRAIN"
+        "answer": "GRAIN",
+        "reference": "Ruth 2:2"
       },
       {
         "number": 17,
@@ -10718,7 +10890,8 @@
         "row": 10,
         "col": 8,
         "text": "Wealthy kinsman who married the foreign widow",
-        "answer": "BOAZ"
+        "answer": "BOAZ",
+        "reference": "Ruth 2:1"
       },
       {
         "number": 18,
@@ -10726,7 +10899,8 @@
         "row": 12,
         "col": 0,
         "text": "Bereaved widow who returned to Bethlehem",
-        "answer": "NAOMI"
+        "answer": "NAOMI",
+        "reference": "Ruth 1:22"
       },
       {
         "number": 19,
@@ -10734,7 +10908,8 @@
         "row": 12,
         "col": 6,
         "text": "Land where the family sojourned during famine",
-        "answer": "MOAB"
+        "answer": "MOAB",
+        "reference": "Ruth 1:1"
       }
     ]
   },
@@ -10770,7 +10945,8 @@
         "row": 0,
         "col": 9,
         "text": "The enslaved people set free",
-        "answer": "ISRAEL"
+        "answer": "ISRAEL",
+        "reference": "Exodus 11:7"
       },
       {
         "number": 2,
@@ -10786,7 +10962,8 @@
         "row": 2,
         "col": 1,
         "text": "Ice from the sky mingled with fire",
-        "answer": "HAIL"
+        "answer": "HAIL",
+        "reference": "Exodus 9:23"
       },
       {
         "number": 4,
@@ -10794,7 +10971,8 @@
         "row": 3,
         "col": 6,
         "text": "Swarms that filled the houses",
-        "answer": "FLIES"
+        "answer": "FLIES",
+        "reference": "Exodus 8:24"
       },
       {
         "number": 5,
@@ -10802,7 +10980,8 @@
         "row": 3,
         "col": 9,
         "text": "A divine affliction sent upon the land",
-        "answer": "PLAGUE"
+        "answer": "PLAGUE",
+        "reference": "Exodus 11:1"
       },
       {
         "number": 5,
@@ -10810,7 +10989,8 @@
         "row": 3,
         "col": 9,
         "text": "Feast marking the sparing of Israel's homes",
-        "answer": "PASSOVER"
+        "answer": "PASSOVER",
+        "reference": "Exodus 12:27"
       },
       {
         "number": 6,
@@ -10818,7 +10998,8 @@
         "row": 3,
         "col": 11,
         "text": "Brother who stretched out the rod",
-        "answer": "AARON"
+        "answer": "AARON",
+        "reference": "Exodus 8:17"
       },
       {
         "number": 7,
@@ -10826,7 +11007,8 @@
         "row": 5,
         "col": 1,
         "text": "Animal whose blood marked the doorposts",
-        "answer": "LAMB"
+        "answer": "LAMB",
+        "reference": "Exodus 12:7"
       },
       {
         "number": 8,
@@ -10834,7 +11016,8 @@
         "row": 5,
         "col": 4,
         "text": "Painful sores breaking out on man and beast",
-        "answer": "BOILS"
+        "answer": "BOILS",
+        "reference": "Exodus 9:10"
       },
       {
         "number": 9,
@@ -10850,7 +11033,8 @@
         "row": 7,
         "col": 3,
         "text": "The eldest, struck dead in the final plague",
-        "answer": "FIRSTBORN"
+        "answer": "FIRSTBORN",
+        "reference": "Exodus 12:29"
       },
       {
         "number": 11,
@@ -10858,7 +11042,8 @@
         "row": 8,
         "col": 0,
         "text": "What the river was turned into",
-        "answer": "BLOOD"
+        "answer": "BLOOD",
+        "reference": "Exodus 7:20"
       },
       {
         "number": 12,
@@ -10866,7 +11051,8 @@
         "row": 9,
         "col": 0,
         "text": "Insects that devoured every green thing",
-        "answer": "LOCUSTS"
+        "answer": "LOCUSTS",
+        "reference": "Exodus 10:12"
       },
       {
         "number": 13,
@@ -10874,7 +11060,8 @@
         "row": 9,
         "col": 12,
         "text": "Great river of Egypt turned foul",
-        "answer": "NILE"
+        "answer": "NILE",
+        "reference": "Exodus 7:21"
       },
       {
         "number": 14,
@@ -10890,7 +11077,8 @@
         "row": 10,
         "col": 7,
         "text": "Leader who demanded the people be let go",
-        "answer": "MOSES"
+        "answer": "MOSES",
+        "reference": "Exodus 5:1"
       },
       {
         "number": 15,
@@ -10898,7 +11086,8 @@
         "row": 12,
         "col": 0,
         "text": "Three days when no man could see",
-        "answer": "DARKNESS"
+        "answer": "DARKNESS",
+        "reference": "Exodus 10:22"
       },
       {
         "number": 16,
@@ -10906,7 +11095,8 @@
         "row": 13,
         "col": 7,
         "text": "Land that suffered the ten judgments",
-        "answer": "EGYPT"
+        "answer": "EGYPT",
+        "reference": "Exodus 7:3"
       },
       {
         "number": 17,
@@ -10914,7 +11104,8 @@
         "row": 14,
         "col": 3,
         "text": "Croaking creatures that covered the land",
-        "answer": "FROGS"
+        "answer": "FROGS",
+        "reference": "Exodus 8:6"
       }
     ]
   },
@@ -10950,7 +11141,8 @@
         "row": 0,
         "col": 1,
         "text": "Slime they used to bind the bricks",
-        "answer": "MORTAR"
+        "answer": "MORTAR",
+        "reference": "Genesis 11:3"
       },
       {
         "number": 2,
@@ -10966,7 +11158,8 @@
         "row": 1,
         "col": 14,
         "text": "Where the tower's top was meant to reach",
-        "answer": "HEAVEN"
+        "answer": "HEAVEN",
+        "reference": "Genesis 11:4"
       },
       {
         "number": 4,
@@ -10974,7 +11167,8 @@
         "row": 2,
         "col": 10,
         "text": "Material they had not, using brick instead",
-        "answer": "STONE"
+        "answer": "STONE",
+        "reference": "Genesis 11:3"
       },
       {
         "number": 5,
@@ -10982,7 +11176,8 @@
         "row": 3,
         "col": 3,
         "text": "The one nation that began the building",
-        "answer": "PEOPLE"
+        "answer": "PEOPLE",
+        "reference": "Genesis 11:6"
       },
       {
         "number": 6,
@@ -10990,7 +11185,8 @@
         "row": 3,
         "col": 5,
         "text": "What the people sought to build with the tower",
-        "answer": "CITY"
+        "answer": "CITY",
+        "reference": "Genesis 11:4"
       },
       {
         "number": 7,
@@ -10998,7 +11194,8 @@
         "row": 3,
         "col": 7,
         "text": "Another word for the language they all spoke",
-        "answer": "TONGUE"
+        "answer": "TONGUE",
+        "reference": "Revelation 5:9"
       },
       {
         "number": 8,
@@ -11006,7 +11203,8 @@
         "row": 4,
         "col": 0,
         "text": "Name of the city of confusion",
-        "answer": "BABEL"
+        "answer": "BABEL",
+        "reference": "Genesis 11:9"
       },
       {
         "number": 9,
@@ -11014,7 +11212,8 @@
         "row": 5,
         "col": 10,
         "text": "Of one kind, before God confounded it",
-        "answer": "SPEECH"
+        "answer": "SPEECH",
+        "reference": "Genesis 11:1"
       },
       {
         "number": 10,
@@ -11022,7 +11221,8 @@
         "row": 6,
         "col": 10,
         "text": "Land in Shinar where they settled",
-        "answer": "PLAIN"
+        "answer": "PLAIN",
+        "reference": "Genesis 11:2"
       },
       {
         "number": 11,
@@ -11030,7 +11230,8 @@
         "row": 7,
         "col": 1,
         "text": "Material they made and burned thoroughly to build",
-        "answer": "BRICK"
+        "answer": "BRICK",
+        "reference": "Genesis 11:3"
       },
       {
         "number": 12,
@@ -11038,7 +11239,8 @@
         "row": 7,
         "col": 3,
         "text": "The one speech all the earth shared before the confusion",
-        "answer": "LANGUAGE"
+        "answer": "LANGUAGE",
+        "reference": "Genesis 11:1"
       },
       {
         "number": 13,
@@ -11046,7 +11248,8 @@
         "row": 7,
         "col": 5,
         "text": "What the builders sought to make for themselves",
-        "answer": "NAME"
+        "answer": "NAME",
+        "reference": "Genesis 11:4"
       },
       {
         "number": 14,
@@ -11054,7 +11257,8 @@
         "row": 8,
         "col": 10,
         "text": "Direction from which the people journeyed",
-        "answer": "EAST"
+        "answer": "EAST",
+        "reference": "Genesis 11:2"
       },
       {
         "number": 15,
@@ -11062,7 +11266,8 @@
         "row": 10,
         "col": 0,
         "text": "What God did to the people across the earth",
-        "answer": "SCATTER"
+        "answer": "SCATTER",
+        "reference": "Genesis 11:8"
       },
       {
         "number": 16,
@@ -11070,7 +11275,8 @@
         "row": 10,
         "col": 3,
         "text": "The lofty structure meant to reach heaven",
-        "answer": "TOWER"
+        "answer": "TOWER",
+        "reference": "Genesis 11:4"
       },
       {
         "number": 17,
@@ -11078,7 +11284,8 @@
         "row": 10,
         "col": 9,
         "text": "Region where the people journeyed and settled",
-        "answer": "SHINAR"
+        "answer": "SHINAR",
+        "reference": "Genesis 11:2"
       },
       {
         "number": 17,
@@ -11094,7 +11301,8 @@
         "row": 12,
         "col": 7,
         "text": "What the people set out to do on the plain",
-        "answer": "BUILD"
+        "answer": "BUILD",
+        "reference": "Genesis 11:4"
       },
       {
         "number": 19,
@@ -11102,7 +11310,8 @@
         "row": 14,
         "col": 9,
         "text": "Across all of it the people were scattered abroad",
-        "answer": "EARTH"
+        "answer": "EARTH",
+        "reference": "Genesis 11:9"
       }
     ]
   },
@@ -11138,7 +11347,8 @@
         "row": 1,
         "col": 5,
         "text": "Title Peter cried, asking to be saved",
-        "answer": "LORD"
+        "answer": "LORD",
+        "reference": "Matthew 14:30"
       },
       {
         "number": 2,
@@ -11146,7 +11356,8 @@
         "row": 2,
         "col": 4,
         "text": "Small craft the twelve sailed in",
-        "answer": "BOAT"
+        "answer": "BOAT",
+        "reference": "Matthew 14:22"
       },
       {
         "number": 3,
@@ -11154,7 +11365,8 @@
         "row": 3,
         "col": 2,
         "text": "What the disciples mistook Jesus for",
-        "answer": "GHOST"
+        "answer": "GHOST",
+        "reference": "Matthew 14:26"
       },
       {
         "number": 4,
@@ -11162,7 +11374,8 @@
         "row": 3,
         "col": 11,
         "text": "Disciple who stepped out of the boat",
-        "answer": "PETER"
+        "answer": "PETER",
+        "reference": "Matthew 14:29"
       },
       {
         "number": 5,
@@ -11170,7 +11383,8 @@
         "row": 3,
         "col": 14,
         "text": "What those in the ship did, saying he was God's Son",
-        "answer": "WORSHIP"
+        "answer": "WORSHIP",
+        "reference": "Matthew 14:33"
       },
       {
         "number": 6,
@@ -11178,7 +11392,8 @@
         "row": 4,
         "col": 2,
         "text": "What Jesus stretched forth to catch the sinking disciple",
-        "answer": "HAND"
+        "answer": "HAND",
+        "reference": "Matthew 14:31"
       },
       {
         "number": 7,
@@ -11186,7 +11401,8 @@
         "row": 4,
         "col": 10,
         "text": "Body of water near Galilee in this account",
-        "answer": "SEA"
+        "answer": "SEA",
+        "reference": "Matthew 14:25"
       },
       {
         "number": 8,
@@ -11194,7 +11410,8 @@
         "row": 5,
         "col": 9,
         "text": "Peter's plea: 'Lord, ___ me'",
-        "answer": "SAVE"
+        "answer": "SAVE",
+        "reference": "Matthew 14:30"
       },
       {
         "number": 9,
@@ -11202,7 +11419,8 @@
         "row": 6,
         "col": 2,
         "text": "What Peter started to do when afraid",
-        "answer": "SINK"
+        "answer": "SINK",
+        "reference": "Matthew 14:30"
       },
       {
         "number": 10,
@@ -11210,7 +11428,8 @@
         "row": 6,
         "col": 4,
         "text": "Fourth watch of this was when Jesus came",
-        "answer": "NIGHT"
+        "answer": "NIGHT",
+        "reference": "Matthew 14:25"
       },
       {
         "number": 11,
@@ -11218,7 +11437,8 @@
         "row": 6,
         "col": 8,
         "text": "Sea swells tossing the ship",
-        "answer": "WAVES"
+        "answer": "WAVES",
+        "reference": "Matthew 14:24"
       },
       {
         "number": 12,
@@ -11226,7 +11446,8 @@
         "row": 7,
         "col": 7,
         "text": "Boisterous force that made the apostle afraid",
-        "answer": "WIND"
+        "answer": "WIND",
+        "reference": "Matthew 14:30"
       },
       {
         "number": 13,
@@ -11234,7 +11455,8 @@
         "row": 8,
         "col": 1,
         "text": "The liquid surface Jesus walked upon",
-        "answer": "WATER"
+        "answer": "WATER",
+        "reference": "Matthew 14:29"
       },
       {
         "number": 14,
@@ -11242,7 +11464,8 @@
         "row": 8,
         "col": 4,
         "text": "Region whose sea is the setting here",
-        "answer": "GALILEE"
+        "answer": "GALILEE",
+        "reference": "John 6:1"
       },
       {
         "number": 15,
@@ -11250,7 +11473,8 @@
         "row": 9,
         "col": 0,
         "text": "What Peter lacked when he began to sink, per Jesus",
-        "answer": "FAITH"
+        "answer": "FAITH",
+        "reference": "Matthew 14:31"
       },
       {
         "number": 16,
@@ -11274,7 +11498,8 @@
         "row": 10,
         "col": 7,
         "text": "Why Jesus asked 'wherefore didst thou ___?'",
-        "answer": "DOUBT"
+        "answer": "DOUBT",
+        "reference": "Matthew 14:31"
       },
       {
         "number": 18,
@@ -11282,7 +11507,8 @@
         "row": 11,
         "col": 0,
         "text": "What the disciples felt seeing a figure on the sea",
-        "answer": "FEAR"
+        "answer": "FEAR",
+        "reference": "Matthew 14:26"
       },
       {
         "number": 19,
@@ -11326,7 +11552,8 @@
         "row": 0,
         "col": 1,
         "text": "Wife of Isaac, met at a well",
-        "answer": "REBEKAH"
+        "answer": "REBEKAH",
+        "reference": "Genesis 24:67"
       },
       {
         "number": 2,
@@ -11334,7 +11561,8 @@
         "row": 0,
         "col": 2,
         "text": "The first woman, made in the garden",
-        "answer": "EVE"
+        "answer": "EVE",
+        "reference": "Genesis 3:20"
       },
       {
         "number": 3,
@@ -11342,7 +11570,8 @@
         "row": 1,
         "col": 11,
         "text": "Grandmother of Timothy noted for faith",
-        "answer": "LOIS"
+        "answer": "LOIS",
+        "reference": "2 Timothy 1:5"
       },
       {
         "number": 4,
@@ -11350,7 +11579,8 @@
         "row": 1,
         "col": 14,
         "text": "Wife of Abraham, mother of Isaac in old age",
-        "answer": "SARAH"
+        "answer": "SARAH",
+        "reference": "Genesis 21:2"
       },
       {
         "number": 5,
@@ -11358,7 +11588,8 @@
         "row": 2,
         "col": 1,
         "text": "Prophetess and judge of Israel",
-        "answer": "DEBORAH"
+        "answer": "DEBORAH",
+        "reference": "Judges 4:4"
       },
       {
         "number": 5,
@@ -11366,7 +11597,8 @@
         "row": 2,
         "col": 1,
         "text": "Daughter of Jacob and Leah",
-        "answer": "DINAH"
+        "answer": "DINAH",
+        "reference": "Genesis 34:1"
       },
       {
         "number": 6,
@@ -11374,7 +11606,8 @@
         "row": 3,
         "col": 8,
         "text": "Widow whose daughter-in-law refused to leave her",
-        "answer": "NAOMI"
+        "answer": "NAOMI",
+        "reference": "Ruth 1:8"
       },
       {
         "number": 7,
@@ -11382,7 +11615,8 @@
         "row": 3,
         "col": 11,
         "text": "Sister of Moses and Aaron, led song after the sea",
-        "answer": "MIRIAM"
+        "answer": "MIRIAM",
+        "reference": "Exodus 15:20"
       },
       {
         "number": 8,
@@ -11390,7 +11624,8 @@
         "row": 5,
         "col": 0,
         "text": "Sister of Lazarus, busy serving in Bethany",
-        "answer": "MARTHA"
+        "answer": "MARTHA",
+        "reference": "John 11:1"
       },
       {
         "number": 9,
@@ -11398,7 +11633,8 @@
         "row": 5,
         "col": 5,
         "text": "Wise wife of Nabal who later married David",
-        "answer": "ABIGAIL"
+        "answer": "ABIGAIL",
+        "reference": "1 Samuel 25:3"
       },
       {
         "number": 10,
@@ -11406,7 +11642,8 @@
         "row": 5,
         "col": 7,
         "text": "Beloved wife of Jacob, mother of Joseph",
-        "answer": "RACHEL"
+        "answer": "RACHEL",
+        "reference": "Genesis 46:19"
       },
       {
         "number": 11,
@@ -11414,7 +11651,8 @@
         "row": 5,
         "col": 9,
         "text": "Woman who betrayed Samson's secret",
-        "answer": "DELILAH"
+        "answer": "DELILAH",
+        "reference": "Judges 16:18"
       },
       {
         "number": 12,
@@ -11422,7 +11660,8 @@
         "row": 5,
         "col": 11,
         "text": "Moabite who clung to Naomi and married Boaz",
-        "answer": "RUTH"
+        "answer": "RUTH",
+        "reference": "Ruth 3:16"
       },
       {
         "number": 13,
@@ -11430,7 +11669,8 @@
         "row": 7,
         "col": 3,
         "text": "Tentmaker who taught with her husband Aquila",
-        "answer": "PRISCILLA"
+        "answer": "PRISCILLA",
+        "reference": "Acts 18:26"
       },
       {
         "number": 14,
@@ -11438,7 +11678,8 @@
         "row": 8,
         "col": 11,
         "text": "Mother of Jesus",
-        "answer": "MARY"
+        "answer": "MARY",
+        "reference": "Matthew 1:18"
       },
       {
         "number": 15,
@@ -11446,7 +11687,8 @@
         "row": 9,
         "col": 1,
         "text": "Seller of purple converted at Philippi",
-        "answer": "LYDIA"
+        "answer": "LYDIA",
+        "reference": "Acts 16:14"
       },
       {
         "number": 15,
@@ -11454,7 +11696,8 @@
         "row": 9,
         "col": 1,
         "text": "Jacob's first wife, sister of Rachel",
-        "answer": "LEAH"
+        "answer": "LEAH",
+        "reference": "Genesis 29:30"
       },
       {
         "number": 16,
@@ -11462,7 +11705,8 @@
         "row": 10,
         "col": 13,
         "text": "Daughter-in-law of Judah in Genesis",
-        "answer": "TAMAR"
+        "answer": "TAMAR",
+        "reference": "Genesis 38:11"
       },
       {
         "number": 17,
@@ -11470,7 +11714,8 @@
         "row": 11,
         "col": 9,
         "text": "Prayerful mother of the prophet Samuel",
-        "answer": "HANNAH"
+        "answer": "HANNAH",
+        "reference": "1 Samuel 1:20"
       },
       {
         "number": 18,
@@ -11478,7 +11723,8 @@
         "row": 14,
         "col": 8,
         "text": "Jewish queen of Persia who saved her people",
-        "answer": "ESTHER"
+        "answer": "ESTHER",
+        "reference": "Esther 2:17"
       }
     ]
   },
@@ -11514,7 +11760,8 @@
         "row": 0,
         "col": 14,
         "text": "Haughtiness that goes before a fall",
-        "answer": "PRIDE"
+        "answer": "PRIDE",
+        "reference": "Proverbs 16:18"
       },
       {
         "number": 2,
@@ -11522,7 +11769,8 @@
         "row": 1,
         "col": 0,
         "text": "One who loveth at all times",
-        "answer": "FRIEND"
+        "answer": "FRIEND",
+        "reference": "Proverbs 17:17"
       },
       {
         "number": 3,
@@ -11538,7 +11786,8 @@
         "row": 1,
         "col": 10,
         "text": "Wrath that a soft answer turns away",
-        "answer": "ANGER"
+        "answer": "ANGER",
+        "reference": "Proverbs 15:1"
       },
       {
         "number": 4,
@@ -11546,7 +11795,8 @@
         "row": 1,
         "col": 10,
         "text": "Tiny creature the sluggard is told to consider",
-        "answer": "ANT"
+        "answer": "ANT",
+        "reference": "Proverbs 6:6"
       },
       {
         "number": 5,
@@ -11554,7 +11804,8 @@
         "row": 3,
         "col": 8,
         "text": "Way of life He will direct",
-        "answer": "PATH"
+        "answer": "PATH",
+        "reference": "Proverbs 3:6"
       },
       {
         "number": 5,
@@ -11562,7 +11813,8 @@
         "row": 3,
         "col": 8,
         "text": "Short saying that carries wise counsel",
-        "answer": "PROVERB"
+        "answer": "PROVERB",
+        "reference": "Proverbs 1:6"
       },
       {
         "number": 6,
@@ -11570,7 +11822,8 @@
         "row": 4,
         "col": 3,
         "text": "Sensible person who foresees evil and hides",
-        "answer": "PRUDENT"
+        "answer": "PRUDENT",
+        "reference": "Proverbs 22:3"
       },
       {
         "number": 7,
@@ -11578,7 +11831,8 @@
         "row": 4,
         "col": 5,
         "text": "One who despises instruction",
-        "answer": "FOOL"
+        "answer": "FOOL",
+        "reference": "Proverbs 1:7"
       },
       {
         "number": 8,
@@ -11586,7 +11840,8 @@
         "row": 5,
         "col": 0,
         "text": "Reverence of the Lord, beginning of knowledge",
-        "answer": "FEAR"
+        "answer": "FEAR",
+        "reference": "Proverbs 1:7"
       },
       {
         "number": 9,
@@ -11594,7 +11849,8 @@
         "row": 5,
         "col": 7,
         "text": "Sweet food pleasant words are likened to",
-        "answer": "HONEY"
+        "answer": "HONEY",
+        "reference": "Proverbs 16:24"
       },
       {
         "number": 10,
@@ -11602,7 +11858,8 @@
         "row": 6,
         "col": 12,
         "text": "Naive person the book seeks to make prudent",
-        "answer": "SIMPLE"
+        "answer": "SIMPLE",
+        "reference": "Proverbs 1:4"
       },
       {
         "number": 11,
@@ -11610,7 +11867,8 @@
         "row": 7,
         "col": 3,
         "text": "Hard-working, the opposite of slothful",
-        "answer": "DILIGENT"
+        "answer": "DILIGENT",
+        "reference": "Proverbs 10:4"
       },
       {
         "number": 12,
@@ -11618,7 +11876,8 @@
         "row": 7,
         "col": 6,
         "text": "To teach and correct, as a parent does",
-        "answer": "INSTRUCT"
+        "answer": "INSTRUCT",
+        "reference": "Proverbs 9:9"
       },
       {
         "number": 13,
@@ -11626,7 +11885,8 @@
         "row": 7,
         "col": 10,
         "text": "Member that holds life and death",
-        "answer": "TONGUE"
+        "answer": "TONGUE",
+        "reference": "Proverbs 18:21"
       },
       {
         "number": 14,
@@ -11634,7 +11894,8 @@
         "row": 8,
         "col": 0,
         "text": "Sound judgment, the theme of the book",
-        "answer": "WISDOM"
+        "answer": "WISDOM",
+        "reference": "Proverbs 2:7"
       },
       {
         "number": 15,
@@ -11650,7 +11911,8 @@
         "row": 10,
         "col": 10,
         "text": "Precious metal wisdom is worth more than",
-        "answer": "GOLD"
+        "answer": "GOLD",
+        "reference": "Proverbs 16:16"
       },
       {
         "number": 17,
@@ -11658,7 +11920,8 @@
         "row": 12,
         "col": 4,
         "text": "To lean on the Lord rather than oneself",
-        "answer": "TRUST"
+        "answer": "TRUST",
+        "reference": "Proverbs 3:5"
       },
       {
         "number": 18,
@@ -11666,7 +11929,8 @@
         "row": 14,
         "col": 2,
         "text": "Inner self to keep with all diligence",
-        "answer": "HEART"
+        "answer": "HEART",
+        "reference": "Proverbs 4:23"
       }
     ]
   },
@@ -11702,7 +11966,8 @@
         "row": 0,
         "col": 6,
         "text": "Paul's pastoral letter to a young minister",
-        "answer": "TIMOTHY"
+        "answer": "TIMOTHY",
+        "reference": "1 Timothy 1:2"
       },
       {
         "number": 2,
@@ -11710,7 +11975,8 @@
         "row": 0,
         "col": 8,
         "text": "Shortest of the four gospels",
-        "answer": "MARK"
+        "answer": "MARK",
+        "reference": "Mark 1:1"
       },
       {
         "number": 3,
@@ -11718,7 +11984,8 @@
         "row": 1,
         "col": 1,
         "text": "Short epistle just before Revelation",
-        "answer": "JUDE"
+        "answer": "JUDE",
+        "reference": "Jude 1:1"
       },
       {
         "number": 4,
@@ -11726,7 +11993,8 @@
         "row": 1,
         "col": 4,
         "text": "Letter describing the armour of God",
-        "answer": "EPHESIANS"
+        "answer": "EPHESIANS",
+        "reference": "Ephesians 1:1"
       },
       {
         "number": 5,
@@ -11734,7 +12002,8 @@
         "row": 2,
         "col": 4,
         "text": "Epistle by the fisherman apostle",
-        "answer": "PETER"
+        "answer": "PETER",
+        "reference": "1 Peter 1:1"
       },
       {
         "number": 6,
@@ -11742,7 +12011,8 @@
         "row": 4,
         "col": 1,
         "text": "Gospel by a physician, with a sequel of Acts",
-        "answer": "LUKE"
+        "answer": "LUKE",
+        "reference": "Luke 1:1"
       },
       {
         "number": 7,
@@ -11750,7 +12020,8 @@
         "row": 4,
         "col": 6,
         "text": "Paul's letter to the church in the empire's capital",
-        "answer": "ROMANS"
+        "answer": "ROMANS",
+        "reference": "Romans 1:1"
       },
       {
         "number": 8,
@@ -11758,7 +12029,8 @@
         "row": 4,
         "col": 10,
         "text": "Fourth gospel beginning with the Word",
-        "answer": "JOHN"
+        "answer": "JOHN",
+        "reference": "John 1:1"
       },
       {
         "number": 9,
@@ -11766,7 +12038,8 @@
         "row": 5,
         "col": 8,
         "text": "Brief letter about a runaway servant named Onesimus",
-        "answer": "PHILEMON"
+        "answer": "PHILEMON",
+        "reference": "Philemon 1:1"
       },
       {
         "number": 10,
@@ -11774,7 +12047,8 @@
         "row": 6,
         "col": 13,
         "text": "Letter portraying Christ as the great high priest",
-        "answer": "HEBREWS"
+        "answer": "HEBREWS",
+        "reference": "Hebrews 1:1"
       },
       {
         "number": 11,
@@ -11782,7 +12056,8 @@
         "row": 7,
         "col": 3,
         "text": "Paul's letter defending salvation by faith",
-        "answer": "GALATIANS"
+        "answer": "GALATIANS",
+        "reference": "Galatians 1:1"
       },
       {
         "number": 12,
@@ -11790,7 +12065,8 @@
         "row": 9,
         "col": 0,
         "text": "Epistle teaching that faith without works is dead",
-        "answer": "JAMES"
+        "answer": "JAMES",
+        "reference": "James 1:1"
       },
       {
         "number": 13,
@@ -11798,7 +12074,8 @@
         "row": 9,
         "col": 1,
         "text": "Book of the early church and Paul's journeys",
-        "answer": "ACTS"
+        "answer": "ACTS",
+        "reference": "Acts 1:1"
       },
       {
         "number": 14,
@@ -11806,7 +12083,8 @@
         "row": 10,
         "col": 8,
         "text": "First gospel, written by a former tax collector",
-        "answer": "MATTHEW"
+        "answer": "MATTHEW",
+        "reference": "Matthew 1:1"
       },
       {
         "number": 15,
@@ -11814,7 +12092,8 @@
         "row": 10,
         "col": 10,
         "text": "Paul's letter to a leader on the isle of Crete",
-        "answer": "TITUS"
+        "answer": "TITUS",
+        "reference": "Titus 1:1"
       }
     ]
   },
@@ -11850,7 +12129,8 @@
         "row": 0,
         "col": 7,
         "text": "Book of one hundred fifty songs and prayers",
-        "answer": "PSALMS"
+        "answer": "PSALMS",
+        "reference": "Luke 20:42"
       },
       {
         "number": 2,
@@ -11858,7 +12138,8 @@
         "row": 0,
         "col": 11,
         "text": "Prophet who spoke of locusts and the Spirit poured out",
-        "answer": "JOEL"
+        "answer": "JOEL",
+        "reference": "Joel 1:1"
       },
       {
         "number": 2,
@@ -11866,7 +12147,8 @@
         "row": 0,
         "col": 11,
         "text": "Prophet swallowed by a great fish",
-        "answer": "JONAH"
+        "answer": "JONAH",
+        "reference": "Jonah 1:1"
       },
       {
         "number": 3,
@@ -11874,7 +12156,8 @@
         "row": 0,
         "col": 13,
         "text": "Book of the departure from Egypt",
-        "answer": "EXODUS"
+        "answer": "EXODUS",
+        "reference": "Exodus 1:1"
       },
       {
         "number": 4,
@@ -11882,7 +12165,8 @@
         "row": 1,
         "col": 2,
         "text": "Book of leaders like Gideon and Samson",
-        "answer": "JUDGES"
+        "answer": "JUDGES",
+        "reference": "Judges 1:1"
       },
       {
         "number": 4,
@@ -11890,7 +12174,8 @@
         "row": 1,
         "col": 2,
         "text": "Book about a righteous man who suffered",
-        "answer": "JOB"
+        "answer": "JOB",
+        "reference": "Job 1:1"
       },
       {
         "number": 5,
@@ -11898,7 +12183,8 @@
         "row": 4,
         "col": 7,
         "text": "Prophet who named Bethlehem as the Messiah's birthplace",
-        "answer": "MICAH"
+        "answer": "MICAH",
+        "reference": "Micah 1:1"
       },
       {
         "number": 6,
@@ -11906,7 +12192,8 @@
         "row": 4,
         "col": 10,
         "text": "Herdsman prophet of Tekoa",
-        "answer": "AMOS"
+        "answer": "AMOS",
+        "reference": "Amos 1:1"
       },
       {
         "number": 7,
@@ -11914,7 +12201,8 @@
         "row": 6,
         "col": 8,
         "text": "Major prophet who foretold the Messiah",
-        "answer": "ISAIAH"
+        "answer": "ISAIAH",
+        "reference": "Isaiah 1:1"
       },
       {
         "number": 8,
@@ -11922,7 +12210,8 @@
         "row": 7,
         "col": 0,
         "text": "Prophet delivered from the lions' den",
-        "answer": "DANIEL"
+        "answer": "DANIEL",
+        "reference": "Daniel 1:1"
       },
       {
         "number": 9,
@@ -11930,7 +12219,8 @@
         "row": 7,
         "col": 4,
         "text": "First book, the book of beginnings",
-        "answer": "GENESIS"
+        "answer": "GENESIS",
+        "reference": "Genesis 1:1"
       },
       {
         "number": 10,
@@ -11938,7 +12228,8 @@
         "row": 7,
         "col": 5,
         "text": "Book set in Persia with no mention of God's name",
-        "answer": "ESTHER"
+        "answer": "ESTHER",
+        "reference": "Esther 1:1"
       },
       {
         "number": 11,
@@ -11946,7 +12237,8 @@
         "row": 8,
         "col": 11,
         "text": "Fourth book named for a wilderness census",
-        "answer": "NUMBERS"
+        "answer": "NUMBERS",
+        "reference": "Numbers 1:1"
       },
       {
         "number": 12,
@@ -11954,7 +12246,8 @@
         "row": 9,
         "col": 3,
         "text": "Short book of a loyal Moabite woman",
-        "answer": "RUTH"
+        "answer": "RUTH",
+        "reference": "Ruth 1:1"
       },
       {
         "number": 13,
@@ -11962,7 +12255,8 @@
         "row": 10,
         "col": 7,
         "text": "Prophet who foretold Nineveh's fall",
-        "answer": "NAHUM"
+        "answer": "NAHUM",
+        "reference": "Nahum 1:1"
       },
       {
         "number": 14,
@@ -11970,7 +12264,8 @@
         "row": 10,
         "col": 14,
         "text": "Prophet told to marry an unfaithful wife",
-        "answer": "HOSEA"
+        "answer": "HOSEA",
+        "reference": "Hosea 1:1"
       },
       {
         "number": 15,
@@ -11978,7 +12273,8 @@
         "row": 11,
         "col": 0,
         "text": "Prophet of the valley of dry bones",
-        "answer": "EZEKIEL"
+        "answer": "EZEKIEL",
+        "reference": "Ezekiel 1:1"
       },
       {
         "number": 16,
@@ -11986,7 +12282,8 @@
         "row": 11,
         "col": 2,
         "text": "Book of the scribe who returned from exile",
-        "answer": "EZRA"
+        "answer": "EZRA",
+        "reference": "Ezra 1:1"
       },
       {
         "number": 17,
@@ -11994,7 +12291,8 @@
         "row": 14,
         "col": 1,
         "text": "Final book of the Old Testament",
-        "answer": "MALACHI"
+        "answer": "MALACHI",
+        "reference": "Malachi 1:1"
       },
       {
         "number": 18,
@@ -12002,7 +12300,8 @@
         "row": 14,
         "col": 9,
         "text": "Book of conquering the promised land",
-        "answer": "JOSHUA"
+        "answer": "JOSHUA",
+        "reference": "Joshua 1:1"
       }
     ]
   },
@@ -12038,7 +12337,8 @@
         "row": 0,
         "col": 7,
         "text": "What fell from heaven to consume the offering",
-        "answer": "FIRE"
+        "answer": "FIRE",
+        "reference": "1 Kings 18:38"
       },
       {
         "number": 2,
@@ -12046,7 +12346,8 @@
         "row": 0,
         "col": 9,
         "text": "Mount where the contest took place",
-        "answer": "CARMEL"
+        "answer": "CARMEL",
+        "reference": "1 Kings 18:19"
       },
       {
         "number": 3,
@@ -12054,7 +12355,8 @@
         "row": 1,
         "col": 0,
         "text": "Bird that fed the prophet by the brook",
-        "answer": "RAVEN"
+        "answer": "RAVEN",
+        "reference": "1 Kings 17:6"
       },
       {
         "number": 4,
@@ -12062,7 +12364,8 @@
         "row": 1,
         "col": 1,
         "text": "Structure rebuilt with twelve stones",
-        "answer": "ALTAR"
+        "answer": "ALTAR",
+        "reference": "1 Kings 18:32"
       },
       {
         "number": 5,
@@ -12078,7 +12381,8 @@
         "row": 3,
         "col": 4,
         "text": "Channel dug around the altar",
-        "answer": "TRENCH"
+        "answer": "TRENCH",
+        "reference": "1 Kings 18:32"
       },
       {
         "number": 6,
@@ -12086,7 +12390,8 @@
         "row": 4,
         "col": 0,
         "text": "Liquid poured on the sacrifice three times",
-        "answer": "WATER"
+        "answer": "WATER",
+        "reference": "1 Kings 18:34"
       },
       {
         "number": 7,
@@ -12094,7 +12399,8 @@
         "row": 5,
         "col": 6,
         "text": "Long-awaited downpour after the drought",
-        "answer": "RAIN"
+        "answer": "RAIN",
+        "reference": "1 Kings 18:1"
       },
       {
         "number": 8,
@@ -12102,7 +12408,8 @@
         "row": 5,
         "col": 8,
         "text": "Small rising sign the size of a hand",
-        "answer": "CLOUD"
+        "answer": "CLOUD",
+        "reference": "1 Kings 18:44"
       },
       {
         "number": 9,
@@ -12118,7 +12425,8 @@
         "row": 5,
         "col": 12,
         "text": "Long dry spell ended by the prophet's prayer",
-        "answer": "DROUGHT"
+        "answer": "DROUGHT",
+        "reference": "1 Kings 18:1"
       },
       {
         "number": 11,
@@ -12126,7 +12434,8 @@
         "row": 7,
         "col": 2,
         "text": "Offering consumed by the heavenly flame",
-        "answer": "SACRIFICE"
+        "answer": "SACRIFICE",
+        "reference": "1 Kings 18:38"
       },
       {
         "number": 11,
@@ -12134,7 +12443,8 @@
         "row": 7,
         "col": 2,
         "text": "Direction the servant looked for rain",
-        "answer": "SEA"
+        "answer": "SEA",
+        "reference": "1 Kings 18:43"
       },
       {
         "number": 12,
@@ -12142,7 +12452,8 @@
         "row": 8,
         "col": 0,
         "text": "False god whose prophets failed to answer",
-        "answer": "BAAL"
+        "answer": "BAAL",
+        "reference": "1 Kings 18:26"
       },
       {
         "number": 13,
@@ -12150,7 +12461,8 @@
         "row": 9,
         "col": 0,
         "text": "Wicked king who opposed the prophet",
-        "answer": "AHAB"
+        "answer": "AHAB",
+        "reference": "1 Kings 18:20"
       },
       {
         "number": 14,
@@ -12158,7 +12470,8 @@
         "row": 9,
         "col": 3,
         "text": "Cherith stream where he hid and drank",
-        "answer": "BROOK"
+        "answer": "BROOK",
+        "reference": "1 Kings 17:5"
       },
       {
         "number": 15,
@@ -12166,7 +12479,8 @@
         "row": 9,
         "col": 8,
         "text": "Material of the rebuilt altar",
-        "answer": "STONE"
+        "answer": "STONE",
+        "reference": "1 Kings 18:32"
       },
       {
         "number": 16,
@@ -12174,7 +12488,8 @@
         "row": 11,
         "col": 6,
         "text": "Spokesman for God, as Elijah was",
-        "answer": "PROPHET"
+        "answer": "PROPHET",
+        "reference": "1 Kings 18:22"
       },
       {
         "number": 17,
@@ -12182,7 +12497,8 @@
         "row": 12,
         "col": 2,
         "text": "Fuel laid upon the altar",
-        "answer": "WOOD"
+        "answer": "WOOD",
+        "reference": "1 Kings 18:33"
       },
       {
         "number": 18,
@@ -12190,7 +12506,8 @@
         "row": 13,
         "col": 7,
         "text": "Queen who hunted the man of God",
-        "answer": "JEZEBEL"
+        "answer": "JEZEBEL",
+        "reference": "1 Kings 19:2"
       }
     ]
   },
@@ -12226,7 +12543,8 @@
         "row": 0,
         "col": 2,
         "text": "River whose waters divided for him",
-        "answer": "JORDAN"
+        "answer": "JORDAN",
+        "reference": "2 Kings 2:13"
       },
       {
         "number": 1,
@@ -12234,7 +12552,8 @@
         "row": 0,
         "col": 2,
         "text": "City whose bitter water he healed",
-        "answer": "JERICHO"
+        "answer": "JERICHO",
+        "reference": "2 Kings 2:18"
       },
       {
         "number": 2,
@@ -12242,7 +12561,8 @@
         "row": 0,
         "col": 7,
         "text": "Syrian captain healed of leprosy",
-        "answer": "NAAMAN"
+        "answer": "NAAMAN",
+        "reference": "2 Kings 5:14"
       },
       {
         "number": 3,
@@ -12250,7 +12570,8 @@
         "row": 0,
         "col": 11,
         "text": "Loaves that fed a hundred men with leftovers",
-        "answer": "BREAD"
+        "answer": "BREAD",
+        "reference": "2 Kings 4:42"
       },
       {
         "number": 4,
@@ -12258,7 +12579,8 @@
         "row": 1,
         "col": 7,
         "text": "Iron tool that floated on the water",
-        "answer": "AXE"
+        "answer": "AXE",
+        "reference": "2 Kings 6:5"
       },
       {
         "number": 5,
@@ -12282,7 +12604,8 @@
         "row": 4,
         "col": 9,
         "text": "Substance cast in to heal the spring",
-        "answer": "SALT"
+        "answer": "SALT",
+        "reference": "2 Kings 2:21"
       },
       {
         "number": 8,
@@ -12290,7 +12613,8 @@
         "row": 5,
         "col": 4,
         "text": "Elisha's servant struck with leprosy for greed",
-        "answer": "GEHAZI"
+        "answer": "GEHAZI",
+        "reference": "2 Kings 5:20"
       },
       {
         "number": 9,
@@ -12298,7 +12622,8 @@
         "row": 6,
         "col": 0,
         "text": "Beasts that came from the wood and mauled the youths",
-        "answer": "BEARS"
+        "answer": "BEARS",
+        "reference": "2 Kings 2:24"
       },
       {
         "number": 10,
@@ -12306,7 +12631,8 @@
         "row": 6,
         "col": 6,
         "text": "Metal of the head that swam",
-        "answer": "IRON"
+        "answer": "IRON",
+        "reference": "2 Kings 6:6"
       },
       {
         "number": 11,
@@ -12314,7 +12640,8 @@
         "row": 6,
         "col": 11,
         "text": "Streams parted and purified by the prophet",
-        "answer": "WATERS"
+        "answer": "WATERS",
+        "reference": "2 Kings 2:14"
       },
       {
         "number": 12,
@@ -12322,7 +12649,8 @@
         "row": 7,
         "col": 3,
         "text": "Fiery vehicle that took Elijah up",
-        "answer": "CHARIOT"
+        "answer": "CHARIOT",
+        "reference": "2 Kings 2:11"
       },
       {
         "number": 13,
@@ -12330,7 +12658,8 @@
         "row": 7,
         "col": 8,
         "text": "What filled the borrowed vessels",
-        "answer": "OIL"
+        "answer": "OIL",
+        "reference": "2 Kings 4:2"
       },
       {
         "number": 14,
@@ -12338,7 +12667,8 @@
         "row": 8,
         "col": 2,
         "text": "Mentor whose mantle he received",
-        "answer": "ELIJAH"
+        "answer": "ELIJAH",
+        "reference": "2 Kings 2:13"
       },
       {
         "number": 15,
@@ -12346,7 +12676,8 @@
         "row": 9,
         "col": 8,
         "text": "One afflicted with the disease Naaman bore",
-        "answer": "LEPER"
+        "answer": "LEPER",
+        "reference": "2 Kings 5:1"
       },
       {
         "number": 16,
@@ -12354,7 +12685,8 @@
         "row": 9,
         "col": 9,
         "text": "Prophet who succeeded his master",
-        "answer": "ELISHA"
+        "answer": "ELISHA",
+        "reference": "2 Kings 2:3"
       },
       {
         "number": 17,
@@ -12362,7 +12694,8 @@
         "row": 10,
         "col": 0,
         "text": "Double portion Elisha requested of his master",
-        "answer": "SPIRIT"
+        "answer": "SPIRIT",
+        "reference": "2 Kings 2:9"
       },
       {
         "number": 18,
@@ -12378,7 +12711,8 @@
         "row": 13,
         "col": 8,
         "text": "Town of the woman whose son was raised",
-        "answer": "SHUNEM"
+        "answer": "SHUNEM",
+        "reference": "2 Kings 4:8"
       }
     ]
   },
@@ -12422,7 +12756,8 @@
         "row": 0,
         "col": 6,
         "text": "Animal slain at the spring feast, a type of Christ",
-        "answer": "LAMB"
+        "answer": "LAMB",
+        "reference": "1 Corinthians 5:7"
       },
       {
         "number": 3,
@@ -12438,7 +12773,8 @@
         "row": 2,
         "col": 1,
         "text": "Solemn day of fasting and the scapegoat",
-        "answer": "ATONEMENT"
+        "answer": "ATONEMENT",
+        "reference": "Leviticus 23:27"
       },
       {
         "number": 5,
@@ -12446,7 +12782,8 @@
         "row": 2,
         "col": 11,
         "text": "One who ministered before the altar",
-        "answer": "PRIEST"
+        "answer": "PRIEST",
+        "reference": "Leviticus 23:11"
       },
       {
         "number": 6,
@@ -12454,7 +12791,8 @@
         "row": 3,
         "col": 13,
         "text": "Gathering of crops celebrated with thanksgiving",
-        "answer": "HARVEST"
+        "answer": "HARVEST",
+        "reference": "Exodus 23:16"
       },
       {
         "number": 7,
@@ -12462,7 +12800,8 @@
         "row": 4,
         "col": 7,
         "text": "Gift presented to the Lord at the altar",
-        "answer": "OFFERING"
+        "answer": "OFFERING",
+        "reference": "Leviticus 23:38"
       },
       {
         "number": 8,
@@ -12470,7 +12809,8 @@
         "row": 5,
         "col": 1,
         "text": "Feast of lots commemorating Esther's deliverance",
-        "answer": "PURIM"
+        "answer": "PURIM",
+        "reference": "Esther 9:26"
       },
       {
         "number": 9,
@@ -12478,7 +12818,8 @@
         "row": 5,
         "col": 5,
         "text": "Bread from heaven gathered in the desert",
-        "answer": "MANNA"
+        "answer": "MANNA",
+        "reference": "John 6:31"
       },
       {
         "number": 10,
@@ -12486,7 +12827,8 @@
         "row": 7,
         "col": 3,
         "text": "Feast fifty days after firstfruits, when the Spirit came",
-        "answer": "PENTECOST"
+        "answer": "PENTECOST",
+        "reference": "Acts 2:1"
       },
       {
         "number": 10,
@@ -12494,7 +12836,8 @@
         "row": 7,
         "col": 3,
         "text": "Feast recalling the angel sparing Israel's firstborn",
-        "answer": "PASSOVER"
+        "answer": "PASSOVER",
+        "reference": "Leviticus 23:5"
       },
       {
         "number": 11,
@@ -12502,7 +12845,8 @@
         "row": 7,
         "col": 10,
         "text": "Seventh day set apart for rest",
-        "answer": "SABBATH"
+        "answer": "SABBATH",
+        "reference": "Leviticus 23:3"
       },
       {
         "number": 12,
@@ -12510,7 +12854,8 @@
         "row": 8,
         "col": 0,
         "text": "Fiftieth year of release and restored land",
-        "answer": "JUBILEE"
+        "answer": "JUBILEE",
+        "reference": "Leviticus 25:10"
       },
       {
         "number": 13,
@@ -12518,7 +12863,8 @@
         "row": 9,
         "col": 10,
         "text": "Temporary shelter dwelt in during the autumn feast",
-        "answer": "BOOTH"
+        "answer": "BOOTH",
+        "reference": "Leviticus 23:42"
       },
       {
         "number": 14,
@@ -12526,7 +12872,8 @@
         "row": 11,
         "col": 10,
         "text": "Raised place where sacrifices were made",
-        "answer": "ALTAR"
+        "answer": "ALTAR",
+        "reference": "Exodus 20:24"
       },
       {
         "number": 15,
@@ -12534,7 +12881,8 @@
         "row": 12,
         "col": 0,
         "text": "Yeast removed from the house before the spring feast",
-        "answer": "LEAVEN"
+        "answer": "LEAVEN",
+        "reference": "Exodus 12:15"
       },
       {
         "number": 16,
@@ -12542,7 +12890,8 @@
         "row": 14,
         "col": 2,
         "text": "Feast announced by the blowing of the shofar",
-        "answer": "TRUMPETS"
+        "answer": "TRUMPETS",
+        "reference": "Leviticus 23:24"
       }
     ]
   },
@@ -12578,7 +12927,8 @@
         "row": 0,
         "col": 5,
         "text": "Son of Uzziah who reigned over Judah",
-        "answer": "JOTHAM"
+        "answer": "JOTHAM",
+        "reference": "2 Kings 15:32"
       },
       {
         "number": 2,
@@ -12586,7 +12936,8 @@
         "row": 0,
         "col": 10,
         "text": "Driver who overthrew the house of Ahab",
-        "answer": "JEHU"
+        "answer": "JEHU",
+        "reference": "2 Kings 9:20"
       },
       {
         "number": 2,
@@ -12594,7 +12945,8 @@
         "row": 0,
         "col": 10,
         "text": "First ruler of the northern kingdom after the split",
-        "answer": "JEROBOAM"
+        "answer": "JEROBOAM",
+        "reference": "1 Kings 12:20"
       },
       {
         "number": 3,
@@ -12602,7 +12954,8 @@
         "row": 2,
         "col": 12,
         "text": "King of Israel who reigned only seven days",
-        "answer": "ZIMRI"
+        "answer": "ZIMRI",
+        "reference": "1 Kings 16:15"
       },
       {
         "number": 4,
@@ -12610,7 +12963,8 @@
         "row": 3,
         "col": 7,
         "text": "Son of Jeroboam, briefly king of Israel",
-        "answer": "NADAB"
+        "answer": "NADAB",
+        "reference": "1 Kings 15:25"
       },
       {
         "number": 5,
@@ -12618,7 +12972,8 @@
         "row": 3,
         "col": 9,
         "text": "Young king who found the book of the law",
-        "answer": "JOSIAH"
+        "answer": "JOSIAH",
+        "reference": "2 Kings 23:24"
       },
       {
         "number": 6,
@@ -12626,7 +12981,8 @@
         "row": 4,
         "col": 0,
         "text": "Northern king who built Samaria",
-        "answer": "OMRI"
+        "answer": "OMRI",
+        "reference": "1 Kings 16:28"
       },
       {
         "number": 7,
@@ -12634,7 +12990,8 @@
         "row": 4,
         "col": 1,
         "text": "Long-reigning wicked king of Judah who later repented",
-        "answer": "MANASSEH"
+        "answer": "MANASSEH",
+        "reference": "2 Chronicles 33:13"
       },
       {
         "number": 8,
@@ -12642,7 +12999,8 @@
         "row": 4,
         "col": 5,
         "text": "Northern king who married Jezebel",
-        "answer": "AHAB"
+        "answer": "AHAB",
+        "reference": "1 Kings 21:25"
       },
       {
         "number": 9,
@@ -12650,7 +13008,8 @@
         "row": 5,
         "col": 14,
         "text": "Judah's king struck with leprosy for pride",
-        "answer": "UZZIAH"
+        "answer": "UZZIAH",
+        "reference": "2 Chronicles 26:19"
       },
       {
         "number": 10,
@@ -12658,7 +13017,8 @@
         "row": 6,
         "col": 4,
         "text": "Israel's king slain by Hoshea",
-        "answer": "PEKAH"
+        "answer": "PEKAH",
+        "reference": "2 Kings 15:30"
       },
       {
         "number": 11,
@@ -12666,7 +13026,8 @@
         "row": 7,
         "col": 3,
         "text": "Son of Solomon under whom the kingdom split",
-        "answer": "REHOBOAM"
+        "answer": "REHOBOAM",
+        "reference": "1 Kings 11:43"
       },
       {
         "number": 12,
@@ -12674,7 +13035,8 @@
         "row": 7,
         "col": 9,
         "text": "Idolatrous king of Judah, father of Hezekiah",
-        "answer": "AHAZ"
+        "answer": "AHAZ",
+        "reference": "2 Kings 16:2"
       },
       {
         "number": 13,
@@ -12682,7 +13044,8 @@
         "row": 8,
         "col": 12,
         "text": "Son of Rehoboam, king of Judah",
-        "answer": "ABIJAM"
+        "answer": "ABIJAM",
+        "reference": "1 Kings 14:31"
       },
       {
         "number": 14,
@@ -12690,7 +13053,8 @@
         "row": 9,
         "col": 4,
         "text": "Reforming king of Judah, son of Abijam",
-        "answer": "ASA"
+        "answer": "ASA",
+        "reference": "1 Kings 15:8"
       },
       {
         "number": 15,
@@ -12698,7 +13062,8 @@
         "row": 10,
         "col": 1,
         "text": "Son of Baasha slain by Zimri",
-        "answer": "ELAH"
+        "answer": "ELAH",
+        "reference": "1 Kings 16:9"
       },
       {
         "number": 16,
@@ -12706,7 +13071,8 @@
         "row": 10,
         "col": 3,
         "text": "Short-reigning son of Manasseh",
-        "answer": "AMON"
+        "answer": "AMON",
+        "reference": "2 Kings 21:19"
       },
       {
         "number": 17,
@@ -12714,7 +13080,8 @@
         "row": 10,
         "col": 7,
         "text": "Judah's king who trusted God against Assyria",
-        "answer": "HEZEKIAH"
+        "answer": "HEZEKIAH",
+        "reference": "2 Kings 18:5"
       },
       {
         "number": 18,
@@ -12722,7 +13089,8 @@
         "row": 12,
         "col": 2,
         "text": "Wise builder of the first temple, son of David",
-        "answer": "SOLOMON"
+        "answer": "SOLOMON",
+        "reference": "1 Kings 5:7"
       },
       {
         "number": 19,
@@ -12730,7 +13098,8 @@
         "row": 12,
         "col": 10,
         "text": "Boy king of Judah hidden from Athaliah",
-        "answer": "JOASH"
+        "answer": "JOASH",
+        "reference": "2 Kings 11:2"
       }
     ]
   },
@@ -12766,7 +13135,8 @@
         "row": 0,
         "col": 2,
         "text": "Sister who met Jesus on the way",
-        "answer": "MARTHA"
+        "answer": "MARTHA",
+        "reference": "John 11:20"
       },
       {
         "number": 2,
@@ -12774,7 +13144,8 @@
         "row": 0,
         "col": 5,
         "text": "What Jesus declared himself to be, with resurrection",
-        "answer": "LIFE"
+        "answer": "LIFE",
+        "reference": "John 11:25"
       },
       {
         "number": 3,
@@ -12790,7 +13161,8 @@
         "row": 0,
         "col": 10,
         "text": "Jesus told Martha her brother would do this again",
-        "answer": "RISE"
+        "answer": "RISE",
+        "reference": "John 11:23"
       },
       {
         "number": 5,
@@ -12806,7 +13178,8 @@
         "row": 2,
         "col": 7,
         "text": "The two women who sent for Jesus",
-        "answer": "SISTERS"
+        "answer": "SISTERS",
+        "reference": "John 11:3"
       },
       {
         "number": 7,
@@ -12814,7 +13187,8 @@
         "row": 3,
         "col": 4,
         "text": "What Martha was asked to do to see God's glory",
-        "answer": "BELIEVE"
+        "answer": "BELIEVE",
+        "reference": "John 11:40"
       },
       {
         "number": 8,
@@ -12822,7 +13196,8 @@
         "row": 5,
         "col": 7,
         "text": "Cave where the dead man was laid",
-        "answer": "TOMB"
+        "answer": "TOMB",
+        "reference": "John 11:38"
       },
       {
         "number": 9,
@@ -12830,7 +13205,8 @@
         "row": 6,
         "col": 4,
         "text": "Sister who fell at Jesus' feet weeping",
-        "answer": "MARY"
+        "answer": "MARY",
+        "reference": "John 11:32"
       },
       {
         "number": 10,
@@ -12838,7 +13214,8 @@
         "row": 7,
         "col": 3,
         "text": "Man raised after four days in the tomb",
-        "answer": "LAZARUS"
+        "answer": "LAZARUS",
+        "reference": "John 11:17"
       },
       {
         "number": 11,
@@ -12846,7 +13223,8 @@
         "row": 7,
         "col": 9,
         "text": "How Jesus first described Lazarus' death",
-        "answer": "SLEEP"
+        "answer": "SLEEP",
+        "reference": "John 11:13"
       },
       {
         "number": 12,
@@ -12854,7 +13232,8 @@
         "row": 7,
         "col": 11,
         "text": "Number of days he had lain dead",
-        "answer": "FOUR"
+        "answer": "FOUR",
+        "reference": "John 11:17"
       },
       {
         "number": 13,
@@ -12862,7 +13241,8 @@
         "row": 7,
         "col": 13,
         "text": "Village where the family lived",
-        "answer": "BETHANY"
+        "answer": "BETHANY",
+        "reference": "John 11:1"
       },
       {
         "number": 14,
@@ -12886,7 +13266,8 @@
         "row": 9,
         "col": 0,
         "text": "This sickness was for the ___ of God",
-        "answer": "GLORY"
+        "answer": "GLORY",
+        "reference": "John 11:4"
       },
       {
         "number": 17,
@@ -12894,7 +13275,8 @@
         "row": 10,
         "col": 5,
         "text": "State Jesus said this sickness was not unto",
-        "answer": "DEATH"
+        "answer": "DEATH",
+        "reference": "John 11:4"
       },
       {
         "number": 18,
@@ -12902,7 +13284,8 @@
         "row": 11,
         "col": 1,
         "text": "What was taken away from the grave's mouth",
-        "answer": "STONE"
+        "answer": "STONE",
+        "reference": "John 11:39"
       },
       {
         "number": 19,
@@ -12910,7 +13293,8 @@
         "row": 11,
         "col": 7,
         "text": "Shortest verse: 'Jesus ___'",
-        "answer": "WEPT"
+        "answer": "WEPT",
+        "reference": "John 11:35"
       },
       {
         "number": 20,
@@ -12954,7 +13338,8 @@
         "row": 0,
         "col": 2,
         "text": "Empire ruling Judah in Nehemiah's day",
-        "answer": "PERSIA"
+        "answer": "PERSIA",
+        "reference": "Nehemiah 12:22"
       },
       {
         "number": 1,
@@ -12962,7 +13347,8 @@
         "row": 0,
         "col": 2,
         "text": "Nehemiah's frequent turning to God in petition",
-        "answer": "PRAYER"
+        "answer": "PRAYER",
+        "reference": "Nehemiah 1:6"
       },
       {
         "number": 2,
@@ -12970,7 +13356,8 @@
         "row": 0,
         "col": 9,
         "text": "Wood requested for the gates and beams",
-        "answer": "TIMBER"
+        "answer": "TIMBER",
+        "reference": "Nehemiah 2:8"
       },
       {
         "number": 3,
@@ -12978,7 +13365,8 @@
         "row": 0,
         "col": 11,
         "text": "Paste binding bricks and stones together",
-        "answer": "MORTAR"
+        "answer": "MORTAR",
+        "reference": "Genesis 11:3"
       },
       {
         "number": 4,
@@ -12994,7 +13382,8 @@
         "row": 1,
         "col": 0,
         "text": "Entryway set into the rampart, hung with doors",
-        "answer": "GATE"
+        "answer": "GATE",
+        "reference": "Nehemiah 2:13"
       },
       {
         "number": 6,
@@ -13002,7 +13391,8 @@
         "row": 1,
         "col": 8,
         "text": "Cupbearer who led the rebuilding of the wall",
-        "answer": "NEHEMIAH"
+        "answer": "NEHEMIAH",
+        "reference": "Nehemiah 1:1"
       },
       {
         "number": 7,
@@ -13018,7 +13408,8 @@
         "row": 4,
         "col": 0,
         "text": "Foes who mocked and opposed the work",
-        "answer": "ENEMIES"
+        "answer": "ENEMIES",
+        "reference": "Nehemiah 4:11"
       },
       {
         "number": 9,
@@ -13026,7 +13417,8 @@
         "row": 4,
         "col": 6,
         "text": "Horonite adversary who scorned the project",
-        "answer": "SANBALLAT"
+        "answer": "SANBALLAT",
+        "reference": "Nehemiah 2:19"
       },
       {
         "number": 10,
@@ -13034,7 +13426,8 @@
         "row": 4,
         "col": 8,
         "text": "Scribe who read the law to the people",
-        "answer": "EZRA"
+        "answer": "EZRA",
+        "reference": "Nehemiah 8:3"
       },
       {
         "number": 11,
@@ -13042,7 +13435,8 @@
         "row": 6,
         "col": 4,
         "text": "Broken-down state of the city before repair",
-        "answer": "RUIN"
+        "answer": "RUIN",
+        "reference": "Nehemiah 2:17"
       },
       {
         "number": 12,
@@ -13058,7 +13452,8 @@
         "row": 7,
         "col": 3,
         "text": "Nehemiah's royal office, tasting the king's drink",
-        "answer": "CUPBEARER"
+        "answer": "CUPBEARER",
+        "reference": "Nehemiah 1:11"
       },
       {
         "number": 14,
@@ -13066,7 +13461,8 @@
         "row": 8,
         "col": 14,
         "text": "Southern kingdom whose capital was restored",
-        "answer": "JUDAH"
+        "answer": "JUDAH",
+        "reference": "Nehemiah 1:2"
       },
       {
         "number": 15,
@@ -13074,7 +13470,8 @@
         "row": 9,
         "col": 12,
         "text": "Ammonite official allied against the builders",
-        "answer": "TOBIAH"
+        "answer": "TOBIAH",
+        "reference": "Nehemiah 2:19"
       },
       {
         "number": 16,
@@ -13082,7 +13479,8 @@
         "row": 10,
         "col": 10,
         "text": "Weapon builders kept girded while they worked",
-        "answer": "SWORD"
+        "answer": "SWORD",
+        "reference": "Nehemiah 4:18"
       },
       {
         "number": 17,
@@ -13090,7 +13488,8 @@
         "row": 11,
         "col": 5,
         "text": "Defensive barrier around the holy city",
-        "answer": "WALL"
+        "answer": "WALL",
+        "reference": "Nehemiah 2:13"
       },
       {
         "number": 18,
@@ -13134,7 +13533,8 @@
         "row": 0,
         "col": 1,
         "text": "Central theme of Paul's gospel message",
-        "answer": "GRACE"
+        "answer": "GRACE",
+        "reference": "Acts 14:3"
       },
       {
         "number": 2,
@@ -13142,7 +13542,8 @@
         "row": 0,
         "col": 11,
         "text": "Island Barnabas and Paul first sailed to",
-        "answer": "CYPRUS"
+        "answer": "CYPRUS",
+        "reference": "Acts 13:4"
       },
       {
         "number": 3,
@@ -13150,7 +13551,8 @@
         "row": 1,
         "col": 5,
         "text": "Young disciple Paul called his son in the faith",
-        "answer": "TIMOTHY"
+        "answer": "TIMOTHY",
+        "reference": "Acts 16:1"
       },
       {
         "number": 4,
@@ -13158,7 +13560,8 @@
         "row": 3,
         "col": 9,
         "text": "Town whose people searched the scriptures daily",
-        "answer": "BEREA"
+        "answer": "BEREA",
+        "reference": "Acts 17:11"
       },
       {
         "number": 5,
@@ -13166,7 +13569,8 @@
         "row": 4,
         "col": 0,
         "text": "Non-Jewish people Paul was sent to reach",
-        "answer": "GENTILE"
+        "answer": "GENTILE",
+        "reference": "Acts 9:15"
       },
       {
         "number": 6,
@@ -13174,7 +13578,8 @@
         "row": 4,
         "col": 5,
         "text": "Seller of purple, first European convert",
-        "answer": "LYDIA"
+        "answer": "LYDIA",
+        "reference": "Acts 16:14"
       },
       {
         "number": 7,
@@ -13182,7 +13587,8 @@
         "row": 5,
         "col": 7,
         "text": "Companion imprisoned with Paul at Philippi",
-        "answer": "SILAS"
+        "answer": "SILAS",
+        "reference": "Acts 16:19"
       },
       {
         "number": 7,
@@ -13190,7 +13596,8 @@
         "row": 5,
         "col": 7,
         "text": "How Paul often traveled between coastal cities",
-        "answer": "SAILED"
+        "answer": "SAILED",
+        "reference": "Acts 18:18"
       },
       {
         "number": 8,
@@ -13198,7 +13605,8 @@
         "row": 5,
         "col": 10,
         "text": "Province where Ephesus lay, region of Paul's labor",
-        "answer": "ASIA"
+        "answer": "ASIA",
+        "reference": "Acts 19:26"
       },
       {
         "number": 9,
@@ -13206,7 +13614,8 @@
         "row": 6,
         "col": 0,
         "text": "Imperial city Paul longed and finally came to",
-        "answer": "ROME"
+        "answer": "ROME",
+        "reference": "Acts 19:21"
       },
       {
         "number": 10,
@@ -13214,7 +13623,8 @@
         "row": 6,
         "col": 3,
         "text": "Asian city of the great temple of Diana",
-        "answer": "EPHESUS"
+        "answer": "EPHESUS",
+        "reference": "Acts 19:35"
       },
       {
         "number": 11,
@@ -13222,7 +13632,8 @@
         "row": 7,
         "col": 3,
         "text": "Macedonian colony where Lydia was converted",
-        "answer": "PHILIPPI"
+        "answer": "PHILIPPI",
+        "reference": "Acts 16:12"
       },
       {
         "number": 12,
@@ -13230,7 +13641,8 @@
         "row": 8,
         "col": 13,
         "text": "Achaian city where Paul stayed with Aquila and Priscilla",
-        "answer": "CORINTH"
+        "answer": "CORINTH",
+        "reference": "Acts 18:1"
       },
       {
         "number": 13,
@@ -13238,7 +13650,8 @@
         "row": 9,
         "col": 1,
         "text": "Philippian keeper who believed after the earthquake",
-        "answer": "JAILER"
+        "answer": "JAILER",
+        "reference": "Acts 16:29"
       },
       {
         "number": 14,
@@ -13246,7 +13659,8 @@
         "row": 9,
         "col": 9,
         "text": "What Paul did in every city he entered",
-        "answer": "PREACH"
+        "answer": "PREACH",
+        "reference": "Acts 14:21"
       },
       {
         "number": 15,
@@ -13262,7 +13676,8 @@
         "row": 10,
         "col": 5,
         "text": "Whom Paul ordained in the churches",
-        "answer": "ELDERS"
+        "answer": "ELDERS",
+        "reference": "Acts 14:23"
       },
       {
         "number": 17,
@@ -13270,7 +13685,8 @@
         "row": 12,
         "col": 1,
         "text": "City where Paul was stoned and a lame man healed",
-        "answer": "LYSTRA"
+        "answer": "LYSTRA",
+        "reference": "Acts 14:8"
       },
       {
         "number": 18,
@@ -13278,7 +13694,8 @@
         "row": 12,
         "col": 9,
         "text": "Greek city where Paul preached at Mars' Hill",
-        "answer": "ATHENS"
+        "answer": "ATHENS",
+        "reference": "Acts 17:22"
       },
       {
         "number": 19,
@@ -13286,7 +13703,8 @@
         "row": 14,
         "col": 3,
         "text": "City where disciples were first called Christians; Paul's sending church",
-        "answer": "ANTIOCH"
+        "answer": "ANTIOCH",
+        "reference": "Acts 11:26"
       }
     ]
   },
@@ -13330,7 +13748,8 @@
         "row": 2,
         "col": 9,
         "text": "Centurion who guarded Paul on the voyage",
-        "answer": "JULIUS"
+        "answer": "JULIUS",
+        "reference": "Acts 27:1"
       },
       {
         "number": 3,
@@ -13346,7 +13765,8 @@
         "row": 3,
         "col": 3,
         "text": "All escaped ___ to land, as Paul had promised",
-        "answer": "SAFE"
+        "answer": "SAFE",
+        "reference": "Acts 27:44"
       },
       {
         "number": 5,
@@ -13354,7 +13774,8 @@
         "row": 3,
         "col": 4,
         "text": "Heavenly messenger who stood by Paul in the night",
-        "answer": "ANGEL"
+        "answer": "ANGEL",
+        "reference": "Acts 27:23"
       },
       {
         "number": 6,
@@ -13362,7 +13783,8 @@
         "row": 5,
         "col": 8,
         "text": "Snake that fastened on Paul's hand by the fire",
-        "answer": "VIPER"
+        "answer": "VIPER",
+        "reference": "Acts 28:3"
       },
       {
         "number": 7,
@@ -13370,7 +13792,8 @@
         "row": 6,
         "col": 6,
         "text": "Kindled by the natives because of the rain and cold",
-        "answer": "FIRE"
+        "answer": "FIRE",
+        "reference": "Acts 28:2"
       },
       {
         "number": 8,
@@ -13386,7 +13809,8 @@
         "row": 7,
         "col": 2,
         "text": "Guards who wanted to kill the prisoners",
-        "answer": "SOLDIERS"
+        "answer": "SOLDIERS",
+        "reference": "Acts 27:42"
       },
       {
         "number": 9,
@@ -13394,7 +13818,8 @@
         "row": 7,
         "col": 2,
         "text": "Crew who tried to flee the ship in the boat",
-        "answer": "SAILORS"
+        "answer": "SAILORS",
+        "reference": "Acts 27:30"
       },
       {
         "number": 10,
@@ -13402,7 +13827,8 @@
         "row": 7,
         "col": 8,
         "text": "Cold weather that prompted the welcoming blaze",
-        "answer": "RAIN"
+        "answer": "RAIN",
+        "reference": "Acts 28:2"
       },
       {
         "number": 11,
@@ -13410,7 +13836,8 @@
         "row": 9,
         "col": 0,
         "text": "How those who could were told to reach land",
-        "answer": "SWIM"
+        "answer": "SWIM",
+        "reference": "Acts 27:43"
       },
       {
         "number": 12,
@@ -13426,7 +13853,8 @@
         "row": 10,
         "col": 4,
         "text": "The tempestuous weather that battered the vessel",
-        "answer": "STORM"
+        "answer": "STORM",
+        "reference": "Acts 27:20"
       },
       {
         "number": 14,
@@ -13434,7 +13862,8 @@
         "row": 10,
         "col": 7,
         "text": "Four cast out of the stern to wait for day",
-        "answer": "ANCHORS"
+        "answer": "ANCHORS",
+        "reference": "Acts 27:29"
       },
       {
         "number": 15,
@@ -13442,7 +13871,8 @@
         "row": 10,
         "col": 13,
         "text": "Land they hoped to reach to save the ship",
-        "answer": "SHORE"
+        "answer": "SHORE",
+        "reference": "Acts 28:1"
       },
       {
         "number": 16,
@@ -13450,7 +13880,8 @@
         "row": 11,
         "col": 6,
         "text": "What Paul did for Publius' father and other sick",
-        "answer": "HEAL"
+        "answer": "HEAL",
+        "reference": "Acts 28:8"
       },
       {
         "number": 17,
@@ -13458,7 +13889,8 @@
         "row": 12,
         "col": 0,
         "text": "Goods cast overboard to lighten the ship",
-        "answer": "CARGO"
+        "answer": "CARGO",
+        "reference": "Acts 27:18"
       },
       {
         "number": 18,
@@ -13502,7 +13934,8 @@
         "row": 0,
         "col": 1,
         "text": "The one who came to test the Lord",
-        "answer": "TEMPTER"
+        "answer": "TEMPTER",
+        "reference": "Matthew 4:3"
       },
       {
         "number": 2,
@@ -13510,7 +13943,8 @@
         "row": 0,
         "col": 3,
         "text": "Realms offered from a high mountain",
-        "answer": "KINGDOMS"
+        "answer": "KINGDOMS",
+        "reference": "Matthew 4:8"
       },
       {
         "number": 3,
@@ -13518,7 +13952,8 @@
         "row": 1,
         "col": 0,
         "text": "The adversary who tested Christ",
-        "answer": "DEVIL"
+        "answer": "DEVIL",
+        "reference": "Matthew 4:1"
       },
       {
         "number": 4,
@@ -13526,7 +13961,8 @@
         "row": 2,
         "col": 5,
         "text": "What the devil demanded in exchange",
-        "answer": "WORSHIP"
+        "answer": "WORSHIP",
+        "reference": "Matthew 4:9"
       },
       {
         "number": 5,
@@ -13534,7 +13970,8 @@
         "row": 2,
         "col": 8,
         "text": "He led Jesus up into the wilderness",
-        "answer": "SPIRIT"
+        "answer": "SPIRIT",
+        "reference": "Matthew 4:1"
       },
       {
         "number": 6,
@@ -13542,7 +13979,8 @@
         "row": 2,
         "col": 13,
         "text": "It is ___, Jesus repeatedly said",
-        "answer": "WRITTEN"
+        "answer": "WRITTEN",
+        "reference": "Matthew 4:4"
       },
       {
         "number": 7,
@@ -13550,7 +13988,8 @@
         "row": 5,
         "col": 10,
         "text": "Number of days of the fast",
-        "answer": "FORTY"
+        "answer": "FORTY",
+        "reference": "Matthew 4:2"
       },
       {
         "number": 8,
@@ -13558,7 +13997,8 @@
         "row": 5,
         "col": 11,
         "text": "To do God's will, as Christ did",
-        "answer": "OBEY"
+        "answer": "OBEY",
+        "reference": "Philippians 2:8"
       },
       {
         "number": 9,
@@ -13566,7 +14006,8 @@
         "row": 6,
         "col": 5,
         "text": "Food that man does not live by alone",
-        "answer": "BREAD"
+        "answer": "BREAD",
+        "reference": "Matthew 4:4"
       },
       {
         "number": 10,
@@ -13574,7 +14015,8 @@
         "row": 7,
         "col": 0,
         "text": "Holy building with the high point",
-        "answer": "TEMPLE"
+        "answer": "TEMPLE",
+        "reference": "Matthew 4:5"
       },
       {
         "number": 11,
@@ -13590,7 +14032,8 @@
         "row": 7,
         "col": 7,
         "text": "High point of the temple in test two",
-        "answer": "PINNACLE"
+        "answer": "PINNACLE",
+        "reference": "Matthew 4:5"
       },
       {
         "number": 13,
@@ -13598,7 +14041,8 @@
         "row": 8,
         "col": 2,
         "text": "What Jesus felt after long fasting",
-        "answer": "HUNGER"
+        "answer": "HUNGER",
+        "reference": "Matthew 4:2"
       },
       {
         "number": 14,
@@ -13606,7 +14050,8 @@
         "row": 9,
         "col": 0,
         "text": "Exceeding high place of the last test",
-        "answer": "MOUNTAIN"
+        "answer": "MOUNTAIN",
+        "reference": "Matthew 4:8"
       },
       {
         "number": 15,
@@ -13622,7 +14067,8 @@
         "row": 11,
         "col": 4,
         "text": "To abstain from food, as Jesus did",
-        "answer": "FAST"
+        "answer": "FAST",
+        "reference": "Matthew 4:2"
       },
       {
         "number": 17,
@@ -13630,7 +14076,8 @@
         "row": 11,
         "col": 7,
         "text": "Beings who came and ministered after",
-        "answer": "ANGELS"
+        "answer": "ANGELS",
+        "reference": "Matthew 4:11"
       },
       {
         "number": 18,
@@ -13638,7 +14085,8 @@
         "row": 14,
         "col": 3,
         "text": "What the tempter said to turn to bread",
-        "answer": "STONES"
+        "answer": "STONES",
+        "reference": "Matthew 4:3"
       },
       {
         "number": 19,
@@ -13646,7 +14094,8 @@
         "row": 14,
         "col": 10,
         "text": "Name Jesus used to dismiss the tempter",
-        "answer": "SATAN"
+        "answer": "SATAN",
+        "reference": "Matthew 4:10"
       }
     ]
   },
@@ -13682,7 +14131,8 @@
         "row": 0,
         "col": 0,
         "text": "New Jerusalem descending out of heaven",
-        "answer": "CITY"
+        "answer": "CITY",
+        "reference": "Revelation 21:2"
       },
       {
         "number": 2,
@@ -13690,7 +14140,8 @@
         "row": 0,
         "col": 2,
         "text": "Seat surrounded by twenty-four elders",
-        "answer": "THRONE"
+        "answer": "THRONE",
+        "reference": "Revelation 4:4"
       },
       {
         "number": 3,
@@ -13698,7 +14149,8 @@
         "row": 0,
         "col": 13,
         "text": "Seven held in the right hand of the Son of man",
-        "answer": "STARS"
+        "answer": "STARS",
+        "reference": "Revelation 1:16"
       },
       {
         "number": 4,
@@ -13706,7 +14158,8 @@
         "row": 1,
         "col": 9,
         "text": "Reaping of the earth by the Son of man",
-        "answer": "HARVEST"
+        "answer": "HARVEST",
+        "reference": "Revelation 14:16"
       },
       {
         "number": 5,
@@ -13714,7 +14167,8 @@
         "row": 2,
         "col": 5,
         "text": "Last Greek letter symbolizing the ending",
-        "answer": "OMEGA"
+        "answer": "OMEGA",
+        "reference": "Revelation 22:13"
       },
       {
         "number": 6,
@@ -13722,7 +14176,8 @@
         "row": 3,
         "col": 0,
         "text": "Reward promised to the faithful unto death",
-        "answer": "CROWN"
+        "answer": "CROWN",
+        "reference": "Revelation 2:10"
       },
       {
         "number": 7,
@@ -13730,7 +14185,8 @@
         "row": 3,
         "col": 9,
         "text": "Pure water of life flowing from the throne",
-        "answer": "RIVER"
+        "answer": "RIVER",
+        "reference": "Revelation 22:1"
       },
       {
         "number": 8,
@@ -13738,7 +14194,8 @@
         "row": 5,
         "col": 1,
         "text": "Creature rising from the sea with seven heads",
-        "answer": "BEAST"
+        "answer": "BEAST",
+        "reference": "Revelation 13:1"
       },
       {
         "number": 9,
@@ -13746,7 +14203,8 @@
         "row": 5,
         "col": 4,
         "text": "Sealed book in the right hand of Him on the throne",
-        "answer": "SCROLL"
+        "answer": "SCROLL",
+        "reference": "Revelation 5:1"
       },
       {
         "number": 10,
@@ -13754,7 +14212,8 @@
         "row": 5,
         "col": 7,
         "text": "Final word of affirmation closing the book",
-        "answer": "AMEN"
+        "answer": "AMEN",
+        "reference": "Revelation 22:21"
       },
       {
         "number": 10,
@@ -13762,7 +14221,8 @@
         "row": 5,
         "col": 7,
         "text": "First Greek letter the Lord calls Himself",
-        "answer": "ALPHA"
+        "answer": "ALPHA",
+        "reference": "Revelation 1:8"
       },
       {
         "number": 11,
@@ -13770,7 +14230,8 @@
         "row": 6,
         "col": 12,
         "text": "Colour of the robes washed in the Lamb's blood",
-        "answer": "WHITE"
+        "answer": "WHITE",
+        "reference": "Revelation 7:14"
       },
       {
         "number": 12,
@@ -13778,7 +14239,8 @@
         "row": 7,
         "col": 3,
         "text": "Seven sounded by angels bringing judgment",
-        "answer": "TRUMPETS"
+        "answer": "TRUMPETS",
+        "reference": "Revelation 8:2"
       },
       {
         "number": 13,
@@ -13786,7 +14248,8 @@
         "row": 7,
         "col": 10,
         "text": "Seven of these were opened on the scroll",
-        "answer": "SEALS"
+        "answer": "SEALS",
+        "reference": "Revelation 5:1"
       },
       {
         "number": 14,
@@ -13794,7 +14257,8 @@
         "row": 8,
         "col": 0,
         "text": "Slain One found worthy to open the seals",
-        "answer": "LAMB"
+        "answer": "LAMB",
+        "reference": "Revelation 5:12"
       },
       {
         "number": 15,
@@ -13802,7 +14266,8 @@
         "row": 8,
         "col": 14,
         "text": "Great red beast, the old serpent cast down",
-        "answer": "DRAGON"
+        "answer": "DRAGON",
+        "reference": "Revelation 12:9"
       },
       {
         "number": 16,
@@ -13810,7 +14275,8 @@
         "row": 9,
         "col": 0,
         "text": "Heavenly messenger who shows John the visions",
-        "answer": "ANGEL"
+        "answer": "ANGEL",
+        "reference": "Revelation 1:1"
       },
       {
         "number": 17,
@@ -13826,7 +14292,8 @@
         "row": 11,
         "col": 5,
         "text": "Island where John received the revelation",
-        "answer": "PATMOS"
+        "answer": "PATMOS",
+        "reference": "Revelation 1:9"
       },
       {
         "number": 19,
@@ -13834,7 +14301,8 @@
         "row": 13,
         "col": 8,
         "text": "Great city, mother of harlots, that falls",
-        "answer": "BABYLON"
+        "answer": "BABYLON",
+        "reference": "Revelation 17:5"
       }
     ]
   },
@@ -13870,7 +14338,8 @@
         "row": 0,
         "col": 1,
         "text": "First Christian martyr, stoned for his testimony",
-        "answer": "STEPHEN"
+        "answer": "STEPHEN",
+        "reference": "Acts 7:59"
       },
       {
         "number": 2,
@@ -13878,7 +14347,8 @@
         "row": 0,
         "col": 4,
         "text": "Charitable woman of Joppa raised by Peter",
-        "answer": "DORCAS"
+        "answer": "DORCAS",
+        "reference": "Acts 9:36"
       },
       {
         "number": 2,
@@ -13894,7 +14364,8 @@
         "row": 0,
         "col": 14,
         "text": "Leaders appointed in every church",
-        "answer": "ELDERS"
+        "answer": "ELDERS",
+        "reference": "Acts 14:23"
       },
       {
         "number": 4,
@@ -13902,7 +14373,8 @@
         "row": 1,
         "col": 12,
         "text": "Place an angel freed Peter from at night",
-        "answer": "PRISON"
+        "answer": "PRISON",
+        "reference": "Acts 12:6"
       },
       {
         "number": 5,
@@ -13910,7 +14382,8 @@
         "row": 2,
         "col": 3,
         "text": "What persecution did to the Jerusalem believers",
-        "answer": "SCATTER"
+        "answer": "SCATTER",
+        "reference": "Acts 8:1"
       },
       {
         "number": 6,
@@ -13918,7 +14391,8 @@
         "row": 4,
         "col": 10,
         "text": "Stephen was full of this and of power",
-        "answer": "FAITH"
+        "answer": "FAITH",
+        "reference": "Acts 6:5"
       },
       {
         "number": 7,
@@ -13926,7 +14400,8 @@
         "row": 5,
         "col": 0,
         "text": "Non-Jew, like Cornelius, brought into the faith",
-        "answer": "GENTILE"
+        "answer": "GENTILE",
+        "reference": "Acts 11:18"
       },
       {
         "number": 8,
@@ -13942,7 +14417,8 @@
         "row": 7,
         "col": 3,
         "text": "To harass the church, as Saul once did",
-        "answer": "PERSECUTE"
+        "answer": "PERSECUTE",
+        "reference": "Acts 9:4"
       },
       {
         "number": 9,
@@ -13950,7 +14426,8 @@
         "row": 7,
         "col": 3,
         "text": "What the believers steadfastly continued in",
-        "answer": "PRAYERS"
+        "answer": "PRAYERS",
+        "reference": "Acts 2:42"
       },
       {
         "number": 10,
@@ -13958,7 +14435,8 @@
         "row": 7,
         "col": 6,
         "text": "Wonders done by the apostles' hands",
-        "answer": "SIGNS"
+        "answer": "SIGNS",
+        "reference": "Acts 5:12"
       },
       {
         "number": 11,
@@ -13966,7 +14444,8 @@
         "row": 7,
         "col": 14,
         "text": "Levite called the son of consolation",
-        "answer": "BARNABAS"
+        "answer": "BARNABAS",
+        "reference": "Acts 4:36"
       },
       {
         "number": 12,
@@ -13974,7 +14453,8 @@
         "row": 9,
         "col": 1,
         "text": "They ate their meat with ___ness and singleness of heart",
-        "answer": "GLAD"
+        "answer": "GLAD",
+        "reference": "Acts 2:46"
       },
       {
         "number": 13,
@@ -13982,7 +14462,8 @@
         "row": 9,
         "col": 9,
         "text": "Whose daily ministration sparked the choosing of seven",
-        "answer": "WIDOWS"
+        "answer": "WIDOWS",
+        "reference": "Acts 6:1"
       },
       {
         "number": 14,
@@ -13990,7 +14471,8 @@
         "row": 10,
         "col": 0,
         "text": "Broken from house to house in fellowship",
-        "answer": "BREAD"
+        "answer": "BREAD",
+        "reference": "Acts 2:46"
       },
       {
         "number": 15,
@@ -13998,7 +14480,8 @@
         "row": 10,
         "col": 5,
         "text": "Man struck dead for lying about his offering",
-        "answer": "ANANIAS"
+        "answer": "ANANIAS",
+        "reference": "Acts 5:5"
       },
       {
         "number": 16,
@@ -14006,7 +14489,8 @@
         "row": 13,
         "col": 0,
         "text": "The twelve sent ones who led the first believers",
-        "answer": "APOSTLES"
+        "answer": "APOSTLES",
+        "reference": "Acts 5:12"
       },
       {
         "number": 17,
@@ -14014,7 +14498,8 @@
         "row": 14,
         "col": 9,
         "text": "Common New Testament term for believers",
-        "answer": "SAINTS"
+        "answer": "SAINTS",
+        "reference": "Acts 9:32"
       }
     ]
   },
@@ -14058,7 +14543,8 @@
         "row": 0,
         "col": 9,
         "text": "Heavenly messenger who strengthened Him",
-        "answer": "ANGEL"
+        "answer": "ANGEL",
+        "reference": "Luke 22:43"
       },
       {
         "number": 2,
@@ -14066,7 +14552,8 @@
         "row": 1,
         "col": 6,
         "text": "Beloved disciple present at the watch",
-        "answer": "JOHN"
+        "answer": "JOHN",
+        "reference": "Mark 14:33"
       },
       {
         "number": 3,
@@ -14074,7 +14561,8 @@
         "row": 2,
         "col": 0,
         "text": "Weapon Peter drew to strike the servant",
-        "answer": "SWORD"
+        "answer": "SWORD",
+        "reference": "Mark 14:47"
       },
       {
         "number": 4,
@@ -14082,7 +14570,8 @@
         "row": 2,
         "col": 9,
         "text": "Enclosed plot where the night prayer took place",
-        "answer": "GARDEN"
+        "answer": "GARDEN",
+        "reference": "John 18:1"
       },
       {
         "number": 5,
@@ -14090,7 +14579,8 @@
         "row": 3,
         "col": 2,
         "text": "Sign the traitor used to identify Him",
-        "answer": "KISS"
+        "answer": "KISS",
+        "reference": "Mark 14:44"
       },
       {
         "number": 6,
@@ -14098,7 +14588,8 @@
         "row": 4,
         "col": 0,
         "text": "The mount where the garden lay",
-        "answer": "OLIVES"
+        "answer": "OLIVES",
+        "reference": "Mark 14:26"
       },
       {
         "number": 7,
@@ -14106,7 +14597,8 @@
         "row": 4,
         "col": 5,
         "text": "Drops that fell like blood to the ground",
-        "answer": "SWEAT"
+        "answer": "SWEAT",
+        "reference": "Luke 22:44"
       },
       {
         "number": 8,
@@ -14114,7 +14606,8 @@
         "row": 4,
         "col": 7,
         "text": "What He yielded to the Father's purpose",
-        "answer": "WILL"
+        "answer": "WILL",
+        "reference": "Mark 14:36"
       },
       {
         "number": 8,
@@ -14122,7 +14615,8 @@
         "row": 4,
         "col": 7,
         "text": "To stay awake and alert, as bidden",
-        "answer": "WATCH"
+        "answer": "WATCH",
+        "reference": "Mark 14:34"
       },
       {
         "number": 9,
@@ -14130,7 +14624,8 @@
         "row": 4,
         "col": 14,
         "text": "Willing part, though the flesh is weak",
-        "answer": "SPIRIT"
+        "answer": "SPIRIT",
+        "reference": "Mark 14:38"
       },
       {
         "number": 10,
@@ -14138,7 +14633,8 @@
         "row": 5,
         "col": 12,
         "text": "Symbol of suffering He asked to pass",
-        "answer": "CUP"
+        "answer": "CUP",
+        "reference": "Mark 14:36"
       },
       {
         "number": 11,
@@ -14146,7 +14642,8 @@
         "row": 6,
         "col": 9,
         "text": "Betrayer who arrived with a band of men",
-        "answer": "JUDAS"
+        "answer": "JUDAS",
+        "reference": "Mark 14:43"
       },
       {
         "number": 12,
@@ -14154,7 +14651,8 @@
         "row": 7,
         "col": 4,
         "text": "Servant of the high priest whose ear was cut",
-        "answer": "MALCHUS"
+        "answer": "MALCHUS",
+        "reference": "John 18:10"
       },
       {
         "number": 13,
@@ -14162,7 +14660,8 @@
         "row": 8,
         "col": 12,
         "text": "Disciple who later denied the Lord three times",
-        "answer": "PETER"
+        "answer": "PETER",
+        "reference": "Mark 14:72"
       },
       {
         "number": 14,
@@ -14170,7 +14669,8 @@
         "row": 9,
         "col": 6,
         "text": "Body part Jesus healed during the arrest",
-        "answer": "EAR"
+        "answer": "EAR",
+        "reference": "Luke 22:51"
       },
       {
         "number": 15,
@@ -14178,7 +14678,8 @@
         "row": 9,
         "col": 9,
         "text": "Seizing of Jesus by the armed crowd",
-        "answer": "ARREST"
+        "answer": "ARREST",
+        "reference": "Mark 14:48"
       },
       {
         "number": 16,
@@ -14186,7 +14687,8 @@
         "row": 10,
         "col": 5,
         "text": "Son of Zebedee among the inner three",
-        "answer": "JAMES"
+        "answer": "JAMES",
+        "reference": "Mark 14:33"
       },
       {
         "number": 17,
@@ -14194,7 +14696,8 @@
         "row": 11,
         "col": 10,
         "text": "What the weary followers did instead of watching",
-        "answer": "SLEEP"
+        "answer": "SLEEP",
+        "reference": "Mark 14:37"
       },
       {
         "number": 18,
@@ -14202,7 +14705,8 @@
         "row": 11,
         "col": 14,
         "text": "To speak earnestly to God",
-        "answer": "PRAY"
+        "answer": "PRAY",
+        "reference": "Mark 14:32"
       }
     ]
   },
@@ -14238,7 +14742,8 @@
         "row": 0,
         "col": 8,
         "text": "Craftsman whose house illustrated God's sovereignty",
-        "answer": "POTTER"
+        "answer": "POTTER",
+        "reference": "Jeremiah 18:2"
       },
       {
         "number": 2,
@@ -14246,7 +14751,8 @@
         "row": 0,
         "col": 10,
         "text": "Seat of glory Isaiah saw the Lord upon",
-        "answer": "THRONE"
+        "answer": "THRONE",
+        "reference": "Isaiah 6:1"
       },
       {
         "number": 3,
@@ -14254,7 +14760,8 @@
         "row": 1,
         "col": 4,
         "text": "To pronounce sentence, as God does on nations",
-        "answer": "JUDGE"
+        "answer": "JUDGE",
+        "reference": "Isaiah 2:4"
       },
       {
         "number": 4,
@@ -14262,7 +14769,8 @@
         "row": 2,
         "col": 8,
         "text": "Fiery place three Hebrews survived unharmed",
-        "answer": "FURNACE"
+        "answer": "FURNACE",
+        "reference": "Daniel 3:17"
       },
       {
         "number": 5,
@@ -14270,7 +14778,8 @@
         "row": 3,
         "col": 1,
         "text": "Empire that carried Judah into captivity",
-        "answer": "BABYLON"
+        "answer": "BABYLON",
+        "reference": "Isaiah 39:6"
       },
       {
         "number": 6,
@@ -14286,7 +14795,8 @@
         "row": 4,
         "col": 14,
         "text": "Six-winged beings crying Holy in Isaiah's vision",
-        "answer": "SERAPHIM"
+        "answer": "SERAPHIM",
+        "reference": "Isaiah 6:2"
       },
       {
         "number": 8,
@@ -14294,7 +14804,8 @@
         "row": 5,
         "col": 1,
         "text": "Dry remains made to live in Ezekiel's vision",
-        "answer": "BONES"
+        "answer": "BONES",
+        "reference": "Ezekiel 37:4"
       },
       {
         "number": 9,
@@ -14302,7 +14813,8 @@
         "row": 5,
         "col": 5,
         "text": "Rolled document a prophet might eat or read",
-        "answer": "SCROLL"
+        "answer": "SCROLL",
+        "reference": "Isaiah 29:11"
       },
       {
         "number": 10,
@@ -14310,7 +14822,8 @@
         "row": 5,
         "col": 10,
         "text": "Forced removal of Judah to Babylon",
-        "answer": "EXILE"
+        "answer": "EXILE",
+        "reference": "Isaiah 5:13"
       },
       {
         "number": 11,
@@ -14318,7 +14831,8 @@
         "row": 6,
         "col": 7,
         "text": "Prophetic name meaning God with us",
-        "answer": "IMMANUEL"
+        "answer": "IMMANUEL",
+        "reference": "Isaiah 7:14"
       },
       {
         "number": 12,
@@ -14326,7 +14840,8 @@
         "row": 6,
         "col": 9,
         "text": "Exile thrown into the lions' den",
-        "answer": "DANIEL"
+        "answer": "DANIEL",
+        "reference": "Daniel 6:16"
       },
       {
         "number": 13,
@@ -14334,7 +14849,8 @@
         "row": 7,
         "col": 3,
         "text": "Weeping prophet who wrote Lamentations",
-        "answer": "JEREMIAH"
+        "answer": "JEREMIAH",
+        "reference": "Jeremiah 45:1"
       },
       {
         "number": 14,
@@ -14342,7 +14858,8 @@
         "row": 8,
         "col": 12,
         "text": "Revelation given to a prophet, often in symbols",
-        "answer": "VISION"
+        "answer": "VISION",
+        "reference": "Isaiah 1:1"
       },
       {
         "number": 15,
@@ -14350,7 +14867,8 @@
         "row": 9,
         "col": 9,
         "text": "Prophet who foretold a virgin's son named Immanuel",
-        "answer": "ISAIAH"
+        "answer": "ISAIAH",
+        "reference": "Isaiah 7:3"
       },
       {
         "number": 16,
@@ -14358,7 +14876,8 @@
         "row": 10,
         "col": 2,
         "text": "Nebuchadnezzar's vision Daniel interpreted",
-        "answer": "DREAM"
+        "answer": "DREAM",
+        "reference": "Daniel 2:36"
       },
       {
         "number": 17,
@@ -14366,7 +14885,8 @@
         "row": 12,
         "col": 2,
         "text": "Prophet of the valley of dry bones",
-        "answer": "EZEKIEL"
+        "answer": "EZEKIEL",
+        "reference": "Ezekiel 1:3"
       },
       {
         "number": 18,
@@ -14374,7 +14894,8 @@
         "row": 13,
         "col": 9,
         "text": "Beasts that did not harm Daniel in the den",
-        "answer": "LIONS"
+        "answer": "LIONS",
+        "reference": "Daniel 6:22"
       },
       {
         "number": 19,
@@ -14382,7 +14903,8 @@
         "row": 14,
         "col": 0,
         "text": "Faithful few preserved through judgment",
-        "answer": "REMNANT"
+        "answer": "REMNANT",
+        "reference": "Isaiah 10:20"
       }
     ]
   },
@@ -14442,7 +14964,8 @@
         "row": 0,
         "col": 13,
         "text": "Aramaic word for Father used in prayer",
-        "answer": "ABBA"
+        "answer": "ABBA",
+        "reference": "Mark 14:36"
       },
       {
         "number": 5,
@@ -14450,7 +14973,8 @@
         "row": 2,
         "col": 4,
         "text": "Maker of heaven and earth",
-        "answer": "CREATOR"
+        "answer": "CREATOR",
+        "reference": "Genesis 14:19"
       },
       {
         "number": 6,
@@ -14458,7 +14982,8 @@
         "row": 2,
         "col": 5,
         "text": "One who buys back; a title of the Lord",
-        "answer": "REDEEMER"
+        "answer": "REDEEMER",
+        "reference": "Psalm 19:14"
       },
       {
         "number": 7,
@@ -14466,7 +14991,8 @@
         "row": 5,
         "col": 1,
         "text": "Relational name Jesus taught us to use",
-        "answer": "FATHER"
+        "answer": "FATHER",
+        "reference": "Matthew 6:9"
       },
       {
         "number": 8,
@@ -14474,7 +15000,8 @@
         "row": 5,
         "col": 9,
         "text": "The ___ High; title in El Elyon",
-        "answer": "MOST"
+        "answer": "MOST",
+        "reference": "Genesis 14:18"
       },
       {
         "number": 9,
@@ -14482,7 +15009,8 @@
         "row": 6,
         "col": 8,
         "text": "Title of Psalm 23: The Lord is my ___",
-        "answer": "SHEPHERD"
+        "answer": "SHEPHERD",
+        "reference": "Psalm 23:1"
       },
       {
         "number": 10,
@@ -14490,7 +15018,8 @@
         "row": 7,
         "col": 1,
         "text": "Image of God as a firm, unshakeable refuge",
-        "answer": "ROCK"
+        "answer": "ROCK",
+        "reference": "2 Samuel 22:3"
       },
       {
         "number": 11,
@@ -14498,7 +15027,8 @@
         "row": 7,
         "col": 3,
         "text": "Title of supreme power; El Shaddai in Hebrew",
-        "answer": "ALMIGHTY"
+        "answer": "ALMIGHTY",
+        "reference": "Genesis 17:1"
       },
       {
         "number": 11,
@@ -14530,7 +15060,8 @@
         "row": 8,
         "col": 0,
         "text": "Common English rendering of the divine name",
-        "answer": "LORD"
+        "answer": "LORD",
+        "reference": "Exodus 3:15"
       },
       {
         "number": 15,
@@ -14538,7 +15069,8 @@
         "row": 9,
         "col": 14,
         "text": "Set apart; the thrice-repeated cry of the seraphim",
-        "answer": "HOLY"
+        "answer": "HOLY",
+        "reference": "Isaiah 6:3"
       },
       {
         "number": 16,
@@ -14546,7 +15078,8 @@
         "row": 10,
         "col": 1,
         "text": "Sovereign ruler over all creation",
-        "answer": "KING"
+        "answer": "KING",
+        "reference": "Jeremiah 10:10"
       },
       {
         "number": 17,
@@ -14554,7 +15087,8 @@
         "row": 11,
         "col": 8,
         "text": "Without beginning or end, as God is",
-        "answer": "ETERNAL"
+        "answer": "ETERNAL",
+        "reference": "Genesis 21:33"
       },
       {
         "number": 18,
@@ -14598,7 +15132,8 @@
         "row": 0,
         "col": 4,
         "text": "These were opened and they recognized Him",
-        "answer": "EYES"
+        "answer": "EYES",
+        "reference": "Luke 24:31"
       },
       {
         "number": 2,
@@ -14606,7 +15141,8 @@
         "row": 0,
         "col": 6,
         "text": "What they called Jesus, mighty in deed",
-        "answer": "PROPHET"
+        "answer": "PROPHET",
+        "reference": "Luke 24:19"
       },
       {
         "number": 3,
@@ -14614,7 +15150,8 @@
         "row": 0,
         "col": 7,
         "text": "Path on which the stranger joined them",
-        "answer": "ROAD"
+        "answer": "ROAD",
+        "reference": "Luke 24:32"
       },
       {
         "number": 4,
@@ -14622,7 +15159,8 @@
         "row": 2,
         "col": 1,
         "text": "Their countenance as they journeyed",
-        "answer": "SAD"
+        "answer": "SAD",
+        "reference": "Luke 24:17"
       },
       {
         "number": 5,
@@ -14630,7 +15168,8 @@
         "row": 2,
         "col": 14,
         "text": "One of the two named travelers",
-        "answer": "CLEOPAS"
+        "answer": "CLEOPAS",
+        "reference": "Luke 24:18"
       },
       {
         "number": 6,
@@ -14646,7 +15185,8 @@
         "row": 3,
         "col": 6,
         "text": "Village the two travelers were heading toward",
-        "answer": "EMMAUS"
+        "answer": "EMMAUS",
+        "reference": "Luke 24:13"
       },
       {
         "number": 8,
@@ -14654,7 +15194,8 @@
         "row": 3,
         "col": 10,
         "text": "Where they sat to eat the evening meal",
-        "answer": "TABLE"
+        "answer": "TABLE",
+        "reference": "Luke 24:30"
       },
       {
         "number": 9,
@@ -14662,7 +15203,8 @@
         "row": 4,
         "col": 8,
         "text": "What He did with the loaf at supper",
-        "answer": "BREAK"
+        "answer": "BREAK",
+        "reference": "Luke 24:35"
       },
       {
         "number": 10,
@@ -14678,7 +15220,8 @@
         "row": 5,
         "col": 4,
         "text": "What happened to their understanding",
-        "answer": "OPENED"
+        "answer": "OPENED",
+        "reference": "Luke 24:45"
       },
       {
         "number": 12,
@@ -14686,7 +15229,8 @@
         "row": 7,
         "col": 3,
         "text": "City the two were departing from that day",
-        "answer": "JERUSALEM"
+        "answer": "JERUSALEM",
+        "reference": "Luke 24:13"
       },
       {
         "number": 13,
@@ -14694,7 +15238,8 @@
         "row": 7,
         "col": 11,
         "text": "Lawgiver whose words He explained",
-        "answer": "MOSES"
+        "answer": "MOSES",
+        "reference": "Luke 24:27"
       },
       {
         "number": 14,
@@ -14702,7 +15247,8 @@
         "row": 10,
         "col": 0,
         "text": "Broken at the table when He was known",
-        "answer": "BREAD"
+        "answer": "BREAD",
+        "reference": "Luke 24:30"
       },
       {
         "number": 15,
@@ -14710,7 +15256,8 @@
         "row": 10,
         "col": 1,
         "text": "Condition of the Lord they met",
-        "answer": "RISEN"
+        "answer": "RISEN",
+        "reference": "Luke 24:34"
       },
       {
         "number": 16,
@@ -14718,7 +15265,8 @@
         "row": 10,
         "col": 8,
         "text": "How their hearts felt as He spoke",
-        "answer": "BURN"
+        "answer": "BURN",
+        "reference": "Luke 24:32"
       },
       {
         "number": 17,
@@ -14726,7 +15274,8 @@
         "row": 10,
         "col": 10,
         "text": "Inner self that burned within them",
-        "answer": "HEART"
+        "answer": "HEART",
+        "reference": "Luke 24:32"
       },
       {
         "number": 18,
@@ -14734,7 +15283,8 @@
         "row": 10,
         "col": 14,
         "text": "What they did about recent events",
-        "answer": "TALK"
+        "answer": "TALK",
+        "reference": "Luke 24:14"
       },
       {
         "number": 19,
@@ -14750,7 +15300,8 @@
         "row": 13,
         "col": 11,
         "text": "To travel on foot, as they did",
-        "answer": "WALK"
+        "answer": "WALK",
+        "reference": "Luke 24:15"
       }
     ]
   },
@@ -14786,7 +15337,8 @@
         "row": 0,
         "col": 10,
         "text": "Precious metal overlaying the sacred furniture",
-        "answer": "GOLD"
+        "answer": "GOLD",
+        "reference": "Exodus 25:11"
       },
       {
         "number": 2,
@@ -14802,7 +15354,8 @@
         "row": 2,
         "col": 3,
         "text": "Fragrant offering burned before the Lord",
-        "answer": "INCENSE"
+        "answer": "INCENSE",
+        "reference": "Exodus 40:27"
       },
       {
         "number": 4,
@@ -14810,7 +15363,8 @@
         "row": 2,
         "col": 6,
         "text": "Curtain dividing the holy from the most holy",
-        "answer": "VEIL"
+        "answer": "VEIL",
+        "reference": "Exodus 26:33"
       },
       {
         "number": 5,
@@ -14818,7 +15372,8 @@
         "row": 2,
         "col": 10,
         "text": "Fine cloth used for the priestly garments",
-        "answer": "LINEN"
+        "answer": "LINEN",
+        "reference": "Exodus 39:27"
       },
       {
         "number": 6,
@@ -14826,7 +15381,8 @@
         "row": 3,
         "col": 1,
         "text": "Portable dwelling that housed the sanctuary",
-        "answer": "TENT"
+        "answer": "TENT",
+        "reference": "Exodus 26:7"
       },
       {
         "number": 7,
@@ -14834,7 +15390,8 @@
         "row": 3,
         "col": 6,
         "text": "Priestly vestment worn over the robe",
-        "answer": "EPHOD"
+        "answer": "EPHOD",
+        "reference": "Exodus 28:4"
       },
       {
         "number": 8,
@@ -14842,7 +15399,8 @@
         "row": 4,
         "col": 0,
         "text": "One who ministered in the holy place",
-        "answer": "PRIEST"
+        "answer": "PRIEST",
+        "reference": "Exodus 29:30"
       },
       {
         "number": 9,
@@ -14850,7 +15408,8 @@
         "row": 5,
         "col": 0,
         "text": "Blue garment worn beneath the ephod",
-        "answer": "ROBE"
+        "answer": "ROBE",
+        "reference": "Exodus 28:31"
       },
       {
         "number": 10,
@@ -14858,7 +15417,8 @@
         "row": 5,
         "col": 6,
         "text": "Light kept burning on the golden stand",
-        "answer": "LAMP"
+        "answer": "LAMP",
+        "reference": "Exodus 27:20"
       },
       {
         "number": 11,
@@ -14866,7 +15426,8 @@
         "row": 5,
         "col": 8,
         "text": "Seat of atonement atop the ark, ___ seat",
-        "answer": "MERCY"
+        "answer": "MERCY",
+        "reference": "Exodus 25:21"
       },
       {
         "number": 12,
@@ -14882,7 +15443,8 @@
         "row": 7,
         "col": 3,
         "text": "Bread of the Presence set on the table",
-        "answer": "SHOWBREAD"
+        "answer": "SHOWBREAD",
+        "reference": "1 Chronicles 23:29"
       },
       {
         "number": 14,
@@ -14890,7 +15452,8 @@
         "row": 7,
         "col": 5,
         "text": "Anointing substance and lamp fuel",
-        "answer": "OIL"
+        "answer": "OIL",
+        "reference": "Exodus 25:6"
       },
       {
         "number": 15,
@@ -14898,7 +15461,8 @@
         "row": 10,
         "col": 9,
         "text": "Gold-covered chest holding the testimony",
-        "answer": "ARK"
+        "answer": "ARK",
+        "reference": "Exodus 25:16"
       },
       {
         "number": 15,
@@ -14906,7 +15470,8 @@
         "row": 10,
         "col": 9,
         "text": "Place where sacrifices were offered",
-        "answer": "ALTAR"
+        "answer": "ALTAR",
+        "reference": "Exodus 40:29"
       },
       {
         "number": 16,
@@ -14914,7 +15479,8 @@
         "row": 10,
         "col": 13,
         "text": "Heavenly bread kept in a pot inside the ark",
-        "answer": "MANNA"
+        "answer": "MANNA",
+        "reference": "Exodus 16:32"
       },
       {
         "number": 17,
@@ -14922,7 +15488,8 @@
         "row": 11,
         "col": 6,
         "text": "Set-apart character of the sanctuary",
-        "answer": "HOLY"
+        "answer": "HOLY",
+        "reference": "Exodus 40:9"
       },
       {
         "number": 18,
@@ -14930,7 +15497,8 @@
         "row": 12,
         "col": 5,
         "text": "Enclosed outer area around the tent",
-        "answer": "COURT"
+        "answer": "COURT",
+        "reference": "Exodus 27:9"
       },
       {
         "number": 19,
@@ -14938,7 +15506,8 @@
         "row": 13,
         "col": 9,
         "text": "First high priest of Israel",
-        "answer": "AARON"
+        "answer": "AARON",
+        "reference": "Exodus 28:1"
       }
     ]
   },
@@ -14974,7 +15543,8 @@
         "row": 0,
         "col": 7,
         "text": "High place where this occurred",
-        "answer": "MOUNT"
+        "answer": "MOUNT",
+        "reference": "Mark 9:2"
       },
       {
         "number": 1,
@@ -14982,7 +15552,8 @@
         "row": 0,
         "col": 7,
         "text": "Lawgiver who appeared talking with Jesus",
-        "answer": "MOSES"
+        "answer": "MOSES",
+        "reference": "Mark 9:4"
       },
       {
         "number": 2,
@@ -14990,7 +15561,8 @@
         "row": 2,
         "col": 7,
         "text": "Jesus' face shone as bright as this",
-        "answer": "SUN"
+        "answer": "SUN",
+        "reference": "Matthew 17:2"
       },
       {
         "number": 3,
@@ -14998,7 +15570,8 @@
         "row": 3,
         "col": 1,
         "text": "Heavenly splendor revealed on the peak",
-        "answer": "GLORY"
+        "answer": "GLORY",
+        "reference": "Luke 9:32"
       },
       {
         "number": 4,
@@ -15022,7 +15595,8 @@
         "row": 4,
         "col": 10,
         "text": "Color of the shining raiment",
-        "answer": "WHITE"
+        "answer": "WHITE",
+        "reference": "Mark 9:3"
       },
       {
         "number": 7,
@@ -15030,7 +15604,8 @@
         "row": 5,
         "col": 0,
         "text": "What came out of the cloud declaring the Son",
-        "answer": "VOICE"
+        "answer": "VOICE",
+        "reference": "Mark 9:7"
       },
       {
         "number": 8,
@@ -15038,7 +15613,8 @@
         "row": 5,
         "col": 6,
         "text": "What Jesus' face did, as the sun",
-        "answer": "SHINE"
+        "answer": "SHINE",
+        "reference": "Matthew 17:2"
       },
       {
         "number": 9,
@@ -15070,7 +15646,8 @@
         "row": 8,
         "col": 14,
         "text": "'This is my beloved ___,' said the voice",
-        "answer": "SON"
+        "answer": "SON",
+        "reference": "Mark 9:7"
       },
       {
         "number": 13,
@@ -15078,7 +15655,8 @@
         "row": 9,
         "col": 3,
         "text": "Part of Jesus that shone like the sun",
-        "answer": "FACE"
+        "answer": "FACE",
+        "reference": "Matthew 17:2"
       },
       {
         "number": 14,
@@ -15086,7 +15664,8 @@
         "row": 9,
         "col": 5,
         "text": "Bright overshadowing from which a voice came",
-        "answer": "CLOUD"
+        "answer": "CLOUD",
+        "reference": "Mark 9:7"
       },
       {
         "number": 15,
@@ -15094,7 +15673,8 @@
         "row": 10,
         "col": 2,
         "text": "His raiment was white as this",
-        "answer": "LIGHT"
+        "answer": "LIGHT",
+        "reference": "Matthew 17:2"
       },
       {
         "number": 16,
@@ -15102,7 +15682,8 @@
         "row": 10,
         "col": 11,
         "text": "Beloved disciple who witnessed the glory",
-        "answer": "JOHN"
+        "answer": "JOHN",
+        "reference": "Mark 9:2"
       },
       {
         "number": 16,
@@ -15110,7 +15691,8 @@
         "row": 10,
         "col": 11,
         "text": "Brother of John present on the mount",
-        "answer": "JAMES"
+        "answer": "JAMES",
+        "reference": "Mark 9:2"
       },
       {
         "number": 17,
@@ -15118,7 +15700,8 @@
         "row": 11,
         "col": 1,
         "text": "What Jesus told them to tell no man until he rose",
-        "answer": "VISION"
+        "answer": "VISION",
+        "reference": "Matthew 17:9"
       },
       {
         "number": 18,
@@ -15126,7 +15709,8 @@
         "row": 13,
         "col": 10,
         "text": "Disciple who offered to build three tabernacles",
-        "answer": "PETER"
+        "answer": "PETER",
+        "reference": "Mark 9:5"
       }
     ]
   },
@@ -18876,7 +19460,8 @@
         "row": 0,
         "col": 0,
         "text": "By its post Eli sat upon a seat",
-        "answer": "TEMPLE"
+        "answer": "TEMPLE",
+        "reference": "1 Samuel 1:9"
       },
       {
         "number": 2,
@@ -18884,7 +19469,8 @@
         "row": 0,
         "col": 3,
         "text": "She poured out her soul in it",
-        "answer": "PRAYER"
+        "answer": "PRAYER",
+        "reference": "1 Samuel 1:12"
       },
       {
         "number": 3,
@@ -18892,7 +19478,8 @@
         "row": 1,
         "col": 6,
         "text": "The one she prayed for",
-        "answer": "CHILD"
+        "answer": "CHILD",
+        "reference": "1 Samuel 1:2"
       },
       {
         "number": 4,
@@ -18900,7 +19487,8 @@
         "row": 2,
         "col": 0,
         "text": "Her husband, of mount Ephraim",
-        "answer": "ELKANAH"
+        "answer": "ELKANAH",
+        "reference": "1 Samuel 1:1"
       },
       {
         "number": 4,
@@ -18908,7 +19496,8 @@
         "row": 2,
         "col": 0,
         "text": "Priest who thought she was drunken",
-        "answer": "ELI"
+        "answer": "ELI",
+        "reference": "1 Samuel 1:13"
       }
     ],
     "kind": "mini"
@@ -19120,7 +19709,8 @@
         "row": 0,
         "col": 0,
         "text": "Live one taken from the altar with tongs",
-        "answer": "COAL"
+        "answer": "COAL",
+        "reference": "Isaiah 6:6"
       },
       {
         "number": 2,
@@ -19128,7 +19718,8 @@
         "row": 0,
         "col": 2,
         "text": "Where the coal came from",
-        "answer": "ALTAR"
+        "answer": "ALTAR",
+        "reference": "Isaiah 6:6"
       },
       {
         "number": 3,
@@ -19136,7 +19727,8 @@
         "row": 2,
         "col": 0,
         "text": "They were unclean, and then purged",
-        "answer": "LIPS"
+        "answer": "LIPS",
+        "reference": "Isaiah 6:5"
       },
       {
         "number": 4,
@@ -19144,7 +19736,8 @@
         "row": 3,
         "col": 0,
         "text": "Prophet who saw the LORD in the temple",
-        "answer": "ISAIAH"
+        "answer": "ISAIAH",
+        "reference": "Isaiah 38:1"
       },
       {
         "number": 5,
@@ -19152,7 +19745,8 @@
         "row": 3,
         "col": 5,
         "text": "Word cried three times",
-        "answer": "HOLY"
+        "answer": "HOLY",
+        "reference": "Isaiah 6:3"
       }
     ],
     "kind": "mini"
@@ -19250,7 +19844,8 @@
         "row": 0,
         "col": 2,
         "text": "The LORD is this upon thy right hand",
-        "answer": "SHADE"
+        "answer": "SHADE",
+        "reference": "Psalm 121:5"
       },
       {
         "number": 2,
@@ -19258,7 +19853,8 @@
         "row": 0,
         "col": 3,
         "text": "It cometh from the LORD",
-        "answer": "HELP"
+        "answer": "HELP",
+        "reference": "Psalm 121:2"
       },
       {
         "number": 3,
@@ -19266,7 +19862,8 @@
         "row": 1,
         "col": 1,
         "text": "He that keepeth thee shall not do it",
-        "answer": "SLEEP"
+        "answer": "SLEEP",
+        "reference": "Psalm 121:4"
       },
       {
         "number": 4,
@@ -19274,7 +19871,8 @@
         "row": 3,
         "col": 0,
         "text": "What the LORD is to thee",
-        "answer": "KEEPER"
+        "answer": "KEEPER",
+        "reference": "Psalm 121:5"
       },
       {
         "number": 5,
@@ -19282,7 +19880,8 @@
         "row": 3,
         "col": 4,
         "text": "They are lifted up unto the hills",
-        "answer": "EYES"
+        "answer": "EYES",
+        "reference": "Psalm 121:1"
       },
       {
         "number": 6,
@@ -19290,7 +19889,8 @@
         "row": 6,
         "col": 4,
         "text": "It shall not smite thee by day",
-        "answer": "SUN"
+        "answer": "SUN",
+        "reference": "Psalm 121:6"
       }
     ],
     "kind": "mini"
@@ -19457,7 +20057,8 @@
         "row": 0,
         "col": 0,
         "text": "Land he was set over",
-        "answer": "EGYPT"
+        "answer": "EGYPT",
+        "reference": "Genesis 41:41"
       },
       {
         "number": 2,
@@ -19465,7 +20066,8 @@
         "row": 1,
         "col": 0,
         "text": "It was laid up in the cities",
-        "answer": "GRAIN"
+        "answer": "GRAIN",
+        "reference": "Genesis 41:35"
       },
       {
         "number": 3,
@@ -19481,7 +20083,8 @@
         "row": 3,
         "col": 0,
         "text": "Ruler troubled by two dreams",
-        "answer": "PHARAOH"
+        "answer": "PHARAOH",
+        "reference": "Genesis 41:8"
       },
       {
         "number": 5,
@@ -19489,7 +20092,8 @@
         "row": 3,
         "col": 3,
         "text": "Pharaoh took it off and put it on Joseph's hand",
-        "answer": "RING"
+        "answer": "RING",
+        "reference": "Genesis 41:42"
       }
     ],
     "kind": "mini"
@@ -19518,7 +20122,8 @@
         "row": 0,
         "col": 3,
         "text": "Jonathan stripped himself of it as a gift",
-        "answer": "ROBE"
+        "answer": "ROBE",
+        "reference": "1 Samuel 18:4"
       },
       {
         "number": 2,
@@ -19526,7 +20131,8 @@
         "row": 1,
         "col": 2,
         "text": "Jonathan's was knit with David's",
-        "answer": "SOUL"
+        "answer": "SOUL",
+        "reference": "1 Samuel 18:1"
       },
       {
         "number": 3,
@@ -19542,7 +20148,8 @@
         "row": 2,
         "col": 1,
         "text": "Three were shot as a secret sign in the field",
-        "answer": "ARROW"
+        "answer": "ARROW",
+        "reference": "1 Samuel 20:20"
       },
       {
         "number": 5,
@@ -19558,7 +20165,8 @@
         "row": 5,
         "col": 0,
         "text": "It passed the love of women",
-        "answer": "LOVE"
+        "answer": "LOVE",
+        "reference": "2 Samuel 1:26"
       }
     ],
     "kind": "mini"
@@ -19656,7 +20264,8 @@
         "row": 0,
         "col": 5,
         "text": "Little city Lot fled to",
-        "answer": "ZOAR"
+        "answer": "ZOAR",
+        "reference": "Genesis 19:22"
       },
       {
         "number": 2,
@@ -19664,7 +20273,8 @@
         "row": 1,
         "col": 4,
         "text": "Righteous man led out of the city",
-        "answer": "LOT"
+        "answer": "LOT",
+        "reference": "Genesis 19:16"
       },
       {
         "number": 3,
@@ -19672,7 +20282,8 @@
         "row": 2,
         "col": 1,
         "text": "It rained down with brimstone",
-        "answer": "FIRE"
+        "answer": "FIRE",
+        "reference": "Genesis 19:24"
       },
       {
         "number": 4,
@@ -19680,7 +20291,8 @@
         "row": 2,
         "col": 3,
         "text": "What they were told to do without looking back",
-        "answer": "FLEE"
+        "answer": "FLEE",
+        "reference": "Genesis 19:17"
       },
       {
         "number": 5,
@@ -19688,7 +20300,8 @@
         "row": 3,
         "col": 0,
         "text": "Form she was turned into",
-        "answer": "PILLAR"
+        "answer": "PILLAR",
+        "reference": "Genesis 19:26"
       }
     ],
     "kind": "mini"
@@ -19717,7 +20330,8 @@
         "row": 0,
         "col": 6,
         "text": "She sat at Jesus' feet and heard his word",
-        "answer": "MARY"
+        "answer": "MARY",
+        "reference": "Luke 10:39"
       },
       {
         "number": 2,
@@ -19725,7 +20339,8 @@
         "row": 2,
         "col": 1,
         "text": "What Martha was busy to do",
-        "answer": "SERVE"
+        "answer": "SERVE",
+        "reference": "Luke 10:40"
       },
       {
         "number": 3,
@@ -19741,7 +20356,8 @@
         "row": 3,
         "col": 0,
         "text": "Village where the sisters lived",
-        "answer": "BETHANY"
+        "answer": "BETHANY",
+        "reference": "John 11:1"
       },
       {
         "number": 5,
@@ -19749,7 +20365,8 @@
         "row": 6,
         "col": 0,
         "text": "Where Mary sat",
-        "answer": "FEET"
+        "answer": "FEET",
+        "reference": "Luke 10:39"
       }
     ],
     "kind": "mini"
@@ -19778,7 +20395,8 @@
         "row": 0,
         "col": 1,
         "text": "What the message told him to do",
-        "answer": "WASH"
+        "answer": "WASH",
+        "reference": "2 Kings 5:10"
       },
       {
         "number": 2,
@@ -19786,7 +20404,8 @@
         "row": 0,
         "col": 3,
         "text": "Land whose captain he was",
-        "answer": "SYRIA"
+        "answer": "SYRIA",
+        "reference": "Luke 4:27"
       },
       {
         "number": 3,
@@ -19794,7 +20413,8 @@
         "row": 1,
         "col": 0,
         "text": "It came again like a little child's",
-        "answer": "FLESH"
+        "answer": "FLESH",
+        "reference": "2 Kings 5:14"
       },
       {
         "number": 4,
@@ -19802,7 +20422,8 @@
         "row": 2,
         "col": 0,
         "text": "Disease he was cleansed of",
-        "answer": "LEPROSY"
+        "answer": "LEPROSY",
+        "reference": "2 Kings 5:3"
       },
       {
         "number": 5,
@@ -19839,7 +20460,8 @@
         "row": 0,
         "col": 4,
         "text": "When Nicodemus came to Jesus",
-        "answer": "NIGHT"
+        "answer": "NIGHT",
+        "reference": "John 3:2"
       },
       {
         "number": 2,
@@ -19847,7 +20469,8 @@
         "row": 1,
         "col": 0,
         "text": "Born of it and of the Spirit",
-        "answer": "WATER"
+        "answer": "WATER",
+        "reference": "John 3:5"
       },
       {
         "number": 3,
@@ -19855,7 +20478,8 @@
         "row": 1,
         "col": 2,
         "text": "How a man must be born",
-        "answer": "AGAIN"
+        "answer": "AGAIN",
+        "reference": "John 3:7"
       },
       {
         "number": 4,
@@ -19863,7 +20487,8 @@
         "row": 1,
         "col": 6,
         "text": "A man must be this again",
-        "answer": "BORN"
+        "answer": "BORN",
+        "reference": "John 3:7"
       },
       {
         "number": 5,
@@ -19871,7 +20496,8 @@
         "row": 3,
         "col": 0,
         "text": "What Nicodemus called him: a --- come from God",
-        "answer": "TEACHER"
+        "answer": "TEACHER",
+        "reference": "John 3:2"
       }
     ],
     "kind": "mini"
@@ -20030,7 +20656,8 @@
         "row": 0,
         "col": 0,
         "text": "His companion in the inner prison",
-        "answer": "SILAS"
+        "answer": "SILAS",
+        "reference": "Acts 16:25"
       },
       {
         "number": 2,
@@ -20038,7 +20665,8 @@
         "row": 0,
         "col": 2,
         "text": "Seller of purple whose heart was opened",
-        "answer": "LYDIA"
+        "answer": "LYDIA",
+        "reference": "Acts 16:14"
       },
       {
         "number": 3,
@@ -20054,7 +20682,8 @@
         "row": 3,
         "col": 0,
         "text": "Its foundations were shaken",
-        "answer": "PRISON"
+        "answer": "PRISON",
+        "reference": "Acts 16:26"
       },
       {
         "number": 4,
@@ -20062,7 +20691,8 @@
         "row": 3,
         "col": 0,
         "text": "He sang praises with Silas",
-        "answer": "PAUL"
+        "answer": "PAUL",
+        "reference": "Acts 16:25"
       }
     ],
     "kind": "mini"
@@ -20091,7 +20721,8 @@
         "row": 0,
         "col": 0,
         "text": "How should I, except some man should do this to me?",
-        "answer": "GUIDE"
+        "answer": "GUIDE",
+        "reference": "Acts 8:31"
       },
       {
         "number": 2,
@@ -20099,7 +20730,8 @@
         "row": 0,
         "col": 2,
         "text": "Prophet whose scroll he was reading",
-        "answer": "ISAIAH"
+        "answer": "ISAIAH",
+        "reference": "Acts 8:28"
       },
       {
         "number": 3,
@@ -20115,7 +20747,8 @@
         "row": 2,
         "col": 0,
         "text": "Where the eunuch sat reading",
-        "answer": "CHARIOT"
+        "answer": "CHARIOT",
+        "reference": "Acts 8:28"
       },
       {
         "number": 5,
@@ -20123,7 +20756,8 @@
         "row": 4,
         "col": 1,
         "text": "The way from Jerusalem toward it, which is desert",
-        "answer": "GAZA"
+        "answer": "GAZA",
+        "reference": "Acts 8:26"
       }
     ],
     "kind": "mini"
@@ -20152,7 +20786,8 @@
         "row": 0,
         "col": 2,
         "text": "Let your light so shine before them",
-        "answer": "MEN"
+        "answer": "MEN",
+        "reference": "Matthew 5:16"
       },
       {
         "number": 2,
@@ -20160,7 +20795,8 @@
         "row": 0,
         "col": 4,
         "text": "A city set on a hill cannot be it",
-        "answer": "HID"
+        "answer": "HID",
+        "reference": "Matthew 5:14"
       },
       {
         "number": 2,
@@ -20168,7 +20804,8 @@
         "row": 0,
         "col": 4,
         "text": "Where the city is set",
-        "answer": "HILL"
+        "answer": "HILL",
+        "reference": "Matthew 5:14"
       },
       {
         "number": 3,
@@ -20184,7 +20821,8 @@
         "row": 2,
         "col": 0,
         "text": "Set on a hill, it cannot be hid",
-        "answer": "CITY"
+        "answer": "CITY",
+        "reference": "Matthew 5:14"
       },
       {
         "number": 4,
@@ -20221,7 +20859,8 @@
         "row": 0,
         "col": 1,
         "text": "He found it in the carcase",
-        "answer": "HONEY"
+        "answer": "HONEY",
+        "reference": "Judges 14:8"
       },
       {
         "number": 2,
@@ -20229,7 +20868,8 @@
         "row": 1,
         "col": 0,
         "text": "The Nazarite one he was born under",
-        "answer": "VOW"
+        "answer": "VOW",
+        "reference": "Numbers 6:2"
       },
       {
         "number": 3,
@@ -20237,7 +20877,8 @@
         "row": 2,
         "col": 3,
         "text": "He rent it as he would a kid",
-        "answer": "LION"
+        "answer": "LION",
+        "reference": "Judges 14:6"
       },
       {
         "number": 4,
@@ -20245,7 +20886,8 @@
         "row": 2,
         "col": 5,
         "text": "City whose gates he carried away",
-        "answer": "GAZA"
+        "answer": "GAZA",
+        "reference": "Judges 16:1"
       },
       {
         "number": 5,
@@ -20253,7 +20895,8 @@
         "row": 3,
         "col": 0,
         "text": "Woman of the valley of Sorek",
-        "answer": "DELILAH"
+        "answer": "DELILAH",
+        "reference": "Judges 16:4"
       }
     ],
     "kind": "mini"
@@ -20282,7 +20925,8 @@
         "row": 0,
         "col": 1,
         "text": "Number of times they marched on the last day",
-        "answer": "SEVEN"
+        "answer": "SEVEN",
+        "reference": "Joshua 6:15"
       },
       {
         "number": 1,
@@ -20290,7 +20934,8 @@
         "row": 0,
         "col": 1,
         "text": "Two men sent ahead to view the land",
-        "answer": "SPIES"
+        "answer": "SPIES",
+        "reference": "Joshua 2:1"
       },
       {
         "number": 2,
@@ -20298,7 +20943,8 @@
         "row": 1,
         "col": 6,
         "text": "Great cry raised before the wall fell",
-        "answer": "SHOUT"
+        "answer": "SHOUT",
+        "reference": "Joshua 6:20"
       },
       {
         "number": 3,
@@ -20306,7 +20952,8 @@
         "row": 3,
         "col": 0,
         "text": "Walled city that fell after seven days",
-        "answer": "JERICHO"
+        "answer": "JERICHO",
+        "reference": "Joshua 6:2"
       },
       {
         "number": 4,
@@ -20314,7 +20961,8 @@
         "row": 3,
         "col": 4,
         "text": "Scarlet line hung in the window",
-        "answer": "CORD"
+        "answer": "CORD",
+        "reference": "Joshua 2:21"
       }
     ],
     "kind": "mini"
@@ -20404,7 +21052,8 @@
         "row": 0,
         "col": 2,
         "text": "It was as it had been an angel's",
-        "answer": "FACE"
+        "answer": "FACE",
+        "reference": "Acts 6:15"
       },
       {
         "number": 2,
@@ -20420,7 +21069,8 @@
         "row": 3,
         "col": 0,
         "text": "Man full of faith and of the Holy Ghost",
-        "answer": "STEPHEN"
+        "answer": "STEPHEN",
+        "reference": "Acts 6:5"
       },
       {
         "number": 3,
@@ -20428,7 +21078,8 @@
         "row": 3,
         "col": 0,
         "text": "The witnesses laid their clothes at his feet",
-        "answer": "SAUL"
+        "answer": "SAUL",
+        "reference": "Acts 7:58"
       },
       {
         "number": 4,
@@ -20436,7 +21087,8 @@
         "row": 6,
         "col": 2,
         "text": "What he did down before he cried out",
-        "answer": "KNEEL"
+        "answer": "KNEEL",
+        "reference": "Acts 7:60"
       }
     ],
     "kind": "mini"
@@ -20526,7 +21178,8 @@
         "row": 0,
         "col": 0,
         "text": "Number of the barley loaves",
-        "answer": "FIVE"
+        "answer": "FIVE",
+        "reference": "John 6:9"
       },
       {
         "number": 1,
@@ -20534,7 +21187,8 @@
         "row": 0,
         "col": 0,
         "text": "Two small ones, brought by a lad",
-        "answer": "FISHES"
+        "answer": "FISHES",
+        "reference": "John 6:9"
       },
       {
         "number": 2,
@@ -20542,7 +21196,8 @@
         "row": 2,
         "col": 5,
         "text": "Multitude that followed him for the loaves",
-        "answer": "CROWD"
+        "answer": "CROWD",
+        "reference": "John 6:2"
       },
       {
         "number": 3,
@@ -20550,7 +21205,8 @@
         "row": 3,
         "col": 0,
         "text": "He that cometh shall never do it",
-        "answer": "HUNGER"
+        "answer": "HUNGER",
+        "reference": "John 6:35"
       },
       {
         "number": 4,
@@ -20558,7 +21214,8 @@
         "row": 6,
         "col": 1,
         "text": "What he declared himself to be, of life",
-        "answer": "BREAD"
+        "answer": "BREAD",
+        "reference": "John 6:35"
       }
     ],
     "kind": "mini"
@@ -20587,7 +21244,8 @@
         "row": 0,
         "col": 0,
         "text": "Place he departed from",
-        "answer": "HARAN"
+        "answer": "HARAN",
+        "reference": "Genesis 12:4"
       },
       {
         "number": 2,
@@ -20595,7 +21253,8 @@
         "row": 0,
         "col": 1,
         "text": "What he built unto the LORD",
-        "answer": "ALTAR"
+        "answer": "ALTAR",
+        "reference": "Genesis 12:7"
       },
       {
         "number": 3,
@@ -20603,7 +21262,8 @@
         "row": 1,
         "col": 5,
         "text": "Dwelling he pitched along the way",
-        "answer": "TENT"
+        "answer": "TENT",
+        "reference": "Genesis 12:8"
       },
       {
         "number": 4,
@@ -20611,7 +21271,8 @@
         "row": 2,
         "col": 3,
         "text": "His wife, who went with him",
-        "answer": "SARAI"
+        "answer": "SARAI",
+        "reference": "Genesis 12:5"
       },
       {
         "number": 5,
@@ -20619,7 +21280,8 @@
         "row": 3,
         "col": 0,
         "text": "Land he journeyed into",
-        "answer": "CANAAN"
+        "answer": "CANAAN",
+        "reference": "Genesis 12:5"
       },
       {
         "number": 6,
@@ -20627,7 +21289,8 @@
         "row": 6,
         "col": 0,
         "text": "Great one he was promised to become",
-        "answer": "NATION"
+        "answer": "NATION",
+        "reference": "Genesis 12:2"
       }
     ],
     "kind": "mini"
@@ -20656,7 +21319,8 @@
         "row": 0,
         "col": 2,
         "text": "Brother he was fleeing from",
-        "answer": "ESAU"
+        "answer": "ESAU",
+        "reference": "Genesis 35:1"
       },
       {
         "number": 2,
@@ -20664,7 +21328,8 @@
         "row": 0,
         "col": 4,
         "text": "They ascended and descended",
-        "answer": "ANGELS"
+        "answer": "ANGELS",
+        "reference": "Genesis 28:12"
       },
       {
         "number": 3,
@@ -20672,7 +21337,8 @@
         "row": 2,
         "col": 1,
         "text": "Dreamer who slept with a stone for a pillow",
-        "answer": "JACOB"
+        "answer": "JACOB",
+        "reference": "Genesis 28:18"
       },
       {
         "number": 4,
@@ -20680,7 +21346,8 @@
         "row": 3,
         "col": 0,
         "text": "It was set up on the earth, reaching heaven",
-        "answer": "LADDER"
+        "answer": "LADDER",
+        "reference": "Genesis 28:12"
       },
       {
         "number": 5,
@@ -20688,7 +21355,8 @@
         "row": 5,
         "col": 0,
         "text": "Promise he made when he awoke",
-        "answer": "VOW"
+        "answer": "VOW",
+        "reference": "Genesis 28:20"
       }
     ],
     "kind": "mini"
@@ -20778,7 +21446,8 @@
         "row": 0,
         "col": 5,
         "text": "He sat under the oak and called him a mighty man",
-        "answer": "ANGEL"
+        "answer": "ANGEL",
+        "reference": "Judges 6:11"
       },
       {
         "number": 2,
@@ -20786,7 +21455,8 @@
         "row": 1,
         "col": 1,
         "text": "With 'hundred,' the size of his band",
-        "answer": "THREE"
+        "answer": "THREE",
+        "reference": "Judges 7:6"
       },
       {
         "number": 3,
@@ -20810,7 +21480,8 @@
         "row": 5,
         "col": 0,
         "text": "It was on the fleece but not the ground",
-        "answer": "DEW"
+        "answer": "DEW",
+        "reference": "Judges 6:37"
       }
     ],
     "kind": "mini"
@@ -20839,7 +21510,8 @@
         "row": 0,
         "col": 3,
         "text": "How the three were cast in",
-        "answer": "BOUND"
+        "answer": "BOUND",
+        "reference": "Daniel 3:23"
       },
       {
         "number": 2,
@@ -20847,7 +21519,8 @@
         "row": 0,
         "col": 6,
         "text": "It had no power upon their bodies",
-        "answer": "FIRE"
+        "answer": "FIRE",
+        "reference": "Daniel 3:27"
       },
       {
         "number": 3,
@@ -20855,7 +21528,8 @@
         "row": 2,
         "col": 1,
         "text": "At its sound all were to fall down",
-        "answer": "MUSIC"
+        "answer": "MUSIC",
+        "reference": "Daniel 3:5"
       },
       {
         "number": 4,
@@ -20863,7 +21537,8 @@
         "row": 3,
         "col": 0,
         "text": "It was heated seven times hotter",
-        "answer": "FURNACE"
+        "answer": "FURNACE",
+        "reference": "Daniel 3:19"
       },
       {
         "number": 5,
@@ -20900,7 +21575,8 @@
         "row": 0,
         "col": 2,
         "text": "Mount where Moses had been",
-        "answer": "SINAI"
+        "answer": "SINAI",
+        "reference": "Exodus 19:20"
       },
       {
         "number": 2,
@@ -20908,7 +21584,8 @@
         "row": 0,
         "col": 3,
         "text": "What the calf was",
-        "answer": "IDOL"
+        "answer": "IDOL",
+        "reference": "Acts 7:41"
       },
       {
         "number": 3,
@@ -20916,7 +21593,8 @@
         "row": 2,
         "col": 1,
         "text": "What Moses saw along with the calf",
-        "answer": "DANCE"
+        "answer": "DANCE",
+        "reference": "Exodus 32:19"
       },
       {
         "number": 4,
@@ -20932,7 +21610,8 @@
         "row": 5,
         "col": 1,
         "text": "Molten image fashioned with a graving tool",
-        "answer": "CALF"
+        "answer": "CALF",
+        "reference": "Exodus 32:4"
       }
     ],
     "kind": "mini"
@@ -21022,7 +21701,8 @@
         "row": 0,
         "col": 0,
         "text": "Where the birds come to lodge",
-        "answer": "BRANCH"
+        "answer": "BRANCH",
+        "reference": "Matthew 13:32"
       },
       {
         "number": 2,
@@ -21038,7 +21718,8 @@
         "row": 2,
         "col": 0,
         "text": "Its grain is the least of all seeds",
-        "answer": "MUSTARD"
+        "answer": "MUSTARD",
+        "reference": "Matthew 13:31"
       },
       {
         "number": 4,
@@ -21046,7 +21727,8 @@
         "row": 2,
         "col": 2,
         "text": "A man took it and sowed it in his field",
-        "answer": "SEED"
+        "answer": "SEED",
+        "reference": "Matthew 13:31"
       },
       {
         "number": 5,
@@ -21083,7 +21765,8 @@
         "row": 0,
         "col": 0,
         "text": "It was brought into the most holy place",
-        "answer": "ARK"
+        "answer": "ARK",
+        "reference": "1 Kings 8:6"
       },
       {
         "number": 1,
@@ -21091,7 +21774,8 @@
         "row": 0,
         "col": 0,
         "text": "Solomon stood before it and spread his hands",
-        "answer": "ALTAR"
+        "answer": "ALTAR",
+        "reference": "1 Kings 8:22"
       },
       {
         "number": 2,
@@ -21099,7 +21783,8 @@
         "row": 1,
         "col": 5,
         "text": "Years the building took",
-        "answer": "SEVEN"
+        "answer": "SEVEN",
+        "reference": "1 Kings 6:38"
       },
       {
         "number": 3,
@@ -21107,7 +21792,8 @@
         "row": 2,
         "col": 0,
         "text": "The house built in Jerusalem",
-        "answer": "TEMPLE"
+        "answer": "TEMPLE",
+        "reference": "1 Kings 6:14"
       },
       {
         "number": 4,
@@ -21115,7 +21801,8 @@
         "row": 5,
         "col": 2,
         "text": "It was made ready before it was brought",
-        "answer": "STONE"
+        "answer": "STONE",
+        "reference": "1 Kings 6:7"
       }
     ],
     "kind": "mini"
@@ -21144,7 +21831,8 @@
         "row": 0,
         "col": 0,
         "text": "Where the flock is kept",
-        "answer": "FOLD"
+        "answer": "FOLD",
+        "reference": "John 10:16"
       },
       {
         "number": 1,
@@ -21152,7 +21840,8 @@
         "row": 0,
         "col": 0,
         "text": "What it was when he laid it on his shoulders",
-        "answer": "FOUND"
+        "answer": "FOUND",
+        "reference": "Luke 15:6"
       },
       {
         "number": 2,
@@ -21160,7 +21849,8 @@
         "row": 1,
         "col": 5,
         "text": "There is more of it in heaven over one that repenteth",
-        "answer": "JOY"
+        "answer": "JOY",
+        "reference": "Luke 15:7"
       },
       {
         "number": 3,
@@ -21168,7 +21858,8 @@
         "row": 2,
         "col": 3,
         "text": "What the shepherd goes to do",
-        "answer": "SEEK"
+        "answer": "SEEK",
+        "reference": "Luke 19:10"
       },
       {
         "number": 4,
@@ -21176,7 +21867,8 @@
         "row": 3,
         "col": 0,
         "text": "With 'and nine', those left in the wilderness",
-        "answer": "NINETY"
+        "answer": "NINETY",
+        "reference": "Luke 15:4"
       }
     ],
     "kind": "mini"
@@ -21205,7 +21897,8 @@
         "row": 0,
         "col": 1,
         "text": "The holy city was prepared as one adorned",
-        "answer": "BRIDE"
+        "answer": "BRIDE",
+        "reference": "Revelation 21:2"
       },
       {
         "number": 2,
@@ -21213,7 +21906,8 @@
         "row": 0,
         "col": 2,
         "text": "Of water of life, clear as crystal",
-        "answer": "RIVER"
+        "answer": "RIVER",
+        "reference": "Revelation 22:1"
       },
       {
         "number": 3,
@@ -21221,7 +21915,8 @@
         "row": 1,
         "col": 0,
         "text": "Twelve of them, each one a pearl",
-        "answer": "GATES"
+        "answer": "GATES",
+        "reference": "Revelation 21:21"
       },
       {
         "number": 4,
@@ -21229,7 +21924,8 @@
         "row": 2,
         "col": 5,
         "text": "Every several gate was one",
-        "answer": "PEARL"
+        "answer": "PEARL",
+        "reference": "Revelation 21:21"
       },
       {
         "number": 5,
@@ -21237,7 +21933,8 @@
         "row": 3,
         "col": 0,
         "text": "Number of the gates, and of the foundations",
-        "answer": "TWELVE"
+        "answer": "TWELVE",
+        "reference": "Revelation 21:12"
       },
       {
         "number": 6,
@@ -21245,7 +21942,8 @@
         "row": 6,
         "col": 3,
         "text": "The street of the city was pure, as it were clear glass",
-        "answer": "GOLD"
+        "answer": "GOLD",
+        "reference": "Revelation 21:21"
       }
     ],
     "kind": "mini"
@@ -21274,7 +21972,8 @@
         "row": 0,
         "col": 0,
         "text": "When the LORD passed through the land",
-        "answer": "NIGHT"
+        "answer": "NIGHT",
+        "reference": "Exodus 12:12"
       },
       {
         "number": 2,
@@ -21282,7 +21981,8 @@
         "row": 1,
         "col": 2,
         "text": "They were bitter, eaten with the lamb",
-        "answer": "HERBS"
+        "answer": "HERBS",
+        "reference": "Exodus 12:8"
       },
       {
         "number": 2,
@@ -21290,7 +21990,8 @@
         "row": 1,
         "col": 2,
         "text": "How they were to eat it, loins girded",
-        "answer": "HASTE"
+        "answer": "HASTE",
+        "reference": "Exodus 12:11"
       },
       {
         "number": 3,
@@ -21298,7 +21999,8 @@
         "row": 3,
         "col": 0,
         "text": "Bunch used to strike the lintel",
-        "answer": "HYSSOP"
+        "answer": "HYSSOP",
+        "reference": "Exodus 12:22"
       },
       {
         "number": 4,
@@ -21306,7 +22008,8 @@
         "row": 5,
         "col": 2,
         "text": "Land they were delivered from",
-        "answer": "EGYPT"
+        "answer": "EGYPT",
+        "reference": "Exodus 12:42"
       }
     ],
     "kind": "mini"
@@ -21396,7 +22099,8 @@
         "row": 0,
         "col": 0,
         "text": "Swarms that filled the houses",
-        "answer": "FLIES"
+        "answer": "FLIES",
+        "reference": "Exodus 8:24"
       },
       {
         "number": 2,
@@ -21404,7 +22108,8 @@
         "row": 0,
         "col": 1,
         "text": "It ate every herb the hail had left",
-        "answer": "LOCUST"
+        "answer": "LOCUST",
+        "reference": "Exodus 10:12"
       },
       {
         "number": 3,
@@ -21412,7 +22117,8 @@
         "row": 1,
         "col": 5,
         "text": "Breaking forth with blains upon man and beast",
-        "answer": "BOILS"
+        "answer": "BOILS",
+        "reference": "Exodus 9:10"
       },
       {
         "number": 4,
@@ -21420,7 +22126,8 @@
         "row": 2,
         "col": 3,
         "text": "They came up and covered the land",
-        "answer": "FROGS"
+        "answer": "FROGS",
+        "reference": "Exodus 8:6"
       },
       {
         "number": 5,
@@ -21457,7 +22164,8 @@
         "row": 0,
         "col": 0,
         "text": "What she came to prove, and found exceeded",
-        "answer": "WISDOM"
+        "answer": "WISDOM",
+        "reference": "1 Kings 10:7"
       },
       {
         "number": 2,
@@ -21473,7 +22181,8 @@
         "row": 0,
         "col": 2,
         "text": "She gave a hundred and twenty talents of it",
-        "answer": "GOLD"
+        "answer": "GOLD",
+        "reference": "1 Kings 10:10"
       },
       {
         "number": 3,
@@ -21481,7 +22190,8 @@
         "row": 0,
         "col": 4,
         "text": "What drew her to come",
-        "answer": "FAME"
+        "answer": "FAME",
+        "reference": "1 Kings 10:1"
       },
       {
         "number": 4,
@@ -21489,7 +22199,8 @@
         "row": 2,
         "col": 0,
         "text": "King whose fame she had heard",
-        "answer": "SOLOMON"
+        "answer": "SOLOMON",
+        "reference": "1 Kings 10:1"
       }
     ],
     "kind": "mini"
@@ -21518,7 +22229,8 @@
         "row": 0,
         "col": 5,
         "text": "They came forth on the rod",
-        "answer": "BUDS"
+        "answer": "BUDS",
+        "reference": "Numbers 17:8"
       },
       {
         "number": 2,
@@ -21534,7 +22246,8 @@
         "row": 2,
         "col": 0,
         "text": "Fruit the budded rod yielded",
-        "answer": "ALMOND"
+        "answer": "ALMOND",
+        "reference": "Numbers 17:8"
       },
       {
         "number": 4,
@@ -21542,7 +22255,8 @@
         "row": 2,
         "col": 1,
         "text": "House whose rod was chosen",
-        "answer": "LEVI"
+        "answer": "LEVI",
+        "reference": "Numbers 17:8"
       },
       {
         "number": 5,
@@ -21550,7 +22264,8 @@
         "row": 5,
         "col": 0,
         "text": "What the budding was meant to be",
-        "answer": "SIGN"
+        "answer": "SIGN",
+        "reference": "Numbers 17:10"
       }
     ],
     "kind": "mini"
@@ -21701,7 +22416,8 @@
         "row": 0,
         "col": 1,
         "text": "The mercy seat was made of it, pure",
-        "answer": "GOLD"
+        "answer": "GOLD",
+        "reference": "Exodus 25:17"
       },
       {
         "number": 1,
@@ -21709,7 +22425,8 @@
         "row": 0,
         "col": 1,
         "text": "It filled the tabernacle",
-        "answer": "GLORY"
+        "answer": "GLORY",
+        "reference": "Exodus 40:34"
       },
       {
         "number": 2,
@@ -21717,7 +22434,8 @@
         "row": 0,
         "col": 3,
         "text": "Fine twined material of the hangings",
-        "answer": "LINEN"
+        "answer": "LINEN",
+        "reference": "Exodus 26:1"
       },
       {
         "number": 3,
@@ -21725,7 +22443,8 @@
         "row": 1,
         "col": 5,
         "text": "Place of burnt offering at the door",
-        "answer": "ALTAR"
+        "answer": "ALTAR",
+        "reference": "Exodus 40:6"
       },
       {
         "number": 4,
@@ -21733,7 +22452,8 @@
         "row": 3,
         "col": 0,
         "text": "Aaron and his sons served as this",
-        "answer": "PRIEST"
+        "answer": "PRIEST",
+        "reference": "Exodus 40:13"
       },
       {
         "number": 5,
@@ -21741,7 +22461,8 @@
         "row": 5,
         "col": 4,
         "text": "It was set within, behind the veil",
-        "answer": "ARK"
+        "answer": "ARK",
+        "reference": "Exodus 40:21"
       }
     ],
     "kind": "mini"
@@ -21831,7 +22552,8 @@
         "row": 0,
         "col": 1,
         "text": "The evil one ten of them brought back",
-        "answer": "REPORT"
+        "answer": "REPORT",
+        "reference": "Numbers 13:32"
       },
       {
         "number": 2,
@@ -21839,7 +22561,8 @@
         "row": 0,
         "col": 5,
         "text": "Land they were sent to search",
-        "answer": "CANAAN"
+        "answer": "CANAAN",
+        "reference": "Numbers 13:17"
       },
       {
         "number": 3,
@@ -21847,7 +22570,8 @@
         "row": 1,
         "col": 3,
         "text": "Whose sons were the giants they saw",
-        "answer": "ANAK"
+        "answer": "ANAK",
+        "reference": "Numbers 13:33"
       },
       {
         "number": 4,
@@ -21855,7 +22579,8 @@
         "row": 3,
         "col": 0,
         "text": "The other spy who brought a good report",
-        "answer": "JOSHUA"
+        "answer": "JOSHUA",
+        "reference": "Numbers 13:16"
       },
       {
         "number": 5,
@@ -21863,7 +22588,8 @@
         "row": 5,
         "col": 3,
         "text": "What they were sent to search out",
-        "answer": "LAND"
+        "answer": "LAND",
+        "reference": "Numbers 13:17"
       }
     ],
     "kind": "mini"
@@ -21892,7 +22618,8 @@
         "row": 0,
         "col": 0,
         "text": "He promised to open them and bring his people up",
-        "answer": "GRAVE"
+        "answer": "GRAVE",
+        "reference": "Ezekiel 37:12"
       },
       {
         "number": 2,
@@ -21908,7 +22635,8 @@
         "row": 1,
         "col": 3,
         "text": "It was prophesied to from the four winds",
-        "answer": "WIND"
+        "answer": "WIND",
+        "reference": "Ezekiel 37:9"
       },
       {
         "number": 4,
@@ -21916,7 +22644,8 @@
         "row": 2,
         "col": 2,
         "text": "It came up, and skin covered them above",
-        "answer": "FLESH"
+        "answer": "FLESH",
+        "reference": "Ezekiel 37:8"
       },
       {
         "number": 5,
@@ -21924,7 +22653,8 @@
         "row": 3,
         "col": 0,
         "text": "Where the prophet was set down",
-        "answer": "VALLEY"
+        "answer": "VALLEY",
+        "reference": "Ezekiel 37:1"
       }
     ],
     "kind": "mini"
@@ -21953,7 +22683,8 @@
         "row": 0,
         "col": 3,
         "text": "What the husbandman does to the fruitful branch",
-        "answer": "PRUNE"
+        "answer": "PRUNE",
+        "reference": "John 15:2"
       },
       {
         "number": 2,
@@ -21961,7 +22692,8 @@
         "row": 0,
         "col": 5,
         "text": "What the branch cast forth does",
-        "answer": "WITHER"
+        "answer": "WITHER",
+        "reference": "John 15:6"
       },
       {
         "number": 3,
@@ -21969,7 +22701,8 @@
         "row": 1,
         "col": 2,
         "text": "Much of it is brought forth by abiding",
-        "answer": "FRUIT"
+        "answer": "FRUIT",
+        "reference": "John 15:5"
       },
       {
         "number": 4,
@@ -21985,7 +22718,8 @@
         "row": 3,
         "col": 0,
         "text": "What his disciples are",
-        "answer": "BRANCH"
+        "answer": "BRANCH",
+        "reference": "John 15:5"
       }
     ],
     "kind": "mini"
@@ -22083,7 +22817,8 @@
         "row": 0,
         "col": 2,
         "text": "It was shut when they returned",
-        "answer": "DOOR"
+        "answer": "DOOR",
+        "reference": "Matthew 25:10"
       },
       {
         "number": 2,
@@ -22091,7 +22826,8 @@
         "row": 1,
         "col": 6,
         "text": "Five of them were this",
-        "answer": "WISE"
+        "answer": "WISE",
+        "reference": "Matthew 25:2"
       },
       {
         "number": 3,
@@ -22099,7 +22835,8 @@
         "row": 2,
         "col": 4,
         "text": "At mid- of it, the cry was made",
-        "answer": "NIGHT"
+        "answer": "NIGHT",
+        "reference": "Matthew 25:6"
       },
       {
         "number": 4,
@@ -22107,7 +22844,8 @@
         "row": 3,
         "col": 0,
         "text": "Ten who took their lamps to meet the bridegroom",
-        "answer": "VIRGINS"
+        "answer": "VIRGINS",
+        "reference": "Matthew 25:1"
       },
       {
         "number": 5,
@@ -22115,7 +22853,8 @@
         "row": 5,
         "col": 0,
         "text": "What we are told to do, knowing neither day nor hour",
-        "answer": "WATCH"
+        "answer": "WATCH",
+        "reference": "Matthew 25:13"
       },
       {
         "number": 6,
@@ -22123,7 +22862,8 @@
         "row": 6,
         "col": 4,
         "text": "How many virgins there were",
-        "answer": "TEN"
+        "answer": "TEN",
+        "reference": "Matthew 25:1"
       }
     ],
     "kind": "mini"
@@ -22152,7 +22892,8 @@
         "row": 0,
         "col": 1,
         "text": "True worshippers worship in spirit and this",
-        "answer": "TRUTH"
+        "answer": "TRUTH",
+        "reference": "John 4:23"
       },
       {
         "number": 2,
@@ -22160,7 +22901,8 @@
         "row": 0,
         "col": 4,
         "text": "Whoever drinks the living water shall never do it",
-        "answer": "THIRST"
+        "answer": "THIRST",
+        "reference": "John 4:14"
       },
       {
         "number": 3,
@@ -22168,7 +22910,8 @@
         "row": 2,
         "col": 1,
         "text": "Whose well it was",
-        "answer": "JACOB"
+        "answer": "JACOB",
+        "reference": "John 4:6"
       },
       {
         "number": 4,
@@ -22176,7 +22919,8 @@
         "row": 2,
         "col": 6,
         "text": "The living kind that was offered",
-        "answer": "WATER"
+        "answer": "WATER",
+        "reference": "John 4:10"
       },
       {
         "number": 5,
@@ -22184,7 +22928,8 @@
         "row": 3,
         "col": 0,
         "text": "Region he must needs go through",
-        "answer": "SAMARIA"
+        "answer": "SAMARIA",
+        "reference": "John 4:4"
       }
     ],
     "kind": "mini"
@@ -22213,7 +22958,8 @@
         "row": 0,
         "col": 0,
         "text": "Fingers of it wrote on the plaister",
-        "answer": "HAND"
+        "answer": "HAND",
+        "reference": "Daniel 5:5"
       },
       {
         "number": 2,
@@ -22221,7 +22967,8 @@
         "row": 1,
         "col": 2,
         "text": "First word written, repeated",
-        "answer": "MENE"
+        "answer": "MENE",
+        "reference": "Daniel 5:25"
       },
       {
         "number": 3,
@@ -22229,7 +22976,8 @@
         "row": 2,
         "col": 4,
         "text": "Word meaning weighed in the balances",
-        "answer": "TEKEL"
+        "answer": "TEKEL",
+        "reference": "Daniel 5:27"
       },
       {
         "number": 4,
@@ -22237,7 +22985,8 @@
         "row": 3,
         "col": 0,
         "text": "He alone could read the writing",
-        "answer": "DANIEL"
+        "answer": "DANIEL",
+        "reference": "Daniel 5:17"
       },
       {
         "number": 5,
@@ -22245,7 +22994,8 @@
         "row": 6,
         "col": 1,
         "text": "Balances in which he was found wanting",
-        "answer": "SCALES"
+        "answer": "SCALES",
+        "reference": "Daniel 5:27"
       }
     ],
     "kind": "mini"
@@ -22343,7 +23093,8 @@
         "row": 2,
         "col": 2,
         "text": "What the waters were to them on either hand",
-        "answer": "WALL"
+        "answer": "WALL",
+        "reference": "Exodus 14:22"
       },
       {
         "number": 3,
@@ -22351,7 +23102,8 @@
         "row": 2,
         "col": 4,
         "text": "Strong east one that drove the sea back",
-        "answer": "WIND"
+        "answer": "WIND",
+        "reference": "Exodus 14:21"
       },
       {
         "number": 4,
@@ -22359,7 +23111,8 @@
         "row": 3,
         "col": 0,
         "text": "Pharaoh's, which pursued into the sea",
-        "answer": "CHARIOT"
+        "answer": "CHARIOT",
+        "reference": "Exodus 14:23"
       },
       {
         "number": 5,
@@ -22367,7 +23120,8 @@
         "row": 5,
         "col": 4,
         "text": "Kind of land the sea became",
-        "answer": "DRY"
+        "answer": "DRY",
+        "reference": "Exodus 14:21"
       }
     ],
     "kind": "mini"
@@ -22396,7 +23150,8 @@
         "row": 0,
         "col": 4,
         "text": "What he cried out for",
-        "answer": "MERCY"
+        "answer": "MERCY",
+        "reference": "Mark 10:48"
       },
       {
         "number": 2,
@@ -22412,7 +23167,8 @@
         "row": 3,
         "col": 0,
         "text": "City he sat outside of",
-        "answer": "JERICHO"
+        "answer": "JERICHO",
+        "reference": "Mark 10:46"
       },
       {
         "number": 4,
@@ -22420,7 +23176,8 @@
         "row": 3,
         "col": 2,
         "text": "The highway side where he sat begging",
-        "answer": "ROAD"
+        "answer": "ROAD",
+        "reference": "Mark 10:46"
       },
       {
         "number": 5,
@@ -22526,7 +23283,8 @@
         "row": 0,
         "col": 1,
         "text": "Mount where the LORD stood upon the rock",
-        "answer": "HOREB"
+        "answer": "HOREB",
+        "reference": "Exodus 17:6"
       },
       {
         "number": 2,
@@ -22534,7 +23292,8 @@
         "row": 1,
         "col": 0,
         "text": "It was smitten and gave water",
-        "answer": "ROCK"
+        "answer": "ROCK",
+        "reference": "Exodus 17:6"
       },
       {
         "number": 3,
@@ -22542,7 +23301,8 @@
         "row": 2,
         "col": 5,
         "text": "What came out for the people",
-        "answer": "WATER"
+        "answer": "WATER",
+        "reference": "Exodus 17:6"
       },
       {
         "number": 4,
@@ -22550,7 +23310,8 @@
         "row": 3,
         "col": 0,
         "text": "Name of the place, meaning chiding",
-        "answer": "MERIBAH"
+        "answer": "MERIBAH",
+        "reference": "Exodus 17:7"
       },
       {
         "number": 5,
@@ -22558,7 +23319,8 @@
         "row": 6,
         "col": 1,
         "text": "They went before the people as witnesses",
-        "answer": "ELDERS"
+        "answer": "ELDERS",
+        "reference": "Exodus 17:5"
       }
     ],
     "kind": "mini"
@@ -22587,7 +23349,8 @@
         "row": 0,
         "col": 3,
         "text": "What they became as they went",
-        "answer": "CLEAN"
+        "answer": "CLEAN",
+        "reference": "Luke 17:14"
       },
       {
         "number": 2,
@@ -22595,7 +23358,8 @@
         "row": 1,
         "col": 1,
         "text": "What the one returned to give",
-        "answer": "THANKS"
+        "answer": "THANKS",
+        "reference": "Luke 17:16"
       },
       {
         "number": 3,
@@ -22603,7 +23367,8 @@
         "row": 2,
         "col": 5,
         "text": "How many did not return",
-        "answer": "NINE"
+        "answer": "NINE",
+        "reference": "Luke 17:17"
       },
       {
         "number": 4,
@@ -22611,7 +23376,8 @@
         "row": 3,
         "col": 0,
         "text": "Region he passed through, with Galilee",
-        "answer": "SAMARIA"
+        "answer": "SAMARIA",
+        "reference": "Luke 17:11"
       },
       {
         "number": 5,
@@ -22619,7 +23385,8 @@
         "row": 5,
         "col": 4,
         "text": "How many were cleansed",
-        "answer": "TEN"
+        "answer": "TEN",
+        "reference": "Luke 17:17"
       }
     ],
     "kind": "mini"
@@ -22717,7 +23484,8 @@
         "row": 0,
         "col": 3,
         "text": "What was changed at the river",
-        "answer": "NAME"
+        "answer": "NAME",
+        "reference": "Genesis 32:28"
       },
       {
         "number": 2,
@@ -22725,7 +23493,8 @@
         "row": 0,
         "col": 4,
         "text": "The one who strove with him till dawn",
-        "answer": "ANGEL"
+        "answer": "ANGEL",
+        "reference": "Hosea 12:4"
       },
       {
         "number": 3,
@@ -22733,7 +23502,8 @@
         "row": 1,
         "col": 2,
         "text": "Crossing of Jabbok he passed over",
-        "answer": "FORD"
+        "answer": "FORD",
+        "reference": "Genesis 32:22"
       },
       {
         "number": 4,
@@ -22741,7 +23511,8 @@
         "row": 2,
         "col": 0,
         "text": "When the struggle took place",
-        "answer": "NIGHT"
+        "answer": "NIGHT",
+        "reference": "Genesis 32:22"
       },
       {
         "number": 5,
@@ -22749,7 +23520,8 @@
         "row": 3,
         "col": 0,
         "text": "New name given to the wrestler",
-        "answer": "ISRAEL"
+        "answer": "ISRAEL",
+        "reference": "Genesis 32:28"
       },
       {
         "number": 6,
@@ -22863,7 +23635,8 @@
         "row": 0,
         "col": 1,
         "text": "The Son of man came to do this, and to save",
-        "answer": "SEEK"
+        "answer": "SEEK",
+        "reference": "Luke 19:10"
       },
       {
         "number": 2,
@@ -22871,7 +23644,8 @@
         "row": 1,
         "col": 6,
         "text": "Where salvation came that day",
-        "answer": "HOUSE"
+        "answer": "HOUSE",
+        "reference": "Luke 19:9"
       },
       {
         "number": 3,
@@ -22879,7 +23653,8 @@
         "row": 2,
         "col": 0,
         "text": "City he passed through",
-        "answer": "JERICHO"
+        "answer": "JERICHO",
+        "reference": "Luke 19:1"
       },
       {
         "number": 4,

@@ -69,12 +69,16 @@ audience, "go look it up in Scripture" is the hint they *wish* they were taking
       completion delta vs letter/word; `hint_limit` paywall rate change
 
 ### T3 — Content dependency (the real work)
-- [ ] Referencing push, ordered by exposure: today's rotation window first,
-      then minis, then packs — a hint type 91% of clues can't offer is a
-      broken promise. Target: 100% of the next 60 rotation days referenced
-- [ ] `tools/` QA check: for each referenced clue, does the answer word
-      literally appear in the BSB verse text (normalized)? Report misses —
-      a paraphrase reference makes a weak verse hint; fix or flag
+- [x] Rotation batch (2026-08-18): 1,032 references authored across
+      daily-049…092 and mini-049…090 — every rotation day through both wraps
+      is covered. Shipped coverage 8.7% → 33.9% (1,041/3,072 clues). Pipeline:
+      BSB word-search constrained to theme/story passage → 5-agent review
+      (~8% replaced, ~8% rejected) → literal-containment re-validation →
+      generator + ClueReferenceTests. Diff was reference-keys-only, ids stable.
+- [x] Known holes are deliberate: ~80 KJV-vocabulary answers (MURRAIN, ELIAS,
+      CALVARY, JEHOVAH, SLIME…) have no BSB verse containing the word — left
+      absent per "never guess". Fix is a clue/answer rewording pass, not a
+      citation. Pack exclusives (0/802) are the next batch.
 - [ ] Generator: new specs require references on ≥90% of clues (warn, not fail,
       until backfill lands)
 
