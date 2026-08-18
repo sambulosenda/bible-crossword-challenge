@@ -99,6 +99,16 @@ struct CompletionView: View {
     @AppStorage("firstCompletionPaywallShown") private var firstCompletionPaywallShown = false
     @AppStorage("streakPaywallShown") private var streakPaywallShown = false
     @AppStorage("autoPaywallLastDay") private var autoPaywallLastDay = 0.0
+    /// Reminder-ask bookkeeping shared with Home's streak card and the day-2
+    /// sheet — the rules live in `ReminderAsk.decide`.
+    @Environment(\.notifications) private var notifications
+    @AppStorage("remindersEnabled") private var remindersEnabled = false
+    @AppStorage("completionReminderAsksShown") private var completionReminderAsksShown = 0
+    @AppStorage("streakReminderAskShown") private var streakReminderAskShown = false
+    @AppStorage("reminderAskLastDay") private var reminderAskLastDay = 0.0
+    /// Decided once on appear so spending an impression can't hide the card
+    /// mid-view.
+    @State private var showReminderAsk = false
 
     private var shareCaption: String {
         var text = "I solved “\(puzzle.title)” in \(TimeFormat.clock(seconds)) — \(streak)-day streak 🔥"
@@ -145,6 +155,18 @@ struct CompletionView: View {
                     achievementsCard
                 }
 
+                // Below the payoffs with the other asks. Present only when the
+                // screen has no other ask this launch — see maybeShowReminderAsk.
+                if showReminderAsk {
+                    ReminderAskCard(
+                        profile: profile,
+                        surface: .completion,
+                        kicker: "MAKE IT A HABIT",
+                        headline: "Same time tomorrow?",
+                        onFinish: { withAnimation { showReminderAsk = false } }
+                    )
+                }
+
                 if puzzle.isMini && !store.isPremium && pastMiniCount > 0 {
                     miniUpsellCard
                 }
@@ -176,6 +198,9 @@ struct CompletionView: View {
             loadChainTarget()
             loadWeeklyRank()
             maybeAutoShowPaywall()
+            // After the paywall decision on purpose: the reminder ask stands
+            // down any day an auto paywall fired (including just now).
+            maybeShowReminderAsk()
         }
         .sheet(item: $paywallEntry) { entry in
             PaywallView(source: entry.source)
@@ -934,6 +959,46 @@ struct CompletionView: View {
             try? await Task.sleep(for: .seconds(1.5))
             paywallEntry = PaywallEntry(source: source)
         }
+    }
+
+    /// Offer the daily reminder at the moment the product just proved its
+    /// value — but only when this screen carries no other ask: a challenge
+    /// result, a review sheet, today's auto paywall, or the mini upsell all
+    /// outrank it, and `ReminderAsk.decide` enforces the cross-surface caps
+    /// (one ask per day anywhere, one per session, first three solves only).
+    private func maybeShowReminderAsk() {
+        #if DEBUG
+        // Same family as -uiForceReminderPrompt: the eligible state needs a
+        // prior day's paywall and an unanswered onboarding, which takes two
+        // real days to reach. Gating itself is unit-tested (ReminderAskTests).
+        if ProcessInfo.processInfo.arguments.contains("-uiForceReminderAsk") {
+            showReminderAsk = true
+            analytics.log(.reminderAskShown(source: ReminderAsk.Surface.completion.rawValue))
+            return
+        }
+        #endif
+        guard challenge == nil, !didRequestReview else { return }
+        if puzzle.isMini && !store.isPremium && pastMiniCount > 0 { return }
+        let today = Calendar.current.startOfDay(for: Date()).timeIntervalSinceReferenceDate
+        guard autoPaywallLastDay != today else { return }
+
+        let state = ReminderAsk.State(
+            remindersEnabled: remindersEnabled,
+            permissionUndetermined: notifications.authorizationStatus == .notDetermined,
+            totalCompleted: totalCompleted,
+            currentStreak: streak,
+            completionAsksShown: completionReminderAsksShown,
+            streakAskShown: streakReminderAskShown,
+            lastAskDay: reminderAskLastDay == 0 ? nil : Date(timeIntervalSinceReferenceDate: reminderAskLastDay),
+            askedThisSession: ReminderAskSession.asked
+        )
+        guard ReminderAsk.decide(.completion, state) else { return }
+
+        showReminderAsk = true
+        completionReminderAsksShown += 1
+        reminderAskLastDay = today
+        ReminderAskSession.asked = true
+        analytics.log(.reminderAskShown(source: ReminderAsk.Surface.completion.rawValue))
     }
 
     private var actions: some View {

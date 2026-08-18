@@ -34,6 +34,17 @@ struct HomeView: View {
     /// navigation — there's no call chain between the tap and the solve.
     @AppStorage("comebackSource") private var comebackSource = ""
 
+    /// Reminder-ask bookkeeping shared with the completion screen and the
+    /// day-2 sheet — the rules live in `ReminderAsk.decide`.
+    @Environment(\.notifications) private var notifications
+    @AppStorage("remindersEnabled") private var remindersEnabled = false
+    @AppStorage("completionReminderAsksShown") private var completionReminderAsksShown = 0
+    @AppStorage("streakReminderAskShown") private var streakReminderAskShown = false
+    @AppStorage("reminderAskLastDay") private var reminderAskLastDay = 0.0
+    /// Decided once on appear so spending the impression can't hide the card
+    /// mid-view.
+    @State private var showStreakAsk = false
+
     private var dailyPuzzle: Puzzle? { puzzleProvider.dailyPuzzle() }
     private var dailyMini: Puzzle? { puzzleProvider.dailyMini() }
 
@@ -55,6 +66,40 @@ struct HomeView: View {
     /// Shared record lookup for pack-progress calculation in the carousel.
     private var recordsByID: [String: PuzzleRecord] {
         Dictionary(records.map { ($0.puzzleID, $0) }, uniquingKeysWith: { a, _ in a })
+    }
+
+    /// Offer the daily reminder once there's a streak worth protecting — the
+    /// moment "a nudge tomorrow" stops being the app's want and becomes the
+    /// player's. Comeback days are excluded: that card owns the moment, and a
+    /// second ask under a broken streak reads as blame.
+    private func maybeShowStreakAsk() {
+        #if DEBUG
+        // Same family as -uiForceReminderPrompt — a 2-day streak with an
+        // unanswered permission takes two real days to reach.
+        if ProcessInfo.processInfo.arguments.contains("-uiForceStreakAsk") {
+            showStreakAsk = true
+            analytics.log(.reminderAskShown(source: ReminderAsk.Surface.streakCard.rawValue))
+            return
+        }
+        #endif
+        guard pendingStreakBreak == 0 else { return }
+        let state = ReminderAsk.State(
+            remindersEnabled: remindersEnabled,
+            permissionUndetermined: notifications.authorizationStatus == .notDetermined,
+            totalCompleted: profile.totalPuzzlesCompleted,
+            currentStreak: profile.currentStreak,
+            completionAsksShown: completionReminderAsksShown,
+            streakAskShown: streakReminderAskShown,
+            lastAskDay: reminderAskLastDay == 0 ? nil : Date(timeIntervalSinceReferenceDate: reminderAskLastDay),
+            askedThisSession: ReminderAskSession.asked
+        )
+        guard ReminderAsk.decide(.streakCard, state) else { return }
+
+        showStreakAsk = true
+        streakReminderAskShown = true
+        reminderAskLastDay = Calendar.current.startOfDay(for: Date()).timeIntervalSinceReferenceDate
+        ReminderAskSession.asked = true
+        analytics.log(.reminderAskShown(source: ReminderAsk.Surface.streakCard.rawValue))
     }
 
     // MARK: - Comeback
@@ -181,6 +226,18 @@ struct HomeView: View {
                             savedRecently: freezeSavedToday,
                             completedWeekdays: completedWeekdaysThisWeek
                         )
+
+                        // Right under the streak it protects. Once ever, and
+                        // never on a day any other surface already asked.
+                        if showStreakAsk {
+                            ReminderAskCard(
+                                profile: profile,
+                                surface: .streakCard,
+                                kicker: "PROTECT YOUR STREAK",
+                                headline: "A daily nudge keeps it alive.",
+                                onFinish: { withAnimation { showStreakAsk = false } }
+                            )
+                        }
                     }
 
                     if !collectionPacks.isEmpty {
@@ -205,6 +262,7 @@ struct HomeView: View {
                 .frame(maxWidth: .infinity)
             }
             .background(Theme.background)
+            .onAppear { maybeShowStreakAsk() }
             // Inline, because the greeting below is the screen's real title —
             // a large "Today" on top of it would be two headings for one page.
             .navigationTitle("Today")

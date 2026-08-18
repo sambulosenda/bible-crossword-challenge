@@ -86,7 +86,15 @@ enum AnalyticsEvent {
     /// that: a renewal or a cross-device grant arrives with no tap in front of
     /// it and would otherwise cancel one out.
     case paywallCTATapped(plan: String, source: String, offersTrial: Bool)
-    case notificationPermission(granted: Bool)
+    /// `source` names the surface whose button reached the system dialog
+    /// (`onboarding`, `prompt`, `completion`, `streak_card`, `profile`) — the
+    /// grant rate is per-ask, and without the source every surface's yes and no
+    /// landed in one indistinguishable pile.
+    case notificationPermission(granted: Bool, source: String)
+    /// A reminder ask was put in front of the player (impression, not outcome),
+    /// so each surface has a denominator. Same source vocabulary as
+    /// `notificationPermission`.
+    case reminderAskShown(source: String)
     /// The player declined reminders in the app, before iOS was ever asked.
     ///
     /// Without this the decline was invisible: `notification_permission` only
@@ -150,6 +158,7 @@ enum AnalyticsEvent {
         case .paywallOpened: return "paywall_opened"
         case .paywallCTATapped: return "paywall_cta_tapped"
         case .notificationPermission: return "notification_permission"
+        case .reminderAskShown: return "reminder_ask_shown"
         case .reminderDeclined: return "reminder_declined"
         case .reminderSettingChanged: return "reminder_setting_changed"
         case .packOpened: return "pack_opened"
@@ -236,8 +245,10 @@ enum AnalyticsEvent {
             return ["source": source]
         case .achievementUnlocked(let id):
             return ["achievement_id": id]
-        case .notificationPermission(let granted):
-            return ["granted": granted]
+        case .notificationPermission(let granted, let source):
+            return ["granted": granted, "source": source]
+        case .reminderAskShown(let source):
+            return ["source": source]
         case .reminderDeclined(let source):
             return ["source": source]
         case .reminderSettingChanged(let enabled):

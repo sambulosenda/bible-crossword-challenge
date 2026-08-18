@@ -49,6 +49,9 @@ struct RootView: View {
     /// Set the first time the day-2 reminder prompt is shown, whatever the
     /// answer. One second ask is a nudge; a recurring one is nagging.
     @AppStorage("didAskReminderAgain") private var didAskReminderAgain = false
+    /// Start-of-day stamp of the last reminder ask on any surface (this sheet,
+    /// completion card, streak card) — the shared one-ask-per-day budget.
+    @AppStorage("reminderAskLastDay") private var reminderAskLastDay = 0.0
     /// Set by ProfileView when it hands the player to Settings to allow
     /// notifications; cleared here once they come back with an answer.
     @AppStorage("pendingReminderOptIn") private var pendingReminderOptIn = false
@@ -129,6 +132,14 @@ struct RootView: View {
             // prompt is still unspent.
             await notifications.refreshStatus()
             showReminderPrompt = shouldAskAgain(profile)
+            if showReminderPrompt {
+                // Spend the shared per-day/per-session ask budget so the
+                // completion and streak cards stand down behind this sheet —
+                // see `ReminderAsk.decide`.
+                reminderAskLastDay = Calendar.current.startOfDay(for: Date()).timeIntervalSinceReferenceDate
+                ReminderAskSession.asked = true
+                analytics.log(.reminderAskShown(source: "prompt"))
+            }
             // A cold launch from a notification tap sets `pendingURL` before
             // this view exists, so the change never lands on `onChange` —
             // whatever is already waiting has to be drained by hand.
@@ -221,7 +232,13 @@ struct RootView: View {
               !didAskReminderAgain,
               notifications.authorizationStatus == .notDetermined,
               // A challenge link is taking them somewhere; don't interrupt it.
-              pendingNavPuzzleID == nil
+              pendingNavPuzzleID == nil,
+              // Another surface (completion or streak card) already asked
+              // today or this session — one ask per day, everywhere.
+              !ReminderAskSession.asked,
+              !Calendar.current.isDate(
+                Date(timeIntervalSinceReferenceDate: reminderAskLastDay),
+                inSameDayAs: Date())
         else { return false }
         #if DEBUG
         // Same family as -uiSeedShowcase. The day-2 clause is otherwise only
