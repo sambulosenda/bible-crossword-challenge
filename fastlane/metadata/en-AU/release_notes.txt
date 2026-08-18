@@ -1,6 +1,7 @@
 Thanks for playing Bible Crossword Challenge! This update includes:
 
-• Auto-check: wrong letters are marked the moment you type them, so a small slip can't quietly sink a whole grid. On from the start for new players — everyone can switch it on or off in the hint menu or under Profile → Gameplay
-• A word of encouragement when you're one or two clues from the finish
-• Your first three days now lead with the Mini — a gentler way into the daily habit
+• Show the Verse: a new hint that opens the Bible passage behind the answer — read the verse, and the word reveals itself
+• Over 1,000 new verse references — every daily and mini clue in the current rotation now points you to its place in Scripture
+• Set your daily reminder right from the celebration screen after a solve, or from your streak card
+• A more polished Profile screen: easier-to-tap buttons and tidier rows
 • Small fixes and improvements throughout
