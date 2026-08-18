@@ -161,7 +161,7 @@ struct CompletionView: View {
                     ReminderAskCard(
                         profile: profile,
                         surface: .completion,
-                        kicker: "MAKE IT A HABIT",
+                        kicker: "Make it a habit",
                         headline: "Same time tomorrow?",
                         onFinish: { withAnimation { showReminderAsk = false } }
                     )

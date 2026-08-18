@@ -233,7 +233,7 @@ struct HomeView: View {
                             ReminderAskCard(
                                 profile: profile,
                                 surface: .streakCard,
-                                kicker: "PROTECT YOUR STREAK",
+                                kicker: "Protect your streak",
                                 headline: "A daily nudge keeps it alive.",
                                 onFinish: { withAnimation { showStreakAsk = false } }
                             )

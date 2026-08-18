@@ -69,6 +69,8 @@ enum ReminderAsk {
 
 /// Process-lifetime flag behind `State.askedThisSession`. A type rather than a
 /// stored default deliberately: "this session" should reset on relaunch.
+/// Main-actor isolated — every reader/writer is view code, and an unisolated
+/// mutable static is a data race under strict concurrency.
 enum ReminderAskSession {
-    static var asked = false
+    @MainActor static var asked = false
 }

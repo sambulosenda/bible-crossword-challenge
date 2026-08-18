@@ -227,6 +227,8 @@ struct ReminderAskCard: View {
     var body: some View {
         VStack(spacing: Theme.Spacing.m) {
             VStack(spacing: Theme.Spacing.xs) {
+                // Natural case; `kicker()` uppercases for display, so VoiceOver
+                // reads a sentence rather than an acronym-like shout.
                 Text(kicker)
                     .kicker()
                 Text(headline)
@@ -234,6 +236,9 @@ struct ReminderAskCard: View {
                     .multilineTextAlignment(.center)
             }
             .frame(maxWidth: .infinity)
+            // One VoiceOver stop for the header pair, like the benefit rows on
+            // the onboarding premium page.
+            .accessibilityElement(children: .combine)
 
             NotificationPreviewCard()
 
