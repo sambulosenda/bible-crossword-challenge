@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4F123CD63034FB3F00291960 /* RevenueCat in Frameworks */ = {isa = PBXBuildFile; productRef = AD0000010000000000000002 /* RevenueCat */; };
 		AA0000010000000000000003 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */ = {isa = PBXBuildFile; productRef = AA0000010000000000000002 /* FirebaseAnalyticsWithoutAdIdSupport */; };
 		AB0000010000000000000001 /* BibleCrosswordWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AB0000010000000000000003 /* BibleCrosswordWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		AC0000010000000000000003 /* PostHog in Frameworks */ = {isa = PBXBuildFile; productRef = AC0000010000000000000002 /* PostHog */; };
@@ -110,6 +111,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4F123CD63034FB3F00291960 /* RevenueCat in Frameworks */,
 				AA0000010000000000000003 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */,
 				AC0000010000000000000003 /* PostHog in Frameworks */,
 				E6B29C08521CBEF2D95113D0 /* Lottie in Frameworks */,
@@ -788,20 +790,20 @@
 				minimumVersion = 3.68.0;
 			};
 		};
-		F6D385BEF7023C5038BB08CF /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/airbnb/lottie-ios";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 4.5.0;
-			};
-		};
 		AD0000010000000000000001 /* XCRemoteSwiftPackageReference "purchases-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/RevenueCat/purchases-ios";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 5.0.0;
+			};
+		};
+		F6D385BEF7023C5038BB08CF /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/lottie-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.5.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

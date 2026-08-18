@@ -23,6 +23,14 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 Push title/subtitle/keywords for all locales. Shows an HTML preview and asks for confirmation before uploading. No binary, no screenshots, no submission. Pass version:X.Y to create/select that editable version in App Store Connect.
 
+### ios upload_build
+
+```sh
+[bundle exec] fastlane ios upload_build
+```
+
+Archive the app and upload the binary to App Store Connect. No metadata, no screenshots, no submission — the build lands in ASC for manual selection. Signing is cloud-managed through the ASC API key, so no local distribution certificate is required.
+
 ### ios upload_screenshots
 
 ```sh
