@@ -26,8 +26,6 @@ struct ProfileView: View {
     @Environment(\.gameCenter) private var gameCenter
     @Environment(\.openURL) private var openURL
     @Environment(\.challengeHistory) private var challengeHistory
-    @Environment(\.puzzleProvider) private var puzzleProvider
-    @Query private var records: [PuzzleRecord]
     @AppStorage("appTheme") private var appTheme: AppTheme = .system
     @AppStorage("remindersEnabled") private var remindersEnabled = false
     /// Set when the player is sent to Settings to allow notifications; RootView
@@ -42,6 +40,11 @@ struct ProfileView: View {
     @State private var showRename = false
     @State private var draftName = ""
     @State private var showChallengeHistory = false
+    /// True while this view is writing `remindersEnabled` itself (permission
+    /// denied, so the switch is forced back off). The `onChange` below skips
+    /// those writes — otherwise a refused permission logs a phantom
+    /// "reminder disabled" event from a player who never had reminders on.
+    @State private var programmaticReminderWrite = false
 
     private var reminderTime: Binding<Date> {
         Binding(
@@ -68,7 +71,7 @@ struct ProfileView: View {
                         unlocked: unlockedCount,
                         totalAchievements: Achievements.all.count
                     )
-                    journeyCard
+                    JourneyCard()
                     challengesSection
                     premiumSection
                     preferencesSection
@@ -134,6 +137,10 @@ struct ProfileView: View {
                     .padding(.horizontal, Theme.Spacing.m)
                     .padding(.vertical, Theme.Spacing.s)
                     .background(Color.primary.opacity(0.06), in: .capsule)
+                    // The capsule stays compact; the hit region meets the 44pt
+                    // HIG minimum.
+                    .frame(minHeight: 44)
+                    .contentShape(.rect)
             }
             .buttonStyle(.plain)
             .accessibilityLabel("Edit name")
@@ -297,6 +304,10 @@ struct ProfileView: View {
             }
             .settingsRowInsets()
             .onChange(of: remindersEnabled) { _, enabled in
+                if programmaticReminderWrite {
+                    programmaticReminderWrite = false
+                    return
+                }
                 handleReminderToggle(enabled)
             }
 
@@ -315,55 +326,6 @@ struct ProfileView: View {
                 Text("Notifications are turned off for this app. Enable them in Settings to receive your daily reminder.")
             }
         }
-    }
-
-    // MARK: - Journey
-
-    /// The way into the map. A row rather than the map itself: sixty-six books
-    /// would swamp a settings screen, and the count is the part worth seeing
-    /// from here.
-    private var journeyCard: some View {
-        NavigationLink {
-            JourneyView()
-        } label: {
-            HStack(spacing: Theme.Spacing.m) {
-                Image(systemName: "map.fill")
-                    .font(.title)
-                    .foregroundStyle(Theme.accent)
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Your journey")
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(.primary)
-                    Text(journeySummary)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-                Spacer(minLength: 0)
-                Image(systemName: "chevron.right")
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(.secondary)
-            }
-            .padding(Theme.Spacing.l)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .elevatedCard()
-        }
-        .buttonStyle(PressableCardStyle())
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel("Your journey. \(journeySummary)")
-        .accessibilityHint("Opens the map of books you've explored")
-    }
-
-    private var journeySummary: String {
-        let count = booksExplored
-        if count == 0 { return "See which books of the Bible you've explored" }
-        return "\(count) \(count == 1 ? "book" : "books") of the Bible explored"
-    }
-
-    private var booksExplored: Int {
-        let solved = Set(records.filter(\.isCompleted).map(\.puzzleID))
-        return BibleJourney.booksTouched(
-            completedPuzzleIDs: solved, puzzles: puzzleProvider.allPuzzles
-        ).count
     }
 
     // MARK: - Challenges
@@ -393,6 +355,10 @@ struct ProfileView: View {
                          ? "See all \(challengeHistory.entries.count)"
                          : "See all")
                         .font(.caption.weight(.semibold))
+                        // Bare caption text alone is a ~16pt target; the frame
+                        // brings the hit region to the 44pt HIG minimum.
+                        .frame(minHeight: 44, alignment: .leading)
+                        .contentShape(.rect)
                 }
                 .padding(.horizontal, Theme.Spacing.xs)
             }
@@ -448,10 +414,12 @@ struct ProfileView: View {
                     analytics.log(.reminderSettingChanged(enabled: true))
                     rescheduleReminders()
                 } else {
+                    programmaticReminderWrite = true
                     remindersEnabled = false
                 }
             case .denied:
                 // Can't grant from inside the app — bounce to Settings, leave off.
+                programmaticReminderWrite = true
                 remindersEnabled = false
                 // Remember that turning it on was the intent. The switch above
                 // is off because permission is missing, not because the player
@@ -574,6 +542,68 @@ private struct ProfileStatsCard: View {
     }
 }
 
+// MARK: - Journey
+
+/// The way into the map. A row rather than the map itself: sixty-six books
+/// would swamp a settings screen, and the count is the part worth seeing
+/// from here.
+///
+/// Its own type for the same reason as `ProfileStatsCard`: as a computed
+/// property on `ProfileView` the books-explored count (a pass over every
+/// record plus `BibleJourney.booksTouched`) re-ran on every parent body
+/// evaluation — including each keystroke in the rename alert. Owning the
+/// query here means only record changes invalidate it, and the query itself
+/// fetches solved records only.
+private struct JourneyCard: View {
+    @Environment(\.puzzleProvider) private var puzzleProvider
+    @Query(filter: #Predicate<PuzzleRecord> { $0.isCompleted })
+    private var solvedRecords: [PuzzleRecord]
+
+    var body: some View {
+        NavigationLink {
+            JourneyView()
+        } label: {
+            HStack(spacing: Theme.Spacing.m) {
+                Image(systemName: "map.fill")
+                    .font(.title)
+                    .foregroundStyle(Theme.accent)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Your journey")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.primary)
+                    Text(journeySummary)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                Spacer(minLength: 0)
+                Image(systemName: "chevron.right")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(.secondary)
+            }
+            .padding(Theme.Spacing.l)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .elevatedCard()
+        }
+        .buttonStyle(PressableCardStyle())
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Your journey. \(journeySummary)")
+        .accessibilityHint("Opens the map of books you've explored")
+    }
+
+    private var journeySummary: String {
+        let count = booksExplored
+        if count == 0 { return "See which books of the Bible you've explored" }
+        return "\(count) \(count == 1 ? "book" : "books") of the Bible explored"
+    }
+
+    private var booksExplored: Int {
+        BibleJourney.booksTouched(
+            completedPuzzleIDs: Set(solvedRecords.map(\.puzzleID)),
+            puzzles: puzzleProvider.allPuzzles
+        ).count
+    }
+}
+
 // MARK: - Avatar
 
 /// The player's initial on an accent disc. A generic SF person glyph said
@@ -651,13 +681,17 @@ extension SettingsSection where Footer == EmptyView {
 }
 
 /// Hairline between rows, inset past the icon chip so the chips read as one
-/// column rather than the divider cutting under them.
+/// column rather than the divider cutting under them. The inset lands exactly
+/// on the row title's leading edge — row inset + chip + label gap — and scales
+/// with the same metric as the chip so they stay aligned at every type size.
 private struct RowDivider: View {
+    @ScaledMetric(relativeTo: .body) private var chipSize: CGFloat = 30
+
     var body: some View {
         Rectangle()
             .fill(Color.primary.opacity(0.08))
             .frame(height: 1)
-            .padding(.leading, 52)
+            .padding(.leading, Theme.Spacing.m + chipSize + Theme.Spacing.s + 4)
     }
 }
 
