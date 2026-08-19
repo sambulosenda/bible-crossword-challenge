@@ -90,7 +90,7 @@ struct CrosswordGameView: View {
                 .padding(Theme.Spacing.m)
                 .frame(maxHeight: .infinity)
 
-            ClueBarView(vm: vm)
+            ClueBarView(vm: vm, onStallCheck: runStallCheck)
 
             LetterKeyboardView(
                 isPencilMode: vm.isPencilMode,
@@ -180,6 +180,13 @@ struct CrosswordGameView: View {
         .sensoryFeedback(.warning, trigger: vm.gridFullWithErrorsTick)
         .onChange(of: vm.gridFullWithErrorsTick) { _, _ in
             showFullMissAlert = true
+        }
+        .onChange(of: vm.stallNudgeTick) { _, _ in
+            analytics.log(.stallNudgeShown(
+                puzzleID: puzzle.id,
+                fillPercent: fillPercent,
+                idleSeconds: vm.secondsSinceLastInput
+            ))
         }
         .alert("Almost There", isPresented: $showFullMissAlert) {
             Button("Check Answers") { runCheck(.puzzle) }
@@ -618,16 +625,32 @@ struct CrosswordGameView: View {
     private func logAbandonIfNeeded() {
         guard !vm.isComplete, challengeReplaySeconds == nil, !didLogAbandon else { return }
         didLogAbandon = true
-        let total = vm.totalPlayableCount
-        let percent = total > 0
-            ? Int((Double(vm.filledPlayableCount) / Double(total) * 100).rounded())
-            : 0
         analytics.log(.puzzleAbandoned(
             puzzleID: puzzle.id,
-            fillPercent: percent,
+            fillPercent: fillPercent,
             seconds: vm.elapsed(),
             hintsUsed: vm.hintsUsed
         ))
+    }
+
+    /// Whole-grid fill as a 0–100 int — the one convention `puzzle_abandoned`
+    /// and the stall-nudge events share, so their histograms line up.
+    private var fillPercent: Int {
+        let total = vm.totalPlayableCount
+        guard total > 0 else { return 0 }
+        return Int((Double(vm.filledPlayableCount) / Double(total) * 100).rounded())
+    }
+
+    /// The stall nudge's tap: log it, then run the same whole-puzzle check the
+    /// hint menu offers. The check itself calls back into the vm, which clears
+    /// the nudge line.
+    private func runStallCheck() {
+        analytics.log(.stallNudgeTapped(
+            puzzleID: puzzle.id,
+            fillPercent: fillPercent,
+            idleSeconds: vm.secondsSinceLastInput
+        ))
+        runCheck(.puzzle)
     }
 
     private func saveProgress() {

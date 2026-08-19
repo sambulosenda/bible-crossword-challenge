@@ -23705,7 +23705,8 @@
         "row": 0,
         "col": 0,
         "text": "It turned every way to keep the way of the tree of life",
-        "answer": "FLAMINGSWORD"
+        "answer": "FLAMINGSWORD",
+        "reference": "Genesis 3:24"
       },
       {
         "number": 2,
@@ -23713,7 +23714,8 @@
         "row": 0,
         "col": 3,
         "text": "Tiller of the ground who became his brother's slayer",
-        "answer": "CAIN"
+        "answer": "CAIN",
+        "reference": "Genesis 4:8"
       },
       {
         "number": 3,
@@ -23721,7 +23723,8 @@
         "row": 0,
         "col": 6,
         "text": "He found grace in the eyes of the LORD",
-        "answer": "NOAH"
+        "answer": "NOAH",
+        "reference": "Genesis 6:8"
       },
       {
         "number": 4,
@@ -23729,7 +23732,8 @@
         "row": 0,
         "col": 8,
         "text": "The mighty hunter before the LORD",
-        "answer": "NIMROD"
+        "answer": "NIMROD",
+        "reference": "Genesis 10:9"
       },
       {
         "number": 5,
@@ -23737,7 +23741,8 @@
         "row": 0,
         "col": 12,
         "text": "The expanse dividing the waters, called Heaven",
-        "answer": "FIRMAMENT"
+        "answer": "FIRMAMENT",
+        "reference": "Genesis 1:8"
       },
       {
         "number": 6,
@@ -23745,7 +23750,8 @@
         "row": 1,
         "col": 10,
         "text": "The covenant token set in the cloud",
-        "answer": "RAINBOW"
+        "answer": "RAINBOW",
+        "reference": "Genesis 9:13"
       },
       {
         "number": 6,
@@ -23753,7 +23759,8 @@
         "row": 1,
         "col": 10,
         "text": "What the woman was fashioned from",
-        "answer": "RIB"
+        "answer": "RIB",
+        "reference": "Genesis 2:22"
       },
       {
         "number": 7,
@@ -23761,7 +23768,8 @@
         "row": 1,
         "col": 14,
         "text": "God breathed it into the man of dust",
-        "answer": "BREATHOFLIFE"
+        "answer": "BREATHOFLIFE",
+        "reference": "Genesis 2:7"
       },
       {
         "number": 8,
@@ -23769,7 +23777,8 @@
         "row": 2,
         "col": 0,
         "text": "Keeper of sheep whose offering was respected",
-        "answer": "ABEL"
+        "answer": "ABEL",
+        "reference": "Genesis 4:4"
       },
       {
         "number": 9,
@@ -23777,7 +23786,8 @@
         "row": 3,
         "col": 5,
         "text": "The angelic guards set east of Eden",
-        "answer": "CHERUBIM"
+        "answer": "CHERUBIM",
+        "reference": "Genesis 3:24"
       },
       {
         "number": 9,
@@ -23785,7 +23795,8 @@
         "row": 3,
         "col": 5,
         "text": "Established with Noah and every living creature",
-        "answer": "COVENANT"
+        "answer": "COVENANT",
+        "reference": "Genesis 9:10"
       },
       {
         "number": 10,
@@ -23793,7 +23804,8 @@
         "row": 4,
         "col": 14,
         "text": "He named every living creature",
-        "answer": "ADAM"
+        "answer": "ADAM",
+        "reference": "Genesis 2:20"
       },
       {
         "number": 11,
@@ -23801,7 +23813,8 @@
         "row": 5,
         "col": 4,
         "text": "The mother of all living",
-        "answer": "EVE"
+        "answer": "EVE",
+        "reference": "Genesis 3:20"
       },
       {
         "number": 12,
@@ -23809,7 +23822,8 @@
         "row": 5,
         "col": 19,
         "text": "Noah's son, father of Canaan",
-        "answer": "HAM"
+        "answer": "HAM",
+        "reference": "Genesis 9:18"
       },
       {
         "number": 13,
@@ -23817,7 +23831,8 @@
         "row": 6,
         "col": 9,
         "text": "The dove's plucked proof that the waters had abated",
-        "answer": "OLIVELEAF"
+        "answer": "OLIVELEAF",
+        "reference": "Genesis 8:11"
       },
       {
         "number": 14,
@@ -23825,7 +23840,8 @@
         "row": 6,
         "col": 11,
         "text": "At 969 years, the longest-lived man in scripture",
-        "answer": "METHUSELAH"
+        "answer": "METHUSELAH",
+        "reference": "Genesis 5:27"
       },
       {
         "number": 15,
@@ -23833,7 +23849,8 @@
         "row": 7,
         "col": 3,
         "text": "Taken, eaten and shared in the fall",
-        "answer": "FRUIT"
+        "answer": "FRUIT",
+        "reference": "Genesis 3:6"
       },
       {
         "number": 16,
@@ -23841,7 +23858,8 @@
         "row": 7,
         "col": 7,
         "text": "The tower where language was confounded",
-        "answer": "BABEL"
+        "answer": "BABEL",
+        "reference": "Genesis 11:9"
       },
       {
         "number": 17,
@@ -23849,7 +23867,8 @@
         "row": 8,
         "col": 14,
         "text": "Forty days of rain that covered the mountains",
-        "answer": "FLOOD"
+        "answer": "FLOOD",
+        "reference": "Genesis 7:20"
       },
       {
         "number": 18,
@@ -23857,7 +23876,8 @@
         "row": 9,
         "col": 11,
         "text": "The first day's creation, divided from darkness",
-        "answer": "LIGHT"
+        "answer": "LIGHT",
+        "reference": "Genesis 1:3"
       },
       {
         "number": 19,
@@ -23865,7 +23885,8 @@
         "row": 10,
         "col": 3,
         "text": "The Bible's first three words, run together",
-        "answer": "INTHEBEGINNING"
+        "answer": "INTHEBEGINNING",
+        "reference": "Genesis 1:1"
       },
       {
         "number": 20,
@@ -23873,7 +23894,8 @@
         "row": 10,
         "col": 16,
         "text": "Planted eastward in Eden",
-        "answer": "GARDEN"
+        "answer": "GARDEN",
+        "reference": "Genesis 2:8"
       },
       {
         "number": 21,
@@ -23881,7 +23903,8 @@
         "row": 10,
         "col": 18,
         "text": "Sent thrice; she finally did not return",
-        "answer": "DOVE"
+        "answer": "DOVE",
+        "reference": "Genesis 8:12"
       },
       {
         "number": 22,
@@ -23889,7 +23912,8 @@
         "row": 11,
         "col": 0,
         "text": "Man's origin, and the serpent's appointed food",
-        "answer": "DUST"
+        "answer": "DUST",
+        "reference": "Genesis 3:19"
       },
       {
         "number": 23,
@@ -23897,7 +23921,8 @@
         "row": 11,
         "col": 2,
         "text": "More subtil than any beast of the field",
-        "answer": "SERPENT"
+        "answer": "SERPENT",
+        "reference": "Genesis 3:1"
       },
       {
         "number": 24,
@@ -23905,7 +23930,8 @@
         "row": 11,
         "col": 20,
         "text": "He walked with God, and was not",
-        "answer": "ENOCH"
+        "answer": "ENOCH",
+        "reference": "Genesis 5:24"
       },
       {
         "number": 25,
@@ -23913,7 +23939,8 @@
         "row": 12,
         "col": 16,
         "text": "The first bird sent out, going to and fro",
-        "answer": "RAVEN"
+        "answer": "RAVEN",
+        "reference": "Genesis 8:7"
       },
       {
         "number": 26,
@@ -23921,7 +23948,8 @@
         "row": 13,
         "col": 1,
         "text": "The mountains where the ark came to rest",
-        "answer": "ARARAT"
+        "answer": "ARARAT",
+        "reference": "Genesis 8:4"
       },
       {
         "number": 27,
@@ -23929,7 +23957,8 @@
         "row": 13,
         "col": 9,
         "text": "Noah built one first thing on dry ground",
-        "answer": "ALTAR"
+        "answer": "ALTAR",
+        "reference": "Genesis 8:20"
       },
       {
         "number": 28,
@@ -23937,7 +23966,8 @@
         "row": 13,
         "col": 12,
         "text": "Three hundred cubits of salvation",
-        "answer": "ARK"
+        "answer": "ARK",
+        "reference": "Genesis 6:15"
       },
       {
         "number": 29,
@@ -23945,7 +23975,8 @@
         "row": 14,
         "col": 14,
         "text": "Noah's son in the line of promise",
-        "answer": "SHEM"
+        "answer": "SHEM",
+        "reference": "Genesis 9:26"
       },
       {
         "number": 29,
@@ -23953,7 +23984,8 @@
         "row": 14,
         "col": 14,
         "text": "The seventh day, blessed and sanctified",
-        "answer": "SABBATH"
+        "answer": "SABBATH",
+        "reference": "Genesis 2:3"
       },
       {
         "number": 30,
@@ -23961,7 +23993,8 @@
         "row": 15,
         "col": 1,
         "text": "The son appointed instead of a slain brother",
-        "answer": "SETH"
+        "answer": "SETH",
+        "reference": "Genesis 4:25"
       },
       {
         "number": 31,
@@ -23969,7 +24002,8 @@
         "row": 17,
         "col": 2,
         "text": "The garden's other named tree, guarded after the fall",
-        "answer": "TREEOFLIFE"
+        "answer": "TREEOFLIFE",
+        "reference": "Genesis 2:9"
       },
       {
         "number": 32,
@@ -23977,7 +24011,8 @@
         "row": 17,
         "col": 4,
         "text": "The garden's home, watered by a river parting four ways",
-        "answer": "EDEN"
+        "answer": "EDEN",
+        "reference": "Genesis 2:10"
       },
       {
         "number": 33,
@@ -23985,7 +24020,8 @@
         "row": 18,
         "col": 13,
         "text": "Noah's son whose descendants spread to the isles",
-        "answer": "JAPHETH"
+        "answer": "JAPHETH",
+        "reference": "Genesis 10:5"
       },
       {
         "number": 34,
@@ -23993,7 +24029,8 @@
         "row": 19,
         "col": 2,
         "text": "Six days of work, finished and called very good",
-        "answer": "CREATION"
+        "answer": "CREATION",
+        "reference": "Genesis 1:31"
       },
       {
         "number": 35,
@@ -24001,7 +24038,8 @@
         "row": 20,
         "col": 11,
         "text": "The ark's specified timber",
-        "answer": "GOPHERWOOD"
+        "answer": "GOPHERWOOD",
+        "reference": "Genesis 6:14"
       }
     ],
     "kind": "sunday"
@@ -24044,7 +24082,8 @@
         "row": 0,
         "col": 0,
         "text": "With Peter he healed the lame man at the Beautiful gate",
-        "answer": "JOHN"
+        "answer": "JOHN",
+        "reference": "Acts 3:2"
       },
       {
         "number": 2,
@@ -24052,7 +24091,8 @@
         "row": 0,
         "col": 2,
         "text": "Paul's voyage to Rome ended in one off Malta",
-        "answer": "SHIPWRECK"
+        "answer": "SHIPWRECK",
+        "reference": "Acts 27:41"
       },
       {
         "number": 2,
@@ -24060,7 +24100,8 @@
         "row": 0,
         "col": 2,
         "text": "He sang with Paul at midnight in a Philippian jail",
-        "answer": "SILAS"
+        "answer": "SILAS",
+        "reference": "Acts 16:25"
       },
       {
         "number": 3,
@@ -24068,7 +24109,8 @@
         "row": 1,
         "col": 12,
         "text": "Colony city where an earthquake opened prison doors",
-        "answer": "PHILIPPI"
+        "answer": "PHILIPPI",
+        "reference": "Acts 16:26"
       },
       {
         "number": 3,
@@ -24076,7 +24118,8 @@
         "row": 1,
         "col": 12,
         "text": "Evangelist who joined a chariot on the Gaza road",
-        "answer": "PHILIP"
+        "answer": "PHILIP",
+        "reference": "Acts 8:29"
       },
       {
         "number": 4,
@@ -24084,7 +24127,8 @@
         "row": 2,
         "col": 0,
         "text": "The promised power that fell at Pentecost",
-        "answer": "HOLYSPIRIT"
+        "answer": "HOLYSPIRIT",
+        "reference": "Acts 2:4"
       },
       {
         "number": 5,
@@ -24092,7 +24136,8 @@
         "row": 2,
         "col": 5,
         "text": "With Aquila, she explained the way more perfectly to Apollos",
-        "answer": "PRISCILLA"
+        "answer": "PRISCILLA",
+        "reference": "Acts 18:26"
       },
       {
         "number": 6,
@@ -24100,7 +24145,8 @@
         "row": 3,
         "col": 14,
         "text": "Tabitha by another name, raised by Peter at Joppa",
-        "answer": "DORCAS"
+        "answer": "DORCAS",
+        "reference": "Acts 9:36"
       },
       {
         "number": 7,
@@ -24108,7 +24154,8 @@
         "row": 3,
         "col": 16,
         "text": "Paul's appeal carried him to this capital",
-        "answer": "ROME"
+        "answer": "ROME",
+        "reference": "Acts 28:16"
       },
       {
         "number": 8,
@@ -24116,7 +24163,8 @@
         "row": 4,
         "col": 4,
         "text": "Young companion with a believing mother, Eunice",
-        "answer": "TIMOTHY"
+        "answer": "TIMOTHY",
+        "reference": "Acts 16:1"
       },
       {
         "number": 9,
@@ -24124,7 +24172,8 @@
         "row": 4,
         "col": 20,
         "text": "He fell from a window during a long sermon and lived",
-        "answer": "EUTYCHUS"
+        "answer": "EUTYCHUS",
+        "reference": "Acts 20:9"
       },
       {
         "number": 10,
@@ -24132,7 +24181,8 @@
         "row": 5,
         "col": 1,
         "text": "The son of consolation who vouched for Saul",
-        "answer": "BARNABAS"
+        "answer": "BARNABAS",
+        "reference": "Acts 9:27"
       },
       {
         "number": 11,
@@ -24140,7 +24190,8 @@
         "row": 5,
         "col": 3,
         "text": "He asked at midnight, 'What must I do to be saved?'",
-        "answer": "JAILER"
+        "answer": "JAILER",
+        "reference": "Acts 16:30"
       },
       {
         "number": 12,
@@ -24148,7 +24199,8 @@
         "row": 6,
         "col": 0,
         "text": "The city Saul never reached as a persecutor",
-        "answer": "DAMASCUS"
+        "answer": "DAMASCUS",
+        "reference": "Acts 9:8"
       },
       {
         "number": 13,
@@ -24156,7 +24208,8 @@
         "row": 6,
         "col": 12,
         "text": "The feast day the church counts as its birthday",
-        "answer": "PENTECOST"
+        "answer": "PENTECOST",
+        "reference": "Acts 2:1"
       },
       {
         "number": 14,
@@ -24164,7 +24217,8 @@
         "row": 6,
         "col": 13,
         "text": "Its silversmiths rioted for great Diana",
-        "answer": "EPHESUS"
+        "answer": "EPHESUS",
+        "reference": "Acts 19:28"
       },
       {
         "number": 15,
@@ -24172,7 +24226,8 @@
         "row": 6,
         "col": 15,
         "text": "As of fire, they sat upon each of them",
-        "answer": "TONGUES"
+        "answer": "TONGUES",
+        "reference": "Acts 2:3"
       },
       {
         "number": 16,
@@ -24180,7 +24235,8 @@
         "row": 8,
         "col": 5,
         "text": "Seller of purple, first convert in Europe",
-        "answer": "LYDIA"
+        "answer": "LYDIA",
+        "reference": "Acts 16:14"
       },
       {
         "number": 17,
@@ -24188,7 +24244,8 @@
         "row": 8,
         "col": 11,
         "text": "Paul preached its unknown god on Mars' hill",
-        "answer": "ATHENS"
+        "answer": "ATHENS",
+        "reference": "Acts 17:23"
       },
       {
         "number": 18,
@@ -24196,7 +24253,8 @@
         "row": 9,
         "col": 10,
         "text": "Apostle to the Gentiles, once a Pharisee of Pharisees",
-        "answer": "PAUL"
+        "answer": "PAUL",
+        "reference": "Acts 13:9"
       },
       {
         "number": 19,
@@ -24204,7 +24262,8 @@
         "row": 9,
         "col": 18,
         "text": "Eloquent Alexandrian, mighty in the scriptures",
-        "answer": "APOLLOS"
+        "answer": "APOLLOS",
+        "reference": "Acts 18:24"
       },
       {
         "number": 20,
@@ -24212,7 +24271,8 @@
         "row": 10,
         "col": 3,
         "text": "Where a persecutor was blinded by light from heaven",
-        "answer": "ROADTODAMASCUS"
+        "answer": "ROADTODAMASCUS",
+        "reference": "Acts 9:3"
       },
       {
         "number": 21,
@@ -24220,7 +24280,8 @@
         "row": 12,
         "col": 3,
         "text": "The teacher who counseled leaving the apostles alone",
-        "answer": "GAMALIEL"
+        "answer": "GAMALIEL",
+        "reference": "Acts 5:34"
       },
       {
         "number": 22,
@@ -24228,7 +24289,8 @@
         "row": 12,
         "col": 5,
         "text": "Island where a viper fastened on Paul's hand",
-        "answer": "MALTA"
+        "answer": "MALTA",
+        "reference": "Acts 28:3"
       },
       {
         "number": 23,
@@ -24236,7 +24298,8 @@
         "row": 12,
         "col": 15,
         "text": "He held the coats at Stephen's stoning",
-        "answer": "SAUL"
+        "answer": "SAUL",
+        "reference": "Acts 7:58"
       },
       {
         "number": 24,
@@ -24244,7 +24307,8 @@
         "row": 12,
         "col": 16,
         "text": "Disciple sent to a street called Straight",
-        "answer": "ANANIAS"
+        "answer": "ANANIAS",
+        "reference": "Acts 9:11"
       },
       {
         "number": 25,
@@ -24252,7 +24316,8 @@
         "row": 13,
         "col": 2,
         "text": "City where Paul stayed with tentmakers a year and a half",
-        "answer": "CORINTH"
+        "answer": "CORINTH",
+        "reference": "Acts 18:11"
       },
       {
         "number": 26,
@@ -24260,7 +24325,8 @@
         "row": 14,
         "col": 14,
         "text": "Seven were chosen to serve tables",
-        "answer": "DEACONS"
+        "answer": "DEACONS",
+        "reference": "Acts 6:3"
       },
       {
         "number": 27,
@@ -24268,7 +24334,8 @@
         "row": 14,
         "col": 20,
         "text": "The first martyr, whose face shone like an angel's",
-        "answer": "STEPHEN"
+        "answer": "STEPHEN",
+        "reference": "Acts 6:15"
       },
       {
         "number": 28,
@@ -24276,7 +24343,8 @@
         "row": 15,
         "col": 0,
         "text": "The name disciples were first called at Antioch",
-        "answer": "CHRISTIANS"
+        "answer": "CHRISTIANS",
+        "reference": "Acts 11:26"
       },
       {
         "number": 29,
@@ -24284,7 +24352,8 @@
         "row": 15,
         "col": 7,
         "text": "Tentmaker exiled from Rome with his wife",
-        "answer": "AQUILA"
+        "answer": "AQUILA",
+        "reference": "Acts 18:2"
       },
       {
         "number": 30,
@@ -24292,7 +24361,8 @@
         "row": 17,
         "col": 4,
         "text": "The sound of a rushing mighty one filled the house",
-        "answer": "WIND"
+        "answer": "WIND",
+        "reference": "Acts 2:2"
       },
       {
         "number": 31,
@@ -24300,7 +24370,8 @@
         "row": 17,
         "col": 12,
         "text": "Seaport where Peter saw the sheet of unclean beasts",
-        "answer": "JOPPA"
+        "answer": "JOPPA",
+        "reference": "Acts 11:5"
       },
       {
         "number": 32,
@@ -24308,7 +24379,8 @@
         "row": 18,
         "col": 1,
         "text": "The eunuch reading Isaiah whom Philip baptized",
-        "answer": "ETHIOPIAN"
+        "answer": "ETHIOPIAN",
+        "reference": "Acts 8:27"
       },
       {
         "number": 33,
@@ -24316,7 +24388,8 @@
         "row": 20,
         "col": 7,
         "text": "The sending church of the first missionary journey",
-        "answer": "ANTIOCH"
+        "answer": "ANTIOCH",
+        "reference": "Acts 13:2"
       }
     ],
     "kind": "sunday"
@@ -24359,7 +24432,8 @@
         "row": 0,
         "col": 0,
         "text": "Struck on lintel and doorposts as a saving sign",
-        "answer": "BLOOD"
+        "answer": "BLOOD",
+        "reference": "Exodus 12:7"
       },
       {
         "number": 1,
@@ -24367,7 +24441,8 @@
         "row": 0,
         "col": 0,
         "text": "It blazed on Horeb yet was not consumed",
-        "answer": "BURNINGBUSH"
+        "answer": "BURNINGBUSH",
+        "reference": "Exodus 3:2"
       },
       {
         "number": 2,
@@ -24375,7 +24450,8 @@
         "row": 0,
         "col": 6,
         "text": "What the rod became when cast to the ground",
-        "answer": "SERPENT"
+        "answer": "SERPENT",
+        "reference": "Exodus 4:3"
       },
       {
         "number": 3,
@@ -24383,7 +24459,8 @@
         "row": 0,
         "col": 9,
         "text": "Ruler whose heart was hardened ten times over",
-        "answer": "PHARAOH"
+        "answer": "PHARAOH",
+        "reference": "Exodus 7:13"
       },
       {
         "number": 4,
@@ -24391,7 +24468,8 @@
         "row": 0,
         "col": 19,
         "text": "Israel made these without straw under cruel taskmasters",
-        "answer": "BRICKS"
+        "answer": "BRICKS",
+        "reference": "Exodus 5:7"
       },
       {
         "number": 5,
@@ -24399,7 +24477,8 @@
         "row": 1,
         "col": 5,
         "text": "With Aaron, he stayed up one of Moses' weary arms",
-        "answer": "HUR"
+        "answer": "HUR",
+        "reference": "Exodus 17:12"
       },
       {
         "number": 6,
@@ -24407,7 +24486,8 @@
         "row": 1,
         "col": 17,
         "text": "The bond sealed at Sinai between God and Israel",
-        "answer": "COVENANT"
+        "answer": "COVENANT",
+        "reference": "Exodus 19:5"
       },
       {
         "number": 7,
@@ -24415,7 +24495,8 @@
         "row": 2,
         "col": 2,
         "text": "The land where a fugitive Moses kept sheep",
-        "answer": "MIDIAN"
+        "answer": "MIDIAN",
+        "reference": "Exodus 2:15"
       },
       {
         "number": 8,
@@ -24423,7 +24504,8 @@
         "row": 2,
         "col": 5,
         "text": "Bread of haste, made without rising",
-        "answer": "UNLEAVENED"
+        "answer": "UNLEAVENED",
+        "reference": "Exodus 12:8"
       },
       {
         "number": 9,
@@ -24431,7 +24513,8 @@
         "row": 5,
         "col": 8,
         "text": "Ten of them came down from Sinai on tables of stone",
-        "answer": "COMMANDMENTS"
+        "answer": "COMMANDMENTS",
+        "reference": "Exodus 20:1"
       },
       {
         "number": 10,
@@ -24439,7 +24522,8 @@
         "row": 5,
         "col": 14,
         "text": "A plague so thick it could be felt",
-        "answer": "DARKNESS"
+        "answer": "DARKNESS",
+        "reference": "Exodus 10:21"
       },
       {
         "number": 11,
@@ -24447,7 +24531,8 @@
         "row": 6,
         "col": 2,
         "text": "The foe defeated while Moses' hands were held high",
-        "answer": "AMALEK"
+        "answer": "AMALEK",
+        "reference": "Exodus 17:11"
       },
       {
         "number": 12,
@@ -24455,7 +24540,8 @@
         "row": 6,
         "col": 6,
         "text": "The house of bondage Israel left behind",
-        "answer": "EGYPT"
+        "answer": "EGYPT",
+        "reference": "Exodus 1:8"
       },
       {
         "number": 13,
@@ -24463,7 +24549,8 @@
         "row": 7,
         "col": 10,
         "text": "The river turned to blood, where a basket once floated",
-        "answer": "NILE"
+        "answer": "NILE",
+        "reference": "Exodus 7:20"
       },
       {
         "number": 14,
@@ -24471,7 +24558,8 @@
         "row": 7,
         "col": 19,
         "text": "Blood, frogs and darkness were three of these ten",
-        "answer": "PLAGUES"
+        "answer": "PLAGUES",
+        "reference": "Exodus 9:14"
       },
       {
         "number": 15,
@@ -24479,7 +24567,8 @@
         "row": 8,
         "col": 4,
         "text": "Israel followed one of cloud by day, fire by night",
-        "answer": "PILLAR"
+        "answer": "PILLAR",
+        "reference": "Exodus 13:21"
       },
       {
         "number": 16,
@@ -24487,7 +24576,8 @@
         "row": 8,
         "col": 12,
         "text": "Midianite shepherdess who became Moses' wife",
-        "answer": "ZIPPORAH"
+        "answer": "ZIPPORAH",
+        "reference": "Exodus 2:21"
       },
       {
         "number": 17,
@@ -24495,7 +24585,8 @@
         "row": 9,
         "col": 0,
         "text": "The mountain wrapped in smoke where the law was given",
-        "answer": "SINAI"
+        "answer": "SINAI",
+        "reference": "Exodus 19:18"
       },
       {
         "number": 18,
@@ -24503,7 +24594,8 @@
         "row": 9,
         "col": 16,
         "text": "The district of Egypt where Israel dwelt apart",
-        "answer": "GOSHEN"
+        "answer": "GOSHEN",
+        "reference": "Exodus 8:22"
       },
       {
         "number": 19,
@@ -24511,7 +24603,8 @@
         "row": 10,
         "col": 4,
         "text": "The demand delivered to Pharaoh, five words spoken as one",
-        "answer": "LETMYPEOPLEGO"
+        "answer": "LETMYPEOPLEGO",
+        "reference": "Exodus 5:1"
       },
       {
         "number": 20,
@@ -24519,7 +24612,8 @@
         "row": 10,
         "col": 7,
         "text": "The bitter waters made sweet by a tree",
-        "answer": "MARAH"
+        "answer": "MARAH",
+        "reference": "Exodus 15:23"
       },
       {
         "number": 21,
@@ -24527,7 +24621,8 @@
         "row": 12,
         "col": 0,
         "text": "Prophetess who led the women with timbrel and dance",
-        "answer": "MIRIAM"
+        "answer": "MIRIAM",
+        "reference": "Exodus 15:20"
       },
       {
         "number": 21,
@@ -24535,7 +24630,8 @@
         "row": 12,
         "col": 0,
         "text": "Drawn out of the water, he led Israel out of bondage",
-        "answer": "MOSES"
+        "answer": "MOSES",
+        "reference": "Exodus 2:10"
       },
       {
         "number": 22,
@@ -24543,7 +24639,8 @@
         "row": 12,
         "col": 2,
         "text": "Waters that stood as walls for Israel to cross",
-        "answer": "REDSEA"
+        "answer": "REDSEA",
+        "reference": "Exodus 14:22"
       },
       {
         "number": 23,
@@ -24551,7 +24648,8 @@
         "row": 12,
         "col": 10,
         "text": "The second plague, croaking in ovens and kneading troughs",
-        "answer": "FROGS"
+        "answer": "FROGS",
+        "reference": "Exodus 8:3"
       },
       {
         "number": 24,
@@ -24559,7 +24657,8 @@
         "row": 12,
         "col": 16,
         "text": "The mountain of God where the bush burned",
-        "answer": "HOREB"
+        "answer": "HOREB",
+        "reference": "Exodus 3:1"
       },
       {
         "number": 25,
@@ -24567,7 +24666,8 @@
         "row": 13,
         "col": 6,
         "text": "Without blemish, one per household, slain at evening",
-        "answer": "LAMB"
+        "answer": "LAMB",
+        "reference": "Exodus 12:5"
       },
       {
         "number": 26,
@@ -24575,7 +24675,8 @@
         "row": 14,
         "col": 10,
         "text": "The evening meat that covered the camp",
-        "answer": "QUAIL"
+        "answer": "QUAIL",
+        "reference": "Exodus 16:13"
       },
       {
         "number": 27,
@@ -24583,7 +24684,8 @@
         "row": 14,
         "col": 14,
         "text": "An east wind brought this devouring swarm",
-        "answer": "LOCUSTS"
+        "answer": "LOCUSTS",
+        "reference": "Exodus 10:13"
       },
       {
         "number": 28,
@@ -24591,7 +24693,8 @@
         "row": 14,
         "col": 18,
         "text": "Father-in-law who advised Moses to appoint judges",
-        "answer": "JETHRO"
+        "answer": "JETHRO",
+        "reference": "Exodus 18:1"
       },
       {
         "number": 29,
@@ -24599,7 +24702,8 @@
         "row": 15,
         "col": 2,
         "text": "The shepherd's rod that became a sign in Moses' hand",
-        "answer": "STAFF"
+        "answer": "STAFF",
+        "reference": "Exodus 4:2"
       },
       {
         "number": 30,
@@ -24607,7 +24711,8 @@
         "row": 16,
         "col": 7,
         "text": "Brother appointed to be spokesman before Pharaoh",
-        "answer": "AARON"
+        "answer": "AARON",
+        "reference": "Exodus 4:14"
       },
       {
         "number": 31,
@@ -24615,7 +24720,8 @@
         "row": 17,
         "col": 1,
         "text": "The tent of meeting built to God's exact pattern",
-        "answer": "TABERNACLE"
+        "answer": "TABERNACLE",
+        "reference": "Exodus 40:2"
       },
       {
         "number": 32,
@@ -24623,7 +24729,8 @@
         "row": 18,
         "col": 11,
         "text": "The final plague struck every one of these in Egypt",
-        "answer": "FIRSTBORN"
+        "answer": "FIRSTBORN",
+        "reference": "Exodus 12:29"
       },
       {
         "number": 33,
@@ -24631,7 +24738,8 @@
         "row": 20,
         "col": 5,
         "text": "Bread from heaven, gathered fresh each morning",
-        "answer": "MANNA"
+        "answer": "MANNA",
+        "reference": "Exodus 16:15"
       },
       {
         "number": 34,
@@ -24639,7 +24747,8 @@
         "row": 20,
         "col": 12,
         "text": "The general who fought while Moses prayed on the hill",
-        "answer": "JOSHUA"
+        "answer": "JOSHUA",
+        "reference": "Exodus 17:9"
       }
     ],
     "kind": "sunday"
@@ -24682,7 +24791,8 @@
         "row": 0,
         "col": 2,
         "text": "Solomon's famous gift, proved with a sword and a child",
-        "answer": "WISDOM"
+        "answer": "WISDOM",
+        "reference": "1 Kings 3:28"
       },
       {
         "number": 1,
@@ -24690,7 +24800,8 @@
         "row": 0,
         "col": 2,
         "text": "Elijah went up to heaven by one",
-        "answer": "WHIRLWIND"
+        "answer": "WHIRLWIND",
+        "reference": "2 Kings 2:11"
       },
       {
         "number": 2,
@@ -24698,7 +24809,8 @@
         "row": 0,
         "col": 11,
         "text": "He drove furiously and ended Ahab's house",
-        "answer": "JEHU"
+        "answer": "JEHU",
+        "reference": "2 Kings 9:20"
       },
       {
         "number": 3,
@@ -24706,7 +24818,8 @@
         "row": 1,
         "col": 10,
         "text": "The servant whose greed earned Naaman's disease",
-        "answer": "GEHAZI"
+        "answer": "GEHAZI",
+        "reference": "2 Kings 5:27"
       },
       {
         "number": 4,
@@ -24714,7 +24827,8 @@
         "row": 1,
         "col": 18,
         "text": "He set golden calves at Bethel and Dan",
-        "answer": "JEROBOAM"
+        "answer": "JEROBOAM",
+        "reference": "1 Kings 12:29"
       },
       {
         "number": 5,
@@ -24722,7 +24836,8 @@
         "row": 2,
         "col": 1,
         "text": "Her barrel of meal at Zarephath did not waste",
-        "answer": "WIDOW"
+        "answer": "WIDOW",
+        "reference": "1 Kings 17:16"
       },
       {
         "number": 6,
@@ -24730,7 +24845,8 @@
         "row": 3,
         "col": 8,
         "text": "Three rainless years shut up by Elijah's prayer",
-        "answer": "DROUGHT"
+        "answer": "DROUGHT",
+        "reference": "1 Kings 17:1"
       },
       {
         "number": 7,
@@ -24738,7 +24854,8 @@
         "row": 3,
         "col": 9,
         "text": "Solomon's son who answered roughly and lost ten tribes",
-        "answer": "REHOBOAM"
+        "answer": "REHOBOAM",
+        "reference": "1 Kings 12:14"
       },
       {
         "number": 8,
@@ -24746,7 +24863,8 @@
         "row": 3,
         "col": 20,
         "text": "The empire that carried the ten tribes away",
-        "answer": "ASSYRIA"
+        "answer": "ASSYRIA",
+        "reference": "2 Kings 17:6"
       },
       {
         "number": 9,
@@ -24754,7 +24872,8 @@
         "row": 4,
         "col": 1,
         "text": "The Tishbite who challenged Baal on Carmel",
-        "answer": "ELIJAH"
+        "answer": "ELIJAH",
+        "reference": "1 Kings 18:21"
       },
       {
         "number": 10,
@@ -24762,7 +24881,8 @@
         "row": 5,
         "col": 8,
         "text": "Her queen came with hard questions and left breathless",
-        "answer": "SHEBA"
+        "answer": "SHEBA",
+        "reference": "1 Kings 10:1"
       },
       {
         "number": 11,
@@ -24770,7 +24890,8 @@
         "row": 5,
         "col": 15,
         "text": "King whose life was lengthened fifteen years",
-        "answer": "HEZEKIAH"
+        "answer": "HEZEKIAH",
+        "reference": "2 Kings 20:6"
       },
       {
         "number": 12,
@@ -24778,7 +24899,8 @@
         "row": 6,
         "col": 6,
         "text": "Judah's exile lasted seventy years there",
-        "answer": "BABYLON"
+        "answer": "BABYLON",
+        "reference": "Jeremiah 29:10"
       },
       {
         "number": 13,
@@ -24786,7 +24908,8 @@
         "row": 6,
         "col": 14,
         "text": "Naaman's affliction, washed away in the Jordan",
-        "answer": "LEPROSY"
+        "answer": "LEPROSY",
+        "reference": "2 Kings 5:14"
       },
       {
         "number": 14,
@@ -24794,7 +24917,8 @@
         "row": 7,
         "col": 2,
         "text": "Syrian captain, great with his master, but a leper",
-        "answer": "NAAMAN"
+        "answer": "NAAMAN",
+        "reference": "2 Kings 5:1"
       },
       {
         "number": 15,
@@ -24802,7 +24926,8 @@
         "row": 7,
         "col": 9,
         "text": "The god who did not answer from morning till noon",
-        "answer": "BAAL"
+        "answer": "BAAL",
+        "reference": "1 Kings 18:26"
       },
       {
         "number": 16,
@@ -24810,7 +24935,8 @@
         "row": 8,
         "col": 13,
         "text": "They brought bread and flesh by a brook",
-        "answer": "RAVENS"
+        "answer": "RAVENS",
+        "reference": "1 Kings 17:6"
       },
       {
         "number": 17,
@@ -24818,7 +24944,8 @@
         "row": 9,
         "col": 1,
         "text": "The mountain where fire fell on a drenched altar",
-        "answer": "CARMEL"
+        "answer": "CARMEL",
+        "reference": "1 Kings 18:38"
       },
       {
         "number": 18,
@@ -24826,7 +24953,8 @@
         "row": 9,
         "col": 4,
         "text": "Usurping queen mother who destroyed the royal seed",
-        "answer": "ATHALIAH"
+        "answer": "ATHALIAH",
+        "reference": "2 Kings 11:1"
       },
       {
         "number": 19,
@@ -24834,7 +24962,8 @@
         "row": 9,
         "col": 11,
         "text": "He asked for a double portion of his master's spirit",
-        "answer": "ELISHA"
+        "answer": "ELISHA",
+        "reference": "2 Kings 2:9"
       },
       {
         "number": 20,
@@ -24842,7 +24971,8 @@
         "row": 9,
         "col": 17,
         "text": "One of two shrines where a golden calf stood",
-        "answer": "BETHEL"
+        "answer": "BETHEL",
+        "reference": "1 Kings 12:29"
       },
       {
         "number": 21,
@@ -24850,7 +24980,8 @@
         "row": 10,
         "col": 3,
         "text": "How the LORD spoke on Horeb, after wind, quake and fire",
-        "answer": "STILLSMALLVOICE"
+        "answer": "STILLSMALLVOICE",
+        "reference": "1 Kings 19:12"
       },
       {
         "number": 22,
@@ -24858,7 +24989,8 @@
         "row": 10,
         "col": 8,
         "text": "He asked for an understanding heart, not riches",
-        "answer": "SOLOMON"
+        "answer": "SOLOMON",
+        "reference": "1 Kings 3:9"
       },
       {
         "number": 23,
@@ -24866,7 +24998,8 @@
         "row": 10,
         "col": 19,
         "text": "Assyrian invader whose army an angel struck by night",
-        "answer": "SENNACHERIB"
+        "answer": "SENNACHERIB",
+        "reference": "2 Kings 19:35"
       },
       {
         "number": 24,
@@ -24874,7 +25007,8 @@
         "row": 13,
         "col": 1,
         "text": "The far-off end of centuries of warned-against sin",
-        "answer": "EXILE"
+        "answer": "EXILE",
+        "reference": "2 Kings 25:21"
       },
       {
         "number": 25,
@@ -24882,7 +25016,8 @@
         "row": 14,
         "col": 6,
         "text": "One of fire parted Elijah from Elisha",
-        "answer": "CHARIOT"
+        "answer": "CHARIOT",
+        "reference": "2 Kings 2:11"
       },
       {
         "number": 26,
@@ -24890,7 +25025,8 @@
         "row": 14,
         "col": 15,
         "text": "The prophetess consulted about the book of the law",
-        "answer": "HULDAH"
+        "answer": "HULDAH",
+        "reference": "2 Kings 22:14"
       },
       {
         "number": 27,
@@ -24898,15 +25034,17 @@
         "row": 15,
         "col": 0,
         "text": "Dip seven times in this river, said the prophet",
-        "answer": "JORDAN"
+        "answer": "JORDAN",
+        "reference": "2 Kings 5:10"
       },
       {
         "number": 28,
         "direction": "across",
         "row": 15,
         "col": 2,
-        "text": "Hidden seven years in the temple, then crowned",
-        "answer": "JOASH"
+        "text": "Hidden in the temple six years, then crowned",
+        "answer": "JOASH",
+        "reference": "2 Kings 11:3"
       },
       {
         "number": 28,
@@ -24914,7 +25052,8 @@
         "row": 15,
         "col": 2,
         "text": "The boy king who tore his robes at the found book",
-        "answer": "JOSIAH"
+        "answer": "JOSIAH",
+        "reference": "2 Kings 22:11"
       },
       {
         "number": 29,
@@ -24922,7 +25061,8 @@
         "row": 17,
         "col": 14,
         "text": "Sidonian queen who hunted the prophets of the LORD",
-        "answer": "JEZEBEL"
+        "answer": "JEZEBEL",
+        "reference": "1 Kings 18:4"
       },
       {
         "number": 30,
@@ -24930,7 +25070,8 @@
         "row": 18,
         "col": 6,
         "text": "The prophet who brought Hezekiah word of added years",
-        "answer": "ISAIAH"
+        "answer": "ISAIAH",
+        "reference": "2 Kings 20:5"
       },
       {
         "number": 31,
@@ -24938,7 +25079,8 @@
         "row": 19,
         "col": 0,
         "text": "He sold himself to work evil, urged on by his wife",
-        "answer": "AHAB"
+        "answer": "AHAB",
+        "reference": "1 Kings 21:25"
       },
       {
         "number": 32,
@@ -24946,7 +25088,8 @@
         "row": 19,
         "col": 14,
         "text": "Omri's hilltop capital of the northern kingdom",
-        "answer": "SAMARIA"
+        "answer": "SAMARIA",
+        "reference": "1 Kings 16:24"
       },
       {
         "number": 33,
@@ -24954,7 +25097,8 @@
         "row": 20,
         "col": 6,
         "text": "Seven years in building, no hammer heard on site",
-        "answer": "TEMPLE"
+        "answer": "TEMPLE",
+        "reference": "1 Kings 6:7"
       }
     ],
     "kind": "sunday"
@@ -24997,7 +25141,8 @@
         "row": 0,
         "col": 2,
         "text": "Governor who washed his hands of the matter",
-        "answer": "PILATE"
+        "answer": "PILATE",
+        "reference": "Matthew 27:24"
       },
       {
         "number": 2,
@@ -25005,7 +25150,8 @@
         "row": 0,
         "col": 11,
         "text": "The mocking crown was woven from these",
-        "answer": "THORNS"
+        "answer": "THORNS",
+        "reference": "Matthew 27:29"
       },
       {
         "number": 3,
@@ -25013,7 +25159,8 @@
         "row": 0,
         "col": 14,
         "text": "He asked to touch the wounds before believing",
-        "answer": "THOMAS"
+        "answer": "THOMAS",
+        "reference": "John 20:27"
       },
       {
         "number": 4,
@@ -25021,7 +25168,8 @@
         "row": 0,
         "col": 15,
         "text": "The tetrarch who hoped to see a miracle and got silence",
-        "answer": "HEROD"
+        "answer": "HEROD",
+        "reference": "Luke 23:8"
       },
       {
         "number": 5,
@@ -25029,7 +25177,8 @@
         "row": 1,
         "col": 2,
         "text": "The cry from the cross that ended the work of redemption",
-        "answer": "ITISFINISHED"
+        "answer": "ITISFINISHED",
+        "reference": "John 19:30"
       },
       {
         "number": 6,
@@ -25037,7 +25186,8 @@
         "row": 2,
         "col": 14,
         "text": "Broken and given: 'This is my body'",
-        "answer": "BREAD"
+        "answer": "BREAD",
+        "reference": "Matthew 26:26"
       },
       {
         "number": 7,
@@ -25045,7 +25195,8 @@
         "row": 3,
         "col": 5,
         "text": "The sour drink offered on a sponge",
-        "answer": "VINEGAR"
+        "answer": "VINEGAR",
+        "reference": "Matthew 27:48"
       },
       {
         "number": 8,
@@ -25053,7 +25204,8 @@
         "row": 3,
         "col": 9,
         "text": "The place of a skull",
-        "answer": "GOLGOTHA"
+        "answer": "GOLGOTHA",
+        "reference": "Matthew 27:33"
       },
       {
         "number": 9,
@@ -25061,7 +25213,8 @@
         "row": 4,
         "col": 0,
         "text": "He drew a sword in the garden and wept at dawn",
-        "answer": "PETER"
+        "answer": "PETER",
+        "reference": "Matthew 26:75"
       },
       {
         "number": 9,
@@ -25069,7 +25222,8 @@
         "row": 4,
         "col": 0,
         "text": "The feast Jerusalem was crowded for that week",
-        "answer": "PASSOVER"
+        "answer": "PASSOVER",
+        "reference": "Matthew 26:2"
       },
       {
         "number": 10,
@@ -25077,7 +25231,8 @@
         "row": 4,
         "col": 11,
         "text": "Night visitor who brought myrrh and aloes for burial",
-        "answer": "NICODEMUS"
+        "answer": "NICODEMUS",
+        "reference": "John 19:39"
       },
       {
         "number": 11,
@@ -25085,7 +25240,8 @@
         "row": 5,
         "col": 7,
         "text": "Branches spread on the Jerusalem road",
-        "answer": "PALMS"
+        "answer": "PALMS",
+        "reference": "John 12:13"
       },
       {
         "number": 12,
@@ -25093,7 +25249,8 @@
         "row": 5,
         "col": 20,
         "text": "The prisoner released when the crowd chose",
-        "answer": "BARABBAS"
+        "answer": "BARABBAS",
+        "reference": "Matthew 27:26"
       },
       {
         "number": 13,
@@ -25101,7 +25258,8 @@
         "row": 6,
         "col": 6,
         "text": "Cursed for bearing leaves but no fruit",
-        "answer": "FIGTREE"
+        "answer": "FIGTREE",
+        "reference": "Matthew 21:19"
       },
       {
         "number": 14,
@@ -25109,7 +25267,8 @@
         "row": 6,
         "col": 14,
         "text": "The palm-waving crowd's shout of praise",
-        "answer": "HOSANNA"
+        "answer": "HOSANNA",
+        "reference": "Matthew 21:9"
       },
       {
         "number": 15,
@@ -25117,7 +25276,8 @@
         "row": 6,
         "col": 16,
         "text": "Thirty pieces of it, later thrown down in the temple",
-        "answer": "SILVER"
+        "answer": "SILVER",
+        "reference": "Matthew 27:5"
       },
       {
         "number": 16,
@@ -25125,7 +25285,8 @@
         "row": 7,
         "col": 2,
         "text": "Their tables were overturned in the temple courts",
-        "answer": "MONEYCHANGERS"
+        "answer": "MONEYCHANGERS",
+        "reference": "Matthew 21:12"
       },
       {
         "number": 17,
@@ -25133,7 +25294,8 @@
         "row": 8,
         "col": 4,
         "text": "Sealed with a stone and guarded by soldiers",
-        "answer": "TOMB"
+        "answer": "TOMB",
+        "reference": "Matthew 27:66"
       },
       {
         "number": 18,
@@ -25141,7 +25303,8 @@
         "row": 8,
         "col": 11,
         "text": "He betrayed with a kiss",
-        "answer": "JUDAS"
+        "answer": "JUDAS",
+        "reference": "Matthew 26:49"
       },
       {
         "number": 19,
@@ -25149,7 +25312,8 @@
         "row": 9,
         "col": 14,
         "text": "Roman officer who confessed, 'Truly this was the Son of God'",
-        "answer": "CENTURION"
+        "answer": "CENTURION",
+        "reference": "Matthew 27:54"
       },
       {
         "number": 20,
@@ -25157,7 +25321,8 @@
         "row": 9,
         "col": 18,
         "text": "The disciples were told to meet the risen Lord there",
-        "answer": "GALILEE"
+        "answer": "GALILEE",
+        "reference": "Matthew 28:10"
       },
       {
         "number": 21,
@@ -25165,7 +25330,8 @@
         "row": 10,
         "col": 4,
         "text": "First to see the risen Lord in the garden",
-        "answer": "MARYMAGDALENE"
+        "answer": "MARYMAGDALENE",
+        "reference": "John 20:16"
       },
       {
         "number": 22,
@@ -25173,7 +25339,8 @@
         "row": 12,
         "col": 17,
         "text": "The traitor's chosen signal",
-        "answer": "KISS"
+        "answer": "KISS",
+        "reference": "Matthew 26:48"
       },
       {
         "number": 23,
@@ -25181,7 +25348,8 @@
         "row": 13,
         "col": 0,
         "text": "High priest who said one man should die for the people",
-        "answer": "CAIAPHAS"
+        "answer": "CAIAPHAS",
+        "reference": "John 11:50"
       },
       {
         "number": 24,
@@ -25189,7 +25357,8 @@
         "row": 13,
         "col": 9,
         "text": "Its veil was torn from top to bottom",
-        "answer": "TEMPLE"
+        "answer": "TEMPLE",
+        "reference": "Matthew 27:51"
       },
       {
         "number": 25,
@@ -25197,7 +25366,8 @@
         "row": 13,
         "col": 13,
         "text": "Jesus prayed for it to pass from him",
-        "answer": "CUP"
+        "answer": "CUP",
+        "reference": "Matthew 26:39"
       },
       {
         "number": 26,
@@ -25205,7 +25375,8 @@
         "row": 14,
         "col": 2,
         "text": "Joseph's town; he gave his own new tomb",
-        "answer": "ARIMATHEA"
+        "answer": "ARIMATHEA",
+        "reference": "Matthew 27:57"
       },
       {
         "number": 27,
@@ -25213,7 +25384,8 @@
         "row": 15,
         "col": 12,
         "text": "Simon of Cyrene was compelled to carry it",
-        "answer": "CROSS"
+        "answer": "CROSS",
+        "reference": "Matthew 27:32"
       },
       {
         "number": 28,
@@ -25221,7 +25393,8 @@
         "row": 15,
         "col": 16,
         "text": "Village road where a stranger opened the scriptures",
-        "answer": "EMMAUS"
+        "answer": "EMMAUS",
+        "reference": "Luke 24:13"
       },
       {
         "number": 29,
@@ -25229,7 +25402,8 @@
         "row": 16,
         "col": 0,
         "text": "His countenance was like lightning as he rolled the stone",
-        "answer": "ANGEL"
+        "answer": "ANGEL",
+        "reference": "Matthew 28:3"
       },
       {
         "number": 30,
@@ -25237,7 +25411,8 @@
         "row": 16,
         "col": 8,
         "text": "Furnished chamber of the last supper",
-        "answer": "UPPERROOM"
+        "answer": "UPPERROOM",
+        "reference": "Luke 22:12"
       },
       {
         "number": 31,
@@ -25245,7 +25420,8 @@
         "row": 18,
         "col": 5,
         "text": "The women carried them to the tomb at dawn",
-        "answer": "SPICES"
+        "answer": "SPICES",
+        "reference": "Mark 16:1"
       },
       {
         "number": 32,
@@ -25253,7 +25429,8 @@
         "row": 20,
         "col": 13,
         "text": "Its crow ended Peter's three denials",
-        "answer": "ROOSTER"
+        "answer": "ROOSTER",
+        "reference": "Matthew 26:74"
       }
     ],
     "kind": "sunday"

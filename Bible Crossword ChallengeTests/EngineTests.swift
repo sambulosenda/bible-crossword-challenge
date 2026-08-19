@@ -409,4 +409,83 @@ struct EngineTests {
         #expect(!vm.revealPuzzle())
         #expect(vm.hintsUsed == 0)
     }
+
+    // MARK: - Stall nudge
+    //
+    // The near-finish rescue: idle past the threshold on the active clock with
+    // the grid ≥ 75% filled fires `stallNudgeTick` exactly once per session.
+    // The fixture has 5 playable cells, so 4 filled = 80%.
+
+    /// Advance the active clock by `seconds` of rendered ticks.
+    private func idle(_ vm: GameViewModel, seconds: Int, from start: Int = 0) {
+        let t0 = Date(timeIntervalSinceReferenceDate: Double(start))
+        vm.tick(now: t0)
+        for s in 1...seconds {
+            vm.tick(now: t0.addingTimeInterval(Double(s)))
+        }
+    }
+
+    private func fillFourOfFive(_ vm: GameViewModel) {
+        vm.enter("C"); vm.enter("A"); vm.enter("T")
+        vm.select(GridPos(row: 1, col: 0)); vm.enter("X")   // wrong on purpose
+    }
+
+    @Test func stallNudgeFiresOnceWhenIdleAtHighFill() {
+        let vm = GameViewModel(puzzle: makePuzzle())
+        vm.isAttachedToWindow = true
+        fillFourOfFive(vm)
+        #expect(!vm.isComplete)
+
+        idle(vm, seconds: vm.stallNudgeSeconds + 1)
+        #expect(vm.stallNudgeTick == 1)
+        #expect(vm.isStallNudgeActive)
+
+        // Keep idling: once per session, never a second nag.
+        idle(vm, seconds: vm.stallNudgeSeconds + 1, from: 1000)
+        #expect(vm.stallNudgeTick == 1)
+    }
+
+    @Test func stallNudgeNeedsHighFill() {
+        let vm = GameViewModel(puzzle: makePuzzle())
+        vm.isAttachedToWindow = true
+        vm.enter("C"); vm.enter("A")                        // 2 of 5 = 40%
+        idle(vm, seconds: vm.stallNudgeSeconds + 5)
+        #expect(vm.stallNudgeTick == 0)
+    }
+
+    @Test func inputResetsTheStallClock() {
+        let vm = GameViewModel(puzzle: makePuzzle())
+        vm.isAttachedToWindow = true
+        fillFourOfFive(vm)
+
+        let half = vm.stallNudgeSeconds / 2
+        idle(vm, seconds: half)
+        vm.select(GridPos(row: 2, col: 0))                  // any deliberate action
+        idle(vm, seconds: half + 5, from: 500)
+        // Only ~half the threshold has passed since the selection.
+        #expect(vm.stallNudgeTick == 0)
+    }
+
+    @Test func inputDismissesAnActiveNudge() {
+        let vm = GameViewModel(puzzle: makePuzzle())
+        vm.isAttachedToWindow = true
+        fillFourOfFive(vm)
+        idle(vm, seconds: vm.stallNudgeSeconds + 1)
+        #expect(vm.isStallNudgeActive)
+
+        vm.delete()
+        #expect(!vm.isStallNudgeActive)
+        #expect(vm.stallNudgeTick == 1)
+    }
+
+    @Test func resumingSeededTimeIsNotIdling() {
+        let vm = GameViewModel(puzzle: makePuzzle())
+        vm.isAttachedToWindow = true
+        fillFourOfFive(vm)
+        vm.seedElapsed(3600)
+        // A couple of rendered ticks after resume must not read the carried
+        // hour as a stall.
+        idle(vm, seconds: 3, from: 5000)
+        #expect(vm.stallNudgeTick == 0)
+    }
 }

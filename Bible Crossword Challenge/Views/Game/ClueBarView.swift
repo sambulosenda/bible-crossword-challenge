@@ -9,10 +9,29 @@ import SwiftUI
 
 struct ClueBarView: View {
     @Bindable var vm: GameViewModel
+    /// Runs a whole-puzzle check when the stall nudge line is tapped. Owned by
+    /// the game view so the analytics and check plumbing stay in one place.
+    var onStallCheck: (() -> Void)? = nil
 
     var body: some View {
         VStack(spacing: 0) {
-            if let nudge = endgameNudge {
+            // The stall line outranks the endgame countdown while active: a
+            // stuck player needs an action, not encouragement.
+            if vm.isStallNudgeActive {
+                Button {
+                    onStallCheck?()
+                } label: {
+                    Label("Stuck? Check your answers", systemImage: "checkmark.circle")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(Theme.accent)
+                        .frame(maxWidth: .infinity)
+                        .padding(.top, Theme.Spacing.xs)
+                        .contentShape(.rect)
+                }
+                .buttonStyle(.plain)
+                .accessibilityHint("Checks the whole puzzle for mistakes")
+                .transition(.move(edge: .bottom).combined(with: .opacity))
+            } else if let nudge = endgameNudge {
                 Text(nudge)
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(Theme.accent)
@@ -23,6 +42,7 @@ struct ClueBarView: View {
             clueRow
         }
         .animation(.snappy, value: endgameNudge)
+        .animation(.snappy, value: vm.isStallNudgeActive)
         .padding(.horizontal, Theme.Spacing.xs)
         .padding(.vertical, Theme.Spacing.xs)
         .background(Color(.secondarySystemBackground))

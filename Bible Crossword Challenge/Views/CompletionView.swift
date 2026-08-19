@@ -952,7 +952,20 @@ struct CompletionView: View {
         guard autoPaywallLastDay != today else { return }
 
         let source: String
-        if totalCompleted == 1 && !firstCompletionPaywallShown {
+        // `<= 3`, not `== 1`: the "first completion" moment can be given away —
+        // to the reminder ask below, or to the mini upsell when the first solve
+        // is a Mini — and an exact match would lose this paywall forever when
+        // that happens. A small window keeps "first" honest while letting a
+        // deferred ask land on solve #2 or #3. (Also why the flag, not the
+        // count, is what marks it spent.)
+        if totalCompleted >= 1 && totalCompleted <= 3 && !firstCompletionPaywallShown {
+            // The first solve is also the reminder ask's best moment, and the
+            // two can't share the screen (`maybeShowReminderAsk` yields to
+            // today's auto paywall). The notification grant compounds every
+            // retention loop this paywall later benefits from — 67% of players
+            // who reach the dialog say yes — so when the ask is eligible it
+            // wins solve #1 outright and this paywall takes the next one.
+            if totalCompleted == 1 && reminderAskEligible { return }
             source = "first_completion"
             firstCompletionPaywallShown = true
         } else if streak >= 3 && !streakPaywallShown {
@@ -975,6 +988,29 @@ struct CompletionView: View {
     /// result, a review sheet, today's auto paywall, or the mini upsell all
     /// outrank it, and `ReminderAsk.decide` enforces the cross-surface caps
     /// (one ask per day anywhere, one per session, first three solves only).
+    /// Whether the completion reminder ask would fire if no auto paywall
+    /// claimed today — the first-solve precedence check in
+    /// `maybeAutoShowPaywall`. Mirrors `maybeShowReminderAsk`'s guards exactly,
+    /// minus the `autoPaywallLastDay` gate this decision feeds.
+    private var reminderAskEligible: Bool {
+        guard challenge == nil, !didRequestReview else { return false }
+        if puzzle.isMini && !store.isPremium && pastMiniCount > 0 { return false }
+        return ReminderAsk.decide(.completion, reminderAskState)
+    }
+
+    private var reminderAskState: ReminderAsk.State {
+        ReminderAsk.State(
+            remindersEnabled: remindersEnabled,
+            permissionUndetermined: notifications.authorizationStatus == .notDetermined,
+            totalCompleted: totalCompleted,
+            currentStreak: streak,
+            completionAsksShown: completionReminderAsksShown,
+            streakAskShown: streakReminderAskShown,
+            lastAskDay: reminderAskLastDay == 0 ? nil : Date(timeIntervalSinceReferenceDate: reminderAskLastDay),
+            askedThisSession: ReminderAskSession.asked
+        )
+    }
+
     private func maybeShowReminderAsk() {
         #if DEBUG
         // Same family as -uiForceReminderPrompt: the eligible state needs a
@@ -986,22 +1022,9 @@ struct CompletionView: View {
             return
         }
         #endif
-        guard challenge == nil, !didRequestReview else { return }
-        if puzzle.isMini && !store.isPremium && pastMiniCount > 0 { return }
         let today = Calendar.current.startOfDay(for: Date()).timeIntervalSinceReferenceDate
         guard autoPaywallLastDay != today else { return }
-
-        let state = ReminderAsk.State(
-            remindersEnabled: remindersEnabled,
-            permissionUndetermined: notifications.authorizationStatus == .notDetermined,
-            totalCompleted: totalCompleted,
-            currentStreak: streak,
-            completionAsksShown: completionReminderAsksShown,
-            streakAskShown: streakReminderAskShown,
-            lastAskDay: reminderAskLastDay == 0 ? nil : Date(timeIntervalSinceReferenceDate: reminderAskLastDay),
-            askedThisSession: ReminderAskSession.asked
-        )
-        guard ReminderAsk.decide(.completion, state) else { return }
+        guard reminderAskEligible else { return }
 
         showReminderAsk = true
         completionReminderAsksShown += 1

@@ -38,6 +38,12 @@ enum AnalyticsEvent {
     /// `hintUsed` because checks cost nothing — the interesting read is whether
     /// check-availability moves hint usage and completion rate.
     case checkUsed(scope: String, wrongCount: Int)
+    /// The near-finish rescue line ("Stuck? Check your answers"), shown after
+    /// `idleSeconds` of active-clock silence at ≥ 75% fill. Shown/tapped pair
+    /// so the abandon histogram's 75–100% buckets can be read against whether
+    /// the nudge is being seen, taken, and followed by a completion.
+    case stallNudgeShown(puzzleID: String, fillPercent: Int, idleSeconds: Int)
+    case stallNudgeTapped(puzzleID: String, fillPercent: Int, idleSeconds: Int)
     case streakUpdated(streak: Int)
     // The two halves of a lost streak. `streakBroken` fires once, on the launch
     // that resets it (see `Streaks.Outcome`), carrying what was lost — the
@@ -161,6 +167,8 @@ enum AnalyticsEvent {
         case .puzzleAbandoned: return "puzzle_abandoned"
         case .hintUsed: return "hint_used"
         case .checkUsed: return "check_used"
+        case .stallNudgeShown: return "stall_nudge_shown"
+        case .stallNudgeTapped: return "stall_nudge_tapped"
         case .streakUpdated: return "streak_updated"
         case .streakBroken: return "streak_broken"
         case .streakComebackStarted: return "streak_comeback_started"
@@ -256,6 +264,9 @@ enum AnalyticsEvent {
             return ["type": type, "cost": cost]
         case .checkUsed(let scope, let wrongCount):
             return ["scope": scope, "wrong_count": wrongCount]
+        case .stallNudgeShown(let puzzleID, let fillPercent, let idleSeconds),
+             .stallNudgeTapped(let puzzleID, let fillPercent, let idleSeconds):
+            return ["puzzle_id": puzzleID, "fill_percent": fillPercent, "idle_seconds": idleSeconds]
         case .streakUpdated(let streak):
             return ["streak": streak]
         case .streakBroken(let previousLength):

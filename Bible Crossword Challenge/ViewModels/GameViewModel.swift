@@ -123,10 +123,46 @@ final class GameViewModel {
     private(set) var gridFullWithErrorsTick = 0
     private var wasFullWithErrors = false
 
+    /// Increments when the player has been idle for `stallNudgeSeconds` of
+    /// active clock with the grid ≥ 75% filled — the near-finish stall that
+    /// abandonment data says precedes walking away (56 abandons ≥ 75% fill in
+    /// the last 30 days, 16 of them ≥ 90%). Once per puzzle session, so the
+    /// nudge stays a nudge. The view reacts with a quiet check-your-answers
+    /// line and logs the impression.
+    private(set) var stallNudgeTick = 0
+    /// True from the stall moment until the next input clears it — drives the
+    /// nudge line's visibility.
+    private(set) var isStallNudgeActive = false
+    private var stallNudged = false
+    /// Active seconds at the last player input. Measured on the solve clock,
+    /// not wall time, so backgrounded or verse-reading stretches never count
+    /// as "stuck".
+    private var lastInputSeconds = 0
+    /// Idle threshold before the stall nudge fires. Grid must also be ≥ 75%
+    /// filled — the same fill convention `puzzle_abandoned` reports.
+    let stallNudgeSeconds: Int
+
+    /// Active seconds since the last player input — for nudge analytics.
+    var secondsSinceLastInput: Int { accumulatedSeconds - lastInputSeconds }
+
     init(puzzle: Puzzle, now: Date = Date()) {
         self.puzzle = puzzle
         self.size = puzzle.size
         self.startDate = now
+
+        #if DEBUG
+        // `-uiStallNudgeSeconds 5` shortens the stall wait for UI testing —
+        // same family as -uiRotationDate.
+        let args = ProcessInfo.processInfo.arguments
+        if let flag = args.firstIndex(of: "-uiStallNudgeSeconds"), flag + 1 < args.count,
+           let secs = Int(args[flag + 1]), secs > 0 {
+            self.stallNudgeSeconds = secs
+        } else {
+            self.stallNudgeSeconds = 75
+        }
+        #else
+        self.stallNudgeSeconds = 75
+        #endif
 
         // Build slots from clue data.
         var across: [Slot] = []
@@ -217,10 +253,20 @@ final class GameViewModel {
         !grid[pos.row][pos.col].isBlock
     }
 
+    // MARK: - Input bookkeeping
+
+    /// Every deliberate player action lands here: it resets the stall clock
+    /// and dismisses an active stall nudge (acting *is* unsticking).
+    private func noteInput() {
+        lastInputSeconds = accumulatedSeconds
+        isStallNudgeActive = false
+    }
+
     // MARK: - Selection
 
     func select(_ pos: GridPos) {
         guard isSelectable(pos) else { return }
+        noteInput()
         if pos == selected {
             toggleDirection()
             return
@@ -240,6 +286,7 @@ final class GameViewModel {
     }
 
     func select(slot: Slot) {
+        noteInput()
         direction = slot.direction
         // Land on the first empty cell, else the first cell.
         selected = slot.positions.first { grid[$0.row][$0.col].entry == nil } ?? slot.positions[0]
@@ -259,6 +306,7 @@ final class GameViewModel {
 
     func enter(_ letter: Character) {
         guard isSelectable(selected) else { return }
+        noteInput()
         // Hint-revealed cells are locked — typing skips over them instead of
         // destroying a letter the player paid for.
         guard !grid[selected.row][selected.col].isRevealed else {
@@ -279,6 +327,7 @@ final class GameViewModel {
     }
 
     func delete() {
+        noteInput()
         var cleared: GridPos?
         let current = grid[selected.row][selected.col]
         if current.entry != nil, !current.isRevealed {
@@ -349,6 +398,7 @@ final class GameViewModel {
 
     @discardableResult
     func revealLetter() -> Bool {
+        noteInput()
         // A hint must always buy progress: if the selected cell already holds
         // the right letter, fall back to the active word's first not-yet-correct
         // cell; if the whole word is correct, refuse (the caller refunds).
@@ -377,6 +427,7 @@ final class GameViewModel {
 
     @discardableResult
     func revealWord() -> Bool {
+        noteInput()
         // Refuse when the word is already fully correct — no progress to buy.
         guard let slot = activeSlot, !slotSolved(slot) else { return false }
         for (i, pos) in slot.positions.enumerated() {
@@ -402,6 +453,7 @@ final class GameViewModel {
     /// fills, leaving the player's own correct pen letters unlocked.
     @discardableResult
     func revealPuzzle() -> Bool {
+        noteInput()
         guard grid.contains(where: { row in
             row.contains { !$0.isBlock && !$0.isCorrect }
         }) else { return false }
@@ -424,6 +476,7 @@ final class GameViewModel {
     /// This only keeps the session hint counter honest for abandonment
     /// analytics.
     func noteVerseHint() {
+        noteInput()
         hintsUsed += 1
     }
 
@@ -486,6 +539,7 @@ final class GameViewModel {
     /// filled cells to judge.
     @discardableResult
     func check(_ scope: CheckScope) -> Int? {
+        noteInput()
         let positions: [GridPos]
         switch scope {
         case .letter: positions = isSelectable(selected) ? [selected] : []
@@ -596,13 +650,31 @@ final class GameViewModel {
         if whole > 0 {
             accumulatedSeconds += whole
             tickFraction -= Double(whole)
+            maybeNudgeStall()
         }
+    }
+
+    /// The near-finish stall: idle on the active clock past the threshold with
+    /// the grid ≥ 75% filled. Fill counts entries like `puzzle_abandoned` does
+    /// (pencil included) — a grid full of pencil guesses is still a player who
+    /// stopped, and the nudge's answer (check) is exactly what converts them.
+    private func maybeNudgeStall() {
+        guard !stallNudged, !isComplete else { return }
+        guard accumulatedSeconds - lastInputSeconds >= stallNudgeSeconds else { return }
+        let total = totalPlayableCount
+        guard total > 0, Double(filledPlayableCount) / Double(total) >= 0.75 else { return }
+        stallNudged = true
+        isStallNudgeActive = true
+        stallNudgeTick += 1
     }
 
     /// Seed cumulative time from a saved record when resuming an in-progress
     /// puzzle. The clock starts counting again from the next rendered tick.
     func seedElapsed(_ seconds: Int) {
         accumulatedSeconds = max(0, seconds)
+        // Resuming is not idling: without this a puzzle carrying an hour of
+        // recorded time would trip the stall nudge on its first tick.
+        lastInputSeconds = accumulatedSeconds
         lastTick = nil
     }
 
