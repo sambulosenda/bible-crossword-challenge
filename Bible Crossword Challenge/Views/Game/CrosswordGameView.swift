@@ -551,7 +551,7 @@ struct CrosswordGameView: View {
         rec.pencil = [:] // a completed grid has no provisional letters left
         rec.updatedAt = Date()
         context.saveLogged("puzzle completion")
-        WidgetBridge.publish(profile)
+        WidgetBridge.publish(profile, context: context)
 
         // Post the Mini time to the weekly Game Center board. First completion
         // only: a replay knows the answers and would post an unbeatable time.

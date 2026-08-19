@@ -44,6 +44,10 @@ enum AnalyticsEvent {
     /// the nudge is being seen, taken, and followed by a completion.
     case stallNudgeShown(puzzleID: String, fillPercent: Int, idleSeconds: Int)
     case stallNudgeTapped(puzzleID: String, fillPercent: Int, idleSeconds: Int)
+    /// A widget tap landed in the app. `destination` is which surface the tap
+    /// resolved to (`daily` / `mini` / `today`) — the widget picks the most
+    /// useful next action, and this is the read on whether players take it.
+    case widgetOpened(destination: String)
     case streakUpdated(streak: Int)
     // The two halves of a lost streak. `streakBroken` fires once, on the launch
     // that resets it (see `Streaks.Outcome`), carrying what was lost — the
@@ -169,6 +173,7 @@ enum AnalyticsEvent {
         case .checkUsed: return "check_used"
         case .stallNudgeShown: return "stall_nudge_shown"
         case .stallNudgeTapped: return "stall_nudge_tapped"
+        case .widgetOpened: return "widget_opened"
         case .streakUpdated: return "streak_updated"
         case .streakBroken: return "streak_broken"
         case .streakComebackStarted: return "streak_comeback_started"
@@ -267,6 +272,8 @@ enum AnalyticsEvent {
         case .stallNudgeShown(let puzzleID, let fillPercent, let idleSeconds),
              .stallNudgeTapped(let puzzleID, let fillPercent, let idleSeconds):
             return ["puzzle_id": puzzleID, "fill_percent": fillPercent, "idle_seconds": idleSeconds]
+        case .widgetOpened(let destination):
+            return ["destination": destination]
         case .streakUpdated(let streak):
             return ["streak": streak]
         case .streakBroken(let previousLength):

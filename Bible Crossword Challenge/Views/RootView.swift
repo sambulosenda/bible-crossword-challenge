@@ -123,7 +123,7 @@ struct RootView: View {
             }
             reconcilePackCompletions(profile)
             context.saveLogged("launch normalise")
-            WidgetBridge.publish(profile)
+            WidgetBridge.publish(profile, context: context)
             gameCenter.authenticate()
             analytics.log(.appOpen)
             await notifications.reschedule(for: profile, enabled: remindersEnabled, minutes: reminderMinutes)
@@ -150,7 +150,7 @@ struct RootView: View {
             // elsewhere — recompute streak-aware copy from the latest state.
             guard phase == .active, let profile = profiles.first else { return }
             mergeSyncDuplicates()
-            WidgetBridge.publish(profile)
+            WidgetBridge.publish(profile, context: context)
             Task {
                 // Unconditionally, and before anything reads it. Notification
                 // permission is the one setting that can change while the app
@@ -329,11 +329,24 @@ struct RootView: View {
             return
         }
 
+        // Widget taps carry `src=widget` so their opens are attributable —
+        // the same hosts are reachable from notification taps, and a
+        // destination funnel that mixes the two channels reads as neither.
+        let fromWidget = URLComponents(url: url, resolvingAgainstBaseURL: false)?
+            .queryItems?.contains { $0.name == "src" && $0.value == "widget" } ?? false
+
         selectedTab = .today
         if url.host() == "play-daily", let daily = puzzleProvider.dailyPuzzle() {
             todayPath = NavigationPath([daily])
+            if fromWidget { analytics.log(.widgetOpened(destination: "daily")) }
+        } else if url.host() == "play-mini", let mini = puzzleProvider.dailyMini() {
+            // The widget offers the Mini once the daily is done. A missing
+            // mini pool falls through to Home rather than a dead tap.
+            todayPath = NavigationPath([mini])
+            if fromWidget { analytics.log(.widgetOpened(destination: "mini")) }
         } else {
             todayPath = NavigationPath()
+            if fromWidget { analytics.log(.widgetOpened(destination: "today")) }
         }
     }
 

@@ -22,6 +22,12 @@ struct StreakSnapshot {
     var streakFreezes: Int = 0
     var lastCompletedDay: Date?
     var totalCompleted: Int = 0
+    /// Which of today's two puzzles are done, and the day those flags were
+    /// written for. `lastCompletedDay` alone can't tell a mini-only day from a
+    /// daily-only one, and the tap target depends on the difference.
+    var flagsDay: Date?
+    var dailyCompletedToday: Bool = false
+    var miniCompletedToday: Bool = false
 
     static func load() -> StreakSnapshot {
         guard let d = UserDefaults(suiteName: appGroupID) else { return StreakSnapshot() }
@@ -32,7 +38,20 @@ struct StreakSnapshot {
         let interval = d.double(forKey: "widget.lastCompletedDay")
         s.lastCompletedDay = interval > 0 ? Date(timeIntervalSinceReferenceDate: interval) : nil
         s.totalCompleted = d.integer(forKey: "widget.totalCompleted")
+        let flagsInterval = d.double(forKey: "widget.flagsDay")
+        s.flagsDay = flagsInterval > 0 ? Date(timeIntervalSinceReferenceDate: flagsInterval) : nil
+        s.dailyCompletedToday = d.bool(forKey: "widget.dailyCompletedToday")
+        s.miniCompletedToday = d.bool(forKey: "widget.miniCompletedToday")
         return s
+    }
+
+    /// The per-pool flags, but only if they were computed for `day` — a
+    /// snapshot written yesterday must read as "nothing done" after midnight.
+    func flags(on day: Date, calendar: Calendar = .current) -> (daily: Bool, mini: Bool) {
+        guard let flagsDay, calendar.isDate(flagsDay, inSameDayAs: day) else {
+            return (false, false)
+        }
+        return (dailyCompletedToday, miniCompletedToday)
     }
 }
 
@@ -49,31 +68,42 @@ struct StreakEntry: TimelineEntry {
         case fresh
     }
 
+    /// Where a tap should land: the most useful next action, not always the
+    /// daily. Decided from the per-pool flags, so a day whose full puzzle is
+    /// done still hands the player the Mini instead of a solved grid.
+    enum Target {
+        case daily, mini, home
+    }
+
     let date: Date
     let streak: Int
     let state: State
+    var target: Target = .daily
 
     /// Mirrors the app's Streaks rules: solved today keeps the flame lit;
     /// solved yesterday means the streak is alive but at stake; exactly one
     /// missed day with a freeze in hand still counts as alive.
     static func make(from snapshot: StreakSnapshot, at date: Date, calendar: Calendar = .current) -> StreakEntry {
         let today = calendar.startOfDay(for: date)
+        let flags = snapshot.flags(on: today, calendar: calendar)
+        let target: Target = !flags.daily ? .daily : (!flags.mini ? .mini : .home)
+
         guard let lastDay = snapshot.lastCompletedDay.map({ calendar.startOfDay(for: $0) }),
               snapshot.currentStreak > 0 else {
-            return StreakEntry(date: date, streak: 0, state: .fresh)
+            return StreakEntry(date: date, streak: 0, state: .fresh, target: target)
         }
         let yesterday = calendar.date(byAdding: .day, value: -1, to: today) ?? today
         let dayBefore = calendar.date(byAdding: .day, value: -2, to: today) ?? today
         if lastDay >= today {
-            return StreakEntry(date: date, streak: snapshot.currentStreak, state: .solvedToday)
+            return StreakEntry(date: date, streak: snapshot.currentStreak, state: .solvedToday, target: target)
         }
         if lastDay == yesterday {
-            return StreakEntry(date: date, streak: snapshot.currentStreak, state: .streakAtStake)
+            return StreakEntry(date: date, streak: snapshot.currentStreak, state: .streakAtStake, target: target)
         }
         if lastDay == dayBefore, snapshot.streakFreezes > 0 {
-            return StreakEntry(date: date, streak: snapshot.currentStreak, state: .streakAtStake)
+            return StreakEntry(date: date, streak: snapshot.currentStreak, state: .streakAtStake, target: target)
         }
-        return StreakEntry(date: date, streak: 0, state: .fresh)
+        return StreakEntry(date: date, streak: 0, state: .fresh, target: target)
     }
 }
 
@@ -130,18 +160,33 @@ extension StreakEntry {
 
     var subline: String {
         switch state {
-        case .solvedToday: "Come back tomorrow"
-        case .streakAtStake: "Solve today's puzzle"
-        case .fresh: "Start a new streak"
+        case .solvedToday:
+            // The flame is lit, but the day may not be finished: a mini-only
+            // solve leaves the full puzzle open, and vice versa.
+            switch target {
+            case .daily: return "The full puzzle is still open"
+            case .mini: return "Today's Mini is still open"
+            case .home: return "Come back tomorrow"
+            }
+        case .streakAtStake: return "Solve today's puzzle"
+        case .fresh: return "Start a new streak"
         }
     }
 
-    /// Tap target. When there's a puzzle to play, jump straight into it;
-    /// once solved, just open the app. Handled by RootView's `onOpenURL`.
+    /// True when there's nothing left to offer today — drives the "Done"
+    /// treatments, which used to key off `solvedToday` and wrongly showed a
+    /// full stop while the Mini was still open.
+    var dayIsFinished: Bool { target == .home }
+
+    /// Tap target: straight into whichever puzzle is still open, Home once
+    /// both are done. `src=widget` attributes the open in analytics — the
+    /// same hosts are reachable from notifications. Handled by RootView's
+    /// `onOpenURL`.
     var deepLinkURL: URL {
-        switch state {
-        case .solvedToday: URL(string: "biblecrossword://today")!
-        case .streakAtStake, .fresh: URL(string: "biblecrossword://play-daily")!
+        switch target {
+        case .daily: URL(string: "biblecrossword://play-daily?src=widget")!
+        case .mini: URL(string: "biblecrossword://play-mini?src=widget")!
+        case .home: URL(string: "biblecrossword://today?src=widget")!
         }
     }
 }
@@ -170,7 +215,7 @@ struct SmallStreakView: View {
                 .font(.footnote.weight(.semibold))
                 .lineLimit(2)
                 .minimumScaleFactor(0.8)
-            if entry.state != .solvedToday {
+            if !entry.dayIsFinished {
                 Text(entry.subline)
                     .font(.caption2)
                     .foregroundStyle(.secondary)
@@ -210,12 +255,12 @@ struct MediumStreakView: View {
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                 Spacer(minLength: 0)
-                if entry.state == .solvedToday {
+                if entry.dayIsFinished {
                     Label("Completed", systemImage: "checkmark.circle.fill")
                         .font(.caption.weight(.semibold))
                         .foregroundStyle(.green)
                 } else {
-                    Text("Play now")
+                    Text(entry.target == .mini ? "Play the Mini" : "Play now")
                         .font(.caption.weight(.semibold))
                         .padding(.horizontal, 10)
                         .padding(.vertical, 5)
@@ -254,11 +299,19 @@ struct RectangularStreakView: View {
         VStack(alignment: .leading, spacing: 1) {
             Label("\(entry.streak) day streak", systemImage: "flame.fill")
                 .font(.headline)
-            Text(entry.state == .solvedToday ? "Solved for today" : "Puzzle waiting")
+            Text(rectangularStatus)
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private var rectangularStatus: String {
+        switch entry.target {
+        case .daily: "Puzzle waiting"
+        case .mini: "Mini waiting"
+        case .home: "Solved for today"
+        }
     }
 }
 
@@ -266,9 +319,12 @@ struct InlineStreakView: View {
     let entry: StreakEntry
 
     var body: some View {
-        if entry.state == .solvedToday {
+        switch entry.target {
+        case .home:
             Label("\(entry.streak) days · Solved", systemImage: "flame.fill")
-        } else {
+        case .mini:
+            Label("\(entry.streak) days · Mini ready", systemImage: "flame")
+        case .daily:
             Label("\(entry.streak) days · Puzzle ready", systemImage: "flame")
         }
     }

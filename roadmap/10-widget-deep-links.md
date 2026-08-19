@@ -1,7 +1,7 @@
 # Ticket 10 — Widget deep links (complete the habit loop)
 
 **Priority:** medium (cheap retention)  
-**Status:** `[ ]`  
+**Status:** `[~]` shipped in code 2026-08-19 — T1–T4 done (snapshot flags with midnight-safe flagsDay, play-mini host, widget picks daily→mini→home, widget_opened(destination) with src=widget attribution). T5 stretch (App Intent dual buttons) not built.  
 **Type:** eng  
 **Estimate:** S–M  
 **Files:** `BibleCrosswordWidget/`, `Services/WidgetBridge.swift`, `Views/RootView.swift`  
@@ -38,7 +38,7 @@ Tapping the widget always lands on the **most useful next action**: unfinished d
 
 ### T1 — Extend app-group snapshot
 
-**Status:** `[ ]`
+**Status:** `[x]` 2026-08-19
 
 In `WidgetBridge` + widget `StreakSnapshot`:
 
@@ -54,7 +54,7 @@ In `WidgetBridge` + widget `StreakSnapshot`:
 
 ### T2 — Deep link hosts
 
-**Status:** `[ ]`
+**Status:** `[x]` 2026-08-19 — play-mini shipped; smart `play` skipped (the widget itself picks the target, so a second chooser in the app would be a fork of the same rule)
 
 | URL | Behavior |
 |-----|----------|
@@ -75,7 +75,7 @@ In `WidgetBridge` + widget `StreakSnapshot`:
 
 ### T3 — Widget chooses best URL
 
-**Status:** `[ ]`
+**Status:** `[x]` 2026-08-19 — `StreakEntry.Target` daily→mini→home; copy follows ("Mini waiting", "Play the Mini")
 
 Update `StreakEntry.deepLinkURL` (and any other widget families):
 
@@ -92,7 +92,7 @@ Update `StreakEntry.deepLinkURL` (and any other widget families):
 
 ### T4 — Analytics
 
-**Status:** `[ ]`
+**Status:** `[x]` 2026-08-19 — `widget_opened(destination)`, fired only when the URL carries `src=widget` (hosts are shared with notification taps)
 
 - [ ] Log e.g. `widget_opened(destination: daily|mini|today)` on handle (new `AnalyticsEvent` case)
 - [ ] Low cardinality destinations only
