@@ -502,7 +502,11 @@ struct CrosswordGameView: View {
 
         // Post the Mini time to the weekly Game Center board. First completion
         // only: a replay knows the answers and would post an unbeatable time.
-        if firstCompletion && puzzle.isMini {
+        // Unaided only: any hint — and above all Reveal Puzzle, which is one
+        // tap — buys a time nobody solved for, and a board of bought times
+        // isn't worth topping. rec.usedHint survives resume and device merges,
+        // so a hint spent in an earlier sitting still disqualifies the post.
+        if firstCompletion && puzzle.isMini && !rec.usedHint {
             gameCenter.submitWeeklyMiniTime(seconds: seconds)
         }
 
