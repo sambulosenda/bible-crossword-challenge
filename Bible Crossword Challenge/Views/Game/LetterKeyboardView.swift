@@ -76,6 +76,7 @@ struct LetterKeyboardView: View {
         .buttonStyle(KeyButtonStyle())
         .accessibilityLabel("Pencil mode")
         .accessibilityValue(isPencilMode ? "on" : "off")
+        .accessibilityAddTraits(.isToggle)
         .accessibilityHint("Letters you type are provisional until entered in pen")
     }
 
