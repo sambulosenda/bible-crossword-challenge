@@ -221,7 +221,11 @@ struct CompletionView: View {
         }
         .alert("What should we call you?", isPresented: $showNamePrompt) {
             TextField("Your name", text: $draftName)
+            // Alert buttons always dismiss, and a Save on an empty field would
+            // silently drop the pending challenge/board intent — so it can't
+            // be tapped until there's a name to save.
             Button("Save") { saveNameAndSend() }
+                .disabled(draftName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
             Button("Cancel", role: .cancel) {}
         } message: {
             Text("We'll show this name to friends you challenge.")
