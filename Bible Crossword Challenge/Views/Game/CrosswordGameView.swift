@@ -31,6 +31,10 @@ struct CrosswordGameView: View {
     /// (see `GameViewModel.seedAutoCheckIfNeeded`), toggleable from the hint
     /// menu and Profile → Gameplay.
     @AppStorage("autoCheckErrors") private var autoCheckErrors = false
+    /// Zen mode, inverted (Profile → Gameplay): off hides the clock's digits
+    /// while the timer keeps recording — see `timerView` for why the
+    /// TimelineView must stay mounted either way.
+    @AppStorage("showSolveTimer") private var showSolveTimer = true
 
     @State private var vm: GameViewModel
     @State private var showClues = false
@@ -345,26 +349,56 @@ struct CrosswordGameView: View {
         }
     }
 
+    /// Whether the clock's digits are on screen. Zen hides them — except when
+    /// racing a friend's time, where a hidden clock makes the race unplayable.
+    private var clockVisible: Bool {
+        showSolveTimer || incomingChallenge != nil
+    }
+
     @ViewBuilder
     private var timerView: some View {
         // No leading icon and fixedSize: the principal slot gets squeezed
         // between the streak flame and the trailing buttons, and a Label
         // truncates the time there ("2:14…").
         if vm.isComplete {
-            Text(TimeFormat.clock(vm.completionSeconds))
-                .foregroundStyle(.green)
-                .monospacedDigit()
-                .fixedSize()
-        } else {
-            TimelineView(.periodic(from: vm.startDate, by: 1)) { context in
-                Text(TimeFormat.clock(vm.elapsed()))
+            if clockVisible {
+                Text(TimeFormat.clock(vm.completionSeconds))
+                    .foregroundStyle(.green)
                     .monospacedDigit()
                     .fixedSize()
-                    // Drives the clock: ticks stop whenever this timer isn't
-                    // actually rendering, so hidden time never accrues.
-                    .onChange(of: context.date) { _, now in vm.tick(now: now) }
+            } else {
+                zenMark
+            }
+        } else {
+            // The TimelineView stays mounted in zen too: `vm.tick(now:)` is
+            // driven only by its rendered ticks, so an empty slot here would
+            // silently stop the clock — and challenges, best times and the
+            // leaderboard all need honest seconds from zen players. The leaf
+            // is real content, guaranteeing the render keeps happening.
+            TimelineView(.periodic(from: vm.startDate, by: 1)) { context in
+                Group {
+                    if clockVisible {
+                        Text(TimeFormat.clock(vm.elapsed()))
+                            .monospacedDigit()
+                            .fixedSize()
+                    } else {
+                        zenMark
+                    }
+                }
+                // Drives the clock: ticks stop whenever this timer isn't
+                // actually rendering, so hidden time never accrues.
+                .onChange(of: context.date) { _, now in vm.tick(now: now) }
             }
         }
+    }
+
+    /// What the timer slot shows in zen: a quiet leaf instead of an empty gap,
+    /// so the missing clock reads as a mode, not a bug.
+    private var zenMark: some View {
+        Image(systemName: "leaf.fill")
+            .font(.subheadline)
+            .foregroundStyle(.secondary)
+            .accessibilityLabel("Zen mode, timer hidden")
     }
 
     private var hintsRemainingText: String {

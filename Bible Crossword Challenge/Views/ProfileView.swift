@@ -35,6 +35,9 @@ struct ProfileView: View {
     /// Mirrors the in-game hint-menu toggle; seeded per player on first read
     /// (see `GameViewModel.seedAutoCheckIfNeeded`).
     @AppStorage("autoCheckErrors") private var autoCheckErrors = false
+    /// Zen mode, inverted: off hides the in-solve clock. Time is still
+    /// recorded — challenges and records need honest seconds.
+    @AppStorage("showSolveTimer") private var showSolveTimer = true
     @State private var showPaywall = false
     @State private var showManageSubscriptions = false
     @State private var showRename = false
@@ -286,8 +289,12 @@ struct ProfileView: View {
                 // default, so this toggle and the in-game menu always agree.
                 GameViewModel.seedAutoCheckIfNeeded(totalCompleted: profile.totalPuzzlesCompleted)
             }
+            Toggle(isOn: $showSolveTimer) {
+                SettingsRowLabel(title: "Show solve timer", symbol: "timer", tint: .blue)
+            }
+            .settingsRowInsets()
         } footer: {
-            Text("Marks wrong letters as you type. Turn off for a classic solve with no help.")
+            Text("Auto-check marks wrong letters as you type. Hide the timer for an unhurried solve — times are still recorded for challenges and records.")
         }
     }
 
