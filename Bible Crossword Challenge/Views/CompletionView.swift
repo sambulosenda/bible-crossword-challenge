@@ -91,9 +91,11 @@ struct CompletionView: View {
     @Environment(\.familyBoard) private var familyBoard
     @Environment(\.modelContext) private var context
     @Environment(StoreService.self) private var store
-    /// Highest completion milestone we've already asked a review at, so each
-    /// milestone prompts at most once across sessions.
+    /// Review-ask bookkeeping — the rules live in `ReviewAsk.decide`.
     @AppStorage("reviewPromptMilestone") private var reviewPromptMilestone = 0
+    @AppStorage("streakReviewPromptShown") private var streakReviewPromptShown = false
+    @AppStorage("reviewPromptVersion") private var reviewPromptVersion = ""
+    @AppStorage("reviewPromptLastAsk") private var reviewPromptLastAsk = 0.0
     /// One-shot flags for the auto-shown paywall moments (first-ever solve,
     /// 3-day streak) plus a daily cap so at most one auto paywall fires per day.
     @AppStorage("firstCompletionPaywallShown") private var firstCompletionPaywallShown = false
@@ -921,22 +923,42 @@ struct CompletionView: View {
         return calendar.date(byAdding: .day, value: 1, to: startOfToday) ?? startOfToday
     }
 
-    /// Ask for a rating at completion milestones — the happiest moment in the
-    /// loop. Each milestone asks at most once; the system further rate-limits.
-    private static let reviewMilestones = [3, 10, 30]
-
+    /// Ask for a rating at the happiest moments in the loop — the triggers and
+    /// their spacing live in `ReviewAsk.decide`; this just spends the flag the
+    /// verdict names. The system further rate-limits what actually shows.
     private func maybeRequestReview() {
-        guard let milestone = Self.reviewMilestones.last(where: { totalCompleted >= $0 }),
-              milestone > reviewPromptMilestone
-        else { return }
-        reviewPromptMilestone = milestone
+        let state = ReviewAsk.State(
+            totalCompleted: totalCompleted,
+            currentStreak: streak,
+            milestoneAsked: reviewPromptMilestone,
+            streakAsked: streakReviewPromptShown,
+            versionAsked: reviewPromptVersion,
+            currentVersion: Self.marketingVersion,
+            lastAsk: reviewPromptLastAsk == 0
+                ? nil : Date(timeIntervalSinceReferenceDate: reviewPromptLastAsk)
+        )
+        guard let trigger = ReviewAsk.decide(state) else { return }
+        switch trigger {
+        case .milestone(let milestone): reviewPromptMilestone = milestone
+        case .streak: streakReviewPromptShown = true
+        case .version: break
+        }
+        // Any ask spends this version's re-arm — the version trigger can't
+        // stack a second prompt onto a version that already asked.
+        reviewPromptVersion = Self.marketingVersion
+        reviewPromptLastAsk = Date().timeIntervalSinceReferenceDate
         didRequestReview = true
+        analytics.log(.reviewPromptRequested(
+            trigger: trigger.analyticsValue, totalCompleted: totalCompleted))
         Task {
             // Let the celebration land before the system sheet appears.
             try? await Task.sleep(for: .seconds(2))
             requestReview()
         }
     }
+
+    private static let marketingVersion =
+        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
 
     /// Auto-present the paywall at the two highest-intent free-user moments:
     /// the first-ever solve ("first_completion") and reaching a 3-day streak

@@ -122,6 +122,12 @@ enum AnalyticsEvent {
     /// `DailyReminderPrompt` ask the same question at very different moments.
     case reminderDeclined(source: String)
     case reminderSettingChanged(enabled: Bool)
+    /// The system review prompt was *called* (Apple decides whether it shows —
+    /// display rate is invisible, so calls are the only tunable denominator).
+    /// `trigger` names the `ReviewAsk` rung ("milestone_75", "streak",
+    /// "version"); `totalCompleted` says where in the ladder players sit when
+    /// each trigger fires, which is the number the ladder is tuned against.
+    case reviewPromptRequested(trigger: String, totalCompleted: Int)
     /// `source` names the surface that pushed the pack (`home`, `packs`,
     /// `notification`) — the question a seasonal pack raises is not how many
     /// people opened it but which surface got them there, and the Home carousel
@@ -187,6 +193,7 @@ enum AnalyticsEvent {
         case .reminderAskShown: return "reminder_ask_shown"
         case .reminderDeclined: return "reminder_declined"
         case .reminderSettingChanged: return "reminder_setting_changed"
+        case .reviewPromptRequested: return "review_prompt_requested"
         case .packOpened: return "pack_opened"
         case .packCompleted: return "pack_completed"
         case .challengeSent: return "challenge_sent"
@@ -290,6 +297,8 @@ enum AnalyticsEvent {
             return ["source": source]
         case .reminderSettingChanged(let enabled):
             return ["enabled": enabled]
+        case .reviewPromptRequested(let trigger, let totalCompleted):
+            return ["trigger": trigger, "total_completed": totalCompleted]
         case .packOpened(let id, let source):
             return ["pack_id": id, "source": source]
         case .packCompleted(let id):
