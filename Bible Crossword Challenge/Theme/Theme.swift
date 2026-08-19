@@ -220,7 +220,8 @@ enum CellPalette {
         return empty
     }
 
-    static func textColor(isSelected: Bool) -> Color {
-        isSelected ? .white : .primary
+    static func textColor(isSelected: Bool, isPencil: Bool = false) -> Color {
+        if isPencil { return isSelected ? .white.opacity(0.8) : .secondary }
+        return isSelected ? .white : .primary
     }
 }

@@ -18,18 +18,29 @@ enum HintType: String {
     /// the player finds the word in Scripture themselves. Only offered on
     /// clues that carry a `reference`.
     case verse
+    /// Fills the whole grid — the give-up button. Confirmed before use.
+    case puzzle
 
     /// Daily-quota cost. The ladder: verse is free (the player still does the
     /// finding — and reading Scripture is the point), a letter is the standard
-    /// unit, and a whole word — nearly an answer button — costs two, so the
-    /// 3/day pool forces a real choice.
+    /// unit, a whole word — nearly an answer button — costs two, and the
+    /// give-up fill costs the entire 3/day pool.
     var cost: Int {
         switch self {
         case .verse: 0
         case .letter: 1
         case .word: 2
+        case .puzzle: 3
         }
     }
+}
+
+/// Granularity of a one-shot answer check. Checks are free and never reveal:
+/// they mark wrong filled letters, which is a different economy from hints.
+enum CheckScope: String {
+    case letter
+    case word
+    case puzzle
 }
 
 @Observable
@@ -45,13 +56,19 @@ final class GameViewModel {
 
     var selected: GridPos
     var direction: ClueDirection
-    var showErrors: Bool = false
+    /// Pencil (provisional) entry mode, toggled from the keyboard. Letters
+    /// typed while on land as `isPencil` and never complete anything.
+    var isPencilMode: Bool = false
     /// Persistent as-you-type mistake marking, mirrored from the
-    /// "autoCheckErrors" default by the owning view. Unlike the manual check
-    /// (`showErrors`, cleared on the next keystroke), this stays on and marks
-    /// only *wrong* letters — correct ones earn nothing until the word
-    /// completes, so it can't be milked as a free answer-by-color oracle.
+    /// "autoCheckErrors" default by the owning view. Unlike the one-shot
+    /// checks (whose wrong-marks clear when the cell is edited), this stays on
+    /// and marks only *wrong* letters — correct ones earn nothing until the
+    /// word completes, so it can't be milked as a free answer-by-color oracle.
     var autoCheck: Bool = false
+    #if DEBUG
+    /// Screenshot-only: paints correct cells green without a check action.
+    var showCorrectOverlay: Bool = false
+    #endif
     private(set) var hintsUsed: Int = 0
     private(set) var isComplete: Bool = false
 
@@ -85,6 +102,9 @@ final class GameViewModel {
     /// uses it to flash the word's cells, play feedback, and announce the solve
     /// to VoiceOver.
     var onWordCompleted: ((Slot) -> Void)?
+    /// Fired after a one-shot check with the correct positions (for a brief
+    /// green flash) and how many cells were marked wrong (for the shake).
+    var onCheckResult: (([GridPos], Int) -> Void)?
 
     private var slotIndex: [ClueDirection: [GridPos: Int]] = [.across: [:], .down: [:]]
 
@@ -211,7 +231,6 @@ final class GameViewModel {
            slot(at: pos, direction: direction.toggled) != nil {
             direction = direction.toggled
         }
-        showErrors = false
     }
 
     func toggleDirection() {
@@ -224,7 +243,6 @@ final class GameViewModel {
         direction = slot.direction
         // Land on the first empty cell, else the first cell.
         selected = slot.positions.first { grid[$0.row][$0.col].entry == nil } ?? slot.positions[0]
-        showErrors = false
     }
 
     // MARK: - Clue navigation
@@ -250,7 +268,8 @@ final class GameViewModel {
         let upper = Character(letter.uppercased())
         let edited = selected
         grid[edited.row][edited.col].entry = upper
-        showErrors = false
+        grid[edited.row][edited.col].isPencil = isPencilMode
+        grid[edited.row][edited.col].isCheckedWrong = false
         onEntryChanged?()
         checkCompletion()
         if !isComplete {
@@ -263,17 +282,16 @@ final class GameViewModel {
         var cleared: GridPos?
         let current = grid[selected.row][selected.col]
         if current.entry != nil, !current.isRevealed {
-            grid[selected.row][selected.col].entry = nil
+            clearCell(selected)
             cleared = selected
         } else if let prev = previousCellInWord() {
             // Step back; clear the previous cell unless it's a locked reveal.
             selected = prev
             if grid[prev.row][prev.col].entry != nil, !grid[prev.row][prev.col].isRevealed {
-                grid[prev.row][prev.col].entry = nil
+                clearCell(prev)
                 cleared = prev
             }
         }
-        showErrors = false
         onEntryChanged?()
         if let cleared {
             refreshSolvedSlots(around: [cleared])
@@ -281,6 +299,12 @@ final class GameViewModel {
             // should announce again (checkCompletion isn't run on deletes).
             wasFullWithErrors = false
         }
+    }
+
+    private func clearCell(_ pos: GridPos) {
+        grid[pos.row][pos.col].entry = nil
+        grid[pos.row][pos.col].isPencil = false
+        grid[pos.row][pos.col].isCheckedWrong = false
     }
 
     private func advanceWithinWord() {
@@ -339,6 +363,8 @@ final class GameViewModel {
         selected = target
         grid[target.row][target.col].entry = solution
         grid[target.row][target.col].isRevealed = true
+        grid[target.row][target.col].isPencil = false
+        grid[target.row][target.col].isCheckedWrong = false
         hintsUsed += 1
         onEntryChanged?()
         checkCompletion()
@@ -355,15 +381,42 @@ final class GameViewModel {
         guard let slot = activeSlot, !slotSolved(slot) else { return false }
         for (i, pos) in slot.positions.enumerated() {
             let ch = Array(slot.answer)[i]
-            // Leave the player's own correct letters alone (and unlocked).
-            guard grid[pos.row][pos.col].entry != ch else { continue }
+            // Leave the player's own correct pen letters alone (and unlocked).
+            // A pencilled letter is not a commitment, even when it's right —
+            // the reveal converts it to a locked pen letter like any other.
+            guard !grid[pos.row][pos.col].isCorrect else { continue }
             grid[pos.row][pos.col].entry = ch
             grid[pos.row][pos.col].isRevealed = true
+            grid[pos.row][pos.col].isPencil = false
+            grid[pos.row][pos.col].isCheckedWrong = false
         }
         hintsUsed += 1
         onEntryChanged?()
         checkCompletion()
         if !isComplete { refreshSolvedSlots(around: slot.positions) }
+        return true
+    }
+
+    /// Fill the whole grid — the give-up button. Refuses when the puzzle is
+    /// already effectively solved (nothing left to buy). Locks every cell it
+    /// fills, leaving the player's own correct pen letters unlocked.
+    @discardableResult
+    func revealPuzzle() -> Bool {
+        guard grid.contains(where: { row in
+            row.contains { !$0.isBlock && !$0.isCorrect }
+        }) else { return false }
+        for r in 0..<size {
+            for c in 0..<size where !grid[r][c].isBlock {
+                guard !grid[r][c].isCorrect else { continue }
+                grid[r][c].entry = grid[r][c].solution
+                grid[r][c].isRevealed = true
+                grid[r][c].isPencil = false
+                grid[r][c].isCheckedWrong = false
+            }
+        }
+        hintsUsed += 1
+        onEntryChanged?()
+        checkCompletion()
         return true
     }
 
@@ -377,9 +430,8 @@ final class GameViewModel {
     // MARK: - Word completion tracking
 
     private func slotSolved(_ slot: Slot) -> Bool {
-        for p in slot.positions {
-            let cell = grid[p.row][p.col]
-            if cell.entry == nil || cell.entry != cell.solution { return false }
+        for p in slot.positions where !grid[p.row][p.col].isCorrect {
+            return false
         }
         return true
     }
@@ -424,8 +476,41 @@ final class GameViewModel {
 
     // MARK: - Validation
 
-    func toggleCheck() {
-        showErrors.toggle()
+    /// One-shot answer check at the given granularity. Free — never reveals a
+    /// letter and never touches the hint economy. Wrong filled cells (pencil
+    /// included) are marked until edited; correct positions are returned via
+    /// `onCheckResult` for a brief flash, deliberately not stored — persistent
+    /// green would accumulate into a free answer oracle.
+    ///
+    /// Returns the number of cells marked wrong, or nil when the scope had no
+    /// filled cells to judge.
+    @discardableResult
+    func check(_ scope: CheckScope) -> Int? {
+        let positions: [GridPos]
+        switch scope {
+        case .letter: positions = isSelectable(selected) ? [selected] : []
+        case .word: positions = activeSlot?.positions ?? []
+        case .puzzle: positions = grid.flatMap { $0 }.filter { !$0.isBlock }.map(\.pos)
+        }
+        var wrong = 0
+        var correct: [GridPos] = []
+        var judged = false
+        for pos in positions {
+            let cell = grid[pos.row][pos.col]
+            guard let entry = cell.entry else { continue }
+            judged = true
+            // Pencil letters are judged like any other: a right guess flashes
+            // green (that conversion is what check is for), a wrong one marks.
+            if entry == cell.solution {
+                correct.append(pos)
+            } else {
+                grid[pos.row][pos.col].isCheckedWrong = true
+                wrong += 1
+            }
+        }
+        guard judged else { return nil }
+        onCheckResult?(correct, wrong)
+        return wrong
     }
 
     /// Completes the puzzle when every playable cell holds the correct letter.
@@ -438,8 +523,10 @@ final class GameViewModel {
         var correct = true
         for row in grid {
             for cell in row where !cell.isBlock {
-                if cell.entry == nil { full = false }
-                if cell.entry != cell.solution { correct = false }
+                // A pencil letter is not a commitment: it neither completes the
+                // puzzle nor counts as "filled" for the full-but-wrong nudge.
+                if cell.entry == nil || cell.isPencil { full = false }
+                if !cell.isCorrect { correct = false }
             }
         }
         guard correct else {
@@ -460,13 +547,6 @@ final class GameViewModel {
 
     var hasAnyEntries: Bool {
         grid.contains { row in row.contains { !$0.isBlock && $0.entry != nil } }
-    }
-
-    /// True when any filled cell holds the wrong letter — drives the check shake.
-    var hasVisibleErrors: Bool {
-        grid.contains { row in
-            row.contains { !$0.isBlock && $0.entry != nil && $0.entry != $0.solution }
-        }
     }
 
     /// Words not yet fully correct. Drives the "2 clues to go" encouragement —
@@ -554,7 +634,7 @@ final class GameViewModel {
                 grid[r][c].entry = grid[r][c].solution
             }
         }
-        showErrors = true
+        showCorrectOverlay = true
         onEntryChanged?()
     }
 
@@ -586,7 +666,7 @@ final class GameViewModel {
         seedSolvedSlots()
         // Green ticks on what's done. Every filled letter came from the answer,
         // so this can only render as correct.
-        showErrors = true
+        showCorrectOverlay = true
         if let next = acrossSlots.first(where: { !slotSolved($0) }) {
             direction = .across
             selected = next.positions.first { grid[$0.row][$0.col].entry == nil }
@@ -598,16 +678,32 @@ final class GameViewModel {
 
     // MARK: - Resume snapshot
 
+    /// Committed (pen) letters only — pencil marks live in `pencilSnapshot()`,
+    /// so the entries payload keeps meaning "real progress" everywhere it's
+    /// counted (resume ring, in-progress status, completion restore).
     func snapshot() -> [String: String] {
         var out: [String: String] = [:]
         for row in grid {
-            for cell in row where !cell.isBlock {
+            for cell in row where !cell.isBlock && !cell.isPencil {
                 if let entry = cell.entry {
                     // Lowercase marks a hint-revealed (locked) cell, so the lock
                     // survives relaunch without a record-schema change.
                     out[cell.pos.storageKey] = cell.isRevealed
                         ? String(entry).lowercased()
                         : String(entry)
+                }
+            }
+        }
+        return out
+    }
+
+    /// Provisional (pencil) letters, keyed like `snapshot()`.
+    func pencilSnapshot() -> [String: String] {
+        var out: [String: String] = [:]
+        for row in grid {
+            for cell in row where !cell.isBlock && cell.isPencil {
+                if let entry = cell.entry {
+                    out[cell.pos.storageKey] = String(entry)
                 }
             }
         }
@@ -626,7 +722,7 @@ final class GameViewModel {
         defaults.set(totalCompleted < 3, forKey: "autoCheckErrors")
     }
 
-    func restore(_ entries: [String: String]) {
+    func restore(_ entries: [String: String], pencil: [String: String] = [:]) {
         for (key, value) in entries {
             let parts = key.split(separator: ",").compactMap { Int($0) }
             guard parts.count == 2, let raw = value.first,
@@ -635,6 +731,15 @@ final class GameViewModel {
             guard r >= 0, r < size, c >= 0, c < size, !grid[r][c].isBlock else { continue }
             grid[r][c].entry = letter
             grid[r][c].isRevealed = raw.isLowercase
+        }
+        for (key, value) in pencil {
+            let parts = key.split(separator: ",").compactMap { Int($0) }
+            guard parts.count == 2, let letter = value.uppercased().first else { continue }
+            let r = parts[0], c = parts[1]
+            guard r >= 0, r < size, c >= 0, c < size, !grid[r][c].isBlock,
+                  grid[r][c].entry == nil else { continue } // pen letters win
+            grid[r][c].entry = letter
+            grid[r][c].isPencil = true
         }
         checkCompletion(announceFullMiss: false)
         seedSolvedSlots()

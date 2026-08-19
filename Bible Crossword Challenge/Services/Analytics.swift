@@ -34,6 +34,10 @@ enum AnalyticsEvent {
     /// numbers are a floor, not a census.
     case puzzleAbandoned(puzzleID: String, fillPercent: Int, seconds: Int, hintsUsed: Int)
     case hintUsed(type: String, cost: Int)
+    /// A free one-shot answer check (letter/word/puzzle scope). Separate from
+    /// `hintUsed` because checks cost nothing — the interesting read is whether
+    /// check-availability moves hint usage and completion rate.
+    case checkUsed(scope: String, wrongCount: Int)
     case streakUpdated(streak: Int)
     // The two halves of a lost streak. `streakBroken` fires once, on the launch
     // that resets it (see `Streaks.Outcome`), carrying what was lost — the
@@ -156,6 +160,7 @@ enum AnalyticsEvent {
         case .dailyPuzzleCompleted: return "daily_puzzle_completed"
         case .puzzleAbandoned: return "puzzle_abandoned"
         case .hintUsed: return "hint_used"
+        case .checkUsed: return "check_used"
         case .streakUpdated: return "streak_updated"
         case .streakBroken: return "streak_broken"
         case .streakComebackStarted: return "streak_comeback_started"
@@ -249,6 +254,8 @@ enum AnalyticsEvent {
             ]
         case .hintUsed(let type, let cost):
             return ["type": type, "cost": cost]
+        case .checkUsed(let scope, let wrongCount):
+            return ["scope": scope, "wrong_count": wrongCount]
         case .streakUpdated(let streak):
             return ["streak": streak]
         case .streakBroken(let previousLength):

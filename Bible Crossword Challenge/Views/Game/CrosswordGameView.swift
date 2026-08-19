@@ -31,6 +31,10 @@ struct CrosswordGameView: View {
     /// (see `GameViewModel.seedAutoCheckIfNeeded`), toggleable from the hint
     /// menu and Profile → Gameplay.
     @AppStorage("autoCheckErrors") private var autoCheckErrors = false
+    /// Zen mode, inverted (Profile → Gameplay): off hides the clock's digits
+    /// while the timer keeps recording — see `timerView` for why the
+    /// TimelineView must stay mounted either way.
+    @AppStorage("showSolveTimer") private var showSolveTimer = true
 
     @State private var vm: GameViewModel
     @State private var showClues = false
@@ -52,6 +56,8 @@ struct CrosswordGameView: View {
     /// Grid is full but at least one letter is wrong — nudge instead of leaving
     /// the player stranded wondering why the completion screen didn't appear.
     @State private var showFullMissAlert = false
+    /// Reveal Puzzle is the give-up button — never fired from a stray menu tap.
+    @State private var showRevealPuzzleConfirm = false
     /// A friend's "beat my time" for this puzzle, captured on entry so the
     /// target chip and result comparison stay stable even after it's consumed.
     @State private var incomingChallenge: ChallengeService.Challenge?
@@ -87,8 +93,10 @@ struct CrosswordGameView: View {
             ClueBarView(vm: vm)
 
             LetterKeyboardView(
+                isPencilMode: vm.isPencilMode,
                 onLetter: { vm.enter($0) },
-                onDelete: { vm.delete() }
+                onDelete: { vm.delete() },
+                onTogglePencil: { vm.isPencilMode.toggle() }
             )
             .background(Color(.systemBackground))
         }
@@ -174,10 +182,20 @@ struct CrosswordGameView: View {
             showFullMissAlert = true
         }
         .alert("Almost There", isPresented: $showFullMissAlert) {
-            Button("Check Answers") { vm.showErrors = true }
+            Button("Check Answers") { runCheck(.puzzle) }
             Button("Keep Trying", role: .cancel) {}
         } message: {
             Text("Every square is filled, but at least one letter isn't right.")
+        }
+        .confirmationDialog(
+            "Reveal the whole puzzle?",
+            isPresented: $showRevealPuzzleConfirm,
+            titleVisibility: .visible
+        ) {
+            Button("Reveal Puzzle", role: .destructive) { useHint(.puzzle) }
+            Button("Keep Solving", role: .cancel) {}
+        } message: {
+            Text("Every remaining square is filled in for you. This uses a hint and the solve won't count as unaided.")
         }
         .task {
             gridFocused = true
@@ -188,7 +206,8 @@ struct CrosswordGameView: View {
             vm.onComplete = { seconds in handleCompletion(seconds: seconds) }
             let rec = loadOrCreateRecord()
             incomingChallenge = challengeService.pending(for: puzzle.id)
-            let isResume = !rec.isCompleted && (!rec.entries.isEmpty || rec.elapsedSeconds > 0)
+            let isResume = !rec.isCompleted
+                && (!rec.entries.isEmpty || !rec.pencil.isEmpty || rec.elapsedSeconds > 0)
             if rec.isCompleted, incomingChallenge != nil {
                 // Already solved this puzzle — jump straight to the comparison
                 // rather than replaying (a replay knows the answers and would
@@ -199,8 +218,8 @@ struct CrosswordGameView: View {
                 // Seed accumulated time before restoring, since restoring a
                 // fully-filled grid can trigger completion.
                 vm.seedElapsed(rec.elapsedSeconds)
-                if !rec.entries.isEmpty {
-                    vm.restore(rec.entries)
+                if !rec.entries.isEmpty || !rec.pencil.isEmpty {
+                    vm.restore(rec.entries, pencil: rec.pencil)
                 }
             }
             analytics.log(.dailyPuzzleStarted(puzzleID: puzzle.id, isResume: isResume))
@@ -291,18 +310,36 @@ struct CrosswordGameView: View {
                         Text(costLabel(.word))
                         Image(systemName: "text.word.spacing")
                     }
+                    Button(role: .destructive) {
+                        showRevealPuzzleConfirm = true
+                    } label: {
+                        Label("Reveal Puzzle", systemImage: "square.grid.3x3.fill")
+                    }
+                }
+                // Checks are free: they judge what's on the grid without giving
+                // anything away, which is a different economy from hints.
+                Section("Check") {
+                    Button {
+                        runCheck(.letter)
+                    } label: {
+                        Label("Check Letter", systemImage: "checkmark.square")
+                    }
+                    Button {
+                        runCheck(.word)
+                    } label: {
+                        Label("Check Word", systemImage: "checkmark.rectangle")
+                    }
+                    Button {
+                        runCheck(.puzzle)
+                    } label: {
+                        Label("Check Puzzle", systemImage: "checkmark.circle")
+                    }
                 }
                 Section {
-                    // Persistent as-you-type marking; the one-shot check below
-                    // stays for players who keep it off.
+                    // Persistent as-you-type marking; the one-shot checks above
+                    // stay for players who keep it off.
                     Toggle(isOn: $autoCheckErrors) {
                         Label("Auto-Check", systemImage: "checkmark.seal")
-                    }
-                    Toggle(isOn: Binding(
-                        get: { vm.showErrors },
-                        set: { _ in vm.toggleCheck() }
-                    )) {
-                        Label("Check Answers", systemImage: "checkmark.circle")
                     }
                 }
             } label: {
@@ -320,26 +357,56 @@ struct CrosswordGameView: View {
         }
     }
 
+    /// Whether the clock's digits are on screen. Zen hides them — except when
+    /// racing a friend's time, where a hidden clock makes the race unplayable.
+    private var clockVisible: Bool {
+        showSolveTimer || incomingChallenge != nil
+    }
+
     @ViewBuilder
     private var timerView: some View {
         // No leading icon and fixedSize: the principal slot gets squeezed
         // between the streak flame and the trailing buttons, and a Label
         // truncates the time there ("2:14…").
         if vm.isComplete {
-            Text(TimeFormat.clock(vm.completionSeconds))
-                .foregroundStyle(.green)
-                .monospacedDigit()
-                .fixedSize()
-        } else {
-            TimelineView(.periodic(from: vm.startDate, by: 1)) { context in
-                Text(TimeFormat.clock(vm.elapsed()))
+            if clockVisible {
+                Text(TimeFormat.clock(vm.completionSeconds))
+                    .foregroundStyle(.green)
                     .monospacedDigit()
                     .fixedSize()
-                    // Drives the clock: ticks stop whenever this timer isn't
-                    // actually rendering, so hidden time never accrues.
-                    .onChange(of: context.date) { _, now in vm.tick(now: now) }
+            } else {
+                zenMark
+            }
+        } else {
+            // The TimelineView stays mounted in zen too: `vm.tick(now:)` is
+            // driven only by its rendered ticks, so an empty slot here would
+            // silently stop the clock — and challenges, best times and the
+            // leaderboard all need honest seconds from zen players. The leaf
+            // is real content, guaranteeing the render keeps happening.
+            TimelineView(.periodic(from: vm.startDate, by: 1)) { context in
+                Group {
+                    if clockVisible {
+                        Text(TimeFormat.clock(vm.elapsed()))
+                            .monospacedDigit()
+                            .fixedSize()
+                    } else {
+                        zenMark
+                    }
+                }
+                // Drives the clock: ticks stop whenever this timer isn't
+                // actually rendering, so hidden time never accrues.
+                .onChange(of: context.date) { _, now in vm.tick(now: now) }
             }
         }
+    }
+
+    /// What the timer slot shows in zen: a quiet leaf instead of an empty gap,
+    /// so the missing clock reads as a mode, not a bug.
+    private var zenMark: some View {
+        Image(systemName: "leaf.fill")
+            .font(.subheadline)
+            .foregroundStyle(.secondary)
+            .accessibilityLabel("Zen mode, timer hidden")
     }
 
     private var hintsRemainingText: String {
@@ -356,6 +423,14 @@ struct CrosswordGameView: View {
     }
 
     // MARK: - Actions
+
+    /// Free one-shot check. Marks wrong cells (until edited), flashes correct
+    /// ones, and deliberately never touches `usedHint` — checking is play,
+    /// not aid, and must not cost anyone the Unaided/Purist achievements.
+    private func runCheck(_ scope: CheckScope) {
+        guard let wrong = vm.check(scope) else { return }
+        analytics.log(.checkUsed(scope: scope.rawValue, wrongCount: wrong))
+    }
 
     private func useHint(_ type: HintType) {
         // `>= cost`, never subtraction: premium's remaining is Int.max.
@@ -374,6 +449,7 @@ struct CrosswordGameView: View {
         switch type {
         case .letter: didReveal = vm.revealLetter()
         case .word: didReveal = vm.revealWord()
+        case .puzzle: didReveal = vm.revealPuzzle()
         // Never routed here — the verse hint reveals nothing, so it has its
         // own path (`useVerseHint`).
         case .verse: didReveal = false
@@ -465,13 +541,18 @@ struct CrosswordGameView: View {
         rec.completedDate = Date()
         rec.elapsedSeconds = seconds
         rec.entries = vm.snapshot()
+        rec.pencil = [:] // a completed grid has no provisional letters left
         rec.updatedAt = Date()
         context.saveLogged("puzzle completion")
         WidgetBridge.publish(profile)
 
         // Post the Mini time to the weekly Game Center board. First completion
         // only: a replay knows the answers and would post an unbeatable time.
-        if firstCompletion && puzzle.isMini {
+        // Unaided only: any hint — and above all Reveal Puzzle, which is one
+        // tap — buys a time nobody solved for, and a board of bought times
+        // isn't worth topping. rec.usedHint survives resume and device merges,
+        // so a hint spent in an earlier sitting still disqualifies the post.
+        if firstCompletion && puzzle.isMini && !rec.usedHint {
             gameCenter.submitWeeklyMiniTime(seconds: seconds)
         }
 
@@ -554,6 +635,7 @@ struct CrosswordGameView: View {
         let rec = loadOrCreateRecord()
         guard !rec.isCompleted else { return }
         rec.entries = vm.snapshot()
+        rec.pencil = vm.pencilSnapshot()
         rec.elapsedSeconds = vm.elapsed()
         rec.updatedAt = Date()
         context.saveLogged("puzzle progress")

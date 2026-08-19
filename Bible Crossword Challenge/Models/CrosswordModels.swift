@@ -103,9 +103,14 @@ struct CellState: Hashable {
     let number: Int?
     var entry: Character?
     var isRevealed: Bool = false
+    /// A provisional (pencil) letter. Pencil entries never count toward word
+    /// or puzzle completion — only committed pen letters do.
+    var isPencil: Bool = false
+    /// Marked wrong by a one-shot check; cleared the moment the cell is edited.
+    var isCheckedWrong: Bool = false
 
     var isCorrect: Bool {
-        guard let solution, let entry else { return false }
+        guard let solution, let entry, !isPencil else { return false }
         return entry == solution
     }
 }

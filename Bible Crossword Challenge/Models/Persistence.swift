@@ -118,6 +118,11 @@ final class PuzzleRecord {
     var elapsedSeconds: Int = 0
     /// Encoded `[String: String]` of position storage-key -> letter, for resume.
     var entriesData: Data?
+    /// Encoded pencil (provisional) letters, same shape as `entriesData` but a
+    /// separate field: pencil is not progress, so everything that counts
+    /// entries (resume ring, in-progress status) stays honest. Optional +
+    /// defaulted for CloudKit.
+    var pencilData: Data?
     /// True once any hint was revealed on this puzzle — survives resume, so a
     /// "no hints" solve stays accurate across sessions.
     var usedHint: Bool = false
@@ -129,6 +134,7 @@ final class PuzzleRecord {
         completedDate: Date? = nil,
         elapsedSeconds: Int = 0,
         entriesData: Data? = nil,
+        pencilData: Data? = nil,
         usedHint: Bool = false,
         updatedAt: Date = Date()
     ) {
@@ -137,6 +143,7 @@ final class PuzzleRecord {
         self.completedDate = completedDate
         self.elapsedSeconds = elapsedSeconds
         self.entriesData = entriesData
+        self.pencilData = pencilData
         self.usedHint = usedHint
         self.updatedAt = updatedAt
     }
@@ -149,6 +156,16 @@ final class PuzzleRecord {
             return decoded
         }
         set { entriesData = try? JSONEncoder().encode(newValue) }
+    }
+
+    var pencil: [String: String] {
+        get {
+            guard let pencilData,
+                  let decoded = try? JSONDecoder().decode([String: String].self, from: pencilData)
+            else { return [:] }
+            return decoded
+        }
+        set { pencilData = newValue.isEmpty ? nil : try? JSONEncoder().encode(newValue) }
     }
 }
 
