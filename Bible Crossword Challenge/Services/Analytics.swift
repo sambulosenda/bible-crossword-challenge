@@ -137,6 +137,14 @@ enum AnalyticsEvent {
     /// strongest D1 retention signal we have, so the button is measured
     /// directly rather than inferred from back-to-back `daily_puzzle_started`.
     case completionChainTapped(fromPuzzleID: String, toPuzzleID: String)
+    // Memory-verse mode. `level` on start/complete is the mastery level the
+    // grid was built at, so the level-4 hint rate — the full-recall cliff —
+    // can be read directly. `leveled_up` false with `hints_used` 0 means the
+    // anti-grind spacing held the level, not a failure.
+    case memoryListOpened(source: String)
+    case memoryVerseStarted(reference: String, level: Int)
+    case memoryVerseCompleted(reference: String, level: Int, leveledUp: Bool, hintsUsed: Int)
+    case memoryVerseMastered(reference: String)
 
     var name: String {
         switch self {
@@ -172,6 +180,10 @@ enum AnalyticsEvent {
         case .familyBoardShared: return "family_board_shared"
         case .scriptureOpened: return "scripture_opened"
         case .completionChainTapped: return "completion_chain_tapped"
+        case .memoryListOpened: return "memory_list_opened"
+        case .memoryVerseStarted: return "memory_verse_started"
+        case .memoryVerseCompleted: return "memory_verse_completed"
+        case .memoryVerseMastered: return "memory_verse_mastered"
         }
     }
 
@@ -275,6 +287,19 @@ enum AnalyticsEvent {
             return ["reference": reference, "source": source]
         case .completionChainTapped(let from, let to):
             return ["from_puzzle_id": from, "to_puzzle_id": to]
+        case .memoryListOpened(let source):
+            return ["source": source]
+        case .memoryVerseStarted(let reference, let level):
+            return ["reference": reference, "level": level]
+        case .memoryVerseCompleted(let reference, let level, let leveledUp, let hintsUsed):
+            return [
+                "reference": reference,
+                "level": level,
+                "leveled_up": leveledUp,
+                "hints_used": hintsUsed,
+            ]
+        case .memoryVerseMastered(let reference):
+            return ["reference": reference]
         }
     }
 }

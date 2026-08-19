@@ -24,6 +24,7 @@ struct HomeView: View {
     @Environment(\.puzzleProvider) private var puzzleProvider
     @Environment(StoreService.self) private var store
     @Environment(\.analytics) private var analytics
+    @Environment(\.memoryVerses) private var memoryVerses
     @Query private var records: [PuzzleRecord]
 
     /// Written by RootView when a launch breaks the streak; cleared here on
@@ -250,6 +251,13 @@ struct HomeView: View {
 
                     NextAchievementCard(profile: profile)
 
+                    // Below the achievement card, above the upsell: the mode
+                    // earns attention through its due badge, not its position.
+                    MemoryVerseCard(
+                        dueCount: memoryVerses.dueCount,
+                        activeCount: memoryVerses.entries.count
+                    )
+
                     if !store.isPremium {
                         UpgradeCard(
                             totalPuzzles: puzzleProvider.totalPuzzleCount,
@@ -272,6 +280,12 @@ struct HomeView: View {
             }
             .navigationDestination(for: PackRoute.self) { route in
                 PackDetailView(pack: route.pack, profile: profile, source: route.source)
+            }
+            .navigationDestination(for: MemoryRoute.self) { _ in
+                MemoryVerseListView()
+            }
+            .navigationDestination(for: MemoryPracticeRoute.self) { route in
+                MemoryPracticeView(referenceKey: route.referenceKey)
             }
         }
     }
