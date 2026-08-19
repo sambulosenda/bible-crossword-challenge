@@ -23,7 +23,7 @@ Core loop is solid but limited modes. Pencil + check is classic crossword litera
 
 ### P4-T1 — Check puzzle (no reveal)
 
-**Status:** `[ ]`  
+**Status:** `[x]` — shipped 2026-08-19 (went further: check letter/word/puzzle)  
 **Type:** eng  
 **Estimate:** S
 
@@ -40,7 +40,7 @@ Core loop is solid but limited modes. Pencil + check is classic crossword litera
 
 ### P4-T2 — Pencil mode (notes)
 
-**Status:** `[ ]`  
+**Status:** `[x]` — shipped 2026-08-19 (single provisional letter)  
 **Type:** eng  
 **Estimate:** L
 
@@ -93,7 +93,7 @@ Core loop is solid but limited modes. Pencil + check is classic crossword litera
 
 ### P4-T5 — Zen mode (no timer pressure)
 
-**Status:** `[ ]`  
+**Status:** `[x]` — shipped 2026-08-19 (Profile toggle; clock keeps recording; challenge overrides)  
 **Type:** eng  
 **Estimate:** S
 
