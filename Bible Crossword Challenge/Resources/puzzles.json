@@ -23668,6 +23668,1597 @@
     "kind": "mini"
   },
   {
+    "id": "sunday-001",
+    "title": "From Eden to Ararat",
+    "difficulty": "medium",
+    "verse": "In the beginning God created the heaven and the earth.",
+    "reference": "Genesis 1:1",
+    "publishDate": "2026-07-01",
+    "size": 21,
+    "grid": [
+      "F..CAIN.N...F........",
+      "L.....O.I.RAINBOW....",
+      "ABEL..A.M.I.R.R......",
+      "M....CHERUBIM.E......",
+      "I....O..O...A.ADAM...",
+      "N...EVE.D...M.T....H.",
+      "G....E...O.METHUSELAH",
+      "S..F.N.B.L..N.O....M.",
+      "W..R.A.A.I..T.FLOOD..",
+      "O..U.N.B.V.L..L......",
+      "R..INTHEBEGINNING.D..",
+      "DUST...L.L.G..F.A.O.E",
+      "..E......E.H..E.RAVEN",
+      ".ARARAT..ALTAR..D.E.O",
+      "..P......F..R.SHEM..C",
+      ".SETH.......K.A.N...H",
+      "..N...........B......",
+      "..TREEOFLIFE..B......",
+      "....D........JAPHETH.",
+      "..CREATION....T......",
+      "....N......GOPHERWOOD"
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 0,
+        "text": "It turned every way to keep the way of the tree of life",
+        "answer": "FLAMINGSWORD"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 0,
+        "col": 3,
+        "text": "Tiller of the ground who became his brother's slayer",
+        "answer": "CAIN"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 0,
+        "col": 6,
+        "text": "He found grace in the eyes of the LORD",
+        "answer": "NOAH"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 0,
+        "col": 8,
+        "text": "The mighty hunter before the LORD",
+        "answer": "NIMROD"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 0,
+        "col": 12,
+        "text": "The expanse dividing the waters, called Heaven",
+        "answer": "FIRMAMENT"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 1,
+        "col": 10,
+        "text": "The covenant token set in the cloud",
+        "answer": "RAINBOW"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 1,
+        "col": 10,
+        "text": "What the woman was fashioned from",
+        "answer": "RIB"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 1,
+        "col": 14,
+        "text": "God breathed it into the man of dust",
+        "answer": "BREATHOFLIFE"
+      },
+      {
+        "number": 8,
+        "direction": "across",
+        "row": 2,
+        "col": 0,
+        "text": "Keeper of sheep whose offering was respected",
+        "answer": "ABEL"
+      },
+      {
+        "number": 9,
+        "direction": "across",
+        "row": 3,
+        "col": 5,
+        "text": "The angelic guards set east of Eden",
+        "answer": "CHERUBIM"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 3,
+        "col": 5,
+        "text": "Established with Noah and every living creature",
+        "answer": "COVENANT"
+      },
+      {
+        "number": 10,
+        "direction": "across",
+        "row": 4,
+        "col": 14,
+        "text": "He named every living creature",
+        "answer": "ADAM"
+      },
+      {
+        "number": 11,
+        "direction": "across",
+        "row": 5,
+        "col": 4,
+        "text": "The mother of all living",
+        "answer": "EVE"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 5,
+        "col": 19,
+        "text": "Noah's son, father of Canaan",
+        "answer": "HAM"
+      },
+      {
+        "number": 13,
+        "direction": "down",
+        "row": 6,
+        "col": 9,
+        "text": "The dove's plucked proof that the waters had abated",
+        "answer": "OLIVELEAF"
+      },
+      {
+        "number": 14,
+        "direction": "across",
+        "row": 6,
+        "col": 11,
+        "text": "At 969 years, the longest-lived man in scripture",
+        "answer": "METHUSELAH"
+      },
+      {
+        "number": 15,
+        "direction": "down",
+        "row": 7,
+        "col": 3,
+        "text": "Taken, eaten and shared in the fall",
+        "answer": "FRUIT"
+      },
+      {
+        "number": 16,
+        "direction": "down",
+        "row": 7,
+        "col": 7,
+        "text": "The tower where language was confounded",
+        "answer": "BABEL"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 8,
+        "col": 14,
+        "text": "Forty days of rain that covered the mountains",
+        "answer": "FLOOD"
+      },
+      {
+        "number": 18,
+        "direction": "down",
+        "row": 9,
+        "col": 11,
+        "text": "The first day's creation, divided from darkness",
+        "answer": "LIGHT"
+      },
+      {
+        "number": 19,
+        "direction": "across",
+        "row": 10,
+        "col": 3,
+        "text": "The Bible's first three words, run together",
+        "answer": "INTHEBEGINNING"
+      },
+      {
+        "number": 20,
+        "direction": "down",
+        "row": 10,
+        "col": 16,
+        "text": "Planted eastward in Eden",
+        "answer": "GARDEN"
+      },
+      {
+        "number": 21,
+        "direction": "down",
+        "row": 10,
+        "col": 18,
+        "text": "Sent thrice; she finally did not return",
+        "answer": "DOVE"
+      },
+      {
+        "number": 22,
+        "direction": "across",
+        "row": 11,
+        "col": 0,
+        "text": "Man's origin, and the serpent's appointed food",
+        "answer": "DUST"
+      },
+      {
+        "number": 23,
+        "direction": "down",
+        "row": 11,
+        "col": 2,
+        "text": "More subtil than any beast of the field",
+        "answer": "SERPENT"
+      },
+      {
+        "number": 24,
+        "direction": "down",
+        "row": 11,
+        "col": 20,
+        "text": "He walked with God, and was not",
+        "answer": "ENOCH"
+      },
+      {
+        "number": 25,
+        "direction": "across",
+        "row": 12,
+        "col": 16,
+        "text": "The first bird sent out, going to and fro",
+        "answer": "RAVEN"
+      },
+      {
+        "number": 26,
+        "direction": "across",
+        "row": 13,
+        "col": 1,
+        "text": "The mountains where the ark came to rest",
+        "answer": "ARARAT"
+      },
+      {
+        "number": 27,
+        "direction": "across",
+        "row": 13,
+        "col": 9,
+        "text": "Noah built one first thing on dry ground",
+        "answer": "ALTAR"
+      },
+      {
+        "number": 28,
+        "direction": "down",
+        "row": 13,
+        "col": 12,
+        "text": "Three hundred cubits of salvation",
+        "answer": "ARK"
+      },
+      {
+        "number": 29,
+        "direction": "across",
+        "row": 14,
+        "col": 14,
+        "text": "Noah's son in the line of promise",
+        "answer": "SHEM"
+      },
+      {
+        "number": 29,
+        "direction": "down",
+        "row": 14,
+        "col": 14,
+        "text": "The seventh day, blessed and sanctified",
+        "answer": "SABBATH"
+      },
+      {
+        "number": 30,
+        "direction": "across",
+        "row": 15,
+        "col": 1,
+        "text": "The son appointed instead of a slain brother",
+        "answer": "SETH"
+      },
+      {
+        "number": 31,
+        "direction": "across",
+        "row": 17,
+        "col": 2,
+        "text": "The garden's other named tree, guarded after the fall",
+        "answer": "TREEOFLIFE"
+      },
+      {
+        "number": 32,
+        "direction": "down",
+        "row": 17,
+        "col": 4,
+        "text": "The garden's home, watered by a river parting four ways",
+        "answer": "EDEN"
+      },
+      {
+        "number": 33,
+        "direction": "across",
+        "row": 18,
+        "col": 13,
+        "text": "Noah's son whose descendants spread to the isles",
+        "answer": "JAPHETH"
+      },
+      {
+        "number": 34,
+        "direction": "across",
+        "row": 19,
+        "col": 2,
+        "text": "Six days of work, finished and called very good",
+        "answer": "CREATION"
+      },
+      {
+        "number": 35,
+        "direction": "across",
+        "row": 20,
+        "col": 11,
+        "text": "The ark's specified timber",
+        "answer": "GOPHERWOOD"
+      }
+    ],
+    "kind": "sunday"
+  },
+  {
+    "id": "sunday-002",
+    "title": "The Church Is Born",
+    "difficulty": "medium",
+    "verse": "And they were all filled with the Holy Ghost, and began to speak with other tongues.",
+    "reference": "Acts 2:4",
+    "publishDate": "2026-07-02",
+    "size": 21,
+    "grid": [
+      "J.SHIPWRECK..........",
+      "O.I.........PHILIPPI.",
+      "HOLYSPIRIT..H........",
+      "N.A..R......I.DORCAS.",
+      "..S.TIMOTHY.L...O...E",
+      ".B.J.S......I...M...U",
+      "DAMASCUS....PENTECOST",
+      ".R.I.I.......P.O....Y",
+      ".N.L.LYDIA.ATHENS...C",
+      ".A.E.L....P..E.G..A.H",
+      ".B.ROADTODAMASCUS.P.U",
+      ".A........U..U.E..O.S",
+      ".S.GAMALIEL..S.SAUL..",
+      "..C..A..........N.L..",
+      "..O..L........DEACONS",
+      "CHRISTIANS......N.S.T",
+      "..I..A.Q........I...E",
+      "..N.W..U....JOPPA...P",
+      ".ETHIOPIAN......S...H",
+      "..H.N..L............E",
+      "....D..ANTIOCH......N"
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 0,
+        "text": "With Peter he healed the lame man at the Beautiful gate",
+        "answer": "JOHN"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 0,
+        "col": 2,
+        "text": "Paul's voyage to Rome ended in one off Malta",
+        "answer": "SHIPWRECK"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 2,
+        "text": "He sang with Paul at midnight in a Philippian jail",
+        "answer": "SILAS"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 1,
+        "col": 12,
+        "text": "Colony city where an earthquake opened prison doors",
+        "answer": "PHILIPPI"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 1,
+        "col": 12,
+        "text": "Evangelist who joined a chariot on the Gaza road",
+        "answer": "PHILIP"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 2,
+        "col": 0,
+        "text": "The promised power that fell at Pentecost",
+        "answer": "HOLYSPIRIT"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 2,
+        "col": 5,
+        "text": "With Aquila, she explained the way more perfectly to Apollos",
+        "answer": "PRISCILLA"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 3,
+        "col": 14,
+        "text": "Tabitha by another name, raised by Peter at Joppa",
+        "answer": "DORCAS"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 3,
+        "col": 16,
+        "text": "Paul's appeal carried him to this capital",
+        "answer": "ROME"
+      },
+      {
+        "number": 8,
+        "direction": "across",
+        "row": 4,
+        "col": 4,
+        "text": "Young companion with a believing mother, Eunice",
+        "answer": "TIMOTHY"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 4,
+        "col": 20,
+        "text": "He fell from a window during a long sermon and lived",
+        "answer": "EUTYCHUS"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 5,
+        "col": 1,
+        "text": "The son of consolation who vouched for Saul",
+        "answer": "BARNABAS"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 5,
+        "col": 3,
+        "text": "He asked at midnight, 'What must I do to be saved?'",
+        "answer": "JAILER"
+      },
+      {
+        "number": 12,
+        "direction": "across",
+        "row": 6,
+        "col": 0,
+        "text": "The city Saul never reached as a persecutor",
+        "answer": "DAMASCUS"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 6,
+        "col": 12,
+        "text": "The feast day the church counts as its birthday",
+        "answer": "PENTECOST"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 6,
+        "col": 13,
+        "text": "Its silversmiths rioted for great Diana",
+        "answer": "EPHESUS"
+      },
+      {
+        "number": 15,
+        "direction": "down",
+        "row": 6,
+        "col": 15,
+        "text": "As of fire, they sat upon each of them",
+        "answer": "TONGUES"
+      },
+      {
+        "number": 16,
+        "direction": "across",
+        "row": 8,
+        "col": 5,
+        "text": "Seller of purple, first convert in Europe",
+        "answer": "LYDIA"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 8,
+        "col": 11,
+        "text": "Paul preached its unknown god on Mars' hill",
+        "answer": "ATHENS"
+      },
+      {
+        "number": 18,
+        "direction": "down",
+        "row": 9,
+        "col": 10,
+        "text": "Apostle to the Gentiles, once a Pharisee of Pharisees",
+        "answer": "PAUL"
+      },
+      {
+        "number": 19,
+        "direction": "down",
+        "row": 9,
+        "col": 18,
+        "text": "Eloquent Alexandrian, mighty in the scriptures",
+        "answer": "APOLLOS"
+      },
+      {
+        "number": 20,
+        "direction": "across",
+        "row": 10,
+        "col": 3,
+        "text": "Where a persecutor was blinded by light from heaven",
+        "answer": "ROADTODAMASCUS"
+      },
+      {
+        "number": 21,
+        "direction": "across",
+        "row": 12,
+        "col": 3,
+        "text": "The teacher who counseled leaving the apostles alone",
+        "answer": "GAMALIEL"
+      },
+      {
+        "number": 22,
+        "direction": "down",
+        "row": 12,
+        "col": 5,
+        "text": "Island where a viper fastened on Paul's hand",
+        "answer": "MALTA"
+      },
+      {
+        "number": 23,
+        "direction": "across",
+        "row": 12,
+        "col": 15,
+        "text": "He held the coats at Stephen's stoning",
+        "answer": "SAUL"
+      },
+      {
+        "number": 24,
+        "direction": "down",
+        "row": 12,
+        "col": 16,
+        "text": "Disciple sent to a street called Straight",
+        "answer": "ANANIAS"
+      },
+      {
+        "number": 25,
+        "direction": "down",
+        "row": 13,
+        "col": 2,
+        "text": "City where Paul stayed with tentmakers a year and a half",
+        "answer": "CORINTH"
+      },
+      {
+        "number": 26,
+        "direction": "across",
+        "row": 14,
+        "col": 14,
+        "text": "Seven were chosen to serve tables",
+        "answer": "DEACONS"
+      },
+      {
+        "number": 27,
+        "direction": "down",
+        "row": 14,
+        "col": 20,
+        "text": "The first martyr, whose face shone like an angel's",
+        "answer": "STEPHEN"
+      },
+      {
+        "number": 28,
+        "direction": "across",
+        "row": 15,
+        "col": 0,
+        "text": "The name disciples were first called at Antioch",
+        "answer": "CHRISTIANS"
+      },
+      {
+        "number": 29,
+        "direction": "down",
+        "row": 15,
+        "col": 7,
+        "text": "Tentmaker exiled from Rome with his wife",
+        "answer": "AQUILA"
+      },
+      {
+        "number": 30,
+        "direction": "down",
+        "row": 17,
+        "col": 4,
+        "text": "The sound of a rushing mighty one filled the house",
+        "answer": "WIND"
+      },
+      {
+        "number": 31,
+        "direction": "across",
+        "row": 17,
+        "col": 12,
+        "text": "Seaport where Peter saw the sheet of unclean beasts",
+        "answer": "JOPPA"
+      },
+      {
+        "number": 32,
+        "direction": "across",
+        "row": 18,
+        "col": 1,
+        "text": "The eunuch reading Isaiah whom Philip baptized",
+        "answer": "ETHIOPIAN"
+      },
+      {
+        "number": 33,
+        "direction": "across",
+        "row": 20,
+        "col": 7,
+        "text": "The sending church of the first missionary journey",
+        "answer": "ANTIOCH"
+      }
+    ],
+    "kind": "sunday"
+  },
+  {
+    "id": "sunday-003",
+    "title": "The Exodus Road",
+    "difficulty": "medium",
+    "verse": "Let my people go, that they may hold a feast unto me in the wilderness.",
+    "reference": "Exodus 5:1",
+    "publishDate": "2026-07-03",
+    "size": 21,
+    "grid": [
+      "BLOOD.SERPENT......B.",
+      "U....H...H.......C.R.",
+      "R.M..UNLEAVENED..O.I.",
+      "N.I..R...R.......V.C.",
+      "I.D......A.......E.K.",
+      "N.I.....COMMANDMENTS.",
+      "G.AMALEK.H....A..A...",
+      "B.N...G...N...R..N.P.",
+      "U...P.Y...I.Z.K..T.L.",
+      "SINAI.P...L.I.N.G..A.",
+      "H...LETMYPEOPLEGO..G.",
+      "....L..A....P.S.S..U.",
+      "MIRIAM.R..FROGS.HOREB",
+      "O.E.R.LAMB..R...E..S.",
+      "S.D....H..QUAIL.N.J..",
+      "E.STAFF.....H.O...E..",
+      "S.E....A......C...T..",
+      ".TABERNACLE...U...H..",
+      ".......R...FIRSTBORN.",
+      ".......O......T...O..",
+      ".....MANNA..JOSHUA..."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 0,
+        "text": "Struck on lintel and doorposts as a saving sign",
+        "answer": "BLOOD"
+      },
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 0,
+        "text": "It blazed on Horeb yet was not consumed",
+        "answer": "BURNINGBUSH"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 0,
+        "col": 6,
+        "text": "What the rod became when cast to the ground",
+        "answer": "SERPENT"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 0,
+        "col": 9,
+        "text": "Ruler whose heart was hardened ten times over",
+        "answer": "PHARAOH"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 0,
+        "col": 19,
+        "text": "Israel made these without straw under cruel taskmasters",
+        "answer": "BRICKS"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 1,
+        "col": 5,
+        "text": "With Aaron, he stayed up one of Moses' weary arms",
+        "answer": "HUR"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 1,
+        "col": 17,
+        "text": "The bond sealed at Sinai between God and Israel",
+        "answer": "COVENANT"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 2,
+        "col": 2,
+        "text": "The land where a fugitive Moses kept sheep",
+        "answer": "MIDIAN"
+      },
+      {
+        "number": 8,
+        "direction": "across",
+        "row": 2,
+        "col": 5,
+        "text": "Bread of haste, made without rising",
+        "answer": "UNLEAVENED"
+      },
+      {
+        "number": 9,
+        "direction": "across",
+        "row": 5,
+        "col": 8,
+        "text": "Ten of them came down from Sinai on tables of stone",
+        "answer": "COMMANDMENTS"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 5,
+        "col": 14,
+        "text": "A plague so thick it could be felt",
+        "answer": "DARKNESS"
+      },
+      {
+        "number": 11,
+        "direction": "across",
+        "row": 6,
+        "col": 2,
+        "text": "The foe defeated while Moses' hands were held high",
+        "answer": "AMALEK"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 6,
+        "col": 6,
+        "text": "The house of bondage Israel left behind",
+        "answer": "EGYPT"
+      },
+      {
+        "number": 13,
+        "direction": "down",
+        "row": 7,
+        "col": 10,
+        "text": "The river turned to blood, where a basket once floated",
+        "answer": "NILE"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 7,
+        "col": 19,
+        "text": "Blood, frogs and darkness were three of these ten",
+        "answer": "PLAGUES"
+      },
+      {
+        "number": 15,
+        "direction": "down",
+        "row": 8,
+        "col": 4,
+        "text": "Israel followed one of cloud by day, fire by night",
+        "answer": "PILLAR"
+      },
+      {
+        "number": 16,
+        "direction": "down",
+        "row": 8,
+        "col": 12,
+        "text": "Midianite shepherdess who became Moses' wife",
+        "answer": "ZIPPORAH"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 9,
+        "col": 0,
+        "text": "The mountain wrapped in smoke where the law was given",
+        "answer": "SINAI"
+      },
+      {
+        "number": 18,
+        "direction": "down",
+        "row": 9,
+        "col": 16,
+        "text": "The district of Egypt where Israel dwelt apart",
+        "answer": "GOSHEN"
+      },
+      {
+        "number": 19,
+        "direction": "across",
+        "row": 10,
+        "col": 4,
+        "text": "The demand delivered to Pharaoh, five words spoken as one",
+        "answer": "LETMYPEOPLEGO"
+      },
+      {
+        "number": 20,
+        "direction": "down",
+        "row": 10,
+        "col": 7,
+        "text": "The bitter waters made sweet by a tree",
+        "answer": "MARAH"
+      },
+      {
+        "number": 21,
+        "direction": "across",
+        "row": 12,
+        "col": 0,
+        "text": "Prophetess who led the women with timbrel and dance",
+        "answer": "MIRIAM"
+      },
+      {
+        "number": 21,
+        "direction": "down",
+        "row": 12,
+        "col": 0,
+        "text": "Drawn out of the water, he led Israel out of bondage",
+        "answer": "MOSES"
+      },
+      {
+        "number": 22,
+        "direction": "down",
+        "row": 12,
+        "col": 2,
+        "text": "Waters that stood as walls for Israel to cross",
+        "answer": "REDSEA"
+      },
+      {
+        "number": 23,
+        "direction": "across",
+        "row": 12,
+        "col": 10,
+        "text": "The second plague, croaking in ovens and kneading troughs",
+        "answer": "FROGS"
+      },
+      {
+        "number": 24,
+        "direction": "across",
+        "row": 12,
+        "col": 16,
+        "text": "The mountain of God where the bush burned",
+        "answer": "HOREB"
+      },
+      {
+        "number": 25,
+        "direction": "across",
+        "row": 13,
+        "col": 6,
+        "text": "Without blemish, one per household, slain at evening",
+        "answer": "LAMB"
+      },
+      {
+        "number": 26,
+        "direction": "across",
+        "row": 14,
+        "col": 10,
+        "text": "The evening meat that covered the camp",
+        "answer": "QUAIL"
+      },
+      {
+        "number": 27,
+        "direction": "down",
+        "row": 14,
+        "col": 14,
+        "text": "An east wind brought this devouring swarm",
+        "answer": "LOCUSTS"
+      },
+      {
+        "number": 28,
+        "direction": "down",
+        "row": 14,
+        "col": 18,
+        "text": "Father-in-law who advised Moses to appoint judges",
+        "answer": "JETHRO"
+      },
+      {
+        "number": 29,
+        "direction": "across",
+        "row": 15,
+        "col": 2,
+        "text": "The shepherd's rod that became a sign in Moses' hand",
+        "answer": "STAFF"
+      },
+      {
+        "number": 30,
+        "direction": "down",
+        "row": 16,
+        "col": 7,
+        "text": "Brother appointed to be spokesman before Pharaoh",
+        "answer": "AARON"
+      },
+      {
+        "number": 31,
+        "direction": "across",
+        "row": 17,
+        "col": 1,
+        "text": "The tent of meeting built to God's exact pattern",
+        "answer": "TABERNACLE"
+      },
+      {
+        "number": 32,
+        "direction": "across",
+        "row": 18,
+        "col": 11,
+        "text": "The final plague struck every one of these in Egypt",
+        "answer": "FIRSTBORN"
+      },
+      {
+        "number": 33,
+        "direction": "across",
+        "row": 20,
+        "col": 5,
+        "text": "Bread from heaven, gathered fresh each morning",
+        "answer": "MANNA"
+      },
+      {
+        "number": 34,
+        "direction": "across",
+        "row": 20,
+        "col": 12,
+        "text": "The general who fought while Moses prayed on the hill",
+        "answer": "JOSHUA"
+      }
+    ],
+    "kind": "sunday"
+  },
+  {
+    "id": "sunday-004",
+    "title": "Kings and Prophets",
+    "difficulty": "hard",
+    "verse": "And after the earthquake a fire; but the LORD was not in the fire: and after the fire a still small voice.",
+    "reference": "1 Kings 19:12",
+    "publishDate": "2026-07-04",
+    "size": 21,
+    "grid": [
+      "..WISDOM...J.........",
+      "..H.......GEHAZI..J..",
+      ".WIDOW.....H......E..",
+      "..R.....DROUGHT...R.A",
+      ".ELIJAH..E........O.S",
+      "..W.....SHEBA..H..B.S",
+      "..I...B..O....LEPROSY",
+      "..NAAMAN.BAAL..Z..A.R",
+      "..D...B..O...R.E..M.I",
+      ".C..A.Y..A.E.A.K.B..A",
+      ".A.STILLSMALLVOICE.S.",
+      ".R..H.O.O..I.E.A.T.E.",
+      ".M..A.N.L..S.N.H.H.N.",
+      ".EXILE..O..H.S...E.N.",
+      ".L..I.C.M..A...HULDAH",
+      "J.JOASH.O..........C.",
+      "O.O.H.A.N..........H.",
+      "R.S...R.......JEZEBEL",
+      "D.I...ISAIAH.......R.",
+      "AHAB..O.......SAMARIA",
+      "N.H...TEMPLE.......B."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 2,
+        "text": "Solomon's famous gift, proved with a sword and a child",
+        "answer": "WISDOM"
+      },
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 2,
+        "text": "Elijah went up to heaven by one",
+        "answer": "WHIRLWIND"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 11,
+        "text": "He drove furiously and ended Ahab's house",
+        "answer": "JEHU"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 1,
+        "col": 10,
+        "text": "The servant whose greed earned Naaman's disease",
+        "answer": "GEHAZI"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 1,
+        "col": 18,
+        "text": "He set golden calves at Bethel and Dan",
+        "answer": "JEROBOAM"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 2,
+        "col": 1,
+        "text": "Her barrel of meal at Zarephath did not waste",
+        "answer": "WIDOW"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 3,
+        "col": 8,
+        "text": "Three rainless years shut up by Elijah's prayer",
+        "answer": "DROUGHT"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 3,
+        "col": 9,
+        "text": "Solomon's son who answered roughly and lost ten tribes",
+        "answer": "REHOBOAM"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 3,
+        "col": 20,
+        "text": "The empire that carried the ten tribes away",
+        "answer": "ASSYRIA"
+      },
+      {
+        "number": 9,
+        "direction": "across",
+        "row": 4,
+        "col": 1,
+        "text": "The Tishbite who challenged Baal on Carmel",
+        "answer": "ELIJAH"
+      },
+      {
+        "number": 10,
+        "direction": "across",
+        "row": 5,
+        "col": 8,
+        "text": "Her queen came with hard questions and left breathless",
+        "answer": "SHEBA"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 5,
+        "col": 15,
+        "text": "King whose life was lengthened fifteen years",
+        "answer": "HEZEKIAH"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 6,
+        "col": 6,
+        "text": "Judah's exile lasted seventy years there",
+        "answer": "BABYLON"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 6,
+        "col": 14,
+        "text": "Naaman's affliction, washed away in the Jordan",
+        "answer": "LEPROSY"
+      },
+      {
+        "number": 14,
+        "direction": "across",
+        "row": 7,
+        "col": 2,
+        "text": "Syrian captain, great with his master, but a leper",
+        "answer": "NAAMAN"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 7,
+        "col": 9,
+        "text": "The god who did not answer from morning till noon",
+        "answer": "BAAL"
+      },
+      {
+        "number": 16,
+        "direction": "down",
+        "row": 8,
+        "col": 13,
+        "text": "They brought bread and flesh by a brook",
+        "answer": "RAVENS"
+      },
+      {
+        "number": 17,
+        "direction": "down",
+        "row": 9,
+        "col": 1,
+        "text": "The mountain where fire fell on a drenched altar",
+        "answer": "CARMEL"
+      },
+      {
+        "number": 18,
+        "direction": "down",
+        "row": 9,
+        "col": 4,
+        "text": "Usurping queen mother who destroyed the royal seed",
+        "answer": "ATHALIAH"
+      },
+      {
+        "number": 19,
+        "direction": "down",
+        "row": 9,
+        "col": 11,
+        "text": "He asked for a double portion of his master's spirit",
+        "answer": "ELISHA"
+      },
+      {
+        "number": 20,
+        "direction": "down",
+        "row": 9,
+        "col": 17,
+        "text": "One of two shrines where a golden calf stood",
+        "answer": "BETHEL"
+      },
+      {
+        "number": 21,
+        "direction": "across",
+        "row": 10,
+        "col": 3,
+        "text": "How the LORD spoke on Horeb, after wind, quake and fire",
+        "answer": "STILLSMALLVOICE"
+      },
+      {
+        "number": 22,
+        "direction": "down",
+        "row": 10,
+        "col": 8,
+        "text": "He asked for an understanding heart, not riches",
+        "answer": "SOLOMON"
+      },
+      {
+        "number": 23,
+        "direction": "down",
+        "row": 10,
+        "col": 19,
+        "text": "Assyrian invader whose army an angel struck by night",
+        "answer": "SENNACHERIB"
+      },
+      {
+        "number": 24,
+        "direction": "across",
+        "row": 13,
+        "col": 1,
+        "text": "The far-off end of centuries of warned-against sin",
+        "answer": "EXILE"
+      },
+      {
+        "number": 25,
+        "direction": "down",
+        "row": 14,
+        "col": 6,
+        "text": "One of fire parted Elijah from Elisha",
+        "answer": "CHARIOT"
+      },
+      {
+        "number": 26,
+        "direction": "across",
+        "row": 14,
+        "col": 15,
+        "text": "The prophetess consulted about the book of the law",
+        "answer": "HULDAH"
+      },
+      {
+        "number": 27,
+        "direction": "down",
+        "row": 15,
+        "col": 0,
+        "text": "Dip seven times in this river, said the prophet",
+        "answer": "JORDAN"
+      },
+      {
+        "number": 28,
+        "direction": "across",
+        "row": 15,
+        "col": 2,
+        "text": "Hidden seven years in the temple, then crowned",
+        "answer": "JOASH"
+      },
+      {
+        "number": 28,
+        "direction": "down",
+        "row": 15,
+        "col": 2,
+        "text": "The boy king who tore his robes at the found book",
+        "answer": "JOSIAH"
+      },
+      {
+        "number": 29,
+        "direction": "across",
+        "row": 17,
+        "col": 14,
+        "text": "Sidonian queen who hunted the prophets of the LORD",
+        "answer": "JEZEBEL"
+      },
+      {
+        "number": 30,
+        "direction": "across",
+        "row": 18,
+        "col": 6,
+        "text": "The prophet who brought Hezekiah word of added years",
+        "answer": "ISAIAH"
+      },
+      {
+        "number": 31,
+        "direction": "across",
+        "row": 19,
+        "col": 0,
+        "text": "He sold himself to work evil, urged on by his wife",
+        "answer": "AHAB"
+      },
+      {
+        "number": 32,
+        "direction": "across",
+        "row": 19,
+        "col": 14,
+        "text": "Omri's hilltop capital of the northern kingdom",
+        "answer": "SAMARIA"
+      },
+      {
+        "number": 33,
+        "direction": "across",
+        "row": 20,
+        "col": 6,
+        "text": "Seven years in building, no hammer heard on site",
+        "answer": "TEMPLE"
+      }
+    ],
+    "kind": "sunday"
+  },
+  {
+    "id": "sunday-005",
+    "title": "The Week That Changed the World",
+    "difficulty": "hard",
+    "verse": "He is not here: for he is risen, as he said. Come, see the place where the Lord lay.",
+    "reference": "Matthew 28:6",
+    "publishDate": "2026-07-05",
+    "size": 21,
+    "grid": [
+      "..P........T..THOMAS.",
+      "..ITISFINISHED.E.....",
+      "..L........O..BREAD..",
+      "..A..VINEGAR...O.....",
+      "PETER....O.NICODEMUS.",
+      "A.E....PALMS........B",
+      "S.....F..G....HOSANNA",
+      "S.M...I..O......I...R",
+      "O.O.T.G..T.J....L...A",
+      "V.N.O.T..H.U..C.V.G.B",
+      "E.E.MARYMAGDALENE.A.B",
+      "R.Y.B.E....A..N.R.L.A",
+      "..C...E....S..T..KISS",
+      "C.H......T...CUP..L..",
+      "A.ARIMATHEA...R...E..",
+      "I.N......M..C.I.E.E..",
+      "ANGEL...UPPERROOM....",
+      "P.E......L..O.N.M....",
+      "H.R..SPICES.S...A....",
+      "A.S.........S...U....",
+      "S............ROOSTER."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 2,
+        "text": "Governor who washed his hands of the matter",
+        "answer": "PILATE"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 11,
+        "text": "The mocking crown was woven from these",
+        "answer": "THORNS"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 0,
+        "col": 14,
+        "text": "He asked to touch the wounds before believing",
+        "answer": "THOMAS"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 0,
+        "col": 15,
+        "text": "The tetrarch who hoped to see a miracle and got silence",
+        "answer": "HEROD"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 1,
+        "col": 2,
+        "text": "The cry from the cross that ended the work of redemption",
+        "answer": "ITISFINISHED"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 2,
+        "col": 14,
+        "text": "Broken and given: 'This is my body'",
+        "answer": "BREAD"
+      },
+      {
+        "number": 7,
+        "direction": "across",
+        "row": 3,
+        "col": 5,
+        "text": "The sour drink offered on a sponge",
+        "answer": "VINEGAR"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 3,
+        "col": 9,
+        "text": "The place of a skull",
+        "answer": "GOLGOTHA"
+      },
+      {
+        "number": 9,
+        "direction": "across",
+        "row": 4,
+        "col": 0,
+        "text": "He drew a sword in the garden and wept at dawn",
+        "answer": "PETER"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 4,
+        "col": 0,
+        "text": "The feast Jerusalem was crowded for that week",
+        "answer": "PASSOVER"
+      },
+      {
+        "number": 10,
+        "direction": "across",
+        "row": 4,
+        "col": 11,
+        "text": "Night visitor who brought myrrh and aloes for burial",
+        "answer": "NICODEMUS"
+      },
+      {
+        "number": 11,
+        "direction": "across",
+        "row": 5,
+        "col": 7,
+        "text": "Branches spread on the Jerusalem road",
+        "answer": "PALMS"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 5,
+        "col": 20,
+        "text": "The prisoner released when the crowd chose",
+        "answer": "BARABBAS"
+      },
+      {
+        "number": 13,
+        "direction": "down",
+        "row": 6,
+        "col": 6,
+        "text": "Cursed for bearing leaves but no fruit",
+        "answer": "FIGTREE"
+      },
+      {
+        "number": 14,
+        "direction": "across",
+        "row": 6,
+        "col": 14,
+        "text": "The palm-waving crowd's shout of praise",
+        "answer": "HOSANNA"
+      },
+      {
+        "number": 15,
+        "direction": "down",
+        "row": 6,
+        "col": 16,
+        "text": "Thirty pieces of it, later thrown down in the temple",
+        "answer": "SILVER"
+      },
+      {
+        "number": 16,
+        "direction": "down",
+        "row": 7,
+        "col": 2,
+        "text": "Their tables were overturned in the temple courts",
+        "answer": "MONEYCHANGERS"
+      },
+      {
+        "number": 17,
+        "direction": "down",
+        "row": 8,
+        "col": 4,
+        "text": "Sealed with a stone and guarded by soldiers",
+        "answer": "TOMB"
+      },
+      {
+        "number": 18,
+        "direction": "down",
+        "row": 8,
+        "col": 11,
+        "text": "He betrayed with a kiss",
+        "answer": "JUDAS"
+      },
+      {
+        "number": 19,
+        "direction": "down",
+        "row": 9,
+        "col": 14,
+        "text": "Roman officer who confessed, 'Truly this was the Son of God'",
+        "answer": "CENTURION"
+      },
+      {
+        "number": 20,
+        "direction": "down",
+        "row": 9,
+        "col": 18,
+        "text": "The disciples were told to meet the risen Lord there",
+        "answer": "GALILEE"
+      },
+      {
+        "number": 21,
+        "direction": "across",
+        "row": 10,
+        "col": 4,
+        "text": "First to see the risen Lord in the garden",
+        "answer": "MARYMAGDALENE"
+      },
+      {
+        "number": 22,
+        "direction": "across",
+        "row": 12,
+        "col": 17,
+        "text": "The traitor's chosen signal",
+        "answer": "KISS"
+      },
+      {
+        "number": 23,
+        "direction": "down",
+        "row": 13,
+        "col": 0,
+        "text": "High priest who said one man should die for the people",
+        "answer": "CAIAPHAS"
+      },
+      {
+        "number": 24,
+        "direction": "down",
+        "row": 13,
+        "col": 9,
+        "text": "Its veil was torn from top to bottom",
+        "answer": "TEMPLE"
+      },
+      {
+        "number": 25,
+        "direction": "across",
+        "row": 13,
+        "col": 13,
+        "text": "Jesus prayed for it to pass from him",
+        "answer": "CUP"
+      },
+      {
+        "number": 26,
+        "direction": "across",
+        "row": 14,
+        "col": 2,
+        "text": "Joseph's town; he gave his own new tomb",
+        "answer": "ARIMATHEA"
+      },
+      {
+        "number": 27,
+        "direction": "down",
+        "row": 15,
+        "col": 12,
+        "text": "Simon of Cyrene was compelled to carry it",
+        "answer": "CROSS"
+      },
+      {
+        "number": 28,
+        "direction": "down",
+        "row": 15,
+        "col": 16,
+        "text": "Village road where a stranger opened the scriptures",
+        "answer": "EMMAUS"
+      },
+      {
+        "number": 29,
+        "direction": "across",
+        "row": 16,
+        "col": 0,
+        "text": "His countenance was like lightning as he rolled the stone",
+        "answer": "ANGEL"
+      },
+      {
+        "number": 30,
+        "direction": "across",
+        "row": 16,
+        "col": 8,
+        "text": "Furnished chamber of the last supper",
+        "answer": "UPPERROOM"
+      },
+      {
+        "number": 31,
+        "direction": "across",
+        "row": 18,
+        "col": 5,
+        "text": "The women carried them to the tomb at dawn",
+        "answer": "SPICES"
+      },
+      {
+        "number": 32,
+        "direction": "across",
+        "row": 20,
+        "col": 13,
+        "text": "Its crow ended Peter's three denials",
+        "answer": "ROOSTER"
+      }
+    ],
+    "kind": "sunday"
+  },
+  {
     "id": "pack-advent-002",
     "title": "Hail, Thou That Art Highly Favoured",
     "difficulty": "easy",

@@ -55,7 +55,13 @@ struct PuzzleAccess {
         let minis = provider.rotationWindow(
             provider.minis, for: date, calendar: calendar, length: windowLength
         )
-        self.windowIDs = Set(dailies.map(\.id)).union(minis.map(\.id))
+        // The Sunday pool's window is a single puzzle: this week's Special is
+        // free for everyone (it lingers Sunday through Saturday), the back
+        // catalogue is Premium's shelf.
+        let sunday = provider.sundaySpecial(for: date, calendar: calendar)
+        self.windowIDs = Set(dailies.map(\.id))
+            .union(minis.map(\.id))
+            .union(sunday.map { [$0.id] } ?? [])
     }
 
     /// True when `puzzle` is inside the current rolling window, regardless of

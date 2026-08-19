@@ -57,15 +57,20 @@ def check_puzzles(puzzles):
 
     for p in puzzles:
         pid = p["id"]
-        if not pid.startswith(("daily-", "mini-", "pack-")):
+        if not pid.startswith(("daily-", "mini-", "pack-", "sunday-")):
             error(f"puzzles.json: {pid} has no recognised prefix "
-                  "(daily- / mini- / pack-)")
+                  "(daily- / mini- / pack- / sunday-)")
         # `kind: mini` and a `mini-` id have to agree: the app splits the pools
         # on the prefix but renders on the kind.
         if pid.startswith("mini-") and p.get("kind") != "mini":
             error(f"puzzles.json: {pid} is in the mini pool but isn't kind=mini")
         if p.get("kind") == "mini" and not pid.startswith("mini-"):
             error(f"puzzles.json: {pid} is kind=mini but isn't a mini- id")
+        # Same agreement for the weekly pool: `kind: sunday` and a `sunday-` id.
+        if pid.startswith("sunday-") and p.get("kind") != "sunday":
+            error(f"puzzles.json: {pid} is in the sunday pool but isn't kind=sunday")
+        if p.get("kind") == "sunday" and not pid.startswith("sunday-"):
+            error(f"puzzles.json: {pid} is kind=sunday but isn't a sunday- id")
 
 
 def check_grids(puzzles):
@@ -280,9 +285,11 @@ def main():
     dailies = sum(1 for p in puzzles if p["id"].startswith("daily-"))
     minis = sum(1 for p in puzzles if p["id"].startswith("mini-"))
     exclusive = sum(1 for p in puzzles if p["id"].startswith("pack-"))
+    sundays = sum(1 for p in puzzles if p["id"].startswith("sunday-"))
     print(f"{len(puzzles)} puzzles: {dailies} daily, {minis} mini, "
-          f"{exclusive} pack-exclusive. {len(packs)} packs.")
-    print(f"Rotation: dailies wrap every {dailies} days, minis every {minis}.")
+          f"{sundays} sunday, {exclusive} pack-exclusive. {len(packs)} packs.")
+    print(f"Rotation: dailies wrap every {dailies} days, minis every {minis}, "
+          f"sundays every {sundays} weeks.")
 
     for w in warnings:
         print(f"warning: {w}", file=sys.stderr)

@@ -53,6 +53,8 @@ final class PuzzleProvider {
     let puzzles: [Puzzle]
     /// Quick 7×7 minis with their own daily rotation.
     let minis: [Puzzle]
+    /// Weekly 21×21 Sunday Specials, rotating by week rather than by day.
+    let sundays: [Puzzle]
     /// Curated collections, in display order, decoded from `packs.json`. Empty
     /// when the bundle omits the file, so the feature degrades to absent.
     let packs: [PuzzlePack]
@@ -82,11 +84,13 @@ final class PuzzleProvider {
     init(bundle: Bundle = .main) {
         let all = Self.loadBundledPuzzles(bundle: bundle)
         self.allPuzzles = all
-        // Pack-exclusive puzzles ("pack-" ids) live only inside their pack:
-        // keeping them out of this pool preserves the daily-rotation index for
-        // every existing player (ids here are content-stable).
-        self.puzzles = all.filter { !$0.isMini && !$0.id.hasPrefix("pack-") }
+        // Pack-exclusive puzzles ("pack-" ids) live only inside their pack, and
+        // Sunday Specials rotate weekly in their own pool: keeping both out of
+        // this pool preserves the daily-rotation index for every existing
+        // player (ids here are content-stable).
+        self.puzzles = all.filter { !$0.isMini && !$0.isSunday && !$0.id.hasPrefix("pack-") }
         self.minis = all.filter(\.isMini)
+        self.sundays = all.filter(\.isSunday)
         let loadedPacks = Self.loadBundledPacks(bundle: bundle)
         self.packs = loadedPacks
 
@@ -142,6 +146,32 @@ final class PuzzleProvider {
     /// Today's Mini — the quick 7×7, rotating through its own pool.
     func dailyMini(for date: Date = RotationClock.now, calendar: Calendar = .current) -> Puzzle? {
         rotated(minis, for: date, calendar: calendar)
+    }
+
+    /// This week's Sunday Special — the big 21×21, one per week. The card
+    /// lingers Sunday through Saturday, so it rotates on `weekIndex`, not on
+    /// the day.
+    func sundaySpecial(for date: Date = RotationClock.now, calendar: Calendar = .current) -> Puzzle? {
+        guard !sundays.isEmpty else { return nil }
+        let week = weekIndex(for: date, calendar: calendar)
+        let count = sundays.count
+        return sundays[((week % count) + count) % count]
+    }
+
+    /// Whole weeks from the content epoch, where a week begins on **Sunday**
+    /// regardless of the player's locale — the Special is a Sunday tradition,
+    /// not a "start of the local week" one. Two dates share an index exactly
+    /// when they share a most-recent Sunday, so the served puzzle holds steady
+    /// Sunday through Saturday and rolls at midnight into Sunday.
+    func weekIndex(for date: Date = RotationClock.now, calendar: Calendar = .current) -> Int {
+        let day = dayIndex(for: date, calendar: calendar)
+        // Gregorian weekday: 1 = Sunday. Shift the day count so every date
+        // inside a Sunday-week collapses to that week's Sunday before dividing.
+        let weekday = calendar.component(.weekday, from: calendar.startOfDay(for: date))
+        let sundayDay = day - (weekday - 1)
+        // Floor division, so pre-epoch dates step backwards without doubling
+        // up around zero the way truncating division would.
+        return Int((Double(sundayDay) / 7.0).rounded(.down))
     }
 
     private func rotated(_ pool: [Puzzle], for date: Date, calendar: Calendar) -> Puzzle? {

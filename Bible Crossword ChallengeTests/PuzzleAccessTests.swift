@@ -253,4 +253,42 @@ struct PuzzleAccessTests {
         #expect(!provider.puzzles.contains { $0.id.hasPrefix("pack-") })
         #expect(!provider.minis.contains { $0.id.hasPrefix("pack-") })
     }
+
+    // MARK: - Sunday Specials
+
+    /// The Sunday pool's window is one puzzle wide: this week's Special is
+    /// free every day of its week, last week's belongs to Premium's shelf.
+    @Test func thisWeeksSundaySpecialIsFreeAllWeek() {
+        let provider = PuzzleProvider.shared
+        // 2026-08-16 is a Sunday; walk its whole week.
+        for offset in 0..<7 {
+            let date = utc.date(byAdding: .day, value: offset, to: day(2026, 8, 16))!
+            let gate = access(on: date)
+            let special = provider.sundaySpecial(for: date, calendar: utc)!
+            #expect(gate.canPlay(special, isPremium: false, hasProgress: false),
+                    "the week's Special must be free on day \(offset)")
+        }
+    }
+
+    @Test func lastWeeksSundaySpecialIsLocked() {
+        let provider = PuzzleProvider.shared
+        let today = day(2026, 8, 19)
+        let gate = access(on: today)
+        let lastWeek = provider.sundaySpecial(
+            for: utc.date(byAdding: .day, value: -7, to: today)!, calendar: utc
+        )!
+        #expect(lastWeek.id != provider.sundaySpecial(for: today, calendar: utc)!.id)
+        #expect(!gate.canPlay(lastWeek, isPremium: false, hasProgress: false))
+        #expect(gate.canPlay(lastWeek, isPremium: false, hasProgress: true),
+                "a started Special stays yours, like any windowed puzzle")
+        #expect(gate.canPlay(lastWeek, isPremium: true, hasProgress: false))
+    }
+
+    /// Sundays rotate weekly in their own pool — never in the daily index.
+    @Test func sundaySpecialsAreNotInTheDailyRotation() {
+        let provider = PuzzleProvider.shared
+        #expect(!provider.puzzles.contains { $0.id.hasPrefix("sunday-") })
+        #expect(!provider.minis.contains { $0.id.hasPrefix("sunday-") })
+        #expect(!provider.sundays.isEmpty)
+    }
 }

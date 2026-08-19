@@ -32,6 +32,7 @@ struct LibraryView: View {
 
     private var puzzles: [Puzzle] { puzzleProvider.puzzles }
     private var minis: [Puzzle] { puzzleProvider.minis }
+    private var sundays: [Puzzle] { puzzleProvider.sundays }
 
     /// One lookup built per body pass, reused by filtering and rows instead of
     /// scanning `records` for every puzzle. `puzzleID` is unique, so this is safe.
@@ -55,6 +56,12 @@ struct LibraryView: View {
             (query.isEmpty || mini.title.localizedCaseInsensitiveContains(query))
                 && statusMatches(mini)
         }
+    }
+
+    /// Sunday Specials honour every filter the dailies do — they carry real
+    /// difficulties, unlike the minis.
+    private var filteredSundays: [Puzzle] {
+        sundays.filter(matches)
     }
 
     private func matches(_ puzzle: Puzzle) -> Bool {
@@ -105,7 +112,7 @@ struct LibraryView: View {
     /// Minis follow the dailies rather than interleaving: they're a different
     /// length of sitting, and the premium list already groups them apart.
     private func partitioned(gate: PuzzleAccess) -> (free: [Puzzle], locked: [Puzzle]) {
-        let all = filtered + filteredMinis
+        let all = filtered + filteredSundays + filteredMinis
         var free: [Puzzle] = []
         var locked: [Puzzle] = []
         for puzzle in all {
@@ -154,6 +161,16 @@ struct LibraryView: View {
                 progressHeader
             }
 
+            if !filteredSundays.isEmpty {
+                Section {
+                    ForEach(filteredSundays) { sunday in
+                        row(sunday)
+                    }
+                } header: {
+                    Text("Sunday Specials")
+                }
+            }
+
             if !filteredMinis.isEmpty {
                 Section {
                     ForEach(filteredMinis) { mini in
@@ -170,7 +187,7 @@ struct LibraryView: View {
         .searchable(text: $query, prompt: "Search puzzles")
         .toolbar { filterMenu }
         .overlay {
-            if filtered.isEmpty && filteredMinis.isEmpty {
+            if filtered.isEmpty && filteredSundays.isEmpty && filteredMinis.isEmpty {
                 if query.isEmpty {
                     ContentUnavailableView(
                         "No Puzzles",

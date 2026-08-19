@@ -32,6 +32,12 @@ CANVAS = 15
 MINI_SIZES = [7]
 MINI_CANVAS = 7
 
+# Sunday Specials: one 21x21 per week. Always padded to 21 (never a smaller
+# size) so the Special's headline claim is literal, with longer answers allowed
+# because the spanners are the point.
+SUNDAY_SIZES = [21]
+SUNDAY_CANVAS = 21
+
 # --- Scripture references -----------------------------------------------
 #
 # A clue may name the passage its answer comes from. The app shows it only
@@ -407,9 +413,10 @@ def main():
     fails = []
     # Dailies are processed first with unchanged parameters so their output is
     # byte-identical however many minis and pack puzzles are added after them.
-    dailies = [s for s in specs if s.get("kind") != "mini" and not s.get("pack")]
+    dailies = [s for s in specs if s.get("kind") not in ("mini", "sunday") and not s.get("pack")]
     minis = [s for s in specs if s.get("kind") == "mini"]
-    packed = [s for s in specs if s.get("pack") and s.get("kind") != "mini"]
+    sundays = [s for s in specs if s.get("kind") == "sunday"]
+    packed = [s for s in specs if s.get("pack") and s.get("kind") not in ("mini", "sunday")]
     # Read before writing: the file about to be overwritten is the record of the
     # order every existing player's rotation follows.
     shipped_order = load_shipped_order(sys.argv[2])
@@ -418,6 +425,13 @@ def main():
         "min_words": 5, "max_words": 10,
         "canvas": MINI_CANVAS, "allowed_sizes": MINI_SIZES, "max_word_len": 7,
     }, shipped_order, extra_fields={"kind": "mini"})
+    # Sunday Specials: processed after dailies and minis so both of those
+    # outputs stay byte-identical as the Sunday bank grows. The pool rotates
+    # weekly by position, so the same append-only ordering rule applies.
+    process(sundays, out, fails, "sunday", {
+        "min_words": 22, "max_words": 48,
+        "canvas": SUNDAY_CANVAS, "allowed_sizes": SUNDAY_SIZES, "max_word_len": 15,
+    }, shipped_order, extra_fields={"kind": "sunday"})
     # Pack-exclusive puzzles: full-size build, ids numbered per pack slug so
     # each pack grows independently. Slugs sorted for deterministic output.
     by_slug = {}

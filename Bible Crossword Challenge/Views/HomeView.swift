@@ -48,6 +48,20 @@ struct HomeView: View {
 
     private var dailyPuzzle: Puzzle? { puzzleProvider.dailyPuzzle() }
     private var dailyMini: Puzzle? { puzzleProvider.dailyMini() }
+    private var sundaySpecial: Puzzle? { puzzleProvider.sundaySpecial() }
+
+    /// A Special solved any day of its own week stays "solved", because the
+    /// card lingers Sunday through Saturday — day-based presentation would
+    /// demote Sunday's win to "played before" by Monday morning.
+    private func sundayPresentation(_ record: PuzzleRecord?) -> DailyPresentation {
+        let base = DailyPresentation.of(record: record, on: Date())
+        if case .playedBefore(let seconds) = base,
+           let completed = record?.completedDate,
+           puzzleProvider.weekIndex(for: completed) == puzzleProvider.weekIndex() {
+            return .solvedToday(seconds: seconds)
+        }
+        return base
+    }
 
     /// Packs available today (seasonal ones only surface in-window), ordered so
     /// the timely ones lead the carousel: closing seasons first, then anything
@@ -205,6 +219,19 @@ struct HomeView: View {
                                 presentation: .of(record: miniRecord, on: Date())
                             )
                         }
+                    }
+
+                    // The week's peak, Sunday through Saturday. Below the two
+                    // dailies: the Special is a sitting you choose, not the
+                    // habit the streak depends on.
+                    if let sunday = sundaySpecial {
+                        CompactPuzzleCard(
+                            puzzle: sunday,
+                            billing: .sunday,
+                            presentation: sundayPresentation(
+                                records.first { $0.puzzleID == sunday.id }
+                            )
+                        )
                     }
 
                     // Instead of, not above: a comeback card stacked on a flame
@@ -417,13 +444,32 @@ private struct TodayHeader: View {
 /// either of the day's two puzzles can occupy either one, so neither card can
 /// name its own occupant any more.
 private enum PuzzleBilling {
-    case daily, mini
+    case daily, mini, sunday
 
-    var kicker: String { self == .daily ? "DAILY PUZZLE" : "DAILY MINI" }
-    var symbol: String { self == .daily ? "calendar" : "square.grid.3x3" }
+    var kicker: String {
+        switch self {
+        case .daily: "DAILY PUZZLE"
+        case .mini: "DAILY MINI"
+        case .sunday: "SUNDAY SPECIAL"
+        }
+    }
+
+    var symbol: String {
+        switch self {
+        case .daily: "calendar"
+        case .mini: "square.grid.3x3"
+        case .sunday: "sparkles"
+        }
+    }
 
     /// The noun VoiceOver leads with.
-    var spoken: String { self == .daily ? "Daily puzzle" : "Daily mini" }
+    var spoken: String {
+        switch self {
+        case .daily: "Daily puzzle"
+        case .mini: "Daily mini"
+        case .sunday: "Sunday Special"
+        }
+    }
 
     /// The one-line description the compact row shows when the puzzle is
     /// unplayed. "A quick two-minute puzzle" is a promise only the Mini keeps.
@@ -431,6 +477,7 @@ private enum PuzzleBilling {
         switch self {
         case .daily: "\(puzzle.size)×\(puzzle.size) · \(puzzle.clueCount) clues"
         case .mini: "\(puzzle.size)×\(puzzle.size) · A quick two-minute puzzle"
+        case .sunday: "\(puzzle.size)×\(puzzle.size) · This week's big grid"
         }
     }
 }
@@ -942,7 +989,7 @@ private struct CompactPuzzleCard: View {
     var body: some View {
         NavigationLink(value: puzzle) {
             HStack(spacing: Theme.Spacing.m) {
-                Image(systemName: isSolvedToday ? "checkmark.circle.fill" : "bolt.circle.fill")
+                Image(systemName: leadingSymbol)
                     .font(.title)
                     .foregroundStyle(isSolvedToday ? .green : Theme.accent)
 
@@ -969,6 +1016,14 @@ private struct CompactPuzzleCard: View {
         .buttonStyle(PressableCardStyle())
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(accessibilityLabel)
+    }
+
+    /// Solved wears the green check; unsolved leads with the billing's own
+    /// mark, so the Special's row reads as an occasion rather than a second
+    /// bolt of the same kind.
+    private var leadingSymbol: String {
+        if isSolvedToday { return "checkmark.circle.fill" }
+        return billing == .sunday ? "star.circle.fill" : "bolt.circle.fill"
     }
 
     private var subtitle: String {

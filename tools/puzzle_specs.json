@@ -17951,5 +17951,812 @@
       }
     ],
     "id": "pack-women-of-the-bible-005"
+  },
+  {
+    "kind": "sunday",
+    "id": "sunday-003",
+    "title": "The Exodus Road",
+    "theme": "The Exodus (Exodus 1-17)",
+    "difficulty": "medium",
+    "verse": "Let my people go, that they may hold a feast unto me in the wilderness.",
+    "reference": "Exodus 5:1",
+    "words": [
+      {
+        "answer": "LETMYPEOPLEGO",
+        "clue": "The demand delivered to Pharaoh, five words spoken as one"
+      },
+      {
+        "answer": "BURNINGBUSH",
+        "clue": "It blazed on Horeb yet was not consumed"
+      },
+      {
+        "answer": "COMMANDMENTS",
+        "clue": "Ten of them came down from Sinai on tables of stone"
+      },
+      {
+        "answer": "TABERNACLE",
+        "clue": "The tent of meeting built to God's exact pattern"
+      },
+      {
+        "answer": "GOLDENCALF",
+        "clue": "The idol Aaron cast while Moses was on the mountain"
+      },
+      {
+        "answer": "PASSOVER",
+        "clue": "The night death passed by every marked door"
+      },
+      {
+        "answer": "FIRSTBORN",
+        "clue": "The final plague struck every one of these in Egypt"
+      },
+      {
+        "answer": "PHARAOH",
+        "clue": "Ruler whose heart was hardened ten times over"
+      },
+      {
+        "answer": "PLAGUES",
+        "clue": "Blood, frogs and darkness were three of these ten"
+      },
+      {
+        "answer": "MIRIAM",
+        "clue": "Prophetess who led the women with timbrel and dance"
+      },
+      {
+        "answer": "MOSES",
+        "clue": "Drawn out of the water, he led Israel out of bondage"
+      },
+      {
+        "answer": "AARON",
+        "clue": "Brother appointed to be spokesman before Pharaoh"
+      },
+      {
+        "answer": "EGYPT",
+        "clue": "The house of bondage Israel left behind"
+      },
+      {
+        "answer": "SINAI",
+        "clue": "The mountain wrapped in smoke where the law was given"
+      },
+      {
+        "answer": "MANNA",
+        "clue": "Bread from heaven, gathered fresh each morning"
+      },
+      {
+        "answer": "QUAIL",
+        "clue": "The evening meat that covered the camp"
+      },
+      {
+        "answer": "REDSEA",
+        "clue": "Waters that stood as walls for Israel to cross"
+      },
+      {
+        "answer": "COVENANT",
+        "clue": "The bond sealed at Sinai between God and Israel"
+      },
+      {
+        "answer": "MIDIAN",
+        "clue": "The land where a fugitive Moses kept sheep"
+      },
+      {
+        "answer": "JETHRO",
+        "clue": "Father-in-law who advised Moses to appoint judges"
+      },
+      {
+        "answer": "ZIPPORAH",
+        "clue": "Midianite shepherdess who became Moses' wife"
+      },
+      {
+        "answer": "STAFF",
+        "clue": "The shepherd's rod that became a sign in Moses' hand"
+      },
+      {
+        "answer": "SERPENT",
+        "clue": "What the rod became when cast to the ground"
+      },
+      {
+        "answer": "PILLAR",
+        "clue": "Israel followed one of cloud by day, fire by night"
+      },
+      {
+        "answer": "HOREB",
+        "clue": "The mountain of God where the bush burned"
+      },
+      {
+        "answer": "AMALEK",
+        "clue": "The foe defeated while Moses' hands were held high"
+      },
+      {
+        "answer": "JOSHUA",
+        "clue": "The general who fought while Moses prayed on the hill"
+      },
+      {
+        "answer": "HUR",
+        "clue": "With Aaron, he stayed up one of Moses' weary arms"
+      },
+      {
+        "answer": "FROGS",
+        "clue": "The second plague, croaking in ovens and kneading troughs"
+      },
+      {
+        "answer": "LOCUSTS",
+        "clue": "An east wind brought this devouring swarm"
+      },
+      {
+        "answer": "DARKNESS",
+        "clue": "A plague so thick it could be felt"
+      },
+      {
+        "answer": "NILE",
+        "clue": "The river turned to blood, where a basket once floated"
+      },
+      {
+        "answer": "LAMB",
+        "clue": "Without blemish, one per household, slain at evening"
+      },
+      {
+        "answer": "BLOOD",
+        "clue": "Struck on lintel and doorposts as a saving sign"
+      },
+      {
+        "answer": "UNLEAVENED",
+        "clue": "Bread of haste, made without rising"
+      },
+      {
+        "answer": "GOSHEN",
+        "clue": "The district of Egypt where Israel dwelt apart"
+      },
+      {
+        "answer": "BRICKS",
+        "clue": "Israel made these without straw under cruel taskmasters"
+      },
+      {
+        "answer": "MARAH",
+        "clue": "The bitter waters made sweet by a tree"
+      }
+    ]
+  },
+  {
+    "kind": "sunday",
+    "id": "sunday-005",
+    "title": "The Week That Changed the World",
+    "theme": "Passion Week (Matthew 21-28)",
+    "difficulty": "hard",
+    "verse": "He is not here: for he is risen, as he said. Come, see the place where the Lord lay.",
+    "reference": "Matthew 28:6",
+    "words": [
+      {
+        "answer": "ITISFINISHED",
+        "clue": "The cry from the cross that ended the work of redemption"
+      },
+      {
+        "answer": "RESURRECTION",
+        "clue": "The empty tomb's announcement to the world"
+      },
+      {
+        "answer": "MARYMAGDALENE",
+        "clue": "First to see the risen Lord in the garden"
+      },
+      {
+        "answer": "GETHSEMANE",
+        "clue": "The olive garden of the agonized prayer"
+      },
+      {
+        "answer": "MONEYCHANGERS",
+        "clue": "Their tables were overturned in the temple courts"
+      },
+      {
+        "answer": "CENTURION",
+        "clue": "Roman officer who confessed, 'Truly this was the Son of God'"
+      },
+      {
+        "answer": "ARIMATHEA",
+        "clue": "Joseph's town; he gave his own new tomb"
+      },
+      {
+        "answer": "NICODEMUS",
+        "clue": "Night visitor who brought myrrh and aloes for burial"
+      },
+      {
+        "answer": "BARABBAS",
+        "clue": "The prisoner released when the crowd chose"
+      },
+      {
+        "answer": "GOLGOTHA",
+        "clue": "The place of a skull"
+      },
+      {
+        "answer": "HOSANNA",
+        "clue": "The palm-waving crowd's shout of praise"
+      },
+      {
+        "answer": "ROOSTER",
+        "clue": "Its crow ended Peter's three denials"
+      },
+      {
+        "answer": "CAIAPHAS",
+        "clue": "High priest who said one man should die for the people"
+      },
+      {
+        "answer": "PILATE",
+        "clue": "Governor who washed his hands of the matter"
+      },
+      {
+        "answer": "HEROD",
+        "clue": "The tetrarch who hoped to see a miracle and got silence"
+      },
+      {
+        "answer": "JUDAS",
+        "clue": "He betrayed with a kiss"
+      },
+      {
+        "answer": "PETER",
+        "clue": "He drew a sword in the garden and wept at dawn"
+      },
+      {
+        "answer": "DONKEY",
+        "clue": "The humble colt of the triumphal entry"
+      },
+      {
+        "answer": "PALMS",
+        "clue": "Branches spread on the Jerusalem road"
+      },
+      {
+        "answer": "TEMPLE",
+        "clue": "Its veil was torn from top to bottom"
+      },
+      {
+        "answer": "FIGTREE",
+        "clue": "Cursed for bearing leaves but no fruit"
+      },
+      {
+        "answer": "UPPERROOM",
+        "clue": "Furnished chamber of the last supper"
+      },
+      {
+        "answer": "BREAD",
+        "clue": "Broken and given: 'This is my body'"
+      },
+      {
+        "answer": "CUP",
+        "clue": "Jesus prayed for it to pass from him"
+      },
+      {
+        "answer": "THORNS",
+        "clue": "The mocking crown was woven from these"
+      },
+      {
+        "answer": "SCOURGED",
+        "clue": "Beaten with a Roman whip before crucifixion"
+      },
+      {
+        "answer": "CROSS",
+        "clue": "Simon of Cyrene was compelled to carry it"
+      },
+      {
+        "answer": "VINEGAR",
+        "clue": "The sour drink offered on a sponge"
+      },
+      {
+        "answer": "TOMB",
+        "clue": "Sealed with a stone and guarded by soldiers"
+      },
+      {
+        "answer": "ANGEL",
+        "clue": "His countenance was like lightning as he rolled the stone"
+      },
+      {
+        "answer": "EMMAUS",
+        "clue": "Village road where a stranger opened the scriptures"
+      },
+      {
+        "answer": "THOMAS",
+        "clue": "He asked to touch the wounds before believing"
+      },
+      {
+        "answer": "GALILEE",
+        "clue": "The disciples were told to meet the risen Lord there"
+      },
+      {
+        "answer": "SILVER",
+        "clue": "Thirty pieces of it, later thrown down in the temple"
+      },
+      {
+        "answer": "KISS",
+        "clue": "The traitor's chosen signal"
+      },
+      {
+        "answer": "PASSOVER",
+        "clue": "The feast Jerusalem was crowded for that week"
+      },
+      {
+        "answer": "SPICES",
+        "clue": "The women carried them to the tomb at dawn"
+      }
+    ]
+  },
+  {
+    "kind": "sunday",
+    "id": "sunday-002",
+    "title": "The Church Is Born",
+    "theme": "The Acts of the Apostles",
+    "difficulty": "medium",
+    "verse": "And they were all filled with the Holy Ghost, and began to speak with other tongues.",
+    "reference": "Acts 2:4",
+    "words": [
+      {
+        "answer": "ROADTODAMASCUS",
+        "clue": "Where a persecutor was blinded by light from heaven"
+      },
+      {
+        "answer": "HOLYSPIRIT",
+        "clue": "The promised power that fell at Pentecost"
+      },
+      {
+        "answer": "PENTECOST",
+        "clue": "The feast day the church counts as its birthday"
+      },
+      {
+        "answer": "CHRISTIANS",
+        "clue": "The name disciples were first called at Antioch"
+      },
+      {
+        "answer": "CORNELIUS",
+        "clue": "The centurion whose household received the Spirit"
+      },
+      {
+        "answer": "PRISCILLA",
+        "clue": "With Aquila, she explained the way more perfectly to Apollos"
+      },
+      {
+        "answer": "SHIPWRECK",
+        "clue": "Paul's voyage to Rome ended in one off Malta"
+      },
+      {
+        "answer": "BARNABAS",
+        "clue": "The son of consolation who vouched for Saul"
+      },
+      {
+        "answer": "GAMALIEL",
+        "clue": "The teacher who counseled leaving the apostles alone"
+      },
+      {
+        "answer": "EUTYCHUS",
+        "clue": "He fell from a window during a long sermon and lived"
+      },
+      {
+        "answer": "STEPHEN",
+        "clue": "The first martyr, whose face shone like an angel's"
+      },
+      {
+        "answer": "TONGUES",
+        "clue": "As of fire, they sat upon each of them"
+      },
+      {
+        "answer": "WIND",
+        "clue": "The sound of a rushing mighty one filled the house"
+      },
+      {
+        "answer": "PETER",
+        "clue": "His Pentecost sermon added three thousand souls"
+      },
+      {
+        "answer": "JOHN",
+        "clue": "With Peter he healed the lame man at the Beautiful gate"
+      },
+      {
+        "answer": "PHILIP",
+        "clue": "Evangelist who joined a chariot on the Gaza road"
+      },
+      {
+        "answer": "ETHIOPIAN",
+        "clue": "The eunuch reading Isaiah whom Philip baptized"
+      },
+      {
+        "answer": "SAUL",
+        "clue": "He held the coats at Stephen's stoning"
+      },
+      {
+        "answer": "DAMASCUS",
+        "clue": "The city Saul never reached as a persecutor"
+      },
+      {
+        "answer": "ANANIAS",
+        "clue": "Disciple sent to a street called Straight"
+      },
+      {
+        "answer": "DORCAS",
+        "clue": "Tabitha by another name, raised by Peter at Joppa"
+      },
+      {
+        "answer": "ANTIOCH",
+        "clue": "The sending church of the first missionary journey"
+      },
+      {
+        "answer": "PAUL",
+        "clue": "Apostle to the Gentiles, once a Pharisee of Pharisees"
+      },
+      {
+        "answer": "SILAS",
+        "clue": "He sang with Paul at midnight in a Philippian jail"
+      },
+      {
+        "answer": "TIMOTHY",
+        "clue": "Young companion with a believing mother, Eunice"
+      },
+      {
+        "answer": "LYDIA",
+        "clue": "Seller of purple, first convert in Europe"
+      },
+      {
+        "answer": "JAILER",
+        "clue": "He asked at midnight, 'What must I do to be saved?'"
+      },
+      {
+        "answer": "PHILIPPI",
+        "clue": "Colony city where an earthquake opened prison doors"
+      },
+      {
+        "answer": "ATHENS",
+        "clue": "Paul preached its unknown god on Mars' hill"
+      },
+      {
+        "answer": "CORINTH",
+        "clue": "City where Paul stayed with tentmakers a year and a half"
+      },
+      {
+        "answer": "EPHESUS",
+        "clue": "Its silversmiths rioted for great Diana"
+      },
+      {
+        "answer": "APOLLOS",
+        "clue": "Eloquent Alexandrian, mighty in the scriptures"
+      },
+      {
+        "answer": "MALTA",
+        "clue": "Island where a viper fastened on Paul's hand"
+      },
+      {
+        "answer": "ROME",
+        "clue": "Paul's appeal carried him to this capital"
+      },
+      {
+        "answer": "DEACONS",
+        "clue": "Seven were chosen to serve tables"
+      },
+      {
+        "answer": "AQUILA",
+        "clue": "Tentmaker exiled from Rome with his wife"
+      },
+      {
+        "answer": "JOPPA",
+        "clue": "Seaport where Peter saw the sheet of unclean beasts"
+      }
+    ]
+  },
+  {
+    "kind": "sunday",
+    "id": "sunday-001",
+    "title": "From Eden to Ararat",
+    "theme": "Genesis 1-11",
+    "difficulty": "medium",
+    "verse": "In the beginning God created the heaven and the earth.",
+    "reference": "Genesis 1:1",
+    "words": [
+      {
+        "answer": "INTHEBEGINNING",
+        "clue": "The Bible's first three words, run together"
+      },
+      {
+        "answer": "FLAMINGSWORD",
+        "clue": "It turned every way to keep the way of the tree of life"
+      },
+      {
+        "answer": "BREATHOFLIFE",
+        "clue": "God breathed it into the man of dust"
+      },
+      {
+        "answer": "METHUSELAH",
+        "clue": "At 969 years, the longest-lived man in scripture"
+      },
+      {
+        "answer": "GOPHERWOOD",
+        "clue": "The ark's specified timber"
+      },
+      {
+        "answer": "TREEOFLIFE",
+        "clue": "The garden's other named tree, guarded after the fall"
+      },
+      {
+        "answer": "OLIVELEAF",
+        "clue": "The dove's plucked proof that the waters had abated"
+      },
+      {
+        "answer": "FIRMAMENT",
+        "clue": "The expanse dividing the waters, called Heaven"
+      },
+      {
+        "answer": "CREATION",
+        "clue": "Six days of work, finished and called very good"
+      },
+      {
+        "answer": "CHERUBIM",
+        "clue": "The angelic guards set east of Eden"
+      },
+      {
+        "answer": "RAINBOW",
+        "clue": "The covenant token set in the cloud"
+      },
+      {
+        "answer": "JAPHETH",
+        "clue": "Noah's son whose descendants spread to the isles"
+      },
+      {
+        "answer": "SERPENT",
+        "clue": "More subtil than any beast of the field"
+      },
+      {
+        "answer": "SABBATH",
+        "clue": "The seventh day, blessed and sanctified"
+      },
+      {
+        "answer": "NIMROD",
+        "clue": "The mighty hunter before the LORD"
+      },
+      {
+        "answer": "ARARAT",
+        "clue": "The mountains where the ark came to rest"
+      },
+      {
+        "answer": "GARDEN",
+        "clue": "Planted eastward in Eden"
+      },
+      {
+        "answer": "LIGHT",
+        "clue": "The first day's creation, divided from darkness"
+      },
+      {
+        "answer": "EDEN",
+        "clue": "The garden's home, watered by a river parting four ways"
+      },
+      {
+        "answer": "ADAM",
+        "clue": "He named every living creature"
+      },
+      {
+        "answer": "EVE",
+        "clue": "The mother of all living"
+      },
+      {
+        "answer": "RIB",
+        "clue": "What the woman was fashioned from"
+      },
+      {
+        "answer": "FRUIT",
+        "clue": "Taken, eaten and shared in the fall"
+      },
+      {
+        "answer": "CAIN",
+        "clue": "Tiller of the ground who became his brother's slayer"
+      },
+      {
+        "answer": "ABEL",
+        "clue": "Keeper of sheep whose offering was respected"
+      },
+      {
+        "answer": "SETH",
+        "clue": "The son appointed instead of a slain brother"
+      },
+      {
+        "answer": "ENOCH",
+        "clue": "He walked with God, and was not"
+      },
+      {
+        "answer": "NOAH",
+        "clue": "He found grace in the eyes of the LORD"
+      },
+      {
+        "answer": "ARK",
+        "clue": "Three hundred cubits of salvation"
+      },
+      {
+        "answer": "FLOOD",
+        "clue": "Forty days of rain that covered the mountains"
+      },
+      {
+        "answer": "RAVEN",
+        "clue": "The first bird sent out, going to and fro"
+      },
+      {
+        "answer": "DOVE",
+        "clue": "Sent thrice; she finally did not return"
+      },
+      {
+        "answer": "COVENANT",
+        "clue": "Established with Noah and every living creature"
+      },
+      {
+        "answer": "SHEM",
+        "clue": "Noah's son in the line of promise"
+      },
+      {
+        "answer": "HAM",
+        "clue": "Noah's son, father of Canaan"
+      },
+      {
+        "answer": "BABEL",
+        "clue": "The tower where language was confounded"
+      },
+      {
+        "answer": "DUST",
+        "clue": "Man's origin, and the serpent's appointed food"
+      },
+      {
+        "answer": "ALTAR",
+        "clue": "Noah built one first thing on dry ground"
+      }
+    ]
+  },
+  {
+    "kind": "sunday",
+    "id": "sunday-004",
+    "title": "Kings and Prophets",
+    "theme": "The books of Kings",
+    "difficulty": "hard",
+    "verse": "And after the earthquake a fire; but the LORD was not in the fire: and after the fire a still small voice.",
+    "reference": "1 Kings 19:12",
+    "words": [
+      {
+        "answer": "STILLSMALLVOICE",
+        "clue": "How the LORD spoke on Horeb, after wind, quake and fire"
+      },
+      {
+        "answer": "NEBUCHADNEZZAR",
+        "clue": "The Babylonian king who burned Jerusalem"
+      },
+      {
+        "answer": "SENNACHERIB",
+        "clue": "Assyrian invader whose army an angel struck by night"
+      },
+      {
+        "answer": "WHIRLWIND",
+        "clue": "Elijah went up to heaven by one"
+      },
+      {
+        "answer": "HEZEKIAH",
+        "clue": "King whose life was lengthened fifteen years"
+      },
+      {
+        "answer": "REHOBOAM",
+        "clue": "Solomon's son who answered roughly and lost ten tribes"
+      },
+      {
+        "answer": "JEROBOAM",
+        "clue": "He set golden calves at Bethel and Dan"
+      },
+      {
+        "answer": "ATHALIAH",
+        "clue": "Usurping queen mother who destroyed the royal seed"
+      },
+      {
+        "answer": "SOLOMON",
+        "clue": "He asked for an understanding heart, not riches"
+      },
+      {
+        "answer": "CHARIOT",
+        "clue": "One of fire parted Elijah from Elisha"
+      },
+      {
+        "answer": "JEZEBEL",
+        "clue": "Sidonian queen who hunted the prophets of the LORD"
+      },
+      {
+        "answer": "LEPROSY",
+        "clue": "Naaman's affliction, washed away in the Jordan"
+      },
+      {
+        "answer": "AXEHEAD",
+        "clue": "Borrowed iron that swam at Elisha's word"
+      },
+      {
+        "answer": "DROUGHT",
+        "clue": "Three rainless years shut up by Elijah's prayer"
+      },
+      {
+        "answer": "SAMARIA",
+        "clue": "Omri's hilltop capital of the northern kingdom"
+      },
+      {
+        "answer": "ASSYRIA",
+        "clue": "The empire that carried the ten tribes away"
+      },
+      {
+        "answer": "BABYLON",
+        "clue": "Judah's exile lasted seventy years there"
+      },
+      {
+        "answer": "WISDOM",
+        "clue": "Solomon's famous gift, proved with a sword and a child"
+      },
+      {
+        "answer": "TEMPLE",
+        "clue": "Seven years in building, no hammer heard on site"
+      },
+      {
+        "answer": "SHEBA",
+        "clue": "Her queen came with hard questions and left breathless"
+      },
+      {
+        "answer": "AHAB",
+        "clue": "He sold himself to work evil, urged on by his wife"
+      },
+      {
+        "answer": "ELIJAH",
+        "clue": "The Tishbite who challenged Baal on Carmel"
+      },
+      {
+        "answer": "CARMEL",
+        "clue": "The mountain where fire fell on a drenched altar"
+      },
+      {
+        "answer": "BAAL",
+        "clue": "The god who did not answer from morning till noon"
+      },
+      {
+        "answer": "RAVENS",
+        "clue": "They brought bread and flesh by a brook"
+      },
+      {
+        "answer": "WIDOW",
+        "clue": "Her barrel of meal at Zarephath did not waste"
+      },
+      {
+        "answer": "ELISHA",
+        "clue": "He asked for a double portion of his master's spirit"
+      },
+      {
+        "answer": "MANTLE",
+        "clue": "Cast on a plowman, it called him to prophecy"
+      },
+      {
+        "answer": "NAAMAN",
+        "clue": "Syrian captain, great with his master, but a leper"
+      },
+      {
+        "answer": "JORDAN",
+        "clue": "Dip seven times in this river, said the prophet"
+      },
+      {
+        "answer": "GEHAZI",
+        "clue": "The servant whose greed earned Naaman's disease"
+      },
+      {
+        "answer": "ISAIAH",
+        "clue": "The prophet who brought Hezekiah word of added years"
+      },
+      {
+        "answer": "JOSIAH",
+        "clue": "The boy king who tore his robes at the found book"
+      },
+      {
+        "answer": "HULDAH",
+        "clue": "The prophetess consulted about the book of the law"
+      },
+      {
+        "answer": "JEHU",
+        "clue": "He drove furiously and ended Ahab's house"
+      },
+      {
+        "answer": "JOASH",
+        "clue": "Hidden seven years in the temple, then crowned"
+      },
+      {
+        "answer": "EXILE",
+        "clue": "The far-off end of centuries of warned-against sin"
+      },
+      {
+        "answer": "BETHEL",
+        "clue": "One of two shrines where a golden calf stood"
+      }
+    ]
   }
 ]

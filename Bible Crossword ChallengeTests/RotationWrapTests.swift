@@ -176,4 +176,43 @@ struct RotationWrapTests {
         _ = Streaks.registerCompletion(profile, now: day(2026, 9, 21), calendar: calendar)
         #expect(profile.currentStreak == 83)
     }
+
+    // MARK: - Sunday Specials
+    //
+    // The weekly pool: one 21×21 per Sunday-week. Same wrap arithmetic as the
+    // daily pools, measured in weeks — and the week must begin on Sunday, not
+    // on whatever the locale calls the first day.
+
+    @Test func theSundayPoolWrapsAfterItsOwnLength() {
+        let provider = PuzzleProvider.shared
+        let pool = provider.sundays
+        #expect(pool.count == 5, "sunday pool changed — the wrap week has moved")
+
+        // 2026-08-16 is a Sunday.
+        let sunday = day(2026, 8, 16)
+        let wrapped = calendar.date(byAdding: .day, value: pool.count * 7, to: sunday)!
+        #expect(provider.sundaySpecial(for: sunday, calendar: calendar)?.id
+            == provider.sundaySpecial(for: wrapped, calendar: calendar)?.id)
+    }
+
+    /// The card lingers all week: Sunday and the following Saturday serve the
+    /// same Special, and the next Sunday rolls it.
+    @Test func theSpecialHoldsSundayThroughSaturday() {
+        let provider = PuzzleProvider.shared
+        let sunday = day(2026, 8, 16)
+        let saturday = day(2026, 8, 22)
+        let nextSunday = day(2026, 8, 23)
+
+        let served = provider.sundaySpecial(for: sunday, calendar: calendar)
+        #expect(served != nil)
+        #expect(provider.sundaySpecial(for: saturday, calendar: calendar)?.id == served?.id)
+        #expect(provider.sundaySpecial(for: nextSunday, calendar: calendar)?.id != served?.id)
+    }
+
+    @Test func everySundaySpecialIsTwentyOneByTwentyOne() {
+        for puzzle in PuzzleProvider.shared.sundays {
+            #expect(puzzle.size == 21, "\(puzzle.id) is not 21×21")
+            #expect(puzzle.isSunday)
+        }
+    }
 }

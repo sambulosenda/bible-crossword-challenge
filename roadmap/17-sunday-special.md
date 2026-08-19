@@ -1,7 +1,7 @@
 # 17 — Sunday Special (weekly 21×21)
 
 **Priority:** high (calendar peak + Premium headline at one puzzle/week content cost)
-**Status:** `[ ]` planned
+**Status:** `[~]` shipped in code 2026-08-19 — T1–T5 done (zoom grid, generator, 5 banked Specials, weekly rotation + access, Today card + Library). T6 resolved without a new paywall row: the four-row benefit list absorbs Sundays via `totalPuzzleCount`. T7 open: existing `daily_puzzle_started/completed` events carry `sunday-` ids, dedicated events + notification/widget still to come.
 **Type:** eng (zoomable grid) + content cadence
 **Estimate:** M–L (T1 is the bulk; everything else is S)
 **Related:** `14-premium-content-value.md` (visible cadence of exclusives),
@@ -96,8 +96,7 @@ content.
 
 ## Open questions
 
-1. Backfill: seed launch with the banked specs as an instant archive (Premium
-   sees 4–6 on day one) or let it accumulate weekly? Leaning **seed** — the
-   paywall claim needs a shelf, not a promise.
+1. ~~Backfill~~ **Seeded**: launched with 5 banked Specials; Premium sees the
+   shelf on day one, free tier gets the current week's.
 2. Zen/timer defaults for a big grid — respect existing toggles, or default
    the timer hidden on Sundays?
