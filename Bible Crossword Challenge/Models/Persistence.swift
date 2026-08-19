@@ -252,11 +252,13 @@ extension PlayerProfile {
         return max(0, Self.freeHintLimit - usedToday)
     }
 
-    func consumeHint(now: Date = Date(), calendar: Calendar = .current) {
+    func consumeHint(cost: Int = 1, now: Date = Date(), calendar: Calendar = .current) {
+        // Free hints (the verse rung) never touch the count or stamp the date.
+        guard cost > 0 else { return }
         if !calendar.isDate(hintsDate ?? .distantPast, inSameDayAs: now) {
             hintsUsedToday = 0
         }
-        hintsUsedToday += 1
+        hintsUsedToday += cost
         hintsDate = now
     }
 }

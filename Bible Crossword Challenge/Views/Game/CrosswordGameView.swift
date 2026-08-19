@@ -263,6 +263,8 @@ struct CrosswordGameView: View {
         ToolbarItem(placement: .topBarTrailing) {
             Menu {
                 Section("Hints left: \(hintsRemainingText)") {
+                    // The hint ladder, gentlest rung first. Two Texts in a
+                    // Button label render as title + cost subtitle in a Menu.
                     // Absent (not disabled) when the clue has no reference —
                     // a dimmed row would advertise a hint most clues can't
                     // offer yet. See ClueListView for the same discipline.
@@ -270,18 +272,24 @@ struct CrosswordGameView: View {
                         Button {
                             useVerseHint()
                         } label: {
-                            Label("Show the Verse", systemImage: "book")
+                            Text("Show the Verse")
+                            Text(costLabel(.verse))
+                            Image(systemName: "book")
                         }
                     }
                     Button {
                         useHint(.letter)
                     } label: {
-                        Label("Reveal Letter", systemImage: "a.square")
+                        Text("Reveal Letter")
+                        Text(costLabel(.letter))
+                        Image(systemName: "a.square")
                     }
                     Button {
                         useHint(.word)
                     } label: {
-                        Label("Reveal Word", systemImage: "text.word.spacing")
+                        Text("Reveal Word")
+                        Text(costLabel(.word))
+                        Image(systemName: "text.word.spacing")
                     }
                 }
                 Section {
@@ -339,10 +347,20 @@ struct CrosswordGameView: View {
         return "\(profile.hintsRemaining(isPremium: false))"
     }
 
+    private func costLabel(_ type: HintType) -> String {
+        switch type.cost {
+        case 0: return "Free"
+        case 1: return "1 hint"
+        default: return "\(type.cost) hints"
+        }
+    }
+
     // MARK: - Actions
 
     private func useHint(_ type: HintType) {
-        guard profile.hintsRemaining(isPremium: store.isPremium) > 0 else {
+        // `>= cost`, never subtraction: premium's remaining is Int.max.
+        // A word (cost 2) with 1 left paywalls with no partial spend.
+        guard profile.hintsRemaining(isPremium: store.isPremium) >= type.cost else {
             showPaywall = true
             return
         }
@@ -357,39 +375,33 @@ struct CrosswordGameView: View {
         case .letter: didReveal = vm.revealLetter()
         case .word: didReveal = vm.revealWord()
         // Never routed here — the verse hint reveals nothing, so it has its
-        // own path (`useVerseHint`) with per-clue charging.
+        // own path (`useVerseHint`).
         case .verse: didReveal = false
         }
         guard didReveal else {
             rec.usedHint = priorUsedHint
             return
         }
-        if !store.isPremium { profile.consumeHint() }
-        analytics.log(.hintUsed(type: type.rawValue))
+        if !store.isPremium { profile.consumeHint(cost: type.cost) }
+        analytics.log(.hintUsed(type: type.rawValue, cost: type.cost))
         saveProgress()
     }
 
-    /// The third hint: open the passage the answer comes from and let the
-    /// player find the word themselves. Charges the shared quota once per
-    /// clue — re-opening the same passage to re-read it is free.
+    /// The ladder's free rung: open the passage the answer comes from and let
+    /// the player find the word themselves. Costs nothing from the daily
+    /// quota, but still counts as a hint for no-hint achievements.
     private func useVerseHint() {
         guard let slot = vm.activeSlot,
               let reference = slot.reference,
               let target = ReaderRouter.Target(reference: reference) else { return }
 
-        if !vm.hasVerseHinted(slot) {
-            guard profile.hintsRemaining(isPremium: store.isPremium) > 0 else {
-                showPaywall = true
-                return
-            }
-            let rec = loadOrCreateRecord()
+        let rec = loadOrCreateRecord()
+        if !rec.usedHint {
             rec.usedHint = true
-            vm.markVerseHinted(slot)
-            if !store.isPremium { profile.consumeHint() }
-            analytics.log(.hintUsed(type: HintType.verse.rawValue))
             saveProgress()
         }
-
+        vm.noteVerseHint()
+        analytics.log(.hintUsed(type: HintType.verse.rawValue, cost: HintType.verse.cost))
         analytics.log(.scriptureOpened(reference: reference, source: "hint"))
         vm.isTimerSuppressed = true
         vm.pauseTimer()

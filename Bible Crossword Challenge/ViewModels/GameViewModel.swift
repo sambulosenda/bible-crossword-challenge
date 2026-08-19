@@ -18,6 +18,18 @@ enum HintType: String {
     /// the player finds the word in Scripture themselves. Only offered on
     /// clues that carry a `reference`.
     case verse
+
+    /// Daily-quota cost. The ladder: verse is free (the player still does the
+    /// finding — and reading Scripture is the point), a letter is the standard
+    /// unit, and a whole word — nearly an answer button — costs two, so the
+    /// 3/day pool forces a real choice.
+    var cost: Int {
+        switch self {
+        case .verse: 0
+        case .letter: 1
+        case .word: 2
+        }
+    }
 }
 
 @Observable
@@ -65,10 +77,6 @@ final class GameViewModel {
     /// clock — and time spent reading Scripture must not count against the
     /// solve.
     var isTimerSuppressed = false
-
-    /// Slots already charged for a verse hint, so re-opening the same passage
-    /// to re-read it is free.
-    private var verseHintedSlotIDs: Set<String> = []
 
     // Side-effect callbacks owned by the view.
     var onComplete: ((Int) -> Void)?
@@ -359,16 +367,10 @@ final class GameViewModel {
         return true
     }
 
-    /// Whether `slot` was already charged for a verse hint this session —
-    /// re-opening the passage to re-read it is free.
-    func hasVerseHinted(_ slot: Slot) -> Bool {
-        verseHintedSlotIDs.contains(slot.id)
-    }
-
-    /// Record the (first) verse hint on `slot`. The grid is untouched — the
-    /// hint is the reading, not a reveal.
-    func markVerseHinted(_ slot: Slot) {
-        guard verseHintedSlotIDs.insert(slot.id).inserted else { return }
+    /// A verse hint touches no cells — the hint is the reading, not a reveal.
+    /// This only keeps the session hint counter honest for abandonment
+    /// analytics.
+    func noteVerseHint() {
         hintsUsed += 1
     }
 

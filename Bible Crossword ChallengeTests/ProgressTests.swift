@@ -270,6 +270,37 @@ struct HintTests {
         let p = PlayerProfile()
         #expect(p.hintsRemaining(isPremium: true, now: day(2026, 7, 1), calendar: utc) == Int.max)
     }
+
+    @Test func wordHintCostsTwo() {
+        let p = PlayerProfile()
+        p.consumeHint(cost: HintType.word.cost, now: day(2026, 7, 1), calendar: utc)
+        #expect(p.hintsRemaining(isPremium: false, now: day(2026, 7, 1), calendar: utc) == 1)
+    }
+
+    @Test func verseHintCostsNothing() {
+        let p = PlayerProfile()
+        p.consumeHint(cost: HintType.verse.cost, now: day(2026, 7, 1), calendar: utc)
+        #expect(p.hintsRemaining(isPremium: false, now: day(2026, 7, 1), calendar: utc) == 3)
+        // A free hint must not stamp the date either.
+        #expect(p.hintsDate == nil)
+    }
+
+    @Test func cannotAffordWordWithOneRemaining() {
+        // Pins the `remaining >= cost` comparison the view uses.
+        let p = PlayerProfile()
+        p.consumeHint(cost: 2, now: day(2026, 7, 1), calendar: utc)
+        let remaining = p.hintsRemaining(isPremium: false, now: day(2026, 7, 1), calendar: utc)
+        #expect(remaining >= HintType.letter.cost)
+        #expect(!(remaining >= HintType.word.cost))
+    }
+
+    @Test func premiumAffordsEverything() {
+        // Guards against "improving" the affordability check into subtraction,
+        // which would overflow on premium's Int.max.
+        let p = PlayerProfile()
+        let remaining = p.hintsRemaining(isPremium: true, now: day(2026, 7, 1), calendar: utc)
+        #expect(remaining >= HintType.word.cost)
+    }
 }
 
 struct AchievementTests {

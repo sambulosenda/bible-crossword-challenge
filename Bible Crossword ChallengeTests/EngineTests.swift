@@ -185,31 +185,19 @@ struct EngineTests {
         #expect(vm2.cell(at: GridPos(row: 0, col: 1)).entry == "A")
     }
 
-    @Test func verseHintChargesOncePerSlot() {
+    @Test func verseHintBumpsSessionCounter() {
         let vm = GameViewModel(puzzle: makePuzzle())
-        let slot = vm.acrossSlots[0]
-        #expect(!vm.hasVerseHinted(slot))
-
-        vm.markVerseHinted(slot)
-        #expect(vm.hasVerseHinted(slot))
-        #expect(vm.hintsUsed == 1)
-
-        // Re-reading the same passage is free — no second charge.
-        vm.markVerseHinted(slot)
-        #expect(vm.hintsUsed == 1)
-
-        // A different slot is a fresh charge.
-        vm.markVerseHinted(vm.downSlots[0])
+        // Free rung, no per-clue dedupe: every open counts toward the
+        // session counter that feeds abandonment analytics.
+        vm.noteVerseHint()
+        vm.noteVerseHint()
         #expect(vm.hintsUsed == 2)
     }
 
-    @Test func verseHintTouchesNoCells() {
-        let vm = GameViewModel(puzzle: makePuzzle())
-        vm.markVerseHinted(vm.acrossSlots[0])
-        for pos in vm.acrossSlots[0].positions {
-            #expect(vm.cell(at: pos).entry == nil)
-            #expect(!vm.cell(at: pos).isRevealed)
-        }
+    @Test func hintTypeCosts() {
+        #expect(HintType.verse.cost == 0)
+        #expect(HintType.letter.cost == 1)
+        #expect(HintType.word.cost == 2)
     }
 
     @Test func suppressedTimerAccruesNothing() {

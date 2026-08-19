@@ -33,7 +33,7 @@ enum AnalyticsEvent {
     /// window, so a quit via app-kill from the background is not counted — the
     /// numbers are a floor, not a census.
     case puzzleAbandoned(puzzleID: String, fillPercent: Int, seconds: Int, hintsUsed: Int)
-    case hintUsed(type: String)
+    case hintUsed(type: String, cost: Int)
     case streakUpdated(streak: Int)
     // The two halves of a lost streak. `streakBroken` fires once, on the launch
     // that resets it (see `Streaks.Outcome`), carrying what was lost — the
@@ -235,8 +235,8 @@ enum AnalyticsEvent {
                 "seconds": seconds,
                 "hints_used": hintsUsed,
             ]
-        case .hintUsed(let type):
-            return ["type": type]
+        case .hintUsed(let type, let cost):
+            return ["type": type, "cost": cost]
         case .streakUpdated(let streak):
             return ["streak": streak]
         case .streakBroken(let previousLength):
