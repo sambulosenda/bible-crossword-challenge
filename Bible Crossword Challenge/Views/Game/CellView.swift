@@ -76,14 +76,21 @@ struct CellView: View, Equatable {
                     }
 
                     if let entry = cell.entry {
+                        // A pencilled letter reads as handwriting-in-the-margin:
+                        // smaller, lighter, and grey, so the eye keeps parsing
+                        // pen letters as the real grid.
                         Text(String(entry))
-                            .font(.system(size: side * 0.5, weight: .semibold, design: .rounded))
-                            .foregroundStyle(CellPalette.textColor(isSelected: isSelected))
+                            .font(.system(
+                                size: side * (cell.isPencil ? 0.42 : 0.5),
+                                weight: cell.isPencil ? .regular : .semibold,
+                                design: .rounded
+                            ))
+                            .foregroundStyle(CellPalette.textColor(isSelected: isSelected, isPencil: cell.isPencil))
                             .scaleEffect(flash && !reduceMotion ? 1.18 : 1.0)
                             .transition(reduceMotion ? .opacity : .scale(scale: 0.4).combined(with: .opacity))
                             // Identity follows the letter so overtyping a filled
                             // cell re-pops instead of swapping text in place.
-                            .id(entry)
+                            .id("\(entry)\(cell.isPencil ? "p" : "")")
                     }
 
                     // Non-colour cue for correctness when colour can't be relied on.
@@ -113,8 +120,9 @@ struct CellView: View, Equatable {
     private var accessibilityLabel: String {
         let base = "Row \(cell.pos.row + 1), Column \(cell.pos.col + 1)"
         guard let entry = cell.entry else { return "\(base), empty" }
-        if errorVisible { return "\(base), \(String(entry)), incorrect" }
-        if correctVisible { return "\(base), \(String(entry)), correct" }
-        return "\(base), \(String(entry))"
+        let letter = cell.isPencil ? "\(String(entry)), pencilled in" : String(entry)
+        if errorVisible { return "\(base), \(letter), incorrect" }
+        if correctVisible { return "\(base), \(letter), correct" }
+        return "\(base), \(letter)"
     }
 }

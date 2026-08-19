@@ -108,7 +108,10 @@ struct EngineTests {
         vm.onWordCompleted = { _ in fired = true }
         vm.enter("C"); vm.enter("A"); vm.enter("X")  // CAX is wrong
         #expect(fired == false)
-        #expect(vm.hasVisibleErrors == true)
+        // The full word auto-advanced selection to the next slot — come back
+        // to CAT before judging it.
+        vm.select(GridPos(row: 0, col: 2))
+        #expect(vm.check(.word) == 1)                // the X is checkably wrong
     }
 
     @Test func finalWordDoesNotDoubleFireWithCompletion() {
@@ -146,7 +149,7 @@ struct EngineTests {
         #expect(count == 0)
     }
 
-    @Test func showErrorsFlagsWrongEntries() {
+    @Test func wrongEntryIsNotCorrect() {
         let vm = GameViewModel(puzzle: makePuzzle())
         vm.enter("X") // wrong at (0,0)
         let cell = vm.cell(at: GridPos(row: 0, col: 0))
@@ -242,5 +245,180 @@ struct EngineTests {
         #expect(vm.activeSlot?.answer == "COD")
         vm.advanceClue(by: 1) // wrap back
         #expect(vm.activeSlot?.answer == "CAT")
+    }
+
+    // MARK: - Pencil mode
+
+    @Test func pencilEntryNeverCompletesAnything() {
+        let vm = GameViewModel(puzzle: makePuzzle())
+        var completedWords = 0
+        vm.onWordCompleted = { _ in completedWords += 1 }
+
+        vm.isPencilMode = true
+        // Fill the entire grid correctly — but all in pencil.
+        vm.enter("C"); vm.enter("A"); vm.enter("T")
+        vm.select(GridPos(row: 1, col: 0)); vm.enter("O")
+        vm.select(GridPos(row: 2, col: 0)); vm.enter("D")
+
+        #expect(vm.cell(at: GridPos(row: 0, col: 0)).isPencil)
+        #expect(!vm.isComplete)
+        #expect(completedWords == 0)
+        #expect(vm.remainingClueCount == 2)
+    }
+
+    @Test func penOverwriteCommitsAPencilledLetter() {
+        let vm = GameViewModel(puzzle: makePuzzle())
+        vm.isPencilMode = true
+        vm.enter("C")
+        #expect(vm.cell(at: GridPos(row: 0, col: 0)).isPencil)
+
+        vm.isPencilMode = false
+        vm.select(GridPos(row: 0, col: 0))
+        vm.enter("C")
+        let cell = vm.cell(at: GridPos(row: 0, col: 0))
+        #expect(!cell.isPencil)
+        #expect(cell.isCorrect)
+    }
+
+    @Test func penningTheLastPencilCompletesThePuzzle() {
+        let vm = GameViewModel(puzzle: makePuzzle())
+        vm.isPencilMode = true
+        vm.enter("C"); vm.enter("A"); vm.enter("T")
+        vm.select(GridPos(row: 1, col: 0)); vm.enter("O")
+        vm.select(GridPos(row: 2, col: 0)); vm.enter("D")
+        #expect(!vm.isComplete)
+
+        // Commit each pencilled letter in pen.
+        vm.isPencilMode = false
+        for pos in [GridPos(row: 0, col: 0), GridPos(row: 0, col: 1), GridPos(row: 0, col: 2),
+                    GridPos(row: 1, col: 0), GridPos(row: 2, col: 0)] {
+            vm.select(pos)
+            vm.enter(vm.cell(at: pos).entry!)
+        }
+        #expect(vm.isComplete)
+    }
+
+    @Test func revealConvertsPencilToLockedPen() {
+        let vm = GameViewModel(puzzle: makePuzzle())
+        vm.isPencilMode = true
+        vm.enter("C") // correct letter, but pencilled
+        vm.select(GridPos(row: 0, col: 0))
+
+        vm.isPencilMode = false
+        #expect(vm.revealLetter())
+        let cell = vm.cell(at: GridPos(row: 0, col: 0))
+        #expect(!cell.isPencil)
+        #expect(cell.isRevealed)
+        #expect(cell.entry == "C")
+    }
+
+    @Test func snapshotSeparatesPenFromPencil() {
+        let vm = GameViewModel(puzzle: makePuzzle())
+        vm.enter("C")                       // pen
+        vm.isPencilMode = true
+        vm.enter("X")                       // pencil at (0,1)
+        #expect(vm.snapshot() == ["0,0": "C"])
+        #expect(vm.pencilSnapshot() == ["0,1": "X"])
+
+        let vm2 = GameViewModel(puzzle: makePuzzle())
+        vm2.restore(vm.snapshot(), pencil: vm.pencilSnapshot())
+        #expect(vm2.cell(at: GridPos(row: 0, col: 0)).entry == "C")
+        #expect(!vm2.cell(at: GridPos(row: 0, col: 0)).isPencil)
+        #expect(vm2.cell(at: GridPos(row: 0, col: 1)).entry == "X")
+        #expect(vm2.cell(at: GridPos(row: 0, col: 1)).isPencil)
+    }
+
+    /// Pins the entries encoding: lowercase means hint-revealed (locked).
+    /// The case of the stored value is load-bearing — see `snapshot()`.
+    @Test func lowercaseSnapshotValueMarksRevealedCell() {
+        let vm = GameViewModel(puzzle: makePuzzle())
+        vm.enter("C")
+        #expect(vm.revealLetter()) // reveals A at (0,1)
+        let snap = vm.snapshot()
+        #expect(snap["0,0"] == "C")
+        #expect(snap["0,1"] == "a")
+
+        let vm2 = GameViewModel(puzzle: makePuzzle())
+        vm2.restore(snap)
+        #expect(!vm2.cell(at: GridPos(row: 0, col: 0)).isRevealed)
+        #expect(vm2.cell(at: GridPos(row: 0, col: 1)).isRevealed)
+    }
+
+    // MARK: - Granular check
+
+    @Test func checkWordMarksOnlyInScopeWrongCells() {
+        let vm = GameViewModel(puzzle: makePuzzle())
+        vm.enter("C"); vm.enter("X")                     // CAT: C right, X wrong
+        vm.select(GridPos(row: 1, col: 0)); vm.enter("Z") // COD: Z wrong, other word
+        vm.select(GridPos(row: 0, col: 0))
+        vm.direction = .across
+
+        var reported: (correct: Int, wrong: Int)?
+        vm.onCheckResult = { correct, wrong in reported = (correct.count, wrong) }
+        #expect(vm.check(.word) == 1)
+
+        #expect(vm.cell(at: GridPos(row: 0, col: 1)).isCheckedWrong)
+        #expect(!vm.cell(at: GridPos(row: 0, col: 0)).isCheckedWrong)
+        // The wrong letter in the other word is out of scope.
+        #expect(!vm.cell(at: GridPos(row: 1, col: 0)).isCheckedWrong)
+        #expect(reported?.correct == 1)
+        #expect(reported?.wrong == 1)
+    }
+
+    @Test func editingAMarkedCellClearsTheMark() {
+        let vm = GameViewModel(puzzle: makePuzzle())
+        vm.enter("X")
+        vm.select(GridPos(row: 0, col: 0))
+        _ = vm.check(.letter)
+        #expect(vm.cell(at: GridPos(row: 0, col: 0)).isCheckedWrong)
+
+        vm.enter("C")
+        #expect(!vm.cell(at: GridPos(row: 0, col: 0)).isCheckedWrong)
+    }
+
+    @Test func checkNeverTouchesTheHintEconomy() {
+        let vm = GameViewModel(puzzle: makePuzzle())
+        vm.enter("X"); vm.enter("A")
+        _ = vm.check(.puzzle)
+        #expect(vm.hintsUsed == 0)
+        // Nothing revealed, nothing filled in.
+        #expect(vm.cell(at: GridPos(row: 0, col: 0)).entry == "X")
+        #expect(!vm.cell(at: GridPos(row: 0, col: 0)).isRevealed)
+    }
+
+    @Test func checkWithNothingFilledReturnsNil() {
+        let vm = GameViewModel(puzzle: makePuzzle())
+        #expect(vm.check(.puzzle) == nil)
+        #expect(vm.check(.letter) == nil)
+    }
+
+    // MARK: - Reveal puzzle
+
+    @Test func revealPuzzleCompletesAndLocks() {
+        let vm = GameViewModel(puzzle: makePuzzle())
+        vm.enter("C")          // player's own correct pen letter
+        vm.isPencilMode = true
+        vm.enter("X")          // wrong pencil at (0,1)
+
+        #expect(vm.revealPuzzle())
+        #expect(vm.isComplete)
+        #expect(vm.hintsUsed == 1)
+        // The player's own correct letter stays unlocked; everything the
+        // reveal touched (including the pencil cell) is locked pen.
+        #expect(!vm.cell(at: GridPos(row: 0, col: 0)).isRevealed)
+        let fixed = vm.cell(at: GridPos(row: 0, col: 1))
+        #expect(fixed.entry == "A")
+        #expect(fixed.isRevealed)
+        #expect(!fixed.isPencil)
+    }
+
+    @Test func revealPuzzleRefusesWhenAlreadySolved() {
+        let vm = GameViewModel(puzzle: makePuzzle())
+        vm.enter("C"); vm.enter("A"); vm.enter("T")
+        vm.select(GridPos(row: 1, col: 0)); vm.enter("O")
+        vm.select(GridPos(row: 2, col: 0)); vm.enter("D")
+        #expect(vm.isComplete)
+        #expect(!vm.revealPuzzle())
+        #expect(vm.hintsUsed == 0)
     }
 }

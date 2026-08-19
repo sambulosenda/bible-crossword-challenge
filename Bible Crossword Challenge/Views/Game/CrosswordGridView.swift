@@ -38,10 +38,11 @@ struct CrosswordGridView: View {
                                 side: side,
                                 isSelected: vm.selected == pos,
                                 isInWord: activeWord.contains(pos),
-                                // Auto-check marks mistakes continuously; only
-                                // the manual check also greens correct letters.
-                                showError: vm.showErrors || vm.autoCheck,
-                                showCorrect: vm.showErrors,
+                                // Auto-check marks mistakes continuously; a
+                                // one-shot check marks its cells until edited
+                                // (that part rides on the cell itself).
+                                showError: vm.autoCheck || cell.isCheckedWrong,
+                                showCorrect: showCorrectOverlay,
                                 flash: flashing.contains(pos),
                                 onTap: { vm.select(pos) }
                             )
@@ -58,22 +59,48 @@ struct CrosswordGridView: View {
         .sensoryFeedback(.impact(weight: .light), trigger: wordTick)
         .sensoryFeedback(.error, trigger: shakeTick)
         .onAppear { wireFeedback() }
-        .onChange(of: vm.showErrors) { _, showing in
-            guard showing, vm.hasVisibleErrors else { return }
-            if reduceMotion {
-                shakeTick += 1                                      // haptic only
-            } else {
-                withAnimation(.linear(duration: 0.45)) { shakeTick += 1 }
-            }
-        }
         .onChange(of: vm.isComplete) { _, complete in
             guard complete, !reduceMotion else { return }
             celebrationWave()
         }
     }
 
-    /// Wire the engine's word-complete callback to the flash + haptic.
+    /// Screenshot helpers paint correct cells green; live play never does —
+    /// check feedback is a transient flash, not a stored state.
+    private var showCorrectOverlay: Bool {
+        #if DEBUG
+        vm.showCorrectOverlay
+        #else
+        false
+        #endif
+    }
+
+    /// Wire the engine's word-complete and check-result callbacks to the
+    /// flash, shake and haptics.
     private func wireFeedback() {
+        vm.onCheckResult = { correct, wrongCount in
+            if wrongCount > 0 {
+                if reduceMotion {
+                    shakeTick += 1                                  // haptic only
+                } else {
+                    withAnimation(.linear(duration: 0.45)) { shakeTick += 1 }
+                }
+                AccessibilityNotification.Announcement(
+                    wrongCount == 1 ? "1 letter incorrect" : "\(wrongCount) letters incorrect"
+                ).post()
+            } else if !correct.isEmpty {
+                AccessibilityNotification.Announcement("All checked letters correct").post()
+            }
+            // Brief green pulse on what checked out — shown once, not stored,
+            // so repeated checking can't paint a permanent answer key.
+            guard !correct.isEmpty else { return }
+            let positions = Set(correct)
+            withAnimation(.easeOut(duration: 0.18)) { flashing.formUnion(positions) }
+            Task { @MainActor in
+                try? await Task.sleep(for: .milliseconds(600))
+                withAnimation(.easeOut(duration: 0.3)) { flashing.subtract(positions) }
+            }
+        }
         vm.onWordCompleted = { slot in
             let positions = slot.positions
             wordTick &+= 1

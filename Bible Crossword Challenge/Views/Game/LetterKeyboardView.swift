@@ -10,8 +10,12 @@
 import SwiftUI
 
 struct LetterKeyboardView: View {
+    var isPencilMode: Bool = false
     let onLetter: (Character) -> Void
     let onDelete: () -> Void
+    /// Present only where pencil entry exists (the game); the onboarding
+    /// first-solve keeps the plain pad.
+    var onTogglePencil: (() -> Void)? = nil
 
     @State private var lastKeyTick = 0
 
@@ -26,6 +30,9 @@ struct LetterKeyboardView: View {
             ForEach(rows, id: \.self) { row in
                 HStack(spacing: 6) {
                     if row.count < 10 { Spacer(minLength: 0) }
+                    if row == rows.last, onTogglePencil != nil {
+                        pencilKey
+                    }
                     ForEach(Array(row), id: \.self) { letter in
                         key(for: letter)
                     }
@@ -52,6 +59,24 @@ struct LetterKeyboardView: View {
         }
         .buttonStyle(KeyButtonStyle())
         .accessibilityLabel(String(letter))
+    }
+
+    /// Pencil (provisional entry) mode toggle. Mirrors the delete key on the
+    /// other end of the bottom row; the filled accent state is the mode light.
+    private var pencilKey: some View {
+        Button {
+            lastKeyTick &+= 1
+            onTogglePencil?()
+        } label: {
+            Image(systemName: isPencilMode ? "pencil.circle.fill" : "pencil")
+                .font(.title3)
+                .frame(maxWidth: .infinity, minHeight: keyHeight)
+                .foregroundStyle(isPencilMode ? Theme.accent : .primary)
+        }
+        .buttonStyle(KeyButtonStyle())
+        .accessibilityLabel("Pencil mode")
+        .accessibilityValue(isPencilMode ? "on" : "off")
+        .accessibilityHint("Letters you type are provisional until entered in pen")
     }
 
     private var deleteKey: some View {

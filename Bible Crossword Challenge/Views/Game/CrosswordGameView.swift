@@ -52,6 +52,8 @@ struct CrosswordGameView: View {
     /// Grid is full but at least one letter is wrong — nudge instead of leaving
     /// the player stranded wondering why the completion screen didn't appear.
     @State private var showFullMissAlert = false
+    /// Reveal Puzzle is the give-up button — never fired from a stray menu tap.
+    @State private var showRevealPuzzleConfirm = false
     /// A friend's "beat my time" for this puzzle, captured on entry so the
     /// target chip and result comparison stay stable even after it's consumed.
     @State private var incomingChallenge: ChallengeService.Challenge?
@@ -87,8 +89,10 @@ struct CrosswordGameView: View {
             ClueBarView(vm: vm)
 
             LetterKeyboardView(
+                isPencilMode: vm.isPencilMode,
                 onLetter: { vm.enter($0) },
-                onDelete: { vm.delete() }
+                onDelete: { vm.delete() },
+                onTogglePencil: { vm.isPencilMode.toggle() }
             )
             .background(Color(.systemBackground))
         }
@@ -174,10 +178,20 @@ struct CrosswordGameView: View {
             showFullMissAlert = true
         }
         .alert("Almost There", isPresented: $showFullMissAlert) {
-            Button("Check Answers") { vm.showErrors = true }
+            Button("Check Answers") { runCheck(.puzzle) }
             Button("Keep Trying", role: .cancel) {}
         } message: {
             Text("Every square is filled, but at least one letter isn't right.")
+        }
+        .confirmationDialog(
+            "Reveal the whole puzzle?",
+            isPresented: $showRevealPuzzleConfirm,
+            titleVisibility: .visible
+        ) {
+            Button("Reveal Puzzle", role: .destructive) { useHint(.puzzle) }
+            Button("Keep Solving", role: .cancel) {}
+        } message: {
+            Text("Every remaining square is filled in for you. This uses a hint and the solve won't count as unaided.")
         }
         .task {
             gridFocused = true
@@ -188,7 +202,8 @@ struct CrosswordGameView: View {
             vm.onComplete = { seconds in handleCompletion(seconds: seconds) }
             let rec = loadOrCreateRecord()
             incomingChallenge = challengeService.pending(for: puzzle.id)
-            let isResume = !rec.isCompleted && (!rec.entries.isEmpty || rec.elapsedSeconds > 0)
+            let isResume = !rec.isCompleted
+                && (!rec.entries.isEmpty || !rec.pencil.isEmpty || rec.elapsedSeconds > 0)
             if rec.isCompleted, incomingChallenge != nil {
                 // Already solved this puzzle — jump straight to the comparison
                 // rather than replaying (a replay knows the answers and would
@@ -199,8 +214,8 @@ struct CrosswordGameView: View {
                 // Seed accumulated time before restoring, since restoring a
                 // fully-filled grid can trigger completion.
                 vm.seedElapsed(rec.elapsedSeconds)
-                if !rec.entries.isEmpty {
-                    vm.restore(rec.entries)
+                if !rec.entries.isEmpty || !rec.pencil.isEmpty {
+                    vm.restore(rec.entries, pencil: rec.pencil)
                 }
             }
             analytics.log(.dailyPuzzleStarted(puzzleID: puzzle.id, isResume: isResume))
@@ -283,18 +298,36 @@ struct CrosswordGameView: View {
                     } label: {
                         Label("Reveal Word", systemImage: "text.word.spacing")
                     }
+                    Button(role: .destructive) {
+                        showRevealPuzzleConfirm = true
+                    } label: {
+                        Label("Reveal Puzzle", systemImage: "square.grid.3x3.fill")
+                    }
+                }
+                // Checks are free: they judge what's on the grid without giving
+                // anything away, which is a different economy from hints.
+                Section("Check") {
+                    Button {
+                        runCheck(.letter)
+                    } label: {
+                        Label("Check Letter", systemImage: "checkmark.square")
+                    }
+                    Button {
+                        runCheck(.word)
+                    } label: {
+                        Label("Check Word", systemImage: "checkmark.rectangle")
+                    }
+                    Button {
+                        runCheck(.puzzle)
+                    } label: {
+                        Label("Check Puzzle", systemImage: "checkmark.circle")
+                    }
                 }
                 Section {
-                    // Persistent as-you-type marking; the one-shot check below
-                    // stays for players who keep it off.
+                    // Persistent as-you-type marking; the one-shot checks above
+                    // stay for players who keep it off.
                     Toggle(isOn: $autoCheckErrors) {
                         Label("Auto-Check", systemImage: "checkmark.seal")
-                    }
-                    Toggle(isOn: Binding(
-                        get: { vm.showErrors },
-                        set: { _ in vm.toggleCheck() }
-                    )) {
-                        Label("Check Answers", systemImage: "checkmark.circle")
                     }
                 }
             } label: {
@@ -341,6 +374,14 @@ struct CrosswordGameView: View {
 
     // MARK: - Actions
 
+    /// Free one-shot check. Marks wrong cells (until edited), flashes correct
+    /// ones, and deliberately never touches `usedHint` — checking is play,
+    /// not aid, and must not cost anyone the Unaided/Purist achievements.
+    private func runCheck(_ scope: CheckScope) {
+        guard let wrong = vm.check(scope) else { return }
+        analytics.log(.checkUsed(scope: scope.rawValue, wrongCount: wrong))
+    }
+
     private func useHint(_ type: HintType) {
         guard profile.hintsRemaining(isPremium: store.isPremium) > 0 else {
             showPaywall = true
@@ -356,6 +397,7 @@ struct CrosswordGameView: View {
         switch type {
         case .letter: didReveal = vm.revealLetter()
         case .word: didReveal = vm.revealWord()
+        case .puzzle: didReveal = vm.revealPuzzle()
         // Never routed here — the verse hint reveals nothing, so it has its
         // own path (`useVerseHint`) with per-clue charging.
         case .verse: didReveal = false
@@ -453,6 +495,7 @@ struct CrosswordGameView: View {
         rec.completedDate = Date()
         rec.elapsedSeconds = seconds
         rec.entries = vm.snapshot()
+        rec.pencil = [:] // a completed grid has no provisional letters left
         rec.updatedAt = Date()
         context.saveLogged("puzzle completion")
         WidgetBridge.publish(profile)
@@ -542,6 +585,7 @@ struct CrosswordGameView: View {
         let rec = loadOrCreateRecord()
         guard !rec.isCompleted else { return }
         rec.entries = vm.snapshot()
+        rec.pencil = vm.pencilSnapshot()
         rec.elapsedSeconds = vm.elapsed()
         rec.updatedAt = Date()
         context.saveLogged("puzzle progress")
