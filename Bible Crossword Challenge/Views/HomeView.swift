@@ -268,6 +268,20 @@ struct HomeView: View {
                         }
                     }
 
+                    // Under the habit surfaces (puzzles, streak), above the
+                    // discovery ones. This card lived at the very bottom and
+                    // reached 21 users/25 taps in 30 days — about 6.5% of
+                    // actives ever saw it. Here it's one short scroll away
+                    // instead of a full one. `source: "home_card"` is
+                    // unchanged on purpose: the move is measured as a lift on
+                    // the same PostHog event, not a new one.
+                    if !store.isPremium {
+                        UpgradeCard(
+                            totalPuzzles: puzzleProvider.totalPuzzleCount,
+                            solvedPuzzles: records.count { $0.isCompleted }
+                        )
+                    }
+
                     if !collectionPacks.isEmpty {
                         CollectionsCarousel(
                             packs: collectionPacks,
@@ -278,19 +292,12 @@ struct HomeView: View {
 
                     NextAchievementCard(profile: profile)
 
-                    // Below the achievement card, above the upsell: the mode
-                    // earns attention through its due badge, not its position.
+                    // Below the achievement card: the mode earns attention
+                    // through its due badge, not its position.
                     MemoryVerseCard(
                         dueCount: memoryVerses.dueCount,
                         activeCount: memoryVerses.entries.count
                     )
-
-                    if !store.isPremium {
-                        UpgradeCard(
-                            totalPuzzles: puzzleProvider.totalPuzzleCount,
-                            solvedPuzzles: records.count { $0.isCompleted }
-                        )
-                    }
                 }
                 .padding(Theme.Spacing.m)
                 .frame(maxWidth: 560)
