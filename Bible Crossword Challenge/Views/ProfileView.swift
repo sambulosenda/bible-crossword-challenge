@@ -80,7 +80,7 @@ struct ProfileView: View {
                     preferencesSection
                     gameplaySection
                     remindersSection
-                    aboutSection
+                    supportSection
                     #if DEBUG
                     developerSection
                     #endif
@@ -284,6 +284,7 @@ struct ProfileView: View {
                 SettingsRowLabel(title: "Auto-check mistakes", symbol: "checkmark.seal.fill", tint: .green)
             }
             .settingsRowInsets()
+            .tint(Theme.accent)
             .task {
                 // Whichever screen reads the key first seeds the per-player
                 // default, so this toggle and the in-game menu always agree.
@@ -293,6 +294,7 @@ struct ProfileView: View {
                 SettingsRowLabel(title: "Show solve timer", symbol: "timer", tint: .blue)
             }
             .settingsRowInsets()
+            .tint(Theme.accent)
         } footer: {
             Text("Auto-check marks wrong letters as you type. Hide the timer for an unhurried solve — times are still recorded for challenges and records.")
         }
@@ -310,6 +312,7 @@ struct ProfileView: View {
                 SettingsRowLabel(title: "Daily reminder", symbol: "bell.fill", tint: .orange)
             }
             .settingsRowInsets()
+            .tint(Theme.accent)
             .onChange(of: remindersEnabled) { _, enabled in
                 if programmaticReminderWrite {
                     programmaticReminderWrite = false
@@ -372,21 +375,40 @@ struct ProfileView: View {
         }
     }
 
-    // MARK: - About
+    // MARK: - Support
 
-    private var aboutSection: some View {
-        SettingsSection("About") {
-            SettingsRow(title: "Version", symbol: "info.circle.fill", tint: .secondary) {
-                Text(appVersion)
-                    .font(.subheadline.weight(.semibold))
-                    .monospacedDigit()
-                    .foregroundStyle(.secondary)
+    /// Rate, share, and reach us — plus the legal pair App Review expects a
+    /// subscription app to expose. The version lives in the footer: a static
+    /// fact doesn't earn a row of its own.
+    private var supportSection: some View {
+        SettingsSection("Support") {
+            SettingsButtonRow(title: "Rate the app", symbol: "star.fill", tint: .yellow, external: true) {
+                openURL(AppLinks.review)
             }
-            // Label and value are one fact, so they're one stop for VoiceOver
-            // ("Version, 1.9") rather than two adjacent static texts.
-            .accessibilityElement(children: .combine)
+            RowDivider()
+            ShareLink(item: AppLinks.appStore) {
+                HStack(spacing: Theme.Spacing.s) {
+                    SettingsRowLabel(title: "Share with a friend", symbol: "square.and.arrow.up", tint: Theme.accent)
+                    Spacer(minLength: Theme.Spacing.s)
+                }
+                .settingsRowInsets()
+                .contentShape(.rect)
+            }
+            .buttonStyle(.plain)
+            RowDivider()
+            SettingsButtonRow(title: "Contact support", symbol: "envelope.fill", tint: .green, external: true) {
+                openURL(AppLinks.support)
+            }
+            RowDivider()
+            SettingsButtonRow(title: "Privacy policy", symbol: "hand.raised.fill", tint: .indigo, external: true) {
+                openURL(AppLinks.privacy)
+            }
+            RowDivider()
+            SettingsButtonRow(title: "Terms of use", symbol: "doc.text.fill", tint: .secondary, external: true) {
+                openURL(AppLinks.terms)
+            }
         } footer: {
-            Text("Bible Crossword Challenge — learn Scripture one puzzle a day.")
+            Text("Version \(appVersion) · Learn Scripture one puzzle a day.")
         }
     }
 
@@ -784,6 +806,10 @@ private struct SettingsButtonRow: View {
     let symbol: String
     let tint: Color
     var hint: String? = nil
+    /// True for rows that leave the app (web, Mail, App Store). The trailing
+    /// glyph switches to the outbound arrow so a chevron keeps meaning
+    /// "pushes a screen here".
+    var external: Bool = false
     let action: () -> Void
 
     var body: some View {
@@ -791,14 +817,30 @@ private struct SettingsButtonRow: View {
             HStack(spacing: Theme.Spacing.s) {
                 SettingsRowLabel(title: title, symbol: symbol, tint: tint)
                 Spacer(minLength: Theme.Spacing.s)
-                Image(systemName: "chevron.right")
+                Image(systemName: external ? "arrow.up.right" : "chevron.right")
                     .font(.footnote.weight(.semibold))
                     .foregroundStyle(.tertiary)
+                    // Decorative — without this VoiceOver appends the symbol's
+                    // name ("arrow up right") to the row's label.
+                    .accessibilityHidden(true)
             }
             .settingsRowInsets()
             .contentShape(.rect)
         }
         .buttonStyle(.plain)
-        .accessibilityHint(hint ?? "")
+        .accessibilityHint(hint ?? (external ? "Opens outside the app" : ""))
     }
+}
+
+// MARK: - Links
+
+/// Everywhere the profile screen can send someone. One place, so the App Store
+/// id and site host can't drift between rows.
+private enum AppLinks {
+    static let appStore = URL(string: "https://apps.apple.com/app/id6783034270")!
+    static let review = URL(string: "https://apps.apple.com/app/id6783034270?action=write-review")!
+    static let privacy = URL(string: "https://biblecrosswordchallenge.com/privacy/")!
+    /// Apple's standard EULA — the app has no bespoke terms page.
+    static let terms = URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!
+    static let support = URL(string: "mailto:sambulosendas@gmail.com")!
 }
