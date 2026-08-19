@@ -47,13 +47,18 @@ struct StreakCard: View {
 
                 Spacer(minLength: 0)
 
-                VStack(alignment: .trailing, spacing: 0) {
-                    Text("\(best)")
-                        .font(.title3.weight(.bold))
-                        .monospacedDigit()
-                    Text("best")
-                        .font(.caption.weight(.medium))
-                        .foregroundStyle(.secondary)
+                // Only a record worth chasing earns a second number — while
+                // best == current the trailing stat just mirrors the big one.
+                if best > current {
+                    VStack(alignment: .trailing, spacing: 0) {
+                        Text("\(best)")
+                            .font(.headline)
+                            .monospacedDigit()
+                            .foregroundStyle(.secondary)
+                        Text("best")
+                            .font(.caption.weight(.medium))
+                            .foregroundStyle(.secondary)
+                    }
                 }
             }
 
@@ -86,17 +91,17 @@ struct StreakCard: View {
         return label
     }
 
+    // The tint stays on the symbol only: a cyan caption fails contrast on the
+    // card, and a full-width tinted line reads as a button this isn't.
     private func footnote(_ text: LocalizedStringKey, symbol: String, tint: Color) -> some View {
-        Label(text, systemImage: symbol)
-            .font(.caption.weight(.medium))
-            .foregroundStyle(tint)
-            .frame(maxWidth: .infinity)
-            .padding(.top, Theme.Spacing.xs)
-            .overlay(alignment: .top) {
-                Rectangle()
-                    .fill(Color.primary.opacity(0.08))
-                    .frame(height: 1)
-            }
+        Label {
+            Text(text).foregroundStyle(.secondary)
+        } icon: {
+            Image(systemName: symbol).foregroundStyle(tint)
+        }
+        .font(.caption.weight(.medium))
+        .frame(maxWidth: .infinity)
+        .padding(.top, Theme.Spacing.xs)
     }
 }
 
