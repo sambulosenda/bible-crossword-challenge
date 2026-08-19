@@ -1,7 +1,8 @@
 Thanks for playing Bible Crossword Challenge! This update includes:
 
-• Show the Verse: a new hint that opens the Bible passage behind the answer — read the verse, and the word reveals itself
-• Over 1,000 new verse references — every daily and mini clue in the current rotation now points you to its place in Scripture
-• Set your daily reminder right from the celebration screen after a solve, or from your streak card
-• A more polished Profile screen: easier-to-tap buttons and tidier rows
-• Small fixes and improvements throughout
+• Sunday Special: a big 21×21 crossword every week — pinch to zoom, and this week's puzzle is free for everyone
+• Pencil marks: jot candidate letters while you think, then confirm them when you're sure
+• Check or reveal exactly what you need — a single letter, a word, or the whole grid
+• Memory Verses: turn a verse from a solved puzzle into one you know by heart, with practice that grows as you do
+• Zen mode: hide the timer for an unhurried solve — your times are still saved
+• A fairer weekly leaderboard: solves that used hints no longer post times
