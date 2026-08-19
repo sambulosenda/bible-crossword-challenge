@@ -30,6 +30,7 @@ Dated work first — 13 has a hard deadline that the rest do not.
 | 14 | **Premium content value** — earn “all packs + every new one” | Trial→paid / catalog | [14-premium-content-value.md](./14-premium-content-value.md) |
 | 15 | Verse hint (“Show the Verse”) | Scripture in the solve loop | [15-verse-hint.md](./15-verse-hint.md) |
 | 16 | Notification opt-in surfaces | Reminder reach / push roadmap | [16-notification-opt-in.md](./16-notification-opt-in.md) |
+| 17 | Sunday Special (weekly 21×21) | Calendar peak / Premium headline | [17-sunday-special.md](./17-sunday-special.md) |
 
 ## Dated
 
