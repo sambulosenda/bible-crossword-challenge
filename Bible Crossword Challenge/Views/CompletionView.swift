@@ -171,6 +171,8 @@ struct CompletionView: View {
                     miniUpsellCard
                 }
 
+                secondaryActions
+
                 nextPuzzleFooter
             }
             .padding(Theme.Spacing.l)
@@ -179,13 +181,16 @@ struct CompletionView: View {
         }
         .background(Theme.background)
         .softTopScrollEdge()
+        // HIG: a pinned bottom bar carries one primary action, not a menu.
+        // Everything else scrolls with the content (see `secondaryActions`).
         .safeAreaInset(edge: .bottom) {
-            actions
+            pinnedActions
                 .padding(.horizontal, Theme.Spacing.l)
                 .padding(.vertical, Theme.Spacing.s)
                 .frame(maxWidth: 520)
                 .frame(maxWidth: .infinity)
                 .background(.bar)
+                .overlay(alignment: .top) { Divider() }
         }
         .onAppear {
             renderShareCard()
@@ -1001,11 +1006,11 @@ struct CompletionView: View {
         analytics.log(.reminderAskShown(source: ReminderAsk.Surface.completion.rawValue))
     }
 
-    private var actions: some View {
-        VStack(spacing: Theme.Spacing.m) {
-            // A Mini solved with today's full puzzle still open: the next solve
-            // is worth more than the share, so the chain takes the primary slot
-            // and Share steps down for this one screen.
+    /// The pinned bottom bar: one primary action plus the quiet exit. A Mini
+    /// solved with today's full puzzle still open makes the chain the primary
+    /// (the next solve is worth more than the share); otherwise Share leads.
+    private var pinnedActions: some View {
+        VStack(spacing: Theme.Spacing.xs) {
             if let chainTarget {
                 Button {
                     analytics.log(.completionChainTapped(
@@ -1021,21 +1026,30 @@ struct CompletionView: View {
                 }
                 .buttonStyle(.pillProminent)
                 .accessibilityHint("Closes this screen and opens today's full-size puzzle")
+            } else {
+                shareButton(prominent: true)
             }
 
-            Group {
-                if let shareImage {
-                    ShareLink(
-                        item: shareImage,
-                        message: Text(shareCaption),
-                        preview: SharePreview("Bible Crossword", image: shareImage)
-                    ) { shareLabel }
-                } else {
-                    // Fallback if image rendering failed.
-                    ShareLink(item: shareCaption) { shareLabel }
-                }
+            Button {
+                onHome()
+            } label: {
+                Text("Home")
+                    .frame(maxWidth: .infinity)
             }
-            .buttonStyle(PillButtonStyle(emphasis: chainTarget == nil ? .primary : .tonal))
+            .buttonStyle(.borderless)
+            .controlSize(.large)
+        }
+    }
+
+    /// The rest of the actions, scrolling with the content they relate to —
+    /// pinning all of them made the bar taller than the visible content on
+    /// smaller phones, burying the verse under a wall of buttons.
+    private var secondaryActions: some View {
+        VStack(spacing: Theme.Spacing.m) {
+            // When the chain owns the pinned bar, Share steps down into here.
+            if chainTarget != nil {
+                shareButton(prominent: false)
+            }
 
             // A challenge that arrived for this puzzle already offers "Send
             // Result Back" in the result card — don't double up the CTA.
@@ -1045,6 +1059,7 @@ struct CompletionView: View {
                         sendChallenge(rematch: lastOpponent != nil)
                     } label: {
                         Label(challengeTitle, systemImage: "flag.checkered")
+                            .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.pillTonal)
 
@@ -1071,16 +1086,23 @@ struct CompletionView: View {
                 .controlSize(.large)
                 .accessibilityHint("Opens the weekly Mini leaderboard")
             }
-
-            Button {
-                onHome()
-            } label: {
-                Text("Home")
-                    .frame(maxWidth: .infinity)
-            }
-            .buttonStyle(.borderless)
-            .controlSize(.large)
         }
+    }
+
+    private func shareButton(prominent: Bool) -> some View {
+        Group {
+            if let shareImage {
+                ShareLink(
+                    item: shareImage,
+                    message: Text(shareCaption),
+                    preview: SharePreview("Bible Crossword", image: shareImage)
+                ) { shareLabel }
+            } else {
+                // Fallback if image rendering failed.
+                ShareLink(item: shareCaption) { shareLabel }
+            }
+        }
+        .buttonStyle(PillButtonStyle(emphasis: prominent ? .primary : .tonal))
     }
 
     private var shareLabel: some View {
