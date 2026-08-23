@@ -169,7 +169,10 @@ struct CompletionView: View {
                     )
                 }
 
-                if puzzle.isMini && !store.isPremium && pastMiniCount > 0 {
+                // Stands down when the reminder ask claimed this screen — one
+                // ask per completion, and the permission grant outranks an
+                // upsell impression the next Mini can repeat.
+                if puzzle.isMini && !store.isPremium && pastMiniCount > 0 && !showReminderAsk {
                     miniUpsellCard
                 }
 
@@ -1024,7 +1027,14 @@ struct CompletionView: View {
     /// minus the `autoPaywallLastDay` gate this decision feeds.
     private var reminderAskEligible: Bool {
         guard challenge == nil, !didRequestReview else { return false }
-        if puzzle.isMini && !store.isPremium && pastMiniCount > 0 { return false }
+        // No mini-upsell suppression here any more. It used to stand this ask
+        // down on every Mini solve past the first — and for a free player
+        // almost every completion is a Mini, so of 78 onboarding decliners in
+        // the 30 days to 2026-08-23, only 8 ever met a re-ask and 1 reached
+        // the system dialog. The upsell card can show on any other solve; the
+        // completion ask has three impressions ever, aimed at the permission
+        // grant that gates every retention loop. When this ask fires, the
+        // upsell yields for that one screen — see `miniUpsellCard`'s gate.
         return ReminderAsk.decide(.completion, reminderAskState)
     }
 

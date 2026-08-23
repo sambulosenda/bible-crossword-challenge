@@ -131,21 +131,19 @@ struct RootView: View {
             // the second ask is that it only makes sense while the system
             // prompt is still unspent.
             await notifications.refreshStatus()
-            showReminderPrompt = shouldAskAgain(profile)
-            if showReminderPrompt {
-                // Spend the shared per-day/per-session ask budget so the
-                // completion and streak cards stand down behind this sheet —
-                // see `ReminderAsk.decide`.
-                reminderAskLastDay = Calendar.current.startOfDay(for: Date()).timeIntervalSinceReferenceDate
-                ReminderAskSession.asked = true
-                analytics.log(.reminderAskShown(source: "prompt"))
-            }
+            presentReminderReaskIfDue()
             // A cold launch from a notification tap sets `pendingURL` before
             // this view exists, so the change never lands on `onChange` —
             // whatever is already waiting has to be drained by hand.
             drainPendingNotificationURL()
         }
         .onChange(of: scenePhase) { _, phase in
+            // Going to the background ends the sitting: the per-session ask
+            // flag exists to stop two asks in one sitting, and with iOS
+            // keeping the process suspended for days, a flag that only resets
+            // on relaunch was blocking every re-ask a returning player was
+            // otherwise due.
+            if phase == .background { ReminderAskSession.asked = false }
             // Returning to the foreground may cross midnight or land after a solve
             // elsewhere — recompute streak-aware copy from the latest state.
             guard phase == .active, let profile = profiles.first else { return }
@@ -161,6 +159,13 @@ struct RootView: View {
                 await notifications.refreshStatus()
                 completePendingReminderOptIn()
                 await notifications.reschedule(for: profile, enabled: remindersEnabled, minutes: reminderMinutes)
+                // The day-2 sheet used to be launch-only, which quietly meant
+                // "cold-launch only": a player returning the next day to a
+                // process iOS kept suspended never saw it. Of 78 onboarding
+                // decliners in the 30 days to 2026-08-23, 25 came back and
+                // played but only 5 ever met this sheet. Foregrounding on a
+                // later day is exactly the moment it was designed for.
+                presentReminderReaskIfDue()
             }
         }
         .onOpenURL { url in
@@ -226,6 +231,20 @@ struct RootView: View {
     /// a prompt would show nothing (Settings is the only route left, and that is
     /// a separate job); they've been asked a second time already; or they're
     /// still on the day they installed, which is not a return visit.
+    /// Presents the day-2 reminder sheet when it's due, spending the shared
+    /// per-day/per-session ask budget so the completion and streak cards stand
+    /// down behind it — see `ReminderAsk.decide`. Callable from launch and
+    /// from foregrounding; the guards make a second call on the same day a
+    /// no-op, and it never dismisses a sheet already up.
+    private func presentReminderReaskIfDue() {
+        guard !showReminderPrompt, let profile = profiles.first,
+              shouldAskAgain(profile) else { return }
+        showReminderPrompt = true
+        reminderAskLastDay = Calendar.current.startOfDay(for: Date()).timeIntervalSinceReferenceDate
+        ReminderAskSession.asked = true
+        analytics.log(.reminderAskShown(source: "prompt"))
+    }
+
     private func shouldAskAgain(_ profile: PlayerProfile) -> Bool {
         guard hasOnboarded,
               !remindersEnabled,
