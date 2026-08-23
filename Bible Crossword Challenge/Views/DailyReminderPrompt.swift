@@ -151,6 +151,9 @@ struct DailyReminderPrompt: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Theme.background)
         .interactiveDismissDisabled(working)
+        // This sheet appears the moment they came back to play, which is the
+        // hour worth reminding them at — see `seedSuggestionIfUnset`.
+        .onAppear { ReminderTime.seedSuggestionIfUnset() }
     }
 
     private func enable() {
@@ -269,6 +272,9 @@ struct ReminderAskCard: View {
         }
         .padding(Theme.Spacing.m)
         .elevatedCard()
+        // The card shows mid-play (completion, Home), so "now" is the play
+        // hour the button should offer — see `seedSuggestionIfUnset`.
+        .onAppear { ReminderTime.seedSuggestionIfUnset() }
     }
 
     private func enable() {

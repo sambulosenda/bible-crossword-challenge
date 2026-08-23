@@ -156,16 +156,12 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
             // `reschedule` runs again and recomputes the whole horizon, so the
             // projection can never outlive the thing it assumed.
             let projectedLapse = daysSinceLastSolve.map { $0 + dayOffset }
-            if dayOffset == 0 && streak > 0 && !completedToday {
-                content.title = "Keep your streak alive 🔥"
-                content.body = "You're on a \(streak)-day streak. Solve today's Bible puzzle to keep it going."
-            } else if let projectedLapse, let winBack = Self.winBack(lapseDays: projectedLapse) {
-                content.title = winBack.title
-                content.body = winBack.body
-            } else {
-                content.title = "Today's puzzle is ready"
-                content.body = Self.prompts[dayOffset % Self.prompts.count]
-            }
+            let copy = Self.reminderCopy(
+                dayOffset: dayOffset, streak: streak,
+                completedToday: completedToday, projectedLapse: projectedLapse
+            )
+            content.title = copy.title
+            content.body = copy.body
             content.sound = .default
 
             let components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: fireDate)
@@ -272,6 +268,43 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
         "Sharpen your Scripture knowledge with today's puzzle.",
     ]
 
+    /// Copy for the reminder scheduled `dayOffset` days out — extracted from
+    /// the scheduling loop so the day-by-day decision is testable.
+    ///
+    /// The streak copy goes on the *last reminder that can still save the
+    /// streak*: today's when today is unsolved, and tomorrow's right after a
+    /// solve. The second case is new — before it, the reminder after a first
+    /// solve carried the generic rotation, so the one notification aimed at
+    /// the day-1→2 cliff (54% of players never pass a 1-day streak, measured
+    /// 2026-08-23) never mentioned the streak at all. Streak 1 gets its own
+    /// wording, borrowed from the day-2 sheet: "a 1-day streak" is a claim,
+    /// "make it two days running" is an invitation.
+    ///
+    /// Copy is written for how things stand at *fire time*, assuming no solve
+    /// in between — any solve triggers a full reschedule, so the assumption
+    /// can't outlive itself.
+    static func reminderCopy(
+        dayOffset: Int, streak: Int, completedToday: Bool, projectedLapse: Int?
+    ) -> (title: String, body: String) {
+        let streakSaveOffset = completedToday ? 1 : 0
+        if streak > 0 && dayOffset == streakSaveOffset {
+            if streak == 1 {
+                return (
+                    "Make it two days running 🔥",
+                    "You solved yesterday's Bible puzzle. Solve today's and it's a streak."
+                )
+            }
+            return (
+                "Keep your streak alive 🔥",
+                "You're on a \(streak)-day streak. Solve today's Bible puzzle to keep it going."
+            )
+        }
+        if let projectedLapse, let winBack = winBack(lapseDays: projectedLapse) {
+            return winBack
+        }
+        return ("Today's puzzle is ready", prompts[dayOffset % prompts.count])
+    }
+
     /// Copy for the day a lapse reaches three days, a week, or a fortnight —
     /// `nil` on every other day, which is most of them.
     ///
@@ -319,6 +352,31 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
 /// Bridges the stored `reminderMinutes` (Int) and the `Date` a DatePicker wants.
 enum ReminderTime {
     static let defaultMinutes = 19 * 60 // 7:00 PM
+
+    /// The reminder default for a player who never picked a time: their own
+    /// play hour, since every ask surface appears while they are playing. A
+    /// reminder at the hour a habit already happens beats a one-size 7 PM —
+    /// the day-1→2 streak cliff (54% of players never pass a 1-day streak,
+    /// measured 2026-08-23) is exactly the population the fixed default was
+    /// missing. Rounded down to the half hour so the picker reads as a chosen
+    /// time rather than a timestamp, and clamped to 7:00–21:00: a 2 AM solver
+    /// gets a morning nudge, a midnight one gets last call at 9 PM — which
+    /// also keeps the 9 PM streak-risk nudge from being made redundant.
+    static func suggestedMinutes(now: Date = Date(), calendar: Calendar = .current) -> Int {
+        let parts = calendar.dateComponents([.hour, .minute], from: now)
+        let rounded = ((parts.hour ?? 19) * 60 + (parts.minute ?? 0)) / 30 * 30
+        return min(max(rounded, 7 * 60), 21 * 60)
+    }
+
+    /// Writes the play-hour suggestion into the shared default, once, and only
+    /// for a player who has never set a time. Every reminder-ask surface calls
+    /// this as it appears, so whichever ask the player meets first fixes the
+    /// suggestion — and a time they picked themselves is never overwritten.
+    static func seedSuggestionIfUnset(now: Date = Date()) {
+        let defaults = UserDefaults.standard
+        guard defaults.object(forKey: "reminderMinutes") == nil else { return }
+        defaults.set(suggestedMinutes(now: now), forKey: "reminderMinutes")
+    }
 
     static func date(fromMinutes minutes: Int) -> Date {
         Calendar.current.date(

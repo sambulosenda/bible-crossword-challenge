@@ -146,6 +146,11 @@ struct OnboardingView: View {
                 analytics.log(.onboardingFirstSolve(solved: solved, attempts: wrongAttempts))
             }
             logStep(newPage)
+            // Arriving at the reminders page fixes the time suggestion to the
+            // player's own play hour — they are playing right now, and that
+            // hour beats the one-size 7 PM default. A time already stored
+            // (theirs, or an earlier surface's suggestion) is left alone.
+            if newPage == 3 { ReminderTime.seedSuggestionIfUnset() }
             if newPage != 2 { nameFocused = false }
             // Raising the keyboard mid-transition fights the page animation, so
             // wait for the slide to settle before taking focus.

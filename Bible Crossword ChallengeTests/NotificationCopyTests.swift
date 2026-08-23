@@ -93,3 +93,95 @@ struct DaysSinceLastSolveTests {
         #expect(NotificationService.winBack(lapseDays: twoDaysIdle + 1) != nil)
     }
 }
+
+// MARK: - Per-day reminder copy
+
+struct ReminderCopyTests {
+
+    /// The day-1→2 cliff: right after a first solve, tomorrow's reminder is
+    /// the one that decides whether a streak exists — it must carry the
+    /// day-2 invitation, not the generic rotation.
+    @Test func tomorrowsReminderAfterFirstSolveInvitesDayTwo() {
+        let copy = NotificationService.reminderCopy(
+            dayOffset: 1, streak: 1, completedToday: true, projectedLapse: 1
+        )
+        #expect(copy.title.contains("two days running"))
+    }
+
+    /// Same situation seen from the unsolved day itself: streak 1, today
+    /// pending — still the day-2 invitation.
+    @Test func todaysReminderAtStreakOneInvitesDayTwo() {
+        let copy = NotificationService.reminderCopy(
+            dayOffset: 0, streak: 1, completedToday: false, projectedLapse: 1
+        )
+        #expect(copy.title.contains("two days running"))
+    }
+
+    /// A longer streak keeps the established streak-saver copy, on tomorrow's
+    /// reminder after a solve and on today's when unsolved.
+    @Test func longerStreaksKeepStreakSaverCopy() {
+        let afterSolve = NotificationService.reminderCopy(
+            dayOffset: 1, streak: 4, completedToday: true, projectedLapse: 1
+        )
+        #expect(afterSolve.title == "Keep your streak alive 🔥")
+        #expect(afterSolve.body.contains("4-day"))
+
+        let unsolvedToday = NotificationService.reminderCopy(
+            dayOffset: 0, streak: 4, completedToday: false, projectedLapse: 1
+        )
+        #expect(unsolvedToday.title == "Keep your streak alive 🔥")
+    }
+
+    /// Only the last reminder that can still save the streak gets the streak
+    /// copy — by the day after, the streak is already gone at fire time.
+    @Test func laterDaysFallBackToTheRotation() {
+        let copy = NotificationService.reminderCopy(
+            dayOffset: 2, streak: 4, completedToday: true, projectedLapse: 2
+        )
+        #expect(copy.title == "Today's puzzle is ready")
+    }
+
+    /// No streak means no streak copy, whatever the day.
+    @Test func noStreakNeverClaimsOne() {
+        for offset in 0...2 {
+            let copy = NotificationService.reminderCopy(
+                dayOffset: offset, streak: 0, completedToday: false, projectedLapse: nil
+            )
+            #expect(!copy.title.contains("streak"))
+            #expect(!copy.title.contains("two days"))
+        }
+    }
+
+    /// Win-back still owns its marked days once the streak-save day has passed.
+    @Test func winBackStillOwnsItsMarkedDays() {
+        let copy = NotificationService.reminderCopy(
+            dayOffset: 1, streak: 0, completedToday: false, projectedLapse: 3
+        )
+        #expect(copy == NotificationService.winBack(lapseDays: 3)!)
+    }
+}
+
+// MARK: - Play-hour reminder default
+
+struct ReminderTimeSuggestionTests {
+
+    private func at(_ hour: Int, _ minute: Int) -> Date {
+        utc.date(from: DateComponents(year: 2026, month: 8, day: 23, hour: hour, minute: minute))!
+    }
+
+    /// The suggestion is the play hour, rounded down to the half hour.
+    @Test func roundsDownToTheHalfHour() {
+        #expect(ReminderTime.suggestedMinutes(now: at(9, 14), calendar: utc) == 9 * 60)
+        #expect(ReminderTime.suggestedMinutes(now: at(9, 44), calendar: utc) == 9 * 60 + 30)
+        #expect(ReminderTime.suggestedMinutes(now: at(20, 0), calendar: utc) == 20 * 60)
+    }
+
+    /// Antisocial hours clamp into 7:00–21:00: the small-hours solver gets a
+    /// morning nudge, the late-night one gets last call at 9 PM.
+    @Test func clampsAntisocialHours() {
+        #expect(ReminderTime.suggestedMinutes(now: at(2, 10), calendar: utc) == 7 * 60)
+        #expect(ReminderTime.suggestedMinutes(now: at(23, 30), calendar: utc) == 21 * 60)
+        #expect(ReminderTime.suggestedMinutes(now: at(6, 59), calendar: utc) == 7 * 60)
+        #expect(ReminderTime.suggestedMinutes(now: at(21, 0), calendar: utc) == 21 * 60)
+    }
+}
