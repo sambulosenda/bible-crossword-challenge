@@ -988,6 +988,14 @@ struct CompletionView: View {
             // who reach the dialog say yes — so when the ask is eligible it
             // wins solve #1 outright and this paywall takes the next one.
             if totalCompleted == 1 && reminderAskEligible { return }
+            // The mini→daily chain outranks this paywall too: completing a
+            // real puzzle on day one is the strongest retention signal we
+            // have (D7 34.8% vs 7%, measured 2026-08-23), and a sheet sliding
+            // over the chain button spends that moment on an ask the player
+            // already declined during onboarding minutes earlier. The `<= 3`
+            // window means the paywall lands on the next solve instead —
+            // usually the chained daily, an even better-proven moment.
+            if chainTarget != nil { return }
             source = "first_completion"
             firstCompletionPaywallShown = true
         } else if streak >= 3 && !streakPaywallShown {
