@@ -124,11 +124,13 @@ final class GameViewModel {
     private var wasFullWithErrors = false
 
     /// Increments when the player has been idle for `stallNudgeSeconds` of
-    /// active clock with the grid ≥ 75% filled — the near-finish stall that
-    /// abandonment data says precedes walking away (56 abandons ≥ 75% fill in
-    /// the last 30 days, 16 of them ≥ 90%). Once per puzzle session, so the
-    /// nudge stays a nudge. The view reacts with a quiet check-your-answers
-    /// line and logs the impression.
+    /// active clock with the grid ≥ 40% filled — the mid-solve stall that
+    /// abandonment data says precedes walking away. The 75% gate this shipped
+    /// with missed most of the stuck players: of the 30-day abandons measured
+    /// 2026-08-23, the modal bucket was 50–74% fill (101 events) with another
+    /// 66 at 25–49%, and the nudge had fired 6 times against ~300 stuck
+    /// abandons. Once per puzzle session, so the nudge stays a nudge. The view
+    /// reacts with a quiet check-your-answers line and logs the impression.
     private(set) var stallNudgeTick = 0
     /// True from the stall moment until the next input clears it — drives the
     /// nudge line's visibility.
@@ -138,7 +140,7 @@ final class GameViewModel {
     /// not wall time, so backgrounded or verse-reading stretches never count
     /// as "stuck".
     private var lastInputSeconds = 0
-    /// Idle threshold before the stall nudge fires. Grid must also be ≥ 75%
+    /// Idle threshold before the stall nudge fires. Grid must also be ≥ 40%
     /// filled — the same fill convention `puzzle_abandoned` reports.
     let stallNudgeSeconds: Int
 
@@ -654,15 +656,17 @@ final class GameViewModel {
         }
     }
 
-    /// The near-finish stall: idle on the active clock past the threshold with
-    /// the grid ≥ 75% filled. Fill counts entries like `puzzle_abandoned` does
+    /// The mid-solve stall: idle on the active clock past the threshold with
+    /// the grid ≥ 40% filled. Fill counts entries like `puzzle_abandoned` does
     /// (pencil included) — a grid full of pencil guesses is still a player who
     /// stopped, and the nudge's answer (check) is exactly what converts them.
+    /// 40%, not lower: under that a long idle is usually someone still reading
+    /// clues, and the idle guard alone can't tell the two apart.
     private func maybeNudgeStall() {
         guard !stallNudged, !isComplete else { return }
         guard accumulatedSeconds - lastInputSeconds >= stallNudgeSeconds else { return }
         let total = totalPlayableCount
-        guard total > 0, Double(filledPlayableCount) / Double(total) >= 0.75 else { return }
+        guard total > 0, Double(filledPlayableCount) / Double(total) >= 0.40 else { return }
         stallNudged = true
         isStallNudgeActive = true
         stallNudgeTick += 1

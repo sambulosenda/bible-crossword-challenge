@@ -412,9 +412,9 @@ struct EngineTests {
 
     // MARK: - Stall nudge
     //
-    // The near-finish rescue: idle past the threshold on the active clock with
-    // the grid ≥ 75% filled fires `stallNudgeTick` exactly once per session.
-    // The fixture has 5 playable cells, so 4 filled = 80%.
+    // The mid-solve rescue: idle past the threshold on the active clock with
+    // the grid ≥ 40% filled fires `stallNudgeTick` exactly once per session.
+    // The fixture has 5 playable cells, so 4 filled = 80% and 1 filled = 20%.
 
     /// Advance the active clock by `seconds` of rendered ticks.
     private func idle(_ vm: GameViewModel, seconds: Int, from start: Int = 0) {
@@ -445,12 +445,20 @@ struct EngineTests {
         #expect(vm.stallNudgeTick == 1)
     }
 
-    @Test func stallNudgeNeedsHighFill() {
+    @Test func stallNudgeNeedsMinimumFill() {
         let vm = GameViewModel(puzzle: makePuzzle())
         vm.isAttachedToWindow = true
-        vm.enter("C"); vm.enter("A")                        // 2 of 5 = 40%
+        vm.enter("C")                                       // 1 of 5 = 20%
         idle(vm, seconds: vm.stallNudgeSeconds + 5)
         #expect(vm.stallNudgeTick == 0)
+    }
+
+    @Test func stallNudgeFiresAtThresholdFill() {
+        let vm = GameViewModel(puzzle: makePuzzle())
+        vm.isAttachedToWindow = true
+        vm.enter("C"); vm.enter("A")                        // 2 of 5 = 40%, the gate
+        idle(vm, seconds: vm.stallNudgeSeconds + 5)
+        #expect(vm.stallNudgeTick == 1)
     }
 
     @Test func inputResetsTheStallClock() {
