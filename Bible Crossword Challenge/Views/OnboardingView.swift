@@ -203,11 +203,34 @@ struct OnboardingView: View {
                     .fill(onOffer ? Theme.badgeRim : (i <= page ? Theme.ink : Color.primary.opacity(0.10)))
                     .frame(height: 4)
             }
+            // The offer page gets the universal paywall escape the moment it
+            // arrives. Every paywall in the app opens with an ✕; this one — the
+            // busiest — made players scroll their eyes to the quiet decline at
+            // the bottom instead, and after the 2026-08-11 price increase a
+            // third of everyone who reached it quit the app on the spot rather
+            // than find it (34% of reachers left without ever playing, up from
+            // 6% at the old price). The ✕ is the affordance they were scanning
+            // for; it exits to the free daily exactly like the button below.
+            if onOffer {
+                Button {
+                    finish()
+                } label: {
+                    Image(systemName: "xmark")
+                        .font(.system(size: 15, weight: .bold))
+                        .frame(width: 36, height: 36)
+                        .contentShape(.rect)
+                }
+                // Same quiet gray as PaywallView's close button — the default
+                // accent tint read as a blue action on the gold offer page.
+                .tint(.secondary)
+                .accessibilityLabel("Close and continue with the free puzzle")
+                .transition(.opacity)
+            }
         }
         .padding(.horizontal, Theme.Spacing.l)
         .padding(.top, Theme.Spacing.s)
         .animation(.spring(duration: 0.35), value: page)
-        .accessibilityElement()
+        .accessibilityElement(children: onOffer ? .contain : .ignore)
         .accessibilityLabel(
             onOffer
                 ? "Setup complete. Premium offer, optional."
@@ -517,17 +540,19 @@ struct OnboardingView: View {
             .foregroundStyle(.secondary)
             .multilineTextAlignment(.center)
 
-        // Quiet, but never hidden: the puzzle really is free, and a paywall
-        // whose exit is hard to find is a rejection risk.
+        // A real button, not a quiet text link. The quiet treatment was
+        // deliberate ("no more inviting than the offer") until the data said
+        // otherwise: after the 2026-08-11 price increase, 34% of players who
+        // reached this page quit the app on it and never played — a player who
+        // deletes converts at 0%, so the safe exit now has to read as safe at
+        // a glance. Tonal, so the gold CTA above still outranks it.
         //
         // "today's free puzzle", not "the free daily puzzle": this button now
         // lands in the Mini, and the Daily Puzzle is a different, named thing
         // one row below it on Today. Naming the wrong one would be the first
-        // promise the app breaks. Deliberately no more inviting than before —
-        // it is still the decline, and this is the busiest paywall in the app.
+        // promise the app breaks.
         Button("Continue with today's free puzzle") { finish() }
-            .font(.subheadline.weight(.semibold))
-            .tint(.primary)
+            .buttonStyle(.pillTonal)
             .padding(.top, Theme.Spacing.xs)
 
         // Restore and the legal links are App Store review requirements
