@@ -5,4 +5,7 @@ Thanks for playing Bible Crossword Challenge! This update includes:
 • Check or reveal exactly what you need — a single letter, a word, or the whole grid
 • Memory Verses: turn a verse from a solved puzzle into one you know by heart, with practice that grows as you do
 • Zen mode: hide the timer for an unhurried solve — your times are still saved
+• Puzzles now open on their easiest clue, so you always have a place to start
+• Stuck mid-solve? A quiet nudge offers to check your answers sooner
+• Daily reminders now suggest the time you actually play
 • A fairer weekly leaderboard: solves that used hints no longer post times
