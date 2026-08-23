@@ -8609,7 +8609,7 @@
         "direction": "down",
         "row": 1,
         "col": 2,
-        "text": "Region the two men addressed the disciples as being from",
+        "text": "'Ye men of ___,' said the two in white",
         "answer": "GALILEE"
       },
       {
@@ -20720,7 +20720,7 @@
         "direction": "across",
         "row": 0,
         "col": 0,
-        "text": "How should I, except some man should do this to me?",
+        "text": "Show the way, as the eunuch asked Philip to do",
         "answer": "GUIDE",
         "reference": "Acts 8:31"
       },
@@ -20738,7 +20738,7 @@
         "direction": "down",
         "row": 1,
         "col": 5,
-        "text": "He went on his way with it",
+        "text": "The baptized eunuch went on his way with it",
         "answer": "JOY"
       },
       {
@@ -20755,7 +20755,7 @@
         "direction": "across",
         "row": 4,
         "col": 1,
-        "text": "The way from Jerusalem toward it, which is desert",
+        "text": "Desert-road city Philip was sent toward",
         "answer": "GAZA",
         "reference": "Acts 8:26"
       }
@@ -20858,7 +20858,7 @@
         "direction": "down",
         "row": 0,
         "col": 1,
-        "text": "He found it in the carcase",
+        "text": "Sweet food Samson found in the lion's carcase",
         "answer": "HONEY",
         "reference": "Judges 14:8"
       },
@@ -20867,7 +20867,7 @@
         "direction": "across",
         "row": 1,
         "col": 0,
-        "text": "The Nazarite one he was born under",
+        "text": "Nazarite promise Samson was born under",
         "answer": "VOW",
         "reference": "Numbers 6:2"
       },
@@ -20876,7 +20876,7 @@
         "direction": "down",
         "row": 2,
         "col": 3,
-        "text": "He rent it as he would a kid",
+        "text": "Beast Samson tore apart with his bare hands",
         "answer": "LION",
         "reference": "Judges 14:6"
       },
@@ -20894,7 +20894,7 @@
         "direction": "across",
         "row": 3,
         "col": 0,
-        "text": "Woman of the valley of Sorek",
+        "text": "She coaxed out the secret of his strength",
         "answer": "DELILAH",
         "reference": "Judges 16:4"
       }
