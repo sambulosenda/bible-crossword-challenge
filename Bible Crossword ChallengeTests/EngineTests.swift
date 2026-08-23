@@ -30,6 +30,35 @@ private func makePuzzle() -> Puzzle {
 
 struct EngineTests {
 
+    @Test func initialSelectionIsTheShortestAnswer() {
+        // 4x4: LAMB across the top, AX down from its A — AX (2) beats LAMB (4),
+        // so the session opens on the easiest foothold, not 1 Across.
+        let vm = GameViewModel(puzzle: Puzzle(
+            id: "test-easiest",
+            title: "Tiny",
+            difficulty: .easy,
+            verse: "Test verse",
+            reference: "Test 1:1",
+            publishDate: "2026-07-01",
+            size: 4,
+            grid: ["LAMB", ".X..", "....", "...."],
+            clues: [
+                ClueData(number: 1, direction: .across, row: 0, col: 0, text: "Passover animal", answer: "LAMB"),
+                ClueData(number: 2, direction: .down, row: 0, col: 1, text: "Chopping tool", answer: "AX"),
+            ]
+        ))
+        #expect(vm.activeSlot?.answer == "AX")
+        #expect(vm.selected == GridPos(row: 0, col: 1))
+    }
+
+    @Test func initialSelectionTiesGoAcross() {
+        // CAT across vs COD down, both 3 letters — the tie keeps the
+        // conventional 1-Across start.
+        let vm = GameViewModel(puzzle: makePuzzle())
+        #expect(vm.activeSlot?.answer == "CAT")
+        #expect(vm.direction == .across)
+    }
+
     @Test func buildsGridAndSlots() {
         let vm = GameViewModel(puzzle: makePuzzle())
         #expect(vm.acrossSlots.count == 1)

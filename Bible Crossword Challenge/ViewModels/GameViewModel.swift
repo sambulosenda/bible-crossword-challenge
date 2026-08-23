@@ -217,13 +217,20 @@ final class GameViewModel {
         for (i, slot) in down.enumerated() { for p in slot.positions { downIdx[p] = i } }
         self.slotIndex = [.across: acrossIdx, .down: downIdx]
 
-        // Initial selection: first across slot, else first down, else origin.
-        if let first = across.first {
-            self.selected = first.positions[0]
-            self.direction = .across
-        } else if let first = down.first {
-            self.selected = first.positions[0]
-            self.direction = .down
+        // Initial selection: the shortest answer in the grid, not 1 Across.
+        // The empty grid is where a third of abandons happen (200 of 496 in
+        // the 30 days to 2026-08-23 quit under 10% fill, ~23s in): opening on
+        // the puzzle's easiest foothold gives that player a first win instead
+        // of a first wall. Ties go across-then-lower-number, so grids whose
+        // shortest answer is 1 Across behave exactly as before. A resumed
+        // puzzle restores entries but keeps this selection — same as the old
+        // 1-Across start, which never followed progress either.
+        if let easiest = (across + down).min(by: {
+            ($0.answer.count, $0.direction == .down ? 1 : 0, $0.number)
+                < ($1.answer.count, $1.direction == .down ? 1 : 0, $1.number)
+        }) {
+            self.selected = easiest.positions[0]
+            self.direction = easiest.direction
         } else {
             self.selected = GridPos(row: 0, col: 0)
             self.direction = .across
