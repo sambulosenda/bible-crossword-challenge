@@ -128,16 +128,27 @@ enum AnalyticsEvent {
     /// "version"); `totalCompleted` says where in the ladder players sit when
     /// each trigger fires, which is the number the ladder is tuned against.
     case reviewPromptRequested(trigger: String, totalCompleted: Int)
+    /// The sentiment card that now stands between a `ReviewAsk` trigger and the
+    /// system prompt. Shown/response pairs measure its yield: `loved: true`
+    /// goes on to `reviewPromptRequested`, `false` routes to feedback mail —
+    /// so a falling loved-rate is the early warning the star rating can't give.
+    case reviewPreAskShown(trigger: String)
+    case reviewPreAskResponse(trigger: String, loved: Bool)
     /// `source` names the surface that pushed the pack (`home`, `packs`,
     /// `notification`) — the question a seasonal pack raises is not how many
     /// people opened it but which surface got them there, and the Home carousel
     /// and the Packs tab were previously indistinguishable.
     case packOpened(id: String, source: String)
     case packCompleted(id: String)
+    /// Logged when the share sheet reports the link actually went somewhere —
+    /// not when it was presented. 30 days to 2026-08-24: 22 "sent" at
+    /// presentation, 0 ever opened; whether links even leave the phone was
+    /// unmeasurable. `challengeShareCancelled` is the other half of that split.
     case challengeSent(puzzleID: String)
     case challengeOpened(puzzleID: String)
     case challengeCompleted(puzzleID: String, won: Bool, deltaSeconds: Int)
     case challengeRematchSent(puzzleID: String)
+    case challengeShareCancelled(puzzleID: String)
     /// The family board, which travels as a link rather than living on a server.
     /// `size` is how many names the board carried at that moment — the only
     /// measure of whether a board actually spread past two people, since there
@@ -194,12 +205,15 @@ enum AnalyticsEvent {
         case .reminderDeclined: return "reminder_declined"
         case .reminderSettingChanged: return "reminder_setting_changed"
         case .reviewPromptRequested: return "review_prompt_requested"
+        case .reviewPreAskShown: return "review_preask_shown"
+        case .reviewPreAskResponse: return "review_preask_response"
         case .packOpened: return "pack_opened"
         case .packCompleted: return "pack_completed"
         case .challengeSent: return "challenge_sent"
         case .challengeOpened: return "challenge_opened"
         case .challengeCompleted: return "challenge_completed"
         case .challengeRematchSent: return "challenge_rematch_sent"
+        case .challengeShareCancelled: return "challenge_share_cancelled"
         case .familyBoardStarted: return "family_board_started"
         case .familyBoardOpened: return "family_board_opened"
         case .familyBoardShared: return "family_board_shared"
@@ -299,6 +313,10 @@ enum AnalyticsEvent {
             return ["enabled": enabled]
         case .reviewPromptRequested(let trigger, let totalCompleted):
             return ["trigger": trigger, "total_completed": totalCompleted]
+        case .reviewPreAskShown(let trigger):
+            return ["trigger": trigger]
+        case .reviewPreAskResponse(let trigger, let loved):
+            return ["trigger": trigger, "loved": loved]
         case .packOpened(let id, let source):
             return ["pack_id": id, "source": source]
         case .packCompleted(let id):
@@ -310,6 +328,8 @@ enum AnalyticsEvent {
         case .challengeCompleted(let id, let won, let delta):
             return ["puzzle_id": id, "won": won, "delta_seconds": delta]
         case .challengeRematchSent(let id):
+            return ["puzzle_id": id]
+        case .challengeShareCancelled(let id):
             return ["puzzle_id": id]
         case .familyBoardStarted(let id):
             return ["puzzle_id": id]

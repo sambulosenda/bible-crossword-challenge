@@ -43,6 +43,15 @@ struct CompletionView: View {
     /// True once this appearance scheduled the system review prompt — the
     /// auto paywall stands down rather than stacking sheets.
     @State private var didRequestReview = false
+    /// The `ReviewAsk` trigger behind the sentiment card, nil when no card is
+    /// showing. The card, not the system prompt, is what a trigger now buys —
+    /// see `maybeRequestReview`.
+    @State private var reviewPreAskTrigger: ReviewAsk.Trigger?
+    /// A challenge-earned freeze this appearance — receiving side granted in
+    /// `processIncomingChallenge`, sending side in the share-sheet callback.
+    /// Separate from `earnedFreeze` (the caller's streak-milestone grant) so
+    /// either can light the card.
+    @State private var bonusFreezeEarned = false
     /// A friend's challenge for this puzzle, captured on appear so consuming it
     /// doesn't make the result card vanish mid-view. Nil = a plain solve.
     @State private var challenge: ChallengeService.Challenge?
@@ -96,6 +105,9 @@ struct CompletionView: View {
     @AppStorage("streakReviewPromptShown") private var streakReviewPromptShown = false
     @AppStorage("reviewPromptVersion") private var reviewPromptVersion = ""
     @AppStorage("reviewPromptLastAsk") private var reviewPromptLastAsk = 0.0
+    /// Start-of-day stamp of the last challenge-send freeze, capping the
+    /// sender's reward at one per day — see `grantSenderFreezeIfDue`.
+    @AppStorage("challengeFreezeLastDay") private var challengeFreezeLastDay = 0.0
     /// One-shot flags for the auto-shown paywall moments (first-ever solve,
     /// 3-day streak) plus a daily cap so at most one auto paywall fires per day.
     @AppStorage("firstCompletionPaywallShown") private var firstCompletionPaywallShown = false
@@ -149,12 +161,19 @@ struct CompletionView: View {
                     startBoardCard
                 }
 
-                if earnedFreeze {
+                if earnedFreeze || bonusFreezeEarned {
                     freezeCard
                 }
 
                 if !newAchievements.isEmpty {
                     achievementsCard
+                }
+
+                // The sentiment gate a review trigger now buys. Down here with
+                // the other asks; it can't co-occur with them — the reminder
+                // ask and auto paywall both yield to `didRequestReview`.
+                if let trigger = reviewPreAskTrigger {
+                    reviewPreAskCard(trigger)
                 }
 
                 // Below the payoffs with the other asks. Present only when the
@@ -169,10 +188,11 @@ struct CompletionView: View {
                     )
                 }
 
-                // Stands down when the reminder ask claimed this screen — one
-                // ask per completion, and the permission grant outranks an
-                // upsell impression the next Mini can repeat.
-                if puzzle.isMini && !store.isPremium && pastMiniCount > 0 && !showReminderAsk {
+                // Stands down when the reminder ask or the review sentiment
+                // card claimed this screen — one ask per completion, and both
+                // outrank an upsell impression the next Mini can repeat.
+                if puzzle.isMini && !store.isPremium && pastMiniCount > 0 && !showReminderAsk
+                    && reviewPreAskTrigger == nil {
                     miniUpsellCard
                 }
 
@@ -216,12 +236,22 @@ struct CompletionView: View {
             PaywallView(source: entry.source)
         }
         .sheet(item: $challengeShare) { share in
-            // History records the send, not the intent: a share sheet the
-            // player backs out of never happened, and a list claiming
-            // otherwise is the one thing a brag sheet can't afford.
+            // History and analytics record the send, not the intent: a share
+            // sheet the player backs out of never happened, and a list (or a
+            // `challenge_sent` count) claiming otherwise is the one thing a
+            // brag sheet can't afford. The cancel is logged too — 22 "sent" to
+            // 0 opened was undiagnosable while the split was invisible.
             ShareSheet(items: [share.caption, share.url]) { completed in
-                guard completed, !share.isBoard else { return }
+                guard !share.isBoard else { return }
+                guard completed else {
+                    analytics.log(.challengeShareCancelled(puzzleID: puzzle.id))
+                    return
+                }
+                analytics.log(share.isRematch
+                    ? .challengeRematchSent(puzzleID: puzzle.id)
+                    : .challengeSent(puzzleID: puzzle.id))
                 recordOutgoing(rematch: share.isRematch)
+                grantSenderFreezeIfDue()
             }
         }
         .alert("What should we call you?", isPresented: $showNamePrompt) {
@@ -259,6 +289,14 @@ struct CompletionView: View {
             mySeconds: seconds
         )
         challengeService.consume(puzzleID: puzzle.id)
+        // Taking a friend's challenge earns a freeze — the receiving half of
+        // the incentive (the sending half is the share-sheet callback). Tied
+        // to the pending challenge just consumed, so a replay can't re-earn.
+        if profile.streakFreezes < PlayerProfile.maxStreakFreezes {
+            profile.streakFreezes += 1
+            context.saveLogged("challenge freeze")
+            bonusFreezeEarned = true
+        }
     }
 
     /// The opponent this screen offers a rematch against — only when no
@@ -268,6 +306,21 @@ struct CompletionView: View {
     private func loadLastOpponent() {
         guard challenge == nil else { return }
         lastOpponent = challengeHistory.lastOpponent(for: puzzle.id)
+    }
+
+    /// The sending half of the challenge incentive: the first completed share
+    /// of the day earns a freeze. Once daily, because the sheet callback only
+    /// proves the share finished — with no backend, a friend actually
+    /// receiving it can't be verified, and unlimited grants would turn the
+    /// share button into a freeze faucet.
+    private func grantSenderFreezeIfDue() {
+        let today = Calendar.current.startOfDay(for: Date()).timeIntervalSinceReferenceDate
+        guard challengeFreezeLastDay != today,
+              profile.streakFreezes < PlayerProfile.maxStreakFreezes else { return }
+        challengeFreezeLastDay = today
+        profile.streakFreezes += 1
+        context.saveLogged("challenge freeze")
+        withAnimation { bonusFreezeEarned = true }
     }
 
     /// Write an outgoing challenge to history once the share has gone through.
@@ -354,7 +407,7 @@ struct CompletionView: View {
             }
         }
         guard challengeHistory.entries.isEmpty else { return nil }
-        return "They'll get a link to this exact puzzle. Fastest time wins."
+        return "They'll get a link to this exact puzzle. Fastest time wins — and sending one earns you a streak freeze."
     }
 
     /// True once the player has set a display name (the default counts as unset).
@@ -377,10 +430,10 @@ struct CompletionView: View {
         guard let url = challengeService.challengeWebURL(
             puzzleID: puzzle.id, seconds: seconds, name: profile.username
         ) else { return }
-        let caption = "Can you beat me? I solved \"\(puzzle.title)\" in \(TimeFormat.clock(seconds)) — Bible Crossword"
+        let caption = "Can you beat me? I solved \"\(puzzle.title)\" in \(TimeFormat.clock(seconds)) — Bible Crossword. Solve it and you'll earn a streak freeze 🧊"
         challengeShare = ChallengeShare(url: url, caption: caption, isRematch: rematch)
-        analytics.log(rematch ? .challengeRematchSent(puzzleID: puzzle.id)
-                              : .challengeSent(puzzleID: puzzle.id))
+        // Sent/cancelled is logged by the share sheet's callback — presenting
+        // the sheet proves intent, not a send.
     }
 
     private func saveNameAndSend() {
@@ -928,8 +981,22 @@ struct CompletionView: View {
 
     /// Ask for a rating at the happiest moments in the loop — the triggers and
     /// their spacing live in `ReviewAsk.decide`; this just spends the flag the
-    /// verdict names. The system further rate-limits what actually shows.
+    /// verdict names. What a trigger now buys is the sentiment card below, not
+    /// the system prompt directly: "loving it" goes on to `requestReview` (and
+    /// Apple still decides whether that shows), "could be better" routes to
+    /// feedback mail — so an unhappy player lands in the inbox, not the store.
+    /// The flag is spent on showing the card, answered or not: an ignored
+    /// question was still this screen's ask, and re-arming it would nag.
     private func maybeRequestReview() {
+        #if DEBUG
+        // Same family as -uiForceReminderAsk: the earliest real trigger is the
+        // third solve, which makes this card slow to look at by hand.
+        if ProcessInfo.processInfo.arguments.contains("-uiForceReviewPreAsk") {
+            didRequestReview = true
+            reviewPreAskTrigger = .milestone(3)
+            return
+        }
+        #endif
         let state = ReviewAsk.State(
             totalCompleted: totalCompleted,
             currentStreak: streak,
@@ -951,13 +1018,65 @@ struct CompletionView: View {
         reviewPromptVersion = Self.marketingVersion
         reviewPromptLastAsk = Date().timeIntervalSinceReferenceDate
         didRequestReview = true
-        analytics.log(.reviewPromptRequested(
-            trigger: trigger.analyticsValue, totalCompleted: totalCompleted))
-        Task {
-            // Let the celebration land before the system sheet appears.
-            try? await Task.sleep(for: .seconds(2))
-            requestReview()
+        analytics.log(.reviewPreAskShown(trigger: trigger.analyticsValue))
+        reviewPreAskTrigger = trigger
+    }
+
+    /// The sentiment gate in front of the system review prompt. Same shape as
+    /// `ReminderAskCard` — a quiet card among the others, never a sheet over
+    /// the celebration.
+    private func reviewPreAskCard(_ trigger: ReviewAsk.Trigger) -> some View {
+        VStack(spacing: Theme.Spacing.m) {
+            VStack(spacing: Theme.Spacing.xs) {
+                Text("Quick question")
+                    .kicker()
+                Text("Enjoying Bible Crossword?")
+                    .font(.headline)
+                    .multilineTextAlignment(.center)
+            }
+            .frame(maxWidth: .infinity)
+            .accessibilityElement(children: .combine)
+
+            Button {
+                analytics.log(.reviewPreAskResponse(
+                    trigger: trigger.analyticsValue, loved: true))
+                analytics.log(.reviewPromptRequested(
+                    trigger: trigger.analyticsValue, totalCompleted: totalCompleted))
+                withAnimation { reviewPreAskTrigger = nil }
+                Task {
+                    // Let the card's dismissal settle before the system sheet.
+                    try? await Task.sleep(for: .seconds(0.6))
+                    requestReview()
+                }
+            } label: {
+                Text("Loving it")
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.pillProminent)
+
+            // Quiet, same weight as the other asks' declines.
+            Button("Could be better") {
+                analytics.log(.reviewPreAskResponse(
+                    trigger: trigger.analyticsValue, loved: false))
+                withAnimation { reviewPreAskTrigger = nil }
+                openURL(feedbackMailURL)
+            }
+            .font(.subheadline.weight(.semibold))
+            .tint(.secondary)
         }
+        .padding(Theme.Spacing.m)
+        .elevatedCard()
+    }
+
+    /// The support address (same one Profile's Contact row uses) with a
+    /// subject line, so a "could be better" arrives as feedback that can be
+    /// acted on rather than a rating that can't.
+    private var feedbackMailURL: URL {
+        var components = URLComponents()
+        components.scheme = "mailto"
+        components.path = "sambulosendas@gmail.com"
+        components.queryItems = [URLQueryItem(name: "subject", value: "Bible Crossword feedback")]
+        return components.url ?? URL(string: "mailto:sambulosendas@gmail.com")!
     }
 
     private static let marketingVersion =

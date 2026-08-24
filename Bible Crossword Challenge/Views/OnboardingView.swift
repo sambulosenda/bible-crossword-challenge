@@ -2,14 +2,20 @@
 //  OnboardingView.swift
 //  Bible Crossword Challenge
 //
-//  First-run experience. Five pages, but only the first two are "intro" — the
+//  First-run experience. Four pages, but only the first two are "intro" — the
 //  rest are setup asks, each one earned by what came before:
 //
 //    0  Welcome     the brand, in the app's own vocabulary (a crossword)
 //    1  First solve two letters, then a verse — the whole product in ten seconds
 //    2  Name        asked once the player has something to be named for
-//    3  Reminders   primed with what the notification will actually look like
-//    4  Premium     the upsell, dismissible; the daily puzzle is always free
+//    3  Premium     the upsell, dismissible; the daily puzzle is always free
+//
+//  There is deliberately no reminders page any more. It asked before the app
+//  had proved anything: of 102 players who answered it in the 30 days to
+//  2026-08-24, 86 tapped "Not now" — 10.8% granted. Killed 2026-08-24; the
+//  first ask is now the completion-screen card (`ReminderAsk`, `.completion`),
+//  which lands on a player who just finished a real puzzle. Decliners keep the
+//  day-2 sheet and streak-card paths, unchanged.
 //
 //  Everything sits on the app's paper canvas with serif hero titles, so the
 //  first screen a player sees is the same app as the hundredth.
@@ -27,19 +33,12 @@ struct OnboardingView: View {
 
     @Environment(StoreService.self) private var store
     @Environment(\.analytics) private var analytics
-    @Environment(\.notifications) private var notifications
     @Environment(\.puzzleProvider) private var puzzleProvider
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-
-    @AppStorage("remindersEnabled") private var remindersEnabled = false
-    @AppStorage("reminderMinutes") private var reminderMinutes = ReminderTime.defaultMinutes
 
     @State private var page = 0
     @State private var didLogPaywallOpen = false
     @State private var didLogFirstSolve = false
-    /// Whether the reminders ask has been answered — either way. Gates the
-    /// swipe off that page; see `remindersLocked`.
-    @State private var didAnswerReminders = false
     @FocusState private var nameFocused: Bool
 
     /// Which plan the premium page has selected. Lives here rather than in
@@ -58,45 +57,10 @@ struct OnboardingView: View {
     @State private var solved = false
     @State private var wrongAttempts = 0
 
-    private let lastPage = 4
+    private let lastPage = 3
 
-    /// Analytics labels for the five pages, indexed by page number.
-    private let stepNames = ["welcome", "first_solve", "name", "reminders", "premium"]
-
-    /// The reminder hour as the player's own locale writes it — 12-hour with
-    /// am/pm, 24-hour, or otherwise, decided by their settings rather than by a
-    /// hardcoded format string.
-    private var reminderTimeText: String {
-        ReminderTime.date(fromMinutes: reminderMinutes)
-            .formatted(date: .omitted, time: .shortened)
-    }
-
-    private var reminderTime: Binding<Date> {
-        Binding(
-            get: { ReminderTime.date(fromMinutes: reminderMinutes) },
-            set: { reminderMinutes = ReminderTime.minutes(from: $0) }
-        )
-    }
-
-    /// Whether the reminders page is holding the swipe until it gets an answer.
-    ///
-    /// Every other page may be swiped past, because on every other page a swipe
-    /// and the button below it do the same thing. On this one they don't: the
-    /// button opens the system permission dialog, and a swipe silently skips an
-    /// ask that iOS only ever allows once. Measured 2026-08-11, 141 players
-    /// reached this page and only 68 answered it — the other 73 swiped by, and
-    /// with them went every notification the app could ever send.
-    ///
-    /// So the page waits. "Not now" is right there and takes one tap, so this
-    /// is a question that must be answered, not a wall: the page cannot be
-    /// left by accident, only on purpose.
-    ///
-    /// Scoped to the unanswered state rather than the page, so swiping *back*
-    /// to re-read something and forward again still works once answered, and a
-    /// programmatic `advance()` is unaffected either way.
-    private var remindersLocked: Bool {
-        page == 3 && !didAnswerReminders
-    }
+    /// Analytics labels for the four pages, indexed by page number.
+    private let stepNames = ["welcome", "first_solve", "name", "premium"]
 
     var body: some View {
         VStack(spacing: 0) {
@@ -106,26 +70,9 @@ struct OnboardingView: View {
                 welcomePage.tag(0)
                 firstSolvePage.tag(1)
                 namePage.tag(2)
-                remindersPage.tag(3)
-                premiumPage.tag(4)
+                premiumPage.tag(3)
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
-            // Swallows the page-turn drag while the reminders page is waiting
-            // for an answer. `.scrollDisabled` looks like the right tool and
-            // does nothing here — a paged TabView is not a ScrollView as far as
-            // that modifier is concerned (verified on iOS 26: the swipe went
-            // straight through). A high-priority drag beats the TabView's own
-            // pan before it starts, so the page doesn't move at all rather than
-            // sliding and snapping back.
-            //
-            // `.all` rather than `.gesture`: the mask has to keep subview
-            // gestures alive, or the time picker on that very page stops
-            // opening — and setting the time is half of what the page is for.
-            // A tap isn't a drag, so it still reaches the picker.
-            .highPriorityGesture(
-                DragGesture(),
-                including: remindersLocked ? .all : .subviews
-            )
             .animation(.easeInOut, value: page)
 
             controls
@@ -146,11 +93,6 @@ struct OnboardingView: View {
                 analytics.log(.onboardingFirstSolve(solved: solved, attempts: wrongAttempts))
             }
             logStep(newPage)
-            // Arriving at the reminders page fixes the time suggestion to the
-            // player's own play hour — they are playing right now, and that
-            // hour beats the one-size 7 PM default. A time already stored
-            // (theirs, or an earlier surface's suggestion) is left alone.
-            if newPage == 3 { ReminderTime.seedSuggestionIfUnset() }
             if newPage != 2 { nameFocused = false }
             // Raising the keyboard mid-transition fights the page animation, so
             // wait for the slide to settle before taking focus.
@@ -190,11 +132,11 @@ struct OnboardingView: View {
         .ignoresSafeArea()
     }
 
-    /// Four ink segments instead of dots: it reads as progress rather than
+    /// Three ink segments instead of dots: it reads as progress rather than
     /// decoration, and it tells the player up front how short this is.
     ///
-    /// Four, not five — the premium page is deliberately not a step. Filling a
-    /// fifth segment on the offer framed paying as the way to finish setting
+    /// Three, not four — the premium page is deliberately not a step. Filling a
+    /// final segment on the offer framed paying as the way to finish setting
     /// the app up, which is both untrue (the free daily is the whole product
     /// for most players) and the kind of bait-and-switch that earns a one-star
     /// review. Setup finishes at four, and the bar goes gold to mark what
@@ -382,40 +324,6 @@ struct OnboardingView: View {
         }
     }
 
-    private var remindersPage: some View {
-        let active = page == 3
-        return pageFrame(spacing: Theme.Spacing.l) {
-            VStack(spacing: Theme.Spacing.m) {
-                Text("Keep the streak")
-                    .kicker()
-                    .entrance(active: active, delay: 0.05, reduceMotion: reduceMotion)
-                Text("One nudge a day.\nThat’s all it takes.")
-                    .font(.scripture(.largeTitle, weight: .semibold))
-                    .multilineTextAlignment(.center)
-                    .entrance(active: active, delay: 0.10, reduceMotion: reduceMotion)
-            }
-
-            // Showing the actual notification is the priming: the player agrees
-            // to a thing they have already seen, not to "notifications".
-            NotificationPreviewCard()
-                .entrance(active: active, delay: 0.18, reduceMotion: reduceMotion)
-
-            HStack {
-                // "Every day at", because the button below now says "Remind me
-                // at …" — the row sets the schedule, the button is the promise.
-                Text("Every day at")
-                    .font(.body)
-                Spacer()
-                DatePicker("Reminder time", selection: reminderTime, displayedComponents: .hourAndMinute)
-                    .labelsHidden()
-            }
-            .padding(.horizontal, Theme.Spacing.m)
-            .padding(.vertical, Theme.Spacing.s)
-            .elevatedCard()
-            .entrance(active: active, delay: 0.24, reduceMotion: reduceMotion)
-        }
-    }
-
     /// The same offer the sheet makes, in a page instead of a sheet.
     ///
     /// Everything below the promise — the trial line, the benefits, the plans —
@@ -484,23 +392,6 @@ struct OnboardingView: View {
                         .tint(.secondary)
                         .padding(.vertical, Theme.Spacing.m)
                 }
-
-            case 3:
-                // The chosen time, not "Enable reminders". Agreeing to a
-                // specific thing at a specific hour is a smaller, clearer step
-                // than granting a capability, and the time is already sitting
-                // in the picker above — restating it here turns the button into
-                // the sentence the player is actually agreeing to.
-                Button("Remind me at \(reminderTimeText)") { enableReminders() }
-                    .buttonStyle(.pillProminent)
-                Button("Not now") {
-                    didAnswerReminders = true
-                    analytics.log(.reminderDeclined(source: "onboarding"))
-                    advance()
-                }
-                .font(.subheadline.weight(.semibold))
-                .tint(.secondary)
-                .padding(.top, Theme.Spacing.xs)
 
             case lastPage:
                 premiumControls
@@ -702,23 +593,6 @@ struct OnboardingView: View {
             }
             // Failure/pending: stay here so the notice alert can present; the
             // free-puzzle button below still exits.
-        }
-    }
-
-    private func enableReminders() {
-        // Marked on the tap, not on the system dialog's answer: the tap is the
-        // player answering *this* page, and whatever iOS goes on to return, the
-        // page has done its job and must not keep holding the swipe.
-        didAnswerReminders = true
-        Task {
-            let granted = await notifications.requestAuthorization()
-            analytics.log(.notificationPermission(granted: granted, source: "onboarding"))
-            if granted {
-                remindersEnabled = true
-                analytics.log(.reminderSettingChanged(enabled: true))
-                await notifications.reschedule(for: profile, enabled: true, minutes: reminderMinutes)
-            }
-            advance()
         }
     }
 
