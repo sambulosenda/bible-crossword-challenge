@@ -66,6 +66,10 @@ final class PlayerProfile {
     /// the last member puzzle completes (and reconciled on launch for solves
     /// that predate this field) — drives the pack achievements.
     var completedPackIDs: [String] = []
+    /// Journey quests fully walked, by quest id — same recording contract as
+    /// `completedPackIDs` (solve-time via `QuestCompletion.record`, launch
+    /// reconciliation for pre-feature solves) — drives the quest achievements.
+    var completedQuestIDs: [String] = []
     /// Streak freezes on hand — each auto-forgives a single missed day. Every
     /// player starts with one; more are earned at streak milestones.
     var streakFreezes: Int = 1
@@ -86,6 +90,7 @@ final class PlayerProfile {
         noHintSolves: Int = 0,
         hardCompleted: Int = 0,
         completedPackIDs: [String] = [],
+        completedQuestIDs: [String] = [],
         streakFreezes: Int = 1,
         lastFreezeUsedDate: Date? = nil,
         createdAt: Date = Date()
@@ -102,6 +107,7 @@ final class PlayerProfile {
         self.noHintSolves = noHintSolves
         self.hardCompleted = hardCompleted
         self.completedPackIDs = completedPackIDs
+        self.completedQuestIDs = completedQuestIDs
         self.streakFreezes = streakFreezes
         self.lastFreezeUsedDate = lastFreezeUsedDate
         self.createdAt = createdAt
@@ -202,6 +208,9 @@ enum SyncMerge {
             }
             for id in other.completedPackIDs where !primary.completedPackIDs.contains(id) {
                 primary.completedPackIDs.append(id)
+            }
+            for id in other.completedQuestIDs where !primary.completedQuestIDs.contains(id) {
+                primary.completedQuestIDs.append(id)
             }
             if let best = other.bestSolveSeconds, best < (primary.bestSolveSeconds ?? .max) {
                 primary.bestSolveSeconds = best
@@ -390,6 +399,7 @@ struct Achievement: Identifiable, Hashable {
         case noHints(Int)
         case difficulty(PuzzleDifficulty, Int)
         case packsCompleted(Int)
+        case questsCompleted(Int)
     }
 
     let id: String
@@ -418,6 +428,8 @@ struct Achievement: Identifiable, Hashable {
             return min(1.0, Double(count(of: diff, in: p)) / Double(target))
         case .packsCompleted(let target):
             return min(1.0, Double(p.completedPackIDs.count) / Double(target))
+        case .questsCompleted(let target):
+            return min(1.0, Double(p.completedQuestIDs.count) / Double(target))
         }
     }
 
@@ -436,6 +448,8 @@ struct Achievement: Identifiable, Hashable {
             return "\(min(count(of: diff, in: p), target)) / \(target)"
         case .packsCompleted(let target):
             return "\(min(p.completedPackIDs.count, target)) / \(target)"
+        case .questsCompleted(let target):
+            return "\(min(p.completedQuestIDs.count, target)) / \(target)"
         }
     }
 
@@ -459,6 +473,8 @@ enum Achievements {
         Achievement(id: "apostle", title: "Apostle", detail: "Reach a 100 day streak", symbol: "crown", goal: .streak(100)),
         Achievement(id: "pathfinder", title: "Pathfinder", detail: "Complete a puzzle pack", symbol: "square.stack.3d.up.fill", goal: .packsCompleted(1)),
         Achievement(id: "collector", title: "Collector", detail: "Complete 3 puzzle packs", symbol: "books.vertical.fill", goal: .packsCompleted(3)),
+        Achievement(id: "first-journey", title: "First Journey", detail: "Walk a Journey to its end", symbol: "map.fill", goal: .questsCompleted(1)),
+        Achievement(id: "pilgrim", title: "Pilgrim", detail: "Complete 3 Journeys", symbol: "signpost.right.fill", goal: .questsCompleted(3)),
     ]
 
     /// Returns achievement IDs newly satisfied that aren't already recorded.

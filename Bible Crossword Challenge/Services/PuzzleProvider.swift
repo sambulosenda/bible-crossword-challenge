@@ -59,6 +59,11 @@ final class PuzzleProvider {
     /// when the bundle omits the file, so the feature degrades to absent.
     let packs: [PuzzlePack]
 
+    /// Journey quest lines, in display order, decoded from `quests.json` —
+    /// authored order is display order and the first quest is the free one.
+    /// Empty when the bundle omits the file, like `packs`.
+    let quests: [QuestLine]
+
     /// Everything in the bundle, including `pack-` exclusives that never enter
     /// the daily or Archive pools but must still resolve by id (pack rows,
     /// challenge links, deep links).
@@ -93,6 +98,7 @@ final class PuzzleProvider {
         self.sundays = all.filter(\.isSunday)
         let loadedPacks = Self.loadBundledPacks(bundle: bundle)
         self.packs = loadedPacks
+        self.quests = Self.loadBundledQuests(bundle: bundle)
 
         var reverse: [String: String] = [:]
         for pack in loadedPacks {
@@ -134,6 +140,21 @@ final class PuzzleProvider {
             return try JSONDecoder().decode([PuzzlePack].self, from: data)
         } catch {
             assertionFailure("Failed to decode packs.json: \(error)")
+            return []
+        }
+    }
+
+    /// Loads `quests.json` if present — same degrade-to-absent contract as
+    /// `loadBundledPacks`.
+    private static func loadBundledQuests(bundle: Bundle) -> [QuestLine] {
+        guard let url = bundle.url(forResource: "quests", withExtension: "json") else {
+            return []
+        }
+        do {
+            let data = try Data(contentsOf: url)
+            return try JSONDecoder().decode([QuestLine].self, from: data)
+        } catch {
+            assertionFailure("Failed to decode quests.json: \(error)")
             return []
         }
     }
@@ -254,5 +275,29 @@ final class PuzzleProvider {
     /// preserving display order.
     func availablePacks(on date: Date = SeasonClock.now) -> [PuzzlePack] {
         packs.filter { $0.isAvailable(on: date) }
+    }
+
+    // MARK: - Quests
+
+    func quest(id: String) -> QuestLine? {
+        quests.first { $0.id == id }
+    }
+
+    /// Every quest listing this puzzle — like packs, a puzzle solved in the
+    /// daily feed can advance more than one quest at once.
+    func quests(containing puzzleID: String) -> [QuestLine] {
+        quests.filter { $0.puzzleIDs.contains(puzzleID) }
+    }
+
+    /// A quest's steps resolved in authored order — same drop-with-assertion
+    /// contract as `puzzles(in pack:)`.
+    func puzzles(in quest: QuestLine) -> [Puzzle] {
+        quest.puzzleIDs.compactMap { id in
+            guard let puzzle = puzzle(id: id) else {
+                assertionFailure("Quest \(quest.id) references missing puzzle \(id)")
+                return nil
+            }
+            return puzzle
+        }
     }
 }

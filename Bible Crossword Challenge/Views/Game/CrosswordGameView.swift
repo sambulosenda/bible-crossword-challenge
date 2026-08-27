@@ -572,6 +572,21 @@ struct CrosswordGameView: View {
             for pack in recordPackCompletions() {
                 analytics.log(.packCompleted(id: pack.id))
             }
+            // Same contract for Journeys: step credit on every quest this
+            // puzzle belongs to, and full-quest credit before achievements so
+            // the badge lands on this completion screen.
+            for quest in puzzleProvider.quests(containing: puzzle.id) {
+                if let step = quest.puzzleIDs.firstIndex(of: puzzle.id) {
+                    analytics.log(.questStepCompleted(
+                        id: quest.id,
+                        step: step + 1,
+                        total: quest.puzzleIDs.count
+                    ))
+                }
+            }
+            for quest in recordQuestCompletions() {
+                analytics.log(.questCompleted(id: quest.id))
+            }
         }
 
         let unlocked = Achievements.newlyUnlocked(for: profile)
@@ -630,6 +645,24 @@ struct CrosswordGameView: View {
             return []
         }
         return PackCompletion.record(packs: candidates, profile: profile) { id in
+            id == puzzle.id || solvedIDs.contains(id)
+        }
+    }
+
+    /// Journeys this puzzle just finished — the quest mirror of
+    /// `recordPackCompletions`, with the same defer-on-fetch-failure contract.
+    private func recordQuestCompletions() -> [QuestLine] {
+        let candidates = puzzleProvider.quests(containing: puzzle.id)
+        guard !candidates.isEmpty else { return [] }
+        let solvedIDs: Set<String>
+        do {
+            let records = try context.fetch(FetchDescriptor<PuzzleRecord>())
+            solvedIDs = Set(records.filter(\.isCompleted).map(\.puzzleID))
+        } catch {
+            Log.persistence.error("Quest completion fetch failed: \(error, privacy: .public)")
+            return []
+        }
+        return QuestCompletion.record(quests: candidates, profile: profile) { id in
             id == puzzle.id || solvedIDs.contains(id)
         }
     }

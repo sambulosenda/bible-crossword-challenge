@@ -61,6 +61,7 @@ struct CompletionView: View {
     /// The solved puzzle's pack, if any, with progress and the next unsolved
     /// puzzle — computed once on appear so the card doesn't shift mid-view.
     @State private var packContext: PackContext?
+    @State private var questContext: QuestContext?
     /// Weekdays solved this week, driving the scorecard's week row. Captured on
     /// appear so the row can't shift mid-view.
     @State private var completedWeekdays: Set<Int> = []
@@ -155,6 +156,10 @@ struct CompletionView: View {
                     packCard(packContext)
                 }
 
+                if let questContext {
+                    questCard(questContext)
+                }
+
                 // The invitation, by contrast, is an ask — it belongs down here
                 // with the other quiet cards, not competing with the verse.
                 if board == nil {
@@ -225,6 +230,7 @@ struct CompletionView: View {
             loadFamilyBoard()
             loadWeek()
             loadPackContext()
+            loadQuestContext()
             loadChainTarget()
             loadWeeklyRank()
             maybeAutoShowPaywall()
@@ -627,6 +633,58 @@ struct CompletionView: View {
             progress: PackProgress(pack: pack, recordsByID: recordsByID),
             next: next
         )
+    }
+
+    // MARK: - Quest continuation
+
+    /// The solved puzzle's place in its Journey. Unlike the pack card there is
+    /// deliberately no "next puzzle" button: the quest's whole frame is one
+    /// step a day, so the card banks today's step and points at tomorrow.
+    private struct QuestContext {
+        let quest: QuestLine
+        let progress: QuestProgress
+    }
+
+    private func loadQuestContext() {
+        guard let quest = puzzleProvider.quests(containing: puzzle.id).first else { return }
+        let records = (try? context.fetch(FetchDescriptor<PuzzleRecord>())) ?? []
+        let recordsByID = Dictionary(records.map { ($0.puzzleID, $0) }, uniquingKeysWith: { a, _ in a })
+        questContext = QuestContext(
+            quest: quest,
+            progress: QuestProgress(quest: quest, recordsByID: recordsByID)
+        )
+    }
+
+    @ViewBuilder
+    private func questCard(_ ctx: QuestContext) -> some View {
+        HStack(spacing: Theme.Spacing.m) {
+            Image(systemName: ctx.progress.isComplete ? "checkmark.seal.fill" : ctx.quest.coverSymbol)
+                .font(.title)
+                .foregroundStyle(ctx.quest.accent)
+            VStack(alignment: .leading, spacing: 2) {
+                if ctx.progress.isComplete {
+                    Text("\(ctx.quest.title) — Journey complete!")
+                        .font(.subheadline.weight(.semibold))
+                    Text("Every step of the path is walked.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                } else {
+                    Text("\(ctx.quest.title) · step \(ctx.progress.solved) of \(ctx.progress.total)")
+                        .font(.subheadline.weight(.semibold))
+                    Text("The next step will be waiting tomorrow.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+            Spacer(minLength: 0)
+        }
+        .padding(Theme.Spacing.l)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(ctx.quest.accent.opacity(0.12), in: .rect(cornerRadius: Theme.cornerRadius, style: .continuous))
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(ctx.progress.isComplete
+            ? "\(ctx.quest.title) Journey complete."
+            : "\(ctx.quest.title), step \(ctx.progress.solved) of \(ctx.progress.total) done. The next step will be waiting tomorrow.")
     }
 
     /// Where this solve sits in its pack. Finished → a celebratory seal; more

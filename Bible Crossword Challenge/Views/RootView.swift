@@ -379,14 +379,18 @@ struct RootView: View {
         todayPath = NavigationPath([puzzle])
     }
 
-    /// Credits any fully-solved packs not yet on the profile — solves that
-    /// predate `completedPackIDs`, or that finished a pack on another device.
+    /// Credits any fully-solved packs and Journeys not yet on the profile —
+    /// solves that predate `completedPackIDs`/`completedQuestIDs`, or that
+    /// finished one on another device.
     private func reconcilePackCompletions(_ profile: PlayerProfile) {
-        guard !puzzleProvider.packs.isEmpty else { return }
+        guard !puzzleProvider.packs.isEmpty || !puzzleProvider.quests.isEmpty else { return }
         do {
             let records = try context.fetch(FetchDescriptor<PuzzleRecord>())
             let solvedIDs = Set(records.filter(\.isCompleted).map(\.puzzleID))
             PackCompletion.record(packs: puzzleProvider.packs, profile: profile) {
+                solvedIDs.contains($0)
+            }
+            QuestCompletion.record(quests: puzzleProvider.quests, profile: profile) {
                 solvedIDs.contains($0)
             }
         } catch {

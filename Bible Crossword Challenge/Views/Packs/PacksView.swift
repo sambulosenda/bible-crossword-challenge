@@ -28,6 +28,7 @@ struct PacksView: View {
     private var packs: [PuzzlePack] { puzzleProvider.availablePacks() }
     private var seasonalPacks: [PuzzlePack] { packs.filter(\.isSeasonal) }
     private var evergreenPacks: [PuzzlePack] { packs.filter { !$0.isSeasonal } }
+    private var quests: [QuestLine] { puzzleProvider.quests }
 
     var body: some View {
         NavigationStack(path: $path) {
@@ -46,6 +47,9 @@ struct PacksView: View {
             .navigationDestination(for: PackRoute.self) { route in
                 PackDetailView(pack: route.pack, profile: profile, source: route.source)
             }
+            .navigationDestination(for: QuestRoute.self) { route in
+                QuestDetailView(quest: route.quest, profile: profile, source: route.source)
+            }
             .navigationDestination(for: Puzzle.self) { puzzle in
                 CrosswordGameView(puzzle: puzzle, profile: profile)
             }
@@ -55,16 +59,38 @@ struct PacksView: View {
     private var list: some View {
         ScrollView {
             VStack(spacing: Theme.Spacing.l) {
+                questSection
                 if !seasonalPacks.isEmpty {
                     section("In Season", packs: seasonalPacks)
                 }
-                section(seasonalPacks.isEmpty ? nil : "All Collections", packs: evergreenPacks)
+                section(quests.isEmpty && seasonalPacks.isEmpty ? nil : "All Collections", packs: evergreenPacks)
             }
             .padding(Theme.Spacing.m)
             .frame(maxWidth: 560)
             .frame(maxWidth: .infinity)
         }
         .background(Theme.background)
+    }
+
+    /// The Journeys sit above the packs: an ordered, paced run is the stronger
+    /// daily-return pitch, and there are only a few of them.
+    @ViewBuilder
+    private var questSection: some View {
+        if !quests.isEmpty {
+            VStack(alignment: .leading, spacing: Theme.Spacing.s) {
+                Text("Journeys").kicker().padding(.horizontal, Theme.Spacing.xs)
+                ForEach(quests) { quest in
+                    NavigationLink(value: QuestRoute(quest: quest, source: .packs)) {
+                        QuestCard(
+                            quest: quest,
+                            progress: QuestProgress(quest: quest, recordsByID: recordsByID),
+                            isLocked: quest.isPremium && !store.isPremium
+                        )
+                    }
+                    .buttonStyle(PressableCardStyle())
+                }
+            }
+        }
     }
 
     @ViewBuilder

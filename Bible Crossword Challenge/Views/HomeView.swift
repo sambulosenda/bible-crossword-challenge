@@ -78,6 +78,15 @@ struct HomeView: View {
         return seasonal + rest.filter { $0.isNew() } + rest.filter { !$0.isNew() }
     }
 
+    /// The first Journey with steps left, in authored order (the free quest is
+    /// authored first, so a new player's card always begins there). Nil once
+    /// every quest is walked — the card earns its slot or gives it back.
+    private var activeQuest: QuestLine? {
+        puzzleProvider.quests.first {
+            !QuestProgress(quest: $0, recordsByID: recordsByID).isComplete
+        }
+    }
+
     /// Shared record lookup for pack-progress calculation in the carousel.
     private var recordsByID: [String: PuzzleRecord] {
         Dictionary(records.map { ($0.puzzleID, $0) }, uniquingKeysWith: { a, _ in a })
@@ -290,6 +299,17 @@ struct HomeView: View {
                         )
                     }
 
+                    // The first unfinished Journey, hidden once they're all
+                    // walked. A locked premium quest still shows — the card is
+                    // a discovery surface, and its detail screen carries the
+                    // paywall.
+                    if let quest = activeQuest {
+                        QuestHomeCard(
+                            quest: quest,
+                            progress: QuestProgress(quest: quest, recordsByID: recordsByID)
+                        )
+                    }
+
                     NextAchievementCard(profile: profile)
 
                     // Below the achievement card: the mode earns attention
@@ -314,6 +334,9 @@ struct HomeView: View {
             }
             .navigationDestination(for: PackRoute.self) { route in
                 PackDetailView(pack: route.pack, profile: profile, source: route.source)
+            }
+            .navigationDestination(for: QuestRoute.self) { route in
+                QuestDetailView(quest: route.quest, profile: profile, source: route.source)
             }
             .navigationDestination(for: MemoryRoute.self) { _ in
                 MemoryVerseListView()

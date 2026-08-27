@@ -22,6 +22,7 @@ from collections import Counter, defaultdict
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PUZZLES = os.path.join(ROOT, "Bible Crossword Challenge/Resources/puzzles.json")
 PACKS = os.path.join(ROOT, "Bible Crossword Challenge/Resources/packs.json")
+QUESTS = os.path.join(ROOT, "Bible Crossword Challenge/Resources/quests.json")
 SPECS = os.path.join(ROOT, "tools/puzzle_specs.json")
 
 # Kept in step with `PackSeason` in Models/PuzzlePack.swift. A kind the app
@@ -167,6 +168,46 @@ def check_packs(packs, puzzles):
         check_season(slug, pack.get("season"))
 
 
+def check_quests(quests, puzzles):
+    """quests.json mirrors packs.json, plus quest-specific rules: exactly one
+    free quest and it must be authored first (QuestsTests asserts both), and a
+    free quest may not contain pack- exclusives — PuzzleAccess hard-locks those
+    for non-premium players, which would dead-end the free journey."""
+    by_id = {p["id"]: p for p in puzzles}
+
+    slugs = Counter(q["id"] for q in quests)
+    for slug, n in slugs.items():
+        if n > 1:
+            error(f"quests.json: duplicate quest id {slug}")
+
+    free = [q["id"] for q in quests if not q.get("isPremium", True)]
+    if len(free) != 1:
+        error(f"quests.json: expected exactly one free quest, found {free or 'none'}")
+    if quests and quests[0].get("isPremium", True):
+        error("quests.json: the first quest must be the free one "
+              "(authored order is display order; the Home card starts there)")
+
+    for quest in quests:
+        slug = quest["id"]
+        ids = quest.get("puzzleIDs") or []
+        if not ids:
+            error(f"quests.json: {slug} is empty")
+        for pid in ids:
+            if pid not in by_id:
+                error(f"quests.json: {slug} references missing puzzle {pid}")
+        dupes = [pid for pid, n in Counter(ids).items() if n > 1]
+        if dupes:
+            error(f"quests.json: {slug} lists {dupes} more than once")
+        for field in ("title", "blurb", "coverSymbol"):
+            if not quest.get(field):
+                error(f"quests.json: {slug} is missing {field}")
+        if not quest.get("isPremium", True):
+            exclusives = [pid for pid in ids if pid.startswith("pack-")]
+            if exclusives:
+                error(f"quests.json: free quest {slug} contains pack exclusives "
+                      f"{exclusives} — hard-locked for free players")
+
+
 def check_season(slug, season):
     """A season that doesn't parse resolves to no window at all, which presents
     as a pack that simply never appears — the failure mode with no symptom."""
@@ -273,10 +314,12 @@ def main():
     puzzles = json.load(open(PUZZLES))
     packs = json.load(open(PACKS))
     specs = json.load(open(SPECS))
+    quests = json.load(open(QUESTS)) if os.path.exists(QUESTS) else []
 
     check_puzzles(puzzles)
     check_grids(puzzles)
     check_packs(packs, puzzles)
+    check_quests(quests, puzzles)
     check_pool_isolation(puzzles, packs)
     check_overlap(packs, puzzles)
     spec_slugs = check_specs(specs, puzzles)
@@ -287,7 +330,8 @@ def main():
     exclusive = sum(1 for p in puzzles if p["id"].startswith("pack-"))
     sundays = sum(1 for p in puzzles if p["id"].startswith("sunday-"))
     print(f"{len(puzzles)} puzzles: {dailies} daily, {minis} mini, "
-          f"{sundays} sunday, {exclusive} pack-exclusive. {len(packs)} packs.")
+          f"{sundays} sunday, {exclusive} pack-exclusive. {len(packs)} packs, "
+          f"{len(quests)} quests.")
     print(f"Rotation: dailies wrap every {dailies} days, minis every {minis}, "
           f"sundays every {sundays} weeks.")
 

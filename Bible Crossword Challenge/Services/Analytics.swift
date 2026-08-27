@@ -147,6 +147,16 @@ enum AnalyticsEvent {
     /// and the Packs tab were previously indistinguishable.
     case packOpened(id: String, source: String)
     case packCompleted(id: String)
+    /// Journey Quests. `quest_opened` mirrors `pack_opened` (`source` = which
+    /// surface pushed the detail screen). `quest_step_completed` fires on the
+    /// first completion of any quest member puzzle, carrying how deep into the
+    /// line it landed — the read is whether the one-a-day framing actually
+    /// produces day-over-day returns (step N events on N distinct days) or
+    /// binging. `quest_completed` is the badge moment, logged where it
+    /// happens (the game screen's completion hook), once per quest.
+    case questOpened(id: String, source: String)
+    case questStepCompleted(id: String, step: Int, total: Int)
+    case questCompleted(id: String)
     /// Logged when the share sheet reports the link actually went somewhere —
     /// not when it was presented. 30 days to 2026-08-24: 22 "sent" at
     /// presentation, 0 ever opened; whether links even leave the phone was
@@ -217,6 +227,9 @@ enum AnalyticsEvent {
         case .reviewPreAskResponse: return "review_preask_response"
         case .packOpened: return "pack_opened"
         case .packCompleted: return "pack_completed"
+        case .questOpened: return "quest_opened"
+        case .questStepCompleted: return "quest_step_completed"
+        case .questCompleted: return "quest_completed"
         case .challengeSent: return "challenge_sent"
         case .challengeOpened: return "challenge_opened"
         case .challengeCompleted: return "challenge_completed"
@@ -331,6 +344,12 @@ enum AnalyticsEvent {
             return ["pack_id": id, "source": source]
         case .packCompleted(let id):
             return ["pack_id": id]
+        case .questOpened(let id, let source):
+            return ["quest_id": id, "source": source]
+        case .questStepCompleted(let id, let step, let total):
+            return ["quest_id": id, "step": step, "total": total]
+        case .questCompleted(let id):
+            return ["quest_id": id]
         case .challengeSent(let id):
             return ["puzzle_id": id]
         case .challengeOpened(let id):
