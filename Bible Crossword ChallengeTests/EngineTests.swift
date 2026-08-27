@@ -564,6 +564,31 @@ struct EngineTests {
         #expect(vm.cell(at: vm.selected).entry == nil)
     }
 
+    @Test func restoreSkipsAFilledOpeningSelection() {
+        // Solve the opening word (CAT), save, and resume: the restored session
+        // must not park the player on the done word — the gifted starter word
+        // makes this the common first-resume shape.
+        let vm = GameViewModel(puzzle: makePuzzle())
+        vm.giftStarterWord()
+        let snap = vm.snapshot()
+
+        let vm2 = GameViewModel(puzzle: makePuzzle())
+        vm2.restore(snap)
+        #expect(vm2.activeSlot?.answer == "COD")
+        #expect(vm2.cell(at: vm2.selected).entry == nil)
+    }
+
+    @Test func restoreKeepsAnUnfinishedOpeningSelection() {
+        let vm = GameViewModel(puzzle: makePuzzle())
+        vm.enter("C")
+        let snap = vm.snapshot()
+
+        // CAT still has empty cells, so the opening selection stands.
+        let vm2 = GameViewModel(puzzle: makePuzzle())
+        vm2.restore(snap)
+        #expect(vm2.activeSlot?.answer == "CAT")
+    }
+
     @Test func giftRefusesWhenTheGridHasAnyProgress() {
         let vm = GameViewModel(puzzle: makePuzzle())
         vm.enter("C")

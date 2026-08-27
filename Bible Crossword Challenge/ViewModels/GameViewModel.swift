@@ -849,5 +849,13 @@ final class GameViewModel {
         }
         checkCompletion(announceFullMiss: false)
         seedSolvedSlots()
+        // The init picked the shortest answer as the opening selection, but a
+        // resume can land that on a word with nothing left to do (the gifted
+        // starter word is the common case). Move to the next word that still
+        // has an empty cell so the player resumes on work, not on a done word.
+        if !isComplete, let slot = activeSlot,
+           !slot.positions.contains(where: { grid[$0.row][$0.col].entry == nil }) {
+            advanceToNextIncompleteSlot(after: slot)
+        }
     }
 }
