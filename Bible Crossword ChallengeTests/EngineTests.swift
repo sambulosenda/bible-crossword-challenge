@@ -525,4 +525,50 @@ struct EngineTests {
         idle(vm, seconds: 3, from: 5000)
         #expect(vm.stallNudgeTick == 0)
     }
+
+    // MARK: - Starter word gift (first-session guaranteed win)
+
+    @Test func giftFillsTheStarterWordWithoutSpendingAHint() {
+        let vm = GameViewModel(puzzle: makePuzzle())
+        let gifted = vm.giftStarterWord()
+        // Initial selection is CAT (ties go across), so that's the gift.
+        #expect(gifted?.answer == "CAT")
+        #expect(vm.cell(at: GridPos(row: 0, col: 0)).entry == "C")
+        #expect(vm.cell(at: GridPos(row: 0, col: 1)).entry == "A")
+        #expect(vm.cell(at: GridPos(row: 0, col: 2)).entry == "T")
+        #expect(vm.hintsUsed == 0)
+        #expect(!vm.isComplete)
+    }
+
+    @Test func giftLocksItsCellsLikeAReveal() {
+        let vm = GameViewModel(puzzle: makePuzzle())
+        vm.giftStarterWord()
+        // Locked: typing over a gifted cell skips it, deleting leaves it.
+        vm.select(GridPos(row: 0, col: 1))
+        vm.enter("X")
+        #expect(vm.cell(at: GridPos(row: 0, col: 1)).entry == "A")
+        vm.select(GridPos(row: 0, col: 1))
+        vm.delete()
+        #expect(vm.cell(at: GridPos(row: 0, col: 1)).entry == "A")
+        // And it persists as a reveal (lowercase in the snapshot), so a
+        // relaunch restores the gift still locked.
+        #expect(vm.snapshot()["0,1"] == "a")
+    }
+
+    @Test func giftMovesSelectionToACrossingWord() {
+        let vm = GameViewModel(puzzle: makePuzzle())
+        vm.giftStarterWord()
+        // The player should land on a word that still needs letters, not sit
+        // on the solved gift.
+        #expect(vm.activeSlot?.answer == "COD")
+        #expect(vm.cell(at: vm.selected).entry == nil)
+    }
+
+    @Test func giftRefusesWhenTheGridHasAnyProgress() {
+        let vm = GameViewModel(puzzle: makePuzzle())
+        vm.enter("C")
+        #expect(vm.giftStarterWord() == nil)
+        // The typed letter (and everything else) is untouched.
+        #expect(vm.cell(at: GridPos(row: 0, col: 1)).entry == nil)
+    }
 }

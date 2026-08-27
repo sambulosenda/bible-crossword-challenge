@@ -489,6 +489,29 @@ final class GameViewModel {
         hintsUsed += 1
     }
 
+    /// First-session gift: fill the starter word (the initial selection is
+    /// already the shortest answer) and move the player to a crossing word, so
+    /// a brand-new player faces a grid with a foothold instead of an empty one
+    /// — 287 of 675 abandons in the 30 days to 2026-08-27 happened under 10%
+    /// fill. Free by design: no `hintsUsed` bump, and the caller must not set
+    /// the record's `usedHint`. Cells lock like any reveal so the gift can't
+    /// be deleted (and persists lowercase in the snapshot). Refuses on any
+    /// existing progress — a resume must never be overwritten.
+    @discardableResult
+    func giftStarterWord() -> Slot? {
+        guard !isComplete, !hasAnyEntries, let slot = activeSlot else { return nil }
+        for (i, pos) in slot.positions.enumerated() {
+            grid[pos.row][pos.col].entry = Array(slot.answer)[i]
+            grid[pos.row][pos.col].isRevealed = true
+        }
+        // Silent: no word-solved flash for a word the player didn't solve. No
+        // completion check either — a gift must never finish a puzzle, and
+        // every shipped grid has more than one word.
+        refreshSolvedSlots(around: slot.positions, silent: true)
+        advanceToNextIncompleteSlot(after: slot)
+        return slot
+    }
+
     // MARK: - Word completion tracking
 
     private func slotSolved(_ slot: Slot) -> Bool {

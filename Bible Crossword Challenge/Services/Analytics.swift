@@ -44,6 +44,13 @@ enum AnalyticsEvent {
     /// the nudge is being seen, taken, and followed by a completion.
     case stallNudgeShown(puzzleID: String, fillPercent: Int, idleSeconds: Int)
     case stallNudgeTapped(puzzleID: String, fillPercent: Int, idleSeconds: Int)
+    /// A brand-new player's first-ever session opened with the starter word
+    /// filled in for free (see `GameViewModel.giftStarterWord`). Fires once per
+    /// install. The read: do gifted first sessions complete more often than the
+    /// pre-gift baseline, whose abandons piled up under 10% fill (287 of 675 in
+    /// the 30 days to 2026-08-27)? Compare `daily_puzzle_completed` rates for
+    /// sessions with and without this event.
+    case starterWordGifted(puzzleID: String, answerLength: Int)
     /// A widget tap landed in the app. `destination` is which surface the tap
     /// resolved to (`daily` / `mini` / `today`) — the widget picks the most
     /// useful next action, and this is the read on whether players take it.
@@ -190,6 +197,7 @@ enum AnalyticsEvent {
         case .checkUsed: return "check_used"
         case .stallNudgeShown: return "stall_nudge_shown"
         case .stallNudgeTapped: return "stall_nudge_tapped"
+        case .starterWordGifted: return "starter_word_gifted"
         case .widgetOpened: return "widget_opened"
         case .streakUpdated: return "streak_updated"
         case .streakBroken: return "streak_broken"
@@ -293,6 +301,8 @@ enum AnalyticsEvent {
         case .stallNudgeShown(let puzzleID, let fillPercent, let idleSeconds),
              .stallNudgeTapped(let puzzleID, let fillPercent, let idleSeconds):
             return ["puzzle_id": puzzleID, "fill_percent": fillPercent, "idle_seconds": idleSeconds]
+        case .starterWordGifted(let puzzleID, let answerLength):
+            return ["puzzle_id": puzzleID, "answer_length": answerLength]
         case .widgetOpened(let destination):
             return ["destination": destination]
         case .streakUpdated(let streak):

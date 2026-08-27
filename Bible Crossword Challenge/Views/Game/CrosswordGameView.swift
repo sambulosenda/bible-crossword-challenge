@@ -53,6 +53,13 @@ struct CrosswordGameView: View {
     /// `HomeView.startComeback`.
     @AppStorage("pendingStreakBreak") private var pendingStreakBreak = 0
     @AppStorage("comebackSource") private var comebackSource = ""
+    /// Once-ever: the first puzzle a fresh install opens gets its starter word
+    /// filled in for free (`GameViewModel.giftStarterWord`). UserDefaults, not
+    /// `PlayerProfile` — a device-local UI concession, like `pendingStreakBreak`,
+    /// that isn't worth a CloudKit schema deploy.
+    @AppStorage("starterWordGifted") private var starterWordGifted = false
+    /// The "first word's on us" line shown after the gift, auto-dismissed.
+    @State private var showStarterGiftNote = false
     /// Grid is full but at least one letter is wrong — nudge instead of leaving
     /// the player stranded wondering why the completion screen didn't appear.
     @State private var showFullMissAlert = false
@@ -84,6 +91,21 @@ struct CrosswordGameView: View {
             if let challenge = incomingChallenge {
                 ChallengeTargetChip(name: challenge.challengerName, seconds: challenge.seconds)
                     .padding(.top, Theme.Spacing.xs)
+            }
+
+            if showStarterGiftNote {
+                Label("Your first word is filled in — you take it from here!", systemImage: "gift.fill")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(Theme.accent)
+                    .padding(.horizontal, Theme.Spacing.m)
+                    .padding(.vertical, Theme.Spacing.xs)
+                    .background(Theme.accent.opacity(0.12), in: .capsule)
+                    .padding(.top, Theme.Spacing.xs)
+                    .transition(.move(edge: .top).combined(with: .opacity))
+                    .task {
+                        try? await Task.sleep(for: .seconds(8))
+                        withAnimation(.snappy) { showStarterGiftNote = false }
+                    }
             }
 
             CrosswordGridView(vm: vm)
@@ -228,6 +250,21 @@ struct CrosswordGameView: View {
                 if !rec.entries.isEmpty || !rec.pencil.isEmpty {
                     vm.restore(rec.entries, pencil: rec.pencil)
                 }
+            }
+            // A fresh install's first-ever puzzle opens with the starter word
+            // already solved — new players were abandoning at the empty grid
+            // (287 of 675 abandons under 10% fill in the 30 days to
+            // 2026-08-27). Free: no hint spent, `usedHint` untouched, so an
+            // unaided solve still counts. Never on a resume or replay.
+            if !starterWordGifted, profile.totalPuzzlesCompleted == 0,
+               !rec.isCompleted, !isResume,
+               let gifted = vm.giftStarterWord() {
+                starterWordGifted = true
+                withAnimation(.snappy) { showStarterGiftNote = true }
+                analytics.log(.starterWordGifted(
+                    puzzleID: puzzle.id,
+                    answerLength: gifted.answer.count
+                ))
             }
             analytics.log(.dailyPuzzleStarted(puzzleID: puzzle.id, isResume: isResume))
             #if DEBUG
