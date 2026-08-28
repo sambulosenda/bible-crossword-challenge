@@ -39,6 +39,14 @@ struct OnboardingView: View {
     @State private var page = 0
     @State private var didLogPaywallOpen = false
     @State private var didLogFirstSolve = false
+
+    // Dismissal telemetry for the offer page, mirroring `PaywallView`'s. Every
+    // exit from onboarding goes through `finish()`, so that is where the event
+    // fires; what's tracked here is when the page arrived and whether the buy
+    // button was pressed. A quit-the-app exit emits nothing — the 34% who
+    // leave that way stay visible only as an absent `onboarding_completed`.
+    @State private var premiumArrivedAt: Date?
+    @State private var didTapPremiumCTA = false
     @FocusState private var nameFocused: Bool
 
     /// Which plan the premium page has selected. Lives here rather than in
@@ -107,6 +115,11 @@ struct OnboardingView: View {
             if newPage == lastPage && !didLogPaywallOpen {
                 didLogPaywallOpen = true
                 analytics.log(.paywallOpened(source: "onboarding"))
+            }
+            // First arrival only, like the open above: swiping back to the
+            // name page and returning shouldn't reset the clock.
+            if newPage == lastPage && premiumArrivedAt == nil {
+                premiumArrivedAt = Date()
             }
         }
         .onAppear {
@@ -563,6 +576,7 @@ struct OnboardingView: View {
     }
 
     private func buySelectedPlan() {
+        didTapPremiumCTA = true
         Task {
             guard let plan = selectedPlan else { return finish() }
             // The plan is named the same way the sheet names it, so the two
@@ -603,6 +617,16 @@ struct OnboardingView: View {
 
     private func finish() {
         nameFocused = false
+        // Only when the offer page was actually reached — `finish()` is also
+        // how a player who never got there would leave, if that ever happens.
+        if let premiumArrivedAt {
+            analytics.log(.paywallDismissed(
+                source: "onboarding",
+                secondsOnScreen: Int(Date().timeIntervalSince(premiumArrivedAt).rounded()),
+                ctaTapped: didTapPremiumCTA
+            ))
+            self.premiumArrivedAt = nil
+        }
         let trimmed = name.trimmingCharacters(in: .whitespaces)
         profile.username = trimmed.isEmpty ? "Friend" : trimmed
         // Carries the solve outcome so completion can be split by it without

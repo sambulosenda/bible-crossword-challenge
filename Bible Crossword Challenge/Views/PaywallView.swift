@@ -53,6 +53,14 @@ struct PaywallView: View {
     @State private var selectedID = StoreService.yearlyID
     @State private var didLogOpen = false
 
+    // Dismissal telemetry. When the sheet appeared, whether the CTA was pressed
+    // during this presentation, and a once-only guard — `onDisappear` is the
+    // one hook that sees every exit (✕, swipe, and the dismissal that follows
+    // a purchase), but nothing stops it firing more than once per identity.
+    @State private var appearedAt: Date?
+    @State private var didTapCTA = false
+    @State private var didLogDismiss = false
+
     private var selectedProduct: Product? {
         store.products.first { $0.id == selectedID }
     }
@@ -111,10 +119,23 @@ struct PaywallView: View {
                 didLogOpen = true
                 analytics.log(.paywallOpened(source: source))
             }
+            if appearedAt == nil { appearedAt = Date() }
             // Default to the trial plan; fall back to whatever loaded.
             if selectedProduct == nil, let first = store.products.first {
                 selectedID = first.id
             }
+        }
+        .onDisappear {
+            // The other half of `paywall_opened` — see `paywallDismissed`.
+            // Counted from first appearance, so a sheet that resurfaces under
+            // another sheet (Apple's purchase dialog) doesn't reset the clock.
+            guard !didLogDismiss, let appearedAt else { return }
+            didLogDismiss = true
+            analytics.log(.paywallDismissed(
+                source: source,
+                secondsOnScreen: Int(Date().timeIntervalSince(appearedAt).rounded()),
+                ctaTapped: didTapCTA
+            ))
         }
         .task {
             if store.products.isEmpty { await store.refresh() }
@@ -261,6 +282,7 @@ struct PaywallView: View {
         VStack(spacing: Theme.Spacing.m) {
             Button {
                 guard let product = selectedProduct else { return }
+                didTapCTA = true
                 Task {
                     let plan = PremiumOfferView.planTitle(product).lowercased()
                     // Before the sheet, not after: this is the only record that
