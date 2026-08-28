@@ -123,6 +123,14 @@ final class GameViewModel {
     private(set) var gridFullWithErrorsTick = 0
     private var wasFullWithErrors = false
 
+    /// Increments when typing lands on a hint-revealed (locked) cell. The
+    /// letter is skipped to protect what the player paid for, but the skip
+    /// was silent — a new player typing into their gifted word saw nothing
+    /// happen and read it as the keyboard being broken. The view reacts with
+    /// a brief flash on `lockedEntryPos` and a haptic.
+    private(set) var lockedEntryTick = 0
+    private(set) var lockedEntryPos: GridPos?
+
     /// Increments when the player has been idle long enough on the active
     /// clock that abandonment data says walking away comes next. Two tiers,
     /// each once per session:
@@ -337,8 +345,11 @@ final class GameViewModel {
         guard isSelectable(selected) else { return }
         noteInput()
         // Hint-revealed cells are locked — typing skips over them instead of
-        // destroying a letter the player paid for.
+        // destroying a letter the player paid for. Announced, not silent:
+        // see `lockedEntryTick`.
         guard !grid[selected.row][selected.col].isRevealed else {
+            lockedEntryPos = selected
+            lockedEntryTick += 1
             advanceWithinWord()
             return
         }
@@ -403,18 +414,41 @@ final class GameViewModel {
         }
     }
 
-    /// Select the next slot (in across-then-down order, wrapping) that still
-    /// has at least one empty cell. No-op when every remaining cell is filled.
+    /// Select the next word to work on once `slot` is full. Crossing words
+    /// come first: each already holds at least one letter from the word just
+    /// finished, so they're the natural foothold — and among them the one
+    /// closest to done compounds the win. With no incomplete crosser, the
+    /// nearest incomplete word by grid distance: the old across-then-down
+    /// wrap could teleport the cursor to a far corner of a 15×15, which reads
+    /// as the app losing the player's place. Ties keep the old
+    /// across-then-lower-number order, so small grids behave as they always
+    /// did. No-op when every remaining cell is filled.
     private func advanceToNextIncompleteSlot(after slot: Slot) {
-        let ordered = acrossSlots + downSlots
-        guard let idx = ordered.firstIndex(of: slot) else { return }
-        for step in 1..<ordered.count {
-            let candidate = ordered[(idx + step) % ordered.count]
-            if candidate.positions.contains(where: { grid[$0.row][$0.col].entry == nil }) {
-                select(slot: candidate)
-                return
-            }
+        func emptyCount(_ s: Slot) -> Int {
+            s.positions.count { grid[$0.row][$0.col].entry == nil }
         }
+        let crossers = slotsContaining(slot.positions).filter {
+            $0.direction != slot.direction && emptyCount($0) > 0
+        }
+        if let target = crossers.min(by: {
+            (emptyCount($0), $0.number) < (emptyCount($1), $1.number)
+        }) {
+            select(slot: target)
+            return
+        }
+        // `selected` still sits inside the finished word — the anchor the
+        // player's eye is on.
+        let anchor = selected
+        func distance(_ s: Slot) -> Int {
+            s.positions.map { abs($0.row - anchor.row) + abs($0.col - anchor.col) }.min() ?? .max
+        }
+        let target = (acrossSlots + downSlots)
+            .filter { $0 != slot && emptyCount($0) > 0 }
+            .min {
+                (distance($0), $0.direction == .down ? 1 : 0, $0.number)
+                    < (distance($1), $1.direction == .down ? 1 : 0, $1.number)
+            }
+        if let target { select(slot: target) }
     }
 
     private func previousCellInWord() -> GridPos? {

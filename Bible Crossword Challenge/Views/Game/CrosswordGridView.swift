@@ -52,6 +52,19 @@ struct CrosswordGridView: View {
         }
         .sensoryFeedback(.impact(weight: .light), trigger: wordTick)
         .sensoryFeedback(.error, trigger: shakeTick)
+        // Typing on a locked (revealed) cell: the letter is skipped, and a
+        // silent skip reads as a broken keyboard — pulse the cell green (it
+        // is, after all, already right) with a warning tap.
+        .sensoryFeedback(.warning, trigger: vm.lockedEntryTick)
+        .onChange(of: vm.lockedEntryTick) { _, _ in
+            guard let pos = vm.lockedEntryPos else { return }
+            AccessibilityNotification.Announcement("Already revealed").post()
+            withAnimation(.easeOut(duration: 0.15)) { _ = flashing.insert(pos) }
+            Task { @MainActor in
+                try? await Task.sleep(for: .milliseconds(350))
+                withAnimation(.easeOut(duration: 0.25)) { _ = flashing.remove(pos) }
+            }
+        }
         .onAppear { wireFeedback() }
         .onChange(of: vm.isComplete) { _, complete in
             guard complete, !reduceMotion else { return }

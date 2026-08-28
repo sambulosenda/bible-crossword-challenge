@@ -590,6 +590,77 @@ struct EngineTests {
         #expect(vm.snapshot()["0,1"] == "a")
     }
 
+    // MARK: - Next-word selection after a solve
+
+    @Test func finishedWordAdvancesToItsCrossingWord() {
+        // CAT across crossed by COW down, plus BEE across far below. The old
+        // across-then-down wrap picked BEE (next across in order); the
+        // crossing word — which already holds the C the player just typed —
+        // is the natural foothold.
+        let vm = GameViewModel(puzzle: Puzzle(
+            id: "test-crossing",
+            title: "Tiny",
+            difficulty: .easy,
+            verse: "Test verse",
+            reference: "Test 1:1",
+            publishDate: "2026-07-01",
+            size: 5,
+            grid: ["CAT..", "O....", "W....", ".....", "BEE.."],
+            clues: [
+                ClueData(number: 1, direction: .across, row: 0, col: 0, text: "Feline", answer: "CAT"),
+                ClueData(number: 1, direction: .down, row: 0, col: 0, text: "Bovine", answer: "COW"),
+                ClueData(number: 5, direction: .across, row: 4, col: 0, text: "Buzzer", answer: "BEE"),
+            ]
+        ))
+        #expect(vm.activeSlot?.answer == "CAT")
+        vm.enter("C"); vm.enter("A"); vm.enter("T")
+        #expect(vm.activeSlot?.answer == "COW")
+        #expect(vm.cell(at: vm.selected).entry == nil)
+    }
+
+    @Test func withNoCrossingWordTheNearestIncompleteWins() {
+        // AX at the top-left touches nothing. BY sits three cells away, ZOO
+        // five — the old wrap order (across before down) picked ZOO and
+        // teleported the cursor across the grid.
+        let vm = GameViewModel(puzzle: Puzzle(
+            id: "test-nearest",
+            title: "Tiny",
+            difficulty: .easy,
+            verse: "Test verse",
+            reference: "Test 1:1",
+            publishDate: "2026-07-01",
+            size: 5,
+            grid: ["AX..B", "....Y", ".....", ".....", "..ZOO"],
+            clues: [
+                ClueData(number: 1, direction: .across, row: 0, col: 0, text: "Tool", answer: "AX"),
+                ClueData(number: 2, direction: .down, row: 0, col: 4, text: "Beside", answer: "BY"),
+                ClueData(number: 3, direction: .across, row: 4, col: 2, text: "Animals", answer: "ZOO"),
+            ]
+        ))
+        #expect(vm.activeSlot?.answer == "AX")
+        vm.enter("A"); vm.enter("X")
+        #expect(vm.activeSlot?.answer == "BY")
+    }
+
+    // MARK: - Locked-cell feedback
+
+    @Test func typingOnALockedCellAnnouncesTheSkip() {
+        let vm = GameViewModel(puzzle: makePuzzle())
+        vm.giftStarterWord()                                // locks CAT
+        vm.select(GridPos(row: 0, col: 1))
+        vm.enter("X")
+        #expect(vm.lockedEntryTick == 1)
+        #expect(vm.lockedEntryPos == GridPos(row: 0, col: 1))
+        #expect(vm.cell(at: GridPos(row: 0, col: 1)).entry == "A")
+    }
+
+    @Test func normalTypingNeverTicksLockedFeedback() {
+        let vm = GameViewModel(puzzle: makePuzzle())
+        vm.enter("C"); vm.enter("A")
+        vm.delete()
+        #expect(vm.lockedEntryTick == 0)
+    }
+
     @Test func giftMovesSelectionToACrossingWord() {
         let vm = GameViewModel(puzzle: makePuzzle())
         vm.giftStarterWord()
