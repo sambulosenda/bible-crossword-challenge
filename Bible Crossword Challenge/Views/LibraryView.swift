@@ -132,7 +132,7 @@ struct LibraryView: View {
             }
             .navigationTitle("Library")
             .navigationDestination(for: Puzzle.self) { puzzle in
-                CrosswordGameView(puzzle: puzzle, profile: profile)
+                CrosswordGameView(puzzle: puzzle, profile: profile, entrySource: "library")
             }
             .sheet(isPresented: $showPaywall) {
                 // Source stays "archive" even though the screen is now called

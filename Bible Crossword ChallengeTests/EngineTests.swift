@@ -441,8 +441,9 @@ struct EngineTests {
 
     // MARK: - Stall nudge
     //
-    // The mid-solve rescue: idle past the threshold on the active clock with
-    // the grid ≥ 40% filled fires `stallNudgeTick` exactly once per session.
+    // The tiered rescue, each tier once per session on the active clock: at
+    // ≥ 40% fill, `stallNudgeSeconds` idle fires the check tier; under 40%,
+    // the shorter `earlyNudgeSeconds` idle fires the free-letter tier.
     // The fixture has 5 playable cells, so 4 filled = 80% and 1 filled = 20%.
 
     /// Advance the active clock by `seconds` of rendered ticks.
@@ -467,6 +468,7 @@ struct EngineTests {
 
         idle(vm, seconds: vm.stallNudgeSeconds + 1)
         #expect(vm.stallNudgeTick == 1)
+        #expect(vm.stallNudgeKind == .checkAnswers)
         #expect(vm.isStallNudgeActive)
 
         // Keep idling: once per session, never a second nag.
@@ -474,12 +476,44 @@ struct EngineTests {
         #expect(vm.stallNudgeTick == 1)
     }
 
-    @Test func stallNudgeNeedsMinimumFill() {
+    @Test func lowFillIdleFiresTheFreeLetterTier() {
         let vm = GameViewModel(puzzle: makePuzzle())
         vm.isAttachedToWindow = true
         vm.enter("C")                                       // 1 of 5 = 20%
-        idle(vm, seconds: vm.stallNudgeSeconds + 5)
+        idle(vm, seconds: vm.earlyNudgeSeconds + 1)
+        #expect(vm.stallNudgeTick == 1)
+        #expect(vm.stallNudgeKind == .freeLetter)
+        #expect(vm.isStallNudgeActive)
+
+        // Once per session for this tier too.
+        idle(vm, seconds: vm.earlyNudgeSeconds + 1, from: 1000)
+        #expect(vm.stallNudgeTick == 1)
+    }
+
+    @Test func earlyTierWaitsItsOwnThreshold() {
+        let vm = GameViewModel(puzzle: makePuzzle())
+        vm.isAttachedToWindow = true
+        // Empty grid — even zero fill is eligible, but not before the idle.
+        idle(vm, seconds: vm.earlyNudgeSeconds - 5)
         #expect(vm.stallNudgeTick == 0)
+        idle(vm, seconds: 6, from: 1000)
+        #expect(vm.stallNudgeTick == 1)
+        #expect(vm.stallNudgeKind == .freeLetter)
+    }
+
+    @Test func eachTierFiresIndependently() {
+        // Early tier at low fill, then the check tier after crossing 40% —
+        // one session can be rescued twice, once per shape of stuck.
+        let vm = GameViewModel(puzzle: makePuzzle())
+        vm.isAttachedToWindow = true
+        idle(vm, seconds: vm.earlyNudgeSeconds + 1)
+        #expect(vm.stallNudgeTick == 1)
+
+        fillFourOfFive(vm)                                  // 80%, clears the line
+        #expect(!vm.isStallNudgeActive)
+        idle(vm, seconds: vm.stallNudgeSeconds + 1, from: 1000)
+        #expect(vm.stallNudgeTick == 2)
+        #expect(vm.stallNudgeKind == .checkAnswers)
     }
 
     @Test func stallNudgeFiresAtThresholdFill() {
@@ -488,6 +522,7 @@ struct EngineTests {
         vm.enter("C"); vm.enter("A")                        // 2 of 5 = 40%, the gate
         idle(vm, seconds: vm.stallNudgeSeconds + 5)
         #expect(vm.stallNudgeTick == 1)
+        #expect(vm.stallNudgeKind == .checkAnswers)
     }
 
     @Test func inputResetsTheStallClock() {

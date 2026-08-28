@@ -13,6 +13,10 @@ import os
 struct CrosswordGameView: View {
     let puzzle: Puzzle
     let profile: PlayerProfile
+    /// Which surface's navigation pushed this screen (`home` / `library` /
+    /// `pack`) — carried on `daily_puzzle_started` so quick closes can be
+    /// attributed to an entry point.
+    let entrySource: String
 
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
@@ -53,13 +57,12 @@ struct CrosswordGameView: View {
     /// `HomeView.startComeback`.
     @AppStorage("pendingStreakBreak") private var pendingStreakBreak = 0
     @AppStorage("comebackSource") private var comebackSource = ""
-    /// Once-ever: the first puzzle a fresh install opens gets its starter word
-    /// filled in for free (`GameViewModel.giftStarterWord`). UserDefaults, not
-    /// `PlayerProfile` — a device-local UI concession, like `pendingStreakBreak`,
-    /// that isn't worth a CloudKit schema deploy.
-    @AppStorage("starterWordGifted") private var starterWordGifted = false
     /// The "first word's on us" line shown after the gift, auto-dismissed.
     @State private var showStarterGiftNote = false
+    /// Wall-clock mark of when this screen appeared, for `puzzle_abandoned`'s
+    /// `wall_seconds` — the active clock ticks at ~1s cadence, so a fast
+    /// bounce can round to 0 and read the same as a prewarm-and-detach.
+    @State private var openedAt = Date()
     /// Grid is full but at least one letter is wrong — nudge instead of leaving
     /// the player stranded wondering why the completion screen didn't appear.
     @State private var showFullMissAlert = false
@@ -80,9 +83,10 @@ struct CrosswordGameView: View {
     /// Keeps the screen focused so a hardware keyboard can type into the grid.
     @FocusState private var gridFocused: Bool
 
-    init(puzzle: Puzzle, profile: PlayerProfile) {
+    init(puzzle: Puzzle, profile: PlayerProfile, entrySource: String) {
         self.puzzle = puzzle
         self.profile = profile
+        self.entrySource = entrySource
         _vm = State(initialValue: GameViewModel(puzzle: puzzle))
     }
 
@@ -112,7 +116,7 @@ struct CrosswordGameView: View {
                 .padding(Theme.Spacing.m)
                 .frame(maxHeight: .infinity)
 
-            ClueBarView(vm: vm, onStallCheck: runStallCheck)
+            ClueBarView(vm: vm, onStallTap: runStallAction)
 
             LetterKeyboardView(
                 isPencilMode: vm.isPencilMode,
@@ -207,7 +211,8 @@ struct CrosswordGameView: View {
             analytics.log(.stallNudgeShown(
                 puzzleID: puzzle.id,
                 fillPercent: fillPercent,
-                idleSeconds: vm.secondsSinceLastInput
+                idleSeconds: vm.secondsSinceLastInput,
+                kind: vm.stallNudgeKind.rawValue
             ))
         }
         .alert("Almost There", isPresented: $showFullMissAlert) {
@@ -251,22 +256,28 @@ struct CrosswordGameView: View {
                     vm.restore(rec.entries, pencil: rec.pencil)
                 }
             }
-            // A fresh install's first-ever puzzle opens with the starter word
-            // already solved — new players were abandoning at the empty grid
-            // (287 of 675 abandons under 10% fill in the 30 days to
-            // 2026-08-27). Free: no hint spent, `usedHint` untouched, so an
-            // unaided solve still counts. Never on a resume or replay.
-            if !starterWordGifted, profile.totalPuzzlesCompleted == 0,
+            // A new player's puzzle opens with the starter word already solved
+            // — new players were abandoning at the empty grid (287 of 675
+            // abandons under 10% fill in the 30 days to 2026-08-27). Every
+            // fresh open until the third completion, not once per install: the
+            // one-shot version spent the whole on-ramp on a single puzzle.
+            // Free: no hint spent, `usedHint` untouched, so an unaided solve
+            // still counts. Never on a resume or replay.
+            if profile.isStillLearning,
                !rec.isCompleted, !isResume,
                let gifted = vm.giftStarterWord() {
-                starterWordGifted = true
                 withAnimation(.snappy) { showStarterGiftNote = true }
                 analytics.log(.starterWordGifted(
                     puzzleID: puzzle.id,
                     answerLength: gifted.answer.count
                 ))
             }
-            analytics.log(.dailyPuzzleStarted(puzzleID: puzzle.id, isResume: isResume))
+            openedAt = Date()
+            analytics.log(.dailyPuzzleStarted(
+                puzzleID: puzzle.id,
+                isResume: isResume,
+                source: entrySource
+            ))
             #if DEBUG
             // Screenshot helpers, triggered by launch arguments — no visible UI.
             let args = ProcessInfo.processInfo.arguments
@@ -387,7 +398,15 @@ struct CrosswordGameView: View {
                     }
                 }
             } label: {
-                Image(systemName: "lightbulb")
+                // Titled, not a bare glyph: every hint and check lives behind
+                // this one button, and the unlabeled lightbulb was invisible
+                // to exactly the stuck new player it exists for. An HStack,
+                // not a Label — the toolbar restyles a Label back to its icon.
+                HStack(spacing: 3) {
+                    Image(systemName: "lightbulb")
+                    Text("Hints")
+                }
+                .font(.subheadline.weight(.medium))
             }
             .accessibilityLabel("Hints and check answers")
         }
@@ -455,10 +474,14 @@ struct CrosswordGameView: View {
 
     private var hintsRemainingText: String {
         if store.isPremium { return "Unlimited" }
+        if profile.isStillLearning { return "Free while you learn" }
         return "\(profile.hintsRemaining(isPremium: false))"
     }
 
     private func costLabel(_ type: HintType) -> String {
+        // The learning window meters nothing, so the rungs must not claim a
+        // price the tap won't charge.
+        if !store.isPremium, profile.isStillLearning { return "Free" }
         switch type.cost {
         case 0: return "Free"
         case 1: return "1 hint"
@@ -503,7 +526,11 @@ struct CrosswordGameView: View {
             return
         }
         if !store.isPremium { profile.consumeHint(cost: type.cost) }
-        analytics.log(.hintUsed(type: type.rawValue, cost: type.cost))
+        // `cost` is what the quota was actually charged: 0 inside the
+        // learning window, list price otherwise (premium included — that
+        // series predates the window and stays comparable).
+        let charged = (!store.isPremium && profile.isStillLearning) ? 0 : type.cost
+        analytics.log(.hintUsed(type: type.rawValue, cost: charged))
         saveProgress()
     }
 
@@ -699,6 +726,7 @@ struct CrosswordGameView: View {
             puzzleID: puzzle.id,
             fillPercent: fillPercent,
             seconds: vm.elapsed(),
+            wallSeconds: Int(Date().timeIntervalSince(openedAt).rounded()),
             hintsUsed: vm.hintsUsed
         ))
     }
@@ -711,16 +739,35 @@ struct CrosswordGameView: View {
         return Int((Double(vm.filledPlayableCount) / Double(total) * 100).rounded())
     }
 
-    /// The stall nudge's tap: log it, then run the same whole-puzzle check the
-    /// hint menu offers. The check itself calls back into the vm, which clears
-    /// the nudge line.
-    private func runStallCheck() {
+    /// The stall nudge's tap: log it, then run the tier's action. The check
+    /// tier runs the same whole-puzzle check the hint menu offers; the early
+    /// tier reveals one letter free of the daily quota — a foothold for the
+    /// player who has nothing worth checking yet. Both actions call back into
+    /// the vm, which clears the nudge line.
+    private func runStallAction() {
         analytics.log(.stallNudgeTapped(
             puzzleID: puzzle.id,
             fillPercent: fillPercent,
-            idleSeconds: vm.secondsSinceLastInput
+            idleSeconds: vm.secondsSinceLastInput,
+            kind: vm.stallNudgeKind.rawValue
         ))
-        runCheck(.puzzle)
+        switch vm.stallNudgeKind {
+        case .checkAnswers:
+            runCheck(.puzzle)
+        case .freeLetter:
+            // Free of quota, but still a reveal: `usedHint` and the session
+            // hint counter stay honest so unaided achievements and the
+            // weekly Mini leaderboard can't be bought with a stall.
+            let rec = loadOrCreateRecord()
+            let priorUsedHint = rec.usedHint
+            rec.usedHint = true
+            guard vm.revealLetter() else {
+                rec.usedHint = priorUsedHint
+                return
+            }
+            analytics.log(.hintUsed(type: HintType.letter.rawValue, cost: 0))
+            saveProgress()
+        }
     }
 
     private func saveProgress() {

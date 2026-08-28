@@ -123,26 +123,46 @@ final class GameViewModel {
     private(set) var gridFullWithErrorsTick = 0
     private var wasFullWithErrors = false
 
-    /// Increments when the player has been idle for `stallNudgeSeconds` of
-    /// active clock with the grid ≥ 40% filled — the mid-solve stall that
-    /// abandonment data says precedes walking away. The 75% gate this shipped
-    /// with missed most of the stuck players: of the 30-day abandons measured
-    /// 2026-08-23, the modal bucket was 50–74% fill (101 events) with another
-    /// 66 at 25–49%, and the nudge had fired 6 times against ~300 stuck
-    /// abandons. Once per puzzle session, so the nudge stays a nudge. The view
-    /// reacts with a quiet check-your-answers line and logs the impression.
+    /// Increments when the player has been idle long enough on the active
+    /// clock that abandonment data says walking away comes next. Two tiers,
+    /// each once per session:
+    ///
+    /// - `.checkAnswers` (≥ 40% fill, `stallNudgeSeconds` idle): the mid-solve
+    ///   stall — there's material on the grid, so the useful action is judging
+    ///   it. The 75% gate this shipped with missed most of the stuck players
+    ///   (see 2026-08-23 histogram in git history), hence 40%.
+    /// - `.freeLetter` (< 40% fill, `earlyNudgeSeconds` idle): the early
+    ///   stall. 43% of abandons in the 30 days to 2026-08-28 happened under
+    ///   10% fill, and no help could fire there: the check nudge needs fill,
+    ///   the hint menu is an unlabeled glyph. Nothing to check yet — the
+    ///   useful action is a foothold, so the tap buys a letter free of quota.
+    ///
+    /// The view reacts with a quiet action line and logs the impression.
     private(set) var stallNudgeTick = 0
+    /// Which tier fired last — drives the nudge line's copy and tap action.
+    enum StallNudgeKind: String {
+        case checkAnswers = "check"
+        case freeLetter = "free_letter"
+    }
+    private(set) var stallNudgeKind: StallNudgeKind = .checkAnswers
     /// True from the stall moment until the next input clears it — drives the
     /// nudge line's visibility.
     private(set) var isStallNudgeActive = false
     private var stallNudged = false
+    private var earlyNudged = false
     /// Active seconds at the last player input. Measured on the solve clock,
     /// not wall time, so backgrounded or verse-reading stretches never count
     /// as "stuck".
     private var lastInputSeconds = 0
-    /// Idle threshold before the stall nudge fires. Grid must also be ≥ 40%
-    /// filled — the same fill convention `puzzle_abandoned` reports.
+    /// Idle threshold before the check-answers stall nudge fires. Grid must
+    /// also be ≥ 40% filled — the same fill convention `puzzle_abandoned`
+    /// reports.
     let stallNudgeSeconds: Int
+    /// Idle threshold for the early (< 40% fill) free-letter nudge. Shorter
+    /// than the check tier: the quick-close cohort it exists for is mostly
+    /// gone by a minute. Never longer than `stallNudgeSeconds`, so the DEBUG
+    /// `-uiStallNudgeSeconds` override shortens both tiers together.
+    var earlyNudgeSeconds: Int { min(30, stallNudgeSeconds) }
 
     /// Active seconds since the last player input — for nudge analytics.
     var secondsSinceLastInput: Int { accumulatedSeconds - lastInputSeconds }
@@ -489,9 +509,9 @@ final class GameViewModel {
         hintsUsed += 1
     }
 
-    /// First-session gift: fill the starter word (the initial selection is
+    /// New-player gift: fill the starter word (the initial selection is
     /// already the shortest answer) and move the player to a crossing word, so
-    /// a brand-new player faces a grid with a foothold instead of an empty one
+    /// a new player faces a grid with a foothold instead of an empty one
     /// — 287 of 675 abandons in the 30 days to 2026-08-27 happened under 10%
     /// fill. Free by design: no `hintsUsed` bump, and the caller must not set
     /// the record's `usedHint`. Cells lock like any reveal so the gift can't
@@ -504,10 +524,12 @@ final class GameViewModel {
             grid[pos.row][pos.col].entry = Array(slot.answer)[i]
             grid[pos.row][pos.col].isRevealed = true
         }
-        // Silent: no word-solved flash for a word the player didn't solve. No
-        // completion check either — a gift must never finish a puzzle, and
-        // every shipped grid has more than one word.
-        refreshSolvedSlots(around: slot.positions, silent: true)
+        // Loud on purpose: the cascade flash and flame pulse are the win
+        // moment the gift was built to manufacture — silent, it read as
+        // pre-filled furniture, not a head start. No completion check — a
+        // gift must never finish a puzzle, and every shipped grid has more
+        // than one word.
+        refreshSolvedSlots(around: slot.positions)
         advanceToNextIncompleteSlot(after: slot)
         return slot
     }
@@ -686,18 +708,27 @@ final class GameViewModel {
         }
     }
 
-    /// The mid-solve stall: idle on the active clock past the threshold with
-    /// the grid ≥ 40% filled. Fill counts entries like `puzzle_abandoned` does
-    /// (pencil included) — a grid full of pencil guesses is still a player who
-    /// stopped, and the nudge's answer (check) is exactly what converts them.
-    /// 40%, not lower: under that a long idle is usually someone still reading
-    /// clues, and the idle guard alone can't tell the two apart.
+    /// The stall watch, tiered by fill. Fill counts entries like
+    /// `puzzle_abandoned` does (pencil included) — a grid full of pencil
+    /// guesses is still a player who stopped. At or above 40% the answer is a
+    /// check (judge what's there); below it there's nothing worth judging, so
+    /// after a shorter idle the answer is a free letter — a foothold for the
+    /// player the check tier could never reach. Each tier fires once per
+    /// session, so a nudge stays a nudge.
     private func maybeNudgeStall() {
-        guard !stallNudged, !isComplete else { return }
-        guard accumulatedSeconds - lastInputSeconds >= stallNudgeSeconds else { return }
+        guard !isComplete else { return }
+        let idle = accumulatedSeconds - lastInputSeconds
         let total = totalPlayableCount
-        guard total > 0, Double(filledPlayableCount) / Double(total) >= 0.40 else { return }
-        stallNudged = true
+        guard total > 0 else { return }
+        if Double(filledPlayableCount) / Double(total) >= 0.40 {
+            guard !stallNudged, idle >= stallNudgeSeconds else { return }
+            stallNudged = true
+            stallNudgeKind = .checkAnswers
+        } else {
+            guard !earlyNudged, idle >= earlyNudgeSeconds else { return }
+            earlyNudged = true
+            stallNudgeKind = .freeLetter
+        }
         isStallNudgeActive = true
         stallNudgeTick += 1
     }

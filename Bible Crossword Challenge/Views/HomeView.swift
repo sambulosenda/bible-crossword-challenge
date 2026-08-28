@@ -330,7 +330,7 @@ struct HomeView: View {
             .navigationTitle("Today")
             .navigationBarTitleDisplayMode(.inline)
             .navigationDestination(for: Puzzle.self) { puzzle in
-                CrosswordGameView(puzzle: puzzle, profile: profile)
+                CrosswordGameView(puzzle: puzzle, profile: profile, entrySource: "home")
             }
             .navigationDestination(for: PackRoute.self) { route in
                 PackDetailView(pack: route.pack, profile: profile, source: route.source)

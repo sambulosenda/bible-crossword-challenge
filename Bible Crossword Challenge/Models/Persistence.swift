@@ -272,15 +272,27 @@ extension PlayerProfile {
     /// into an indefinite safety net.
     static let maxStreakFreezes = 3
 
+    /// The learning window: a player still inside their first three
+    /// completions. The starter gift and the seeded auto-check already key
+    /// off this threshold; hints join them because the daily quota was
+    /// paywalling day-0 players mid-first-puzzle — 53 players hit the
+    /// hint-limit paywall in their first two days over the 60 days to
+    /// 2026-08-28, and day-one completion is the strongest D1 signal the app
+    /// has. (Three of that paywall's four purchases in the same window were
+    /// day-0 players, so this trades some revenue for retention — decided
+    /// 2026-08-28, measure via `premium_purchased` source mix.)
+    var isStillLearning: Bool { totalPuzzlesCompleted < 3 }
+
     func hintsRemaining(isPremium: Bool, now: Date = Date(), calendar: Calendar = .current) -> Int {
-        if isPremium { return .max }
+        if isPremium || isStillLearning { return .max }
         let usedToday = calendar.isDate(hintsDate ?? .distantPast, inSameDayAs: now) ? hintsUsedToday : 0
         return max(0, Self.freeHintLimit - usedToday)
     }
 
     func consumeHint(cost: Int = 1, now: Date = Date(), calendar: Calendar = .current) {
-        // Free hints (the verse rung) never touch the count or stamp the date.
-        guard cost > 0 else { return }
+        // Free hints (the verse rung) never touch the count or stamp the date,
+        // and the learning window pays for nothing at all.
+        guard cost > 0, !isStillLearning else { return }
         if !calendar.isDate(hintsDate ?? .distantPast, inSameDayAs: now) {
             hintsUsedToday = 0
         }

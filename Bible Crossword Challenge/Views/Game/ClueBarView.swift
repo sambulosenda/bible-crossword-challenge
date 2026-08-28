@@ -9,9 +9,10 @@ import SwiftUI
 
 struct ClueBarView: View {
     @Bindable var vm: GameViewModel
-    /// Runs a whole-puzzle check when the stall nudge line is tapped. Owned by
-    /// the game view so the analytics and check plumbing stay in one place.
-    var onStallCheck: (() -> Void)? = nil
+    /// Runs the stall nudge's action when the line is tapped — a whole-puzzle
+    /// check or a free letter depending on `vm.stallNudgeKind`. Owned by the
+    /// game view so the analytics and check/hint plumbing stay in one place.
+    var onStallTap: (() -> Void)? = nil
 
     var body: some View {
         VStack(spacing: 0) {
@@ -19,9 +20,9 @@ struct ClueBarView: View {
             // stuck player needs an action, not encouragement.
             if vm.isStallNudgeActive {
                 Button {
-                    onStallCheck?()
+                    onStallTap?()
                 } label: {
-                    Label("Stuck? Check your answers", systemImage: "checkmark.circle")
+                    Label(stallNudgeText, systemImage: stallNudgeIcon)
                         .font(.caption.weight(.semibold))
                         .foregroundStyle(Theme.accent)
                         .frame(maxWidth: .infinity)
@@ -29,7 +30,7 @@ struct ClueBarView: View {
                         .contentShape(.rect)
                 }
                 .buttonStyle(.plain)
-                .accessibilityHint("Checks the whole puzzle for mistakes")
+                .accessibilityHint(stallNudgeAccessibilityHint)
                 .transition(.move(edge: .bottom).combined(with: .opacity))
             } else if let nudge = endgameNudge {
                 Text(nudge)
@@ -47,6 +48,31 @@ struct ClueBarView: View {
         .padding(.vertical, Theme.Spacing.xs)
         .background(Color(.secondarySystemBackground))
         .overlay(alignment: .bottom) { progressStrip }
+    }
+
+    /// The stall line's copy, matched to the action the tap performs. The
+    /// early tier promises a letter, not a check — under 40% fill there is
+    /// nothing worth checking, and a vague "stuck?" with no offer is exactly
+    /// the line a quitting player ignores.
+    private var stallNudgeText: String {
+        switch vm.stallNudgeKind {
+        case .checkAnswers: "Stuck? Check your answers"
+        case .freeLetter: "Stuck? Tap for a free letter"
+        }
+    }
+
+    private var stallNudgeIcon: String {
+        switch vm.stallNudgeKind {
+        case .checkAnswers: "checkmark.circle"
+        case .freeLetter: "a.square"
+        }
+    }
+
+    private var stallNudgeAccessibilityHint: String {
+        switch vm.stallNudgeKind {
+        case .checkAnswers: "Checks the whole puzzle for mistakes"
+        case .freeLetter: "Reveals one letter without using a hint"
+        }
     }
 
     /// Endgame encouragement for the full-size grids. Fires when the last one

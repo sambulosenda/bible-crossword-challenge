@@ -22,34 +22,44 @@ enum AnalyticsEvent {
     /// readable: without it a player who opens the daily four times counts as
     /// four starts, and the start→completion rate reads a third lower than it
     /// is. A fresh start is `isResume: false`; everything else is the same
-    /// attempt continuing.
-    case dailyPuzzleStarted(puzzleID: String, isResume: Bool)
+    /// attempt continuing. `source` is the surface whose navigation pushed the
+    /// screen (`home` / `library` / `pack`) — quick closes cluster somewhere,
+    /// and until 2026-08-28 nothing said where.
+    case dailyPuzzleStarted(puzzleID: String, isResume: Bool, source: String)
     case dailyPuzzleCompleted(puzzleID: String, seconds: Int)
     /// Leaving the game screen mid-solve — the other half of the start→complete
     /// funnel, which previously had no shape: 55% of starters didn't finish and
     /// nothing said whether they bounced at the empty grid or gave up at 80%.
-    /// `fillPercent` is where they stopped, `seconds` how long they tried,
-    /// `hintsUsed` this sitting's hints. Fires when the screen leaves the
+    /// `fillPercent` is where they stopped, `seconds` how long they tried on
+    /// the *active* clock (rendered ticks only — a sub-second bounce can
+    /// legitimately report 0), `wallSeconds` the wall-clock time the screen was
+    /// open, so a fast bounce is distinguishable from a prewarm-and-detach.
+    /// `hintsUsed` is this sitting's hints. Fires when the screen leaves the
     /// window, so a quit via app-kill from the background is not counted — the
     /// numbers are a floor, not a census.
-    case puzzleAbandoned(puzzleID: String, fillPercent: Int, seconds: Int, hintsUsed: Int)
+    case puzzleAbandoned(puzzleID: String, fillPercent: Int, seconds: Int, wallSeconds: Int, hintsUsed: Int)
     case hintUsed(type: String, cost: Int)
     /// A free one-shot answer check (letter/word/puzzle scope). Separate from
     /// `hintUsed` because checks cost nothing — the interesting read is whether
     /// check-availability moves hint usage and completion rate.
     case checkUsed(scope: String, wrongCount: Int)
-    /// The near-finish rescue line ("Stuck? Check your answers"), shown after
-    /// `idleSeconds` of active-clock silence at ≥ 75% fill. Shown/tapped pair
-    /// so the abandon histogram's 75–100% buckets can be read against whether
-    /// the nudge is being seen, taken, and followed by a completion.
-    case stallNudgeShown(puzzleID: String, fillPercent: Int, idleSeconds: Int)
-    case stallNudgeTapped(puzzleID: String, fillPercent: Int, idleSeconds: Int)
-    /// A brand-new player's first-ever session opened with the starter word
-    /// filled in for free (see `GameViewModel.giftStarterWord`). Fires once per
-    /// install. The read: do gifted first sessions complete more often than the
-    /// pre-gift baseline, whose abandons piled up under 10% fill (287 of 675 in
-    /// the 30 days to 2026-08-27)? Compare `daily_puzzle_completed` rates for
-    /// sessions with and without this event.
+    /// The mid-solve rescue line, shown after `idleSeconds` of active-clock
+    /// silence. `kind` is the tier (see `GameViewModel.StallNudgeKind`):
+    /// `check` ("Stuck? Check your answers") at ≥ 40% fill, `free_letter`
+    /// ("Stuck? Tap for a free letter") under 40% after a shorter idle.
+    /// Shown/tapped pair so each fill bucket of the abandon histogram can be
+    /// read against whether its nudge is being seen, taken, and followed by a
+    /// completion.
+    case stallNudgeShown(puzzleID: String, fillPercent: Int, idleSeconds: Int, kind: String)
+    case stallNudgeTapped(puzzleID: String, fillPercent: Int, idleSeconds: Int, kind: String)
+    /// A new player's session opened with the starter word filled in for free
+    /// (see `GameViewModel.giftStarterWord`). Fires on every fresh (non-resume)
+    /// puzzle open until the third completion — once per install proved too
+    /// little: the one engineered win was spent on a single puzzle and quick
+    /// closes stayed at 43% of abandons. The read: do gifted sessions complete
+    /// more often than the pre-gift baseline, whose abandons piled up under
+    /// 10% fill (287 of 675 in the 30 days to 2026-08-27)? Compare
+    /// `daily_puzzle_completed` rates for sessions with and without this event.
     case starterWordGifted(puzzleID: String, answerLength: Int)
     /// A widget tap landed in the app. `destination` is which surface the tap
     /// resolved to (`daily` / `mini` / `today`) — the widget picks the most
@@ -107,6 +117,23 @@ enum AnalyticsEvent {
     /// that: a renewal or a cross-device grant arrives with no tap in front of
     /// it and would otherwise cancel one out.
     case paywallCTATapped(plan: String, source: String, offersTrial: Bool)
+    /// The player left a paywall surface — the ✕, a sheet swipe, the free-exit
+    /// button, or the dismissal that follows a purchase. Fired by both selling
+    /// surfaces (the sheet and onboarding's offer page), once per presentation.
+    ///
+    /// This is the missing half of `paywall_opened`: without it, someone who
+    /// read the offer for forty seconds and someone who closed it on sight are
+    /// the same row, and "the price scares them off" can't be told apart from
+    /// "they never read it". `seconds_on_screen` is the split.
+    ///
+    /// `cta_tapped` marks whether the commit button was pressed during this
+    /// presentation, so a plain bounce can be isolated without joining against
+    /// `paywall_cta_tapped` by timestamp. Deliberately no `purchased` flag:
+    /// `premium_purchased` is StoreService's, keyed on the transaction, and a
+    /// second opinion here would drift from it (Ask to Buy, grants that land
+    /// after the sheet is gone). A quit-the-app exit emits nothing — this event
+    /// undercounts the hardest bounces, so read it beside session data.
+    case paywallDismissed(source: String, secondsOnScreen: Int, ctaTapped: Bool)
     /// `source` names the surface whose button reached the system dialog
     /// (`onboarding`, `prompt`, `completion`, `streak_card`, `profile`) — the
     /// grant rate is per-ask, and without the source every surface's yes and no
@@ -218,6 +245,7 @@ enum AnalyticsEvent {
         case .purchaseFailed: return "purchase_failed"
         case .paywallOpened: return "paywall_opened"
         case .paywallCTATapped: return "paywall_cta_tapped"
+        case .paywallDismissed: return "paywall_dismissed"
         case .notificationPermission: return "notification_permission"
         case .reminderAskShown: return "reminder_ask_shown"
         case .reminderDeclined: return "reminder_declined"
@@ -296,24 +324,36 @@ enum AnalyticsEvent {
                 // is configured, and would be a different number.
                 "offers_trial": offersTrial,
             ]
-        case .dailyPuzzleStarted(let id, let isResume):
-            return ["puzzle_id": id, "is_resume": isResume]
+        case .paywallDismissed(let source, let secondsOnScreen, let ctaTapped):
+            return [
+                "source": source,
+                "seconds_on_screen": secondsOnScreen,
+                "cta_tapped": ctaTapped,
+            ]
+        case .dailyPuzzleStarted(let id, let isResume, let source):
+            return ["puzzle_id": id, "is_resume": isResume, "source": source]
         case .dailyPuzzleCompleted(let id, let seconds):
             return ["puzzle_id": id, "seconds": seconds]
-        case .puzzleAbandoned(let id, let fillPercent, let seconds, let hintsUsed):
+        case .puzzleAbandoned(let id, let fillPercent, let seconds, let wallSeconds, let hintsUsed):
             return [
                 "puzzle_id": id,
                 "fill_percent": fillPercent,
                 "seconds": seconds,
+                "wall_seconds": wallSeconds,
                 "hints_used": hintsUsed,
             ]
         case .hintUsed(let type, let cost):
             return ["type": type, "cost": cost]
         case .checkUsed(let scope, let wrongCount):
             return ["scope": scope, "wrong_count": wrongCount]
-        case .stallNudgeShown(let puzzleID, let fillPercent, let idleSeconds),
-             .stallNudgeTapped(let puzzleID, let fillPercent, let idleSeconds):
-            return ["puzzle_id": puzzleID, "fill_percent": fillPercent, "idle_seconds": idleSeconds]
+        case .stallNudgeShown(let puzzleID, let fillPercent, let idleSeconds, let kind),
+             .stallNudgeTapped(let puzzleID, let fillPercent, let idleSeconds, let kind):
+            return [
+                "puzzle_id": puzzleID,
+                "fill_percent": fillPercent,
+                "idle_seconds": idleSeconds,
+                "kind": kind,
+            ]
         case .starterWordGifted(let puzzleID, let answerLength):
             return ["puzzle_id": puzzleID, "answer_length": answerLength]
         case .widgetOpened(let destination):

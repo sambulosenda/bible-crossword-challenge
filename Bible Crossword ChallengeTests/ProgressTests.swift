@@ -249,8 +249,15 @@ struct StreakTests {
 
 struct HintTests {
 
-    @Test func freeUserGetsThreeHintsPerDay() {
+    /// A profile past the learning window, where the daily quota applies.
+    private func graduated() -> PlayerProfile {
         let p = PlayerProfile()
+        p.totalPuzzlesCompleted = 3
+        return p
+    }
+
+    @Test func freeUserGetsThreeHintsPerDay() {
+        let p = graduated()
         #expect(p.hintsRemaining(isPremium: false, now: day(2026, 7, 1), calendar: utc) == 3)
         p.consumeHint(now: day(2026, 7, 1), calendar: utc)
         p.consumeHint(now: day(2026, 7, 1), calendar: utc)
@@ -258,7 +265,7 @@ struct HintTests {
     }
 
     @Test func hintsResetNextDay() {
-        let p = PlayerProfile()
+        let p = graduated()
         p.consumeHint(now: day(2026, 7, 1), calendar: utc)
         p.consumeHint(now: day(2026, 7, 1), calendar: utc)
         p.consumeHint(now: day(2026, 7, 1), calendar: utc)
@@ -267,18 +274,38 @@ struct HintTests {
     }
 
     @Test func premiumHasUnlimitedHints() {
-        let p = PlayerProfile()
+        let p = graduated()
         #expect(p.hintsRemaining(isPremium: true, now: day(2026, 7, 1), calendar: utc) == Int.max)
     }
 
     @Test func wordHintCostsTwo() {
-        let p = PlayerProfile()
+        let p = graduated()
         p.consumeHint(cost: HintType.word.cost, now: day(2026, 7, 1), calendar: utc)
         #expect(p.hintsRemaining(isPremium: false, now: day(2026, 7, 1), calendar: utc) == 1)
     }
 
-    @Test func verseHintCostsNothing() {
+    @Test func learningWindowIsUnmetered() {
+        // Inside the first three completions, hints are free: nothing counts
+        // against the quota, and the remaining count never gates a reveal.
         let p = PlayerProfile()
+        #expect(p.isStillLearning)
+        #expect(p.hintsRemaining(isPremium: false, now: day(2026, 7, 1), calendar: utc) == Int.max)
+        p.consumeHint(cost: 3, now: day(2026, 7, 1), calendar: utc)
+        #expect(p.hintsUsedToday == 0)
+    }
+
+    @Test func graduationRestoresTheFullBudget() {
+        // Hints "spent" while learning cost nothing, so the third completion
+        // hands the player an untouched daily budget, not a depleted one.
+        let p = PlayerProfile()
+        p.consumeHint(cost: 3, now: day(2026, 7, 1), calendar: utc)
+        p.totalPuzzlesCompleted = 3
+        #expect(!p.isStillLearning)
+        #expect(p.hintsRemaining(isPremium: false, now: day(2026, 7, 1), calendar: utc) == 3)
+    }
+
+    @Test func verseHintCostsNothing() {
+        let p = graduated()
         p.consumeHint(cost: HintType.verse.cost, now: day(2026, 7, 1), calendar: utc)
         #expect(p.hintsRemaining(isPremium: false, now: day(2026, 7, 1), calendar: utc) == 3)
         // A free hint must not stamp the date either.
@@ -287,7 +314,7 @@ struct HintTests {
 
     @Test func cannotAffordWordWithOneRemaining() {
         // Pins the `remaining >= cost` comparison the view uses.
-        let p = PlayerProfile()
+        let p = graduated()
         p.consumeHint(cost: 2, now: day(2026, 7, 1), calendar: utc)
         let remaining = p.hintsRemaining(isPremium: false, now: day(2026, 7, 1), calendar: utc)
         #expect(remaining >= HintType.letter.cost)

@@ -51,7 +51,7 @@ struct PacksView: View {
                 QuestDetailView(quest: route.quest, profile: profile, source: route.source)
             }
             .navigationDestination(for: Puzzle.self) { puzzle in
-                CrosswordGameView(puzzle: puzzle, profile: profile)
+                CrosswordGameView(puzzle: puzzle, profile: profile, entrySource: "pack")
             }
         }
     }
