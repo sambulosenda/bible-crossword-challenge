@@ -1,7 +1,9 @@
 Thanks for playing Bible Crossword Challenge! This update includes:
 
-• Puzzles now open on their easiest clue, so you always have a place to start
-• Stuck mid-solve? A quiet nudge offers to check your answers sooner
-• Daily reminders now suggest the time you actually play
-• Clearer clues on a handful of puzzles that were tripping players up
-• A cleaner premium page, with an easier way to continue with the free puzzle
+• Journey Quests — themed lines of puzzles to solve one a day, with a badge waiting at the end
+• Pencil marks: jot provisional letters while you think, then commit them when you're sure
+• A head start for new players: your first word is filled in free, and hints cost nothing while you learn the grid
+• Stuck? A quiet nudge now offers a free letter early on, or a full answer check later
+• Finishing a word moves you to a word that crosses it, so you never lose your place
+• Puzzles open on their easiest clue, and daily reminders suggest the time you actually play
+• Clearer clues on a handful of puzzles, plus a cleaner premium page with prices you can compare at a glance
