@@ -46,25 +46,26 @@ const description =
 </Layout>
 
 <style is:global>
+  body { background: var(--gray-bg); }
   .challenge-wrap { min-height: 100vh; display: grid; place-items: center; padding: 28px; }
   .challenge-card {
     width: 100%; max-width: 440px; text-align: center;
-    border: 1px solid var(--rule); border-radius: 22px; background: var(--bg-raised);
-    padding: 40px 30px 30px; box-shadow: var(--shadow-lift);
+    border-radius: 28px; background: #fff;
+    padding: 40px 30px 30px; box-shadow: var(--shadow-card);
   }
   .challenge-mark { display: flex; justify-content: center; margin-bottom: 20px; }
   .challenge-mark .brand-name { display: none; }
   .challenge-card h1 { font-size: clamp(28px, 7vw, 40px); text-align: center; }
   .challenge-card .btn-store { justify-content: center; }
   .challenge-time {
-    font-family: var(--mono); font-size: 15px; color: var(--fg-soft);
+    font-size: 15px; color: var(--fg-soft); font-variant-numeric: tabular-nums;
     background: var(--bg-sunk); border-radius: 999px; padding: 8px 16px;
     display: inline-block; margin: 4px 0 24px;
   }
   [hidden] { display: none !important; }
-  .challenge-time b { color: var(--ink); font-weight: 600; }
+  .challenge-time b { color: var(--fg); font-weight: 600; }
   .challenge-note { font-size: 14px; color: var(--fg-mute); margin: 24px auto 0; max-width: 36ch; }
-  .challenge-foot { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--fg-mute); margin-top: 26px; }
+  .challenge-foot { font-size: 12px; color: var(--fg-mute); margin-top: 26px; }
   .challenge-foot a:hover { color: var(--fg); }
 
   /* Ranked standings. Mirrors the board card in the app: rank, name, time. */

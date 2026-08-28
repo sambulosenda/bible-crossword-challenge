@@ -50,12 +50,12 @@ const stars = rating
   .app-rating a:hover { color: var(--fg-soft); border-bottom-color: currentColor; }
 
   .stars { display: inline-flex; gap: 1px; font-size: 13px; line-height: 1; }
-  .star { color: var(--gilt); }
+  .star { color: var(--star); }
   .star.empty { color: var(--rule-strong); }
   /* A half star is one glyph clipped down the middle, with the empty rule
      colour showing through the right side. */
   .star.half {
-    background: linear-gradient(90deg, var(--gilt) 50%, var(--rule-strong) 50%);
+    background: linear-gradient(90deg, var(--star) 50%, var(--rule-strong) 50%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;

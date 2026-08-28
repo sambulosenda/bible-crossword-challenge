@@ -1,125 +1,45 @@
 /* ============================================================================
-   Fonts — self-hosted
-   ---------------------------------------------------------------------------
-   These are the exact woff2 files Google Fonts was serving (Fraunces v38,
-   Newsreader v26), moved to our own origin. Byte-identical, so rendering is
-   unchanged; what goes away is a DNS lookup and TLS handshake to a third party
-   standing between the visitor and the first painted heading.
-
-   Vietnamese subsets are deliberately not shipped — the site is English.
-   latin-ext is, because names and quotation marks stray outside latin.
-
-   NOTE: Fraunces as served here carries only the `opsz` and `wght` axes. The
-   `SOFT` and `WONK` settings elsewhere in this file therefore do nothing; they
-   did nothing before this change either, since the Google URL never requested
-   those axes. Shipping the full Fraunces variable font would switch them on and
-   change how every heading looks — a design decision, not a hosting one.
-
-   Filenames carry the font version, so a future update lands at a new path.
-   /fonts/* is served immutable for a year (public/_headers): never overwrite
-   one of these in place.
-   ========================================================================= */
-
-@font-face {
-  font-family: 'Fraunces';
-  font-style: normal;
-  font-weight: 400 600;
-  font-display: swap;
-  src: url('/fonts/fraunces-v38-latin.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-@font-face {
-  font-family: 'Fraunces';
-  font-style: normal;
-  font-weight: 400 600;
-  font-display: swap;
-  src: url('/fonts/fraunces-v38-latin-ext.woff2') format('woff2');
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-@font-face {
-  font-family: 'Newsreader';
-  font-style: normal;
-  font-weight: 300 500;
-  font-display: swap;
-  src: url('/fonts/newsreader-v26-latin.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-@font-face {
-  font-family: 'Newsreader';
-  font-style: normal;
-  font-weight: 300 500;
-  font-display: swap;
-  src: url('/fonts/newsreader-v26-latin-ext.woff2') format('woff2');
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-@font-face {
-  font-family: 'Newsreader';
-  font-style: italic;
-  font-weight: 300 400;
-  font-display: swap;
-  src: url('/fonts/newsreader-italic-v26-latin.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-@font-face {
-  font-family: 'Newsreader';
-  font-style: italic;
-  font-weight: 300 400;
-  font-display: swap;
-  src: url('/fonts/newsreader-italic-v26-latin-ext.woff2') format('woff2');
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-
-/* ============================================================================
    Bible Crossword Challenge — design system
    ---------------------------------------------------------------------------
-   Concept: "black square, white square." A crossword alternates filled and open
-   cells; so does this page. Sections are bands that flip between ink and paper,
-   which gives the page its rhythm and lets the ink bands mirror the app's own
-   dark interface — the site should read as the same object as the product.
+   Apple marketing-site pattern: the system SF stack, white pages with
+   #f5f5f7 alternate sections, black feature bands, one blue accent, pill
+   CTAs, hairline rules, borderless rounded cards, and generous whitespace.
 
    Every component styles itself from the semantic tokens (--fg, --bg, --rule,
-   --accent…). A band flips those tokens once and everything inside follows, so
-   the same component works on ink or paper. Never hard-code a colour inside a
-   component; set it on the band.
+   --accent…). A band flips those tokens once and everything inside follows,
+   so the same component works on light or dark. Never hard-code a colour
+   inside a component; set it on the band.
+
+   The self-hosted serif woff2 files under /fonts remain on disk (that path is
+   immutable) but are intentionally unreferenced — the whole site sets in the
+   system stack.
    ========================================================================= */
 
 :root {
   /* ── raw palette ─────────────────────────────────────────────────────── */
-  --ink: #0D1017;            /* printed black, blue undertone — the app's dark */
-  --ink-raised: #161B25;     /* lifted surface on ink */
-  --ink-line: #262D3A;
+  --white: #FFFFFF;
+  --gray-bg: #F5F5F7;          /* Apple's alternate section / card gray */
+  --black: #000000;
+  --near-black: #1D1D1F;       /* primary text on light */
+  --gray-2: #424245;           /* subdued body text */
+  --gray-3: #6E6E73;           /* secondary text */
+  --gray-4: #86868B;           /* tertiary text */
+  --hairline: #D2D2D7;
 
-  --paper: #F7F4EC;          /* warm page */
-  --paper-raised: #FFFFFF;
-  --paper-sunk: #EFEADE;
-  --paper-line: #E2DCCC;
-
-  --graphite: #12151C;       /* text on paper */
-  --graphite-soft: #414855;
-  --graphite-mute: #6B7280;
-
-  --chalk: #ECEAE4;          /* text on ink */
-  --chalk-soft: #A8AEBB;
-  --chalk-mute: #767E8C;
-
-  --blue-on-paper: #0B6FE8;
-  --blue-on-ink: #4C97FF;
-  --blue-wash: #DCEBFF;      /* in-word highlight, as in the app */
-  --green-wash: #CFEBD8;     /* solved flash, as in the app */
-
-  --gilt: #C9A227;           /* Bible page-edge gold — micro-accents only */
-  --gilt-soft: #DCC072;
+  --blue: #0071E3;             /* link + CTA blue on light */
+  --blue-hover: #0077ED;
+  --blue-dark: #2997FF;        /* link blue on black */
+  --blue-wash: #E8F1FD;        /* in-word highlight, as in the app */
+  --green-wash: #D8F1DF;       /* solved flash, as in the app */
+  --star: #FF9500;             /* App Store rating orange */
 
   /* ── type ────────────────────────────────────────────────────────────── */
-  --display: "Fraunces", "Iowan Old Style", Georgia, serif;
-  --scripture: "Newsreader", Georgia, "Times New Roman", serif;
-  --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --display: var(--sans);
+  --scripture: var(--sans);
   --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
 
-  /* ── rhythm ──────────────────────────────────────────────────────────────
-     The spacing scale is the grid. --cell is one crossword square; every gap,
-     pad and rule is a multiple of it, so the page sits on the same lattice the
-     puzzle does.                                                            */
+  /* ── rhythm ──────────────────────────────────────────────────────────── */
   --cell: 8px;
   --s-1: calc(var(--cell) * 1);     /*  8 */
   --s-2: calc(var(--cell) * 2);     /* 16 */
@@ -129,45 +49,55 @@
   --s-8: calc(var(--cell) * 8);     /* 64 */
   --s-12: calc(var(--cell) * 12);   /* 96 */
 
-  --maxw: 1180px;
+  --maxw: 1080px;
   --measure: 62ch;
   --gutter: var(--s-3);
-  --radius: 12px;
-  --radius-lg: 20px;
+  --radius: 14px;
+  --radius-lg: 22px;
+  --pill: 980px;
 
-  /* ── default band: paper ─────────────────────────────────────────────── */
-  --bg: var(--paper);
-  --bg-raised: var(--paper-raised);
-  --bg-sunk: var(--paper-sunk);
-  --fg: var(--graphite);
-  --fg-soft: var(--graphite-soft);
-  --fg-mute: var(--graphite-mute);
-  --rule: var(--paper-line);
-  --rule-strong: #CFC7B2;
-  --accent: var(--blue-on-paper);
-  --shadow-card: 0 1px 2px rgba(13, 16, 23, .05), 0 12px 32px -20px rgba(13, 16, 23, .28);
-  --shadow-lift: 0 2px 6px rgba(13, 16, 23, .07), 0 28px 56px -26px rgba(13, 16, 23, .34);
+  /* ── default band: light ─────────────────────────────────────────────── */
+  --bg: var(--white);
+  --bg-raised: var(--white);
+  --bg-sunk: var(--gray-bg);
+  --fg: var(--near-black);
+  --fg-soft: var(--gray-2);
+  --fg-mute: var(--gray-3);
+  --rule: var(--hairline);
+  --rule-strong: #B8B8BF;
+  --accent: var(--blue);
+  --shadow-card: 0 2px 6px rgba(0, 0, 0, .04), 0 12px 30px -18px rgba(0, 0, 0, .12);
+  --shadow-lift: 0 4px 10px rgba(0, 0, 0, .06), 0 24px 48px -22px rgba(0, 0, 0, .18);
 }
 
-/* ── the ink band ──────────────────────────────────────────────────────────
+/* ── the dark band ─────────────────────────────────────────────────────────
    Flip the semantics once; every component inside inherits the dark reading. */
 .band-ink {
-  --bg: var(--ink);
-  --bg-raised: var(--ink-raised);
-  --bg-sunk: #090C11;
-  --fg: var(--chalk);
-  --fg-soft: var(--chalk-soft);
-  --fg-mute: var(--chalk-mute);
-  --rule: var(--ink-line);
-  --rule-strong: #37404F;
-  --accent: var(--blue-on-ink);
+  --bg: var(--black);
+  --bg-raised: #1D1D1F;
+  --bg-sunk: #101012;
+  --fg: #F5F5F7;
+  --fg-soft: #A1A1A6;
+  --fg-mute: #86868B;
+  --rule: #2D2D30;
+  --rule-strong: #424245;
+  --accent: var(--blue-dark);
   --shadow-card: 0 1px 2px rgba(0, 0, 0, .4), 0 16px 40px -22px rgba(0, 0, 0, .8);
   --shadow-lift: 0 2px 8px rgba(0, 0, 0, .45), 0 34px 64px -26px rgba(0, 0, 0, .9);
   background: var(--bg);
   color: var(--fg);
 }
 
-.band-paper { background: var(--paper); color: var(--graphite); }
+/* A gray Apple-style alternate section. */
+.band-gray {
+  --bg: var(--gray-bg);
+  --bg-raised: var(--white);
+  --bg-sunk: #E8E8ED;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+.band-paper { background: var(--bg); color: var(--fg); }
 
 /* A band is a full-bleed horizontal slab. Vertical padding is the page's main
    rhythm, so it lives here rather than being re-declared per section. */
@@ -182,20 +112,21 @@ html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 
 body {
   margin: 0;
-  background: var(--paper);
-  color: var(--graphite);
+  background: var(--white);
+  color: var(--near-black);
   font-family: var(--sans);
   font-size: 17px;
-  line-height: 1.6;
+  line-height: 1.47059;
+  letter-spacing: -.022em;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   font-synthesis-weight: none;
 }
 
-::selection { background: rgba(201, 162, 39, .3); }
+::selection { background: rgba(0, 113, 227, .18); }
 a { color: inherit; text-decoration: none; }
 img { max-width: 100%; display: block; }
-:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
 
 .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--gutter); }
 .wrap-narrow { max-width: 780px; margin: 0 auto; padding: 0 var(--gutter); }
@@ -203,116 +134,96 @@ img { max-width: 100%; display: block; }
 /* Skip link — keyboard users shouldn't tab the whole nav on every page. */
 .skip {
   position: absolute; left: -9999px; top: 0; z-index: 100;
-  background: var(--ink); color: var(--chalk);
+  background: var(--near-black); color: var(--white);
   padding: var(--s-2) var(--s-3); border-radius: 0 0 var(--radius) 0;
   font-size: 15px; font-weight: 600;
 }
 .skip:focus { left: 0; }
 
 /* ==========================================================================
-   Type
+   Type — SF, tight tracking, confident weights
    ========================================================================= */
-h1, h2, h3 { font-family: var(--display); font-weight: 500; margin: 0; }
+h1, h2, h3 { font-family: var(--sans); font-weight: 600; margin: 0; }
 
 h1 {
-  font-size: clamp(42px, 6.4vw, 82px);
-  line-height: 1.02;
-  letter-spacing: -.022em;
-  font-variation-settings: "opsz" 120, "SOFT" 20, "WONK" 1;
+  font-size: clamp(40px, 6vw, 72px);
+  line-height: 1.05;
+  letter-spacing: -.015em;
   margin: 0 0 var(--s-3);
 }
 h2 {
-  font-size: clamp(30px, 4.2vw, 46px);
+  font-size: clamp(28px, 4vw, 48px);
   line-height: 1.08;
-  letter-spacing: -.016em;
-  font-variation-settings: "opsz" 72, "SOFT" 16, "WONK" 1;
+  letter-spacing: -.012em;
   margin: 0 0 var(--s-2);
 }
 h3 {
-  font-size: clamp(20px, 2.2vw, 24px);
+  font-size: clamp(19px, 2.2vw, 24px);
   line-height: 1.2;
   letter-spacing: -.01em;
-  font-variation-settings: "opsz" 36, "SOFT" 12;
 }
 
 .lede {
-  font-family: var(--scripture);
-  font-size: clamp(18px, 2vw, 21px);
-  line-height: 1.55;
+  font-size: clamp(19px, 2.2vw, 24px);
+  line-height: 1.4;
+  letter-spacing: -.01em;
+  font-weight: 400;
   color: var(--fg-soft);
-  max-width: 46ch;
+  max-width: 48ch;
 }
 .sec-sub { color: var(--fg-mute); font-size: 17px; margin: var(--s-1) 0 0; max-width: 52ch; }
 
-/* Eyebrow — set in mono with a gilt rule, the way a crossword labels an entry. */
+/* Eyebrow — the small colored kicker Apple sets above section headlines. */
 .eyebrow {
-  font-family: var(--mono);
-  font-size: 12px;
-  letter-spacing: .18em;
-  text-transform: uppercase;
-  color: var(--gilt);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -.01em;
+  color: var(--accent);
   margin: 0 0 var(--s-2);
   display: inline-flex;
   align-items: center;
-  gap: var(--s-2);
-}
-.eyebrow::after {
-  content: "";
-  width: 28px; height: 1px;
-  background: currentColor;
-  opacity: .55;
 }
 
 /* ==========================================================================
-   Buttons
+   Buttons — pill CTAs
    ========================================================================= */
 .btn-store {
   display: inline-flex;
   align-items: center;
-  gap: 11px;
+  gap: 10px;
   background: var(--fg);
   color: var(--bg);
-  padding: 14px 26px 14px 20px;
-  border-radius: var(--radius);
-  transition: transform .18s cubic-bezier(.22, 1, .36, 1), box-shadow .18s ease, filter .18s ease;
+  padding: 12px 26px 12px 20px;
+  border-radius: var(--pill);
+  transition: transform .18s cubic-bezier(.22, 1, .36, 1), box-shadow .18s ease, opacity .18s ease;
   box-shadow: var(--shadow-card);
 }
 .btn-store svg { fill: var(--bg); }
-.btn-store:hover { transform: translateY(-2px); box-shadow: var(--shadow-lift); filter: contrast(1.08); }
-.btn-store:active { transform: translateY(0); }
-.btn-store small { display: block; font-size: 11px; font-weight: 500; opacity: .75; line-height: 1.2; }
-.btn-store strong { display: block; font-size: 19px; font-weight: 600; line-height: 1.15; letter-spacing: -.01em; }
+.btn-store:hover { transform: translateY(-1px); box-shadow: var(--shadow-lift); opacity: .92; }
+.btn-store:active { transform: translateY(0); opacity: 1; }
+.btn-store small { display: block; font-size: 11px; font-weight: 400; opacity: .8; line-height: 1.2; letter-spacing: 0; }
+.btn-store strong { display: block; font-size: 18px; font-weight: 600; line-height: 1.15; letter-spacing: -.01em; }
 
 .cta-row { display: flex; align-items: center; gap: var(--s-3); flex-wrap: wrap; }
 .cta-note { font-size: 14px; color: var(--fg-mute); }
 
 /* ==========================================================================
-   Nav — invisible chrome over the ink hero, condenses onto paper once past it
+   Nav — slim frosted-glass bar
    ========================================================================= */
 .nav {
   position: sticky;
   top: 0;
   z-index: 40;
-  transition: background .3s ease, border-color .3s ease;
-  border-bottom: 1px solid transparent;
+  background: rgba(255, 255, 255, .72);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid rgba(0, 0, 0, .08);
+  color: var(--near-black);
 }
-.nav-inner { display: flex; align-items: center; justify-content: space-between; gap: var(--s-2); height: 72px; }
+.nav-inner { display: flex; align-items: center; justify-content: space-between; gap: var(--s-2); height: 52px; }
 
-.nav[data-mode="over"] { background: transparent; color: var(--chalk); }
-.nav[data-mode="over"] .nav-link { color: var(--chalk-soft); }
-.nav[data-mode="over"] .nav-link:hover { color: var(--chalk); }
-.nav[data-mode="over"] .nav-link.primary { color: var(--blue-on-ink); }
-
-.nav[data-mode="stuck"] {
-  background: color-mix(in srgb, var(--paper) 84%, transparent);
-  backdrop-filter: saturate(180%) blur(14px);
-  -webkit-backdrop-filter: saturate(180%) blur(14px);
-  border-bottom-color: var(--paper-line);
-  color: var(--graphite);
-}
-
-.brand { display: flex; align-items: center; gap: 11px; color: inherit; }
-.brand-name { font-family: var(--display); font-weight: 500; font-size: 19px; letter-spacing: -.01em; font-variation-settings: "opsz" 30, "SOFT" 14; }
+.brand { display: flex; align-items: center; gap: 10px; color: inherit; }
+.brand-name { font-weight: 600; font-size: 17px; letter-spacing: -.02em; }
 /* The mark is the real App Store icon, shipped full-bleed square because iOS
    masks its own corners. 22.4% approximates Apple's superellipse and, being
    proportional, holds at every size Brand.astro is called at (30 in the nav and
@@ -320,135 +231,146 @@ h3 {
    larger it gets. */
 .brand-mark { border-radius: 22.4%; display: block; }
 
-.nav-links { display: flex; align-items: center; gap: var(--s-3); }
+.nav-links { display: flex; align-items: center; gap: var(--s-4); }
 .nav-link {
-  font-size: 15px; font-weight: 600; color: var(--graphite-soft);
-  padding: 8px 2px; border-bottom: 2px solid transparent;
-  transition: border-color .15s ease, color .15s ease;
+  font-size: 14px; font-weight: 400; letter-spacing: -.01em; color: rgba(0, 0, 0, .8);
+  padding: 8px 0;
+  transition: color .15s ease;
 }
-.nav-link:hover { border-bottom-color: currentColor; }
-.nav-link.primary { color: var(--blue-on-paper); }
+.nav-link:hover { color: var(--blue); }
+.nav-link.primary {
+  color: #fff; background: var(--blue);
+  padding: 6px 16px; border-radius: var(--pill);
+  font-weight: 400;
+  transition: background .15s ease;
+}
+.nav-link.primary:hover { color: #fff; background: var(--blue-hover); }
 
 /* ==========================================================================
-   Verse band — scripture set as scripture
+   Verse band — the big centered statement on black
    ========================================================================= */
 .verse-band { text-align: center; }
-.verse-band .orn { color: var(--gilt); font-size: 15px; letter-spacing: .7em; padding-left: .7em; display: block; }
+.verse-band .orn { color: var(--fg-mute); font-size: 12px; letter-spacing: .7em; padding-left: .7em; display: block; }
 .verse-band blockquote {
-  font-family: var(--scripture);
-  font-style: italic;
-  font-weight: 300;
-  font-size: clamp(23px, 3.6vw, 38px);
-  line-height: 1.36;
+  font-weight: 600;
+  font-size: clamp(26px, 3.8vw, 44px);
+  line-height: 1.16;
   letter-spacing: -.012em;
-  max-width: 24ch;
+  max-width: 26ch;
   margin: var(--s-4) auto var(--s-3);
   text-wrap: balance;
 }
 .verse-band cite {
-  font-family: var(--mono); font-style: normal; font-size: 12.5px;
-  letter-spacing: .2em; text-transform: uppercase; color: var(--gilt);
+  font-style: normal; font-size: 15px; font-weight: 400;
+  letter-spacing: -.01em; color: var(--fg-mute);
 }
-.verse-band .verse-note { color: var(--fg-mute); font-size: 15.5px; max-width: 46ch; margin: var(--s-4) auto 0; }
+.verse-band .verse-note { color: var(--fg-mute); font-size: 16px; max-width: 46ch; margin: var(--s-4) auto 0; }
 
 /* ==========================================================================
-   Footer
+   Footer — Apple's small light footer
    ========================================================================= */
-footer { border-top: 1px solid var(--rule); padding: var(--s-8) 0 var(--s-6); font-size: 14px; color: var(--fg-mute); }
-.foot-inner { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: var(--s-6); }
+footer {
+  background: var(--gray-bg);
+  border-top: 1px solid var(--hairline);
+  padding: var(--s-6) 0 var(--s-4);
+  font-size: 12px; line-height: 1.5;
+  color: var(--gray-3);
+}
+footer .brand-name { color: var(--near-black); }
+.foot-inner { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: var(--s-4); }
 .foot-brand { display: flex; flex-direction: column; gap: var(--s-2); }
-.foot-brand .brand-name { font-size: 17px; }
-.foot-line { margin: 0; font-size: 14.5px; color: var(--fg-mute); max-width: 30ch; }
-.foot-links { display: flex; gap: var(--s-3) var(--s-4); flex-wrap: wrap; }
-.foot-links a { font-size: 14.5px; transition: color .15s ease; }
-.foot-links a:hover { color: var(--fg); }
+.foot-brand .brand-name { font-size: 15px; }
+.foot-line { margin: 0; font-size: 12px; color: var(--gray-3); max-width: 30ch; }
+.foot-links { display: flex; gap: var(--s-2) var(--s-3); flex-wrap: wrap; }
+.foot-links a { font-size: 12px; color: var(--gray-2); transition: color .15s ease; }
+.foot-links a:hover { color: var(--near-black); text-decoration: underline; }
 /* .foot-base is also .wrap, whose zero margin/padding-top would win if these
    rules lived in a component style block bundled before this file — they must
    stay here, after .wrap. */
 .foot-base {
-  margin-top: var(--s-6); padding-top: var(--s-3);
-  border-top: 1px solid var(--rule);
-  font-family: var(--mono); font-size: 12px; letter-spacing: .08em;
-  text-transform: uppercase; color: var(--fg-mute);
+  margin-top: var(--s-4); padding-top: var(--s-2);
+  border-top: 1px solid var(--hairline);
+  font-size: 12px; color: var(--gray-3);
 }
 
 /* ==========================================================================
    Shared content-page components
    (/puzzles, /puzzles/[slug], /how-to-play, /privacy, 404)
    ========================================================================= */
-.page { padding: var(--s-4) 0 clamp(var(--s-8), 9vw, var(--s-12)); }
+.page { padding: var(--s-6) 0 clamp(var(--s-8), 9vw, var(--s-12)); }
 
 .crumbs {
-  font-family: var(--mono); font-size: 12px; letter-spacing: .08em;
-  text-transform: uppercase; color: var(--fg-mute); margin: 0 0 var(--s-3);
+  font-size: 12px; letter-spacing: -.01em;
+  color: var(--fg-mute); margin: 0 0 var(--s-3);
 }
 .crumbs a { color: var(--fg-mute); transition: color .15s ease; }
-.crumbs a:hover { color: var(--fg); }
-.crumbs span { color: var(--gilt); padding: 0 var(--s-1); }
+.crumbs a:hover { color: var(--fg); text-decoration: underline; }
+.crumbs span { color: var(--fg-mute); padding: 0 var(--s-1); }
 
-.meta-chips { font-family: var(--mono); font-size: 13px; color: var(--fg-mute); margin: 0 0 var(--s-4); }
+.meta-chips { font-size: 14px; color: var(--fg-mute); margin: 0 0 var(--s-4); }
 .meta-chips b { color: var(--fg-soft); font-weight: 600; }
 
 .prose { max-width: var(--measure); }
-.prose p, .prose li { font-family: var(--scripture); font-size: 18px; line-height: 1.65; color: var(--fg-soft); }
+.prose p, .prose li { font-size: 17px; line-height: 1.55; letter-spacing: -.02em; color: var(--fg-soft); }
 .prose p { margin: 0 0 var(--s-2); }
 .prose p:last-child { margin-bottom: 0; }
 .prose ul { padding-left: var(--s-3); margin: 0 0 var(--s-2); }
 .prose li { margin: 0 0 var(--s-1); }
-.prose a { color: var(--accent); border-bottom: 1px solid color-mix(in srgb, var(--accent) 35%, transparent); transition: border-color .15s ease; }
-.prose a:hover { border-bottom-color: var(--accent); }
+.prose a { color: var(--accent); transition: opacity .15s ease; }
+.prose a:hover { text-decoration: underline; }
 
 /* Sample-clue list — shared by the feature list and the puzzle pages */
-.clue-samples { border-top: 2px solid var(--fg); margin-top: var(--s-1); }
+.clue-samples { border-top: 1px solid var(--rule); margin-top: var(--s-1); }
 /* --clue-num-w is one width shared by the number column and the tiles indent,
    in px because the two elements have different font sizes — em drifts. */
 .clue { --clue-num-w: 34px; display: flex; flex-direction: column; gap: var(--s-1); padding: var(--s-2) 0; border-bottom: 1px solid var(--rule); }
 .clue-q { display: flex; gap: var(--s-2); align-items: baseline; }
-.clue-n { font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--fg-mute); min-width: var(--clue-num-w, 2.6em); text-align: right; }
-.clue-text { font-family: var(--scripture); font-size: 17.5px; color: var(--fg-soft); }
-.clue-text .enum { color: var(--fg-mute); font-size: 14px; white-space: nowrap; font-family: var(--mono); }
+.clue-n { font-size: 13px; font-weight: 600; color: var(--fg-mute); min-width: var(--clue-num-w, 2.6em); text-align: right; font-variant-numeric: tabular-nums; }
+.clue-text { font-size: 17px; letter-spacing: -.02em; color: var(--fg-soft); }
+.clue-text .enum { color: var(--fg-mute); font-size: 14px; white-space: nowrap; font-variant-numeric: tabular-nums; }
 .tiles { display: flex; gap: 4px; margin-left: calc(var(--clue-num-w) + var(--s-2)); flex-wrap: wrap; }
 .tile {
-  width: 28px; height: 28px; border: 1.5px solid var(--fg); border-radius: 4px;
+  width: 28px; height: 28px; border: 1px solid var(--rule-strong); border-radius: 6px;
   background: var(--bg-raised); color: var(--fg);
-  display: grid; place-items: center; font-weight: 700; font-size: 14px;
+  display: grid; place-items: center; font-weight: 600; font-size: 14px;
 }
 .clues-foot { margin-top: var(--s-2); font-size: 15px; color: var(--fg-mute); max-width: 60ch; }
 .clues-foot strong { color: var(--fg-soft); font-weight: 600; }
+.clues-foot a { color: var(--accent); }
+.clues-foot a:hover { text-decoration: underline; }
 
-/* Theme cards (puzzle hub + related) */
+/* Theme cards (puzzle hub + related) — borderless gray Apple cards */
 .theme-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(238px, 1fr)); gap: var(--s-2); margin: var(--s-4) 0 0; }
 .theme-card {
-  border: 1px solid var(--rule); border-radius: var(--radius); padding: var(--s-3);
-  background: var(--bg-raised); display: flex; flex-direction: column; gap: 5px;
-  box-shadow: var(--shadow-card);
-  transition: transform .18s cubic-bezier(.22, 1, .36, 1), box-shadow .18s ease, border-color .18s ease;
+  border-radius: var(--radius-lg); padding: var(--s-3);
+  background: var(--bg-sunk); display: flex; flex-direction: column; gap: 6px;
+  transition: transform .22s cubic-bezier(.22, 1, .36, 1), box-shadow .22s ease;
 }
-.theme-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lift); border-color: var(--rule-strong); }
-.theme-card .t-eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--gilt); }
-.theme-card .t-name { font-family: var(--display); font-weight: 500; font-size: 22px; line-height: 1.15; font-variation-settings: "opsz" 36, "SOFT" 14; }
+.theme-card:hover { transform: scale(1.015); box-shadow: var(--shadow-lift); }
+.theme-card .t-eyebrow { font-size: 12px; font-weight: 600; letter-spacing: -.01em; color: var(--fg-mute); text-transform: uppercase; letter-spacing: .04em; }
+.theme-card .t-name { font-weight: 600; font-size: 21px; line-height: 1.15; letter-spacing: -.015em; color: var(--fg); }
 .theme-card .t-sub { font-size: 14px; color: var(--fg-mute); }
 
 /* Archive list */
 .arch-group { margin-top: var(--s-4); }
 .arch-group h3,
 .clue-col h3 {
-  font-family: var(--mono); font-weight: 600; font-size: 12.5px;
-  letter-spacing: .2em; text-transform: uppercase; color: var(--fg-mute);
+  font-weight: 600; font-size: 12px;
+  letter-spacing: .06em; text-transform: uppercase; color: var(--fg-mute);
   margin: 0 0 var(--s-1); padding-bottom: var(--s-1);
-  border-bottom: 2px solid var(--fg);
+  border-bottom: 1px solid var(--rule);
 }
 .arch-list { list-style: none; margin: 0; padding: 0; columns: 2; column-gap: var(--s-6); }
 .arch-list li {
-  padding: 9px 0; border-bottom: 1px solid var(--rule); font-size: 15.5px;
+  padding: 9px 0; border-bottom: 1px solid var(--rule); font-size: 15px;
   color: var(--fg-soft); break-inside: avoid; display: flex;
   justify-content: space-between; gap: var(--s-2);
 }
-.arch-list li .ref { font-family: var(--mono); font-size: 12.5px; color: var(--fg-mute); white-space: nowrap; }
+.arch-list li .ref { font-size: 12.5px; color: var(--fg-mute); white-space: nowrap; }
 /* Titles that have a landing page are links; the rest sit at the same weight so
    the column reads as one list rather than two. */
-.arch-list li a { color: var(--fg); border-bottom: 1px solid color-mix(in srgb, var(--accent) 40%, transparent); transition: color .15s ease, border-color .15s ease; }
-.arch-list li a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+.arch-list li a { color: var(--accent); transition: opacity .15s ease; }
+.arch-list li a:hover { text-decoration: underline; }
 
 .content-section { padding-top: var(--s-1); }
 .content-section h2 { margin-top: var(--s-6); }
@@ -472,7 +394,7 @@ footer { border-top: 1px solid var(--rule); padding: var(--s-8) 0 var(--s-6); fo
 @media (max-width: 640px) {
   .arch-list { columns: 1; }
   .nav-link.secondary { display: none; }
-  .nav-inner { height: 62px; }
+  .nav-inner { height: 48px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -61,8 +61,8 @@ const entityLd = {
 <meta name="description" content={description} />
 <link rel="canonical" href={canonical} />
 <meta name="robots" content={robots} />
-<meta name="theme-color" content="#0D1017" media="(prefers-color-scheme: dark)" />
-<meta name="theme-color" content="#F7F4EC" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)" />
 <meta name="apple-itunes-app" content={`app-id=${APP_STORE_ID}`} />
 
 <meta property="og:type" content="website" />
@@ -93,20 +93,8 @@ const entityLd = {
 <link rel="apple-touch-icon" href="/assets/icon-180.png" />
 <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
 
-<!-- Fraunces carries the display voice, Newsreader sets scripture and long
-     copy. Both are self-hosted (see the @font-face block at the top of
-     global.css), which removes the DNS lookup and TLS handshake to
-     fonts.gstatic.com that used to stand between a visitor and the first
-     painted heading — and with it the render-blocking third-party stylesheet
-     the old `media=print` trick existed to work around.
-
-     Only the two latin roman faces are preloaded: they set the h1 and the body
-     copy on every page, and without a preload the browser cannot discover them
-     until it has parsed the CSS. The italic and latin-ext faces are left to be
-     fetched on demand — they are rarer, and preloading everything would put
-     ~350KB in front of the page instead of ~200KB. `font-display: swap` means
-     text paints in Georgia meanwhile either way. -->
-<link rel="preload" as="font" type="font/woff2" href="/fonts/fraunces-v38-latin.woff2" crossorigin />
-<link rel="preload" as="font" type="font/woff2" href="/fonts/newsreader-v26-latin.woff2" crossorigin />
+<!-- The whole site sets in the system SF stack — no webfonts, so nothing to
+     preload. The old self-hosted serif files remain under /fonts (immutable
+     path) but are intentionally unreferenced. -->
 
 <script type="application/ld+json" set:html={JSON.stringify(entityLd)} />

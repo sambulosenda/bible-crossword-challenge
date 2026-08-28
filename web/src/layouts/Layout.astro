@@ -15,14 +15,11 @@ interface Props {
   /** Set false for standalone pages (e.g. the challenge landing) that supply
       their own chrome. */
   chrome?: boolean;
-  /** True on pages that open with a full-bleed ink band, so the nav starts as
-      transparent chrome over it and only condenses onto paper once scrolled. */
-  overHero?: boolean;
 }
-const { title, description, path, robots, ogImage, ogImageAlt, chrome = true, overHero = false } = Astro.props;
+const { title, description, path, robots, ogImage, ogImageAlt, chrome = true } = Astro.props;
 ---
 <!doctype html>
-<html lang="en" class={overHero ? 'over-hero' : undefined}>
+<html lang="en">
   <head>
     <BaseHead title={title} description={description} path={path} robots={robots} ogImage={ogImage} ogImageAlt={ogImageAlt} />
     <slot name="head" />
@@ -34,28 +31,12 @@ const { title, description, path, robots, ogImage, ogImageAlt, chrome = true, ov
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>
-    {chrome && <Nav overHero={overHero} />}
+    {chrome && <Nav />}
     {/* Each page supplies its own <main id="main"> landmark. */}
     <slot />
     {chrome && <Footer />}
 
     <script>
-      // ── Nav: transparent over an ink hero, condensed once past it ─────────
-      (function () {
-        const nav = document.querySelector<HTMLElement>('.nav');
-        if (!nav || nav.dataset.overhero !== 'true') return;
-        // Watch a sentinel the height of the nav so the swap happens exactly as
-        // the hero's bottom edge passes under it.
-        const probe = document.createElement('div');
-        probe.style.cssText = 'position:absolute;top:0;height:80vh;width:1px;pointer-events:none';
-        document.body.prepend(probe);
-        const io = new IntersectionObserver(
-          ([e]) => { nav.dataset.mode = e.isIntersecting ? 'over' : 'stuck'; },
-          { threshold: 0 }
-        );
-        io.observe(probe);
-      })();
-
       // ── Scroll reveal ────────────────────────────────────────────────────
       (function () {
         const els = document.querySelectorAll<HTMLElement>('.reveal');
