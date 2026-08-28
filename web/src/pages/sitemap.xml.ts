@@ -18,6 +18,7 @@ const STATIC_PATHS = [
   '/puzzles/christmas-and-easter/',
   '/puzzles/for-kids/',
   '/how-to-play/',
+  '/press/',
   '/privacy/',
 ];
 

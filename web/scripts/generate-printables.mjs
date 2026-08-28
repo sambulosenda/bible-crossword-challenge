@@ -199,6 +199,95 @@ async function render(slug, p, qrPng) {
   await new Promise((res, rej) => { out.on('finish', res); out.on('error', rej); });
 }
 
+// The starter pack: one downloadable bundle for outreach — bloggers link a
+// single PDF far more readily than a directory of eighty. Two warm-up minis,
+// then six full grids across the best-known stories; every answer key at the
+// back so a teacher can print pages 2–17 for the class and keep the rest.
+// The id list is curated, not derived: pack membership is an editorial call.
+const PACK_IDS = [
+  'mini-024',  // The Shepherd's Psalm (7×7 warm-up)
+  'mini-009',  // He Is Risen (7×7 warm-up)
+  'daily-004', // David and Goliath
+  'daily-014', // Noah and the Flood
+  'daily-023', // The Lord's Prayer
+  'daily-025', // The Ten Commandments
+  'daily-037', // Miracles of Jesus
+  'daily-053', // The Fruit of the Spirit
+];
+const PACK_FILE = 'bible-crossword-starter-pack.pdf';
+
+async function renderPack(qrPng) {
+  const missing = PACK_IDS.filter((id) => !byId.has(id));
+  if (missing.length) {
+    console.error(`generate-printables: pack puzzle id(s) missing from app bundle: ${missing.join(', ')}`);
+    process.exit(1);
+  }
+  const pack = PACK_IDS.map((id) => byId.get(id));
+
+  const doc = new PDFDocument({ size: 'LETTER', margins: { top: 0, bottom: 0, left: 0, right: 0 }, autoFirstPage: false });
+  doc.info.Title = 'Bible Crossword Starter Pack — 8 printable puzzles with answers';
+  doc.info.Author = 'Bible Crossword Challenge';
+  const out = fs.createWriteStream(path.join(OUT, PACK_FILE));
+  doc.pipe(out);
+
+  // Cover
+  doc.addPage();
+  doc.font('Times-Bold').fontSize(34).fillColor(INK)
+    .text('The Bible Crossword\nStarter Pack', PAGE.margin, 170, { width: PAGE.w - PAGE.margin * 2, align: 'center' });
+  doc.moveDown(0.6);
+  doc.font('Helvetica').fontSize(12).fillColor(FAINT)
+    .text('8 printable crosswords · every answer from Scripture · full answer keys',
+      { width: PAGE.w - PAGE.margin * 2, align: 'center' });
+  doc.moveDown(1.6);
+  doc.font('Times-Roman').fontSize(11.5).fillColor(INK);
+  pack.forEach((p, i) => {
+    doc.text(`${i + 1}.  ${p.title}  ·  ${p.size}×${p.size}${p.id.startsWith('mini') ? '  (quick warm-up)' : ''}`,
+      PAGE.margin + 130, doc.y, { lineBreak: true });
+    doc.moveDown(0.35);
+  });
+  doc.moveDown(1.2);
+  doc.font('Helvetica').fontSize(9.5).fillColor(FAINT)
+    .text('Free to print and copy for church, Sunday school, homeschool, and home use.',
+      PAGE.margin, doc.y, { width: PAGE.w - PAGE.margin * 2, align: 'center' });
+  footer(doc, qrPng, true);
+
+  // Puzzle + clue pages (answer keys all together at the back).
+  for (const p of pack) {
+    doc.addPage();
+    header(doc, p);
+    const gridSize = p.size <= 7 ? 300 : 396;
+    drawGrid(doc, p, { x: (PAGE.w - gridSize) / 2, y: 130, size: gridSize, letters: false });
+    doc.font('Times-Italic').fontSize(10.5).fillColor(INK)
+      .text(`“${p.verse}”  — ${p.reference}`, PAGE.margin + 20, 130 + gridSize + 22,
+        { width: PAGE.w - (PAGE.margin + 20) * 2, align: 'center' });
+    footer(doc, qrPng, false);
+
+    doc.addPage();
+    header(doc, p);
+    const across = p.clues.filter((c) => c.direction === 'across').sort((a, b) => a.number - b.number);
+    const down = p.clues.filter((c) => c.direction === 'down').sort((a, b) => a.number - b.number);
+    const colW = (PAGE.w - PAGE.margin * 2 - 30) / 2;
+    clueColumn(doc, 'Across', across, PAGE.margin, colW, 130);
+    clueColumn(doc, 'Down', down, PAGE.margin + colW + 30, colW, 130);
+    footer(doc, qrPng, false);
+  }
+
+  // Answer keys, two per page.
+  pack.forEach((p, i) => {
+    const top = i % 2 === 0;
+    if (top) doc.addPage();
+    const y0 = top ? PAGE.margin : PAGE.h / 2 + 10;
+    doc.font('Times-Bold').fontSize(13).fillColor(INK)
+      .text(`Answer key — ${p.title}`, PAGE.margin, y0, { width: PAGE.w - PAGE.margin * 2, align: 'center' });
+    const keySize = 250;
+    drawGrid(doc, p, { x: (PAGE.w - keySize) / 2, y: y0 + 26, size: keySize, letters: true });
+  });
+  footer(doc, qrPng, true);
+
+  doc.end();
+  await new Promise((res, rej) => { out.on('finish', res); out.on('error', rej); });
+}
+
 fs.mkdirSync(OUT, { recursive: true });
 const qrPng = await QRCode.toBuffer(QR_URL, { margin: 0, width: 160, color: { dark: '#1c1917' } });
 
@@ -208,4 +297,5 @@ for (const slug of themeSlugs) {
   await render(slug, p, qrPng);
   n++;
 }
-console.log(`generate-printables: wrote ${n} PDFs to public/printables/`);
+await renderPack(qrPng);
+console.log(`generate-printables: wrote ${n} PDFs + ${PACK_FILE} to public/printables/`);

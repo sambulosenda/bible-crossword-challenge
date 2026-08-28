@@ -1,0 +1,123 @@
+---
+// The press kit: everything a journalist, blogger, or podcaster needs to
+// cover the app without a back-and-forth — description in two lengths, plain
+// facts, downloadable assets, and the promo-code offer. Every outreach email
+// links here, so this page is written to be skimmed and quoted from.
+import Layout from '../layouts/Layout.astro';
+import AppStoreButton from '../components/AppStoreButton.astro';
+import { SITE, APP_STORE_URL, SUPPORT_EMAIL } from '../consts';
+
+const title = 'Press Kit — Bible Crossword Challenge';
+const description =
+  'Press kit for Bible Crossword Challenge: app description, facts, screenshots, app icon, and review promo codes for journalists and bloggers.';
+
+const shots = [
+  { file: 'shot-today.png', alt: 'Today screen with the Verse of the Day and daily puzzle' },
+  { file: 'shot-puzzle.png', alt: 'A Bible crossword mid-solve' },
+  { file: 'shot-archive.png', alt: 'The puzzle library' },
+  { file: 'shot-achievements.png', alt: 'Achievements and streaks' },
+  { file: 'shot-profile.png', alt: 'Player profile' },
+];
+
+const breadcrumbLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE}/` },
+    { '@type': 'ListItem', position: 2, name: 'Press', item: `${SITE}/press/` },
+  ],
+};
+
+const appLd = {
+  '@context': 'https://schema.org',
+  '@type': 'MobileApplication',
+  name: 'Bible Crossword Challenge',
+  operatingSystem: 'iOS',
+  applicationCategory: 'GameApplication',
+  url: `${SITE}/`,
+  installUrl: APP_STORE_URL,
+  image: `${SITE}/assets/press/app-icon-1024.png`,
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+};
+---
+<Layout title={title} description={description} path="/press/">
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(breadcrumbLd)} />
+    <script type="application/ld+json" set:html={JSON.stringify(appLd)} />
+  </Fragment>
+
+  <main id="main" class="page">
+    <div class="wrap">
+      <p class="crumbs"><a href="/">Home</a><span>/</span>Press</p>
+      <p class="eyebrow">Press kit</p>
+      <h1>Bible Crossword Challenge</h1>
+      <div class="prose">
+        <p><strong>One line:</strong> A daily Bible crossword for iPhone and iPad — every answer comes from Scripture, and when you're stuck, the hint is the verse itself.</p>
+        <p><strong>Short description:</strong> Bible Crossword Challenge serves a new hand-crafted Bible crossword every day, plus a quick 7×7 daily mini and a big 21×21 Sunday Special. Clues are rooted in the King James Version, and the gentlest hint — free on referenced clues — simply opens the passage the answer comes from, so getting unstuck means reading the Bible. Streaks (with earnable freezes), themed puzzle packs, day-paced Journey Quests, a memory-verse mode, friend time challenges, and a weekly Game Center mini leaderboard round it out. Free to play daily; a premium subscription unlocks the full archive and unlimited hints.</p>
+      </div>
+
+      <div class="content-section">
+        <h2>Facts</h2>
+        <div class="prose">
+          <ul>
+            <li><strong>Platform:</strong> iPhone &amp; iPad (iOS)</li>
+            <li><strong>Price:</strong> free with a premium subscription for the full puzzle archive and unlimited hints</li>
+            <li><strong>Content:</strong> a new daily 15×15 crossword, a daily 7×7 mini, a 21×21 Sunday Special, themed packs, and Journey Quests — all clued from the King James Version</li>
+            <li><strong>Developer:</strong> Sambulo Senda, independent developer</li>
+            <li><strong>App Store:</strong> <a href={APP_STORE_URL} rel="noopener">Bible Crossword Challenge</a></li>
+            <li><strong>Contact:</strong> <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a></li>
+          </ul>
+        </div>
+
+        <h2>Review copies</h2>
+        <div class="prose">
+          <p>Writing about the app? Email <a href={`mailto:${SUPPORT_EMAIL}?subject=Press%20promo%20code%20request`}>{SUPPORT_EMAIL}</a> and a promo code for full premium access is yours — usually within a day. Interview requests welcome.</p>
+        </div>
+
+        <h2>App icon</h2>
+        <div class="prose">
+          <p><a href="/assets/press/app-icon-1024.png" download>Download the app icon (1024×1024 PNG)</a></p>
+        </div>
+
+        <h2>Screenshots</h2>
+        <div class="press-shots">
+          {shots.map((s) => (
+            <a href={`/assets/${s.file}`} download>
+              <img src={`/assets/${s.file.replace('.png', '.webp')}`} alt={s.alt} width="220" loading="lazy" />
+            </a>
+          ))}
+        </div>
+        <div class="prose">
+          <p>Click any screenshot to download the full-size PNG. Need a different size, device frame, or format? Just ask.</p>
+        </div>
+
+        <h2>Story angles</h2>
+        <div class="prose">
+          <ul>
+            <li>The hint that's a Bible: the app's gentlest hint opens the Scripture passage the answer comes from — getting unstuck <em>is</em> the devotional.</li>
+            <li>Built solo: designed, engineered, and shipped by one independent developer.</li>
+            <li>Faith &amp; daily habit: what a daily puzzle format does for consistent Scripture engagement.</li>
+          </ul>
+          <p>There's also a <a href="/puzzles/printable/">free printable library</a> — every themed puzzle as a PDF with an answer key, plus an 8-puzzle starter pack — free to reprint for church, Sunday school, and homeschool use.</p>
+        </div>
+
+        <div style="margin-top:34px"><AppStoreButton /></div>
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .press-shots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin: 18px 0 10px;
+  }
+  .press-shots img {
+    display: block;
+    max-width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.12);
+  }
+</style>
