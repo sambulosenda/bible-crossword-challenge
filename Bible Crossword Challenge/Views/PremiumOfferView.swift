@@ -668,54 +668,58 @@ struct PremiumOfferView: View {
         return "One-time purchase — yours forever."
     }
 
-    /// The headline figure on a card: what leaves the account, and how often.
+    /// The headline figure on a card: the per-week equivalent, on both
+    /// subscriptions, so the two cards compare in one unit and the first number
+    /// the eye lands on is the smallest honest reading of the price.
+    ///
+    /// This used to be the billed price ("$24.99/year"). After the 2026-08-11
+    /// increase that number became the screen's largest price shock: paywall
+    /// openers tapping the CTA fell from 21% to 9% while everything downstream
+    /// of the tap improved — the people the figure scared off were exactly the
+    /// ones the free trial existed to convince. The billed price still appears
+    /// twice, in the card's own footnote and in the commitment line under the
+    /// CTA, so nothing about what actually leaves the account is hidden.
     private func planPrice(_ product: Product) -> String {
-        product.displayPrice + (store.periodText(for: product) ?? "")
+        switch product.id {
+        case StoreService.yearlyID, StoreService.monthlyID:
+            return perWeekText(product).map { "\($0)/week" }
+                ?? product.displayPrice + (store.periodText(for: product) ?? "")
+        default:
+            return product.displayPrice + (store.periodText(for: product) ?? "")
+        }
     }
 
-    /// The line under the price: the same price read the other way round, so
-    /// each card is legible on its own — the per-month figure on yearly, the
-    /// annual total on monthly. That makes the saving a subtraction the reader
-    /// can see rather than a percentage they have to trust.
+    /// The line under the price: what is actually billed, and how often — the
+    /// number the per-week figure above it is derived from. With both headline
+    /// figures in weeks the cards no longer need to restate each other's price
+    /// for comparison; what they need is the real charge, stated plainly.
     ///
-    /// The trial does not appear here, and used to be all that did: this
-    /// returned the introductory offer early, so whenever one existed the
-    /// yearly card read "3-day free trial" and the per-month figure appeared
-    /// *nowhere on the screen*. The cheapest way to read this price was the one
-    /// number the page never showed.
-    ///
-    /// The trial is already stated three times — the subhead, the CTA, and the
-    /// commitment line — and it reads as attached to yearly because yearly is
-    /// preselected: choosing monthly changes the CTA away from "Start 3-day
-    /// free trial", which says it more plainly than a fourth caption would.
-    /// Adding it back here only cost the card a second line, and left the two
-    /// plans at visibly different heights.
+    /// The trial does not appear here — it's already stated three times (the
+    /// subhead, the CTA, and the commitment line), and it reads as attached to
+    /// yearly because yearly is preselected.
     private func planFootnote(_ product: Product) -> String {
         switch product.id {
         case StoreService.yearlyID:
-            return yearlyPerMonthText.map { "\($0)/month" } ?? ""
+            return "\(product.displayPrice) billed yearly"
         case StoreService.monthlyID:
-            return monthlyPerYearText.map { "\($0) a year" } ?? ""
+            return "\(product.displayPrice) billed monthly"
         default:
             return "one-time"
         }
     }
 
-    /// The monthly plan's price over twelve months, in the product's own
-    /// currency — the number the yearly plan is quietly being compared against.
-    private var monthlyPerYearText: String? {
-        guard let monthly = store.products.first(where: { $0.id == StoreService.monthlyID })
-        else { return nil }
-        return (monthly.price * 12).formatted(monthly.priceFormatStyle)
-    }
-
-    /// The yearly plan's price divided by twelve, formatted in the product's
-    /// own currency and locale rather than hand-built from the display string.
-    private var yearlyPerMonthText: String? {
-        guard let yearly = store.products.first(where: { $0.id == StoreService.yearlyID })
-        else { return nil }
-        let perMonth = yearly.price / 12
-        return perMonth.formatted(yearly.priceFormatStyle)
+    /// A subscription's price per week, formatted in the product's own currency
+    /// and locale rather than hand-built from the display string. 52 weeks to
+    /// the year and 12ths of that for a month, so the two cards' figures come
+    /// from the same arithmetic and their ratio matches the savings pill.
+    private func perWeekText(_ product: Product) -> String? {
+        let perWeek: Decimal
+        switch product.id {
+        case StoreService.yearlyID: perWeek = product.price / 52
+        case StoreService.monthlyID: perWeek = product.price * 12 / 52
+        default: return nil
+        }
+        return perWeek.formatted(product.priceFormatStyle)
     }
 
     /// Tinted pill on the yearly plan — the computed saving vs. paying monthly,
