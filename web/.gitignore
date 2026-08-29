@@ -10,3 +10,5 @@ node_modules/
 # macOS
 .DS_Store
 public/printables/
+# wrangler local state
+.wrangler/
