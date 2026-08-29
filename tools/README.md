@@ -7,7 +7,8 @@ the app.
 ## Files
 - `puzzle_specs.json` — the source content: an array of
   `{ title, theme, difficulty, verse, reference, words: [{answer, clue}] }`.
-  Verses are King James Version (public domain). Each puzzle lists ~16–20
+  Verses are Berean Standard Bible (public domain, same translation as the
+  bundled reader). Each puzzle lists ~16–20
   candidate words; the generator only uses the ones that interlock.
 - `generate_puzzles.py` — deterministically builds valid crossword grids from
   the specs and writes the app's `puzzles.json`.

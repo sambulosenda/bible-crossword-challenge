@@ -4,7 +4,7 @@
     "title": "In the Beginning",
     "theme": "The Creation (Genesis 1-2)",
     "difficulty": "easy",
-    "verse": "In the beginning God created the heaven and the earth.",
+    "verse": "In the beginning God created the heavens and the earth.",
     "reference": "Genesis 1:1",
     "keep": true,
     "issues": "Verse and reference correct KJV; all answers valid 3-9 letters, A-Z, on-theme; no clue contains its answer. No changes needed.",
@@ -116,7 +116,7 @@
     "title": "The Garden of Eden",
     "theme": "Adam, Eve, and the Fall",
     "difficulty": "easy",
-    "verse": "And the LORD God said, It is not good that the man should be alone; I will make him an help meet for him.",
+    "verse": "The LORD God also said, “It is not good for the man to be alone. I will make for him a suitable helper.”",
     "reference": "Genesis 2:18",
     "keep": true,
     "issues": "Verse and reference correct KJV; all answers valid and on-theme; no clue contains its answer. No changes needed.",
@@ -208,7 +208,7 @@
     "title": "Noah and the Flood",
     "theme": "Noah's ark and the great flood",
     "difficulty": "easy",
-    "verse": "And the LORD said unto Noah, Come thou and all thy house into the ark.",
+    "verse": "Then the LORD said to Noah, “Go into the ark, you and all your family, because I have found you righteous in this generation.”",
     "reference": "Genesis 7:1",
     "keep": true,
     "issues": "Verse opening matches KJV exactly; all answers valid and on-theme; no clue contains its answer. No changes needed.",
@@ -320,7 +320,7 @@
     "title": "The Tower of Babel",
     "theme": "The tower of Babel and scattered languages",
     "difficulty": "medium",
-    "verse": "Go to, let us build us a city and a tower, whose top may reach unto heaven.",
+    "verse": "let us build for ourselves a city with a tower that reaches to the heavens",
     "reference": "Genesis 11:4",
     "keep": true,
     "issues": "Verse and reference correct KJV; all answers valid and on-theme; no clue contains its answer. No changes needed.",
@@ -430,7 +430,7 @@
     "title": "Father Abraham",
     "theme": "Abraham, covenant and promise",
     "difficulty": "easy",
-    "verse": "And he believed in the LORD; and he counted it to him for righteousness.",
+    "verse": "Abram believed the LORD, and it was credited to him as righteousness.",
     "reference": "Genesis 15:6",
     "keep": true,
     "issues": "Verse and reference correct KJV; all answers valid and on-theme; no clue contains its answer. No changes needed.",
@@ -522,7 +522,7 @@
     "title": "Isaac and Rebekah",
     "theme": "Isaac, Rebekah, and the birthright",
     "difficulty": "medium",
-    "verse": "And Isaac intreated the LORD for his wife, because she was barren: and the LORD was intreated of him, and Rebekah his wife conceived.",
+    "verse": "Later, Isaac prayed to the LORD on behalf of his wife, because she was barren. And the LORD heard his prayer, and his wife Rebekah conceived.",
     "reference": "Genesis 25:21",
     "keep": true,
     "issues": "Verse and reference correct KJV. Removed BIRTHRIGHT (10 letters, over 9-letter limit) and replaced with BEERSHEBA (9, on-theme); birthright concept still covered by POTTAGE/VENISON clues.",
@@ -614,7 +614,7 @@
     "title": "Jacob's Ladder",
     "theme": "Jacob, Esau, and the twelve sons",
     "difficulty": "medium",
-    "verse": "And he dreamed, and behold a ladder set up on the earth, and the top of it reached to heaven: and behold the angels of God ascending and descending on it.",
+    "verse": "And Jacob had a dream about a ladder that rested on the earth with its top reaching up to heaven, and God’s angels were going up and down the ladder.",
     "reference": "Genesis 28:12",
     "words": [
       {
@@ -706,7 +706,7 @@
     "title": "Joseph the Dreamer",
     "theme": "Joseph sold into Egypt, coat of many colours",
     "difficulty": "easy",
-    "verse": "Now Israel loved Joseph more than all his children, because he was the son of his old age: and he made him a coat of many colours.",
+    "verse": "Now Israel loved Joseph more than his other sons, because Joseph had been born to him in his old age; so he made him a robe of many colors.",
     "reference": "Genesis 37:3",
     "words": [
       {
@@ -798,7 +798,7 @@
     "title": "The Burning Bush",
     "theme": "Moses called by God in Midian",
     "difficulty": "easy",
-    "verse": "And the angel of the LORD appeared unto him in a flame of fire out of the midst of a bush: and he looked, and, behold, the bush burned with fire, and the bush was not consumed.",
+    "verse": "There the angel of the LORD appeared to him in a blazing fire from within a bush. Moses saw the bush ablaze with fire, but it was not consumed.",
     "reference": "Exodus 3:2",
     "words": [
       {
@@ -890,7 +890,7 @@
     "title": "The Ten Plagues",
     "theme": "The plagues upon Egypt",
     "difficulty": "medium",
-    "verse": "And the LORD said unto Moses, Yet will I bring one plague more upon Pharaoh, and upon Egypt; afterwards he will let you go hence: when he shall let you go, he shall surely thrust you out hence altogether.",
+    "verse": "Then the LORD said to Moses, “I will bring upon Pharaoh and Egypt one more plague. After that, he will allow you to leave this place. And when he lets you go, he will drive you out completely.”",
     "reference": "Exodus 11:1",
     "words": [
       {
@@ -999,7 +999,7 @@
     "title": "Crossing the Red Sea",
     "theme": "The Exodus from Egypt",
     "difficulty": "easy",
-    "verse": "And the children of Israel went into the midst of the sea upon the dry ground: and the waters were a wall unto them on their right hand, and on their left.",
+    "verse": "and the Israelites went through the sea on dry ground, with walls of water on their right and on their left.",
     "reference": "Exodus 14:22",
     "words": [
       {
@@ -1091,7 +1091,7 @@
     "title": "The Ten Commandments",
     "theme": "The law given at Mount Sinai",
     "difficulty": "easy",
-    "verse": "Honour thy father and thy mother: that thy days may be long upon the land which the LORD thy God giveth thee.",
+    "verse": "Honor your father and mother, so that your days may be long in the land that the LORD your God is giving you.",
     "reference": "Exodus 20:12",
     "words": [
       {
@@ -1183,7 +1183,7 @@
     "title": "Manna in the Wilderness",
     "theme": "Israel wandering in the desert",
     "difficulty": "medium",
-    "verse": "And when the dew that lay was gone up, behold, upon the face of the wilderness there lay a small round thing, as small as the hoar frost on the ground.",
+    "verse": "When the layer of dew had evaporated, there were thin flakes on the desert floor, as fine as frost on the ground.",
     "reference": "Exodus 16:14",
     "words": [
       {
@@ -1275,7 +1275,7 @@
     "title": "The Tabernacle",
     "theme": "The tabernacle and worship",
     "difficulty": "hard",
-    "verse": "And let them make me a sanctuary; that I may dwell among them.",
+    "verse": "And they are to make a sanctuary for Me, so that I may dwell among them.",
     "reference": "Exodus 25:8",
     "words": [
       {
@@ -1385,7 +1385,7 @@
     "title": "The Walls of Jericho",
     "theme": "Joshua and the fall of Jericho",
     "difficulty": "easy",
-    "verse": "So the people shouted when the priests blew with the trumpets: and it came to pass, when the people heard the sound of the trumpet, and the people shouted with a great shout, that the wall fell down flat, so that the people went up into the city, every man straight before him, and they took the city.",
+    "verse": "So when the rams’ horns sounded, the people shouted. When they heard the blast of the horn, the people gave a great shout, and the wall collapsed. Then all the people charged straight into the city and captured it.",
     "reference": "Joshua 6:20",
     "words": [
       {
@@ -1477,7 +1477,7 @@
     "title": "Gideon's Three Hundred",
     "theme": "Gideon the judge",
     "difficulty": "medium",
-    "verse": "And the LORD said unto Gideon, By the three hundred men that lapped will I save you, and deliver the Midianites into thine hand.",
+    "verse": "Then the LORD said to Gideon, “With the three hundred men who lapped the water I will save you and deliver the Midianites into your hand. But all the others are to go home.”",
     "reference": "Judges 7:7",
     "words": [
       {
@@ -1569,7 +1569,7 @@
     "title": "Samson and Delilah",
     "theme": "Samson the strong judge",
     "difficulty": "easy",
-    "verse": "And the child grew, and the LORD blessed him.",
+    "verse": "So the woman gave birth to a son and named him Samson. The boy grew, and the LORD blessed him.",
     "reference": "Judges 13:24",
     "words": [
       {
@@ -1661,7 +1661,7 @@
     "title": "The Story of Ruth",
     "theme": "Ruth, Naomi, and Boaz",
     "difficulty": "medium",
-    "verse": "And Ruth said, Intreat me not to leave thee, or to return from following after thee: for whither thou goest, I will go; and where thou lodgest, I will lodge: thy people shall be my people, and thy God my God.",
+    "verse": "But Ruth replied: “Do not urge me to leave you or to turn from following you. For wherever you go, I will go, and wherever you live, I will live; your people will be my people, and your God will be my God.”",
     "reference": "Ruth 1:16",
     "words": [
       {
@@ -1773,7 +1773,7 @@
     "title": "Samuel Hears God",
     "theme": "Samuel the prophet called as a boy",
     "difficulty": "easy",
-    "verse": "And the LORD came, and stood, and called as at other times, Samuel, Samuel. Then Samuel answered, Speak; for thy servant heareth.",
+    "verse": "Then the LORD came and stood there, calling as before, “Samuel! Samuel!” And Samuel answered, “Speak, for Your servant is listening.”",
     "reference": "1 Samuel 3:10",
     "words": [
       {
@@ -1806,7 +1806,7 @@
       },
       {
         "answer": "SERVANT",
-        "clue": "Word Samuel used: thy ____ heareth"
+        "clue": "Word Samuel used: 'Your ____ is listening'"
       },
       {
         "answer": "PRIEST",
@@ -1830,7 +1830,7 @@
       },
       {
         "answer": "SPEAK",
-        "clue": "Samuel's reply: ____, for thy servant heareth"
+        "clue": "Samuel's reply: '____, for Your servant is listening'"
       },
       {
         "answer": "ANOINT",
@@ -1865,7 +1865,7 @@
     "title": "King Saul",
     "theme": "Saul, the first king of Israel",
     "difficulty": "medium",
-    "verse": "And all the people shouted, and said, God save the king.",
+    "verse": "Long live the king!",
     "reference": "1 Samuel 10:24",
     "words": [
       {
@@ -1957,7 +1957,7 @@
     "title": "David and Goliath",
     "theme": "David defeats the giant",
     "difficulty": "easy",
-    "verse": "Then said David to the Philistine, Thou comest to me with a sword, and with a spear, and with a shield: but I come to thee in the name of the LORD of hosts",
+    "verse": "But David said to the Philistine, “You come against me with sword and spear and javelin, but I come against you in the name of the LORD of Hosts, the God of the armies of Israel, whom you have defied.”",
     "reference": "1 Samuel 17:45",
     "words": [
       {
@@ -2049,7 +2049,7 @@
     "title": "King David",
     "theme": "David, shepherd, king, psalmist",
     "difficulty": "easy",
-    "verse": "The LORD is my shepherd; I shall not want",
+    "verse": "A Psalm of David. The LORD is my shepherd; I shall not want.",
     "reference": "Psalm 23:1",
     "words": [
       {
@@ -2141,7 +2141,7 @@
     "title": "Solomon's Wisdom",
     "theme": "Solomon and the temple",
     "difficulty": "medium",
-    "verse": "The fear of the LORD is the beginning of knowledge: but fools despise wisdom and instruction",
+    "verse": "The fear of the LORD is the beginning of knowledge, but fools despise wisdom and discipline.",
     "reference": "Proverbs 1:7",
     "words": [
       {
@@ -2233,7 +2233,7 @@
     "title": "Elijah and the Fire",
     "theme": "Elijah on Mount Carmel",
     "difficulty": "hard",
-    "verse": "Then the fire of the LORD fell, and consumed the burnt sacrifice, and the wood, and the stones, and the dust, and licked up the water that was in the trench",
+    "verse": "Then the fire of the LORD fell and consumed the sacrifice, the wood, the stones, and the dust, and it licked up the water in the trench.",
     "reference": "1 Kings 18:38",
     "words": [
       {
@@ -2343,7 +2343,7 @@
     "title": "Elisha the Prophet",
     "theme": "Elisha's miracles",
     "difficulty": "hard",
-    "verse": "And he said, Take up thy son. Then she went in, and fell at his feet, and bowed herself to the ground, and took up her son, and went out.",
+    "verse": "Elisha summoned Gehazi and said, “Call the Shunammite woman.” So he called her and she came. Then Elisha said, “Pick up your son.”",
     "reference": "2 Kings 4:36",
     "words": [
       {
@@ -2452,7 +2452,7 @@
     "title": "The Patience of Job",
     "theme": "Job's suffering and faith",
     "difficulty": "medium",
-    "verse": "Naked came I out of my mother's womb, and naked shall I return thither: the LORD gave, and the LORD hath taken away; blessed be the name of the LORD.",
+    "verse": "saying: “Naked I came from my mother’s womb, and naked I will return. The LORD gave, and the LORD has taken away. Blessed be the name of the LORD.”",
     "reference": "Job 1:21",
     "words": [
       {
@@ -2562,7 +2562,7 @@
     "title": "Daniel in the Lions' Den",
     "theme": "Daniel in Babylon",
     "difficulty": "easy",
-    "verse": "My God hath sent his angel, and hath shut the lions' mouths, that they have not hurt me: forasmuch as before him innocency was found in me; and also before thee, O king, have I done no hurt.",
+    "verse": "My God sent His angel and shut the mouths of the lions. They have not hurt me, for I was found innocent in His sight, and I have done no wrong against you, O king.",
     "reference": "Daniel 6:22",
     "words": [
       {
@@ -2650,7 +2650,7 @@
     "title": "The Fiery Furnace",
     "theme": "Shadrach, Meshach, and Abednego",
     "difficulty": "medium",
-    "verse": "He answered and said, Lo, I see four men loose, walking in the midst of the fire, and they have no hurt; and the form of the fourth is like the Son of God.",
+    "verse": "“Look!” he exclaimed. “I see four men, unbound and unharmed, walking around in the fire—and the fourth looks like a son of the gods!”",
     "reference": "Daniel 3:25",
     "words": [
       {
@@ -2760,7 +2760,7 @@
     "title": "Jonah and the Whale",
     "theme": "Jonah and Nineveh",
     "difficulty": "easy",
-    "verse": "Now the LORD had prepared a great fish to swallow up Jonah. And Jonah was in the belly of the fish three days and three nights.",
+    "verse": "Now the LORD had appointed a great fish to swallow Jonah, and Jonah spent three days and three nights in the belly of the fish.",
     "reference": "Jonah 1:17",
     "words": [
       {
@@ -2848,7 +2848,7 @@
     "title": "Queen Esther",
     "theme": "Esther saves her people",
     "difficulty": "medium",
-    "verse": "And who knoweth whether thou art come to the kingdom for such a time as this?",
+    "verse": "And who knows if perhaps you have come to the kingdom for such a time as this?",
     "reference": "Esther 4:14",
     "words": [
       {
@@ -2940,7 +2940,7 @@
     "title": "Nehemiah Rebuilds",
     "theme": "Nehemiah and the walls of Jerusalem",
     "difficulty": "hard",
-    "verse": "The God of heaven, he will prosper us; therefore we his servants will arise and build",
+    "verse": "The God of heaven is the One who will grant us success. We, His servants, will start rebuilding",
     "reference": "Nehemiah 2:20",
     "keep": true,
     "issues": "Removed ARTAXERXES (10 letters, exceeds 9-letter limit); rewrote CUPBEARER clue which contained the answer word.",
@@ -3043,7 +3043,7 @@
     "title": "The Major Prophets",
     "theme": "Isaiah, Jeremiah, Ezekiel, Daniel",
     "difficulty": "hard",
-    "verse": "The grass withereth, the flower fadeth: but the word of our God shall stand for ever",
+    "verse": "The grass withers and the flowers fall, but the word of our God stands forever.",
     "reference": "Isaiah 40:8",
     "keep": true,
     "issues": "Verified KJV verse and all clues/answers; no changes needed.",
@@ -3154,7 +3154,7 @@
     "title": "The Lord Is My Shepherd",
     "theme": "Psalm 23 and trust in God",
     "difficulty": "easy",
-    "verse": "The LORD is my shepherd; I shall not want",
+    "verse": "A Psalm of David. The LORD is my shepherd; I shall not want.",
     "reference": "Psalm 23:1",
     "keep": true,
     "issues": "Verified KJV verse and all clues/answers; no changes needed.",
@@ -3246,7 +3246,7 @@
     "title": "Songs of Praise",
     "theme": "The Psalms of David",
     "difficulty": "medium",
-    "verse": "Make a joyful noise unto the LORD, all ye lands",
+    "verse": "A Psalm of thanksgiving. Make a joyful noise to the LORD, all the earth.",
     "reference": "Psalm 100:1",
     "keep": true,
     "issues": "Verified KJV verse and all clues/answers; no changes needed.",
@@ -3338,7 +3338,7 @@
     "title": "Words of the Wise",
     "theme": "The Proverbs",
     "difficulty": "medium",
-    "verse": "Trust in the LORD with all thine heart; and lean not unto thine own understanding",
+    "verse": "Trust in the LORD with all your heart, and lean not on your own understanding;",
     "reference": "Proverbs 3:5",
     "keep": true,
     "issues": "Verified KJV verse and all clues/answers; no changes needed.",
@@ -3428,7 +3428,7 @@
       },
       {
         "answer": "FRIEND",
-        "clue": "One who loveth at all times",
+        "clue": "One who loves at all times",
         "reference": "Proverbs 17:17"
       },
       {
@@ -3448,7 +3448,7 @@
     "title": "The Christmas Story",
     "theme": "The nativity of Jesus in Bethlehem",
     "difficulty": "easy",
-    "verse": "And she brought forth her firstborn son, and wrapped him in swaddling clothes, and laid him in a manger; because there was no room for them in the inn.",
+    "verse": "And she gave birth to her firstborn, a Son. She wrapped Him in swaddling cloths and laid Him in a manger, because there was no room for them in the inn.",
     "reference": "Luke 2:7",
     "keep": true,
     "issues": "Verified KJV verse and all clues/answers; no changes needed.",
@@ -3540,7 +3540,7 @@
     "title": "Wise Men from the East",
     "theme": "The magi follow the star",
     "difficulty": "easy",
-    "verse": "Saying, Where is he that is born King of the Jews? for we have seen his star in the east, and are come to worship him.",
+    "verse": "asking, “Where is the One who has been born King of the Jews? We saw His star in the east and have come to worship Him.”",
     "reference": "Matthew 2:2",
     "keep": true,
     "issues": "Verse correct. Replaced STABLE (magi found child in a house, not stable) with HOUSE; replaced off-theme STREET with FRANKINCENSE.",
@@ -3632,7 +3632,7 @@
     "title": "John the Baptist",
     "theme": "John baptising in the Jordan",
     "difficulty": "medium",
-    "verse": "In those days came John the Baptist, preaching in the wilderness of Judaea,",
+    "verse": "In those days John the Baptist came, preaching in the wilderness of Judea",
     "reference": "Matthew 3:1",
     "keep": true,
     "issues": "Verse correct (KJV Matthew 3:1). All answers valid and on-theme; clues accurate. No changes needed.",
@@ -3724,7 +3724,7 @@
     "title": "The Baptism of Jesus",
     "theme": "Jesus baptised, the dove and voice",
     "difficulty": "medium",
-    "verse": "And there came a voice from heaven, saying, Thou art my beloved Son, in whom I am well pleased.",
+    "verse": "And a voice came from heaven: “You are My beloved Son; in You I am well pleased.”",
     "reference": "Mark 1:11",
     "keep": true,
     "issues": "Verse correct (KJV Mark 1:11). All answers valid and on-theme; clues accurate. No changes needed.",
@@ -3816,7 +3816,7 @@
     "title": "Tempted in the Desert",
     "theme": "The temptation of Christ",
     "difficulty": "hard",
-    "verse": "And when the tempter came to him, he said, If thou be the Son of God, command that these stones be made bread.",
+    "verse": "The tempter came to Him and said, “If You are the Son of God, tell these stones to become bread.”",
     "reference": "Matthew 4:3",
     "keep": true,
     "issues": "Verse correct (KJV Matthew 4:3). All answers valid and on-theme; clues accurate. No changes needed.",
@@ -3926,7 +3926,7 @@
     "title": "The Twelve Disciples",
     "theme": "The apostles of Jesus",
     "difficulty": "easy",
-    "verse": "And he ordained twelve, that they should be with him, and that he might send them forth to preach,",
+    "verse": "He appointed twelve of them, whom He designated as apostles, to accompany Him, to be sent out to preach,",
     "reference": "Mark 3:14",
     "keep": true,
     "issues": "Verse corrected to end with KJV comma. Reworded weak FISHER clue (repeated 'catch'). All answers valid and on-theme.",
@@ -4010,7 +4010,7 @@
     "title": "Sermon on the Mount",
     "theme": "Jesus' teaching on the mount",
     "difficulty": "medium",
-    "verse": "Ye are the light of the world. A city that is set on an hill cannot be hid.",
+    "verse": "You are the light of the world. A city on a hill cannot be hidden.",
     "reference": "Matthew 5:14",
     "keep": true,
     "issues": "Verse correct (KJV Matthew 5:14). All answers valid and on-theme; clues accurate. No changes needed.",
@@ -4098,7 +4098,7 @@
     "title": "The Beatitudes",
     "theme": "Blessed are the meek (Matthew 5)",
     "difficulty": "medium",
-    "verse": "Blessed are the meek: for they shall inherit the earth.",
+    "verse": "Blessed are the meek, for they will inherit the earth.",
     "reference": "Matthew 5:5",
     "words": [
       {
@@ -4194,7 +4194,7 @@
     "title": "The Lord's Prayer",
     "theme": "Our Father, the model prayer",
     "difficulty": "easy",
-    "verse": "After this manner therefore pray ye: Our Father which art in heaven, Hallowed be thy name.",
+    "verse": "So then, this is how you should pray: ‘Our Father in heaven, hallowed be Your name.",
     "reference": "Matthew 6:9",
     "words": [
       {
@@ -4215,7 +4215,7 @@
       },
       {
         "answer": "WILL",
-        "clue": "May thine be done on earth"
+        "clue": "May Yours be done on earth"
       },
       {
         "answer": "EARTH",
@@ -4278,7 +4278,7 @@
     "title": "The Parable of the Sower",
     "theme": "Seed on different soils",
     "difficulty": "medium",
-    "verse": "Behold, a sower went forth to sow.",
+    "verse": "And He told them many things in parables, saying, “A farmer went out to sow his seed.”",
     "reference": "Matthew 13:3",
     "words": [
       {
@@ -4378,7 +4378,7 @@
     "title": "The Prodigal Son",
     "theme": "The lost son returns home",
     "difficulty": "easy",
-    "verse": "For this my son was dead, and is alive again; he was lost, and is found. And they began to be merry.",
+    "verse": "For this son of mine was dead and is alive again! He was lost and is found!’ So they began to celebrate.",
     "reference": "Luke 15:24",
     "words": [
       {
@@ -4470,7 +4470,7 @@
     "title": "The Good Samaritan",
     "theme": "Love your neighbour parable",
     "difficulty": "easy",
-    "verse": "Thou shalt love thy neighbour as thyself.",
+    "verse": "Love your neighbor as yourself.",
     "reference": "Luke 10:27",
     "words": [
       {
@@ -4562,7 +4562,7 @@
     "title": "The Good Shepherd",
     "theme": "Jesus as the shepherd, lost sheep",
     "difficulty": "medium",
-    "verse": "I am the good shepherd: the good shepherd giveth his life for the sheep.",
+    "verse": "I am the good shepherd. The good shepherd lays down His life for the sheep.",
     "reference": "John 10:11",
     "words": [
       {
@@ -4672,7 +4672,7 @@
     "title": "Miracles of Jesus",
     "theme": "The healings and wonders of Christ",
     "difficulty": "medium",
-    "verse": "And many other signs truly did Jesus in the presence of his disciples, which are not written in this book.",
+    "verse": "Jesus performed many other signs in the presence of His disciples, which are not written in this book.",
     "reference": "John 20:30",
     "words": [
       {
@@ -4764,7 +4764,7 @@
     "title": "Feeding the Five Thousand",
     "theme": "Loaves and fishes miracle",
     "difficulty": "easy",
-    "verse": "There is a lad here, which hath five barley loaves, and two small fishes: but what are they among so many?",
+    "verse": "“Here is a boy with five barley loaves and two small fish. But what difference will these make among so many?”",
     "reference": "John 6:9",
     "words": [
       {
@@ -4856,7 +4856,7 @@
     "title": "Walking on Water",
     "theme": "Jesus and Peter on the sea",
     "difficulty": "medium",
-    "verse": "But straightway Jesus spake unto them, saying, Be of good cheer; it is I; be not afraid.",
+    "verse": "But Jesus spoke up at once: “Take courage! It is I. Do not be afraid.”",
     "reference": "Matthew 14:27",
     "words": [
       {
@@ -4948,7 +4948,7 @@
       },
       {
         "answer": "DOUBT",
-        "clue": "Why Jesus asked 'wherefore didst thou ___?'",
+        "clue": "Jesus' question on the water: 'why did you ___?'",
         "reference": "Matthew 14:31"
       },
       {
@@ -4965,7 +4965,7 @@
     "title": "Calming the Storm",
     "theme": "Jesus stills the tempest",
     "difficulty": "medium",
-    "verse": "And he arose, and rebuked the wind, and said unto the sea, Peace, be still. And the wind ceased, and there was a great calm.",
+    "verse": "Then Jesus got up and rebuked the wind and the sea. “Silence!” He commanded. “Be still!” And the wind died down, and it was perfectly calm.",
     "reference": "Mark 4:39",
     "words": [
       {
@@ -5010,7 +5010,7 @@
       },
       {
         "answer": "FEAR",
-        "clue": "Emotion Jesus questioned: 'why are ye so fearful?'"
+        "clue": "Emotion Jesus questioned: 'why are you so afraid?'"
       },
       {
         "answer": "FAITH",
@@ -5057,7 +5057,7 @@
     "title": "Lazarus, Come Forth",
     "theme": "Raising of Lazarus",
     "difficulty": "hard",
-    "verse": "Jesus said unto her, I am the resurrection, and the life: he that believeth in me, though he were dead, yet shall he live.",
+    "verse": "Jesus said to her, “I am the resurrection and the life. Whoever believes in Me will live, even though he dies.”",
     "reference": "John 11:25",
     "words": [
       {
@@ -5091,7 +5091,7 @@
       },
       {
         "answer": "DEATH",
-        "clue": "State Jesus said this sickness was not unto",
+        "clue": "State Jesus said this sickness would not end in",
         "reference": "John 11:4"
       },
       {
@@ -5164,7 +5164,7 @@
     "title": "The Transfiguration",
     "theme": "Jesus glorified on the mountain",
     "difficulty": "hard",
-    "verse": "And his raiment became shining, exceeding white as snow; so as no fuller on earth can white them.",
+    "verse": "His clothes became radiantly white, brighter than any launderer on earth could bleach them.",
     "reference": "Mark 9:3",
     "words": [
       {
@@ -5271,7 +5271,7 @@
     "title": "The Last Supper",
     "theme": "The final meal and communion",
     "difficulty": "medium",
-    "verse": "And he took bread, and gave thanks, and brake it, and gave unto them, saying, This is my body which is given for you: this do in remembrance of me.",
+    "verse": "And He took the bread, gave thanks and broke it, and gave it to them, saying, “This is My body, given for you; do this in remembrance of Me.”",
     "reference": "Luke 22:19",
     "words": [
       {
@@ -5381,7 +5381,7 @@
     "title": "The Garden of Gethsemane",
     "theme": "Jesus prays before arrest",
     "difficulty": "hard",
-    "verse": "And he said, Abba, Father, all things are possible unto thee; take away this cup from me: nevertheless not what I will, but what thou wilt.",
+    "verse": "“Abba, Father,” He said, “all things are possible for You. Take this cup from Me. Yet not what I will, but what You will.”",
     "reference": "Mark 14:36",
     "words": [
       {
@@ -5492,7 +5492,7 @@
     "title": "The Crucifixion",
     "theme": "The death of Christ at Calvary",
     "difficulty": "medium",
-    "verse": "And when they were come to the place, which is called Calvary, there they crucified him, and the malefactors, one on the right hand, and the other on the left.",
+    "verse": "When they came to the place called The Skull, they crucified Him there, along with the criminals, one on His right and the other on His left.",
     "reference": "Luke 23:33",
     "words": [
       {
@@ -5602,7 +5602,7 @@
     "title": "He Is Risen",
     "theme": "The resurrection of Jesus",
     "difficulty": "easy",
-    "verse": "He is not here: for he is risen, as he said. Come, see the place where the Lord lay.",
+    "verse": "He is not here; He has risen, just as He said! Come, see the place where He lay.",
     "reference": "Matthew 28:6",
     "words": [
       {
@@ -5694,7 +5694,7 @@
     "title": "The Road to Emmaus",
     "theme": "Risen Jesus appears to two",
     "difficulty": "hard",
-    "verse": "And their eyes were opened, and they knew him; and he vanished out of their sight.",
+    "verse": "Then their eyes were opened and they recognized Jesus—and He disappeared from their sight.",
     "reference": "Luke 24:31",
     "words": [
       {
@@ -5803,7 +5803,7 @@
     "title": "The Ascension",
     "theme": "Jesus taken up into heaven",
     "difficulty": "medium",
-    "verse": "And while they looked stedfastly toward heaven as he went up, behold, two men stood by them in white apparel;",
+    "verse": "They were looking intently into the sky as He was going, when suddenly two men dressed in white stood beside them.",
     "reference": "Acts 1:10",
     "words": [
       {
@@ -5860,7 +5860,7 @@
       },
       {
         "answer": "GALILEE",
-        "clue": "'Ye men of ___,' said the two in white"
+        "clue": "'Men of ___,' said the two in white"
       },
       {
         "answer": "EARTH",
@@ -5895,7 +5895,7 @@
     "title": "The Day of Pentecost",
     "theme": "The Holy Spirit comes",
     "difficulty": "medium",
-    "verse": "And they were all filled with the Holy Ghost, and began to speak with other tongues, as the Spirit gave them utterance.",
+    "verse": "And they were all filled with the Holy Spirit and began to speak in other tongues as the Spirit enabled them.",
     "reference": "Acts 2:4",
     "words": [
       {
@@ -6001,7 +6001,7 @@
     "title": "The Early Church",
     "theme": "The book of Acts, first believers",
     "difficulty": "hard",
-    "verse": "And they continued stedfastly in the apostles' doctrine and fellowship, and in breaking of bread, and in prayers.",
+    "verse": "They devoted themselves to the apostles’ teaching and to the fellowship, to the breaking of bread and to prayer.",
     "reference": "Acts 2:42",
     "words": [
       {
@@ -6111,7 +6111,7 @@
     "title": "Saul on the Damascus Road",
     "theme": "Paul's conversion",
     "difficulty": "medium",
-    "verse": "And he fell to the earth, and heard a voice saying unto him, Saul, Saul, why persecutest thou me?",
+    "verse": "He fell to the ground and heard a voice say to him, “Saul, Saul, why do you persecute Me?”",
     "reference": "Acts 9:4",
     "words": [
       {
@@ -6203,7 +6203,7 @@
     "title": "Paul's Journeys",
     "theme": "The missionary journeys of Paul",
     "difficulty": "hard",
-    "verse": "But ye shall receive power, after that the Holy Ghost is come upon you: and ye shall be witnesses unto me both in Jerusalem, and in all Judaea, and in Samaria, and unto the uttermost part of the earth.",
+    "verse": "But you will receive power when the Holy Spirit comes upon you, and you will be My witnesses in Jerusalem, and in all Judea and Samaria, and to the ends of the earth.",
     "reference": "Acts 1:8",
     "words": [
       {
@@ -6314,7 +6314,7 @@
     "title": "Shipwrecked on Malta",
     "theme": "Paul's voyage and shipwreck",
     "difficulty": "hard",
-    "verse": "Wherefore, sirs, be of good cheer: for I believe God, that it shall be even as it was told me.",
+    "verse": "So take courage, men, for I believe God that it will happen just as He told me.",
     "reference": "Acts 27:25",
     "words": [
       {
@@ -6420,7 +6420,7 @@
     "title": "The Fruit of the Spirit",
     "theme": "Galatians 5 love joy peace",
     "difficulty": "medium",
-    "verse": "But the fruit of the Spirit is love, joy, peace, longsuffering, gentleness, goodness, faith,",
+    "verse": "But the fruit of the Spirit is love, joy, peace, patience, kindness, goodness, faithfulness,",
     "reference": "Galatians 5:22",
     "words": [
       {
@@ -6520,7 +6520,7 @@
     "title": "The Armour of God",
     "theme": "Ephesians 6 spiritual armour",
     "difficulty": "medium",
-    "verse": "Put on the whole armour of God, that ye may be able to stand against the wiles of the devil.",
+    "verse": "Put on the full armor of God, so that you can make your stand against the devil’s schemes.",
     "reference": "Ephesians 6:11",
     "keep": true,
     "issues": "SPIRIT clue contained answer word; reworded. Verse and all facts verified correct.",
@@ -6608,7 +6608,7 @@
     "title": "Faith, Hope, and Love",
     "theme": "1 Corinthians 13",
     "difficulty": "easy",
-    "verse": "And now abideth faith, hope, charity, these three; but the greatest of these is charity.",
+    "verse": "And now these three remain: faith, hope, and love; but the greatest of these is love.",
     "reference": "1 Corinthians 13:13",
     "keep": true,
     "issues": "Verse and facts verified correct KJV. No answers in clues; all valid.",
@@ -6696,7 +6696,7 @@
     "title": "The Names of God",
     "theme": "Titles and names for God",
     "difficulty": "hard",
-    "verse": "And God said unto Moses, I AM THAT I AM: and he said, Thus shalt thou say unto the children of Israel, I AM hath sent me unto you.",
+    "verse": "God said to Moses, “I AM WHO I AM. This is what you are to say to the Israelites: ‘I AM has sent me to you.’”",
     "reference": "Exodus 3:14",
     "keep": true,
     "issues": "Verse verified correct KJV. All names/titles accurate; no answers in clues.",
@@ -6796,7 +6796,7 @@
     "title": "Angels of the Bible",
     "theme": "Gabriel, Michael, and the heavenly host",
     "difficulty": "medium",
-    "verse": "For he shall give his angels charge over thee, to keep thee in all thy ways.",
+    "verse": "For He will command His angels concerning you to guard you in all your ways.",
     "reference": "Psalm 91:11",
     "keep": true,
     "issues": "Verse verified correct KJV. Replaced WINGED (weak/redundant with WINGS) with FEATHERS and reworded STAR clue. Facts verified.",
@@ -6884,7 +6884,7 @@
     "title": "Women of the Bible",
     "theme": "Sarah, Mary, Esther, Deborah, and more",
     "difficulty": "medium",
-    "verse": "Strength and honour are her clothing; and she shall rejoice in time to come.",
+    "verse": "Strength and honor are her clothing, and she can laugh at the days to come.",
     "reference": "Proverbs 31:25",
     "keep": true,
     "issues": "Verse verified correct KJV. All women and facts accurate; no answers in clues.",
@@ -6996,7 +6996,7 @@
     "title": "Kings of Israel and Judah",
     "theme": "The kings after David",
     "difficulty": "hard",
-    "verse": "And Solomon sat upon the throne of David his father; and his kingdom was established greatly.",
+    "verse": "So Solomon sat on the throne of his father David, and his kingdom was firmly established.",
     "reference": "1 Kings 2:12",
     "keep": true,
     "issues": "Verse verified correct KJV. All kings and facts accurate; no answers in clues.",
@@ -7108,7 +7108,7 @@
     "title": "Books of the Old Testament",
     "theme": "Genesis to Malachi",
     "difficulty": "hard",
-    "verse": "In the beginning God created the heaven and the earth.",
+    "verse": "In the beginning God created the heavens and the earth.",
     "reference": "Genesis 1:1",
     "words": [
       {
@@ -7220,7 +7220,7 @@
     "title": "Books of the New Testament",
     "theme": "Matthew to Revelation",
     "difficulty": "hard",
-    "verse": "For God so loved the world, that he gave his only begotten Son.",
+    "verse": "For God so loved the world that He gave His one and only Son, that everyone who believes in Him shall not perish but have eternal life.",
     "reference": "John 3:16",
     "words": [
       {
@@ -7322,7 +7322,7 @@
     "title": "Animals of the Bible",
     "theme": "Lambs, lions, doves, serpents",
     "difficulty": "easy",
-    "verse": "The wolf also shall dwell with the lamb, and the leopard shall lie down with the kid.",
+    "verse": "The wolf will live with the lamb, and the leopard will lie down with the goat",
     "reference": "Isaiah 11:6",
     "words": [
       {
@@ -7429,7 +7429,7 @@
     "title": "Places in the Holy Land",
     "theme": "Bethlehem, Nazareth, Jericho, Galilee",
     "difficulty": "medium",
-    "verse": "But thou, Bethlehem Ephratah, though thou be little among the thousands of Judah, yet out of thee shall he come forth unto me that is to be ruler in Israel.",
+    "verse": "But you, Bethlehem Ephrathah, who are small among the clans of Judah, out of you will come forth for Me One to be ruler over Israel—One whose origins are of old, from the days of eternity.",
     "reference": "Micah 5:2",
     "words": [
       {
@@ -7521,7 +7521,7 @@
     "title": "Feasts and Festivals",
     "theme": "Passover, Pentecost, Tabernacles",
     "difficulty": "hard",
-    "verse": "And when the day of Pentecost was fully come, they were all with one accord in one place.",
+    "verse": "When the day of Pentecost came, they were all together in one place.",
     "reference": "Acts 2:1",
     "words": [
       {
@@ -7630,7 +7630,7 @@
     "title": "Parables of the Kingdom",
     "theme": "Mustard seed, pearl, treasure",
     "difficulty": "medium",
-    "verse": "Again, the kingdom of heaven is like unto treasure hid in a field; the which when a man hath found, he hideth, and for joy thereof goeth and selleth all that he hath, and buyeth that field.",
+    "verse": "The kingdom of heaven is like treasure hidden in a field. When a man found it, he hid it again, and in his joy he went and sold all he had and bought that field.",
     "reference": "Matthew 13:44",
     "words": [
       {
@@ -7722,7 +7722,7 @@
     "title": "The Book of Revelation",
     "theme": "John's apocalypse and new Jerusalem",
     "difficulty": "hard",
-    "verse": "I am Alpha and Omega, the beginning and the ending, saith the Lord, which is, and which was, and which is to come, the Almighty.",
+    "verse": "“I am the Alpha and the Omega,” says the Lord God, who is and was and is to come—the Almighty.",
     "reference": "Revelation 1:8",
     "words": [
       {
@@ -7797,7 +7797,7 @@
       },
       {
         "answer": "CROWN",
-        "clue": "Reward promised to the faithful unto death",
+        "clue": "Reward promised to those faithful to the point of death",
         "reference": "Revelation 2:10"
       },
       {
@@ -7833,7 +7833,7 @@
     "title": "Fruits of Faith",
     "theme": "Christian virtues and discipleship",
     "difficulty": "easy",
-    "verse": "But the fruit of the Spirit is love, joy, peace, longsuffering, gentleness, goodness, faith,",
+    "verse": "But the fruit of the Spirit is love, joy, peace, patience, kindness, goodness, faithfulness,",
     "reference": "Galatians 5:22",
     "words": [
       {
@@ -7925,7 +7925,7 @@
     "title": "Praise and Worship",
     "theme": "Worship, hymns, and thanksgiving",
     "difficulty": "easy",
-    "verse": "O come, let us sing unto the LORD: let us make a joyful noise to the rock of our salvation.",
+    "verse": "Come, let us sing for joy to the LORD; let us shout to the Rock of our salvation!",
     "reference": "Psalm 95:1",
     "words": [
       {
@@ -8017,7 +8017,7 @@
     "title": "Promises of God",
     "theme": "God's covenant promises",
     "difficulty": "medium",
-    "verse": "For all the promises of God in him are yea, and in him Amen, unto the glory of God by us.",
+    "verse": "For all the promises of God are “Yes” in Christ. And so through Him, our “Amen” is spoken to the glory of God.",
     "reference": "2 Corinthians 1:20",
     "words": [
       {
@@ -8110,7 +8110,7 @@
     "title": "Noah and the Flood",
     "theme": "Noah's ark (Genesis 6-9)",
     "difficulty": "easy",
-    "verse": "And the rain was upon the earth forty days and forty nights.",
+    "verse": "And the rain fell upon the earth for forty days and forty nights.",
     "reference": "Genesis 7:12",
     "words": [
       {
@@ -8161,7 +8161,7 @@
     "title": "In the Garden",
     "theme": "The Garden of Eden (Genesis 2-3)",
     "difficulty": "easy",
-    "verse": "And the LORD God planted a garden eastward in Eden; and there he put the man whom he had formed.",
+    "verse": "And the LORD God planted a garden in Eden, in the east, where He placed the man He had formed.",
     "reference": "Genesis 2:8",
     "words": [
       {
@@ -8208,7 +8208,7 @@
     "title": "The Shepherd and the Giant",
     "theme": "David and Goliath (1 Samuel 17)",
     "difficulty": "easy",
-    "verse": "So David prevailed over the Philistine with a sling and with a stone.",
+    "verse": "Thus David prevailed over the Philistine with a sling and a stone; without a sword in his hand he struck down the Philistine and killed him.",
     "reference": "1 Samuel 17:50",
     "words": [
       {
@@ -8267,7 +8267,7 @@
     "title": "Born in Bethlehem",
     "theme": "The Nativity (Luke 2, Matthew 2)",
     "difficulty": "easy",
-    "verse": "For unto you is born this day in the city of David a Saviour, which is Christ the Lord.",
+    "verse": "Today in the city of David a Savior has been born to you. He is Christ the Lord!",
     "reference": "Luke 2:11",
     "words": [
       {
@@ -8318,7 +8318,7 @@
     "title": "Out of Egypt",
     "theme": "Moses and the Exodus",
     "difficulty": "easy",
-    "verse": "Come now therefore, and I will send thee unto Pharaoh, that thou mayest bring forth my people the children of Israel out of Egypt.",
+    "verse": "Therefore, go! I am sending you to Pharaoh to bring My people the Israelites out of Egypt.",
     "reference": "Exodus 3:10",
     "words": [
       {
@@ -8369,7 +8369,7 @@
     "title": "Swallowed by the Sea",
     "theme": "Jonah and the great fish",
     "difficulty": "easy",
-    "verse": "Now the LORD had prepared a great fish to swallow up Jonah. And Jonah was in the belly of the fish three days and three nights.",
+    "verse": "Now the LORD had appointed a great fish to swallow Jonah, and Jonah spent three days and three nights in the belly of the fish.",
     "reference": "Jonah 1:17",
     "words": [
       {
@@ -8416,7 +8416,7 @@
     "title": "In the Lions' Den",
     "theme": "Daniel in Babylon",
     "difficulty": "easy",
-    "verse": "My God hath sent his angel, and hath shut the lions' mouths, that they have not hurt me.",
+    "verse": "My God sent His angel and shut the mouths of the lions. They have not hurt me, for I was found innocent in His sight, and I have done no wrong against you, O king.",
     "reference": "Daniel 6:22",
     "words": [
       {
@@ -8463,7 +8463,7 @@
     "title": "The Shepherd's Psalm",
     "theme": "Psalm 23",
     "difficulty": "easy",
-    "verse": "The LORD is my shepherd; I shall not want.",
+    "verse": "A Psalm of David. The LORD is my shepherd; I shall not want.",
     "reference": "Psalm 23:1",
     "words": [
       {
@@ -8488,7 +8488,7 @@
       },
       {
         "answer": "OIL",
-        "clue": "Thou anointest my head with it"
+        "clue": "You anoint my head with it"
       },
       {
         "answer": "PATH",
@@ -8514,7 +8514,7 @@
     "title": "Fruit of the Spirit",
     "theme": "Galatians 5:22-23",
     "difficulty": "easy",
-    "verse": "But the fruit of the Spirit is love, joy, peace, longsuffering, gentleness, goodness, faith.",
+    "verse": "But the fruit of the Spirit is love, joy, peace, patience, kindness, goodness, faithfulness,",
     "reference": "Galatians 5:22",
     "words": [
       {
@@ -8523,7 +8523,7 @@
       },
       {
         "answer": "JOY",
-        "clue": "Second fruit \u2014 of the LORD, it is your strength"
+        "clue": "Second fruit — of the LORD, it is your strength"
       },
       {
         "answer": "PEACE",
@@ -8539,7 +8539,7 @@
       },
       {
         "answer": "FRUIT",
-        "clue": "By theirs ye shall know them"
+        "clue": "By theirs you will know them"
       },
       {
         "answer": "GENTLE",
@@ -8559,11 +8559,11 @@
       },
       {
         "answer": "HOPE",
-        "clue": "It abideth, with faith and charity"
+        "clue": "It remains, with faith and love"
       },
       {
         "answer": "REST",
-        "clue": "Come unto me, and I will give you this"
+        "clue": "Come to me, and I will give you this"
       }
     ]
   },
@@ -8573,7 +8573,7 @@
     "title": "The Twelve",
     "theme": "The apostles of Jesus",
     "difficulty": "easy",
-    "verse": "And he ordained twelve, that they should be with him, and that he might send them forth to preach.",
+    "verse": "He appointed twelve of them, whom He designated as apostles, to accompany Him, to be sent out to preach,",
     "reference": "Mark 3:14",
     "words": [
       {
@@ -8594,7 +8594,7 @@
       },
       {
         "answer": "SIMON",
-        "clue": "Called the Zealot \u2014 or Peter's given name"
+        "clue": "Called the Zealot — or Peter's given name"
       },
       {
         "answer": "ANDREW",
@@ -8620,7 +8620,7 @@
     "title": "Signs and Wonders",
     "theme": "Miracles of Jesus",
     "difficulty": "easy",
-    "verse": "This beginning of miracles did Jesus in Cana of Galilee, and manifested forth his glory.",
+    "verse": "Jesus performed this, the first of His signs, at Cana in Galilee. He thus revealed His glory, and His disciples believed in Him.",
     "reference": "John 2:11",
     "words": [
       {
@@ -8667,7 +8667,7 @@
     "title": "He Is Risen",
     "theme": "The crucifixion and resurrection",
     "difficulty": "easy",
-    "verse": "He is not here: for he is risen, as he said. Come, see the place where the Lord lay.",
+    "verse": "He is not here; He has risen, just as He said! Come, see the place where He lay.",
     "reference": "Matthew 28:6",
     "words": [
       {
@@ -8714,7 +8714,7 @@
     "title": "Whither Thou Goest",
     "theme": "The book of Ruth",
     "difficulty": "easy",
-    "verse": "Whither thou goest, I will go; and where thou lodgest, I will lodge: thy people shall be my people, and thy God my God.",
+    "verse": "For wherever you go, I will go, and wherever you live, I will live; your people will be my people, and your God will be my God.",
     "reference": "Ruth 1:16",
     "words": [
       {
@@ -8761,12 +8761,12 @@
     "title": "For Such a Time",
     "theme": "The book of Esther",
     "difficulty": "easy",
-    "verse": "And who knoweth whether thou art come to the kingdom for such a time as this?",
+    "verse": "And who knows if perhaps you have come to the kingdom for such a time as this?",
     "reference": "Esther 4:14",
     "words": [
       {
         "answer": "ESTHER",
-        "clue": "The queen who went in unto the king unbidden"
+        "clue": "The queen who approached the king uninvited"
       },
       {
         "answer": "QUEEN",
@@ -8808,7 +8808,7 @@
     "title": "Heavenly Host",
     "theme": "Angels in scripture",
     "difficulty": "easy",
-    "verse": "And suddenly there was with the angel a multitude of the heavenly host praising God.",
+    "verse": "And suddenly there appeared with the angel a great multitude of the heavenly host, praising God and saying:",
     "reference": "Luke 2:13",
     "words": [
       {
@@ -8855,12 +8855,12 @@
     "title": "Ask, Seek, Knock",
     "theme": "Prayer",
     "difficulty": "easy",
-    "verse": "Ask, and it shall be given you; seek, and ye shall find; knock, and it shall be opened unto you.",
+    "verse": "Ask, and it will be given to you; seek, and you will find; knock, and the door will be opened to you.",
     "reference": "Matthew 7:7",
     "words": [
       {
         "answer": "AMEN",
-        "clue": "So be it \u2014 the word that seals a prayer",
+        "clue": "So be it — the word that seals a prayer",
         "reference": "1 Corinthians 14:16"
       },
       {
@@ -8880,7 +8880,7 @@
       },
       {
         "answer": "SEEK",
-        "clue": "Do it, and ye shall find",
+        "clue": "Do it, and you will find",
         "reference": "Matthew 7:7"
       },
       {
@@ -8890,7 +8890,7 @@
       },
       {
         "answer": "ALTAR",
-        "clue": "Leave thy gift there and be reconciled first",
+        "clue": "Leave your gift there and be reconciled first",
         "reference": "Matthew 5:24"
       },
       {
@@ -8911,7 +8911,7 @@
     "title": "Written in Stone",
     "theme": "The Ten Commandments",
     "difficulty": "easy",
-    "verse": "Thou shalt have no other gods before me.",
+    "verse": "You shall have no other gods before Me.",
     "reference": "Exodus 20:3",
     "words": [
       {
@@ -8936,7 +8936,7 @@
       },
       {
         "answer": "COVET",
-        "clue": "Thou shalt not do this to thy neighbour's house"
+        "clue": "You shall not do this to your neighbor's house"
       },
       {
         "answer": "IDOL",
@@ -8958,7 +8958,7 @@
     "title": "Thrones of Israel",
     "theme": "Kings of Israel and Judah",
     "difficulty": "easy",
-    "verse": "Give therefore thy servant an understanding heart to judge thy people, that I may discern between good and bad.",
+    "verse": "Therefore give Your servant an understanding heart to judge Your people and to discern between good and evil. For who is able to govern this great people of Yours?",
     "reference": "1 Kings 3:9",
     "words": [
       {
@@ -9005,7 +9005,7 @@
     "title": "House of the LORD",
     "theme": "The temple and its worship",
     "difficulty": "easy",
-    "verse": "I was glad when they said unto me, Let us go into the house of the LORD.",
+    "verse": "A song of ascents. Of David. I was glad when they said to me, “Let us go to the house of the LORD.”",
     "reference": "Psalm 122:1",
     "words": [
       {
@@ -9042,7 +9042,7 @@
       },
       {
         "answer": "COURT",
-        "clue": "A day in thine is better than a thousand"
+        "clue": "One day in God's is better than a thousand elsewhere"
       }
     ]
   },
@@ -9052,7 +9052,7 @@
     "title": "He Spake in Parables",
     "theme": "The parables of Jesus",
     "difficulty": "easy",
-    "verse": "And he spake many things unto them in parables, saying, Behold, a sower went forth to sow.",
+    "verse": "And He told them many things in parables, saying, “A farmer went out to sow his seed.”",
     "reference": "Matthew 13:3",
     "words": [
       {
@@ -9081,7 +9081,7 @@
       },
       {
         "answer": "VINE",
-        "clue": "I am the true one, ye are the branches"
+        "clue": "I am the true one, you are the branches"
       },
       {
         "answer": "TALENT",
@@ -9099,7 +9099,7 @@
     "title": "A Chosen Vessel",
     "theme": "Paul's life and journeys",
     "difficulty": "easy",
-    "verse": "Go thy way: for he is a chosen vessel unto me, to bear my name before the Gentiles, and kings, and the children of Israel.",
+    "verse": "Go!” said the Lord. “This man is My chosen instrument to carry My name before the Gentiles and their kings, and before the people of Israel.",
     "reference": "Acts 9:15",
     "words": [
       {
@@ -9109,7 +9109,7 @@
       },
       {
         "answer": "ROME",
-        "clue": "The city where he appealed unto Caesar",
+        "clue": "The city where he appealed to Caesar",
         "reference": "Acts 25:11"
       },
       {
@@ -9144,7 +9144,7 @@
       },
       {
         "answer": "GRACE",
-        "clue": "My ___ is sufficient for thee",
+        "clue": "My ___ is sufficient for you",
         "reference": "2 Corinthians 12:9"
       }
     ]
@@ -9155,7 +9155,7 @@
     "title": "The Whole Armour",
     "theme": "The armour of God (Ephesians 6)",
     "difficulty": "easy",
-    "verse": "Put on the whole armour of God, that ye may be able to stand against the wiles of the devil.",
+    "verse": "Put on the full armor of God, so that you can make your stand against the devil’s schemes.",
     "reference": "Ephesians 6:11",
     "words": [
       {
@@ -9196,7 +9196,7 @@
       },
       {
         "answer": "GOSPEL",
-        "clue": "Of peace \u2014 let your feet be shod with it"
+        "clue": "Of peace — let your feet be shod with it"
       },
       {
         "answer": "FEET",
@@ -9218,7 +9218,7 @@
     "title": "Living Waters",
     "theme": "Rivers and seas of scripture",
     "difficulty": "easy",
-    "verse": "But let judgment run down as waters, and righteousness as a mighty stream.",
+    "verse": "But let justice roll on like a river, and righteousness like an ever-flowing stream.",
     "reference": "Amos 5:24",
     "words": [
       {
@@ -9265,7 +9265,7 @@
     "title": "Daily Bread",
     "theme": "Food in the Bible",
     "difficulty": "easy",
-    "verse": "Man did eat angels' food: he sent them meat to the full.",
+    "verse": "Man ate the bread of angels; He sent them food in abundance.",
     "reference": "Psalm 78:25",
     "words": [
       {
@@ -9278,7 +9278,7 @@
       },
       {
         "answer": "MANNA",
-        "clue": "What is it? \u2014 gathered fresh each morning"
+        "clue": "What is it? — gathered fresh each morning"
       },
       {
         "answer": "FIGS",
@@ -9312,7 +9312,7 @@
     "title": "The Dreamer",
     "theme": "Joseph in Egypt (Genesis 37-47)",
     "difficulty": "easy",
-    "verse": "Now Israel loved Joseph more than all his children, because he was the son of his old age: and he made him a coat of many colours.",
+    "verse": "Now Israel loved Joseph more than his other sons, because Joseph had been born to him in his old age; so he made him a robe of many colors.",
     "reference": "Genesis 37:3",
     "words": [
       {
@@ -9359,7 +9359,7 @@
     "title": "Virtuous Women",
     "theme": "Women of the Bible",
     "difficulty": "easy",
-    "verse": "Who can find a virtuous woman? for her price is far above rubies.",
+    "verse": "A wife of noble character, who can find? She is far more precious than rubies.",
     "reference": "Proverbs 31:10",
     "words": [
       {
@@ -9406,7 +9406,7 @@
     "title": "Blessed Are They",
     "theme": "The Beatitudes (Matthew 5)",
     "difficulty": "easy",
-    "verse": "Blessed are the meek: for they shall inherit the earth.",
+    "verse": "Blessed are the meek, for they will inherit the earth.",
     "reference": "Matthew 5:5",
     "words": [
       {
@@ -9435,7 +9435,7 @@
       },
       {
         "answer": "POOR",
-        "clue": "In spirit \u2014 theirs is the kingdom"
+        "clue": "In spirit — theirs is the kingdom"
       },
       {
         "answer": "HEART",
@@ -9443,7 +9443,7 @@
       },
       {
         "answer": "SALT",
-        "clue": "Ye are this, of the earth"
+        "clue": "You are this, of the earth"
       }
     ]
   },
@@ -9453,7 +9453,7 @@
     "title": "The Patience of Job",
     "theme": "The book of Job",
     "difficulty": "easy",
-    "verse": "The LORD gave, and the LORD hath taken away; blessed be the name of the LORD.",
+    "verse": "saying: “Naked I came from my mother’s womb, and naked I will return. The LORD gave, and the LORD has taken away. Blessed be the name of the LORD.”",
     "reference": "Job 1:21",
     "words": [
       {
@@ -9500,7 +9500,7 @@
     "title": "Alpha and Omega",
     "theme": "The book of Revelation",
     "difficulty": "easy",
-    "verse": "I am Alpha and Omega, the beginning and the ending, saith the Lord.",
+    "verse": "“I am the Alpha and the Omega,” says the Lord God, who is and was and is to come—the Almighty.",
     "reference": "Revelation 1:8",
     "words": [
       {
@@ -9547,7 +9547,7 @@
     "title": "The Good Shepherd",
     "theme": "Shepherds and sheep",
     "difficulty": "easy",
-    "verse": "I am the good shepherd: the good shepherd giveth his life for the sheep.",
+    "verse": "I am the good shepherd. The good shepherd lays down His life for the sheep.",
     "reference": "John 10:11",
     "words": [
       {
@@ -9576,7 +9576,7 @@
       },
       {
         "answer": "GATE",
-        "clue": "The door of the sheep \u2014 enter by it"
+        "clue": "The door of the sheep — enter by it"
       },
       {
         "answer": "SHEEP",
@@ -9592,9 +9592,9 @@
     "id": "pack-psalm-23-001",
     "pack": "psalm-23",
     "title": "The Shepherd's Care",
-    "theme": "Psalm 23:1 \u2014 The LORD is my shepherd",
+    "theme": "Psalm 23:1 — The LORD is my shepherd",
     "difficulty": "easy",
-    "verse": "The LORD is my shepherd; I shall not want.",
+    "verse": "A Psalm of David. The LORD is my shepherd; I shall not want.",
     "reference": "Psalm 23:1",
     "words": [
       {
@@ -9663,9 +9663,9 @@
     "id": "pack-psalm-23-002",
     "pack": "psalm-23",
     "title": "Green Pastures",
-    "theme": "Psalm 23:2 \u2014 still waters and rest",
+    "theme": "Psalm 23:2 — still waters and rest",
     "difficulty": "easy",
-    "verse": "He maketh me to lie down in green pastures: he leadeth me beside the still waters.",
+    "verse": "He makes me lie down in green pastures; He leads me beside quiet waters.",
     "reference": "Psalm 23:2",
     "words": [
       {
@@ -9682,7 +9682,7 @@
       },
       {
         "answer": "STILL",
-        "clue": "How the waters are \u2014 hushed and calm"
+        "clue": "How the waters are — hushed and calm"
       },
       {
         "answer": "REST",
@@ -9718,7 +9718,7 @@
       },
       {
         "answer": "BESIDE",
-        "clue": "Where He leads me \u2014 right ___ the still waters"
+        "clue": "Where He leads me — right ___ the still waters"
       },
       {
         "answer": "DRINK",
@@ -9726,7 +9726,7 @@
       },
       {
         "answer": "LIE",
-        "clue": "'He maketh me to ___ down in green pastures'"
+        "clue": "'He makes me ___ down in green pastures'"
       }
     ]
   },
@@ -9734,9 +9734,9 @@
     "id": "pack-psalm-23-003",
     "pack": "psalm-23",
     "title": "He Restoreth My Soul",
-    "theme": "Psalm 23:3 \u2014 paths of righteousness",
+    "theme": "Psalm 23:3 — paths of righteousness",
     "difficulty": "medium",
-    "verse": "He restoreth my soul: he leadeth me in the paths of righteousness for his name's sake.",
+    "verse": "He restores my soul; He guides me in the paths of righteousness for the sake of His name.",
     "reference": "Psalm 23:3",
     "words": [
       {
@@ -9749,7 +9749,7 @@
       },
       {
         "answer": "PATHS",
-        "clue": "Of righteousness \u2014 the ways He leads me in"
+        "clue": "Of righteousness — the ways He leads me in"
       },
       {
         "answer": "NAME",
@@ -9765,7 +9765,7 @@
       },
       {
         "answer": "RIGHTEOUS",
-        "clue": "Upright before God \u2014 the kind of paths He chooses"
+        "clue": "Upright before God — the kind of paths He chooses"
       },
       {
         "answer": "WALK",
@@ -9805,9 +9805,9 @@
     "id": "pack-psalm-23-004",
     "pack": "psalm-23",
     "title": "Through the Valley",
-    "theme": "Psalm 23:4 \u2014 fear no evil",
+    "theme": "Psalm 23:4 — fear no evil",
     "difficulty": "medium",
-    "verse": "Yea, though I walk through the valley of the shadow of death, I will fear no evil: for thou art with me; thy rod and thy staff they comfort me.",
+    "verse": "Even though I walk through the valley of the shadow of death, I will fear no evil, for You are with me; Your rod and Your staff, they comfort me.",
     "reference": "Psalm 23:4",
     "words": [
       {
@@ -9816,7 +9816,7 @@
       },
       {
         "answer": "SHADOW",
-        "clue": "Of death \u2014 what darkens the valley"
+        "clue": "Of death — what darkens the valley"
       },
       {
         "answer": "DEATH",
@@ -9828,7 +9828,7 @@
       },
       {
         "answer": "EVIL",
-        "clue": "I will fear none of it, for Thou art with me"
+        "clue": "I will fear none of it, for You are with me"
       },
       {
         "answer": "ROD",
@@ -9844,15 +9844,15 @@
       },
       {
         "answer": "WALK",
-        "clue": "'Yea, though I ___ through the valley'"
+        "clue": "'Even though I ___ through the valley'"
       },
       {
         "answer": "PRESENCE",
-        "clue": "'Thou art with me' \u2014 His nearness in the dark"
+        "clue": "'You are with me' — His nearness in the dark"
       },
       {
         "answer": "THOU",
-        "clue": "'For ___ art with me'"
+        "clue": "KJV word for 'You' in 'for ___ art with me'"
       },
       {
         "answer": "DARKNESS",
@@ -9860,7 +9860,7 @@
       },
       {
         "answer": "COURAGE",
-        "clue": "What 'Thou art with me' gives in the valley"
+        "clue": "What 'You are with me' gives in the valley"
       },
       {
         "answer": "PROTECT",
@@ -9876,9 +9876,9 @@
     "id": "pack-psalm-23-005",
     "pack": "psalm-23",
     "title": "Goodness and Mercy",
-    "theme": "Psalm 23:5-6 \u2014 a table before me",
+    "theme": "Psalm 23:5-6 — a table before me",
     "difficulty": "hard",
-    "verse": "Surely goodness and mercy shall follow me all the days of my life: and I will dwell in the house of the LORD for ever.",
+    "verse": "Surely goodness and mercy will follow me all the days of my life, and I will dwell in the house of the LORD forever.",
     "reference": "Psalm 23:6",
     "words": [
       {
@@ -9895,7 +9895,7 @@
       },
       {
         "answer": "OIL",
-        "clue": "What Thou anointest my head with"
+        "clue": "What You anoint my head with"
       },
       {
         "answer": "CUP",
@@ -9923,7 +9923,7 @@
       },
       {
         "answer": "HOUSE",
-        "clue": "Of the LORD \u2014 my home for ever"
+        "clue": "Of the LORD — my home for ever"
       },
       {
         "answer": "FOREVER",
@@ -9939,7 +9939,7 @@
       },
       {
         "answer": "RUNNETH",
-        "clue": "What my cup does \u2014 over"
+        "clue": "What my cup does — over"
       },
       {
         "answer": "DAYS",
@@ -9957,7 +9957,7 @@
     "title": "Seven Days Around Jericho",
     "theme": "The fall of Jericho (Joshua 6)",
     "difficulty": "easy",
-    "verse": "The wall fell down flat, so that the people went up into the city.",
+    "verse": "the people gave a great shout, and the wall collapsed. Then all the people charged straight into the city",
     "reference": "Joshua 6:20",
     "words": [
       {
@@ -10017,7 +10017,7 @@
     "title": "Crossing the Jordan",
     "theme": "Israel enters the promised land (Joshua 3-4)",
     "difficulty": "easy",
-    "verse": "The priests that bare the ark of the covenant of the LORD stood firm on dry ground in the midst of Jordan.",
+    "verse": "The priests carrying the ark of the covenant of the LORD stood firm on dry ground in the middle of the Jordan",
     "reference": "Joshua 3:17",
     "words": [
       {
@@ -10084,7 +10084,7 @@
     "title": "Cain and Abel",
     "theme": "The first brothers (Genesis 4)",
     "difficulty": "easy",
-    "verse": "Am I my brother's keeper?",
+    "verse": "Am I my brother’s keeper?",
     "reference": "Genesis 4:9",
     "words": [
       {
@@ -10135,7 +10135,7 @@
     "title": "Confusion of Tongues",
     "theme": "Confusion of tongues (Genesis 11)",
     "difficulty": "easy",
-    "verse": "Therefore is the name of it called Babel; because the LORD did there confound the language of all the earth.",
+    "verse": "That is why it is called Babel, for there the LORD confused the language of the whole world, and from that place the LORD scattered them over the face of all the earth.",
     "reference": "Genesis 11:9",
     "words": [
       {
@@ -10186,7 +10186,7 @@
     "title": "The Call of Abram",
     "theme": "Abram leaves Haran (Genesis 12)",
     "difficulty": "easy",
-    "verse": "Get thee out of thy country, and from thy kindred, and from thy father's house, unto a land that I will shew thee.",
+    "verse": "Then the LORD said to Abram, “Leave your country, your kindred, and your father’s household, and go to the land I will show you.”",
     "reference": "Genesis 12:1",
     "words": [
       {
@@ -10206,7 +10206,7 @@
       },
       {
         "answer": "ALTAR",
-        "clue": "What he built unto the LORD",
+        "clue": "What he built to the LORD",
         "reference": "Genesis 12:7"
       },
       {
@@ -10246,7 +10246,7 @@
     "title": "Lot and the Cities of the Plain",
     "theme": "Sodom destroyed (Genesis 19)",
     "difficulty": "easy",
-    "verse": "But his wife looked back from behind him, and she became a pillar of salt.",
+    "verse": "But Lot’s wife looked back, and she became a pillar of salt.",
     "reference": "Genesis 19:26",
     "words": [
       {
@@ -10307,7 +10307,7 @@
     "title": "A Bride for Isaac",
     "theme": "Rebekah at the well (Genesis 24)",
     "difficulty": "easy",
-    "verse": "And Isaac brought her into his mother Sarah's tent, and took Rebekah, and she became his wife; and he loved her.",
+    "verse": "And Isaac brought her into the tent of his mother Sarah and took Rebekah as his wife. And Isaac loved her and was comforted after his mother’s death.",
     "reference": "Genesis 24:67",
     "words": [
       {
@@ -10358,7 +10358,7 @@
     "title": "The Dream at Bethel",
     "theme": "The dream at Bethel (Genesis 28)",
     "difficulty": "easy",
-    "verse": "And he dreamed, and behold a ladder set up on the earth, and the top of it reached to heaven.",
+    "verse": "And Jacob had a dream about a ladder that rested on the earth with its top reaching up to heaven, and God’s angels were going up and down the ladder.",
     "reference": "Genesis 28:12",
     "words": [
       {
@@ -10419,7 +10419,7 @@
     "title": "Wrestling at Peniel",
     "theme": "Jacob becomes Israel (Genesis 32)",
     "difficulty": "easy",
-    "verse": "Thy name shall be called no more Jacob, but Israel: for as a prince hast thou power with God and with men, and hast prevailed.",
+    "verse": "Then the man said, “Your name will no longer be Jacob, but Israel, because you have struggled with God and with men, and you have prevailed.”",
     "reference": "Genesis 32:28",
     "words": [
       {
@@ -10479,7 +10479,7 @@
     "title": "Joseph in Egypt",
     "theme": "From prison to palace (Genesis 41)",
     "difficulty": "easy",
-    "verse": "See, I have set thee over all the land of Egypt.",
+    "verse": "Pharaoh also told Joseph, “I hereby place you over all the land of Egypt.”",
     "reference": "Genesis 41:41",
     "words": [
       {
@@ -10539,7 +10539,7 @@
     "title": "The Passover",
     "theme": "The night of deliverance (Exodus 12)",
     "difficulty": "easy",
-    "verse": "And when I see the blood, I will pass over you.",
+    "verse": "when I see the blood, I will pass over you",
     "reference": "Exodus 12:13",
     "words": [
       {
@@ -10599,7 +10599,7 @@
     "title": "The Plagues of Egypt",
     "theme": "Signs against Pharaoh (Exodus 7-12)",
     "difficulty": "easy",
-    "verse": "I will smite all thy borders with frogs.",
+    "verse": "But if you refuse to let them go, I will plague your whole country with frogs.",
     "reference": "Exodus 8:2",
     "words": [
       {
@@ -10658,7 +10658,7 @@
     "title": "Through the Red Sea",
     "theme": "The waters divided (Exodus 14)",
     "difficulty": "easy",
-    "verse": "And the LORD caused the sea to go back by a strong east wind all that night, and made the sea dry land, and the waters were divided.",
+    "verse": "Then Moses stretched out his hand over the sea, and all that night the LORD drove back the sea with a strong east wind that turned it into dry land. So the waters were divided,",
     "reference": "Exodus 14:21",
     "words": [
       {
@@ -10717,7 +10717,7 @@
     "title": "Bread from Heaven",
     "theme": "Manna in the wilderness (Exodus 16)",
     "difficulty": "easy",
-    "verse": "This is the bread which the LORD hath given you to eat.",
+    "verse": "It is the bread that the LORD has given you to eat.",
     "reference": "Exodus 16:15",
     "words": [
       {
@@ -10768,7 +10768,7 @@
     "title": "Water from the Rock",
     "theme": "Thirst at Horeb (Exodus 17)",
     "difficulty": "easy",
-    "verse": "Thou shalt smite the rock, and there shall come water out of it, that the people may drink.",
+    "verse": "when you strike the rock, water will come out of it for the people to drink",
     "reference": "Exodus 17:6",
     "words": [
       {
@@ -10792,7 +10792,7 @@
       },
       {
         "answer": "MOSES",
-        "clue": "He cried unto the LORD for the people",
+        "clue": "He cried out to the LORD for the people",
         "reference": "Exodus 17:4"
       },
       {
@@ -10827,7 +10827,7 @@
     "title": "The Golden Calf",
     "theme": "Israel's idolatry at Sinai (Exodus 32)",
     "difficulty": "easy",
-    "verse": "And he saw the calf, and the dancing: and Moses' anger waxed hot, and he cast the tables out of his hands.",
+    "verse": "As Moses approached the camp and saw the calf and the dancing, he burned with anger and threw the tablets out of his hands, shattering them at the base of the mountain.",
     "reference": "Exodus 32:19",
     "words": [
       {
@@ -10887,7 +10887,7 @@
     "title": "The Tent of Meeting",
     "theme": "The tabernacle filled with glory (Exodus 40)",
     "difficulty": "easy",
-    "verse": "Then a cloud covered the tent of the congregation, and the glory of the LORD filled the tabernacle.",
+    "verse": "Then the cloud covered the Tent of Meeting, and the glory of the LORD filled the tabernacle.",
     "reference": "Exodus 40:34",
     "words": [
       {
@@ -10948,7 +10948,7 @@
     "title": "The Rod That Budded",
     "theme": "Aaron's rod (Numbers 17)",
     "difficulty": "easy",
-    "verse": "The rod of Aaron for the house of Levi was budded, and brought forth buds, and bloomed blossoms, and yielded almonds.",
+    "verse": "The next day Moses entered the Tent of the Testimony and saw that Aaron’s staff, representing the house of Levi, had sprouted, put forth buds, blossomed, and produced almonds.",
     "reference": "Numbers 17:8",
     "words": [
       {
@@ -11007,7 +11007,7 @@
     "title": "The Twelve Spies",
     "theme": "Searching out Canaan (Numbers 13)",
     "difficulty": "easy",
-    "verse": "Let us go up at once, and possess it; for we are well able to overcome it.",
+    "verse": "Then Caleb quieted the people before Moses and said, “We must go up and take possession of the land, for we can certainly conquer it!”",
     "reference": "Numbers 13:30",
     "words": [
       {
@@ -11087,7 +11087,7 @@
     "title": "Balaam's Donkey",
     "theme": "The ass that spoke (Numbers 22)",
     "difficulty": "easy",
-    "verse": "And the LORD opened the mouth of the ass, and she said unto Balaam, What have I done unto thee?",
+    "verse": "Then the LORD opened the donkey’s mouth, and she said to Balaam, “What have I done to you that you have beaten me these three times?”",
     "reference": "Numbers 22:28",
     "words": [
       {
@@ -11138,7 +11138,7 @@
     "title": "Deborah the Judge",
     "theme": "Deborah and Barak (Judges 4-5)",
     "difficulty": "easy",
-    "verse": "And Deborah, a prophetess, the wife of Lapidoth, she judged Israel at that time.",
+    "verse": "Now Deborah, a prophetess, the wife of Lappidoth, was judging Israel at that time.",
     "reference": "Judges 4:4",
     "words": [
       {
@@ -11189,7 +11189,7 @@
     "title": "The Fleece and the Lamps",
     "theme": "The fleece and the lamps (Judges 6-7)",
     "difficulty": "easy",
-    "verse": "The sword of the LORD, and of Gideon.",
+    "verse": "A sword for the LORD and for Gideon!",
     "reference": "Judges 7:20",
     "words": [
       {
@@ -11247,7 +11247,7 @@
     "title": "Samson's Strength",
     "theme": "Samson and Delilah (Judges 13-16)",
     "difficulty": "easy",
-    "verse": "If I be shaven, then my strength will go from me.",
+    "verse": "If I am shaved, my strength will leave me",
     "reference": "Judges 16:17",
     "words": [
       {
@@ -11308,7 +11308,7 @@
     "title": "Hannah's Prayer",
     "theme": "A son asked of the LORD (1 Samuel 1)",
     "difficulty": "easy",
-    "verse": "For this child I prayed; and the LORD hath given me my petition which I asked of him.",
+    "verse": "I prayed for this boy, and since the LORD has granted me what I asked of Him,",
     "reference": "1 Samuel 1:27",
     "words": [
       {
@@ -11368,7 +11368,7 @@
     "title": "Knit in Soul",
     "theme": "David and Jonathan (1 Samuel 18-20)",
     "difficulty": "easy",
-    "verse": "The soul of Jonathan was knit with the soul of David, and Jonathan loved him as his own soul.",
+    "verse": "After David had finished speaking with Saul, the souls of Jonathan and David were knit together, and Jonathan loved him as himself.",
     "reference": "1 Samuel 18:1",
     "words": [
       {
@@ -11427,7 +11427,7 @@
     "title": "The Queen of Sheba",
     "theme": "A royal visit to Solomon (1 Kings 10)",
     "difficulty": "easy",
-    "verse": "And when the queen of Sheba heard of the fame of Solomon, she came to prove him with hard questions.",
+    "verse": "Now when the queen of Sheba heard about the fame of Solomon concerning the name of the LORD, she came to test him with difficult questions.",
     "reference": "1 Kings 10:1",
     "words": [
       {
@@ -11487,7 +11487,7 @@
     "title": "The House of Cedar",
     "theme": "Solomon builds the temple (1 Kings 6-8)",
     "difficulty": "easy",
-    "verse": "The glory of the LORD had filled the house of the LORD.",
+    "verse": "so that the priests could not stand there to minister because of the cloud. For the glory of the LORD filled the house of the LORD.",
     "reference": "1 Kings 8:11",
     "words": [
       {
@@ -11548,7 +11548,7 @@
     "title": "Fire on Mount Carmel",
     "theme": "Elijah and the prophets of Baal (1 Kings 18)",
     "difficulty": "easy",
-    "verse": "Then the fire of the LORD fell, and consumed the burnt sacrifice.",
+    "verse": "Then the fire of the LORD fell and consumed the sacrifice, the wood, the stones, and the dust, and it licked up the water in the trench.",
     "reference": "1 Kings 18:38",
     "words": [
       {
@@ -11599,7 +11599,7 @@
     "title": "A Still Small Voice",
     "theme": "Elijah at Horeb (1 Kings 19)",
     "difficulty": "easy",
-    "verse": "And after the fire a still small voice.",
+    "verse": "After the earthquake there was a fire, but the LORD was not in the fire. And after the fire came a still, small voice.",
     "reference": "1 Kings 19:12",
     "words": [
       {
@@ -11650,7 +11650,7 @@
     "title": "Naaman at the Jordan",
     "theme": "The healing of a Syrian captain (2 Kings 5)",
     "difficulty": "easy",
-    "verse": "And his flesh came again like unto the flesh of a little child, and he was clean.",
+    "verse": "his flesh was restored and became like that of a little child, and he was clean",
     "reference": "2 Kings 5:14",
     "words": [
       {
@@ -11710,7 +11710,7 @@
     "title": "Building the Wall",
     "theme": "Nehemiah rebuilds Jerusalem (Nehemiah 2-6)",
     "difficulty": "easy",
-    "verse": "So the wall was finished in the fifty and second day of the month Elul.",
+    "verse": "So the wall was completed in fifty-two days, on the twenty-fifth of Elul.",
     "reference": "Nehemiah 6:15",
     "words": [
       {
@@ -11761,7 +11761,7 @@
     "title": "The Writing on the Wall",
     "theme": "Belshazzar's feast (Daniel 5)",
     "difficulty": "easy",
-    "verse": "MENE, MENE, TEKEL, UPHARSIN.",
+    "verse": "Now this is the inscription that was written: MENE, MENE, TEKEL, PARSIN.",
     "reference": "Daniel 5:25",
     "words": [
       {
@@ -11822,7 +11822,7 @@
     "title": "The Form of the Fourth",
     "theme": "Three men who would not bow (Daniel 3)",
     "difficulty": "easy",
-    "verse": "And the form of the fourth is like the Son of God.",
+    "verse": "I see four men, unbound and unharmed, walking around in the fire",
     "reference": "Daniel 3:25",
     "words": [
       {
@@ -11881,7 +11881,7 @@
     "title": "The Valley of Dry Bones",
     "theme": "Ezekiel's vision (Ezekiel 37)",
     "difficulty": "easy",
-    "verse": "O ye dry bones, hear the word of the LORD.",
+    "verse": "And He said to me, “Prophesy concerning these bones and tell them, ‘Dry bones, hear the word of the LORD!”",
     "reference": "Ezekiel 37:4",
     "words": [
       {
@@ -11941,7 +11941,7 @@
     "title": "Here Am I; Send Me",
     "theme": "Isaiah's call (Isaiah 6)",
     "difficulty": "easy",
-    "verse": "Here am I; send me.",
+    "verse": "Here am I. Send me!",
     "reference": "Isaiah 6:8",
     "words": [
       {
@@ -12001,7 +12001,7 @@
     "title": "By His Stripes",
     "theme": "The suffering servant (Isaiah 53)",
     "difficulty": "easy",
-    "verse": "But he was wounded for our transgressions, he was bruised for our iniquities: and with his stripes we are healed.",
+    "verse": "But He was pierced for our transgressions, He was crushed for our iniquities; the punishment that brought us peace was upon Him, and by His stripes we are healed.",
     "reference": "Isaiah 53:5",
     "words": [
       {
@@ -12052,7 +12052,7 @@
     "title": "I Will Lift Up Mine Eyes",
     "theme": "A song of degrees (Psalm 121)",
     "difficulty": "easy",
-    "verse": "I will lift up mine eyes unto the hills, from whence cometh my help.",
+    "verse": "A song of ascents. I lift up my eyes to the hills. From where does my help come?",
     "reference": "Psalm 121:1",
     "words": [
       {
@@ -12062,27 +12062,27 @@
       },
       {
         "answer": "HELP",
-        "clue": "It cometh from the LORD",
+        "clue": "It comes from the LORD",
         "reference": "Psalm 121:2"
       },
       {
         "answer": "EYES",
-        "clue": "They are lifted up unto the hills",
+        "clue": "They are lifted up to the hills",
         "reference": "Psalm 121:1"
       },
       {
         "answer": "KEEPER",
-        "clue": "What the LORD is to thee",
+        "clue": "What the LORD is to you",
         "reference": "Psalm 121:5"
       },
       {
         "answer": "SHADE",
-        "clue": "The LORD is this upon thy right hand",
+        "clue": "The LORD is this at your right hand",
         "reference": "Psalm 121:5"
       },
       {
         "answer": "SUN",
-        "clue": "It shall not smite thee by day",
+        "clue": "It will not strike you by day",
         "reference": "Psalm 121:6"
       },
       {
@@ -12092,7 +12092,7 @@
       },
       {
         "answer": "SLEEP",
-        "clue": "He that keepeth thee shall not do it",
+        "clue": "He who watches over you will not do it",
         "reference": "Psalm 121:4"
       },
       {
@@ -12113,7 +12113,7 @@
     "title": "Create in Me a Clean Heart",
     "theme": "A psalm of repentance (Psalm 51)",
     "difficulty": "easy",
-    "verse": "Create in me a clean heart, O God; and renew a right spirit within me.",
+    "verse": "Create in me a clean heart, O God, and renew a right spirit within me.",
     "reference": "Psalm 51:10",
     "words": [
       {
@@ -12146,7 +12146,7 @@
       },
       {
         "answer": "JOY",
-        "clue": "Restore unto me the one of thy salvation"
+        "clue": "Restore to me the one of Your salvation"
       },
       {
         "answer": "BLOT",
@@ -12164,7 +12164,7 @@
     "title": "The Woman at the Well",
     "theme": "Living water in Samaria (John 4)",
     "difficulty": "easy",
-    "verse": "But whosoever drinketh of the water that I shall give him shall never thirst.",
+    "verse": "But whoever drinks the water I give him will never thirst. Indeed, the water I give him will become in him a fount of water springing up to eternal life.",
     "reference": "John 4:14",
     "words": [
       {
@@ -12223,7 +12223,7 @@
     "title": "Nicodemus by Night",
     "theme": "Ye must be born again (John 3)",
     "difficulty": "easy",
-    "verse": "Except a man be born again, he cannot see the kingdom of God.",
+    "verse": "Jesus replied, “Truly, truly, I tell you, no one can see the kingdom of God unless he is born again.”",
     "reference": "John 3:3",
     "words": [
       {
@@ -12283,7 +12283,7 @@
     "title": "The Bread of Life",
     "theme": "Loaves, fishes, and the true bread (John 6)",
     "difficulty": "easy",
-    "verse": "I am the bread of life: he that cometh to me shall never hunger.",
+    "verse": "Jesus answered, “I am the bread of life. Whoever comes to Me will never hunger, and whoever believes in Me will never thirst.”",
     "reference": "John 6:35",
     "words": [
       {
@@ -12298,7 +12298,7 @@
       },
       {
         "answer": "HUNGER",
-        "clue": "He that cometh shall never do it",
+        "clue": "Whoever comes to Him will never do it",
         "reference": "John 6:35"
       },
       {
@@ -12333,7 +12333,7 @@
       },
       {
         "answer": "THIRST",
-        "clue": "He that believeth shall never do it",
+        "clue": "Whoever believes in Him will never do it",
         "reference": "John 6:35"
       }
     ]
@@ -12344,7 +12344,7 @@
     "title": "The Vine and the Branches",
     "theme": "Abide in me (John 15)",
     "difficulty": "easy",
-    "verse": "I am the vine, ye are the branches: He that abideth in me, and I in him, the same bringeth forth much fruit.",
+    "verse": "I am the vine and you are the branches. The one who remains in Me, and I in him, will bear much fruit. For apart from Me you can do nothing.",
     "reference": "John 15:5",
     "words": [
       {
@@ -12378,7 +12378,7 @@
       },
       {
         "answer": "LOVE",
-        "clue": "Continue ye in mine",
+        "clue": "Remain in mine, Jesus said",
         "reference": "John 15:9"
       },
       {
@@ -12404,7 +12404,7 @@
     "title": "Blessed Are They That Have Not Seen",
     "theme": "Thomas and the risen Lord (John 20)",
     "difficulty": "easy",
-    "verse": "Blessed are they that have not seen, and yet have believed.",
+    "verse": "Jesus said to him, “Because you have seen Me, you have believed; blessed are those who have not seen and yet have believed.”",
     "reference": "John 20:29",
     "words": [
       {
@@ -12455,7 +12455,7 @@
     "title": "Zacchaeus in the Tree",
     "theme": "Salvation comes to a house (Luke 19)",
     "difficulty": "easy",
-    "verse": "Zacchaeus, make haste, and come down; for to day I must abide at thy house.",
+    "verse": "When Jesus came to that place, He looked up and said, “Zacchaeus, hurry down, for I must stay at your house today.”",
     "reference": "Luke 19:5",
     "words": [
       {
@@ -12513,7 +12513,7 @@
     "title": "Thy Faith Hath Made Thee Whole",
     "theme": "Blind Bartimaeus (Mark 10)",
     "difficulty": "easy",
-    "verse": "Go thy way; thy faith hath made thee whole.",
+    "verse": "“Go,” said Jesus, “your faith has healed you.” And immediately he received his sight and followed Jesus along the road.",
     "reference": "Mark 10:52",
     "words": [
       {
@@ -12548,7 +12548,7 @@
       },
       {
         "answer": "WAY",
-        "clue": "Go thy ---"
+        "clue": "'Go your ---'"
       },
       {
         "answer": "GARMENT",
@@ -12572,7 +12572,7 @@
     "title": "Where Are the Nine?",
     "theme": "The ten lepers (Luke 17)",
     "difficulty": "easy",
-    "verse": "Were there not ten cleansed? but where are the nine?",
+    "verse": "Were not all ten cleansed?” Jesus asked. “Where then are the other nine?",
     "reference": "Luke 17:17",
     "words": [
       {
@@ -12633,7 +12633,7 @@
     "title": "Mary and Martha",
     "theme": "One thing is needful (Luke 10)",
     "difficulty": "easy",
-    "verse": "But one thing is needful: and Mary hath chosen that good part, which shall not be taken away from her.",
+    "verse": "But only one thing is necessary. Mary has chosen the good portion, and it will not be taken away from her.",
     "reference": "Luke 10:42",
     "words": [
       {
@@ -12691,7 +12691,7 @@
     "title": "The Lost Sheep",
     "theme": "Parables of the lost (Luke 15)",
     "difficulty": "easy",
-    "verse": "What man of you, having an hundred sheep, if he lose one of them, doth not leave the ninety and nine in the wilderness, and go after that which is lost?",
+    "verse": "What man among you, if he has a hundred sheep and loses one of them, does not leave the ninety-nine in the pasture and go after the one that is lost, until he finds it?",
     "reference": "Luke 15:4",
     "words": [
       {
@@ -12752,7 +12752,7 @@
     "title": "The Grain of Mustard Seed",
     "theme": "The kingdom likened (Matthew 13)",
     "difficulty": "easy",
-    "verse": "Which indeed is the least of all seeds: but when it is grown, it is the greatest among herbs, and becometh a tree.",
+    "verse": "Although it is the smallest of all seeds, yet it grows into the largest of garden plants and becomes a tree, so that the birds of the air come and nest in its branches.",
     "reference": "Matthew 13:32",
     "words": [
       {
@@ -12810,7 +12810,7 @@
     "title": "The Wise and Foolish Virgins",
     "theme": "Watching for the bridegroom (Matthew 25)",
     "difficulty": "easy",
-    "verse": "But the wise took oil in their vessels with their lamps.",
+    "verse": "But the wise ones took oil in flasks along with their lamps.",
     "reference": "Matthew 25:4",
     "words": [
       {
@@ -12871,7 +12871,7 @@
     "title": "Good and Faithful Servant",
     "theme": "The parable of the talents (Matthew 25)",
     "difficulty": "easy",
-    "verse": "Well done, thou good and faithful servant.",
+    "verse": "Well done, good and faithful servant!",
     "reference": "Matthew 25:21",
     "words": [
       {
@@ -12900,7 +12900,7 @@
       },
       {
         "answer": "JOY",
-        "clue": "Enter thou into the one of thy lord"
+        "clue": "Enter into the one of your master"
       },
       {
         "answer": "GAIN",
@@ -12922,17 +12922,17 @@
     "title": "Salt and Light",
     "theme": "A city set on a hill (Matthew 5)",
     "difficulty": "easy",
-    "verse": "Ye are the salt of the earth.",
+    "verse": "You are the salt of the earth.",
     "reference": "Matthew 5:13",
     "words": [
       {
         "answer": "SALT",
-        "clue": "Ye are it, of the earth",
+        "clue": "You are it, of the earth",
         "reference": "Matthew 5:13"
       },
       {
         "answer": "LIGHT",
-        "clue": "Ye are it, of the world",
+        "clue": "You are it, of the world",
         "reference": "Matthew 5:14"
       },
       {
@@ -12964,7 +12964,7 @@
       },
       {
         "answer": "EARTH",
-        "clue": "Ye are the salt of it",
+        "clue": "You are the salt of it",
         "reference": "Matthew 5:13"
       },
       {
@@ -12998,7 +12998,7 @@
     "title": "Go Ye Therefore",
     "theme": "The great commission (Matthew 28)",
     "difficulty": "easy",
-    "verse": "Go ye therefore, and teach all nations, baptizing them in the name of the Father, and of the Son, and of the Holy Ghost.",
+    "verse": "Therefore go and make disciples of all nations, baptizing them in the name of the Father and of the Son and of the Holy Spirit,",
     "reference": "Matthew 28:19",
     "words": [
       {
@@ -13031,7 +13031,7 @@
       },
       {
         "answer": "WORLD",
-        "clue": "He is with us unto the end of it"
+        "clue": "He is with us to the end of it"
       },
       {
         "answer": "POWER",
@@ -13039,7 +13039,7 @@
       },
       {
         "answer": "ALWAY",
-        "clue": "Lo, I am with you ---, even unto the end"
+        "clue": "'I am with you ---' (KJV spelling), even to the end"
       }
     ]
   },
@@ -13049,7 +13049,7 @@
     "title": "Stephen the Martyr",
     "theme": "The first witness to die (Acts 6-7)",
     "difficulty": "easy",
-    "verse": "Lord, lay not this sin to their charge.",
+    "verse": "Lord, do not hold this sin against them.",
     "reference": "Acts 7:60",
     "words": [
       {
@@ -13109,7 +13109,7 @@
     "title": "Philip and the Ethiopian",
     "theme": "A chariot on the desert road (Acts 8)",
     "difficulty": "easy",
-    "verse": "See, here is water; what doth hinder me to be baptized?",
+    "verse": "Look, here is water! What is there to prevent me from being baptized?",
     "reference": "Acts 8:36",
     "words": [
       {
@@ -13134,7 +13134,7 @@
       },
       {
         "answer": "WATER",
-        "clue": "They came unto a certain one on the way",
+        "clue": "They came to some along the road, prompting the eunuch's baptism",
         "reference": "Acts 8:36"
       },
       {
@@ -13154,7 +13154,7 @@
       },
       {
         "answer": "ANGEL",
-        "clue": "Of the Lord, he spake unto Philip",
+        "clue": "Of the Lord, he spoke to Philip",
         "reference": "Acts 8:26"
       },
       {
@@ -13169,7 +13169,7 @@
     "title": "Paul and Silas in Prison",
     "theme": "Songs at midnight (Acts 16)",
     "difficulty": "easy",
-    "verse": "And at midnight Paul and Silas prayed, and sang praises unto God.",
+    "verse": "About midnight Paul and Silas were praying and singing hymns to God, and the other prisoners were listening to them.",
     "reference": "Acts 16:25",
     "words": [
       {
@@ -13229,7 +13229,7 @@
     "title": "Escaped All Safe to Land",
     "theme": "Paul's voyage to Rome (Acts 27-28)",
     "difficulty": "easy",
-    "verse": "And so it came to pass, that they escaped all safe to land.",
+    "verse": "The rest were to follow on planks and various parts of the ship. In this way everyone was brought safely to land.",
     "reference": "Acts 27:44",
     "words": [
       {
@@ -13280,7 +13280,7 @@
     "title": "Faith, Hope, and Charity",
     "theme": "The greatest of these (1 Corinthians 13)",
     "difficulty": "easy",
-    "verse": "And now abideth faith, hope, charity, these three; but the greatest of these is charity.",
+    "verse": "And now these three remain: faith, hope, and love; but the greatest of these is love.",
     "reference": "1 Corinthians 13:13",
     "words": [
       {
@@ -13313,7 +13313,7 @@
       },
       {
         "answer": "CHILD",
-        "clue": "When I was one, I spake as one"
+        "clue": "When I was one, I talked like one"
       },
       {
         "answer": "TONGUE",
@@ -13321,7 +13321,7 @@
       },
       {
         "answer": "FAIL",
-        "clue": "Charity never doth it"
+        "clue": "Love never does it"
       }
     ]
   },
@@ -13331,7 +13331,7 @@
     "title": "By Faith",
     "theme": "The cloud of witnesses (Hebrews 11)",
     "difficulty": "easy",
-    "verse": "Now faith is the substance of things hoped for, the evidence of things not seen.",
+    "verse": "Now faith is the assurance of what we hope for and the certainty of what we do not see.",
     "reference": "Hebrews 11:1",
     "words": [
       {
@@ -13382,7 +13382,7 @@
     "title": "The New Jerusalem",
     "theme": "All things made new (Revelation 21)",
     "difficulty": "easy",
-    "verse": "And God shall wipe away all tears from their eyes; and there shall be no more death.",
+    "verse": "‘He will wipe away every tear from their eyes,’ and there will be no more death or mourning or crying or pain, for the former things have passed away.",
     "reference": "Revelation 21:4",
     "words": [
       {
@@ -13441,9 +13441,9 @@
     "id": "pack-easter-001",
     "pack": "easter",
     "title": "Hosanna in the Highest",
-    "theme": "Matthew 21 \u2014 the triumphal entry into Jerusalem",
+    "theme": "Matthew 21 — the triumphal entry into Jerusalem",
     "difficulty": "easy",
-    "verse": "And the multitudes that went before, and that followed, cried, saying, Hosanna to the Son of David: Blessed is he that cometh in the name of the Lord; Hosanna in the highest.",
+    "verse": "The crowds that went ahead of Him and those that followed were shouting: “Hosanna to the Son of David!” “Blessed is He who comes in the name of the Lord!” “Hosanna in the highest!”",
     "reference": "Matthew 21:9",
     "words": [
       {
@@ -13476,7 +13476,7 @@
       },
       {
         "answer": "BLESSED",
-        "clue": "What he is, that cometh in the name of the Lord"
+        "clue": "What he is, who comes in the name of the Lord"
       },
       {
         "answer": "LORD",
@@ -13532,9 +13532,9 @@
     "id": "pack-easter-002",
     "pack": "easter",
     "title": "It Is Finished",
-    "theme": "John 19 \u2014 the cross at Golgotha",
+    "theme": "John 19 — the cross at Golgotha",
     "difficulty": "easy",
-    "verse": "When Jesus therefore had received the vinegar, he said, It is finished: and he bowed his head, and gave up the ghost.",
+    "verse": "When Jesus had received the sour wine, He said, “It is finished.” And bowing His head, He yielded up His spirit.",
     "reference": "John 19:30",
     "words": [
       {
@@ -13623,9 +13623,9 @@
     "id": "pack-easter-003",
     "pack": "easter",
     "title": "The First Day of the Week",
-    "theme": "John 20 \u2014 the first day of the week",
+    "theme": "John 20 — the first day of the week",
     "difficulty": "medium",
-    "verse": "Jesus saith unto her, Mary. She turned herself, and saith unto him, Rabboni; which is to say, Master.",
+    "verse": "Jesus said to her, “Mary.” She turned and said to Him in Hebrew, “Rabboni!” (which means “Teacher”).",
     "reference": "John 20:16",
     "words": [
       {
@@ -13694,7 +13694,7 @@
       },
       {
         "answer": "HANDS",
-        "clue": "These, and His side, He shewed unto the disciples"
+        "clue": "These, and His side, He showed the disciples"
       },
       {
         "answer": "DOORS",
@@ -13714,9 +13714,9 @@
     "id": "pack-easter-004",
     "pack": "easter",
     "title": "The Road to Emmaus",
-    "theme": "Luke 24 \u2014 the road to Emmaus",
+    "theme": "Luke 24 — the road to Emmaus",
     "difficulty": "medium",
-    "verse": "And they said one to another, Did not our heart burn within us, while he talked with us by the way, and while he opened to us the scriptures?",
+    "verse": "They asked each other, “Were not our hearts burning within us as He spoke with us on the road and opened the Scriptures to us?”",
     "reference": "Luke 24:32",
     "words": [
       {
@@ -13737,7 +13737,7 @@
       },
       {
         "answer": "VILLAGE",
-        "clue": "Whither they went, and He made as though to go further"
+        "clue": "Where they were headed when He seemed ready to go farther"
       },
       {
         "answer": "ABIDE",
@@ -13805,14 +13805,14 @@
     "id": "pack-easter-005",
     "pack": "easter",
     "title": "Breakfast by the Sea",
-    "theme": "John 21 \u2014 breakfast by the sea of Tiberias",
+    "theme": "John 21 — breakfast by the sea of Tiberias",
     "difficulty": "hard",
-    "verse": "Jesus saith unto them, Come and dine. And none of the disciples durst ask him, Who art thou? knowing that it was the Lord.",
+    "verse": "“Come, have breakfast,” Jesus said to them. None of the disciples dared to ask Him, “Who are You?” They knew it was the Lord.",
     "reference": "John 21:12",
     "words": [
       {
         "answer": "TIBERIAS",
-        "clue": "The sea where He shewed Himself again to the disciples"
+        "clue": "The sea where He appeared again to the disciples"
       },
       {
         "answer": "FISHING",
@@ -13896,26 +13896,26 @@
     "id": "pack-advent-001",
     "pack": "advent",
     "title": "Unto Us a Child Is Born",
-    "theme": "Isaiah 9 \u2014 the promise of the coming King",
+    "theme": "Isaiah 9 — the promise of the coming King",
     "difficulty": "easy",
-    "verse": "For unto us a child is born, unto us a son is given: and the government shall be upon his shoulder: and his name shall be called Wonderful, Counsellor, The mighty God, The everlasting Father, The Prince of Peace.",
+    "verse": "For unto us a child is born, unto us a son is given, and the government will be upon His shoulders. And He will be called Wonderful Counselor, Mighty God, Everlasting Father, Prince of Peace.",
     "reference": "Isaiah 9:6",
     "words": [
       {
         "answer": "CHILD",
-        "clue": "The one born unto us, in the prophet's promise"
+        "clue": "The one born to us, in the prophet's promise"
       },
       {
         "answer": "SON",
-        "clue": "Given unto us, says Isaiah"
+        "clue": "Given to us, says Isaiah"
       },
       {
         "answer": "GIVEN",
-        "clue": "What the son was, unto us"
+        "clue": "What the son was, to us"
       },
       {
         "answer": "BORN",
-        "clue": "What the child is, unto us"
+        "clue": "What the child is, to us"
       },
       {
         "answer": "NAME",
@@ -13959,11 +13959,11 @@
       },
       {
         "answer": "JOY",
-        "clue": "What is increased before Thee, as in harvest"
+        "clue": "What is increased, as in harvest time"
       },
       {
         "answer": "YOKE",
-        "clue": "Of his burden, which Thou hast broken"
+        "clue": "Of his burden, which You have broken"
       },
       {
         "answer": "BURDEN",
@@ -13987,9 +13987,9 @@
     "id": "pack-advent-002",
     "pack": "advent",
     "title": "Hail, Thou That Art Highly Favoured",
-    "theme": "Luke 1 \u2014 the angel comes to Nazareth",
+    "theme": "Luke 1 — the angel comes to Nazareth",
     "difficulty": "easy",
-    "verse": "And the angel came in unto her, and said, Hail, thou that art highly favoured, the Lord is with thee: blessed art thou among women.",
+    "verse": "The angel appeared to her and said, “Greetings, you who are highly favored! The Lord is with you.”",
     "reference": "Luke 1:28",
     "words": [
       {
@@ -14078,9 +14078,9 @@
     "id": "pack-advent-003",
     "pack": "advent",
     "title": "My Soul Doth Magnify the Lord",
-    "theme": "Luke 1 \u2014 Mary goes to the hill country",
+    "theme": "Luke 1 — Mary goes to the hill country",
     "difficulty": "easy",
-    "verse": "And Mary said, My soul doth magnify the Lord, And my spirit hath rejoiced in God my Saviour.",
+    "verse": "Then Mary said: “My soul magnifies the Lord, and my spirit rejoices in God my Savior!”",
     "reference": "Luke 1:46-47",
     "words": [
       {
@@ -14125,7 +14125,7 @@
       },
       {
         "answer": "SPIRIT",
-        "clue": "What hath rejoiced in God her Saviour"
+        "clue": "What rejoiced in God her Savior"
       },
       {
         "answer": "REJOICE",
@@ -14149,11 +14149,11 @@
       },
       {
         "answer": "PROUD",
-        "clue": "Whom He hath scattered, in the imagination of their hearts"
+        "clue": "Whom He has scattered, in the thoughts of their hearts"
       },
       {
         "answer": "HUNGRY",
-        "clue": "Whom He hath filled with good things"
+        "clue": "Whom He has filled with good things"
       },
       {
         "answer": "ABRAHAM",
@@ -14161,7 +14161,7 @@
       },
       {
         "answer": "SEED",
-        "clue": "His, for ever, as He spake to our fathers"
+        "clue": "His, forever, as He promised our fathers"
       }
     ]
   },
@@ -14169,9 +14169,9 @@
     "id": "pack-advent-004",
     "pack": "advent",
     "title": "They Shall Call His Name Emmanuel",
-    "theme": "Matthew 1 \u2014 the dream of Joseph",
+    "theme": "Matthew 1 — the dream of Joseph",
     "difficulty": "medium",
-    "verse": "Behold, a virgin shall be with child, and shall bring forth a son, and they shall call his name Emmanuel, which being interpreted is, God with us.",
+    "verse": "“Behold, the virgin will be with child and will give birth to a son, and they will call Him Immanuel” (which means, “God with us”).",
     "reference": "Matthew 1:23",
     "words": [
       {
@@ -14260,9 +14260,9 @@
     "id": "pack-advent-005",
     "pack": "advent",
     "title": "No Room in the Inn",
-    "theme": "Luke 2 \u2014 the decree and the journey",
+    "theme": "Luke 2 — the decree and the journey",
     "difficulty": "medium",
-    "verse": "And she brought forth her firstborn son, and wrapped him in swaddling clothes, and laid him in a manger; because there was no room for them in the inn.",
+    "verse": "And she gave birth to her firstborn, a Son. She wrapped Him in swaddling cloths and laid Him in a manger, because there was no room for them in the inn.",
     "reference": "Luke 2:7",
     "words": [
       {
@@ -14351,9 +14351,9 @@
     "id": "pack-advent-006",
     "pack": "advent",
     "title": "Glory to God in the Highest",
-    "theme": "Luke 2 \u2014 the shepherds and the heavenly host",
+    "theme": "Luke 2 — the shepherds and the heavenly host",
     "difficulty": "hard",
-    "verse": "Glory to God in the highest, and on earth peace, good will toward men.",
+    "verse": "“Glory to God in the highest, and on earth peace to men on whom His favor rests!”",
     "reference": "Luke 2:14",
     "words": [
       {
@@ -14442,9 +14442,9 @@
     "id": "pack-christmas-001",
     "pack": "christmas",
     "title": "The Word Made Flesh",
-    "theme": "John 1 \u2014 in the beginning was the Word",
+    "theme": "John 1 — in the beginning was the Word",
     "difficulty": "easy",
-    "verse": "And the Word was made flesh, and dwelt among us, (and we beheld his glory, the glory as of the only begotten of the Father,) full of grace and truth.",
+    "verse": "The Word became flesh and made His dwelling among us. We have seen His glory, the glory of the one and only Son from the Father, full of grace and truth.",
     "reference": "John 1:14",
     "words": [
       {
@@ -14509,7 +14509,7 @@
       },
       {
         "answer": "RECEIVED",
-        "clue": "What His own did not do, when He came unto them"
+        "clue": "What His own did not do, when He came to them"
       },
       {
         "answer": "SONS",
@@ -14533,9 +14533,9 @@
     "id": "pack-christmas-002",
     "pack": "christmas",
     "title": "Simeon and Anna",
-    "theme": "Luke 2 \u2014 the child brought to the temple",
+    "theme": "Luke 2 — the child brought to the temple",
     "difficulty": "easy",
-    "verse": "Lord, now lettest thou thy servant depart in peace, according to thy word.",
+    "verse": "Sovereign Lord, as You have promised, You now dismiss Your servant in peace.",
     "reference": "Luke 2:29",
     "words": [
       {
@@ -14584,7 +14584,7 @@
       },
       {
         "answer": "REVEALED",
-        "clue": "What it was unto him, that he should not see death first"
+        "clue": "What it was to him, that he would not see death first"
       },
       {
         "answer": "DEPART",
@@ -14624,9 +14624,9 @@
     "id": "pack-christmas-003",
     "pack": "christmas",
     "title": "The Star in the East",
-    "theme": "Matthew 2 \u2014 wise men come to Jerusalem",
+    "theme": "Matthew 2 — wise men come to Jerusalem",
     "difficulty": "medium",
-    "verse": "Saying, Where is he that is born King of the Jews? for we have seen his star in the east, and are come to worship him.",
+    "verse": "asking, “Where is the One who has been born King of the Jews? We saw His star in the east and have come to worship Him.”",
     "reference": "Matthew 2:2",
     "words": [
       {
@@ -14715,14 +14715,14 @@
     "id": "pack-christmas-004",
     "pack": "christmas",
     "title": "The Flight into Egypt",
-    "theme": "Matthew 2 \u2014 arise, and take the young child",
+    "theme": "Matthew 2 — arise, and take the young child",
     "difficulty": "medium",
-    "verse": "And when they were departed, behold, the angel of the Lord appeareth to Joseph in a dream, saying, Arise, and take the young child and his mother, and flee into Egypt, and be thou there until I bring thee word.",
+    "verse": "When the Magi had gone, an angel of the Lord appeared to Joseph in a dream. “Get up!” he said. “Take the Child and His mother and flee to Egypt. Stay there until I tell you, for Herod is going to search for the Child to kill Him.”",
     "reference": "Matthew 2:13",
     "words": [
       {
         "answer": "EGYPT",
-        "clue": "Whither they were told to flee, and stay till word came"
+        "clue": "Where they were told to flee, and stay until word came"
       },
       {
         "answer": "FLEE",
@@ -14806,9 +14806,9 @@
     "id": "pack-christmas-005",
     "pack": "christmas",
     "title": "About My Father's Business",
-    "theme": "Luke 2 \u2014 the boy of twelve in the temple",
+    "theme": "Luke 2 — the boy of twelve in the temple",
     "difficulty": "hard",
-    "verse": "And he said unto them, How is it that ye sought me? wist ye not that I must be about my Father's business?",
+    "verse": "“Why were you looking for Me?” He asked. “Did you not know that I had to be in My Father’s house?”",
     "reference": "Luke 2:49",
     "words": [
       {
@@ -14897,9 +14897,9 @@
     "id": "pack-lent-001",
     "pack": "lent",
     "title": "Rend Your Heart",
-    "theme": "Joel 2 \u2014 turn unto the LORD your God",
+    "theme": "Joel 2 — turn unto the LORD your God",
     "difficulty": "easy",
-    "verse": "And rend your heart, and not your garments, and turn unto the LORD your God: for he is gracious and merciful, slow to anger, and of great kindness, and repenteth him of the evil.",
+    "verse": "So rend your hearts and not your garments, and return to the LORD your God. For He is gracious and compassionate, slow to anger, abounding in loving devotion. And He relents from sending disaster.",
     "reference": "Joel 2:13",
     "words": [
       {
@@ -14916,7 +14916,7 @@
       },
       {
         "answer": "TURN",
-        "clue": "What the people are to do, unto the LORD their God"
+        "clue": "What the people are to do — back to the LORD their God"
       },
       {
         "answer": "GRACIOUS",
@@ -14980,7 +14980,7 @@
       },
       {
         "answer": "YEARS",
-        "clue": "What the locust hath eaten, and He will give again"
+        "clue": "What the locust has eaten, and He will restore"
       }
     ]
   },
@@ -14988,9 +14988,9 @@
     "id": "pack-lent-002",
     "pack": "lent",
     "title": "Forty Days in the Wilderness",
-    "theme": "Matthew 4 \u2014 the temptation in the desert",
+    "theme": "Matthew 4 — the temptation in the desert",
     "difficulty": "easy",
-    "verse": "But he answered and said, It is written, Man shall not live by bread alone, but by every word that proceedeth out of the mouth of God.",
+    "verse": "But Jesus answered, “It is written: ‘Man shall not live on bread alone, but on every word that comes from the mouth of God.’”",
     "reference": "Matthew 4:4",
     "words": [
       {
@@ -15079,9 +15079,9 @@
     "id": "pack-lent-003",
     "pack": "lent",
     "title": "A Great Way Off",
-    "theme": "Luke 15 \u2014 the father and his two sons",
+    "theme": "Luke 15 — the father and his two sons",
     "difficulty": "medium",
-    "verse": "And he arose, and came to his father. But when he was yet a great way off, his father saw him, and had compassion, and ran, and fell on his neck, and kissed him.",
+    "verse": "So he got up and went to his father. But while he was still in the distance, his father saw him and was filled with compassion. He ran to his son, embraced him, and kissed him.",
     "reference": "Luke 15:20",
     "words": [
       {
@@ -15170,9 +15170,9 @@
     "id": "pack-lent-004",
     "pack": "lent",
     "title": "He Washed Their Feet",
-    "theme": "John 13 \u2014 the upper room and the basin",
+    "theme": "John 13 — the upper room and the basin",
     "difficulty": "medium",
-    "verse": "If I then, your Lord and Master, have washed your feet; ye also ought to wash one another's feet.",
+    "verse": "So if I, your Lord and Teacher, have washed your feet, you also should wash one another’s feet.",
     "reference": "John 13:14",
     "words": [
       {
@@ -15213,7 +15213,7 @@
       },
       {
         "answer": "MASTER",
-        "clue": "What they called Him, along with Lord \u2014 and rightly, He said"
+        "clue": "What they called Him, along with Lord — and rightly, He said"
       },
       {
         "answer": "EXAMPLE",
@@ -15229,7 +15229,7 @@
       },
       {
         "answer": "CLEAN",
-        "clue": "What He said they were \u2014 but not all of them"
+        "clue": "What He said they were — but not all of them"
       },
       {
         "answer": "BETRAY",
@@ -15249,7 +15249,7 @@
       },
       {
         "answer": "LOVE",
-        "clue": "The new commandment: that ye do this one to another"
+        "clue": "The new commandment: do this to one another"
       },
       {
         "answer": "DISCIPLES",
@@ -15261,9 +15261,9 @@
     "id": "pack-lent-005",
     "pack": "lent",
     "title": "Not as I Will",
-    "theme": "Matthew 26 \u2014 the garden and the third prayer",
+    "theme": "Matthew 26 — the garden and the third prayer",
     "difficulty": "hard",
-    "verse": "And he went a little further, and fell on his face, and prayed, saying, O my Father, if it be possible, let this cup pass from me: nevertheless not as I will, but as thou wilt.",
+    "verse": "Going a little farther, He fell facedown and prayed, “My Father, if it is possible, let this cup pass from Me. Yet not as I will, but as You will.”",
     "reference": "Matthew 26:39",
     "words": [
       {
@@ -15296,7 +15296,7 @@
       },
       {
         "answer": "SORROWFUL",
-        "clue": "How He told them His soul was, even unto death"
+        "clue": "How He said His soul was, even to the point of death"
       },
       {
         "answer": "HEAVY",
@@ -15353,7 +15353,7 @@
     "title": "All Things Work Together",
     "theme": "Paul's letter to the Romans",
     "difficulty": "easy",
-    "verse": "And we know that all things work together for good to them that love God, to them who are the called according to his purpose.",
+    "verse": "And we know that God works all things together for the good of those who love Him, who are called according to His purpose.",
     "reference": "Romans 8:28",
     "words": [
       {
@@ -15368,7 +15368,7 @@
       },
       {
         "answer": "SPIRIT",
-        "clue": "The Helper who maketh intercession with groanings",
+        "clue": "The Helper who intercedes with groanings",
         "reference": "Romans 8:26"
       },
       {
@@ -15463,7 +15463,7 @@
     "title": "Through Christ Which Strengtheneth",
     "theme": "Paul's letter to the Philippians",
     "difficulty": "easy",
-    "verse": "I can do all things through Christ which strengtheneth me.",
+    "verse": "I can do all things through Christ who gives me strength.",
     "reference": "Philippians 4:13",
     "words": [
       {
@@ -15508,7 +15508,7 @@
       },
       {
         "answer": "HUMBLE",
-        "clue": "What Christ did to himself, obedient unto death",
+        "clue": "What Christ did to Himself, obedient even to death",
         "reference": "Philippians 2:8"
       },
       {
@@ -15518,7 +15518,7 @@
       },
       {
         "answer": "NAME",
-        "clue": "What is above every other, given unto Jesus",
+        "clue": "What is above every other, given to Jesus",
         "reference": "Philippians 2:9"
       },
       {
@@ -15573,7 +15573,7 @@
     "title": "God Is Love",
     "theme": "The first epistle of John (1 John)",
     "difficulty": "easy",
-    "verse": "He that loveth not knoweth not God; for God is love.",
+    "verse": "Whoever does not love does not know God, because God is love.",
     "reference": "1 John 4:8",
     "words": [
       {
@@ -15593,7 +15593,7 @@
       },
       {
         "answer": "FEAR",
-        "clue": "What perfect love casteth out, for it hath torment",
+        "clue": "What perfect love casts out, for it involves torment",
         "reference": "1 John 4:18"
       },
       {
@@ -15613,7 +15613,7 @@
       },
       {
         "answer": "SON",
-        "clue": "He that hath him hath life; he that hath him not hath not life",
+        "clue": "Whoever has Him has life; whoever does not has no life",
         "reference": "1 John 5:12"
       },
       {
@@ -15648,7 +15648,7 @@
       },
       {
         "answer": "BROTHER",
-        "clue": "He that loveth not his own cannot love God",
+        "clue": "Whoever does not love his own cannot love God",
         "reference": "1 John 4:20"
       },
       {
@@ -15663,7 +15663,7 @@
       },
       {
         "answer": "LIFE",
-        "clue": "What he that hath the Son possesses",
+        "clue": "What whoever has the Son possesses",
         "reference": "1 John 5:12"
       },
       {
@@ -15673,7 +15673,7 @@
       },
       {
         "answer": "BORN",
-        "clue": "Every one that loveth is this of God, and knoweth him",
+        "clue": "Everyone who loves is this of God, and knows Him",
         "reference": "1 John 4:7"
       }
     ]
@@ -15683,7 +15683,7 @@
     "title": "Faith Without Works",
     "theme": "The epistle of James",
     "difficulty": "medium",
-    "verse": "For as the body without the spirit is dead, so faith without works is dead also.",
+    "verse": "As the body without the spirit is dead, so faith without deeds is dead.",
     "reference": "James 2:26",
     "words": [
       {
@@ -15703,7 +15703,7 @@
       },
       {
         "answer": "WISDOM",
-        "clue": "If any lack it, let him ask of God, who giveth liberally",
+        "clue": "If anyone lacks it, ask God, who gives generously",
         "reference": "James 1:5"
       },
       {
@@ -15738,7 +15738,7 @@
       },
       {
         "answer": "HUMBLE",
-        "clue": "Whom God giveth grace, while resisting the proud",
+        "clue": "Whom God gives grace, while resisting the proud",
         "reference": "James 4:6"
       },
       {
@@ -15793,7 +15793,7 @@
     "title": "Casting All Your Care",
     "theme": "The first epistle of Peter (1 Peter)",
     "difficulty": "medium",
-    "verse": "Casting all your care upon him; for he careth for you.",
+    "verse": "Cast all your anxiety on Him, because He cares for you.",
     "reference": "1 Peter 5:7",
     "words": [
       {
@@ -15838,7 +15838,7 @@
       },
       {
         "answer": "GRACE",
-        "clue": "God giveth it to the lowly, but resisteth the proud",
+        "clue": "God gives it to the lowly, but resists the proud",
         "reference": "1 Peter 5:5"
       },
       {
@@ -15848,7 +15848,7 @@
       },
       {
         "answer": "GLORY",
-        "clue": "What shall be revealed, that ye may be glad with joy",
+        "clue": "What will be revealed, so you may be overjoyed",
         "reference": "1 Peter 4:13"
       },
       {
@@ -15883,7 +15883,7 @@
       },
       {
         "answer": "WATCH",
-        "clue": "Be sober, and do this unto prayer",
+        "clue": "Be sober-minded, and do this in prayer",
         "reference": "1 Peter 4:7"
       },
       {
@@ -15893,7 +15893,7 @@
       },
       {
         "answer": "SILVER",
-        "clue": "Not with this were ye redeemed, nor with gold",
+        "clue": "Not with this were you redeemed, nor with gold",
         "reference": "1 Peter 1:18"
       }
     ]
@@ -15903,7 +15903,7 @@
     "title": "A Time to Every Purpose",
     "theme": "The Preacher's seasons (Ecclesiastes)",
     "difficulty": "medium",
-    "verse": "To every thing there is a season, and a time to every purpose under the heaven.",
+    "verse": "To everything there is a season, and a time for every purpose under heaven:",
     "reference": "Ecclesiastes 3:1",
     "words": [
       {
@@ -15918,7 +15918,7 @@
       },
       {
         "answer": "WISDOM",
-        "clue": "In much of it is much grief, saith the Preacher",
+        "clue": "In much of it is much grief, says the Teacher",
         "reference": "Ecclesiastes 1:18"
       },
       {
@@ -15928,7 +15928,7 @@
       },
       {
         "answer": "LABOUR",
-        "clue": "What profit hath a man of all his, under the sun?",
+        "clue": "What does a man gain from all his, under the sun?",
         "reference": "Ecclesiastes 1:3"
       },
       {
@@ -15943,7 +15943,7 @@
       },
       {
         "answer": "SILVER",
-        "clue": "He that loveth it shall not be satisfied with it",
+        "clue": "Whoever loves it will never be satisfied with it",
         "reference": "Ecclesiastes 5:10"
       },
       {
@@ -16013,12 +16013,12 @@
     "title": "Thoughts of Peace",
     "theme": "The prophet Jeremiah",
     "difficulty": "medium",
-    "verse": "For I know the thoughts that I think toward you, saith the LORD, thoughts of peace, and not of evil, to give you an expected end.",
+    "verse": "For I know the plans I have for you, declares the LORD, plans to prosper you and not to harm you, to give you a future and a hope.",
     "reference": "Jeremiah 29:11",
     "words": [
       {
         "answer": "PROPHET",
-        "clue": "What God ordained Jeremiah to be unto the nations",
+        "clue": "What God appointed Jeremiah to be to the nations",
         "reference": "Jeremiah 1:5"
       },
       {
@@ -16103,7 +16103,7 @@
       },
       {
         "answer": "SEEK",
-        "clue": "Do this for me with all your heart, and ye shall find me",
+        "clue": "Do this with all your heart, and you will find me",
         "reference": "Jeremiah 29:13"
       },
       {
@@ -16123,7 +16123,7 @@
     "title": "New Every Morning",
     "theme": "The lament over Jerusalem (Lamentations)",
     "difficulty": "hard",
-    "verse": "They are new every morning: great is thy faithfulness.",
+    "verse": "They are new every morning; great is Your faithfulness!",
     "reference": "Lamentations 3:23",
     "words": [
       {
@@ -16148,7 +16148,7 @@
       },
       {
         "answer": "AFFLICT",
-        "clue": "He doth not do this willingly to the children of men",
+        "clue": "He does not do this willingly to the children of men",
         "reference": "Lamentations 3:33"
       },
       {
@@ -16158,7 +16158,7 @@
       },
       {
         "answer": "ASHES",
-        "clue": "He hath covered me with these, in the dust",
+        "clue": "He has covered me with these, in the dust",
         "reference": "Lamentations 3:16"
       },
       {
@@ -16188,7 +16188,7 @@
       },
       {
         "answer": "SORROW",
-        "clue": "Is any like unto mine? asks the mourning city",
+        "clue": "Is any like mine? asks the mourning city",
         "reference": "Lamentations 1:12"
       },
       {
@@ -16203,7 +16203,7 @@
       },
       {
         "answer": "SILENT",
-        "clue": "He sitteth alone and keepeth this, having borne the yoke",
+        "clue": "He sits alone and keeps this, having borne the yoke",
         "reference": "Lamentations 3:28"
       },
       {
@@ -16233,12 +16233,12 @@
     "title": "I Change Not",
     "theme": "The prophet Malachi",
     "difficulty": "hard",
-    "verse": "For I am the LORD, I change not; therefore ye sons of Jacob are not consumed.",
+    "verse": "Because I, the LORD, do not change, you descendants of Jacob have not been destroyed.",
     "reference": "Malachi 3:6",
     "words": [
       {
         "answer": "TITHE",
-        "clue": "Bring all of it into the storehouse, saith the LORD",
+        "clue": "Bring all of it into the storehouse, says the LORD",
         "reference": "Malachi 3:10"
       },
       {
@@ -16288,7 +16288,7 @@
       },
       {
         "answer": "ROBBED",
-        "clue": "Will a man do this to God? Yet ye have",
+        "clue": "Will a man do this to God? Yet you have",
         "reference": "Malachi 3:8"
       },
       {
@@ -16298,7 +16298,7 @@
       },
       {
         "answer": "ALTAR",
-        "clue": "Polluted bread was offered upon it, saith the LORD",
+        "clue": "Defiled bread was offered on it, says the LORD",
         "reference": "Malachi 1:7"
       },
       {
@@ -16343,7 +16343,7 @@
     "title": "With All Thine Heart",
     "theme": "Moses rehearses the law (Deuteronomy)",
     "difficulty": "hard",
-    "verse": "And thou shalt love the LORD thy God with all thine heart, and with all thy soul, and with all thy might.",
+    "verse": "And you shall love the LORD your God with all your heart and with all your soul and with all your strength.",
     "reference": "Deuteronomy 6:5",
     "words": [
       {
@@ -16353,7 +16353,7 @@
       },
       {
         "answer": "HEART",
-        "clue": "Love the LORD thy God with all of it",
+        "clue": "Love the LORD your God with all of it",
         "reference": "Deuteronomy 6:5"
       },
       {
@@ -16398,12 +16398,12 @@
       },
       {
         "answer": "OBEY",
-        "clue": "To hearken diligently unto the voice of the LORD",
+        "clue": "To carefully heed the voice of the LORD",
         "reference": "Deuteronomy 28:1"
       },
       {
         "answer": "STATUTE",
-        "clue": "A decree of the LORD, to be taught unto the children",
+        "clue": "A decree of the LORD, to be taught to the children",
         "reference": "Deuteronomy 6:1"
       },
       {
@@ -16418,7 +16418,7 @@
       },
       {
         "answer": "HOREB",
-        "clue": "The mount where the LORD spake out of the midst of the fire",
+        "clue": "The mount where the LORD spoke out of the midst of the fire",
         "reference": "Deuteronomy 4:15"
       },
       {
@@ -16438,7 +16438,7 @@
       },
       {
         "answer": "TEACH",
-        "clue": "Do this diligently to thy children, and talk of them at home",
+        "clue": "Do this diligently to your children, talking of God's words at home",
         "reference": "Deuteronomy 6:7"
       },
       {
@@ -16451,9 +16451,9 @@
   {
     "pack": "life-of-david",
     "title": "The Cave of Adullam",
-    "theme": "1 Samuel 22-24 \u2014 David a fugitive from Saul",
+    "theme": "1 Samuel 22-24 — David a fugitive from Saul",
     "difficulty": "medium",
-    "verse": "The LORD is my rock, and my fortress, and my deliverer;",
+    "verse": "He said: “The LORD is my rock, my fortress, and my deliverer.”",
     "reference": "2 Samuel 22:2",
     "words": [
       {
@@ -16530,9 +16530,9 @@
   {
     "pack": "life-of-david",
     "title": "The Arrow and the Oath",
-    "theme": "1 Samuel 18-20 \u2014 David and Jonathan",
+    "theme": "1 Samuel 18-20 — David and Jonathan",
     "difficulty": "easy",
-    "verse": "Go in peace, forasmuch as we have sworn both of us in the name of the LORD",
+    "verse": "Go in peace, for the two of us have sworn in the name of the LORD",
     "reference": "1 Samuel 20:42",
     "words": [
       {
@@ -16605,9 +16605,9 @@
   {
     "pack": "life-of-david",
     "title": "The Ark Comes Home",
-    "theme": "2 Samuel 6 \u2014 the ark brought up to the city",
+    "theme": "2 Samuel 6 — the ark brought up to the city",
     "difficulty": "easy",
-    "verse": "And David danced before the LORD with all his might",
+    "verse": "And David, wearing a linen ephod, danced with all his might before the LORD,",
     "reference": "2 Samuel 6:14",
     "words": [
       {
@@ -16680,9 +16680,9 @@
   {
     "pack": "life-of-david",
     "title": "Thou Art the Man",
-    "theme": "2 Samuel 12 \u2014 Nathan's parable and David's confession",
+    "theme": "2 Samuel 12 — Nathan's parable and David's confession",
     "difficulty": "medium",
-    "verse": "And Nathan said to David, Thou art the man.",
+    "verse": "You are that man!",
     "reference": "2 Samuel 12:7",
     "words": [
       {
@@ -16755,9 +16755,9 @@
   {
     "pack": "life-of-david",
     "title": "Create in Me a Clean Heart",
-    "theme": "Psalm 51 \u2014 the psalm of repentance",
+    "theme": "Psalm 51 — the psalm of repentance",
     "difficulty": "medium",
-    "verse": "Create in me a clean heart, O God; and renew a right spirit within me.",
+    "verse": "Create in me a clean heart, O God, and renew a right spirit within me.",
     "reference": "Psalm 51:10",
     "words": [
       {
@@ -16798,7 +16798,7 @@
       },
       {
         "answer": "SALVATION",
-        "clue": "Restore unto me the joy of thy ____"
+        "clue": "Restore to me the joy of Your ____"
       },
       {
         "answer": "CONTRITE",
@@ -16818,7 +16818,7 @@
       },
       {
         "answer": "TEACH",
-        "clue": "Then will I ____ transgressors thy ways"
+        "clue": "Then I will ____ transgressors Your ways"
       },
       {
         "answer": "CREATE",
@@ -16830,9 +16830,9 @@
   {
     "pack": "parables-of-jesus",
     "title": "The Ten Virgins",
-    "theme": "Matthew 25 \u2014 the wise and the foolish",
+    "theme": "Matthew 25 — the wise and the foolish",
     "difficulty": "easy",
-    "verse": "Watch therefore, for ye know neither the day nor the hour wherein the Son of man cometh.",
+    "verse": "Therefore keep watch, because you do not know the day or the hour.",
     "reference": "Matthew 25:13",
     "words": [
       {
@@ -16897,7 +16897,7 @@
       },
       {
         "answer": "CRY",
-        "clue": "Behold, the bridegroom cometh"
+        "clue": "The midnight shout: 'Here comes the bridegroom!'"
       }
     ],
     "id": "pack-parables-of-jesus-002"
@@ -16905,9 +16905,9 @@
   {
     "pack": "parables-of-jesus",
     "title": "Seventy Times Seven",
-    "theme": "Matthew 18 \u2014 the unforgiving servant",
+    "theme": "Matthew 18 — the unforgiving servant",
     "difficulty": "medium",
-    "verse": "I say not unto thee, Until seven times: but, Until seventy times seven.",
+    "verse": "Jesus answered, “I tell you, not just seven times, but seventy-seven times!”",
     "reference": "Matthew 18:22",
     "words": [
       {
@@ -16928,7 +16928,7 @@
       },
       {
         "answer": "PATIENCE",
-        "clue": "Have ____ with me, and I will pay thee all"
+        "clue": "Have ____ with me, and I will repay you everything"
       },
       {
         "answer": "WICKED",
@@ -16980,9 +16980,9 @@
   {
     "pack": "parables-of-jesus",
     "title": "The Rich Fool",
-    "theme": "Luke 12 \u2014 the man who built greater barns",
+    "theme": "Luke 12 — the man who built greater barns",
     "difficulty": "easy",
-    "verse": "a man's life consisteth not in the abundance of the things which he possesseth",
+    "verse": "And He said to them, “Watch out! Guard yourselves against every form of greed, for one’s life does not consist in the abundance of his possessions.”",
     "reference": "Luke 12:15",
     "words": [
       {
@@ -16991,7 +16991,7 @@
       },
       {
         "answer": "SOUL",
-        "clue": "Thy ____ shall be required of thee this night"
+        "clue": "Your ____ will be required of you this very night"
       },
       {
         "answer": "GOODS",
@@ -17007,7 +17007,7 @@
       },
       {
         "answer": "EASE",
-        "clue": "Take thine ____, eat, drink, and be merry"
+        "clue": "Take your ____; eat, drink, and be merry"
       },
       {
         "answer": "NIGHT",
@@ -17055,9 +17055,9 @@
   {
     "pack": "parables-of-jesus",
     "title": "Two Men Went Up to Pray",
-    "theme": "Luke 18 \u2014 the Pharisee and the publican",
+    "theme": "Luke 18 — the Pharisee and the publican",
     "difficulty": "medium",
-    "verse": "God be merciful to me a sinner.",
+    "verse": "God, have mercy on me, a sinner!",
     "reference": "Luke 18:13",
     "words": [
       {
@@ -17110,7 +17110,7 @@
       },
       {
         "answer": "THANK",
-        "clue": "God, I ____ thee that I am not as other men"
+        "clue": "God, I ____ you that I am not like other men"
       },
       {
         "answer": "ABASED",
@@ -17130,9 +17130,9 @@
   {
     "pack": "parables-of-jesus",
     "title": "The Persistent Widow",
-    "theme": "Luke 18 \u2014 the unjust judge",
+    "theme": "Luke 18 — the unjust judge",
     "difficulty": "medium",
-    "verse": "men ought always to pray, and not to faint",
+    "verse": "Then Jesus told them a parable about their need to pray at all times and not lose heart:",
     "reference": "Luke 18:1",
     "words": [
       {
@@ -17169,7 +17169,7 @@
       },
       {
         "answer": "ELECT",
-        "clue": "God's own, who cry day and night unto him"
+        "clue": "God's own, who cry out to Him day and night"
       },
       {
         "answer": "WEARY",
@@ -17193,7 +17193,7 @@
       },
       {
         "answer": "CRY",
-        "clue": "What the elect do day and night unto him"
+        "clue": "What the elect do, day and night, to God"
       },
       {
         "answer": "FEARED",
@@ -17205,9 +17205,9 @@
   {
     "pack": "exodus",
     "title": "The Burning Bush",
-    "theme": "Exodus 3 \u2014 the call of Moses at Horeb",
+    "theme": "Exodus 3 — the call of Moses at Horeb",
     "difficulty": "easy",
-    "verse": "And God said unto Moses, I AM THAT I AM",
+    "verse": "God said to Moses, “I AM WHO I AM. This is what you are to say to the Israelites: ‘I AM has sent me to you.’”",
     "reference": "Exodus 3:14",
     "words": [
       {
@@ -17232,7 +17232,7 @@
       },
       {
         "answer": "SHOES",
-        "clue": "Put them off thy feet, for the place is holy"
+        "clue": "Take them off your feet, for the place is holy"
       },
       {
         "answer": "HOLY",
@@ -17280,9 +17280,9 @@
   {
     "pack": "exodus",
     "title": "Let My People Go",
-    "theme": "Exodus 7-12 \u2014 the plagues and the passover",
+    "theme": "Exodus 7-12 — the plagues and the passover",
     "difficulty": "medium",
-    "verse": "and when I see the blood, I will pass over you",
+    "verse": "when I see the blood, I will pass over you",
     "reference": "Exodus 12:13",
     "words": [
       {
@@ -17355,9 +17355,9 @@
   {
     "pack": "exodus",
     "title": "The Sea Divided",
-    "theme": "Exodus 14-15 \u2014 through the sea on dry ground",
+    "theme": "Exodus 14-15 — through the sea on dry ground",
     "difficulty": "easy",
-    "verse": "The LORD shall fight for you, and ye shall hold your peace.",
+    "verse": "The LORD will fight for you; you need only to be still.",
     "reference": "Exodus 14:14",
     "words": [
       {
@@ -17382,7 +17382,7 @@
       },
       {
         "answer": "HORSE",
-        "clue": "The ____ and his rider hath he thrown into the sea"
+        "clue": "The ____ and rider He has thrown into the sea"
       },
       {
         "answer": "PILLAR",
@@ -17430,9 +17430,9 @@
   {
     "pack": "exodus",
     "title": "Bread from Heaven",
-    "theme": "Exodus 16 \u2014 manna in the wilderness",
+    "theme": "Exodus 16 — manna in the wilderness",
     "difficulty": "easy",
-    "verse": "Behold, I will rain bread from heaven for you",
+    "verse": "Behold, I will rain down bread from heaven for you.",
     "reference": "Exodus 16:4",
     "words": [
       {
@@ -17505,9 +17505,9 @@
   {
     "pack": "exodus",
     "title": "The Mount and the Calf",
-    "theme": "Exodus 19-32 \u2014 the law given and broken",
+    "theme": "Exodus 19-32 — the law given and broken",
     "difficulty": "medium",
-    "verse": "Thou shalt have no other gods before me.",
+    "verse": "You shall have no other gods before Me.",
     "reference": "Exodus 20:3",
     "words": [
       {
@@ -17536,7 +17536,7 @@
       },
       {
         "answer": "GRAVEN",
-        "clue": "Thou shalt not make unto thee any ____ image"
+        "clue": "You shall not make for yourself any ____ image"
       },
       {
         "answer": "IMAGE",
@@ -17572,7 +17572,7 @@
       },
       {
         "answer": "HONOUR",
-        "clue": "____ thy father and thy mother"
+        "clue": "____ your father and your mother"
       }
     ],
     "id": "pack-exodus-005"
@@ -17580,14 +17580,14 @@
   {
     "pack": "women-of-the-bible",
     "title": "Whither Thou Goest",
-    "theme": "Ruth \u2014 the Moabitess who would not turn back",
+    "theme": "Ruth — the Moabitess who would not turn back",
     "difficulty": "easy",
-    "verse": "thy people shall be my people, and thy God my God",
+    "verse": "For wherever you go, I will go, and wherever you live, I will live; your people will be my people, and your God will be my God.",
     "reference": "Ruth 1:16",
     "words": [
       {
         "answer": "RUTH",
-        "clue": "The Moabitess who clave unto her mother in law"
+        "clue": "The Moabite woman who stayed devoted to her mother-in-law"
       },
       {
         "answer": "NAOMI",
@@ -17655,9 +17655,9 @@
   {
     "pack": "women-of-the-bible",
     "title": "For Such a Time as This",
-    "theme": "Esther \u2014 a queen who risked the sceptre",
+    "theme": "Esther — a queen who risked the sceptre",
     "difficulty": "hard",
-    "verse": "who knoweth whether thou art come to the kingdom for such a time as this?",
+    "verse": "And who knows if perhaps you have come to the kingdom for such a time as this?",
     "reference": "Esther 4:14",
     "words": [
       {
@@ -17730,9 +17730,9 @@
   {
     "pack": "women-of-the-bible",
     "title": "Deborah and Jael",
-    "theme": "Judges 4-5 \u2014 a prophetess judged Israel",
+    "theme": "Judges 4-5 — a prophetess judged Israel",
     "difficulty": "medium",
-    "verse": "And Deborah, a prophetess, the wife of Lapidoth, she judged Israel at that time.",
+    "verse": "Now Deborah, a prophetess, the wife of Lappidoth, was judging Israel at that time.",
     "reference": "Judges 4:4",
     "words": [
       {
@@ -17805,9 +17805,9 @@
   {
     "pack": "women-of-the-bible",
     "title": "For This Child I Prayed",
-    "theme": "1 Samuel 1-2 \u2014 Hannah at Shiloh",
+    "theme": "1 Samuel 1-2 — Hannah at Shiloh",
     "difficulty": "easy",
-    "verse": "For this child I prayed; and the LORD hath given me my petition which I asked of him",
+    "verse": "I prayed for this boy, and since the LORD has granted me what I asked of Him,",
     "reference": "1 Samuel 1:27",
     "words": [
       {
@@ -17852,7 +17852,7 @@
       },
       {
         "answer": "LEND",
-        "clue": "As long as he liveth he shall be ____ to the LORD"
+        "clue": "Hannah's promise: to ____ Samuel to the LORD for life"
       },
       {
         "answer": "SAMUEL",
@@ -17872,7 +17872,7 @@
       },
       {
         "answer": "GRACE",
-        "clue": "Let thine handmaid find ____ in thy sight"
+        "clue": "Let your servant find ____ in your sight"
       }
     ],
     "id": "pack-women-of-the-bible-001"
@@ -17880,9 +17880,9 @@
   {
     "pack": "women-of-the-bible",
     "title": "One Thing Is Needful",
-    "theme": "Luke 10 \u2014 Mary and Martha at Bethany",
+    "theme": "Luke 10 — Mary and Martha at Bethany",
     "difficulty": "medium",
-    "verse": "But one thing is needful: and Mary hath chosen that good part",
+    "verse": "But only one thing is necessary. Mary has chosen the good portion, and it will not be taken away from her.",
     "reference": "Luke 10:42",
     "words": [
       {
@@ -17915,7 +17915,7 @@
       },
       {
         "answer": "CHOSEN",
-        "clue": "Mary hath ____ that good part"
+        "clue": "Mary has ____ the good part"
       },
       {
         "answer": "FEET",
@@ -17927,7 +17927,7 @@
       },
       {
         "answer": "TROUBLED",
-        "clue": "Thou art careful and ____ about many things"
+        "clue": "You are worried and ____ about many things"
       },
       {
         "answer": "PART",
@@ -17958,7 +17958,7 @@
     "title": "The Exodus Road",
     "theme": "The Exodus (Exodus 1-17)",
     "difficulty": "medium",
-    "verse": "Let my people go, that they may hold a feast unto me in the wilderness.",
+    "verse": "Let My people go, so that they may hold a feast to Me in the wilderness.",
     "reference": "Exodus 5:1",
     "words": [
       {
@@ -18159,7 +18159,7 @@
     "title": "The Week That Changed the World",
     "theme": "Passion Week (Matthew 21-28)",
     "difficulty": "hard",
-    "verse": "He is not here: for he is risen, as he said. Come, see the place where the Lord lay.",
+    "verse": "He is not here; He has risen, just as He said! Come, see the place where He lay.",
     "reference": "Matthew 28:6",
     "words": [
       {
@@ -18355,7 +18355,7 @@
     "title": "The Church Is Born",
     "theme": "The Acts of the Apostles",
     "difficulty": "medium",
-    "verse": "And they were all filled with the Holy Ghost, and began to speak with other tongues.",
+    "verse": "And they were all filled with the Holy Spirit and began to speak in other tongues as the Spirit enabled them.",
     "reference": "Acts 2:4",
     "words": [
       {
@@ -18551,7 +18551,7 @@
     "title": "From Eden to Ararat",
     "theme": "Genesis 1-11",
     "difficulty": "medium",
-    "verse": "In the beginning God created the heaven and the earth.",
+    "verse": "In the beginning God created the heavens and the earth.",
     "reference": "Genesis 1:1",
     "words": [
       {
@@ -18752,7 +18752,7 @@
     "title": "Kings and Prophets",
     "theme": "The books of Kings",
     "difficulty": "hard",
-    "verse": "And after the earthquake a fire; but the LORD was not in the fire: and after the fire a still small voice.",
+    "verse": "After the earthquake there was a fire, but the LORD was not in the fire. And after the fire came a still, small voice.",
     "reference": "1 Kings 19:12",
     "words": [
       {
