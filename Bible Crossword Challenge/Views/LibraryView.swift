@@ -183,6 +183,10 @@ struct LibraryView: View {
         }
         // Warm paper canvas behind the native list rows (see ProfileView).
         .scrollContentBackground(.hidden)
+        // Same readable column as the card screens — a row stretched across a
+        // 13" iPad puts its chevron half a metre from its title.
+        .frame(maxWidth: 640)
+        .frame(maxWidth: .infinity)
         .background(Theme.background)
         .searchable(text: $query, prompt: "Search puzzles")
         .toolbar { filterMenu }
@@ -369,6 +373,9 @@ struct LibraryView: View {
             }
         }
         .scrollContentBackground(.hidden)
+        // See premiumList: keep rows at a readable width on iPad.
+        .frame(maxWidth: 640)
+        .frame(maxWidth: .infinity)
         .background(Theme.background)
         .searchable(text: $query, prompt: "Search puzzles")
         .toolbar { filterMenu }

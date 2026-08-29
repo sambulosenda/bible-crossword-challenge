@@ -27,6 +27,7 @@ struct CrosswordGameView: View {
     @Environment(\.challengeService) private var challengeService
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(StoreService.self) private var store
 
     @AppStorage("remindersEnabled") private var remindersEnabled = false
@@ -91,6 +92,29 @@ struct CrosswordGameView: View {
     }
 
     var body: some View {
+        Group {
+            if horizontalSizeClass == .regular {
+                // iPad (and large-phone landscape): the clue list stops being a
+                // sheet and becomes a standing side panel — grid and keyboard on
+                // the left, every clue in view on the right, the way a paper
+                // crossword sits next to its clues.
+                HStack(spacing: 0) {
+                    solveColumn
+                    Divider().ignoresSafeArea(edges: .bottom)
+                    ClueListView(vm: vm, embedded: true)
+                        .frame(width: 340)
+                }
+            } else {
+                solveColumn
+            }
+        }
+        .background(Theme.background)
+    }
+
+    /// The solving surface: challenge chip, grid, clue bar and keyboard. The
+    /// whole screen in compact width; the left column beside the clue panel in
+    /// regular width.
+    private var solveColumn: some View {
         VStack(spacing: 0) {
             if let challenge = incomingChallenge {
                 ChallengeTargetChip(name: challenge.challengerName, seconds: challenge.seconds)
@@ -154,6 +178,29 @@ struct CrosswordGameView: View {
         }
         .onKeyPress(.delete, phases: .down) { _ in
             vm.delete()
+            return .handled
+        }
+        // Arrow keys walk the grid (skipping blocks) and the space bar flips
+        // between across and down — the vocabulary every desktop crossword
+        // shares, for anyone solving with an iPad keyboard.
+        .onKeyPress(.upArrow, phases: .down) { _ in
+            vm.moveSelection(rowDelta: -1, colDelta: 0)
+            return .handled
+        }
+        .onKeyPress(.downArrow, phases: .down) { _ in
+            vm.moveSelection(rowDelta: 1, colDelta: 0)
+            return .handled
+        }
+        .onKeyPress(.leftArrow, phases: .down) { _ in
+            vm.moveSelection(rowDelta: 0, colDelta: -1)
+            return .handled
+        }
+        .onKeyPress(.rightArrow, phases: .down) { _ in
+            vm.moveSelection(rowDelta: 0, colDelta: 1)
+            return .handled
+        }
+        .onKeyPress(.space, phases: .down) { _ in
+            vm.toggleDirection()
             return .handled
         }
         .navigationTitle(puzzle.title)
@@ -410,13 +457,17 @@ struct CrosswordGameView: View {
             }
             .accessibilityLabel("Hints and check answers")
         }
-        ToolbarItem(placement: .topBarTrailing) {
-            Button {
-                showClues = true
-            } label: {
-                Image(systemName: "list.bullet")
+        // In regular width the clue list is a standing side panel, so a button
+        // that opens it as a sheet would be a second copy of what's on screen.
+        if horizontalSizeClass != .regular {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    showClues = true
+                } label: {
+                    Image(systemName: "list.bullet")
+                }
+                .accessibilityLabel("Clue list")
             }
-            .accessibilityLabel("Clue list")
         }
     }
 

@@ -135,7 +135,10 @@ private struct ChapterPage: View {
                         verseRow(verse).id(verse.number)
                     }
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
+                // A measure a reader can actually track — scripture set across
+                // a full iPad landscape width is a 40-word line.
+                .frame(maxWidth: 640, alignment: .leading)
+                .frame(maxWidth: .infinity)
                 .padding(.horizontal, Theme.Spacing.l)
                 .padding(.vertical, Theme.Spacing.m)
             }

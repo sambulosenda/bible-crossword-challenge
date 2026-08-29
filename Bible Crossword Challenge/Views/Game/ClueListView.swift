@@ -15,6 +15,12 @@ import SwiftUI
 
 struct ClueListView: View {
     @Bindable var vm: GameViewModel
+    /// True when the list is the iPad game screen's always-visible side panel
+    /// rather than a sheet: no navigation chrome, a tapped clue keeps the
+    /// panel up, the list follows the active clue, and the reader opens as a
+    /// sheet — a full-screen cover would detach the grid from its window,
+    /// which pauses the clock and logs an abandon for what is just reading.
+    var embedded = false
     @Environment(\.dismiss) private var dismiss
     @Environment(\.analytics) private var analytics
 
@@ -28,29 +34,52 @@ struct ClueListView: View {
     private let numberColumn: CGFloat = 24
 
     var body: some View {
-        NavigationStack {
-            ScrollViewReader { proxy in
-                List {
-                    section(title: "Across", slots: vm.acrossSlots)
-                    section(title: "Down", slots: vm.downSlots)
-                }
-                .navigationTitle("Clues")
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItem(placement: .confirmationAction) {
-                        Button("Done") { dismiss() }
-                    }
-                }
-                .onAppear {
-                    // Land on the clue you were working — the list can be long.
-                    if let active = vm.activeSlot {
-                        proxy.scrollTo(active.id, anchor: .center)
-                    }
-                }
-                // Closing the reader returns to the clue list, so reading a
-                // passage doesn't cost the player their place.
-                .fullScreenCover(item: $readerTarget) { target in
+        if embedded {
+            clueList
+                .scrollContentBackground(.hidden)
+                .background(Theme.background)
+                // Reading must not detach the grid — see `embedded` above.
+                .sheet(item: $readerTarget) { target in
                     ReaderModal(target: target)
+                }
+        } else {
+            NavigationStack {
+                clueList
+                    .navigationTitle("Clues")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .confirmationAction) {
+                            Button("Done") { dismiss() }
+                        }
+                    }
+                    // Closing the reader returns to the clue list, so reading a
+                    // passage doesn't cost the player their place.
+                    .fullScreenCover(item: $readerTarget) { target in
+                        ReaderModal(target: target)
+                    }
+            }
+        }
+    }
+
+    private var clueList: some View {
+        ScrollViewReader { proxy in
+            List {
+                section(title: "Across", slots: vm.acrossSlots)
+                section(title: "Down", slots: vm.downSlots)
+            }
+            .onAppear {
+                // Land on the clue you were working — the list can be long.
+                if let active = vm.activeSlot {
+                    proxy.scrollTo(active.id, anchor: .center)
+                }
+            }
+            .onChange(of: vm.activeSlot?.id) { _, id in
+                // The panel follows play: typing to a word's end or tapping the
+                // grid moves the active clue, and the side panel keeps it in
+                // view. Sheets don't need this — they open fresh each time.
+                guard embedded, let id else { return }
+                withAnimation(.easeOut(duration: 0.2)) {
+                    proxy.scrollTo(id, anchor: .center)
                 }
             }
         }
@@ -66,7 +95,7 @@ struct ClueListView: View {
                 VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
                     Button {
                         vm.select(slot: slot)
-                        dismiss()
+                        if !embedded { dismiss() }
                     } label: {
                         HStack(alignment: .firstTextBaseline, spacing: Theme.Spacing.s) {
                             Text("\(slot.number)")

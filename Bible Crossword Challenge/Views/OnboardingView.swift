@@ -374,6 +374,9 @@ struct OnboardingView: View {
         return GeometryReader { geo in
             ScrollView {
                 stack
+                    // Same readable column every tab screen uses — on iPad a
+                    // full-bleed onboarding page reads as a stretched phone.
+                    .frame(maxWidth: 560)
                     .frame(maxWidth: .infinity)
                     .padding(.horizontal, Theme.Spacing.l)
                     .padding(.vertical, Theme.Spacing.l)
@@ -414,6 +417,10 @@ struct OnboardingView: View {
                     .buttonStyle(.pillProminent)
             }
         }
+        // Match the page column above, so the CTA never grows wider than the
+        // content it belongs to.
+        .frame(maxWidth: 560)
+        .frame(maxWidth: .infinity)
         .padding(.horizontal, Theme.Spacing.l)
         .padding(.top, Theme.Spacing.m)
         .padding(.bottom, Theme.Spacing.s)

@@ -329,6 +329,24 @@ final class GameViewModel {
         selected = slot.positions.first { grid[$0.row][$0.col].entry == nil } ?? slot.positions[0]
     }
 
+    /// Hardware-keyboard cursor movement (iPad / Bluetooth): one step in the
+    /// given direction, walking over blocks to the next playable cell and
+    /// stopping at the grid's edge. Routed through `select`, so the typing
+    /// direction keeps its usual follow-the-word behaviour — and never lands
+    /// on the current cell, so a held arrow can't toggle across/down.
+    func moveSelection(rowDelta: Int, colDelta: Int) {
+        var r = selected.row + rowDelta
+        var c = selected.col + colDelta
+        while r >= 0, r < size, c >= 0, c < size {
+            if !grid[r][c].isBlock {
+                select(GridPos(row: r, col: c))
+                return
+            }
+            r += rowDelta
+            c += colDelta
+        }
+    }
+
     // MARK: - Clue navigation
 
     func advanceClue(by offset: Int) {

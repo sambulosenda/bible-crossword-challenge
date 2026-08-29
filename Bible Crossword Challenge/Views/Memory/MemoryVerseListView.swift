@@ -92,6 +92,9 @@ struct MemoryVerseListView: View {
             }
         }
         .scrollContentBackground(.hidden)
+        // Readable column on iPad, matching LibraryView's lists.
+        .frame(maxWidth: 640)
+        .frame(maxWidth: .infinity)
     }
 
     // MARK: - Rows

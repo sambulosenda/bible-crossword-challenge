@@ -45,6 +45,11 @@ struct LetterKeyboardView: View {
         }
         .padding(.horizontal, Theme.Spacing.s)
         .padding(.vertical, Theme.Spacing.m)
+        // On iPad the keys stop growing at a hand's width — a Q stretched to
+        // an eighth of a 13" screen stops reading as a key. The outer frame
+        // keeps the view full-width so a call site's background still spans.
+        .frame(maxWidth: 560)
+        .frame(maxWidth: .infinity)
         .sensoryFeedback(.selection, trigger: lastKeyTick)
     }
 

@@ -163,6 +163,8 @@ struct MemoryPracticeView: View {
                 .foregroundStyle(.secondary)
             Spacer(minLength: 0)
         }
+        .frame(maxWidth: 560)
+        .frame(maxWidth: .infinity)
         .padding(.horizontal, Theme.Spacing.m)
         .padding(.vertical, Theme.Spacing.s)
         .accessibilityElement(children: .combine)
