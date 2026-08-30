@@ -916,7 +916,7 @@ private struct UpgradeCard: View {
     /// reason the paywall hides its progress line at zero.
     private var subtitle: String {
         guard solvedPuzzles > 0 else {
-            return "No hint limits, and every themed pack."
+            return "Every themed pack, and hints whenever you need them."
         }
         return "You've solved \(solvedPuzzles) — the rest are waiting."
     }

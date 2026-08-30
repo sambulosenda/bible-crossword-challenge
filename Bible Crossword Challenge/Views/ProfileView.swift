@@ -223,7 +223,7 @@ struct ProfileView: View {
             VStack(spacing: 4) {
                 Text("Unlock every puzzle")
                     .font(.headline.weight(.bold))
-                Text("No hint limits, and every themed pack.")
+                Text("Every themed pack, and hints whenever you need them.")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }

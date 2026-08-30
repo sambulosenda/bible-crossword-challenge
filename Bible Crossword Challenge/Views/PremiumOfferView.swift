@@ -136,8 +136,11 @@ struct PremiumOfferView: View {
         VStack(spacing: Theme.Spacing.s) {
             // A bare label: the puzzle count already leads the benefits list
             // one block down, and stating it up here as well meant the screen's
-            // first two numbers were the same number.
-            Text("Premium")
+            // first two numbers were the same number. The app's name is in the
+            // label because a bare "PREMIUM" was the one word on the page in
+            // nobody's voice — onboarding's welcome kicker says "BIBLE
+            // CROSSWORD", and this page continues it.
+            Text("Bible Crossword Premium")
                 .kicker()
             Text(headline)
                 .font(.scripture(.largeTitle, weight: .semibold))

@@ -198,9 +198,12 @@ struct PaywallView: View {
         case .firstCompletion:
             return "That's your first. The rest are waiting."
         case .streak3:
-            // Names the actual reason Premium matters *here*: the habit they've
-            // just built runs on one puzzle a day, and that's all free gives.
-            return "A habit needs more than one a day."
+            // Honours the streak before asking anything of it: the old line
+            // ("A habit needs more than one a day") told a player mid-milestone
+            // that their effort was insufficient — on the one screen that only
+            // exists because they showed up three days running. The ask is the
+            // same; it just comes after the credit now.
+            return "Three days strong. Give it more than one a day."
         case .miniCompletion:
             return "Two minutes was just the start."
         case .packCompletion:
@@ -222,13 +225,15 @@ struct PaywallView: View {
         }
     }
 
-    /// "12 down. 165 to go." — the player's own two numbers, on the one screen
-    /// where they've just finished something and the next one is the question.
+    /// "12 down. 165 more waiting." — the player's own two numbers, on the one
+    /// screen where they've just finished something and the next one is the
+    /// question. "Waiting", not "to go": the remainder is supply, and "to go"
+    /// framed it as a debt — 165 puzzles owed rather than 165 on the shelf.
     private var solvedTally: String? {
         let solved = completedRecords.count
         let remaining = puzzleProvider.totalPuzzleCount - solved
         guard solved > 0, remaining > 0 else { return nil }
-        return "\(solved) down. \(remaining) to go."
+        return "\(solved) down. \(remaining) more waiting."
     }
 
     /// The player's own gap, stated as a fact and nothing more. A personal
@@ -392,7 +397,10 @@ enum PremiumCopy {
     /// The promise itself, in the app's own register: what you'd be doing with
     /// the library rather than what's in it. Said by onboarding's premium page
     /// and by the paywall wherever the entry point has nothing more specific.
-    static let promise = "Time in the Word, one clue at a time."
+    /// "More", because as a bare noun phrase the line read as a description of
+    /// the app rather than of what Premium adds — and every reader already has
+    /// the app.
+    static let promise = "More time in the Word, one clue at a time."
 
     /// The archive's promise. Shared because the Library locked state and the
     /// paywall it opens (`source: "archive"`) are one tap apart — a different
@@ -450,14 +458,15 @@ struct PremiumBenefit: Identifiable {
     /// Counts are passed in from the bundle rather than written as "100+" or
     /// "four", so no claim here can go stale as puzzles and packs are added.
     ///
-    /// The first row says "not just today's" rather than "all N puzzles,
-    /// unlocked". The free tier already gives a daily and a mini, so "unlocked"
-    /// described a state the reader was not in — it invited them to check, find
-    /// today's puzzle playable, and discount the other two rows with it. Naming
-    /// the free tier in the same breath as the offer is the only version a
-    /// daily player can't catch out. It also stopped the row from reaching for
-    /// packs, which the third row already owns: one row for the archive and
-    /// replay, one for hints, one for packs.
+    /// The first row says "the whole library" rather than "all N puzzles,
+    /// unlocked" or the old "not just today's". "Unlocked" described a state
+    /// the reader was not in — it invited them to check, find today's puzzle
+    /// playable, and discount the other two rows with it. "Not just today's"
+    /// fixed that but spent the list's opening words on what free lacks; the
+    /// library is a claim about the shelf, not the reader's state, so a daily
+    /// player can't catch it out either — and it stays affirmative. The row
+    /// still doesn't reach for packs, which the fourth row owns: one row for
+    /// the archive, one for replay, one for hints, one for packs.
     ///
     /// Hint limits get their own row rather than sharing one with ads: they're
     /// the most-hit paywall trigger in the app, and pairing the strongest
@@ -469,11 +478,9 @@ struct PremiumBenefit: Identifiable {
         [
             PremiumBenefit(
                 icon: "square.grid.3x3.fill",
-                // "today's", not "this week's": the free tier refreshes one
-                // daily and one Mini every day, so today's is exactly what a
-                // free player has. The prose above this has said "today's" all
-                // along — the string had drifted from it.
-                title: "All \(puzzleCount) puzzles, not just today's"
+                // No "all" before the count: with it the row wraps on a 402pt
+                // screen, and the break landed between "all" and its number.
+                title: "The whole library — \(puzzleCount) puzzles"
             ),
             PremiumBenefit(
                 icon: "arrow.clockwise",
@@ -481,7 +488,10 @@ struct PremiumBenefit: Identifiable {
             ),
             PremiumBenefit(
                 icon: "lightbulb.fill",
-                title: "No hint limits"
+                // What the lifted limit means, not the limit: "No hint limits"
+                // was the list's second negation, and the reader it matters to
+                // is mid-frustration — say the outcome they want instead.
+                title: "Hints whenever you need them"
             ),
             PremiumBenefit(
                 icon: "rectangle.stack.fill",

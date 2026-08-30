@@ -496,16 +496,40 @@ struct OnboardingView: View {
         return store.introOfferText(for: plan)
     }
 
-    /// The promise, aware of what the player just did.
+    /// The promise, aware of what the player just did — and leading with the
+    /// trial when there is one.
+    ///
+    /// Dismissal telemetry put the median time on this page at four seconds:
+    /// most players skip before reading anything below the headline, and the
+    /// first "free" used to sit in the timeline, half below the fold. The one
+    /// fact that changes a four-second reader's mind is that today costs
+    /// nothing, so when a trial exists it gets the largest text on the screen.
+    ///
+    /// Keyed to the *selected* plan, like the subhead, the CTA and the
+    /// timeline: monthly carries no introductory offer, and a headline
+    /// promising free above a CTA that charges immediately is the one drift
+    /// this page must never have. "Free for", not "the next N days are" — the
+    /// duration string pluralises ("3 days", "1 month"), and only the former
+    /// phrasing survives both.
     ///
     /// Someone who solved the first clue thirty seconds ago has already had the
-    /// product demonstrated to them, and the generic promise ignores it. Someone
-    /// who skipped hasn't, so they still get the promise cold.
-    ///
-    /// Deliberately no numbers: the most they can have solved is the onboarding
-    /// mini, and a tally of one reads as a tally of nothing.
+    /// product demonstrated to them, so their line keeps the credit. Someone
+    /// who skipped hasn't, so they get the offer cold. No solve tallies in
+    /// either: the most they can have solved is the onboarding mini, and a
+    /// tally of one reads as a tally of nothing.
     private var premiumHeadline: String {
-        solved ? "You got the idea.\nKeep it going." : PremiumCopy.promise
+        if let plan = selectedPlan, let offer = store.introOffer(for: plan) {
+            // Non-breaking spaces keep the offer in one piece: left to itself
+            // the headline wrapped as "free / for 3 days", splitting the only
+            // phrase the four-second reader is here to catch. Glued, the line
+            // breaks after "going —" and the offer lands whole.
+            let freePhrase = "free for \(offer.duration)."
+                .replacingOccurrences(of: " ", with: "\u{00a0}")
+            return solved
+                ? "You got the idea.\nKeep it going — \(freePhrase)"
+                : "Everything free for \(offer.duration)."
+        }
+        return solved ? "You got the idea.\nKeep it going." : PremiumCopy.promise
     }
 
     /// Both shared with the sheet — see `PremiumOfferView.ctaTitle` and
