@@ -2,13 +2,20 @@
 //  OnboardingView.swift
 //  Bible Crossword Challenge
 //
-//  First-run experience. Four pages, but only the first two are "intro" — the
-//  rest are setup asks, each one earned by what came before:
+//  First-run experience. Five pages — intro, one ask, a payoff, the offer:
 //
 //    0  Welcome     the brand, in the app's own vocabulary (a crossword)
 //    1  First solve two letters, then a verse — the whole product in ten seconds
 //    2  Name        asked once the player has something to be named for
-//    3  Premium     the upsell, dismissible; the daily puzzle is always free
+//    3  Celebration the payoff, by name and with their own numbers — the
+//                   emotional peak the offer used to arrive without
+//    4  Premium     the upsell, dismissible; the daily puzzle is always free
+//
+//  The celebration sits directly before the offer, not directly after the
+//  solve: the name page's typing would have spent the peak, and a greeting by
+//  name needs the name to exist. It is the pattern the top-converting
+//  onboardings share (a stats moment between the demonstrated value and the
+//  sell), sized honestly for a two-letter solve.
 //
 //  There is deliberately no reminders page any more. It asked before the app
 //  had proved anything: of 102 players who answered it in the 30 days to
@@ -65,10 +72,22 @@ struct OnboardingView: View {
     @State private var solved = false
     @State private var wrongAttempts = 0
 
-    private let lastPage = 3
+    // Solve timing, for the celebration page's tile. Started on the first
+    // letter typed rather than on page arrival, so reading the clue doesn't
+    // count against the player — the number exists to flatter an eight-second
+    // solve, not to audit it.
+    @State private var solveStartedAt: Date?
+    @State private var solveSeconds: Int?
 
-    /// Analytics labels for the four pages, indexed by page number.
-    private let stepNames = ["welcome", "first_solve", "name", "premium"]
+    private let lastPage = 4
+
+    /// How many of the pages are setup steps. The celebration and the offer
+    /// both sit past the end of the bar — one is payoff, the other a bonus,
+    /// and neither asks the player for anything.
+    private let stepCount = 3
+
+    /// Analytics labels for the five pages, indexed by page number.
+    private let stepNames = ["welcome", "first_solve", "name", "celebration", "premium"]
 
     var body: some View {
         VStack(spacing: 0) {
@@ -78,7 +97,8 @@ struct OnboardingView: View {
                 welcomePage.tag(0)
                 firstSolvePage.tag(1)
                 namePage.tag(2)
-                premiumPage.tag(3)
+                celebrationPage.tag(3)
+                premiumPage.tag(4)
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
             .animation(.easeInOut, value: page)
@@ -148,17 +168,19 @@ struct OnboardingView: View {
     /// Three ink segments instead of dots: it reads as progress rather than
     /// decoration, and it tells the player up front how short this is.
     ///
-    /// Three, not four — the premium page is deliberately not a step. Filling a
-    /// final segment on the offer framed paying as the way to finish setting
-    /// the app up, which is both untrue (the free daily is the whole product
-    /// for most players) and the kind of bait-and-switch that earns a one-star
-    /// review. Setup finishes at four, and the bar goes gold to mark what
-    /// follows as a bonus — the same gold the canvas wash already turns on that
-    /// page, so the two read as one signal.
+    /// Three, not five — neither the celebration nor the premium page is a
+    /// step. The celebration asks nothing (it's the payoff, and it arrives
+    /// with the bar already full, which is the point). Filling a final segment
+    /// on the offer framed paying as the way to finish setting the app up,
+    /// which is both untrue (the free daily is the whole product for most
+    /// players) and the kind of bait-and-switch that earns a one-star review.
+    /// The bar goes gold on the offer to mark what follows as a bonus — the
+    /// same gold the canvas wash already turns on that page, so the two read
+    /// as one signal.
     private var progressBar: some View {
         let onOffer = page == lastPage
         return HStack(spacing: 5) {
-            ForEach(0..<lastPage, id: \.self) { i in
+            ForEach(0..<stepCount, id: \.self) { i in
                 Capsule()
                     .fill(onOffer ? Theme.badgeRim : (i <= page ? Theme.ink : Color.primary.opacity(0.10)))
                     .frame(height: 4)
@@ -194,7 +216,9 @@ struct OnboardingView: View {
         .accessibilityLabel(
             onOffer
                 ? "Setup complete. Premium offer, optional."
-                : "Step \(page + 1) of \(lastPage)"
+                : page >= stepCount
+                    ? "Setup complete."
+                    : "Step \(page + 1) of \(stepCount)"
         )
     }
 
@@ -337,6 +361,82 @@ struct OnboardingView: View {
         }
     }
 
+    /// The peak before the ask: the player greeted by the name they just gave,
+    /// over their own numbers.
+    ///
+    /// The solve page's inline verse card is the *product's* payoff (the verse
+    /// behind the answer); this page is the *player's* (what they did, what's
+    /// waiting). Splitting them keeps each small enough to land — and puts a
+    /// high point directly under the offer, which used to arrive off the back
+    /// of a keyboard.
+    ///
+    /// A skipper gets the same page with honest content: no "well done" for a
+    /// clue they didn't solve, and library tiles instead of a solve time.
+    private var celebrationPage: some View {
+        let active = page == 3
+        return pageFrame(spacing: Theme.Spacing.xl) {
+            CelebrationBadge(systemImage: "checkmark", confetti: "puzzle_complete", size: 110)
+                .entrance(active: active, delay: 0.05, reduceMotion: reduceMotion)
+
+            VStack(spacing: Theme.Spacing.m) {
+                Text("Setup complete")
+                    .kicker()
+                    .entrance(active: active, delay: 0.14, reduceMotion: reduceMotion)
+                Text(celebrationHeadline)
+                    .font(.scripture(.largeTitle, weight: .semibold))
+                    .multilineTextAlignment(.center)
+                    .entrance(active: active, delay: 0.20, reduceMotion: reduceMotion)
+            }
+
+            celebrationTiles
+                .entrance(active: active, delay: 0.30, reduceMotion: reduceMotion)
+        }
+    }
+
+    /// Greets by name when there is one to use — the field the player just
+    /// filled is the freshest thing in the app, and top onboarding flows cash
+    /// personalisation in immediately rather than saving it for the profile.
+    private var celebrationHeadline: String {
+        let trimmed = name.trimmingCharacters(in: .whitespaces)
+        let suffix = trimmed.isEmpty ? "" : ", \(trimmed)"
+        return solved
+            ? "Well done\(suffix)."
+            : "You're all set\(suffix)."
+    }
+
+    /// Two tiles, Duolingo's stats-moment pattern in this app's own units.
+    /// The counts come from the bundle, so neither can go stale.
+    private var celebrationTiles: some View {
+        HStack(spacing: Theme.Spacing.s) {
+            if solved, let seconds = solveSeconds {
+                statTile(value: solveTimeText(seconds), label: "First clue")
+            } else {
+                statTile(value: "\(puzzleProvider.packs.count)", label: "Themed packs")
+            }
+            statTile(value: "\(puzzleProvider.totalPuzzleCount)", label: "Puzzles waiting")
+        }
+    }
+
+    private func statTile(value: String, label: String) -> some View {
+        VStack(spacing: 4) {
+            Text(value)
+                .font(.scripture(.title, weight: .semibold))
+            Text(label)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(Theme.Spacing.m)
+        .elevatedCard()
+        .accessibilityElement(children: .combine)
+    }
+
+    /// "8s" under a minute, "1m 12s" past it — the profile's 0:00 format reads
+    /// as a record to beat, and this number is a compliment, not a record.
+    private func solveTimeText(_ seconds: Int) -> String {
+        seconds < 60 ? "\(seconds)s" : "\(seconds / 60)m \(seconds % 60)s"
+    }
+
     /// The same offer the sheet makes, in a page instead of a sheet.
     ///
     /// Everything below the promise — the trial line, the benefits, the plans —
@@ -412,6 +512,12 @@ struct OnboardingView: View {
             case lastPage:
                 premiumControls
 
+            case 3:
+                // Momentum, not procedure: "Continue" reads as one more form
+                // step, and this is the one page whose only job is momentum.
+                Button("Keep going") { advance() }
+                    .buttonStyle(.pillProminent)
+
             default:
                 Button("Continue") { advance() }
                     .buttonStyle(.pillProminent)
@@ -448,6 +554,9 @@ struct OnboardingView: View {
                 }
             }
         }
+        // Regular size: with the escape demoted to a text link this is the
+        // only pill on the page, so the full height reads as the one action
+        // rather than as part of a wall of buttons.
         .buttonStyle(.pillProminent)
         .disabled(store.purchaseInFlight || selectedPlan == nil)
 
@@ -456,19 +565,22 @@ struct OnboardingView: View {
             .foregroundStyle(.secondary)
             .multilineTextAlignment(.center)
 
-        // A real button, not a quiet text link. The quiet treatment was
-        // deliberate ("no more inviting than the offer") until the data said
-        // otherwise: after the 2026-08-11 price increase, 34% of players who
-        // reached this page quit the app on it and never played — a player who
-        // deletes converts at 0%, so the safe exit now has to read as safe at
-        // a glance. Tonal, so the gold CTA above still outranks it.
+        // A quiet text link again — but only because the ✕ now exists. The
+        // tonal-pill era was the fix for a page with no visible escape at all
+        // (34% of reachers quit the app on it after the 2026-08-11 price
+        // increase); the ✕ in the progress bar is the affordance those players
+        // were actually scanning for, and with it in place a second full-width
+        // exit button was competing with the one thing this page sells. If
+        // quit-on-page climbs back toward that figure after release, the ✕
+        // wasn't carrying the load — re-promote this, don't remove the ✕.
         //
-        // "today's free puzzle", not "the free daily puzzle": this button now
+        // "today's free puzzle", not "the free daily puzzle": this button
         // lands in the Mini, and the Daily Puzzle is a different, named thing
         // one row below it on Today. Naming the wrong one would be the first
         // promise the app breaks.
         Button("Continue with today's free puzzle") { finish() }
-            .buttonStyle(.pillTonal)
+            .font(.subheadline.weight(.semibold))
+            .tint(.secondary)
             .padding(.top, Theme.Spacing.xs)
 
         // Restore and the legal links are App Store review requirements
@@ -551,6 +663,7 @@ struct OnboardingView: View {
 
     private func type(_ letter: Character) {
         guard let target = focus ?? nextBlank() else { return }
+        if solveStartedAt == nil { solveStartedAt = Date() }
         entries[target] = letter
         focus = nextBlank(after: target)
         check()
@@ -591,6 +704,11 @@ struct OnboardingView: View {
         if correct {
             solved = true
             focus = nil
+            if let solveStartedAt {
+                // At least one second: a sub-second time renders as "0s",
+                // which reads as a bug rather than a brag.
+                solveSeconds = max(1, Int(Date().timeIntervalSince(solveStartedAt).rounded()))
+            }
         } else {
             withAnimation(.spring(duration: 0.4, bounce: 0.5)) { wrongAttempts += 1 }
             // Clear and hand the first cell back rather than leaving the player
