@@ -321,7 +321,14 @@ struct HomeView: View {
                 }
                 .padding(Theme.Spacing.m)
                 .frame(maxWidth: 560)
-                .frame(maxWidth: .infinity)
+                // The scroll content's width is pinned to the scroll
+                // container, not left to the column's own measurement. Left
+                // to itself the column came out two-thirds of a point wider
+                // than the screen (fractional layout out of the readable-width
+                // chain), which made the vertical scroller horizontally
+                // scrollable — the whole page could be dragged and bounced
+                // left and right.
+                .containerRelativeFrame(.horizontal)
             }
             .background(Theme.background)
             .onAppear { maybeShowStreakAsk() }
@@ -1084,3 +1091,4 @@ private struct CompactPuzzleCard: View {
         }
     }
 }
+
