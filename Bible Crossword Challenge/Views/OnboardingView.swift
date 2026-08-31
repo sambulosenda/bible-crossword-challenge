@@ -331,7 +331,10 @@ struct OnboardingView: View {
         let active = page == 2
         return pageFrame(spacing: Theme.Spacing.l) {
             VStack(spacing: Theme.Spacing.m) {
-                Text("Nice solve")
+                // No praise for a clue they skipped — the celebration page
+                // already applies this razor, and the two pages reading the
+                // same player differently would be the tell.
+                Text(solved ? "Nice solve" : "Before you play")
                     .kicker()
                     .entrance(active: active, delay: 0.05, reduceMotion: reduceMotion)
                 Text("What should we\ncall you?")
@@ -543,27 +546,40 @@ struct OnboardingView: View {
 
     @ViewBuilder
     private var premiumControls: some View {
-        Button {
-            buySelectedPlan()
-        } label: {
-            Group {
-                if store.purchaseInFlight {
-                    ProgressView().tint(Theme.onInk)
-                } else {
-                    Text(premiumCTATitle)
+        if store.isPremium {
+            // A Restore on this page can land here already subscribed. The
+            // offer above has swapped to its premium badge; a buy button for
+            // a product they own would only have StoreKit refuse it.
+            Button("Continue") { finish() }
+                .buttonStyle(.pillProminent)
+        } else if !store.products.isEmpty {
+            Button {
+                buySelectedPlan()
+            } label: {
+                Group {
+                    if store.purchaseInFlight {
+                        ProgressView().tint(Theme.onInk)
+                    } else {
+                        Text(premiumCTATitle)
+                    }
                 }
             }
-        }
-        // Regular size: with the escape demoted to a text link this is the
-        // only pill on the page, so the full height reads as the one action
-        // rather than as part of a wall of buttons.
-        .buttonStyle(.pillProminent)
-        .disabled(store.purchaseInFlight || selectedPlan == nil)
+            // Regular size: with the escape demoted to a text link this is the
+            // only pill on the page, so the full height reads as the one action
+            // rather than as part of a wall of buttons.
+            //
+            // Gated on loaded products, like the sheet's purchase bar: when
+            // the fetch failed the offer above is a retry card, and a disabled
+            // pill under it was a dead button pretending to be the way out.
+            .buttonStyle(.pillProminent)
+            .disabled(store.purchaseInFlight || selectedPlan == nil)
 
-        Text(priceLine)
-            .font(.caption)
-            .foregroundStyle(.secondary)
-            .multilineTextAlignment(.center)
+            // No commitment line under the button here, unlike the sheet: on
+            // this page the trial timeline sits directly above the CTA saying
+            // the same two facts, so the caption was the third telling. The
+            // sheet keeps its copy because its timeline scrolls away while
+            // the CTA stays pinned.
+        }
 
         // A quiet text link again — but only because the ✕ now exists. The
         // tonal-pill era was the fix for a page with no visible escape at all
@@ -578,10 +594,13 @@ struct OnboardingView: View {
         // lands in the Mini, and the Daily Puzzle is a different, named thing
         // one row below it on Today. Naming the wrong one would be the first
         // promise the app breaks.
+        // The vertical padding is the tap target: bare subheadline text is
+        // ~20pt tall, and this is an exit — the one control that must never
+        // take two tries. Same treatment as "Skip for now".
         Button("Continue with today's free puzzle") { finish() }
             .font(.subheadline.weight(.semibold))
             .tint(.secondary)
-            .padding(.top, Theme.Spacing.xs)
+            .padding(.vertical, Theme.Spacing.s)
 
         // Restore and the legal links are App Store review requirements
         // wherever a purchase can start — including here.
@@ -653,10 +672,6 @@ struct OnboardingView: View {
             store: store,
             puzzleCount: puzzleProvider.totalPuzzleCount
         )
-    }
-
-    private var priceLine: String {
-        PremiumOfferView.commitmentText(for: selectedPlan, store: store) ?? ""
     }
 
     // MARK: - First solve
