@@ -1,9 +1,7 @@
 Thanks for playing Bible Crossword Challenge! This update includes:
 
-• Journey Quests — themed lines of puzzles to solve one a day, with a badge waiting at the end
-• Pencil marks: jot provisional letters while you think, then commit them when you're sure
-• A head start for new players: your first word is filled in free, and hints cost nothing while you learn the grid
-• Stuck? A quiet nudge now offers a free letter early on, or a full answer check later
-• Finishing a word moves you to a word that crosses it, so you never lose your place
-• Puzzles open on their easiest clue, and daily reminders suggest the time you actually play
-• Clearer clues on a handful of puzzles, plus a cleaner premium page with prices you can compare at a glance
+• Bible Crossword now runs natively on iPad: the grid on one side, your full clue list on the other, so you can read every clue while you solve
+• Plug a keyboard into your iPad and the arrow keys move around the grid; space switches between Across and Down
+• Clearer clues across all 233 puzzles, re-edited in modern English, with every verse now from the Berean Standard Bible
+• New players get a small celebration after solving their first clue
+• Fixed the Today screen drifting sideways when you scroll
