@@ -49,6 +49,13 @@ enum ReviewAsk {
     /// Minimum spacing between asks on any trigger.
     static let minimumGap: TimeInterval = 14 * 86_400
 
+    /// No ask before the install is this old, on any trigger. Solve counts
+    /// include Minis, so the first rung is reachable in one sitting: of 20
+    /// first-rung prompts to 2026-09-02, 7 fired on install day and 8 more on
+    /// days 1–2. A day-0 rating is a novelty rating, and it spends one of the
+    /// three yearly displays on the player least likely to still be here.
+    static let minimumInstallAge: TimeInterval = 3 * 86_400
+
     struct State {
         var totalCompleted: Int
         var currentStreak: Int
@@ -61,13 +68,20 @@ enum ReviewAsk {
         var currentVersion: String
         /// When the last ask fired, `nil` if never.
         var lastAsk: Date?
+        /// When the profile was created. `nil` (unknown) is treated as old
+        /// enough — a missing date must not silence a long-time player.
+        var installedAt: Date?
         var now: Date = Date()
     }
 
     static func decide(_ s: State) -> Trigger? {
+        // Both floors block without spending: the trigger stays armed and
+        // retries on a later solve once the time has passed.
+        if let installed = s.installedAt,
+           s.now.timeIntervalSince(installed) < Self.minimumInstallAge {
+            return nil
+        }
         if let last = s.lastAsk, s.now.timeIntervalSince(last) < Self.minimumGap {
-            // Blocked triggers stay armed — nothing is spent, so the same
-            // trigger retries on a later solve once the gap has passed.
             return nil
         }
         if let milestone = milestones.last(where: { s.totalCompleted >= $0 }),

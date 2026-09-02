@@ -1021,7 +1021,8 @@ struct CompletionView: View {
             versionAsked: reviewPromptVersion,
             currentVersion: Self.marketingVersion,
             lastAsk: reviewPromptLastAsk == 0
-                ? nil : Date(timeIntervalSinceReferenceDate: reviewPromptLastAsk)
+                ? nil : Date(timeIntervalSinceReferenceDate: reviewPromptLastAsk),
+            installedAt: profile.createdAt
         )
         guard let trigger = ReviewAsk.decide(state) else { return }
         switch trigger {

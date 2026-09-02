@@ -22,7 +22,8 @@ struct ReviewAskTests {
             streakAsked: false,
             versionAsked: "",
             currentVersion: "2.2",
-            lastAsk: nil
+            lastAsk: nil,
+            installedAt: Date().addingTimeInterval(-30 * 86_400)
         )
     }
 
@@ -101,5 +102,20 @@ struct ReviewAskTests {
         var s = fresh(); s.totalCompleted = 10; s.milestoneAsked = 3
         s.lastAsk = s.now.addingTimeInterval(-ReviewAsk.minimumGap - 3_600)
         #expect(ReviewAsk.decide(s) == .milestone(10))
+    }
+
+    @Test func freshInstallSilencesEveryTrigger() {
+        // Three Minis in one sitting reach the first rung on install day;
+        // a 7-streak can't, but the floor is on every trigger regardless.
+        var s = fresh(); s.totalCompleted = 3; s.currentStreak = 7
+        s.installedAt = s.now.addingTimeInterval(-ReviewAsk.minimumInstallAge + 3_600)
+        #expect(ReviewAsk.decide(s) == nil)
+        s.installedAt = s.now.addingTimeInterval(-ReviewAsk.minimumInstallAge - 3_600)
+        #expect(ReviewAsk.decide(s) == .milestone(3))
+    }
+
+    @Test func unknownInstallDateDoesNotBlock() {
+        var s = fresh(); s.totalCompleted = 3; s.installedAt = nil
+        #expect(ReviewAsk.decide(s) == .milestone(3))
     }
 }
