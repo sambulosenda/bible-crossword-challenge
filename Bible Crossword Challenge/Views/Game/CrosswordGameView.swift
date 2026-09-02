@@ -161,7 +161,7 @@ struct CrosswordGameView: View {
                 .padding(Theme.Spacing.m)
                 .frame(maxHeight: .infinity)
 
-            ClueBarView(vm: vm, onStallTap: runStallAction)
+            ClueBarView(vm: vm, onStallTap: runStallAction, onVerseTap: useVerseHint)
 
             LetterKeyboardView(
                 isPencilMode: vm.isPencilMode,

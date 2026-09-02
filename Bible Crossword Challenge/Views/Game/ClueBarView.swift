@@ -13,6 +13,13 @@ struct ClueBarView: View {
     /// check, the verse, or a free letter per `vm.stallNudgeKind`. Owned by the
     /// game view so the analytics and check/hint plumbing stay in one place.
     var onStallTap: (() -> Void)? = nil
+    /// Opens the passage the active clue is drawn from — the free verse hint,
+    /// one tap from the clue instead of a row inside the Hints menu. In the 30
+    /// days to 2026-09-02 the verse was the least-found hint (56 players vs 140
+    /// for letter reveals) and the most-used per player who found it (~24
+    /// uses each): a demand the menu was hiding. Same path as the menu row,
+    /// so the analytics compare directly.
+    var onVerseTap: (() -> Void)? = nil
 
     var body: some View {
         VStack(spacing: 0) {
@@ -128,6 +135,23 @@ struct ClueBarView: View {
             .accessibilityElement(children: .combine)
             .accessibilityLabel(clueAccessibilityLabel)
             .accessibilityHint("Switches between across and down")
+
+            // Only on clues that have a passage: an always-present icon would
+            // advertise a hint most clues can't offer yet, and a dimmed one is
+            // a question the player can't answer. See ClueListView.
+            if vm.activeSlot?.reference != nil, let onVerseTap {
+                Button {
+                    onVerseTap()
+                } label: {
+                    Image(systemName: "book")
+                        .font(.headline)
+                        .foregroundStyle(Theme.accent)
+                        .frame(width: 44, height: 44)
+                        .contentShape(.rect)
+                }
+                .accessibilityLabel("Read the verse")
+                .accessibilityHint("Opens the passage this clue comes from. Free, but counts as a hint.")
+            }
 
             Button {
                 vm.advanceClue(by: 1)
