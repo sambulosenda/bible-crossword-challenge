@@ -339,7 +339,9 @@ struct OnboardingView: View {
             deleteLetter()
             return .handled
         }
-        .onAppear { if active { solveFocused = true } }
+        // Focus follows the page, not `onAppear`: the paged TabView builds
+        // every page up front, so this view appears while page 0 is showing
+        // and an appear-time write would land on an unsettled tree anyway.
         .onChange(of: page) { _, new in solveFocused = (new == 1) }
     }
 
@@ -421,11 +423,23 @@ struct OnboardingView: View {
     private var celebrationPage: some View {
         let active = page == 3
         return pageFrame(spacing: Theme.Spacing.xl) {
-            CelebrationBadge(systemImage: "checkmark", confetti: "puzzle_complete", size: 110)
-                .entrance(active: active, delay: 0.05, reduceMotion: reduceMotion)
+            // The mark is the grid the player just filled (see CelebrationBadge:
+            // a tick says "succeeded", the grid says what). Skippers get the
+            // tick — there is nothing of theirs to show. No gold rim here: gold
+            // is the offer bar's signal on the next page.
+            Group {
+                if solved {
+                    CelebrationBadge(grid: ["GRACE", "..R..", "..K.."], confetti: "puzzle_complete", size: 96, showsRim: false)
+                } else {
+                    CelebrationBadge(systemImage: "checkmark", size: 96, showsRim: false)
+                }
+            }
+            .entrance(active: active, delay: 0.05, reduceMotion: reduceMotion)
 
             VStack(spacing: Theme.Spacing.m) {
-                Text("Setup complete")
+                // A solver did something; "setup" undersells it. A skipper
+                // did set the app up, and gets the honest word.
+                Text(solved ? "First solve" : "Setup complete")
                     .kicker()
                     .entrance(active: active, delay: 0.14, reduceMotion: reduceMotion)
                 Text(celebrationHeadline)
@@ -454,8 +468,12 @@ struct OnboardingView: View {
     /// The counts come from the bundle, so neither can go stale.
     private var celebrationTiles: some View {
         HStack(spacing: Theme.Spacing.s) {
-            if solved, let seconds = solveSeconds {
-                statTile(value: solveTimeText(seconds), label: "First clue")
+            // "1s · First clue" was the old left tile: three letters typed in
+            // a second reads as a timer bug, and at a minute it is still not
+            // a number worth a tile. Day one is true for everyone and points
+            // at the habit the next screens ask about.
+            if solved {
+                statTile(value: "Day 1", label: "Your streak")
             } else {
                 statTile(value: "\(puzzleProvider.packs.count)", label: "Themed packs")
             }
@@ -475,12 +493,6 @@ struct OnboardingView: View {
         .padding(Theme.Spacing.m)
         .elevatedCard()
         .accessibilityElement(children: .combine)
-    }
-
-    /// "8s" under a minute, "1m 12s" past it — the profile's 0:00 format reads
-    /// as a record to beat, and this number is a compliment, not a record.
-    private func solveTimeText(_ seconds: Int) -> String {
-        seconds < 60 ? "\(seconds)s" : "\(seconds / 60)m \(seconds % 60)s"
     }
 
     /// The same offer the sheet makes, in a page instead of a sheet.
