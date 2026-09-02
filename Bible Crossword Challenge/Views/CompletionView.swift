@@ -116,6 +116,11 @@ struct CompletionView: View {
     @AppStorage("completionReminderAsksShown") private var completionReminderAsksShown = 0
     @AppStorage("streakReminderAskShown") private var streakReminderAskShown = false
     @AppStorage("reminderAskLastDay") private var reminderAskLastDay = 0.0
+    /// The return-day sheet is once ever; this is the spent flag. Same key
+    /// the launch-time sheet used, so players who already met it there are
+    /// not asked twice across the move.
+    @AppStorage("didAskReminderAgain") private var didAskReminderAgain = false
+    @State private var showReturnDaySheet = false
     /// Decided once on appear so spending an impression can't hide the card
     /// mid-view.
     @State private var showReminderAsk = false
@@ -228,7 +233,19 @@ struct CompletionView: View {
             loadQuestContext()
             loadChainTarget()
             loadWeeklyRank()
+            // Sheet first: it spends the day's ask budget, and the inline
+            // card below yields to it through `ReminderAsk.decide`.
+            maybeShowReturnDaySheet()
             maybeShowReminderAsk()
+        }
+        .sheet(isPresented: $showReturnDaySheet, onDismiss: {
+            // Marked on the way out, whichever way it closed — a swipe-down
+            // counts as an answer; the single sheet this player gets is spent.
+            didAskReminderAgain = true
+        }) {
+            DailyReminderPrompt(profile: profile) {
+                showReturnDaySheet = false
+            }
         }
         .sheet(item: $paywallEntry) { entry in
             PaywallView(source: entry.source)
@@ -1166,8 +1183,36 @@ struct CompletionView: View {
             completionAsksShown: completionReminderAsksShown,
             streakAskShown: streakReminderAskShown,
             lastAskDay: reminderAskLastDay == 0 ? nil : Date(timeIntervalSinceReferenceDate: reminderAskLastDay),
-            askedThisSession: ReminderAskSession.asked
+            askedThisSession: ReminderAskSession.asked,
+            returnDaySheetShown: didAskReminderAgain,
+            isInstallDay: Calendar.current.isDateInToday(profile.createdAt)
         )
+    }
+
+    /// The once-ever full ask, over the completion screen of a solve on a
+    /// later day than the install. It used to open at app launch on that day
+    /// and 29 of 34 players tapped it away to get to the puzzle; here the
+    /// puzzle is done and the habit is a fact. Yields to a challenge result
+    /// and the review sheet like every other ask, and takes the day's budget
+    /// so the inline card stands down. Slides up after the celebration lands.
+    private func maybeShowReturnDaySheet() {
+        guard challenge == nil, !didRequestReview else { return }
+        #if DEBUG
+        // Reaching the eligible state takes a real second day; the flag makes
+        // the sheet inspectable. Gating is unit-tested (ReminderAskTests).
+        let forced = ProcessInfo.processInfo.arguments.contains("-uiForceReminderPrompt")
+        #else
+        let forced = false
+        #endif
+        guard forced || ReminderAsk.decide(.returnDaySheet, reminderAskState) else { return }
+
+        reminderAskLastDay = Calendar.current.startOfDay(for: Date()).timeIntervalSinceReferenceDate
+        ReminderAskSession.asked = true
+        analytics.log(.reminderAskShown(source: ReminderAsk.Surface.returnDaySheet.rawValue))
+        Task {
+            try? await Task.sleep(for: .seconds(1.5))
+            showReturnDaySheet = true
+        }
     }
 
     private func maybeShowReminderAsk() {

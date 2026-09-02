@@ -24,6 +24,15 @@ enum ReminderAsk {
         case completion
         /// Home streak card once there is a streak worth protecting.
         case streakCard = "streak_card"
+        /// The full sheet (`DailyReminderPrompt`), once ever, over the
+        /// completion screen of a solve on a later day than the install. It
+        /// used to open at launch on that day: of 34 players who met it there
+        /// (2.2–2.6, 45 days to 2026-09-02) 29 tapped "No thanks" and 2
+        /// reached the dialog — a sheet in the way of the puzzle they came
+        /// back for. After the solve the same sheet asks about a habit the
+        /// player has just demonstrated. Raw value kept as `prompt` so the
+        /// two placements compare directly in analytics.
+        case returnDaySheet = "prompt"
     }
 
     /// The completion ask retries across the first few solves until answered;
@@ -46,6 +55,11 @@ enum ReminderAsk {
         /// True once any surface asked since process launch — two asks in one
         /// sitting reads as nagging even when the daily cap would allow it.
         var askedThisSession: Bool
+        /// The return-day sheet has been shown (once ever).
+        var returnDaySheetShown: Bool = false
+        /// Today is the day the profile was created — a first sitting, not a
+        /// return, so the return-day sheet has nothing true to say yet.
+        var isInstallDay: Bool = false
         var now: Date = Date()
         var calendar: Calendar = .current
     }
@@ -63,6 +77,8 @@ enum ReminderAsk {
             return s.totalCompleted >= 1 && s.completionAsksShown < Self.maxCompletionAsks
         case .streakCard:
             return s.currentStreak >= 2 && !s.streakAskShown
+        case .returnDaySheet:
+            return s.totalCompleted >= 1 && !s.returnDaySheetShown && !s.isInstallDay
         }
     }
 }

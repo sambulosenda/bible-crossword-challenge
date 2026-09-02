@@ -48,10 +48,8 @@ struct RootView: View {
     @AppStorage("reminderMinutes") private var reminderMinutes = ReminderTime.defaultMinutes
     /// Set the first time the day-2 reminder prompt is shown, whatever the
     /// answer. One second ask is a nudge; a recurring one is nagging.
-    @AppStorage("didAskReminderAgain") private var didAskReminderAgain = false
     /// Start-of-day stamp of the last reminder ask on any surface (this sheet,
     /// completion card, streak card) — the shared one-ask-per-day budget.
-    @AppStorage("reminderAskLastDay") private var reminderAskLastDay = 0.0
     /// Set by ProfileView when it hands the player to Settings to allow
     /// notifications; cleared here once they come back with an answer.
     @AppStorage("pendingReminderOptIn") private var pendingReminderOptIn = false
@@ -60,7 +58,6 @@ struct RootView: View {
     /// field on `PlayerProfile`: it's a transient piece of UI state, and a new
     /// synced field would mean a CloudKit schema deploy before this could ship.
     @AppStorage("pendingStreakBreak") private var pendingStreakBreak = 0
-    @State private var showReminderPrompt = false
 
     var body: some View {
         Group {
@@ -127,11 +124,9 @@ struct RootView: View {
             gameCenter.authenticate()
             analytics.log(.appOpen)
             await notifications.reschedule(for: profile, enabled: remindersEnabled, minutes: reminderMinutes)
-            // Status has to be read before deciding, because the whole point of
-            // the second ask is that it only makes sense while the system
-            // prompt is still unspent.
+            // Read before any ask surface decides: the asks only make sense
+            // while the system prompt is still unspent.
             await notifications.refreshStatus()
-            presentReminderReaskIfDue()
             // A cold launch from a notification tap sets `pendingURL` before
             // this view exists, so the change never lands on `onChange` —
             // whatever is already waiting has to be drained by hand.
@@ -159,13 +154,6 @@ struct RootView: View {
                 await notifications.refreshStatus()
                 completePendingReminderOptIn()
                 await notifications.reschedule(for: profile, enabled: remindersEnabled, minutes: reminderMinutes)
-                // The day-2 sheet used to be launch-only, which quietly meant
-                // "cold-launch only": a player returning the next day to a
-                // process iOS kept suspended never saw it. Of 78 onboarding
-                // decliners in the 30 days to 2026-08-23, 25 came back and
-                // played but only 5 ever met this sheet. Foregrounding on a
-                // later day is exactly the moment it was designed for.
-                presentReminderReaskIfDue()
             }
         }
         .onOpenURL { url in
@@ -186,17 +174,6 @@ struct RootView: View {
             Button("OK", role: .cancel) {}
         } message: {
             Text("This challenge was made with a newer version of the app. Update to play it.")
-        }
-        .sheet(isPresented: $showReminderPrompt) {
-            if let profile = profiles.first {
-                DailyReminderPrompt(profile: profile) {
-                    // Marked on the way out rather than on the way in, so a
-                    // launch that never finished presenting doesn't burn the
-                    // single ask this player gets.
-                    didAskReminderAgain = true
-                    showReminderPrompt = false
-                }
-            }
         }
     }
 
@@ -224,49 +201,10 @@ struct RootView: View {
         }
     }
 
-    /// Whether to make the second reminder ask on this launch.
-    ///
-    /// Every condition is a reason the ask would otherwise be wasted or unwanted:
-    /// they already have a reminder; they already answered the system dialog, so
-    /// a prompt would show nothing (Settings is the only route left, and that is
-    /// a separate job); they've been asked a second time already; or they're
-    /// still on the day they installed, which is not a return visit.
-    /// Presents the day-2 reminder sheet when it's due, spending the shared
-    /// per-day/per-session ask budget so the completion and streak cards stand
-    /// down behind it — see `ReminderAsk.decide`. Callable from launch and
-    /// from foregrounding; the guards make a second call on the same day a
-    /// no-op, and it never dismisses a sheet already up.
-    private func presentReminderReaskIfDue() {
-        guard !showReminderPrompt, let profile = profiles.first,
-              shouldAskAgain(profile) else { return }
-        showReminderPrompt = true
-        reminderAskLastDay = Calendar.current.startOfDay(for: Date()).timeIntervalSinceReferenceDate
-        ReminderAskSession.asked = true
-        analytics.log(.reminderAskShown(source: "prompt"))
-    }
-
-    private func shouldAskAgain(_ profile: PlayerProfile) -> Bool {
-        guard hasOnboarded,
-              !remindersEnabled,
-              !didAskReminderAgain,
-              notifications.authorizationStatus == .notDetermined,
-              // A challenge link is taking them somewhere; don't interrupt it.
-              pendingNavPuzzleID == nil,
-              // Another surface (completion or streak card) already asked
-              // today or this session — one ask per day, everywhere.
-              !ReminderAskSession.asked,
-              !Calendar.current.isDate(
-                Date(timeIntervalSinceReferenceDate: reminderAskLastDay),
-                inSameDayAs: Date())
-        else { return false }
-        #if DEBUG
-        // Same family as -uiSeedShowcase. The day-2 clause is otherwise only
-        // reachable by waiting a day or moving the device clock, which makes
-        // the one screen a player sees least the one hardest to look at.
-        if ProcessInfo.processInfo.arguments.contains("-uiForceReminderPrompt") { return true }
-        #endif
-        return !Calendar.current.isDateInToday(profile.createdAt)
-    }
+    // The day-2 reminder sheet no longer opens here. It moved to the
+    // completion screen of a return-day solve (`CompletionView`), where the
+    // habit it asks about has just been demonstrated — see
+    // `ReminderAsk.Surface.returnDaySheet`.
 
     /// Routes whatever a notification tap left behind, exactly once.
     private func drainPendingNotificationURL() {

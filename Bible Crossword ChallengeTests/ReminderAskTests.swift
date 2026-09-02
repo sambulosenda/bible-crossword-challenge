@@ -88,4 +88,38 @@ struct ReminderAskTests {
         // But the completion surface is unaffected by the streak flag.
         #expect(ReminderAsk.decide(.completion, s))
     }
+
+    // MARK: - Return-day sheet
+
+    @Test func returnDaySheetAsksOnALaterDayAfterASolve() {
+        #expect(ReminderAsk.decide(.returnDaySheet, eligible()))
+    }
+
+    @Test func returnDaySheetWaitsForAReturn() {
+        var s = eligible(); s.isInstallDay = true
+        #expect(!ReminderAsk.decide(.returnDaySheet, s))
+        // The inline card still asks on the install day.
+        #expect(ReminderAsk.decide(.completion, s))
+    }
+
+    @Test func returnDaySheetIsOnceEver() {
+        var s = eligible(); s.returnDaySheetShown = true
+        #expect(!ReminderAsk.decide(.returnDaySheet, s))
+        #expect(ReminderAsk.decide(.completion, s))
+    }
+
+    @Test func returnDaySheetNeedsASolve() {
+        var s = eligible(); s.totalCompleted = 0
+        #expect(!ReminderAsk.decide(.returnDaySheet, s))
+    }
+
+    @Test func returnDaySheetSharesTheDailyAndSessionBudget() {
+        var s = eligible()
+        s.lastAskDay = s.calendar.startOfDay(for: s.now)
+        #expect(!ReminderAsk.decide(.returnDaySheet, s))
+        s = eligible(); s.askedThisSession = true
+        #expect(!ReminderAsk.decide(.returnDaySheet, s))
+        s = eligible(); s.permissionUndetermined = false
+        #expect(!ReminderAsk.decide(.returnDaySheet, s))
+    }
 }

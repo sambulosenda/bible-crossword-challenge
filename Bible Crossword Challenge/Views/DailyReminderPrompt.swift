@@ -2,8 +2,12 @@
 //  DailyReminderPrompt.swift
 //  Bible Crossword Challenge
 //
-//  The second ask for a daily reminder, shown once to players who declined
-//  during onboarding and then came back on a later day.
+//  The second ask for a daily reminder, shown once, over the completion screen
+//  of a solve on a later day than the install (see
+//  `ReminderAsk.Surface.returnDaySheet`). It used to open at launch on that
+//  day; 29 of the 34 players who met it there tapped it away to reach the
+//  puzzle. Now the puzzle is done and the sheet asks about a habit the player
+//  has just demonstrated.
 //
 //  Why a second ask exists at all: of 66 players who reached the onboarding
 //  reminder step, 48 tapped "Not now" and 8 more declined the system dialog —
@@ -90,12 +94,12 @@ struct DailyReminderPrompt: View {
             Spacer(minLength: 0)
 
             VStack(spacing: Theme.Spacing.m) {
-                Text("You came back")
+                Text("You came back and solved it")
                     .kicker()
-                // Names what they already did rather than what the app wants.
-                // On day one "keep the streak" was an abstraction; to someone
-                // who has returned of their own accord it's a description.
-                Text("Make it two\ndays running.")
+                // Names what they already did rather than what the app wants:
+                // they returned of their own accord and finished — the
+                // reminder is for repeating that, not for starting it.
+                Text("Same time\ntomorrow?")
                     .font(.scripture(.largeTitle, weight: .semibold))
                     .multilineTextAlignment(.center)
             }
@@ -151,8 +155,8 @@ struct DailyReminderPrompt: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Theme.background)
         .interactiveDismissDisabled(working)
-        // This sheet appears the moment they came back to play, which is the
-        // hour worth reminding them at — see `seedSuggestionIfUnset`.
+        // This sheet appears right after a solve, so "now" is the play hour
+        // worth reminding them at — see `seedSuggestionIfUnset`.
         .onAppear { ReminderTime.seedSuggestionIfUnset() }
     }
 
