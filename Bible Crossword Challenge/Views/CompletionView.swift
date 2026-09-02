@@ -134,75 +134,72 @@ struct CompletionView: View {
     }
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: Theme.Spacing.l) {
-                header
+        // Short content (the common case now: header, scorecard, verse)
+        // centres between the top and the pinned bar instead of leaving
+        // the bottom third empty; taller content scrolls as before.
+        GeometryReader { viewport in
+            ScrollView {
+                VStack(spacing: Theme.Spacing.l) {
+                    header
 
-                scorecard
+                    scorecard
 
-                if let challenge {
-                    resultCard(challenge)
+                    if let challenge {
+                        resultCard(challenge)
+                    }
+
+                    // A board the player is already part of is why they're on this
+                    // screen, so it sits above the verse with the other payoffs.
+                    if let board {
+                        familyBoardCard(board)
+                    }
+
+                    verseCard
+
+                    if let packContext {
+                        packCard(packContext)
+                    }
+
+                    if let questContext {
+                        questCard(questContext)
+                    }
+
+                    if earnedFreeze || bonusFreezeEarned {
+                        freezeCard
+                    }
+
+                    if !newAchievements.isEmpty {
+                        achievementsCard
+                    }
+
+                    // The sentiment gate a review trigger now buys. Down here with
+                    // the other asks; it can't co-occur with them — the reminder
+                    // ask yields to `didRequestReview`.
+                    if let trigger = reviewPreAskTrigger {
+                        reviewPreAskCard(trigger)
+                    }
+
+                    // The completion reminder ask lives in the scorecard now, not
+                    // here: this slot sat two to four screens below the fold, and
+                    // of 79 players whose screen included the card (2.2–2.6, 45
+                    // days to 2026-09-02) 76 never touched it. See `scorecard`.
+
+                    if puzzle.isMini && !store.isPremium && pastMiniCount > 0 && !showReminderAsk
+                        && reviewPreAskTrigger == nil {
+                        miniUpsellCard
+                    }
+
                 }
-
-                // A board the player is already part of is why they're on this
-                // screen, so it sits above the verse with the other payoffs.
-                if let board {
-                    familyBoardCard(board)
-                }
-
-                verseCard
-
-                if let packContext {
-                    packCard(packContext)
-                }
-
-                if let questContext {
-                    questCard(questContext)
-                }
-
-                // The invitation, by contrast, is an ask — it belongs down here
-                // with the other quiet cards, not competing with the verse.
-                if board == nil {
-                    startBoardCard
-                }
-
-                if earnedFreeze || bonusFreezeEarned {
-                    freezeCard
-                }
-
-                if !newAchievements.isEmpty {
-                    achievementsCard
-                }
-
-                // The sentiment gate a review trigger now buys. Down here with
-                // the other asks; it can't co-occur with them — the reminder
-                // ask yields to `didRequestReview`.
-                if let trigger = reviewPreAskTrigger {
-                    reviewPreAskCard(trigger)
-                }
-
-                // The completion reminder ask lives in the scorecard now, not
-                // here: this slot sat two to four screens below the fold, and
-                // of 79 players whose screen included the card (2.2–2.6, 45
-                // days to 2026-09-02) 76 never touched it. See `scorecard`.
-
-                if puzzle.isMini && !store.isPremium && pastMiniCount > 0 && !showReminderAsk
-                    && reviewPreAskTrigger == nil {
-                    miniUpsellCard
-                }
-
-                secondaryActions
-
-                nextPuzzleFooter
+                .padding(Theme.Spacing.l)
+                .frame(maxWidth: 520)
+                .frame(maxWidth: .infinity)
+                .frame(minHeight: viewport.size.height)
             }
-            .padding(Theme.Spacing.l)
-            .frame(maxWidth: 520)
-            .frame(maxWidth: .infinity)
         }
         .background(Theme.background)
         .softTopScrollEdge()
-        // HIG: a pinned bottom bar carries one primary action, not a menu.
-        // Everything else scrolls with the content (see `secondaryActions`).
+        // HIG: a pinned bottom bar carries one primary action; the rest sits
+        // behind the "more" menu beside it (see `pinnedActions`).
         // The exit is a close button where a full-screen cover keeps it, not
         // a second line under the primary pill.
         .overlay(alignment: .topLeading) {
@@ -435,21 +432,6 @@ struct CompletionView: View {
 
     /// One quiet line under the CTA: how this puzzle's last matchup stands, or —
     /// for someone who has never sent one — what tapping actually does.
-    private var challengeHint: String? {
-        if let last = lastOpponent, let name = last.opponentName, let theirs = last.opponentSeconds {
-            let mine = TimeFormat.clock(last.mySeconds)
-            let hers = TimeFormat.clock(theirs)
-            switch last.outcome {
-            case .won: return "You won that one — \(mine) to \(hers)."
-            case .lost: return "\(name) won that one — \(hers) to \(mine)."
-            case .tied, .none: return "You and \(name) tied at \(mine)."
-            }
-        }
-        guard challengeHistory.entries.isEmpty else { return nil }
-        return "They'll get a link to this exact puzzle. Fastest time wins — and sending one earns you a streak freeze."
-    }
-
-    /// True once the player has set a display name (the default counts as unset).
     private var hasChosenName: Bool {
         let name = profile.username.trimmingCharacters(in: .whitespacesAndNewlines)
         return !name.isEmpty && name != ChallengeService.placeholderName
@@ -576,39 +558,6 @@ struct CompletionView: View {
     }
 
     /// The invitation, for a puzzle with no board yet.
-    private var startBoardCard: some View {
-        Button {
-            startBoard()
-        } label: {
-            HStack(spacing: Theme.Spacing.m) {
-                Image(systemName: "person.3.fill")
-                    .font(.title)
-                    .foregroundStyle(Theme.accent)
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Start a family board")
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(.primary)
-                    Text("Everyone plays this puzzle; the times stack up in one list.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-                Spacer(minLength: 0)
-                Image(systemName: "chevron.right")
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(.secondary)
-            }
-            .padding(Theme.Spacing.l)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .elevatedCard()
-        }
-        .buttonStyle(PressableCardStyle())
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel("Start a family board. Everyone plays this puzzle; the times stack up in one list.")
-        .accessibilityHint("Creates a board with your time and opens the share sheet")
-    }
-
-    /// Create the board with this solve on it and hand it straight to the share
-    /// sheet — a board of one has no reason to exist until it's sent.
     private func startBoard() {
         guard hasChosenName else {
             pendingBoardIntent = true
@@ -1066,18 +1015,6 @@ struct CompletionView: View {
 
     /// Tomorrow hook, demoted to a quiet footer line — the streak already
     /// carries the retention message up in the stat line.
-    private var nextPuzzleFooter: some View {
-        Text("Next puzzle in \(Text(timerInterval: Date()...nextMidnight, countsDown: true).monospacedDigit())")
-            .font(.footnote.weight(.medium))
-            .foregroundStyle(.secondary)
-            .frame(maxWidth: .infinity)
-    }
-
-    private var nextMidnight: Date {
-        let calendar = Calendar.current
-        let startOfToday = calendar.startOfDay(for: Date())
-        return calendar.date(byAdding: .day, value: 1, to: startOfToday) ?? startOfToday
-    }
 
     /// Ask for a rating at the happiest moments in the loop — the triggers and
     /// their spacing live in `ReviewAsk.decide`; this just spends the flag the
@@ -1272,8 +1209,14 @@ struct CompletionView: View {
     /// The pinned bottom bar: one primary action plus the quiet exit. A Mini
     /// solved with today's full puzzle still open makes the chain the primary
     /// (the next solve is worth more than the share); otherwise Share leads.
+    /// The pinned bar: one primary action and a "more" menu. Chain (a Mini
+    /// solved with today's daily still open) or Share is the primary; the
+    /// challenge, family board and leaderboard live in the menu. They used to
+    /// be a card, a pill with a two-line hint and a button in the scroll — in
+    /// the 60 days to 2026-09-02, 8 players sent a challenge and 3 started a
+    /// board, and every other player scrolled past all of it.
     private var pinnedActions: some View {
-        VStack(spacing: Theme.Spacing.xs) {
+        HStack(spacing: Theme.Spacing.s) {
             if let chainTarget {
                 Button {
                     analytics.log(.completionChainTapped(
@@ -1292,55 +1235,54 @@ struct CompletionView: View {
             } else {
                 shareButton(prominent: true)
             }
+
+            moreMenu
         }
     }
 
-    /// The rest of the actions, scrolling with the content they relate to —
-    /// pinning all of them made the bar taller than the visible content on
-    /// smaller phones, burying the verse under a wall of buttons.
-    private var secondaryActions: some View {
-        VStack(spacing: Theme.Spacing.m) {
-            // When the chain owns the pinned bar, Share steps down into here.
+    /// Everything social that isn't the primary: same actions, same name
+    /// prompt and share sheets, same events, one tap further away.
+    private var moreMenu: some View {
+        Menu {
+            // When the chain owns the primary slot, Share steps in here.
             if chainTarget != nil {
                 shareButton(prominent: false)
             }
-
             // A challenge that arrived for this puzzle already offers "Send
-            // Result Back" in the result card — don't double up the CTA.
+            // Result Back" in the result card — don't double up.
             if challenge == nil {
-                VStack(spacing: Theme.Spacing.xs) {
-                    Button {
-                        sendChallenge(rematch: lastOpponent != nil)
-                    } label: {
-                        Label(challengeTitle, systemImage: "flag.checkered")
-                            .frame(maxWidth: .infinity)
-                    }
-                    .buttonStyle(.pillTonal)
-
-                    if let hint = challengeHint {
-                        Text(hint)
-                            .font(.caption2)
-                            .foregroundStyle(.secondary)
-                            .multilineTextAlignment(.center)
-                    }
+                Button {
+                    sendChallenge(rematch: lastOpponent != nil)
+                } label: {
+                    Label(challengeTitle, systemImage: "flag.checkered")
                 }
             }
-
-            // Minis race the clock against everyone — surface this week's
-            // standings while the solve is fresh, with the player's own rank
-            // once Game Center reports it. Hidden when not signed in.
+            if board == nil {
+                Button {
+                    startBoard()
+                } label: {
+                    Label("Start a Family Board", systemImage: "person.3")
+                }
+            }
             if puzzle.isMini && gameCenter.isAuthenticated {
                 Button {
                     gameCenter.showWeeklyMiniLeaderboard()
                 } label: {
                     Label(weeklyRankTitle, systemImage: "trophy")
-                        .frame(maxWidth: .infinity)
                 }
-                .buttonStyle(.bordered)
-                .controlSize(.large)
-                .accessibilityHint("Opens the weekly Mini leaderboard")
             }
+        } label: {
+            Image(systemName: "ellipsis")
+                .font(.body.weight(.semibold))
+                .foregroundStyle(.primary)
+                .frame(width: 52, height: 52)
+                .background(Color.primary.opacity(0.08), in: .circle)
+                .contentShape(.circle)
         }
+        // A Menu label takes the accent tint; the glyph should read as ink.
+        .buttonStyle(.plain)
+        .accessibilityLabel("More")
+        .accessibilityHint("Challenge a friend, start a family board, or see the leaderboard")
     }
 
     private func shareButton(prominent: Bool) -> some View {
