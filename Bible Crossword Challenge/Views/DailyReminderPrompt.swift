@@ -206,11 +206,108 @@ enum ReminderOptIn {
     }
 }
 
+// MARK: - Inline ask row
+
+/// The smallest form of the ask: one row for a card the player is already
+/// looking at (the completion scorecard, under the week row). No preview, no
+/// kicker — the surrounding card supplies the context, and the row's job is
+/// to be seen. Same accept path and analytics as the other surfaces.
+struct ReminderAskRow: View {
+    let profile: PlayerProfile
+    let surface: ReminderAsk.Surface
+    /// Called once the ask is answered either way, so the owner can remove
+    /// the row. Impressions are recorded by the owner when it decides to show.
+    let onFinish: () -> Void
+
+    @Environment(\.analytics) private var analytics
+    @Environment(\.notifications) private var notifications
+    @AppStorage("remindersEnabled") private var remindersEnabled = false
+    @AppStorage("reminderMinutes") private var reminderMinutes = ReminderTime.defaultMinutes
+    @State private var working = false
+
+    private var reminderTimeText: String {
+        ReminderTime.date(fromMinutes: reminderMinutes)
+            .formatted(date: .omitted, time: .shortened)
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: Theme.Spacing.s) {
+            HStack(spacing: Theme.Spacing.s) {
+                Image(systemName: "bell.badge")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Theme.accent)
+                    .accessibilityHidden(true)
+                VStack(alignment: .leading, spacing: 1) {
+                    Text("Same time tomorrow?")
+                        .font(.subheadline.weight(.semibold))
+                    Text("One nudge a day, at \(reminderTimeText). Change it any time.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .accessibilityElement(children: .combine)
+            }
+
+            HStack(spacing: Theme.Spacing.m) {
+                // Quiet, same weight as the other asks' declines.
+                Button("Not now") {
+                    analytics.log(.reminderDeclined(source: surface.rawValue))
+                    onFinish()
+                }
+                .font(.subheadline.weight(.semibold))
+                .tint(.secondary)
+                .disabled(working)
+
+                Spacer(minLength: 0)
+
+                Button {
+                    enable()
+                } label: {
+                    Group {
+                        if working {
+                            ProgressView().tint(.white)
+                        } else {
+                            Text("Remind me")
+                                .foregroundStyle(.white)
+                        }
+                    }
+                    .font(.subheadline.weight(.semibold))
+                    .padding(.horizontal, Theme.Spacing.xs)
+                }
+                .buttonStyle(.borderedProminent)
+                .buttonBorderShape(.capsule)
+                .tint(Theme.accent)
+                .disabled(working)
+                .accessibilityLabel("Remind me at \(reminderTimeText)")
+                .accessibilityHint("Asks for notification permission")
+            }
+        }
+        // Mid-play, so "now" is the play hour the button should offer — see
+        // `seedSuggestionIfUnset`.
+        .onAppear { ReminderTime.seedSuggestionIfUnset() }
+    }
+
+    private func enable() {
+        working = true
+        Task {
+            let granted = await ReminderOptIn.enable(
+                source: surface.rawValue, profile: profile,
+                notifications: notifications, analytics: analytics,
+                minutes: reminderMinutes
+            )
+            if granted { remindersEnabled = true }
+            working = false
+            onFinish()
+        }
+    }
+}
+
 // MARK: - Inline ask card
 
-/// The compact form of the ask for surfaces that are already a screen of their
-/// own (completion, Home). Same preview, same buttons, no time picker — the
+/// The card form of the ask for a surface that is already a screen of its
+/// own (Home's streak card). Same preview, same buttons, no time picker — the
 /// stored default time is offered in the button and adjustable in Profile.
+/// The completion screen uses `ReminderAskRow` inside its scorecard instead.
 struct ReminderAskCard: View {
     let profile: PlayerProfile
     let surface: ReminderAsk.Surface

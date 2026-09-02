@@ -181,21 +181,11 @@ struct CompletionView: View {
                     reviewPreAskCard(trigger)
                 }
 
-                // Below the payoffs with the other asks. Present only when the
-                // screen has no other ask this launch — see maybeShowReminderAsk.
-                if showReminderAsk {
-                    ReminderAskCard(
-                        profile: profile,
-                        surface: .completion,
-                        kicker: "Make it a habit",
-                        headline: "Same time tomorrow?",
-                        onFinish: { withAnimation { showReminderAsk = false } }
-                    )
-                }
+                // The completion reminder ask lives in the scorecard now, not
+                // here: this slot sat two to four screens below the fold, and
+                // of 79 players whose screen included the card (2.2–2.6, 45
+                // days to 2026-09-02) 76 never touched it. See `scorecard`.
 
-                // Stands down when the reminder ask or the review sentiment
-                // card claimed this screen — one ask per completion, and both
-                // outrank an upsell impression the next Mini can repeat.
                 if puzzle.isMini && !store.isPremium && pastMiniCount > 0 && !showReminderAsk
                     && reviewPreAskTrigger == nil {
                     miniUpsellCard
@@ -839,7 +829,37 @@ struct CompletionView: View {
     /// report them. Tiles put the numbers first and the labels under, and the
     /// week row underneath turns a bare streak count into a visible run: this is
     /// the moment today's dot fills, so it's the moment worth showing it.
+    /// Time, streak, the week row — and, when it's due, the reminder ask in
+    /// one compact row under the week. The week row is already a picture of
+    /// tomorrow, and this card is the one thing on the screen every player
+    /// sees: the ask used to be its own card far below the fold, where 76 of
+    /// 79 players never reached it. Grouped so VoiceOver reads the stats as
+    /// one element and still lands on the ask's buttons.
     private var scorecard: some View {
+        VStack(spacing: Theme.Spacing.m) {
+            scorecardStats
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel(scorecardLabel)
+
+            if showReminderAsk {
+                Rectangle()
+                    .fill(Color.primary.opacity(0.08))
+                    .frame(height: 1)
+
+                ReminderAskRow(
+                    profile: profile,
+                    surface: .completion,
+                    onFinish: { withAnimation { showReminderAsk = false } }
+                )
+                .transition(.opacity)
+            }
+        }
+        .padding(Theme.Spacing.l)
+        .frame(maxWidth: .infinity)
+        .elevatedCard()
+    }
+
+    private var scorecardStats: some View {
         VStack(spacing: Theme.Spacing.m) {
             HStack(spacing: Theme.Spacing.m) {
                 statTile(value: TimeFormat.clock(seconds),
@@ -864,11 +884,6 @@ struct CompletionView: View {
 
             WeekRow(completedWeekdays: completedWeekdays)
         }
-        .padding(Theme.Spacing.l)
-        .frame(maxWidth: .infinity)
-        .elevatedCard()
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel(scorecardLabel)
     }
 
     private func statTile(value: String, label: String, symbol: String, tint: Color) -> some View {
