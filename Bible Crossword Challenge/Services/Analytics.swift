@@ -168,12 +168,6 @@ enum AnalyticsEvent {
     /// "version"); `totalCompleted` says where in the ladder players sit when
     /// each trigger fires, which is the number the ladder is tuned against.
     case reviewPromptRequested(trigger: String, totalCompleted: Int)
-    /// The sentiment card that now stands between a `ReviewAsk` trigger and the
-    /// system prompt. Shown/response pairs measure its yield: `loved: true`
-    /// goes on to `reviewPromptRequested`, `false` routes to feedback mail —
-    /// so a falling loved-rate is the early warning the star rating can't give.
-    case reviewPreAskShown(trigger: String)
-    case reviewPreAskResponse(trigger: String, loved: Bool)
     /// `source` names the surface that pushed the pack (`home`, `packs`,
     /// `notification`) — the question a seasonal pack raises is not how many
     /// people opened it but which surface got them there, and the Home carousel
@@ -258,8 +252,6 @@ enum AnalyticsEvent {
         case .reminderDeclined: return "reminder_declined"
         case .reminderSettingChanged: return "reminder_setting_changed"
         case .reviewPromptRequested: return "review_prompt_requested"
-        case .reviewPreAskShown: return "review_preask_shown"
-        case .reviewPreAskResponse: return "review_preask_response"
         case .packOpened: return "pack_opened"
         case .packCompleted: return "pack_completed"
         case .questOpened: return "quest_opened"
@@ -385,10 +377,6 @@ enum AnalyticsEvent {
             return ["enabled": enabled]
         case .reviewPromptRequested(let trigger, let totalCompleted):
             return ["trigger": trigger, "total_completed": totalCompleted]
-        case .reviewPreAskShown(let trigger):
-            return ["trigger": trigger]
-        case .reviewPreAskResponse(let trigger, let loved):
-            return ["trigger": trigger, "loved": loved]
         case .packOpened(let id, let source):
             return ["pack_id": id, "source": source]
         case .packCompleted(let id):

@@ -43,10 +43,6 @@ struct CompletionView: View {
     /// True once this appearance scheduled the system review prompt — the
     /// reminder ask stands down rather than stacking asks.
     @State private var didRequestReview = false
-    /// The `ReviewAsk` trigger behind the sentiment card, nil when no card is
-    /// showing. The card, not the system prompt, is what a trigger now buys —
-    /// see `maybeRequestReview`.
-    @State private var reviewPreAskTrigger: ReviewAsk.Trigger?
     /// A challenge-earned freeze this appearance — receiving side granted in
     /// `processIncomingChallenge`, sending side in the share-sheet callback.
     /// Separate from `earnedFreeze` (the caller's streak-milestone grant) so
@@ -172,20 +168,12 @@ struct CompletionView: View {
                         achievementsCard
                     }
 
-                    // The sentiment gate a review trigger now buys. Down here with
-                    // the other asks; it can't co-occur with them — the reminder
-                    // ask yields to `didRequestReview`.
-                    if let trigger = reviewPreAskTrigger {
-                        reviewPreAskCard(trigger)
-                    }
-
                     // The completion reminder ask lives in the scorecard now, not
                     // here: this slot sat two to four screens below the fold, and
                     // of 79 players whose screen included the card (2.2–2.6, 45
                     // days to 2026-09-02) 76 never touched it. See `scorecard`.
 
-                    if puzzle.isMini && !store.isPremium && pastMiniCount > 0 && !showReminderAsk
-                        && reviewPreAskTrigger == nil {
+                    if puzzle.isMini && !store.isPremium && pastMiniCount > 0 && !showReminderAsk {
                         miniUpsellCard
                     }
 
@@ -1018,22 +1006,13 @@ struct CompletionView: View {
 
     /// Ask for a rating at the happiest moments in the loop — the triggers and
     /// their spacing live in `ReviewAsk.decide`; this just spends the flag the
-    /// verdict names. What a trigger now buys is the sentiment card below, not
-    /// the system prompt directly: "loving it" goes on to `requestReview` (and
-    /// Apple still decides whether that shows), "could be better" routes to
-    /// feedback mail — so an unhappy player lands in the inbox, not the store.
-    /// The flag is spent on showing the card, answered or not: an ignored
-    /// question was still this screen's ask, and re-arming it would nag.
+    /// verdict names and calls the system prompt, which Apple further
+    /// rate-limits. No sentiment card in front of it any more: in 2.5–2.6 the
+    /// card sat below the fold and 15 of 15 players who were shown it never
+    /// answered, so the ladder produced zero prompts while the direct call in
+    /// 2.3–2.4 produced 28 in the same span — and the store rating it was
+    /// meant to protect stood at 4.86.
     private func maybeRequestReview() {
-        #if DEBUG
-        // Same family as -uiForceReminderAsk: the earliest real trigger is the
-        // third solve, which makes this card slow to look at by hand.
-        if ProcessInfo.processInfo.arguments.contains("-uiForceReviewPreAsk") {
-            didRequestReview = true
-            reviewPreAskTrigger = .milestone(3)
-            return
-        }
-        #endif
         let state = ReviewAsk.State(
             totalCompleted: totalCompleted,
             currentStreak: streak,
@@ -1055,65 +1034,13 @@ struct CompletionView: View {
         reviewPromptVersion = Self.marketingVersion
         reviewPromptLastAsk = Date().timeIntervalSinceReferenceDate
         didRequestReview = true
-        analytics.log(.reviewPreAskShown(trigger: trigger.analyticsValue))
-        reviewPreAskTrigger = trigger
-    }
-
-    /// The sentiment gate in front of the system review prompt. Same shape as
-    /// `ReminderAskCard` — a quiet card among the others, never a sheet over
-    /// the celebration.
-    private func reviewPreAskCard(_ trigger: ReviewAsk.Trigger) -> some View {
-        VStack(spacing: Theme.Spacing.m) {
-            VStack(spacing: Theme.Spacing.xs) {
-                Text("Quick question")
-                    .kicker()
-                Text("Enjoying Bible Crossword?")
-                    .font(.headline)
-                    .multilineTextAlignment(.center)
-            }
-            .frame(maxWidth: .infinity)
-            .accessibilityElement(children: .combine)
-
-            Button {
-                analytics.log(.reviewPreAskResponse(
-                    trigger: trigger.analyticsValue, loved: true))
-                analytics.log(.reviewPromptRequested(
-                    trigger: trigger.analyticsValue, totalCompleted: totalCompleted))
-                withAnimation { reviewPreAskTrigger = nil }
-                Task {
-                    // Let the card's dismissal settle before the system sheet.
-                    try? await Task.sleep(for: .seconds(0.6))
-                    requestReview()
-                }
-            } label: {
-                Text("Loving it")
-                    .frame(maxWidth: .infinity)
-            }
-            .buttonStyle(.pillProminent)
-
-            // Quiet, same weight as the other asks' declines.
-            Button("Could be better") {
-                analytics.log(.reviewPreAskResponse(
-                    trigger: trigger.analyticsValue, loved: false))
-                withAnimation { reviewPreAskTrigger = nil }
-                openURL(feedbackMailURL)
-            }
-            .font(.subheadline.weight(.semibold))
-            .tint(.secondary)
+        analytics.log(.reviewPromptRequested(
+            trigger: trigger.analyticsValue, totalCompleted: totalCompleted))
+        Task {
+            // Let the celebration land before the system sheet appears.
+            try? await Task.sleep(for: .seconds(2))
+            requestReview()
         }
-        .padding(Theme.Spacing.m)
-        .elevatedCard()
-    }
-
-    /// The support address (same one Profile's Contact row uses) with a
-    /// subject line, so a "could be better" arrives as feedback that can be
-    /// acted on rather than a rating that can't.
-    private var feedbackMailURL: URL {
-        var components = URLComponents()
-        components.scheme = "mailto"
-        components.path = "sambulosendas@gmail.com"
-        components.queryItems = [URLQueryItem(name: "subject", value: "Bible Crossword feedback")]
-        return components.url ?? URL(string: "mailto:sambulosendas@gmail.com")!
     }
 
     private static let marketingVersion =
