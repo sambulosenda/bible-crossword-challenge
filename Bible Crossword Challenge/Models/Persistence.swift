@@ -164,6 +164,12 @@ final class PuzzleRecord {
         set { entriesData = try? JSONEncoder().encode(newValue) }
     }
 
+    /// True once the player has typed or pencilled anything. Revealed cells
+    /// (hints, the starter-word gift) are stored lowercase and don't count.
+    var hasPlayerEntries: Bool {
+        entries.values.contains { $0 != $0.lowercased() } || !pencil.isEmpty
+    }
+
     var pencil: [String: String] {
         get {
             guard let pencilData,

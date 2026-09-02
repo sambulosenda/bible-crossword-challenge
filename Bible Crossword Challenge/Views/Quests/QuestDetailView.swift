@@ -350,15 +350,15 @@ struct QuestHomeCard: View {
         .accessibilityLabel("Journey. \(headline). \(subtitle)")
     }
 
-    private var headline: String {
-        if progress.solved == 0 { return "Begin the \(quest.title) journey" }
-        if progress.steppedToday { return "Step \(progress.solved) of \(progress.total) done" }
-        return "Day \(progress.solved + 1) of \(progress.total) — the next step is ready"
-    }
+    // Title is the pack's name and never wraps; the state goes in the
+    // subtitle. The old headline ("Day 3 of 5 — the next step is ready",
+    // "Begin the Beginnings journey") truncated at default type on every
+    // phone, and the blurb under it truncated too.
+    private var headline: String { quest.title }
 
     private var subtitle: String {
-        if progress.solved == 0 { return quest.blurb }
-        if progress.steppedToday { return "The next step will be waiting tomorrow." }
-        return quest.title
+        if progress.solved == 0 { return "Start the journey · \(progress.total) steps, one a day" }
+        if progress.steppedToday { return "Step \(progress.solved) of \(progress.total) done · next one tomorrow" }
+        return "Day \(progress.solved + 1) of \(progress.total) · the next step is ready"
     }
 }

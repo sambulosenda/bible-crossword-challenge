@@ -16,7 +16,11 @@ enum PuzzleStatus {
     init(record: PuzzleRecord?) {
         guard let record else { self = .start; return }
         if record.isCompleted { self = .completed }
-        else if !record.entries.isEmpty { self = .inProgress }
+        // Typed or pencilled letters are progress; a grid holding only the
+        // starter-word gift (stored lowercase, like any revealed cell) is a
+        // puzzle the player hasn't touched, and Today must not say Continue
+        // over it or show a bar for letters they didn't enter.
+        else if record.hasPlayerEntries { self = .inProgress }
         else { self = .start }
     }
 

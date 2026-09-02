@@ -375,7 +375,7 @@ struct HomeView: View {
 
     /// Fraction of playable cells filled, or nil when the puzzle isn't mid-solve.
     private func inProgressFraction(_ puzzle: Puzzle, record: PuzzleRecord?) -> Double? {
-        guard let record, !record.isCompleted, !record.entries.isEmpty else { return nil }
+        guard let record, !record.isCompleted, record.hasPlayerEntries else { return nil }
         let total = puzzle.grid.reduce(0) { $0 + $1.filter { $0 != "." }.count }
         guard total > 0 else { return nil }
         return min(1.0, Double(record.entries.count) / Double(total))
@@ -445,10 +445,12 @@ private struct TodayHeader: View {
                     // below the fold on a 667pt screen while landing it in a
                     // different place every day. The reference below is the
                     // affordance for reading the whole passage.
+                    // No line limit: the verse is the top of the app by
+                    // decision, and a three-line clamp cut it mid-word
+                    // ("…heard his praye…"). The longest in rotation is five.
                     Text(verse.verse)
                         .font(.scripture(.title3))
                         .lineSpacing(6)
-                        .lineLimit(3)
                         .foregroundStyle(.primary)
                         .multilineTextAlignment(.leading)
                         .fixedSize(horizontal: false, vertical: true)
@@ -560,8 +562,10 @@ private struct LeadPuzzleCard: View {
     // button stays a separate focusable control below.
     private var info: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.m) {
+            // No kicker: the card is the hero, its title names the puzzle and
+            // the meta row says the size; the compact card below names the
+            // other one. Seven uppercase labels on Today was two too many.
             HStack {
-                Label(billing.kicker, systemImage: billing.symbol).kicker()
                 Spacer()
                 DifficultyBadge(difficulty: puzzle.difficulty)
             }
@@ -1058,9 +1062,15 @@ private struct CompactPuzzleCard: View {
     /// Solved wears the green check; unsolved leads with the billing's own
     /// mark, so the Special's row reads as an occasion rather than a second
     /// bolt of the same kind.
+    /// The bolt means "quick", which is the Mini's trait; the daily gets the
+    /// calendar it's billed under. Both used to share the bolt.
     private var leadingSymbol: String {
         if isSolvedToday { return "checkmark.circle.fill" }
-        return billing == .sunday ? "star.circle.fill" : "bolt.circle.fill"
+        switch billing {
+        case .mini: return "bolt.circle.fill"
+        case .daily: return "calendar.circle.fill"
+        case .sunday: return "star.circle.fill"
+        }
     }
 
     private var subtitle: String {

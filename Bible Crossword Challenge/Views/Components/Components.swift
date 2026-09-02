@@ -64,10 +64,16 @@ struct StreakCard: View {
 
             WeekRow(completedWeekdays: completedWeekdays)
 
+            // At streak 0 there is nothing to protect, and "freeze" is a word
+            // the new player hasn't met: say what to do today instead. When a
+            // freeze is mentioned, say what it does — this line is its first
+            // appearance for most players.
             if savedRecently {
                 footnote("A freeze saved your streak", symbol: "snowflake", tint: .cyan)
+            } else if current == 0 {
+                footnote("Solve today to start your streak", symbol: "flame", tint: .orange)
             } else if freezes > 0 {
-                footnote("^[\(freezes) freeze](inflect: true) ready to protect your streak",
+                footnote("^[\(freezes) freeze](inflect: true) ready to cover a missed day",
                          symbol: "snowflake", tint: .cyan)
             }
         }
@@ -85,8 +91,10 @@ struct StreakCard: View {
         }
         if savedRecently {
             label += ". A freeze saved your streak"
+        } else if current == 0 {
+            label += ". Solve today to start your streak"
         } else if freezes > 0 {
-            label += ". \(freezes) streak \(freezes == 1 ? "freeze" : "freezes") available"
+            label += ". \(freezes) streak \(freezes == 1 ? "freeze" : "freezes") available, each covers a missed day"
         }
         return label
     }
