@@ -32,6 +32,7 @@
 //
 
 import SwiftUI
+import Lottie
 import StoreKit
 
 struct OnboardingView: View {
@@ -283,11 +284,27 @@ struct OnboardingView: View {
                 focus = tapped
             }
             .modifier(Shake(travel: CGFloat(wrongAttempts)))
+            // The solved word glowing gold is the celebration; the confetti
+            // bursts from it, not from a second badge lower down.
+            .background {
+                if solved, !reduceMotion {
+                    LottieView(animation: .named("puzzle_complete"))
+                        .configure { $0.contentMode = .scaleAspectFit }
+                        .playing(loopMode: .playOnce)
+                        .frame(width: 320, height: 320)
+                        .allowsHitTesting(false)
+                }
+            }
             .entrance(active: active, delay: 0.12, reduceMotion: reduceMotion)
 
-            // Keeps the keypad — and the verse that replaces it — down by the
-            // thumb rather than floating in the middle of the page.
-            Spacer(minLength: Theme.Spacing.l)
+            // Unsolved: the keypad stays down by the thumb, so the gap above
+            // it flexes. Solved: the verse follows the word it came from, so
+            // the gap is fixed and the clue–grid–verse group centres as one.
+            if solved {
+                Spacer().frame(height: Theme.Spacing.xl)
+            } else {
+                Spacer(minLength: Theme.Spacing.l)
+            }
 
             if solved {
                 verseReveal
@@ -299,6 +316,7 @@ struct OnboardingView: View {
                                 removal: .opacity
                             )
                     )
+                Spacer(minLength: 0)
             } else {
                 LetterKeyboardView(onLetter: type(_:), onDelete: deleteLetter)
                     .transition(.opacity)
@@ -327,27 +345,29 @@ struct OnboardingView: View {
 
     /// The payoff. Same shape as the verse card on the completion screen, so a
     /// player meets the app's one moment of ceremony before their first puzzle.
+    /// The payoff, set on the paper like the completion screen's verse: the
+    /// line, the verse at reading size, the reference. No second badge (the
+    /// gold word above is the celebration) and no tinted panel around the one
+    /// thing on the page that is content rather than chrome.
     private var verseReveal: some View {
         VStack(spacing: Theme.Spacing.s) {
-            CelebrationBadge(systemImage: "checkmark", confetti: "puzzle_complete", size: 64)
-
             Text("That’s the whole game.")
                 .font(.headline)
 
             Text("“By faith Noah, when warned about things not yet seen, in godly fear built an ark to save his family.”")
-                .font(.scripture(.subheadline))
-                .lineSpacing(3)
+                .font(.scripture(.title3))
+                .lineSpacing(4)
                 .multilineTextAlignment(.center)
 
-            // Headline weight, not footnote: the accent only clears the
-            // contrast bar on paper at large-text sizes.
+            // A label, not a link: secondary, semibold so it clears contrast.
             Text("Hebrews 11:7")
-                .font(.headline)
-                .foregroundStyle(Theme.accent)
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(.secondary)
         }
-        .padding(Theme.Spacing.l)
+        .padding(.horizontal, Theme.Spacing.m)
+        .padding(.vertical, Theme.Spacing.s)
         .frame(maxWidth: .infinity)
-        .background(Theme.accent.opacity(0.10), in: .rect(cornerRadius: Theme.cornerRadius, style: .continuous))
+        .accessibilityElement(children: .combine)
     }
 
     private var namePage: some View {
