@@ -441,10 +441,29 @@ struct EngineTests {
 
     // MARK: - Stall nudge
     //
-    // The tiered rescue, each tier once per session on the active clock: at
-    // ≥ 40% fill, `stallNudgeSeconds` idle fires the check tier; under 40%,
-    // the shorter `earlyNudgeSeconds` idle fires the free-letter tier.
+    // The tiered rescue on the active clock: at ≥ 40% fill, `stallNudgeSeconds`
+    // idle fires the mid-solve tier, whose offer is read off the grid and which
+    // re-arms after input up to `maxMidSolveNudges`; under 40%, the shorter
+    // `earlyNudgeSeconds` idle fires the free-letter tier once.
     // The fixture has 5 playable cells, so 4 filled = 80% and 1 filled = 20%.
+
+    /// The fixture with a passage on the across clue, for the verse offer.
+    private func makeReferencedPuzzle() -> Puzzle {
+        Puzzle(
+            id: "test-ref",
+            title: "Tiny",
+            difficulty: .easy,
+            verse: "Test verse",
+            reference: "Test 1:1",
+            publishDate: "2026-07-01",
+            size: 3,
+            grid: ["CAT", "O..", "D.."],
+            clues: [
+                ClueData(number: 1, direction: .across, row: 0, col: 0, text: "Feline", answer: "CAT", reference: "Genesis 1:24"),
+                ClueData(number: 1, direction: .down, row: 0, col: 0, text: "A fish", answer: "COD"),
+            ]
+        )
+    }
 
     /// Advance the active clock by `seconds` of rendered ticks.
     private func idle(_ vm: GameViewModel, seconds: Int, from start: Int = 0) {
@@ -460,7 +479,7 @@ struct EngineTests {
         vm.select(GridPos(row: 1, col: 0)); vm.enter("X")   // wrong on purpose
     }
 
-    @Test func stallNudgeFiresOnceWhenIdleAtHighFill() {
+    @Test func stallNudgeDoesNotRefireWhileTheLineIsUp() {
         let vm = GameViewModel(puzzle: makePuzzle())
         vm.isAttachedToWindow = true
         fillFourOfFive(vm)
@@ -471,9 +490,60 @@ struct EngineTests {
         #expect(vm.stallNudgeKind == .checkAnswers)
         #expect(vm.isStallNudgeActive)
 
-        // Keep idling: once per session, never a second nag.
+        // Keep idling with the line still up: nothing to add, no second nag.
         idle(vm, seconds: vm.stallNudgeSeconds + 1, from: 1000)
         #expect(vm.stallNudgeTick == 1)
+    }
+
+    @Test func midSolveNudgeRearmsAfterInputUpToTheCap() {
+        let vm = GameViewModel(puzzle: makePuzzle())
+        vm.isAttachedToWindow = true
+        fillFourOfFive(vm)
+
+        var from = 0
+        for expected in 1...GameViewModel.maxMidSolveNudges {
+            idle(vm, seconds: vm.stallNudgeSeconds + 1, from: from)
+            #expect(vm.stallNudgeTick == expected)
+            #expect(vm.isStallNudgeActive)
+            vm.select(GridPos(row: 2, col: 0))              // input takes it down
+            #expect(!vm.isStallNudgeActive)
+            from += 1000
+        }
+        // The cap: a fourth idle stretch offers nothing.
+        idle(vm, seconds: vm.stallNudgeSeconds + 1, from: from)
+        #expect(vm.stallNudgeTick == GameViewModel.maxMidSolveNudges)
+        #expect(!vm.isStallNudgeActive)
+    }
+
+    @Test func midSolveOfferIsTheCheckWhenALetterIsWrong() {
+        let vm = GameViewModel(puzzle: makePuzzle())
+        vm.enter("C"); vm.enter("A")                        // 40%, all correct
+        vm.select(GridPos(row: 1, col: 0)); vm.enter("X")   // one wrong
+        #expect(vm.midSolveRescueKind == .checkAnswers)
+    }
+
+    @Test func midSolveOfferIsTheVerseWhenNothingIsWrongAndTheClueHasOne() {
+        let vm = GameViewModel(puzzle: makeReferencedPuzzle())
+        vm.enter("C"); vm.enter("A")                        // across is active
+        #expect(vm.activeSlot?.reference != nil)
+        #expect(vm.midSolveRescueKind == .readVerse)
+    }
+
+    @Test func midSolveOfferIsAFreeLetterWithNothingWrongAndNoVerse() {
+        let vm = GameViewModel(puzzle: makePuzzle())
+        vm.enter("C"); vm.enter("A")
+        #expect(vm.midSolveRescueKind == .freeLetter)
+    }
+
+    @Test func alreadyMarkedWrongLettersDoNotEarnACheckOffer() {
+        // A letter the player can already see is wrong is not a reason to
+        // tell them to check; the offer moves on to the next rung.
+        let vm = GameViewModel(puzzle: makePuzzle())
+        vm.enter("C"); vm.enter("A")
+        vm.select(GridPos(row: 1, col: 0)); vm.enter("X")
+        vm.check(.puzzle)                                   // marks the X
+        #expect(vm.unmarkedWrongEntryCount == 0)
+        #expect(vm.midSolveRescueKind == .freeLetter)
     }
 
     @Test func lowFillIdleFiresTheFreeLetterTier() {
@@ -522,7 +592,9 @@ struct EngineTests {
         vm.enter("C"); vm.enter("A")                        // 2 of 5 = 40%, the gate
         idle(vm, seconds: vm.stallNudgeSeconds + 5)
         #expect(vm.stallNudgeTick == 1)
-        #expect(vm.stallNudgeKind == .checkAnswers)
+        // Both letters are right and the fixture's clues carry no passage, so
+        // the mid tier's offer falls through to the free letter.
+        #expect(vm.stallNudgeKind == .freeLetter)
     }
 
     @Test func inputResetsTheStallClock() {

@@ -10,7 +10,7 @@ import SwiftUI
 struct ClueBarView: View {
     @Bindable var vm: GameViewModel
     /// Runs the stall nudge's action when the line is tapped — a whole-puzzle
-    /// check or a free letter depending on `vm.stallNudgeKind`. Owned by the
+    /// check, the verse, or a free letter per `vm.stallNudgeKind`. Owned by the
     /// game view so the analytics and check/hint plumbing stay in one place.
     var onStallTap: (() -> Void)? = nil
 
@@ -57,6 +57,7 @@ struct ClueBarView: View {
     private var stallNudgeText: String {
         switch vm.stallNudgeKind {
         case .checkAnswers: "Stuck? Check your answers"
+        case .readVerse: "Stuck? Read the verse — it's free"
         case .freeLetter: "Stuck? Tap for a free letter"
         }
     }
@@ -64,6 +65,7 @@ struct ClueBarView: View {
     private var stallNudgeIcon: String {
         switch vm.stallNudgeKind {
         case .checkAnswers: "checkmark.circle"
+        case .readVerse: "book"
         case .freeLetter: "a.square"
         }
     }
@@ -71,6 +73,7 @@ struct ClueBarView: View {
     private var stallNudgeAccessibilityHint: String {
         switch vm.stallNudgeKind {
         case .checkAnswers: "Checks the whole puzzle for mistakes"
+        case .readVerse: "Opens the passage this clue comes from, without using a hint"
         case .freeLetter: "Reveals one letter without using a hint"
         }
     }

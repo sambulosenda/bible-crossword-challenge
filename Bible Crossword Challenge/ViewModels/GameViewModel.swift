@@ -132,14 +132,19 @@ final class GameViewModel {
     private(set) var lockedEntryPos: GridPos?
 
     /// Increments when the player has been idle long enough on the active
-    /// clock that abandonment data says walking away comes next. Two tiers,
-    /// each once per session:
+    /// clock that abandonment data says walking away comes next. Two tiers:
     ///
-    /// - `.checkAnswers` (≥ 40% fill, `stallNudgeSeconds` idle): the mid-solve
-    ///   stall — there's material on the grid, so the useful action is judging
-    ///   it. The 75% gate this shipped with missed most of the stuck players
+    /// - The mid-solve tier (≥ 40% fill, `stallNudgeSeconds` idle): there's
+    ///   material on the grid. The kind is chosen from the grid's state — see
+    ///   `midSolveRescueKind` — and the tier re-arms after every input, up to
+    ///   `maxMidSolveNudges` per sitting. It used to fire once, after 75s: in
+    ///   the 30 days to 2026-09-02 the 50–74% band logged 175 abandons and 17
+    ///   nudges, because players left before the single nudge was due. 88 of
+    ///   the 92 abandons never finished had used no hint that sitting — the
+    ///   stuck player does not ask, so the offer has to come sooner and again.
+    ///   The 75% gate this shipped with missed most of the stuck players
     ///   (see 2026-08-23 histogram in git history), hence 40%.
-    /// - `.freeLetter` (< 40% fill, `earlyNudgeSeconds` idle): the early
+    /// - `.freeLetter` (< 40% fill, `earlyNudgeSeconds` idle, once): the early
     ///   stall. 43% of abandons in the 30 days to 2026-08-28 happened under
     ///   10% fill, and no help could fire there: the check nudge needs fill,
     ///   the hint menu is an unlabeled glyph. Nothing to check yet — the
@@ -147,16 +152,19 @@ final class GameViewModel {
     ///
     /// The view reacts with a quiet action line and logs the impression.
     private(set) var stallNudgeTick = 0
-    /// Which tier fired last — drives the nudge line's copy and tap action.
+    /// Which action the nudge line offers — drives its copy and tap action.
     enum StallNudgeKind: String {
         case checkAnswers = "check"
+        case readVerse = "verse"
         case freeLetter = "free_letter"
     }
     private(set) var stallNudgeKind: StallNudgeKind = .checkAnswers
     /// True from the stall moment until the next input clears it — drives the
     /// nudge line's visibility.
     private(set) var isStallNudgeActive = false
-    private var stallNudged = false
+    /// Mid-solve nudges fired this sitting. Capped so a nudge stays a nudge.
+    private(set) var midSolveNudgeCount = 0
+    static let maxMidSolveNudges = 3
     private var earlyNudged = false
     /// Active seconds at the last player input. Measured on the solve clock,
     /// not wall time, so backgrounded or verse-reading stretches never count
@@ -188,10 +196,12 @@ final class GameViewModel {
            let secs = Int(args[flag + 1]), secs > 0 {
             self.stallNudgeSeconds = secs
         } else {
-            self.stallNudgeSeconds = 75
+            self.stallNudgeSeconds = 45
         }
         #else
-        self.stallNudgeSeconds = 75
+        // 45, down from 75: the mid-fill abandoner's median sitting was ~5
+        // minutes, and the old nudge fired in 17 of 175 such abandons.
+        self.stallNudgeSeconds = 45
         #endif
 
         // Build slots from clue data.
@@ -762,20 +772,22 @@ final class GameViewModel {
 
     /// The stall watch, tiered by fill. Fill counts entries like
     /// `puzzle_abandoned` does (pencil included) — a grid full of pencil
-    /// guesses is still a player who stopped. At or above 40% the answer is a
-    /// check (judge what's there); below it there's nothing worth judging, so
-    /// after a shorter idle the answer is a free letter — a foothold for the
-    /// player the check tier could never reach. Each tier fires once per
-    /// session, so a nudge stays a nudge.
+    /// guesses is still a player who stopped. At or above 40% the offer is
+    /// chosen from the grid (`midSolveRescueKind`) and re-arms after each
+    /// input, up to the cap; below it there's nothing worth judging, so after
+    /// a shorter idle the answer is a free letter — a foothold for the player
+    /// the mid tier could never reach — once per sitting.
     private func maybeNudgeStall() {
-        guard !isComplete else { return }
+        // While a line is up there is nothing to add; input takes it down and
+        // restarts the idle clock, which is what re-arms the mid tier.
+        guard !isComplete, !isStallNudgeActive else { return }
         let idle = accumulatedSeconds - lastInputSeconds
         let total = totalPlayableCount
         guard total > 0 else { return }
         if Double(filledPlayableCount) / Double(total) >= 0.40 {
-            guard !stallNudged, idle >= stallNudgeSeconds else { return }
-            stallNudged = true
-            stallNudgeKind = .checkAnswers
+            guard midSolveNudgeCount < Self.maxMidSolveNudges, idle >= stallNudgeSeconds else { return }
+            midSolveNudgeCount += 1
+            stallNudgeKind = midSolveRescueKind
         } else {
             guard !earlyNudged, idle >= earlyNudgeSeconds else { return }
             earlyNudged = true
@@ -783,6 +795,34 @@ final class GameViewModel {
         }
         isStallNudgeActive = true
         stallNudgeTick += 1
+    }
+
+    /// The mid-solve offer, read off the grid. Wrong letters the player can't
+    /// see yet → a check, because judging what's there is the fastest unstick.
+    /// Nothing wrong (they're stuck on a clue, not a mistake) → the passage
+    /// the answer comes from, free, when the clue has one; else a free letter.
+    /// Cells already marked wrong (a prior check, or auto-check) don't count:
+    /// telling a player to check what's already red is the empty nudge.
+    var midSolveRescueKind: StallNudgeKind {
+        if unmarkedWrongEntryCount > 0 { return .checkAnswers }
+        if activeSlot?.reference != nil { return .readVerse }
+        return .freeLetter
+    }
+
+    /// Filled cells that are wrong and not yet marked as such.
+    var unmarkedWrongEntryCount: Int {
+        grid.reduce(0) { acc, row in
+            acc + row.filter { cell in
+                !cell.isBlock && cell.entry != nil && !cell.isCorrect && !cell.isCheckedWrong
+            }.count
+        }
+    }
+
+    /// Takes the nudge line down for an action that doesn't touch the grid
+    /// (opening the verse). Counts as input: the clock restarts and the mid
+    /// tier can offer again later.
+    func acknowledgeStallNudge() {
+        noteInput()
     }
 
     /// Seed cumulative time from a saved record when resuming an in-progress

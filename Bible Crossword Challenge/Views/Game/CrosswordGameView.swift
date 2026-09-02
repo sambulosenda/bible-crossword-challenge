@@ -871,6 +871,12 @@ struct CrosswordGameView: View {
         switch vm.stallNudgeKind {
         case .checkAnswers:
             runCheck(.puzzle)
+        case .readVerse:
+            // The reader doesn't touch the grid, so the vm wouldn't otherwise
+            // learn the nudge was taken; acknowledge first so the line drops
+            // and the idle clock restarts behind the sheet.
+            vm.acknowledgeStallNudge()
+            useVerseHint()
         case .freeLetter:
             // Free of quota, but still a reveal: `usedHint` and the session
             // hint counter stay honest so unaided achievements and the
