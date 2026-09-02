@@ -41,7 +41,7 @@ struct CompletionView: View {
     /// sheet is built from, so the two can't drift apart again.
     @State private var paywallEntry: PaywallEntry?
     /// True once this appearance scheduled the system review prompt — the
-    /// auto paywall stands down rather than stacking sheets.
+    /// reminder ask stands down rather than stacking asks.
     @State private var didRequestReview = false
     /// The `ReviewAsk` trigger behind the sentiment card, nil when no card is
     /// showing. The card, not the system prompt, is what a trigger now buys —
@@ -109,11 +109,6 @@ struct CompletionView: View {
     /// Start-of-day stamp of the last challenge-send freeze, capping the
     /// sender's reward at one per day — see `grantSenderFreezeIfDue`.
     @AppStorage("challengeFreezeLastDay") private var challengeFreezeLastDay = 0.0
-    /// One-shot flags for the auto-shown paywall moments (first-ever solve,
-    /// 3-day streak) plus a daily cap so at most one auto paywall fires per day.
-    @AppStorage("firstCompletionPaywallShown") private var firstCompletionPaywallShown = false
-    @AppStorage("streakPaywallShown") private var streakPaywallShown = false
-    @AppStorage("autoPaywallLastDay") private var autoPaywallLastDay = 0.0
     /// Reminder-ask bookkeeping shared with Home's streak card and the day-2
     /// sheet — the rules live in `ReminderAsk.decide`.
     @Environment(\.notifications) private var notifications
@@ -176,7 +171,7 @@ struct CompletionView: View {
 
                 // The sentiment gate a review trigger now buys. Down here with
                 // the other asks; it can't co-occur with them — the reminder
-                // ask and auto paywall both yield to `didRequestReview`.
+                // ask yields to `didRequestReview`.
                 if let trigger = reviewPreAskTrigger {
                     reviewPreAskCard(trigger)
                 }
@@ -233,9 +228,6 @@ struct CompletionView: View {
             loadQuestContext()
             loadChainTarget()
             loadWeeklyRank()
-            maybeAutoShowPaywall()
-            // After the paywall decision on purpose: the reminder ask stands
-            // down any day an auto paywall fired (including just now).
             maybeShowReminderAsk()
         }
         .sheet(item: $paywallEntry) { entry in
@@ -1140,68 +1132,18 @@ struct CompletionView: View {
     private static let marketingVersion =
         Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
 
-    /// Auto-present the paywall at the two highest-intent free-user moments:
-    /// the first-ever solve ("first_completion") and reaching a 3-day streak
-    /// ("streak_3"). Each fires once ever, at most one auto paywall per day,
-    /// and never over a challenge result, the mini upsell card, or a review
-    /// prompt — the celebration stays the hero, the ask follows it.
-    private func maybeAutoShowPaywall() {
-        guard !store.isPremium, challenge == nil, !didRequestReview else { return }
-        // The mini upsell card already makes this screen's ask — don't stack.
-        if puzzle.isMini && pastMiniCount > 0 { return }
-
-        let today = Calendar.current.startOfDay(for: Date()).timeIntervalSinceReferenceDate
-        guard autoPaywallLastDay != today else { return }
-
-        let source: String
-        // `<= 3`, not `== 1`: the "first completion" moment can be given away —
-        // to the reminder ask below, or to the mini upsell when the first solve
-        // is a Mini — and an exact match would lose this paywall forever when
-        // that happens. A small window keeps "first" honest while letting a
-        // deferred ask land on solve #2 or #3. (Also why the flag, not the
-        // count, is what marks it spent.)
-        if totalCompleted >= 1 && totalCompleted <= 3 && !firstCompletionPaywallShown {
-            // The first solve is also the reminder ask's best moment, and the
-            // two can't share the screen (`maybeShowReminderAsk` yields to
-            // today's auto paywall). The notification grant compounds every
-            // retention loop this paywall later benefits from — 67% of players
-            // who reach the dialog say yes — so when the ask is eligible it
-            // wins solve #1 outright and this paywall takes the next one.
-            if totalCompleted == 1 && reminderAskEligible { return }
-            // The mini→daily chain outranks this paywall too: completing a
-            // real puzzle on day one is the strongest retention signal we
-            // have (D7 34.8% vs 7%, measured 2026-08-23), and a sheet sliding
-            // over the chain button spends that moment on an ask the player
-            // already declined during onboarding minutes earlier. The `<= 3`
-            // window means the paywall lands on the next solve instead —
-            // usually the chained daily, an even better-proven moment.
-            if chainTarget != nil { return }
-            source = "first_completion"
-            firstCompletionPaywallShown = true
-        } else if streak >= 3 && !streakPaywallShown {
-            source = "streak_3"
-            streakPaywallShown = true
-        } else {
-            return
-        }
-
-        autoPaywallLastDay = today
-        Task {
-            // Let the completion celebration land before the sheet slides up.
-            try? await Task.sleep(for: .seconds(1.5))
-            paywallEntry = PaywallEntry(source: source)
-        }
-    }
+    // No auto-presented paywall here any more. The first-solve and 3-day-streak
+    // sheets (`first_completion`, `streak_3`) were shown to 88 free players in
+    // the 30 days to 2026-09-02 and produced one CTA tap and zero purchases,
+    // while covering the celebration and pre-empting the reminder ask. The
+    // paywall is still reachable from this screen through the mini upsell
+    // card and the locked-pack row — asks the player chooses to tap.
 
     /// Offer the daily reminder at the moment the product just proved its
     /// value — but only when this screen carries no other ask: a challenge
-    /// result, a review sheet, today's auto paywall, or the mini upsell all
-    /// outrank it, and `ReminderAsk.decide` enforces the cross-surface caps
-    /// (one ask per day anywhere, one per session, first three solves only).
-    /// Whether the completion reminder ask would fire if no auto paywall
-    /// claimed today — the first-solve precedence check in
-    /// `maybeAutoShowPaywall`. Mirrors `maybeShowReminderAsk`'s guards exactly,
-    /// minus the `autoPaywallLastDay` gate this decision feeds.
+    /// result or a review sheet outrank it, and `ReminderAsk.decide` enforces
+    /// the cross-surface caps (one ask per day anywhere, one per session,
+    /// first three solves only).
     private var reminderAskEligible: Bool {
         guard challenge == nil, !didRequestReview else { return false }
         // No mini-upsell suppression here any more. It used to stand this ask
@@ -1240,7 +1182,6 @@ struct CompletionView: View {
         }
         #endif
         let today = Calendar.current.startOfDay(for: Date()).timeIntervalSinceReferenceDate
-        guard autoPaywallLastDay != today else { return }
         guard reminderAskEligible else { return }
 
         showReminderAsk = true

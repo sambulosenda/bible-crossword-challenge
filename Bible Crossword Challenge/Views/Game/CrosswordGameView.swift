@@ -45,6 +45,17 @@ struct CrosswordGameView: View {
     @State private var showClues = false
     @State private var showCompletion = false
     @State private var showPaywall = false
+    /// The hint wall, inline. Tapping a paid hint with no quota left used to
+    /// open the full paywall as a sheet over the grid: 317 opens by 82 free
+    /// players in the 30 days to 2026-09-02, median 2 seconds on screen, four
+    /// purchases — an interstitial people learned to swipe away, ~4 times
+    /// each. Now the wall is a one-line notice that names what's still free
+    /// (the verse and the checks) and carries the upgrade as a tap.
+    @State private var showHintLimitNote = false
+    /// Bumped on every wall hit so the auto-dismiss timer restarts from the
+    /// latest tap — `.task(id:)` cancels and re-runs on change, where a plain
+    /// `.task` would keep the first hit's clock while the note is already up.
+    @State private var hintLimitHits = 0
     @State private var newlyUnlocked: [Achievement] = []
     /// Whether this solve crossed a streak milestone that granted a freeze.
     @State private var earnedFreeze = false
@@ -119,6 +130,16 @@ struct CrosswordGameView: View {
             if let challenge = incomingChallenge {
                 ChallengeTargetChip(name: challenge.challengerName, seconds: challenge.seconds)
                     .padding(.top, Theme.Spacing.xs)
+            }
+
+            if showHintLimitNote {
+                hintLimitNote
+                    .padding(.top, Theme.Spacing.xs)
+                    .transition(.move(edge: .top).combined(with: .opacity))
+                    .task(id: hintLimitHits) {
+                        try? await Task.sleep(for: .seconds(10))
+                        withAnimation(.snappy) { showHintLimitNote = false }
+                    }
             }
 
             if showStarterGiftNote {
@@ -523,6 +544,49 @@ struct CrosswordGameView: View {
             .accessibilityLabel("Zen mode, timer hidden")
     }
 
+    /// "No hints left today" plus the two rungs that still cost nothing, and
+    /// the upgrade as a link rather than a wall. A verse rung only exists when
+    /// the active clue has a reference, so the line names it only then.
+    private var hintLimitNote: some View {
+        HStack(spacing: Theme.Spacing.s) {
+            Image(systemName: "lightbulb.slash")
+                .font(.caption.weight(.semibold))
+                .accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: 1) {
+                Text("No hints left today")
+                    .font(.caption.weight(.semibold))
+                Text(vm.activeSlot?.reference != nil
+                     ? "The verse and checks are still free."
+                     : "Checks are still free.")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+            }
+            // One VoiceOver stop for the two lines; the button stays its own.
+            .accessibilityElement(children: .combine)
+            Spacer(minLength: 0)
+            Button {
+                withAnimation(.snappy) { showHintLimitNote = false }
+                showPaywall = true
+            } label: {
+                // Explicit: the container's accent foreground otherwise
+                // cascades into the label and paints it accent-on-accent.
+                Text("Unlimited")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.white)
+            }
+            .buttonStyle(.borderedProminent)
+            .buttonBorderShape(.capsule)
+            .controlSize(.mini)
+            .tint(Theme.accent)
+            .accessibilityLabel("Get unlimited hints")
+            .accessibilityHint("Opens Premium upgrade options")
+        }
+        .foregroundStyle(Theme.accent)
+        .padding(.horizontal, Theme.Spacing.m)
+        .padding(.vertical, Theme.Spacing.xs)
+        .background(Theme.accent.opacity(0.12), in: .capsule)
+    }
+
     private var hintsRemainingText: String {
         if store.isPremium { return "Unlimited" }
         if profile.isStillLearning { return "Free while you learn" }
@@ -554,7 +618,9 @@ struct CrosswordGameView: View {
         // `>= cost`, never subtraction: premium's remaining is Int.max.
         // A word (cost 2) with 1 left paywalls with no partial spend.
         guard profile.hintsRemaining(isPremium: store.isPremium) >= type.cost else {
-            showPaywall = true
+            analytics.log(.hintLimitReached(type: type.rawValue))
+            hintLimitHits += 1
+            withAnimation(.snappy) { showHintLimitNote = true }
             return
         }
         // Mark the puzzle as hinted *before* revealing: a reveal can complete the

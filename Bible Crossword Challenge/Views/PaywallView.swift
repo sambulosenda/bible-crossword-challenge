@@ -157,9 +157,7 @@ struct PaywallView: View {
     private enum Entry: String {
         case hintLimit = "hint_limit"
         case completion
-        case firstCompletion = "first_completion"
         case miniCompletion = "mini_completion"
-        case streak3 = "streak_3"
         case packCompletion = "pack_completion"
         case packLocked = "pack_locked"
         case homeCard = "home_card"
@@ -191,19 +189,6 @@ struct PaywallView: View {
             return "Never stuck for long."
         case .completion:
             return solvedTally ?? Self.defaultHeadline
-        // The two auto-opens from `maybeAutoShowPaywall`, which fire once ever
-        // at the highest-intent moments the app has. Both used to land on the
-        // brand line — the largest text on the screen saying nothing about the
-        // thing that had just happened.
-        case .firstCompletion:
-            return "That's your first. The rest are waiting."
-        case .streak3:
-            // Honours the streak before asking anything of it: the old line
-            // ("A habit needs more than one a day") told a player mid-milestone
-            // that their effort was insufficient — on the one screen that only
-            // exists because they showed up three days running. The ask is the
-            // same; it just comes after the credit now.
-            return "Three days strong. Give it more than one a day."
         case .miniCompletion:
             return "Two minutes was just the start."
         case .packCompletion:

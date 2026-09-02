@@ -39,6 +39,12 @@ enum AnalyticsEvent {
     /// numbers are a floor, not a census.
     case puzzleAbandoned(puzzleID: String, fillPercent: Int, seconds: Int, wallSeconds: Int, hintsUsed: Int)
     case hintUsed(type: String, cost: Int)
+    /// A paid hint tapped with no quota left. Logged at the wall, not at the
+    /// paywall: the inline notice that replaced the auto-opened sheet
+    /// (2026-09-02) means `paywall_opened` with `source=hint_limit` now counts
+    /// only players who chose to tap through, so this keeps the wall itself
+    /// measurable. `type` is the rung they reached for.
+    case hintLimitReached(type: String)
     /// A free one-shot answer check (letter/word/puzzle scope). Separate from
     /// `hintUsed` because checks cost nothing — the interesting read is whether
     /// check-availability moves hint usage and completion rate.
@@ -231,6 +237,7 @@ enum AnalyticsEvent {
         case .dailyPuzzleCompleted: return "daily_puzzle_completed"
         case .puzzleAbandoned: return "puzzle_abandoned"
         case .hintUsed: return "hint_used"
+        case .hintLimitReached: return "hint_limit_reached"
         case .checkUsed: return "check_used"
         case .stallNudgeShown: return "stall_nudge_shown"
         case .stallNudgeTapped: return "stall_nudge_tapped"
@@ -344,6 +351,8 @@ enum AnalyticsEvent {
             ]
         case .hintUsed(let type, let cost):
             return ["type": type, "cost": cost]
+        case .hintLimitReached(let type):
+            return ["type": type]
         case .checkUsed(let scope, let wrongCount):
             return ["scope": scope, "wrong_count": wrongCount]
         case .stallNudgeShown(let puzzleID, let fillPercent, let idleSeconds, let kind),

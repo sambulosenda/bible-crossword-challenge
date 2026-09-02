@@ -41,7 +41,7 @@ enum ReminderAsk {
         var completionAsksShown: Int
         var streakAskShown: Bool
         /// Start-of-day stamp of the last ask on ANY surface, including the
-        /// day-2 sheet. Encoded like `autoPaywallLastDay`.
+        /// day-2 sheet. Encoded as start-of-day `timeIntervalSinceReferenceDate`.
         var lastAskDay: Date?
         /// True once any surface asked since process launch — two asks in one
         /// sitting reads as nagging even when the daily cap would allow it.
