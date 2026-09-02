@@ -1,7 +1,9 @@
 Thanks for playing Bible Crossword Challenge! This update includes:
 
-• Bible Crossword now runs natively on iPad: the grid on one side, your full clue list on the other, so you can read every clue while you solve
-• Plug a keyboard into your iPad and the arrow keys move around the grid; space switches between Across and Down
-• Clearer clues across all 233 puzzles, re-edited in modern English, with every verse now from the Berean Standard Bible
-• New players get a small celebration after solving their first clue
-• Fixed the Today screen drifting sideways when you scroll
+• The verse hint is now one tap away, right on the clue bar
+• Stuck on a clue? A quiet nudge offers a check, the verse, or a free letter — no more staring at an empty square
+• A calmer finish: the completion screen has one clear next step, your verse on the paper, and sharing tucked behind a menu
+• Fewer interruptions: nothing pops over your celebration after a solve, and the hint limit shows inline instead of as a sheet
+• Today cards show the full verse instead of cutting it short
+• First-solve celebration now shows your solved grid
+• Fixes to how and when we ask for a rating
