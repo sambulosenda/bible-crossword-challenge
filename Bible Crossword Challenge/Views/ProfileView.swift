@@ -32,8 +32,8 @@ struct ProfileView: View {
     /// finishes the opt-in if they come back having allowed them.
     @AppStorage("pendingReminderOptIn") private var pendingReminderOptIn = false
     @AppStorage("reminderMinutes") private var reminderMinutes = ReminderTime.defaultMinutes
-    /// Mirrors the in-game hint-menu toggle; seeded per player on first read
-    /// (see `GameViewModel.seedAutoCheckIfNeeded`).
+    /// Mirrors the in-game hint-menu toggle; seeded per player at launch
+    /// (see `GameViewModel.seedAutoCheckIfNeeded`, called from RootView).
     @AppStorage("autoCheckErrors") private var autoCheckErrors = false
     /// Zen mode, inverted: off hides the in-solve clock. Time is still
     /// recorded — challenges and records need honest seconds.
@@ -43,11 +43,6 @@ struct ProfileView: View {
     @State private var showRename = false
     @State private var draftName = ""
     @State private var showChallengeHistory = false
-    /// True while this view is writing `remindersEnabled` itself (permission
-    /// denied, so the switch is forced back off). The `onChange` below skips
-    /// those writes — otherwise a refused permission logs a phantom
-    /// "reminder disabled" event from a player who never had reminders on.
-    @State private var programmaticReminderWrite = false
 
     private var reminderTime: Binding<Date> {
         Binding(
@@ -280,23 +275,28 @@ struct ProfileView: View {
 
     private var gameplaySection: some View {
         SettingsSection("Gameplay") {
+            // Each row explains itself; a shared footer explaining two
+            // settings in one paragraph made the reader match sentences to
+            // switches. The auto-check default is seeded at launch (RootView).
             Toggle(isOn: $autoCheckErrors) {
-                SettingsRowLabel(title: "Auto-check mistakes", symbol: "checkmark.seal.fill", tint: .green)
+                SettingsRowLabel(
+                    title: "Auto-check mistakes",
+                    subtitle: "Marks wrong letters as you type.",
+                    symbol: "checkmark.seal.fill", tint: .green
+                )
             }
             .settingsRowInsets()
             .tint(Theme.accent)
-            .task {
-                // Whichever screen reads the key first seeds the per-player
-                // default, so this toggle and the in-game menu always agree.
-                GameViewModel.seedAutoCheckIfNeeded(totalCompleted: profile.totalPuzzlesCompleted)
-            }
+            RowDivider()
             Toggle(isOn: $showSolveTimer) {
-                SettingsRowLabel(title: "Show solve timer", symbol: "timer", tint: .blue)
+                SettingsRowLabel(
+                    title: "Show solve timer",
+                    subtitle: "Off hides the clock. Times are still recorded.",
+                    symbol: "timer", tint: .blue
+                )
             }
             .settingsRowInsets()
             .tint(Theme.accent)
-        } footer: {
-            Text("Auto-check marks wrong letters as you type. Hide the timer for an unhurried solve — times are still recorded for challenges and records.")
         }
     }
 
@@ -308,18 +308,18 @@ struct ProfileView: View {
             // separate `Text`. Split apart, VoiceOver reads "Daily reminder"
             // twice — once as static text, once as the switch's own label —
             // where the Form this replaced gave one element for the pair.
-            Toggle(isOn: $remindersEnabled) {
+            // A binding whose setter is the user's tap: code paths that turn
+            // the reminder off (permission denied, bounced to Settings) write
+            // `remindersEnabled` directly and never re-enter the handler, so a
+            // refused permission can't log a phantom "reminder disabled".
+            Toggle(isOn: Binding(
+                get: { remindersEnabled },
+                set: { handleReminderToggle($0) }
+            )) {
                 SettingsRowLabel(title: "Daily reminder", symbol: "bell.fill", tint: .orange)
             }
             .settingsRowInsets()
             .tint(Theme.accent)
-            .onChange(of: remindersEnabled) { _, enabled in
-                if programmaticReminderWrite {
-                    programmaticReminderWrite = false
-                    return
-                }
-                handleReminderToggle(enabled)
-            }
 
             if remindersEnabled && notifications.authorizationStatus == .authorized {
                 RowDivider()
@@ -428,8 +428,11 @@ struct ProfileView: View {
 
     // MARK: - Reminder plumbing
 
+    /// The user flipped the switch. Off is immediate; on depends on
+    /// permission, so the switch moves first and comes back if iOS says no.
     private func handleReminderToggle(_ enabled: Bool) {
         guard enabled else {
+            remindersEnabled = false
             analytics.log(.reminderSettingChanged(enabled: false))
             notifications.cancelAll()
             return
@@ -437,18 +440,17 @@ struct ProfileView: View {
         Task {
             switch notifications.authorizationStatus {
             case .notDetermined:
+                remindersEnabled = true
                 let granted = await notifications.requestAuthorization()
                 analytics.log(.notificationPermission(granted: granted, source: "profile"))
                 if granted {
                     analytics.log(.reminderSettingChanged(enabled: true))
                     rescheduleReminders()
                 } else {
-                    programmaticReminderWrite = true
                     remindersEnabled = false
                 }
             case .denied:
                 // Can't grant from inside the app — bounce to Settings, leave off.
-                programmaticReminderWrite = true
                 remindersEnabled = false
                 // Remember that turning it on was the intent. The switch above
                 // is off because permission is missing, not because the player
@@ -460,6 +462,7 @@ struct ProfileView: View {
                     openURL(url)
                 }
             default:
+                remindersEnabled = true
                 analytics.log(.reminderSettingChanged(enabled: true))
                 rescheduleReminders()
             }
@@ -756,15 +759,24 @@ private extension View {
 /// Chip + title, the shared leading half of every settings row.
 private struct SettingsRowLabel: View {
     let title: LocalizedStringKey
+    var subtitle: LocalizedStringKey? = nil
     let symbol: String
     let tint: Color
 
     var body: some View {
         HStack(spacing: Theme.Spacing.s + 4) {
             IconChip(symbol: symbol, tint: tint)
-            Text(title)
-                .font(.body)
-                .foregroundStyle(.primary)
+            VStack(alignment: .leading, spacing: 1) {
+                Text(title)
+                    .font(.body)
+                    .foregroundStyle(.primary)
+                if let subtitle {
+                    Text(subtitle)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
         }
     }
 }

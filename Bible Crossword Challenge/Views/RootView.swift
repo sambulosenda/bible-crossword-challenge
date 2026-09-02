@@ -119,6 +119,9 @@ struct RootView: View {
                 analytics.log(.streakBroken(previousLength: previous))
             }
             reconcilePackCompletions(profile)
+            // Seed the auto-check default once, here, so the game and the
+            // Profile toggle agree whichever is seen first.
+            GameViewModel.seedAutoCheckIfNeeded(totalCompleted: profile.totalPuzzlesCompleted)
             context.saveLogged("launch normalise")
             WidgetBridge.publish(profile, context: context)
             gameCenter.authenticate()

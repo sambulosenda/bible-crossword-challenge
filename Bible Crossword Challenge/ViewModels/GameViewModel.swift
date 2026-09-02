@@ -942,9 +942,9 @@ final class GameViewModel {
     /// Seeds the "autoCheckErrors" default the first time it's consulted:
     /// ON for a player still inside their first three solves, OFF for anyone
     /// who learned the grid without it — flipping a veteran's game behavior
-    /// under them is worse than making a beginner find a toggle. Called from
-    /// every surface that reads the key, so whichever screen is seen first
-    /// (game or Profile) agrees with the others.
+    /// under them is worse than making a beginner find a toggle. Called at
+    /// launch from RootView; the game view keeps a call as a belt-and-braces
+    /// for a puzzle opened before that task runs.
     static func seedAutoCheckIfNeeded(totalCompleted: Int) {
         let defaults = UserDefaults.standard
         guard defaults.object(forKey: "autoCheckErrors") == nil else { return }
