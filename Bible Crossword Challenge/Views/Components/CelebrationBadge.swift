@@ -37,20 +37,24 @@ struct CelebrationBadge: View {
     var tint: Color = Theme.accent
     /// Diameter of the disc. Confetti overflows it and is not clipped.
     var size: CGFloat = 120
+    /// The gold rim. Off where the badge sits among the app's own blue-on-paper
+    /// palette (the completion screen), where the one gold ring read as a one-off.
+    var showsRim: Bool = true
 
-    init(mark: Mark, confetti: String? = nil, tint: Color = Theme.accent, size: CGFloat = 120) {
+    init(mark: Mark, confetti: String? = nil, tint: Color = Theme.accent, size: CGFloat = 120, showsRim: Bool = true) {
         self.mark = mark
         self.confetti = confetti
         self.tint = tint
         self.size = size
+        self.showsRim = showsRim
     }
 
-    init(systemImage: String, confetti: String? = nil, tint: Color = Theme.accent, size: CGFloat = 120) {
-        self.init(mark: .symbol(systemImage), confetti: confetti, tint: tint, size: size)
+    init(systemImage: String, confetti: String? = nil, tint: Color = Theme.accent, size: CGFloat = 120, showsRim: Bool = true) {
+        self.init(mark: .symbol(systemImage), confetti: confetti, tint: tint, size: size, showsRim: showsRim)
     }
 
-    init(grid: [String], confetti: String? = nil, tint: Color = Theme.accent, size: CGFloat = 120) {
-        self.init(mark: .grid(grid), confetti: confetti, tint: tint, size: size)
+    init(grid: [String], confetti: String? = nil, tint: Color = Theme.accent, size: CGFloat = 120, showsRim: Bool = true) {
+        self.init(mark: .grid(grid), confetti: confetti, tint: tint, size: size, showsRim: showsRim)
     }
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -115,7 +119,9 @@ struct CelebrationBadge: View {
         Circle()
             .fill(tint)
             .overlay {
-                Circle().strokeBorder(Theme.badgeRim, lineWidth: rimWidth)
+                if showsRim {
+                    Circle().strokeBorder(Theme.badgeRim, lineWidth: rimWidth)
+                }
             }
             .overlay { centreMark }
             .frame(width: size, height: size)

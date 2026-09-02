@@ -203,14 +203,48 @@ struct CompletionView: View {
         .softTopScrollEdge()
         // HIG: a pinned bottom bar carries one primary action, not a menu.
         // Everything else scrolls with the content (see `secondaryActions`).
+        // The exit is a close button where a full-screen cover keeps it, not
+        // a second line under the primary pill.
+        .overlay(alignment: .topLeading) {
+            Button {
+                onHome()
+            } label: {
+                Image(systemName: "xmark")
+                    .font(.body.weight(.semibold))
+                    .foregroundStyle(.primary)
+                    .frame(width: 44, height: 44)
+                    .background(Theme.surface, in: .circle)
+                    // Floats over scrolled content, so it needs the lift a
+                    // resting card doesn't.
+                    .shadow(color: .black.opacity(0.10), radius: 8, y: 2)
+            }
+            .buttonStyle(.plain)
+            .padding(.leading, Theme.Spacing.m)
+            .padding(.top, Theme.Spacing.xs)
+            .accessibilityLabel("Close")
+            // An overlay sits after the scroll content in the tree; VoiceOver
+            // should reach the exit first, as it would on a system sheet.
+            .accessibilitySortPriority(1)
+        }
+        // Content fades under the bar rather than being cut by a rule.
         .safeAreaInset(edge: .bottom) {
             pinnedActions
                 .padding(.horizontal, Theme.Spacing.l)
                 .padding(.vertical, Theme.Spacing.s)
                 .frame(maxWidth: 520)
                 .frame(maxWidth: .infinity)
-                .background(.bar)
-                .overlay(alignment: .top) { Divider() }
+                .background {
+                    Theme.background
+                        .overlay(alignment: .top) {
+                            LinearGradient(
+                                colors: [Theme.background.opacity(0), Theme.background],
+                                startPoint: .top, endPoint: .bottom
+                            )
+                            .frame(height: Theme.Spacing.l)
+                            .offset(y: -Theme.Spacing.l)
+                        }
+                        .ignoresSafeArea()
+                }
         }
         .onAppear {
             renderShareCard()
@@ -798,28 +832,27 @@ struct CompletionView: View {
         .accessibilityHint("Opens Premium upgrade options")
     }
 
+    /// The badge and the two facts of the solve: the time as the title, the
+    /// puzzle's name under it. The time used to be a stat tile below a generic
+    /// "Puzzle Completed!" — the headline is the result now. The mark is the
+    /// grid the player just filled, not a checkmark (see `CelebrationBadge`).
     private var header: some View {
         VStack(spacing: Theme.Spacing.m) {
-            celebration
+            CelebrationBadge(grid: puzzle.grid, confetti: "puzzle_complete", size: 88, showsRim: false)
 
-            Text("Puzzle Completed!")
-                .font(.largeTitle.bold())
-                .multilineTextAlignment(.center)
+            VStack(spacing: Theme.Spacing.xs) {
+                Text("Solved in \(TimeFormat.clock(seconds))")
+                    .font(.title.bold())
+                    .monospacedDigit()
+                Text(puzzle.title)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+            .multilineTextAlignment(.center)
+            // One stop: "Solved in 4:12, The New Jerusalem".
+            .accessibilityElement(children: .combine)
         }
-        .padding(.top, Theme.Spacing.m)
-    }
-
-    /// Celebratory completion mark: the grid the player just filled, not a
-    /// checkmark. A tick is what iOS shows for "operation succeeded" — it marks
-    /// that something finished without saying what, and every results screen in
-    /// the category that reaches for one looks like every other. The grid is the
-    /// puzzle itself, a different shape every day, and the same mark the app
-    /// icon, the daily card and the share caption already use.
-    ///
-    /// The disc is drawn natively so it tracks the accent and survives Reduce
-    /// Motion intact; the Lottie adds only confetti.
-    private var celebration: some View {
-        CelebrationBadge(grid: puzzle.grid, confetti: "puzzle_complete")
+        .padding(.top, Theme.Spacing.s)
     }
 
     /// The solve's own numbers, given the weight a results screen owes them.
@@ -859,51 +892,33 @@ struct CompletionView: View {
         .elevatedCard()
     }
 
+    /// One line for the streak and a row of dots for the week. The old
+    /// icon–number–label tiles and lettered 42pt circles were the loudest
+    /// things on the screen for two facts.
     private var scorecardStats: some View {
-        VStack(spacing: Theme.Spacing.m) {
-            HStack(spacing: Theme.Spacing.m) {
-                statTile(value: TimeFormat.clock(seconds),
-                         label: "Time",
-                         symbol: "timer",
-                         tint: .secondary)
-
-                if streak > 0 {
-                    // "1-day streak" is a true but bleak thing to show someone
-                    // who just lost a long one. Naming it a new streak says the
-                    // same number and frames it as a start.
-                    statTile(value: "\(streak)",
-                             label: isComeback ? "New streak" : "Day streak",
-                             symbol: "flame.fill",
-                             tint: .orange)
-                }
+        VStack(spacing: Theme.Spacing.s) {
+            HStack(spacing: Theme.Spacing.xs) {
+                Image(systemName: "flame.fill")
+                    .foregroundStyle(.orange)
+                Text(streakLine)
             }
+            .font(.headline)
 
-            Rectangle()
-                .fill(Color.primary.opacity(0.08))
-                .frame(height: 1)
-
-            WeekRow(completedWeekdays: completedWeekdays)
-        }
-    }
-
-    private func statTile(value: String, label: String, symbol: String, tint: Color) -> some View {
-        VStack(spacing: 2) {
-            Image(systemName: symbol)
-                .font(.subheadline)
-                .foregroundStyle(tint)
-            Text(value)
-                .font(.title.weight(.bold))
-                .monospacedDigit()
-            Text(label)
-                .kicker()
+            WeekRow(completedWeekdays: completedWeekdays, style: .dots)
         }
         .frame(maxWidth: .infinity)
-        .lineLimit(1)
-        .minimumScaleFactor(0.6)
+    }
+
+    /// "1-day streak" is a true but bleak thing to show someone who just lost
+    /// a long one. Naming it a new streak says the same number and frames it
+    /// as a start.
+    private var streakLine: String {
+        guard streak > 0 else { return "Solved today" }
+        return isComeback ? "New streak · day \(streak)" : "\(streak)-day streak"
     }
 
     private var scorecardLabel: String {
-        var parts = ["Solved in \(TimeFormat.clock(seconds))"]
+        var parts: [String] = []
         if streak > 0 {
             parts.append(isComeback ? "New streak, day \(streak)" : "\(streak) day streak")
         }
@@ -974,6 +989,9 @@ struct CompletionView: View {
 
     /// The verse is the emotional payoff of the solve — the one card that gets
     /// special treatment (accent wash) while everything else recedes.
+    /// The verse is content, not chrome: set straight on the paper, with the
+    /// reference and a text link under it. It used to be a tinted card, the
+    /// third container style on one screen.
     private var verseCard: some View {
         VStack(spacing: Theme.Spacing.s) {
             Text("Today's Verse")
@@ -983,8 +1001,8 @@ struct CompletionView: View {
                 .lineSpacing(4)
                 .multilineTextAlignment(.center)
             Text(puzzle.reference)
-                .font(.headline)
-                .foregroundStyle(Theme.accent)
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(.secondary)
 
             Button {
                 analytics.log(.scriptureOpened(reference: puzzle.reference, source: "puzzle_completion"))
@@ -994,14 +1012,14 @@ struct CompletionView: View {
                 Label("Read the passage", systemImage: "book")
                     .font(.subheadline.weight(.semibold))
             }
-            .buttonStyle(.bordered)
+            .buttonStyle(.borderless)
             .tint(Theme.accent)
             .padding(.top, Theme.Spacing.xs)
             .accessibilityHint("Closes this screen and opens the passage in the reader")
         }
-        .padding(Theme.Spacing.l)
+        .padding(.horizontal, Theme.Spacing.m)
+        .padding(.vertical, Theme.Spacing.s)
         .frame(maxWidth: .infinity)
-        .background(Theme.accent.opacity(0.1), in: .rect(cornerRadius: Theme.cornerRadius, style: .continuous))
     }
 
     private var freezeCard: some View {
@@ -1274,15 +1292,6 @@ struct CompletionView: View {
             } else {
                 shareButton(prominent: true)
             }
-
-            Button {
-                onHome()
-            } label: {
-                Text("Home")
-                    .frame(maxWidth: .infinity)
-            }
-            .buttonStyle(.borderless)
-            .controlSize(.large)
         }
     }
 

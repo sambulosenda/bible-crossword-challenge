@@ -176,21 +176,41 @@ struct ComebackCard: View {
 /// fills is the same dot in both places, which is the point of showing it at the
 /// moment it fills.
 struct WeekRow: View {
+    /// `.circles` is the lettered row for Home; `.dots` is the quiet 10pt
+    /// version for a card that has a headline of its own above it.
+    enum Style { case circles, dots }
+
     let completedWeekdays: Set<Int>
+    var style: Style = .circles
 
     @Environment(\.calendar) private var calendar
 
     var body: some View {
         HStack(spacing: Theme.Spacing.s) {
             ForEach(orderedWeekdays, id: \.self) { day in
-                dayCircle(day)
+                switch style {
+                case .circles: dayCircle(day)
+                case .dots: dot(day)
+                }
             }
         }
         // Decorative recap — the card's combined label already summarises it.
         .accessibilityHidden(true)
     }
 
-    /// The week's weekdays in the user's calendar order (respects firstWeekday).
+    private func dot(_ day: Int) -> some View {
+        let done = completedWeekdays.contains(day)
+        let isToday = day == today
+        return Circle()
+            .fill(done ? Theme.accent : Color.primary.opacity(0.1))
+            .overlay {
+                if isToday && !done {
+                    Circle().strokeBorder(Theme.accent, lineWidth: 1.5)
+                }
+            }
+            .frame(width: 10, height: 10)
+    }
+
     private var orderedWeekdays: [Int] {
         let first = calendar.firstWeekday
         return (0..<7).map { ((first - 1 + $0) % 7) + 1 }
