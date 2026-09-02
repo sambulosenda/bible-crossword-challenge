@@ -43,6 +43,11 @@ struct OnboardingView: View {
     @Environment(\.puzzleProvider) private var puzzleProvider
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
+    /// Hardware-keyboard focus for the first-solve page. The game screen takes
+    /// typed letters (iPad, Bluetooth keyboards); the one puzzle a new player
+    /// meets before it should too, or the first screen teaches that keys
+    /// don't work here.
+    @FocusState private var solveFocused: Bool
     @State private var page = 0
     @State private var didLogPaywallOpen = false
     @State private var didLogFirstSolve = false
@@ -300,6 +305,24 @@ struct OnboardingView: View {
             }
         }
         .animation(reduceMotion ? .easeInOut(duration: 0.3) : .spring(duration: 0.55, bounce: 0.15), value: solved)
+        // Same routing as CrosswordGameView: the page takes focus and feeds
+        // letters and backspace into the mini. Only while unsolved — after
+        // the solve the keypad is gone and Continue is the only action.
+        .focusable()
+        .focusEffectDisabled()
+        .focused($solveFocused)
+        .onKeyPress(characters: .letters, phases: .down) { press in
+            guard !solved, let letter = press.characters.uppercased().first else { return .ignored }
+            type(letter)
+            return .handled
+        }
+        .onKeyPress(.delete, phases: .down) { _ in
+            guard !solved else { return .ignored }
+            deleteLetter()
+            return .handled
+        }
+        .onAppear { if active { solveFocused = true } }
+        .onChange(of: page) { _, new in solveFocused = (new == 1) }
     }
 
     /// The payoff. Same shape as the verse card on the completion screen, so a
