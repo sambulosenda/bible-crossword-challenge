@@ -207,6 +207,16 @@ enum AnalyticsEvent {
     /// second whether finishing a puzzle actually sends anyone to Scripture.
     /// Both were unmeasured, so any claim about either was a guess.
     case scriptureOpened(reference: String, source: String)
+    /// The other half of `scriptureOpened`. In the 30 days to 2026-09-03 the
+    /// reader was opened 1,630 times and nothing said how long anyone stayed
+    /// or whether they read past the verse they came for — 92% of those opens
+    /// were the mid-puzzle verse hint, which is consulting, not reading.
+    /// `seconds` is wall time open; `chaptersPaged` counts page turns after
+    /// the first chapter settled; `scrolledPastVerse` is whether the player
+    /// scrolled a deep-linked verse's page by hand; `expanded` is whether the
+    /// verse-first hint sheet was opened out to the full chapter (always true
+    /// for the chapter reader itself).
+    case readerClosed(source: String, seconds: Int, chaptersPaged: Int, scrolledPastVerse: Bool, expanded: Bool)
     /// The mini→daily chain: the completion screen's offer to roll straight
     /// into today's full puzzle. Completing a puzzle on day one is the
     /// strongest D1 retention signal we have, so the button is measured
@@ -284,6 +294,7 @@ enum AnalyticsEvent {
         case .familyBoardOpened: return "family_board_opened"
         case .familyBoardShared: return "family_board_shared"
         case .scriptureOpened: return "scripture_opened"
+        case .readerClosed: return "reader_closed"
         case .completionChainTapped: return "completion_chain_tapped"
         case .memoryListOpened: return "memory_list_opened"
         case .memoryVerseStarted: return "memory_verse_started"
@@ -427,6 +438,14 @@ enum AnalyticsEvent {
             return ["puzzle_id": id, "size": size]
         case .scriptureOpened(let reference, let source):
             return ["reference": reference, "source": source]
+        case .readerClosed(let source, let seconds, let chaptersPaged, let scrolledPastVerse, let expanded):
+            return [
+                "source": source,
+                "seconds": seconds,
+                "chapters_paged": chaptersPaged,
+                "scrolled_past_verse": scrolledPastVerse,
+                "expanded": expanded,
+            ]
         case .completionChainTapped(let from, let to):
             return ["from_puzzle_id": from, "to_puzzle_id": to]
         case .memoryListOpened(let source):

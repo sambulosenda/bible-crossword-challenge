@@ -25,7 +25,8 @@ struct ReaderModal: View {
             ChapterReaderView(
                 startBook: target.book,
                 startChapter: target.chapter,
-                highlightVerse: target.verse
+                highlightVerse: target.verse,
+                source: target.source
             )
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {

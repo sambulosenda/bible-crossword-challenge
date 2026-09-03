@@ -446,7 +446,7 @@ private struct TodayHeader: View {
     private func scripture(_ verse: Puzzle) -> some View {
         Button {
             analytics.log(.scriptureOpened(reference: verse.reference, source: "verse_of_the_day"))
-            readerRouter.open(reference: verse.reference)
+            readerRouter.open(reference: verse.reference, source: "verse_of_the_day")
         } label: {
             VStack(alignment: .leading, spacing: Theme.Spacing.m) {
                 VStack(alignment: .leading, spacing: Theme.Spacing.s) {

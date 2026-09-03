@@ -244,7 +244,10 @@ struct CrosswordGameView: View {
         .sheet(item: $verseHintTarget, onDismiss: {
             vm.isTimerSuppressed = false
         }) { target in
-            ReaderModal(target: target)
+            // Verse-first, not the chapter: the player is mid-grid looking
+            // for an answer (1,490 of 1,630 reader opens in the 30 days to
+            // 2026-09-03 came from here). The chapter is one tap away.
+            VerseHintSheet(target: target)
         }
         .fullScreenCover(isPresented: $showCompletion) {
             CompletionView(
@@ -659,7 +662,7 @@ struct CrosswordGameView: View {
     private func useVerseHint() {
         guard let slot = vm.activeSlot,
               let reference = slot.reference,
-              let target = ReaderRouter.Target(reference: reference) else { return }
+              let target = ReaderRouter.Target(reference: reference, source: "hint") else { return }
 
         let rec = loadOrCreateRecord()
         if !rec.usedHint {

@@ -15,6 +15,18 @@ struct ChapterReaderView: View {
     let startBook: String
     let startChapter: Int
     var highlightVerse: Int? = nil
+    /// Which surface opened the reader. Nil when a host logs the close itself
+    /// (the verse-first hint sheet), so one visit never reports twice.
+    var source: String? = nil
+
+    @Environment(\.analytics) private var analytics
+    @State private var openedAt = Date()
+    /// Page turns after the opening chapter settled — the swipe from `0` to
+    /// the start index in `build()` is setup, not reading.
+    @State private var pageTurns = 0
+    @State private var didSettle = false
+    /// Whether the player scrolled the deep-linked verse's page by hand.
+    @State private var scrolledPastVerse = false
 
     @AppStorage("read.lastBook") private var lastBook = ""
     @AppStorage("read.lastChapter") private var lastChapter = 0
@@ -43,7 +55,8 @@ struct ChapterReaderView: View {
                             book: locations[i].book,
                             chapter: locations[i].chapter,
                             fontSize: fontSize,
-                            highlight: i == startIndex ? highlightVerse : nil
+                            highlight: i == startIndex ? highlightVerse : nil,
+                            scrolledPast: $scrolledPastVerse
                         )
                         .tag(i)
                     }
@@ -72,7 +85,20 @@ struct ChapterReaderView: View {
             }
         }
         .task { build() }
-        .onChange(of: selection) { _, i in persist(i) }
+        .onChange(of: selection) { _, i in
+            persist(i)
+            if didSettle { pageTurns += 1 }
+        }
+        .onDisappear {
+            guard let source else { return }
+            analytics.log(.readerClosed(
+                source: source,
+                seconds: Int(Date().timeIntervalSince(openedAt).rounded()),
+                chaptersPaged: pageTurns,
+                scrolledPastVerse: scrolledPastVerse,
+                expanded: true
+            ))
+        }
         .sheet(isPresented: $showJump) {
             JumpSheet(books: scripture.books) { book, chapter in
                 if let idx = locations.firstIndex(where: { $0.book == book && $0.chapter.number == chapter }) {
@@ -103,6 +129,7 @@ struct ChapterReaderView: View {
         startIndex = idx
         selection = idx
         persist(idx)
+        didSettle = true
     }
 
     private func persist(_ i: Int) {
@@ -119,9 +146,15 @@ private struct ChapterPage: View {
     let chapter: BibleChapter
     let fontSize: Double
     var highlight: Int?
+    /// Set once the player scrolls this page by hand after a deep-linked
+    /// verse has been brought into view. Only the highlighted page reports.
+    @Binding var scrolledPast: Bool
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var flashing = false
+    /// True after the programmatic scroll to the verse has landed — offsets
+    /// before that are the app moving the page, not the reader.
+    @State private var settled = false
 
     var body: some View {
         ScrollViewReader { proxy in
@@ -146,10 +179,20 @@ private struct ChapterPage: View {
                 guard let target = highlight else { return }
                 try? await Task.sleep(for: .milliseconds(60))
                 withAnimation(.easeInOut) { proxy.scrollTo(target, anchor: .center) }
+                // Past the scroll animation before offsets count as reading.
+                try? await Task.sleep(for: .milliseconds(500))
+                settled = true
                 guard !reduceMotion else { return }
                 flashing = true
-                try? await Task.sleep(for: .seconds(1.1))
+                try? await Task.sleep(for: .milliseconds(600))
                 withAnimation(.easeOut(duration: 0.7)) { flashing = false }
+            }
+            // A threshold, not any change: a settled page still reports tiny
+            // offsets, and only a real drag should flip the flag — which then
+            // stays flipped, so this writes state at most once.
+            .onScrollGeometryChange(for: CGFloat.self) { $0.contentOffset.y } action: { old, new in
+                guard settled, !scrolledPast, abs(new - old) > 24 else { return }
+                scrolledPast = true
             }
         }
     }

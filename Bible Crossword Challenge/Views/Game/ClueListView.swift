@@ -137,7 +137,7 @@ struct ClueListView: View {
     /// the Verse of the Day.
     private func referenceLink(_ reference: String) -> some View {
         Button {
-            guard let target = ReaderRouter.Target(reference: reference) else { return }
+            guard let target = ReaderRouter.Target(reference: reference, source: "clue") else { return }
             analytics.log(.scriptureOpened(reference: reference, source: "clue"))
             readerTarget = target
         } label: {

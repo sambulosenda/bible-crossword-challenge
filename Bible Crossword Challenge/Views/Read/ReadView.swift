@@ -64,7 +64,11 @@ struct ReadView: View {
             }
             .navigationDestination(isPresented: $showReader) {
                 let point = snapshot ?? .placeholder
-                ChapterReaderView(startBook: point.book, startChapter: point.chapter)
+                ChapterReaderView(
+                    startBook: point.book,
+                    startChapter: point.chapter,
+                    source: point.isFresh ? "read_start" : "read_continue"
+                )
             }
             // The memory list pushes practice by value, as it does from Today.
             .navigationDestination(for: MemoryRoute.self) { _ in
@@ -288,7 +292,7 @@ struct ChapterPickerView: View {
         .navigationTitle(book.name)
         .navigationBarTitleDisplayMode(.inline)
         .navigationDestination(item: $openChapter) { chapter in
-            ChapterReaderView(startBook: book.name, startChapter: chapter)
+            ChapterReaderView(startBook: book.name, startChapter: chapter, source: "read_browse")
         }
     }
 }

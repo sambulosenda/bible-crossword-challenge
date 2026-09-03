@@ -20,21 +20,25 @@ final class ReaderRouter {
         let book: String
         let chapter: Int
         let verse: Int?
+        /// Which surface asked — the same value its `scripture_opened` carried,
+        /// so `reader_closed` can be paired with it.
+        let source: String
 
         var id: String { "\(book)-\(chapter)-\(verse ?? 0)" }
 
         /// Nil for a reference the bundled Bible can't address, so a citation
         /// that doesn't resolve shows nothing rather than opening an empty
         /// reader.
-        init?(reference: String) {
+        init?(reference: String, source: String) {
             guard let ref = ScriptureRef(reference) else { return nil }
-            self.init(book: ref.book, chapter: ref.chapter, verse: ref.verse)
+            self.init(book: ref.book, chapter: ref.chapter, verse: ref.verse, source: source)
         }
 
-        init(book: String, chapter: Int, verse: Int?) {
+        init(book: String, chapter: Int, verse: Int?, source: String) {
             self.book = book
             self.chapter = chapter
             self.verse = verse
+            self.source = source
         }
     }
 
@@ -48,8 +52,8 @@ final class ReaderRouter {
     /// the cover this drives hangs off the tab bar, and UIKit drops the request
     /// if something is already presented over it. A sheet should present its own
     /// `ReaderModal` instead.
-    func open(reference: String) {
-        guard let target = Target(reference: reference) else { return }
+    func open(reference: String, source: String) {
+        guard let target = Target(reference: reference, source: source) else { return }
         self.target = target
     }
 }

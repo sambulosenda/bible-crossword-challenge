@@ -943,7 +943,7 @@ struct CompletionView: View {
 
             Button {
                 analytics.log(.scriptureOpened(reference: puzzle.reference, source: "puzzle_completion"))
-                readerRouter.open(reference: puzzle.reference)
+                readerRouter.open(reference: puzzle.reference, source: "puzzle_completion")
                 onHome()
             } label: {
                 Label("Read the passage", systemImage: "book")
