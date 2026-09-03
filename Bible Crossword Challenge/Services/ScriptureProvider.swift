@@ -25,12 +25,31 @@ final class ScriptureProvider {
     var bible: Bible {
         if let cached { return cached }
         let loaded = Self.load(bundle: bundle)
+        install(loaded)
+        return loaded
+    }
+
+    /// Decodes off the main thread when nothing has needed the Bible yet, so
+    /// the first screen that shows it (the Read tab) doesn't pay the decode
+    /// as a hitch. `bible` still decodes synchronously for a caller that
+    /// can't wait; a caller that can should `await` this first. Safe to call
+    /// repeatedly: a decode that lands after another already did is dropped.
+    func preload() async {
+        guard cached == nil else { return }
+        let bundle = self.bundle
+        let loaded = await Task.detached(priority: .userInitiated) {
+            Self.load(bundle: bundle)
+        }.value
+        guard cached == nil else { return }
+        install(loaded)
+    }
+
+    private func install(_ loaded: Bible) {
         cached = loaded
         byName = Dictionary(
             loaded.books.map { ($0.name.lowercased(), $0) },
             uniquingKeysWith: { first, _ in first }
         )
-        return loaded
     }
 
     var books: [BibleBook] { bible.books }
@@ -47,7 +66,7 @@ final class ScriptureProvider {
         return (book, chapter)
     }
 
-    private static func load(bundle: Bundle) -> Bible {
+    private nonisolated static func load(bundle: Bundle) -> Bible {
         guard let url = bundle.url(forResource: "bsb", withExtension: "json") else {
             assertionFailure("bsb.json missing from bundle")
             return Bible(translation: "", abbreviation: "", books: [])

@@ -6,22 +6,26 @@
 //  domain). Decoded from `bsb.json` and consumed by the Read tab. Fully offline,
 //  mirroring how `puzzles.json` backs the game.
 //
+//  `nonisolated`: the project defaults types to the main actor, and the decode
+//  runs on a background task (`ScriptureProvider.preload`), so these plain
+//  values opt out — they carry no state that needs an actor.
+//
 
 import Foundation
 
-enum Testament: String, Codable, Hashable, CaseIterable {
+nonisolated enum Testament: String, Codable, Hashable, CaseIterable, Sendable {
     case old, new
 
     var label: String { self == .old ? "Old Testament" : "New Testament" }
 }
 
-struct Bible: Codable, Hashable {
+nonisolated struct Bible: Codable, Hashable, Sendable {
     let translation: String
     let abbreviation: String
     let books: [BibleBook]
 }
 
-struct BibleBook: Codable, Hashable, Identifiable {
+nonisolated struct BibleBook: Codable, Hashable, Identifiable, Sendable {
     let name: String
     let testament: Testament
     let chapters: [BibleChapter]
@@ -30,14 +34,14 @@ struct BibleBook: Codable, Hashable, Identifiable {
     var chapterCount: Int { chapters.count }
 }
 
-struct BibleChapter: Codable, Hashable, Identifiable {
+nonisolated struct BibleChapter: Codable, Hashable, Identifiable, Sendable {
     let number: Int
     let verses: [BibleVerse]
 
     var id: Int { number }
 }
 
-struct BibleVerse: Codable, Hashable, Identifiable {
+nonisolated struct BibleVerse: Codable, Hashable, Identifiable, Sendable {
     let number: Int
     let text: String
 
