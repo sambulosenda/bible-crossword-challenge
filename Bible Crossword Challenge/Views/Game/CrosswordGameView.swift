@@ -99,7 +99,9 @@ struct CrosswordGameView: View {
         self.puzzle = puzzle
         self.profile = profile
         self.entrySource = entrySource
-        _vm = State(initialValue: GameViewModel(puzzle: puzzle))
+        // Learning-window players get the shorter stall thresholds — see
+        // `GameViewModel.isLearning`.
+        _vm = State(initialValue: GameViewModel(puzzle: puzzle, learning: profile.isStillLearning))
     }
 
     var body: some View {

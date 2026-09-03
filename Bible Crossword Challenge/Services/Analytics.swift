@@ -220,6 +220,19 @@ enum AnalyticsEvent {
     case memoryVerseStarted(reference: String, level: Int)
     case memoryVerseCompleted(reference: String, level: Int, leveledUp: Bool, hintsUsed: Int)
     case memoryVerseMastered(reference: String)
+    // MetricKit diagnostics, forwarded by `CrashReporter` on the launch after
+    // the event. The app has no crash SDK, and in the 30 days to 2026-09-03,
+    // 19 of 51 day-0 non-finishers on 2.0+ builds logged a puzzle start and
+    // then nothing at all — not even `Application Backgrounded`. A crash and
+    // an app-kill before the analytics queue flushed look identical from the
+    // outside; these two events are what makes them distinguishable.
+    // `build` and `os` come from the payload, not the running app, because
+    // the crash may predate an update. `frames` is the crashed thread's
+    // deepest frames as `Binary+0xoffset` (symbolicate with `atos` against
+    // that build's dSYM); `app_frames` is the subset in our own binary, which
+    // is the grouping key.
+    case appCrash(signal: Int?, exceptionType: Int?, exceptionCode: Int?, reason: String?, build: String, os: String, frames: String, appFrames: String)
+    case appHang(seconds: Double, build: String, os: String, frames: String, appFrames: String)
 
     var name: String {
         switch self {
@@ -271,6 +284,8 @@ enum AnalyticsEvent {
         case .memoryVerseStarted: return "memory_verse_started"
         case .memoryVerseCompleted: return "memory_verse_completed"
         case .memoryVerseMastered: return "memory_verse_mastered"
+        case .appCrash: return "app_crash"
+        case .appHang: return "app_hang"
         }
     }
 
@@ -420,6 +435,27 @@ enum AnalyticsEvent {
             ]
         case .memoryVerseMastered(let reference):
             return ["reference": reference]
+        case .appCrash(let signal, let exceptionType, let exceptionCode, let reason, let build, let os, let frames, let appFrames):
+            return [
+                // -1 stands in for "not reported" — a dictionary of Any can't
+                // carry nil, and a missing key would vanish from breakdowns.
+                "signal": signal ?? -1,
+                "exception_type": exceptionType ?? -1,
+                "exception_code": exceptionCode ?? -1,
+                "reason": reason ?? "",
+                "build": build,
+                "os": os,
+                "frames": frames,
+                "app_frames": appFrames,
+            ]
+        case .appHang(let seconds, let build, let os, let frames, let appFrames):
+            return [
+                "seconds": seconds,
+                "build": build,
+                "os": os,
+                "frames": frames,
+                "app_frames": appFrames,
+            ]
         }
     }
 }

@@ -21,6 +21,9 @@ struct Bible_Crossword_ChallengeApp: App {
         FirebaseApp.configure()
         FirebaseAnalyticsService.configure()
         PostHogAnalyticsService.configure()
+        // After the analytics backends exist: MetricKit hands over last
+        // session's crash and hang diagnostics early in launch.
+        CrashReporter.shared.start()
         // Touched here purely to install its notification-centre delegate. A
         // cold launch from a notification tap delivers the response during the
         // launch cycle, so a delegate first assigned from a view's `.task` is

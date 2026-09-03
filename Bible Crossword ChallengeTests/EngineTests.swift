@@ -571,6 +571,44 @@ struct EngineTests {
         #expect(vm.stallNudgeKind == .freeLetter)
     }
 
+    @Test func learningWindowShortensBothTiers() {
+        // Under three completions the thresholds drop (20s / 12s): day-0
+        // non-finishers left inside the standard 30s/45s waits, so the
+        // standard tiers fired for 5 of 35 of them.
+        let learning = GameViewModel(puzzle: makePuzzle(), learning: true)
+        let standard = GameViewModel(puzzle: makePuzzle())
+        #expect(learning.stallNudgeSeconds == GameViewModel.learningStallNudgeSeconds)
+        #expect(learning.earlyNudgeSeconds == GameViewModel.learningEarlyNudgeSeconds)
+        #expect(standard.stallNudgeSeconds == GameViewModel.standardStallNudgeSeconds)
+        #expect(standard.earlyNudgeSeconds == GameViewModel.earlyNudgeCap)
+        #expect(learning.stallNudgeSeconds < standard.stallNudgeSeconds)
+        #expect(learning.earlyNudgeSeconds < standard.earlyNudgeSeconds)
+        // The early tier never waits longer than the mid tier, in either mode.
+        #expect(learning.earlyNudgeSeconds <= learning.stallNudgeSeconds)
+    }
+
+    @Test func learningWindowEarlyTierFiresInsideTwelveSeconds() {
+        let vm = GameViewModel(puzzle: makePuzzle(), learning: true)
+        vm.isAttachedToWindow = true
+        vm.enter("C")                                       // 20%, early tier
+        idle(vm, seconds: GameViewModel.learningEarlyNudgeSeconds - 1)
+        #expect(vm.stallNudgeTick == 0)
+        idle(vm, seconds: 2, from: 1000)
+        #expect(vm.stallNudgeTick == 1)
+        #expect(vm.stallNudgeKind == .freeLetter)
+    }
+
+    @Test func learningWindowMidTierFiresInsideTwentySeconds() {
+        let vm = GameViewModel(puzzle: makePuzzle(), learning: true)
+        vm.isAttachedToWindow = true
+        fillFourOfFive(vm)                                  // 80%, mid tier
+        idle(vm, seconds: GameViewModel.learningStallNudgeSeconds - 1)
+        #expect(vm.stallNudgeTick == 0)
+        idle(vm, seconds: 2, from: 1000)
+        #expect(vm.stallNudgeTick == 1)
+        #expect(vm.stallNudgeKind == .checkAnswers)
+    }
+
     @Test func eachTierFiresIndependently() {
         // Early tier at low fill, then the check tier after crossing 40% —
         // one session can be rescued twice, once per shape of stuck.

@@ -178,15 +178,40 @@ final class GameViewModel {
     /// than the check tier: the quick-close cohort it exists for is mostly
     /// gone by a minute. Never longer than `stallNudgeSeconds`, so the DEBUG
     /// `-uiStallNudgeSeconds` override shortens both tiers together.
-    var earlyNudgeSeconds: Int { min(30, stallNudgeSeconds) }
+    var earlyNudgeSeconds: Int {
+        min(isLearning ? Self.learningEarlyNudgeSeconds : Self.earlyNudgeCap, stallNudgeSeconds)
+    }
+
+    /// A player inside the learning window (under three completions — the
+    /// same gate as free hints and the starter word). Their thresholds are
+    /// shorter because their sittings are: on 2.0–2.6 builds, day-0
+    /// non-finishers spent 1–40 active seconds on the grid before leaving
+    /// under 10% fill (30 of 65 abandons to 2026-09-03), and the 40%+ band
+    /// sat 40–250s. The 30s/45s tiers fired for 5 of those 35 players. The
+    /// nudge has to arrive inside the patience they actually have.
+    let isLearning: Bool
+
+    /// Mid-solve idle threshold for everyone past the learning window.
+    static let standardStallNudgeSeconds = 45
+    /// Mid-solve idle threshold inside the learning window.
+    static let learningStallNudgeSeconds = 20
+    /// Early (< 40% fill) idle threshold past the learning window.
+    static let earlyNudgeCap = 30
+    /// Early idle threshold inside the learning window.
+    static let learningEarlyNudgeSeconds = 12
+
+    static func defaultStallNudgeSeconds(learning: Bool) -> Int {
+        learning ? learningStallNudgeSeconds : standardStallNudgeSeconds
+    }
 
     /// Active seconds since the last player input — for nudge analytics.
     var secondsSinceLastInput: Int { accumulatedSeconds - lastInputSeconds }
 
-    init(puzzle: Puzzle, now: Date = Date()) {
+    init(puzzle: Puzzle, learning: Bool = false, now: Date = Date()) {
         self.puzzle = puzzle
         self.size = puzzle.size
         self.startDate = now
+        self.isLearning = learning
 
         #if DEBUG
         // `-uiStallNudgeSeconds 5` shortens the stall wait for UI testing —
@@ -196,12 +221,13 @@ final class GameViewModel {
            let secs = Int(args[flag + 1]), secs > 0 {
             self.stallNudgeSeconds = secs
         } else {
-            self.stallNudgeSeconds = 45
+            self.stallNudgeSeconds = Self.defaultStallNudgeSeconds(learning: learning)
         }
         #else
         // 45, down from 75: the mid-fill abandoner's median sitting was ~5
-        // minutes, and the old nudge fired in 17 of 175 such abandons.
-        self.stallNudgeSeconds = 45
+        // minutes, and the old nudge fired in 17 of 175 such abandons. 20 in
+        // the learning window — see `isLearning`.
+        self.stallNudgeSeconds = Self.defaultStallNudgeSeconds(learning: learning)
         #endif
 
         // Build slots from clue data.
