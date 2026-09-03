@@ -2,9 +2,10 @@
 //  ReaderRouter.swift
 //  Bible Crossword Challenge
 //
-//  Drives the scripture reader, which exists only as a deep-link target — a
-//  puzzle's verse reference sets `target` and RootView presents the reader
-//  modally over whatever tab is in front. There is no standalone Read tab.
+//  Drives the modal scripture reader — a puzzle's verse reference sets
+//  `target` and RootView presents the reader over whatever tab is in front.
+//  The Read tab (`ReadView`) hosts the same reader for browsing; this stays
+//  the route for a reference tapped mid-puzzle.
 //
 
 import SwiftUI

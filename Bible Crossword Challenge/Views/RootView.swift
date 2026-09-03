@@ -10,9 +10,11 @@ import SwiftUI
 import SwiftData
 import os
 
-/// The main tab bar's selectable tabs.
+/// The main tab bar's selectable tabs. `read` took the slot Achievements
+/// held until 2.8 — the trophy list now lives inside Profile (and behind
+/// Today's next-achievement card), and the scripture surfaces got the tab.
 enum RootTab: Hashable {
-    case today, packs, library, achievements, profile
+    case today, packs, library, read, profile
 }
 
 struct RootView: View {
@@ -361,15 +363,16 @@ struct RootView: View {
             Tab("Library", systemImage: "books.vertical", value: RootTab.library) {
                 LibraryView(profile: profile)
             }
-            Tab("Achievements", systemImage: "trophy", value: RootTab.achievements) {
-                AchievementsView(profile: profile)
+            Tab("Read", systemImage: "book", value: RootTab.read) {
+                ReadView()
             }
             Tab("Profile", systemImage: "person", value: RootTab.profile) {
                 ProfileView(profile: profile)
             }
         }
-        // The reader is a deep-link target only — a puzzle's verse reference sets
-        // the router target and we present it modally over the current tab.
+        // A verse reference tapped anywhere sets the router target and the
+        // reader is presented modally over the current tab; the Read tab hosts
+        // the same reader for browsing.
         .fullScreenCover(item: $router.target) { target in
             ReaderModal(target: target)
         }

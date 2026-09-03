@@ -69,7 +69,11 @@ struct ProfileView: View {
                         unlocked: unlockedCount,
                         totalAchievements: Achievements.all.count
                     )
-                    JourneyCard()
+                    AchievementsCard(
+                        profile: profile,
+                        unlocked: unlockedCount,
+                        total: Achievements.all.count
+                    )
                     challengesSection
                     premiumSection
                     preferencesSection
@@ -574,36 +578,29 @@ private struct ProfileStatsCard: View {
     }
 }
 
-// MARK: - Journey
+// MARK: - Achievements
 
-/// The way into the map. A row rather than the map itself: sixty-six books
-/// would swamp a settings screen, and the count is the part worth seeing
-/// from here.
-///
-/// Its own type for the same reason as `ProfileStatsCard`: as a computed
-/// property on `ProfileView` the books-explored count (a pass over every
-/// record plus `BibleJourney.booksTouched`) re-ran on every parent body
-/// evaluation — including each keystroke in the rename alert. Owning the
-/// query here means only record changes invalidate it, and the query itself
-/// fetches solved records only.
-private struct JourneyCard: View {
-    @Environment(\.puzzleProvider) private var puzzleProvider
-    @Query(filter: #Predicate<PuzzleRecord> { $0.isCompleted })
-    private var solvedRecords: [PuzzleRecord]
+/// The way into the trophy list, in the row the journey card held until 2.8
+/// (the map moved to the Read tab). Plain values only, for the same
+/// invalidation reason as `ProfileStatsCard`.
+private struct AchievementsCard: View {
+    let profile: PlayerProfile
+    let unlocked: Int
+    let total: Int
 
     var body: some View {
         NavigationLink {
-            JourneyView()
+            AchievementsView(profile: profile, source: "profile")
         } label: {
             HStack(spacing: Theme.Spacing.m) {
-                Image(systemName: "map.fill")
+                Image(systemName: "trophy.fill")
                     .font(.title)
                     .foregroundStyle(Theme.accent)
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("Your journey")
+                    Text("Achievements")
                         .font(.subheadline.weight(.semibold))
                         .foregroundStyle(.primary)
-                    Text(journeySummary)
+                    Text(summary)
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -618,21 +615,13 @@ private struct JourneyCard: View {
         }
         .buttonStyle(PressableCardStyle())
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("Your journey. \(journeySummary)")
-        .accessibilityHint("Opens the map of books you've explored")
+        .accessibilityLabel("Achievements. \(summary)")
+        .accessibilityHint("Opens every badge and its progress")
     }
 
-    private var journeySummary: String {
-        let count = booksExplored
-        if count == 0 { return "See which books of the Bible you've explored" }
-        return "\(count) \(count == 1 ? "book" : "books") of the Bible explored"
-    }
-
-    private var booksExplored: Int {
-        BibleJourney.booksTouched(
-            completedPuzzleIDs: Set(solvedRecords.map(\.puzzleID)),
-            puzzles: puzzleProvider.allPuzzles
-        ).count
+    private var summary: String {
+        guard unlocked > 0 else { return "Solve puzzles to earn your first badge" }
+        return "\(unlocked) of \(total) badges earned"
     }
 }
 

@@ -16,7 +16,11 @@ import SwiftUI
 import SwiftData
 
 struct JourneyView: View {
+    /// Which surface pushed it — see `JourneyCard`.
+    var source: String = "read_tab"
+
     @Environment(\.puzzleProvider) private var puzzleProvider
+    @Environment(\.analytics) private var analytics
     @Environment(StoreService.self) private var store
     @Query private var records: [PuzzleRecord]
 
@@ -39,7 +43,10 @@ struct JourneyView: View {
         .background(Theme.background)
         .navigationTitle("Your journey")
         .navigationBarTitleDisplayMode(.inline)
-        .onAppear(perform: reload)
+        .onAppear {
+            reload()
+            analytics.log(.journeyOpened(source: source))
+        }
         .onChange(of: records.count, reload)
     }
 
@@ -368,5 +375,69 @@ struct JourneyBookView: View {
             parts.append("Premium")
         }
         return parts.joined(separator: ", ")
+    }
+}
+
+// MARK: - Journey
+
+/// The way into the map. A row rather than the map itself: sixty-six books
+/// would swamp a hub screen, and the count is the part worth seeing from
+/// here. Lived on Profile until 2.8; the Read tab is its home now.
+///
+/// Its own type with its own query: as a computed property on the parent the
+/// books-explored count (a pass over every record plus
+/// `BibleJourney.booksTouched`) re-ran on every parent body evaluation.
+/// Owning the query here means only record changes invalidate it, and the
+/// query itself fetches solved records only.
+struct JourneyCard: View {
+    /// Which surface pushed it — `read_tab`, or `profile` before 2.8.
+    var source: String = "read_tab"
+
+    @Environment(\.puzzleProvider) private var puzzleProvider
+    @Query(filter: #Predicate<PuzzleRecord> { $0.isCompleted })
+    private var solvedRecords: [PuzzleRecord]
+
+    var body: some View {
+        NavigationLink {
+            JourneyView(source: source)
+        } label: {
+            HStack(spacing: Theme.Spacing.m) {
+                Image(systemName: "map.fill")
+                    .font(.title)
+                    .foregroundStyle(Theme.accent)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Your journey")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.primary)
+                    Text(journeySummary)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                Spacer(minLength: 0)
+                Image(systemName: "chevron.right")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(.secondary)
+            }
+            .padding(Theme.Spacing.l)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .elevatedCard()
+        }
+        .buttonStyle(PressableCardStyle())
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Your journey. \(journeySummary)")
+        .accessibilityHint("Opens the map of books you've explored")
+    }
+
+    private var journeySummary: String {
+        let count = booksExplored
+        if count == 0 { return "See which books of the Bible you've explored" }
+        return "\(count) \(count == 1 ? "book" : "books") of the Bible explored"
+    }
+
+    private var booksExplored: Int {
+        BibleJourney.booksTouched(
+            completedPuzzleIDs: Set(solvedRecords.map(\.puzzleID)),
+            puzzles: puzzleProvider.allPuzzles
+        ).count
     }
 }

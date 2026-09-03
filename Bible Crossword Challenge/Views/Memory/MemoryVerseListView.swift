@@ -15,6 +15,9 @@ import SwiftData
 struct MemoryRoute: Hashable {}
 
 struct MemoryVerseListView: View {
+    /// Which surface pushed it — `home_card` from Today, `read_tab` from Read.
+    var source: String = "home_card"
+
     @Environment(\.memoryVerses) private var memoryVerses
     @Environment(\.puzzleProvider) private var puzzleProvider
     @Environment(\.analytics) private var analytics
@@ -50,7 +53,7 @@ struct MemoryVerseListView: View {
         .navigationTitle("Memory Verses")
         .navigationBarTitleDisplayMode(.large)
         .background(Theme.background)
-        .onAppear { analytics.log(.memoryListOpened(source: "home_card")) }
+        .onAppear { analytics.log(.memoryListOpened(source: source)) }
         .sheet(isPresented: $showPaywall) {
             PaywallView(source: "memory_verse_limit")
         }

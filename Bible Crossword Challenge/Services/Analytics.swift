@@ -220,6 +220,11 @@ enum AnalyticsEvent {
     case memoryVerseStarted(reference: String, level: Int)
     case memoryVerseCompleted(reference: String, level: Int, leveledUp: Bool, hintsUsed: Int)
     case memoryVerseMastered(reference: String)
+    // The two screens re-homed in 2.8: the journey map moved from Profile to
+    // the Read tab, and achievements lost their tab for a Profile card and a
+    // tappable next-achievement card on Today. `source` says which door.
+    case journeyOpened(source: String)
+    case achievementsOpened(source: String)
     // MetricKit diagnostics, forwarded by `CrashReporter` on the launch after
     // the event. The app has no crash SDK, and in the 30 days to 2026-09-03,
     // 19 of 51 day-0 non-finishers on 2.0+ builds logged a puzzle start and
@@ -284,6 +289,8 @@ enum AnalyticsEvent {
         case .memoryVerseStarted: return "memory_verse_started"
         case .memoryVerseCompleted: return "memory_verse_completed"
         case .memoryVerseMastered: return "memory_verse_mastered"
+        case .journeyOpened: return "journey_opened"
+        case .achievementsOpened: return "achievements_opened"
         case .appCrash: return "app_crash"
         case .appHang: return "app_hang"
         }
@@ -435,6 +442,8 @@ enum AnalyticsEvent {
             ]
         case .memoryVerseMastered(let reference):
             return ["reference": reference]
+        case .journeyOpened(let source), .achievementsOpened(let source):
+            return ["source": source]
         case .appCrash(let signal, let exceptionType, let exceptionCode, let reason, let build, let os, let frames, let appFrames):
             return [
                 // -1 stands in for "not reported" — a dictionary of Any can't

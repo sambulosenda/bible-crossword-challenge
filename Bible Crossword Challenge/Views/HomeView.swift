@@ -45,6 +45,9 @@ struct HomeView: View {
     /// Decided once on appear so spending the impression can't hide the card
     /// mid-view.
     @State private var showStreakAsk = false
+    /// Pushes the trophy list from the next-achievement card. Achievements
+    /// lost their tab in 2.8, so the card is the only way in from Today.
+    @State private var showAchievements = false
 
     private var dailyPuzzle: Puzzle? { puzzleProvider.dailyPuzzle() }
     private var dailyMini: Puzzle? { puzzleProvider.dailyMini() }
@@ -310,7 +313,13 @@ struct HomeView: View {
                         )
                     }
 
-                    NextAchievementCard(profile: profile)
+                    Button {
+                        showAchievements = true
+                    } label: {
+                        NextAchievementCard(profile: profile)
+                    }
+                    .buttonStyle(PressableCardStyle())
+                    .accessibilityHint("Opens every achievement")
 
                     // Below the achievement card: the mode earns attention
                     // through its due badge, not its position.
@@ -344,6 +353,9 @@ struct HomeView: View {
             }
             .navigationDestination(for: QuestRoute.self) { route in
                 QuestDetailView(quest: route.quest, profile: profile, source: route.source)
+            }
+            .navigationDestination(isPresented: $showAchievements) {
+                AchievementsView(profile: profile, source: "home_card")
             }
             .navigationDestination(for: MemoryRoute.self) { _ in
                 MemoryVerseListView()

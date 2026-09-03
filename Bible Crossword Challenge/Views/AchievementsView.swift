@@ -2,27 +2,36 @@
 //  AchievementsView.swift
 //  Bible Crossword Challenge
 //
+//  The trophy list. A pushed screen since 2.8, reached from Profile's
+//  achievements card and Today's next-achievement card; it held a tab of its
+//  own before that, while the reader, memory verses and the journey map had
+//  no front door at all (see `ReadView`).
+//
 
 import SwiftUI
 
 struct AchievementsView: View {
     let profile: PlayerProfile
+    /// Which surface pushed it — `profile` or `home_card`.
+    var source: String = "profile"
+
+    @Environment(\.analytics) private var analytics
 
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                LazyVStack(spacing: Theme.Spacing.m) {
-                    ForEach(Achievements.all) { achievement in
-                        row(achievement)
-                    }
+        ScrollView {
+            LazyVStack(spacing: Theme.Spacing.m) {
+                ForEach(Achievements.all) { achievement in
+                    row(achievement)
                 }
-                .padding(Theme.Spacing.m)
-                .frame(maxWidth: 560)
-                .frame(maxWidth: .infinity)
             }
-            .background(Theme.background)
-            .navigationTitle("Achievements")
+            .padding(Theme.Spacing.m)
+            .frame(maxWidth: 560)
+            .frame(maxWidth: .infinity)
         }
+        .background(Theme.background)
+        .navigationTitle("Achievements")
+        .navigationBarTitleDisplayMode(.inline)
+        .onAppear { analytics.log(.achievementsOpened(source: source)) }
     }
 
     private func row(_ achievement: Achievement) -> some View {
