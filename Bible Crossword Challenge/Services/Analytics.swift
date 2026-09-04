@@ -222,6 +222,12 @@ enum AnalyticsEvent {
     /// solved puzzle, so compare its share of `memory_verse_started`.
     case verseAction(kind: String, reference: String)
     case bookmarksOpened(count: Int)
+    /// The puzzle chips at the foot of a chapter — the reader's way back into
+    /// the grid. Shown once per chapter page a reader lands on, so tap rate is
+    /// taps over shows; the starts they produce carry `entry_source=read` on
+    /// the usual puzzle-start event and need nothing new.
+    case readPuzzleChipsShown(book: String, chapter: Int, count: Int, lockedCount: Int, source: String)
+    case readPuzzleChipTapped(puzzleID: String, locked: Bool, source: String)
     // The chapter-a-day plan. `day` is 1-based within the book.
     case planStarted(plan: String)
     case planChapterRead(plan: String, day: Int)
@@ -307,6 +313,8 @@ enum AnalyticsEvent {
         case .readerClosed: return "reader_closed"
         case .verseAction: return "verse_action"
         case .bookmarksOpened: return "bookmarks_opened"
+        case .readPuzzleChipsShown: return "read_puzzle_chips_shown"
+        case .readPuzzleChipTapped: return "read_puzzle_chip_tapped"
         case .planStarted: return "plan_started"
         case .planChapterRead: return "plan_chapter_read"
         case .planCompleted: return "plan_completed"
@@ -458,6 +466,10 @@ enum AnalyticsEvent {
             return ["kind": kind, "reference": reference]
         case .bookmarksOpened(let count):
             return ["count": count]
+        case .readPuzzleChipsShown(let book, let chapter, let count, let lockedCount, let source):
+            return ["book": book, "chapter": chapter, "count": count, "locked_count": lockedCount, "source": source]
+        case .readPuzzleChipTapped(let puzzleID, let locked, let source):
+            return ["puzzle_id": puzzleID, "locked": locked, "source": source]
         case .planStarted(let plan):
             return ["plan": plan]
         case .planChapterRead(let plan, let day), .planStopped(let plan, let day):

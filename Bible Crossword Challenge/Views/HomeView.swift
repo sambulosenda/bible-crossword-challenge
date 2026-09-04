@@ -16,6 +16,13 @@
 import SwiftUI
 import SwiftData
 
+/// A puzzle pushed onto Today from the reader's chapter chips. Its own value
+/// type so the grid can report `entry_source: "read"` — pushed as a bare
+/// `Puzzle` it would count as a Home start.
+struct ReadPuzzleRoute: Hashable {
+    let puzzle: Puzzle
+}
+
 struct HomeView: View {
     let profile: PlayerProfile
     /// Owned by RootView so a widget deep-link can push the daily puzzle here.
@@ -357,6 +364,9 @@ struct HomeView: View {
             .navigationBarTitleDisplayMode(.inline)
             .navigationDestination(for: Puzzle.self) { puzzle in
                 CrosswordGameView(puzzle: puzzle, profile: profile, entrySource: "home")
+            }
+            .navigationDestination(for: ReadPuzzleRoute.self) { route in
+                CrosswordGameView(puzzle: route.puzzle, profile: profile, entrySource: "read")
             }
             .navigationDestination(for: PackRoute.self) { route in
                 PackDetailView(pack: route.pack, profile: profile, source: route.source)

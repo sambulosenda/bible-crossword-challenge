@@ -73,6 +73,9 @@ final class PuzzleProvider {
     /// has been solved.
     let allPuzzles: [Puzzle]
 
+    /// Chapter → the puzzles that cite it, for the reader's puzzle chips.
+    let chapterIndex: ChapterPuzzleIndex
+
     /// Everything a Premium player can play: dailies, minis and pack
     /// exclusives. `puzzles` is only the daily/Archive pool, so it understates
     /// the library by the packs and minis when used in upgrade copy.
@@ -89,6 +92,7 @@ final class PuzzleProvider {
     init(bundle: Bundle = .main) {
         let all = Self.loadBundledPuzzles(bundle: bundle)
         self.allPuzzles = all
+        self.chapterIndex = ChapterPuzzleIndex(puzzles: all)
         // Pack-exclusive puzzles ("pack-" ids) live only inside their pack, and
         // Sunday Specials rotate weekly in their own pool: keeping both out of
         // this pool preserves the daily-rotation index for every existing
