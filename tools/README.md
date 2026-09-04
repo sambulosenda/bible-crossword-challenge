@@ -12,6 +12,13 @@ the app.
   candidate words; the generator only uses the ones that interlock.
 - `generate_puzzles.py` — deterministically builds valid crossword grids from
   the specs and writes the app's `puzzles.json`.
+- `americanize_clues.py` — normalises clue and title spelling to American
+  English (colour → color, honour → honor, traveller → traveler…) in both
+  `puzzle_specs.json` and the shipped `puzzles.json`, text only, so grids,
+  ids and order never move. The verse under every clue is the BSB, which is
+  American English, and the store is US-first. Run it after authoring;
+  `--check` reports without writing (exit 1 if anything would change).
+  Titles that quote the KJV are listed in `KEEP_TITLES` and left alone.
 - `validate_content.py` — checks what actually shipped: every clue's answer
   matches the letters in its solution grid, pack membership resolves, seasonal
   windows parse, pack-exclusive puzzles stay out of the daily pool, every
