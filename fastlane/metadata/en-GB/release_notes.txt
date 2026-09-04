@@ -1,9 +1,9 @@
 Thanks for playing Bible Crossword Challenge! This update includes:
 
-• The verse hint is now one tap away, right on the clue bar
-• Stuck on a clue? A quiet nudge offers a check, the verse, or a free letter — no more staring at an empty square
-• A calmer finish: the completion screen has one clear next step, your verse on the paper, and sharing tucked behind a menu
-• Fewer interruptions: nothing pops over your celebration after a solve, and the hint limit shows inline instead of as a sheet
-• Today cards show the full verse instead of cutting it short
-• First-solve celebration now shows your solved grid
-• Fixes to how and when we ask for a rating
+• A new Read tab: the whole Bible, with search by verse, chapter or words, and a Recent row to pick up where you left off
+• Touch and hold any verse to memorize, bookmark, share or copy it
+• Reading plans: one chapter a day through John, Mark, Proverbs, Genesis or Psalms, with today's chapter on the Today screen
+• Every chapter ends with the puzzles drawn from it, so reading leads back to the grid
+• Eight new Sunday Specials: David, Joseph, Daniel, the parables, the miracles, Joshua and Judges, Ruth and Esther, Revelation
+• The verse hint now opens on the verse itself, with the whole chapter one tap away
+• Achievements have moved into your Profile
