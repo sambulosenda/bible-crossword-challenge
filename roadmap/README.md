@@ -42,7 +42,7 @@ whenever puzzles are added — every daily added moves the first date by one.
 |------|------|-------|
 | Dailies | 92 | 2026-10-01 |
 | Minis | 90 | 2026-09-29 |
-| Sundays | 5 | repeats every 5 weeks (weekly pool, rolls each Sunday) |
+| Sundays | 13 | first repeat 2026-11-08 (weekly pool, rolls each Sunday; see `PuzzleProvider.sundayRotationOffset`) |
 
 `RotationWrapTests` asserts both pool sizes and both dates, so adding content
 fails the suite until these are re-recorded — the table can't quietly go stale.

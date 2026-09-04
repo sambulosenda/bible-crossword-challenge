@@ -186,7 +186,7 @@ struct RotationWrapTests {
     @Test func theSundayPoolWrapsAfterItsOwnLength() {
         let provider = PuzzleProvider.shared
         let pool = provider.sundays
-        #expect(pool.count == 5, "sunday pool changed — the wrap week has moved")
+        #expect(pool.count == 13, "sunday pool changed — the wrap week has moved")
 
         // 2026-08-16 is a Sunday.
         let sunday = day(2026, 8, 16)
@@ -207,6 +207,19 @@ struct RotationWrapTests {
         #expect(served != nil)
         #expect(provider.sundaySpecial(for: saturday, calendar: calendar)?.id == served?.id)
         #expect(provider.sundaySpecial(for: nextSunday, calendar: calendar)?.id != served?.id)
+    }
+
+    /// The 2026-09-04 bank growth (5 → 13). The week in progress kept its
+    /// Special, the next weeks walk through the eight new ones, and the first
+    /// repeat comes only after every Special has been served once.
+    @Test func growingTheSundayBankServesNewSpecialsBeforeRepeating() {
+        let provider = PuzzleProvider.shared
+        // Week 8 (Sunday 2026-08-30) was serving sunday-004 when the bank grew.
+        #expect(provider.sundaySpecial(for: day(2026, 8, 30), calendar: calendar)?.id == "sunday-004")
+        #expect(provider.sundaySpecial(for: day(2026, 9, 6), calendar: calendar)?.id == "sunday-005")
+        #expect(provider.sundaySpecial(for: day(2026, 9, 13), calendar: calendar)?.id == "sunday-006")
+        #expect(provider.sundaySpecial(for: day(2026, 11, 1), calendar: calendar)?.id == "sunday-013")
+        #expect(provider.sundaySpecial(for: day(2026, 11, 8), calendar: calendar)?.id == "sunday-001")
     }
 
     @Test func everySundaySpecialIsTwentyOneByTwentyOne() {

@@ -1,7 +1,7 @@
 # 17 — Sunday Special (weekly 21×21)
 
 **Priority:** high (calendar peak + Premium headline at one puzzle/week content cost)
-**Status:** `[~]` shipped in code 2026-08-19 — T1–T5 done (zoom grid, generator, 5 banked Specials, weekly rotation + access, Today card + Library). T6 resolved without a new paywall row: the four-row benefit list absorbs Sundays via `totalPuzzleCount`. T7 open: existing `daily_puzzle_started/completed` events carry `sunday-` ids, dedicated events + notification/widget still to come.
+**Status:** `[~]` shipped in code 2026-08-19 — T1–T5 done (zoom grid, generator, 5 banked Specials, weekly rotation + access, Today card + Library). Bank grown to 13 on 2026-09-04 (David, Joseph, Daniel, parables, miracles, Joshua/Judges, Ruth/Esther, Revelation); the first repeat is now 2026-11-08, and `PuzzleProvider.sundayRotationOffset` keeps a grown bank from replaying old Specials before the new ones. T6 resolved without a new paywall row: the four-row benefit list absorbs Sundays via `totalPuzzleCount`. T7 open: existing `daily_puzzle_started/completed` events carry `sunday-` ids, dedicated events + notification/widget still to come.
 **Type:** eng (zoomable grid) + content cadence
 **Estimate:** M–L (T1 is the bulk; everything else is S)
 **Related:** `14-premium-content-value.md` (visible cadence of exclusives),

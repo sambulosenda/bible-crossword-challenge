@@ -178,10 +178,25 @@ final class PuzzleProvider {
     /// the day.
     func sundaySpecial(for date: Date = RotationClock.now, calendar: Calendar = .current) -> Puzzle? {
         guard !sundays.isEmpty else { return nil }
-        let week = weekIndex(for: date, calendar: calendar)
+        let week = weekIndex(for: date, calendar: calendar) - Self.sundayRotationOffset
         let count = sundays.count
         return sundays[((week % count) + count) % count]
     }
+
+    /// Weeks subtracted from the week index before it picks a Special.
+    ///
+    /// The pool is append-only (ids and positions are content-stable), so a
+    /// plain `week % count` would, after a bank grows, replay the oldest
+    /// Specials before it ever reached the new ones: with 5 banked, weeks 0–8
+    /// served 001–005 and 001–004 again; adding 8 more without this would have
+    /// sent weeks 13–17 back to 001–005 a third time while 006–009 sat unplayed.
+    ///
+    /// Re-derive whenever the bank grows: with the current week `w` serving
+    /// index `i`, set this so `(w - offset) % newCount == i` — the week in
+    /// progress keeps its Special and the following weeks walk forward through
+    /// every puzzle once before wrapping. Set 2026-09-04 (week 8, index 3, 13
+    /// banked): (8 - 5) % 13 == 3.
+    static let sundayRotationOffset = 5
 
     /// Whole weeks from the content epoch, where a week begins on **Sunday**
     /// regardless of the player's locale — the Special is a Sunday tradition,

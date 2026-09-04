@@ -52,12 +52,15 @@ BSB = os.path.join(os.path.dirname(os.path.abspath(__file__)),
 _bible = None
 
 def bible():
-    """{book name: {chapter number: verse count}}, loaded once."""
+    """{book name: {chapter number: set of verse numbers}}, loaded once."""
     global _bible
     if _bible is None:
         with open(BSB) as f:
             data = json.load(f)
-        _bible = {b["name"]: {c["number"]: len(c["verses"]) for c in b["chapters"]}
+        # Verse *numbers*, not a count: the BSB omits verses absent from the
+        # earliest manuscripts (Matthew 17:21, Acts 8:37…), so a chapter's last
+        # verse can be numbered past its length.
+        _bible = {b["name"]: {c["number"]: {v["number"] for v in c["verses"]} for c in b["chapters"]}
                   for b in data["books"]}
     return _bible
 
@@ -89,8 +92,8 @@ def ref_error(raw):
         return f"no book named {book!r} in bsb.json (references use 'Psalm', not 'Psalms')"
     if chapter not in chapters:
         return f"{book} has no chapter {chapter}"
-    if verse is not None and not (1 <= verse <= chapters[chapter]):
-        return f"{book} {chapter} has {chapters[chapter]} verses, not {verse}"
+    if verse is not None and verse not in chapters[chapter]:
+        return f"{book} {chapter} has no verse {verse} (last is {max(chapters[chapter])})"
     return None
 
 def theme_books(theme):

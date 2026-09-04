@@ -25436,6 +25436,2986 @@
     "kind": "sunday"
   },
   {
+    "id": "sunday-006",
+    "title": "A Shepherd Made King",
+    "difficulty": "medium",
+    "verse": "For man sees the outward appearance, but the LORD sees the heart.",
+    "reference": "1 Samuel 16:7",
+    "publishDate": "2026-07-06",
+    "size": 21,
+    "grid": [
+      "....JONATHAN.L...ELAH",
+      ".........E...I...N...",
+      "..TAMAR.ABSALOM..G..M",
+      ".C.B.....R...N...E..I",
+      ".E.I.B...O.B...J.D..C",
+      ".N.G.ANOINTED.GOLIATH",
+      ".S.A.T.....A...A..D.A",
+      ".U.I.H.N...R...B..U.L",
+      "PSALMS.A..S.......L..",
+      "H.R..H.T..T..J.SAUL..",
+      "I.K.MEPHIBOSHETH..A..",
+      "L..A.B.A..N..S.E..M..",
+      "I..B.A.N..E..S.P....B",
+      "SLING...S.S..E.HARP.E",
+      "T..E....O......E....T",
+      "I..R.Z..L...U.ARAUNAH",
+      "N...WINDOW..R..D..A.L",
+      "E....K..M...I.....B.E",
+      "SAMUEL.COVENANT..GATH",
+      ".....A..N...H.....L.E",
+      ".....G..............M"
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 4,
+        "text": "Saul's son, bound to David by friendship and covenant",
+        "answer": "JONATHAN",
+        "reference": "1 Samuel 18:3"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 9,
+        "text": "Where David was first anointed king over Judah",
+        "answer": "HEBRON",
+        "reference": "2 Samuel 2:4"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 0,
+        "col": 13,
+        "text": "Beast David killed while guarding sheep, along with a bear",
+        "answer": "LION",
+        "reference": "1 Samuel 17:36"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 0,
+        "col": 17,
+        "text": "The valley where the two armies faced off",
+        "answer": "ELAH",
+        "reference": "1 Samuel 17:2"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 0,
+        "col": 17,
+        "text": "Where David cut the corner of Saul's robe in a cave",
+        "answer": "ENGEDI",
+        "reference": "1 Samuel 24:1"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 2,
+        "col": 2,
+        "text": "Absalom's sister, wronged by Amnon",
+        "answer": "TAMAR",
+        "reference": "2 Samuel 13:1"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 2,
+        "col": 3,
+        "text": "Nabal's wise wife, who rode out to meet David",
+        "answer": "ABIGAIL",
+        "reference": "1 Samuel 25:42"
+      },
+      {
+        "number": 7,
+        "direction": "across",
+        "row": 2,
+        "col": 8,
+        "text": "The rebel son caught by his hair in an oak",
+        "answer": "ABSALOM",
+        "reference": "2 Samuel 18:9"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 2,
+        "col": 20,
+        "text": "Saul's daughter, who let David down through a window",
+        "answer": "MICHAL",
+        "reference": "1 Samuel 19:12"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 3,
+        "col": 1,
+        "text": "David's count of the people, which brought a plague",
+        "answer": "CENSUS",
+        "reference": "2 Samuel 24:10"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 4,
+        "col": 5,
+        "text": "Uriah's wife, seen bathing from the palace roof",
+        "answer": "BATHSHEBA",
+        "reference": "2 Samuel 11:3"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 4,
+        "col": 11,
+        "text": "The other beast the shepherd boy killed",
+        "answer": "BEAR",
+        "reference": "1 Samuel 17:36"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 4,
+        "col": 15,
+        "text": "David's ruthless commander",
+        "answer": "JOAB",
+        "reference": "2 Samuel 8:16"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 5,
+        "col": 5,
+        "text": "What Samuel did to David in front of his brothers",
+        "answer": "ANOINTED",
+        "reference": "1 Samuel 16:13"
+      },
+      {
+        "number": 14,
+        "direction": "across",
+        "row": 5,
+        "col": 14,
+        "text": "The giant of Gath felled by one stone",
+        "answer": "GOLIATH",
+        "reference": "1 Samuel 17:49"
+      },
+      {
+        "number": 15,
+        "direction": "down",
+        "row": 5,
+        "col": 18,
+        "text": "The cave where David's band of outlaws gathered",
+        "answer": "ADULLAM",
+        "reference": "1 Samuel 22:1"
+      },
+      {
+        "number": 16,
+        "direction": "down",
+        "row": 7,
+        "col": 7,
+        "text": "The prophet who told David, \"You are the man!\"",
+        "answer": "NATHAN",
+        "reference": "2 Samuel 12:7"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 8,
+        "col": 0,
+        "text": "David's songs; the shepherd's one is best known",
+        "answer": "PSALMS",
+        "reference": "Psalm 23:1"
+      },
+      {
+        "number": 17,
+        "direction": "down",
+        "row": 8,
+        "col": 0,
+        "text": "Israel's coastal enemies, Goliath's people",
+        "answer": "PHILISTINES",
+        "reference": "1 Samuel 17:1"
+      },
+      {
+        "number": 18,
+        "direction": "down",
+        "row": 8,
+        "col": 2,
+        "text": "David danced before it as it entered the city",
+        "answer": "ARK",
+        "reference": "2 Samuel 6:14"
+      },
+      {
+        "number": 19,
+        "direction": "down",
+        "row": 8,
+        "col": 10,
+        "text": "Five smooth ones, chosen from the brook",
+        "answer": "STONES",
+        "reference": "1 Samuel 17:40"
+      },
+      {
+        "number": 20,
+        "direction": "down",
+        "row": 9,
+        "col": 13,
+        "text": "David's father, who had eight sons",
+        "answer": "JESSE",
+        "reference": "1 Samuel 17:12"
+      },
+      {
+        "number": 21,
+        "direction": "across",
+        "row": 9,
+        "col": 15,
+        "text": "The king who hunted David through the wilderness",
+        "answer": "SAUL",
+        "reference": "1 Samuel 23:14"
+      },
+      {
+        "number": 21,
+        "direction": "down",
+        "row": 9,
+        "col": 15,
+        "text": "David's job when Samuel sent for him",
+        "answer": "SHEPHERD",
+        "reference": "1 Samuel 16:11"
+      },
+      {
+        "number": 22,
+        "direction": "across",
+        "row": 10,
+        "col": 4,
+        "text": "Jonathan's lame son, given a seat at the king's table",
+        "answer": "MEPHIBOSHETH",
+        "reference": "2 Samuel 9:13"
+      },
+      {
+        "number": 23,
+        "direction": "down",
+        "row": 11,
+        "col": 3,
+        "text": "Saul's commander, murdered by Joab at the gate",
+        "answer": "ABNER",
+        "reference": "2 Samuel 3:27"
+      },
+      {
+        "number": 24,
+        "direction": "down",
+        "row": 12,
+        "col": 20,
+        "text": "David's home town, where Samuel came with a horn of oil",
+        "answer": "BETHLEHEM",
+        "reference": "1 Samuel 16:4"
+      },
+      {
+        "number": 25,
+        "direction": "across",
+        "row": 13,
+        "col": 0,
+        "text": "David's weapon against the giant",
+        "answer": "SLING",
+        "reference": "1 Samuel 17:50"
+      },
+      {
+        "number": 26,
+        "direction": "down",
+        "row": 13,
+        "col": 8,
+        "text": "The son anointed king while David still lived",
+        "answer": "SOLOMON",
+        "reference": "1 Kings 1:39"
+      },
+      {
+        "number": 27,
+        "direction": "across",
+        "row": 13,
+        "col": 15,
+        "text": "David played it to ease Saul's torment",
+        "answer": "HARP",
+        "reference": "1 Samuel 16:23"
+      },
+      {
+        "number": 28,
+        "direction": "down",
+        "row": 15,
+        "col": 5,
+        "text": "David's Philistine town, burned by the Amalekites",
+        "answer": "ZIKLAG",
+        "reference": "1 Samuel 30:1"
+      },
+      {
+        "number": 29,
+        "direction": "down",
+        "row": 15,
+        "col": 12,
+        "text": "The Hittite sent to die in the front line",
+        "answer": "URIAH",
+        "reference": "2 Samuel 11:15"
+      },
+      {
+        "number": 30,
+        "direction": "across",
+        "row": 15,
+        "col": 14,
+        "text": "The Jebusite whose threshing floor David bought",
+        "answer": "ARAUNAH",
+        "reference": "2 Samuel 24:24"
+      },
+      {
+        "number": 31,
+        "direction": "down",
+        "row": 15,
+        "col": 18,
+        "text": "The surly sheep-owner who refused David's men",
+        "answer": "NABAL",
+        "reference": "1 Samuel 25:10"
+      },
+      {
+        "number": 32,
+        "direction": "across",
+        "row": 16,
+        "col": 4,
+        "text": "Michal's escape route for her husband",
+        "answer": "WINDOW",
+        "reference": "1 Samuel 19:12"
+      },
+      {
+        "number": 33,
+        "direction": "across",
+        "row": 18,
+        "col": 0,
+        "text": "The prophet who anointed David",
+        "answer": "SAMUEL",
+        "reference": "1 Samuel 16:13"
+      },
+      {
+        "number": 34,
+        "direction": "across",
+        "row": 18,
+        "col": 7,
+        "text": "God's promise that David's house would endure forever",
+        "answer": "COVENANT",
+        "reference": "2 Samuel 7:16"
+      },
+      {
+        "number": 35,
+        "direction": "across",
+        "row": 18,
+        "col": 17,
+        "text": "Goliath's home town",
+        "answer": "GATH",
+        "reference": "1 Samuel 17:4"
+      }
+    ],
+    "kind": "sunday"
+  },
+  {
+    "id": "sunday-007",
+    "title": "Lions, Fire and Dreams",
+    "difficulty": "medium",
+    "verse": "My God sent His angel and shut the mouths of the lions.",
+    "reference": "Daniel 6:22",
+    "publishDate": "2026-07-07",
+    "size": 21,
+    "grid": [
+      ".H......MESHACH......",
+      ".A....G......L.......",
+      ".N....O.W.DURA..WALL.",
+      ".A....L.I.E..Y...Z..T",
+      ".N....DEN.C.F..STATUE",
+      ".I.M....DARIUS...R..K",
+      ".ABEDNEGO.E.R....I..E",
+      ".H.N....W.E.N....A..L",
+      "B..E...A.P..ARIOCH...",
+      "A...B..N.R..C........",
+      "B..NEBUCHADNEZZAR....",
+      "Y...L..I.Y.......GOAT",
+      "LIONS.VEGETABLES.R...",
+      "O...H..N.R..E..H.A..A",
+      "N..RAM.T...SATRAPS..N",
+      "....Z...S...S..D.S..G",
+      "..S.Z..SEVENTY.R....E",
+      "..T.A...A...S.GABRIEL",
+      ".FOURTH.L......C.....",
+      "..N......BELTESHAZZAR",
+      "TREE................."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 1,
+        "text": "Shadrach's Hebrew name",
+        "answer": "HANANIAH",
+        "reference": "Daniel 1:7"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 0,
+        "col": 8,
+        "text": "The third man in the furnace",
+        "answer": "MESHACH",
+        "reference": "Daniel 3:12"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 0,
+        "col": 13,
+        "text": "Mixed with iron in the statue's feet",
+        "answer": "CLAY",
+        "reference": "Daniel 2:33"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 1,
+        "col": 6,
+        "text": "The statue's head",
+        "answer": "GOLD",
+        "reference": "Daniel 2:38"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 2,
+        "col": 8,
+        "text": "Open toward Jerusalem, three times a day",
+        "answer": "WINDOW",
+        "reference": "Daniel 6:10"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 2,
+        "col": 10,
+        "text": "The plain where the golden image stood",
+        "answer": "DURA",
+        "reference": "Daniel 3:1"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 2,
+        "col": 10,
+        "text": "Thirty days of petitions to the king alone",
+        "answer": "DECREE",
+        "reference": "Daniel 6:7"
+      },
+      {
+        "number": 7,
+        "direction": "across",
+        "row": 2,
+        "col": 16,
+        "text": "Where the fingers of a hand wrote",
+        "answer": "WALL",
+        "reference": "Daniel 5:5"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 2,
+        "col": 17,
+        "text": "Abednego's Hebrew name",
+        "answer": "AZARIAH",
+        "reference": "Daniel 1:7"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 3,
+        "col": 20,
+        "text": "Weighed on the scales and found wanting",
+        "answer": "TEKEL",
+        "reference": "Daniel 5:27"
+      },
+      {
+        "number": 10,
+        "direction": "across",
+        "row": 4,
+        "col": 6,
+        "text": "Where Daniel spent the night",
+        "answer": "DEN",
+        "reference": "Daniel 6:16"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 4,
+        "col": 12,
+        "text": "Heated seven times hotter than usual",
+        "answer": "FURNACE",
+        "reference": "Daniel 3:19"
+      },
+      {
+        "number": 12,
+        "direction": "across",
+        "row": 4,
+        "col": 15,
+        "text": "Head of gold, feet of iron and clay",
+        "answer": "STATUE",
+        "reference": "Daniel 2:32"
+      },
+      {
+        "number": 13,
+        "direction": "down",
+        "row": 5,
+        "col": 3,
+        "text": "First word written on the wall",
+        "answer": "MENE",
+        "reference": "Daniel 5:25"
+      },
+      {
+        "number": 14,
+        "direction": "across",
+        "row": 5,
+        "col": 8,
+        "text": "The Mede who signed the decree and could not sleep",
+        "answer": "DARIUS",
+        "reference": "Daniel 6:18"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 6,
+        "col": 1,
+        "text": "Another of the three thrown into the furnace",
+        "answer": "ABEDNEGO",
+        "reference": "Daniel 3:12"
+      },
+      {
+        "number": 16,
+        "direction": "down",
+        "row": 8,
+        "col": 0,
+        "text": "Where Daniel was carried as a youth",
+        "answer": "BABYLON",
+        "reference": "Daniel 1:1"
+      },
+      {
+        "number": 17,
+        "direction": "down",
+        "row": 8,
+        "col": 7,
+        "text": "\"The ___ of Days\", seated on a throne of fire",
+        "answer": "ANCIENT",
+        "reference": "Daniel 7:9"
+      },
+      {
+        "number": 18,
+        "direction": "down",
+        "row": 8,
+        "col": 9,
+        "text": "Daniel's habit, kept in spite of the decree",
+        "answer": "PRAYER",
+        "reference": "Daniel 6:10"
+      },
+      {
+        "number": 19,
+        "direction": "across",
+        "row": 8,
+        "col": 12,
+        "text": "Captain of the guard sent to kill the wise men",
+        "answer": "ARIOCH",
+        "reference": "Daniel 2:14"
+      },
+      {
+        "number": 20,
+        "direction": "down",
+        "row": 9,
+        "col": 4,
+        "text": "He drank from the temple vessels the night the wall was written on",
+        "answer": "BELSHAZZAR",
+        "reference": "Daniel 5:1"
+      },
+      {
+        "number": 21,
+        "direction": "across",
+        "row": 10,
+        "col": 3,
+        "text": "The king whose dream of a statue no wise man could tell",
+        "answer": "NEBUCHADNEZZAR",
+        "reference": "Daniel 2:1"
+      },
+      {
+        "number": 22,
+        "direction": "across",
+        "row": 11,
+        "col": 17,
+        "text": "Came from the west with one great horn",
+        "answer": "GOAT",
+        "reference": "Daniel 8:5"
+      },
+      {
+        "number": 22,
+        "direction": "down",
+        "row": 11,
+        "col": 17,
+        "text": "What the humbled king ate like an ox",
+        "answer": "GRASS",
+        "reference": "Daniel 4:33"
+      },
+      {
+        "number": 23,
+        "direction": "across",
+        "row": 12,
+        "col": 0,
+        "text": "Their mouths were shut by an angel",
+        "answer": "LIONS",
+        "reference": "Daniel 6:22"
+      },
+      {
+        "number": 24,
+        "direction": "across",
+        "row": 12,
+        "col": 6,
+        "text": "Daniel's ten-day diet instead of the king's food",
+        "answer": "VEGETABLES",
+        "reference": "Daniel 1:12"
+      },
+      {
+        "number": 25,
+        "direction": "down",
+        "row": 12,
+        "col": 12,
+        "text": "Four of them rose from the sea in Daniel's vision",
+        "answer": "BEASTS",
+        "reference": "Daniel 7:3"
+      },
+      {
+        "number": 26,
+        "direction": "down",
+        "row": 12,
+        "col": 15,
+        "text": "One of three who would not bow to the golden image",
+        "answer": "SHADRACH",
+        "reference": "Daniel 3:12"
+      },
+      {
+        "number": 27,
+        "direction": "down",
+        "row": 13,
+        "col": 20,
+        "text": "Sent to shut the lions' mouths",
+        "answer": "ANGEL",
+        "reference": "Daniel 6:22"
+      },
+      {
+        "number": 28,
+        "direction": "across",
+        "row": 14,
+        "col": 3,
+        "text": "Two-horned, seen by the Ulai canal",
+        "answer": "RAM",
+        "reference": "Daniel 8:3"
+      },
+      {
+        "number": 29,
+        "direction": "across",
+        "row": 14,
+        "col": 11,
+        "text": "Officials who plotted to catch Daniel at prayer",
+        "answer": "SATRAPS",
+        "reference": "Daniel 6:4"
+      },
+      {
+        "number": 30,
+        "direction": "down",
+        "row": 15,
+        "col": 8,
+        "text": "The king's signet on the stone over the den",
+        "answer": "SEAL",
+        "reference": "Daniel 6:17"
+      },
+      {
+        "number": 31,
+        "direction": "down",
+        "row": 16,
+        "col": 2,
+        "text": "Cut without hands, it struck the statue",
+        "answer": "STONE",
+        "reference": "Daniel 2:34"
+      },
+      {
+        "number": 32,
+        "direction": "across",
+        "row": 16,
+        "col": 7,
+        "text": "Weeks decreed for Daniel's people",
+        "answer": "SEVENTY",
+        "reference": "Daniel 9:24"
+      },
+      {
+        "number": 33,
+        "direction": "across",
+        "row": 17,
+        "col": 14,
+        "text": "The one who explained the vision of the ram and goat",
+        "answer": "GABRIEL",
+        "reference": "Daniel 8:16"
+      },
+      {
+        "number": 34,
+        "direction": "across",
+        "row": 18,
+        "col": 1,
+        "text": "The extra man in the fire, like a son of the gods",
+        "answer": "FOURTH",
+        "reference": "Daniel 3:25"
+      },
+      {
+        "number": 35,
+        "direction": "across",
+        "row": 19,
+        "col": 9,
+        "text": "Daniel's Babylonian name",
+        "answer": "BELTESHAZZAR",
+        "reference": "Daniel 1:7"
+      },
+      {
+        "number": 36,
+        "direction": "across",
+        "row": 20,
+        "col": 0,
+        "text": "Cut down in the king's second dream, its stump left",
+        "answer": "TREE",
+        "reference": "Daniel 4:14"
+      }
+    ],
+    "kind": "sunday"
+  },
+  {
+    "id": "sunday-008",
+    "title": "Queens and Kinsmen",
+    "difficulty": "medium",
+    "verse": "Your people will be my people, and your God will be my God.",
+    "reference": "Ruth 1:16",
+    "publishDate": "2026-07-08",
+    "size": 21,
+    "grid": [
+      "..B.......SIGNET.....",
+      "..A.........A......H.",
+      "KINSMAN.....T......A.",
+      "..Q....H...BETHLEHEM.",
+      "P.U....O.B.O.......A.",
+      "U.E..MORDECAI....X.N.",
+      "RUTH...S.N.Z.ESTHER..",
+      "...A.E.E.J....C..R...",
+      "OBED.D..MARA..E..X.F.",
+      "...A.I.B.M..N.P..E.A.",
+      "...SUCHATIMEASTHIS.S.",
+      "M..S.T.R.N..O.E....T.",
+      "ORPAH..L....M.ROBE.I.",
+      "A..H...E.PURIM...L.N.",
+      "B...V..Y...E....WINGS",
+      "....A...SANDAL...M...",
+      "....S......E.....E...",
+      "...CHRONICLES.GALLOWS",
+      "....T......M.....E..U",
+      "AGAGITE..GLEAN...C..S",
+      "...........R.....H..A"
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 2,
+        "text": "Esther's, for the king and Haman",
+        "answer": "BANQUET",
+        "reference": "Esther 5:4"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 0,
+        "col": 10,
+        "text": "The ring given to Haman, then to Mordecai",
+        "answer": "SIGNET",
+        "reference": "Esther 8:2"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 0,
+        "col": 12,
+        "text": "Where Boaz settled the matter before ten elders",
+        "answer": "GATE",
+        "reference": "Ruth 4:1"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 1,
+        "col": 19,
+        "text": "The enemy of the Jews, hanged on his own gallows",
+        "answer": "HAMAN",
+        "reference": "Esther 7:10"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 2,
+        "col": 0,
+        "text": "A close relative with the right to redeem",
+        "answer": "KINSMAN",
+        "reference": "Ruth 2:20"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 3,
+        "col": 7,
+        "text": "The king's own, led through the square by Haman",
+        "answer": "HORSE",
+        "reference": "Esther 6:11"
+      },
+      {
+        "number": 7,
+        "direction": "across",
+        "row": 3,
+        "col": 11,
+        "text": "Naomi's home, reached at the barley harvest",
+        "answer": "BETHLEHEM",
+        "reference": "Ruth 1:22"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 3,
+        "col": 11,
+        "text": "The man of standing in whose field Ruth gleaned",
+        "answer": "BOAZ",
+        "reference": "Ruth 2:1"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 4,
+        "col": 0,
+        "text": "The lot cast before Haman",
+        "answer": "PUR",
+        "reference": "Esther 3:7"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 4,
+        "col": 9,
+        "text": "Mordecai's tribe",
+        "answer": "BENJAMIN",
+        "reference": "Esther 2:5"
+      },
+      {
+        "number": 10,
+        "direction": "across",
+        "row": 5,
+        "col": 5,
+        "text": "He sat at the king's gate and would not bow",
+        "answer": "MORDECAI",
+        "reference": "Esther 3:2"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 5,
+        "col": 17,
+        "text": "The king who ruled from India to Cush",
+        "answer": "XERXES",
+        "reference": "Esther 1:1"
+      },
+      {
+        "number": 12,
+        "direction": "across",
+        "row": 6,
+        "col": 0,
+        "text": "The Moabite who would not leave her mother-in-law",
+        "answer": "RUTH",
+        "reference": "Ruth 1:16"
+      },
+      {
+        "number": 13,
+        "direction": "down",
+        "row": 6,
+        "col": 3,
+        "text": "Esther's Hebrew name",
+        "answer": "HADASSAH",
+        "reference": "Esther 2:7"
+      },
+      {
+        "number": 14,
+        "direction": "across",
+        "row": 6,
+        "col": 13,
+        "text": "The orphan who became queen of Persia",
+        "answer": "ESTHER",
+        "reference": "Esther 2:17"
+      },
+      {
+        "number": 15,
+        "direction": "down",
+        "row": 6,
+        "col": 14,
+        "text": "Held out, and Esther's life was spared",
+        "answer": "SCEPTER",
+        "reference": "Esther 5:2"
+      },
+      {
+        "number": 16,
+        "direction": "down",
+        "row": 7,
+        "col": 5,
+        "text": "Written in the king's name, it could not be revoked",
+        "answer": "EDICT",
+        "reference": "Esther 8:8"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 8,
+        "col": 0,
+        "text": "Ruth's son, grandfather of David",
+        "answer": "OBED",
+        "reference": "Ruth 4:17"
+      },
+      {
+        "number": 18,
+        "direction": "across",
+        "row": 8,
+        "col": 8,
+        "text": "\"Bitter\": the name Naomi asked for",
+        "answer": "MARA",
+        "reference": "Ruth 1:20"
+      },
+      {
+        "number": 19,
+        "direction": "down",
+        "row": 8,
+        "col": 19,
+        "text": "Three days of it before Esther went in",
+        "answer": "FASTING",
+        "reference": "Esther 4:16"
+      },
+      {
+        "number": 20,
+        "direction": "down",
+        "row": 9,
+        "col": 7,
+        "text": "The harvest Ruth gleaned first",
+        "answer": "BARLEY",
+        "reference": "Ruth 2:23"
+      },
+      {
+        "number": 21,
+        "direction": "down",
+        "row": 9,
+        "col": 12,
+        "text": "She went out full and came back empty",
+        "answer": "NAOMI",
+        "reference": "Ruth 1:21"
+      },
+      {
+        "number": 22,
+        "direction": "across",
+        "row": 10,
+        "col": 3,
+        "text": "Mordecai's words: perhaps you came to the kingdom for ___",
+        "answer": "SUCHATIMEASTHIS",
+        "reference": "Esther 4:14"
+      },
+      {
+        "number": 23,
+        "direction": "down",
+        "row": 11,
+        "col": 0,
+        "text": "Where Naomi's family went in the famine",
+        "answer": "MOAB",
+        "reference": "Ruth 1:1"
+      },
+      {
+        "number": 24,
+        "direction": "across",
+        "row": 12,
+        "col": 0,
+        "text": "The daughter-in-law who turned back",
+        "answer": "ORPAH",
+        "reference": "Ruth 1:14"
+      },
+      {
+        "number": 25,
+        "direction": "across",
+        "row": 12,
+        "col": 14,
+        "text": "Royal, worn by the king himself, for the man he delights to honour",
+        "answer": "ROBE",
+        "reference": "Esther 6:8"
+      },
+      {
+        "number": 26,
+        "direction": "down",
+        "row": 12,
+        "col": 17,
+        "text": "Naomi's husband, who died in Moab",
+        "answer": "ELIMELECH",
+        "reference": "Ruth 1:3"
+      },
+      {
+        "number": 27,
+        "direction": "across",
+        "row": 13,
+        "col": 9,
+        "text": "The feast named for the lot",
+        "answer": "PURIM",
+        "reference": "Esther 9:26"
+      },
+      {
+        "number": 28,
+        "direction": "down",
+        "row": 13,
+        "col": 11,
+        "text": "Kinsman-___: what Boaz was to Naomi's family",
+        "answer": "REDEEMER",
+        "reference": "Ruth 2:20"
+      },
+      {
+        "number": 29,
+        "direction": "down",
+        "row": 14,
+        "col": 4,
+        "text": "The queen who refused to come when summoned",
+        "answer": "VASHTI",
+        "reference": "Esther 1:12"
+      },
+      {
+        "number": 30,
+        "direction": "across",
+        "row": 14,
+        "col": 16,
+        "text": "\"Under whose ___ you have taken refuge\"",
+        "answer": "WINGS",
+        "reference": "Ruth 2:12"
+      },
+      {
+        "number": 31,
+        "direction": "across",
+        "row": 15,
+        "col": 8,
+        "text": "Removed to seal a deal at the gate",
+        "answer": "SANDAL",
+        "reference": "Ruth 4:7"
+      },
+      {
+        "number": 32,
+        "direction": "across",
+        "row": 17,
+        "col": 3,
+        "text": "The record read to the sleepless king",
+        "answer": "CHRONICLES",
+        "reference": "Esther 6:1"
+      },
+      {
+        "number": 33,
+        "direction": "across",
+        "row": 17,
+        "col": 14,
+        "text": "Fifty cubits high, built for Mordecai",
+        "answer": "GALLOWS",
+        "reference": "Esther 5:14"
+      },
+      {
+        "number": 34,
+        "direction": "down",
+        "row": 17,
+        "col": 20,
+        "text": "The citadel where the story of Esther unfolds",
+        "answer": "SUSA",
+        "reference": "Esther 1:2"
+      },
+      {
+        "number": 35,
+        "direction": "across",
+        "row": 19,
+        "col": 0,
+        "text": "Haman's people",
+        "answer": "AGAGITE",
+        "reference": "Esther 3:1"
+      },
+      {
+        "number": 36,
+        "direction": "across",
+        "row": 19,
+        "col": 9,
+        "text": "To gather what the reapers left",
+        "answer": "GLEAN",
+        "reference": "Ruth 2:3"
+      }
+    ],
+    "kind": "sunday"
+  },
+  {
+    "id": "sunday-009",
+    "title": "Signs and Wonders",
+    "difficulty": "medium",
+    "verse": "Jesus performed many other signs in the presence of His disciples, which are not written in this book.",
+    "reference": "John 20:30",
+    "publishDate": "2026-07-09",
+    "size": 21,
+    "grid": [
+      "...CATCH..SILOAM....C",
+      "......L.M....F..B.P.E",
+      "......O.A....F.LEGION",
+      "....J.A.R....I..T.G.T",
+      "W..BASKETS...C..H.S.U",
+      "A...I...H....I..E...R",
+      "LEPER..BARTIMAEUS...I",
+      "K...U........L..D...O",
+      "E.P.S.......C...A...N",
+      "DEAF.....P..A.J...C..",
+      "..R..MOTHERINLAW.ROOF",
+      "..A..U.A.T..A.R...I..",
+      ".BLIND.L.E....SILENCE",
+      "..Y....I.R...F..A...P",
+      "..T..G.T..WINE..Z...H",
+      "NAIN.A.H.....V..A...P",
+      "..C..LOAVES.LEPERS..H",
+      "...M.I....T..R..U...A",
+      "...A.L....O...FISH..T",
+      ".WITHERED.R.........H",
+      ".....E....MALCHUS...A"
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 3,
+        "text": "Nets began to tear with it",
+        "answer": "CATCH",
+        "reference": "Luke 5:6"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 6,
+        "text": "A bleeding woman touched it and was healed",
+        "answer": "CLOAK",
+        "reference": "Mark 5:27"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 0,
+        "col": 10,
+        "text": "The pool where a blind man washed and saw",
+        "answer": "SILOAM",
+        "reference": "John 9:7"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 0,
+        "col": 13,
+        "text": "Royal, and his son in Capernaum lived",
+        "answer": "OFFICIAL",
+        "reference": "John 4:46"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 0,
+        "col": 20,
+        "text": "\"Just say the word\": his servant was healed from afar",
+        "answer": "CENTURION",
+        "reference": "Luke 7:7"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 1,
+        "col": 8,
+        "text": "\"Lord, if You had been here, my brother would not have died\"",
+        "answer": "MARTHA",
+        "reference": "John 11:21"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 1,
+        "col": 16,
+        "text": "The pool with five covered colonnades",
+        "answer": "BETHESDA",
+        "reference": "John 5:2"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 1,
+        "col": 18,
+        "text": "Where the demons went, and over the cliff",
+        "answer": "PIGS",
+        "reference": "Mark 5:13"
+      },
+      {
+        "number": 9,
+        "direction": "across",
+        "row": 2,
+        "col": 15,
+        "text": "Demons named for their number",
+        "answer": "LEGION",
+        "reference": "Mark 5:9"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 3,
+        "col": 4,
+        "text": "The synagogue leader whose daughter was raised",
+        "answer": "JAIRUS",
+        "reference": "Mark 5:22"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 4,
+        "col": 0,
+        "text": "What Jesus did on the sea toward the boat",
+        "answer": "WALKED",
+        "reference": "Matthew 14:25"
+      },
+      {
+        "number": 12,
+        "direction": "across",
+        "row": 4,
+        "col": 3,
+        "text": "Twelve, filled with the leftover pieces",
+        "answer": "BASKETS",
+        "reference": "John 6:13"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 6,
+        "col": 0,
+        "text": "\"I am willing; be clean\"",
+        "answer": "LEPER",
+        "reference": "Mark 1:41"
+      },
+      {
+        "number": 14,
+        "direction": "across",
+        "row": 6,
+        "col": 7,
+        "text": "The blind beggar of Jericho who threw off his cloak",
+        "answer": "BARTIMAEUS",
+        "reference": "Mark 10:46"
+      },
+      {
+        "number": 15,
+        "direction": "down",
+        "row": 8,
+        "col": 2,
+        "text": "Lowered through the roof by four friends",
+        "answer": "PARALYTIC",
+        "reference": "Mark 2:4"
+      },
+      {
+        "number": 16,
+        "direction": "down",
+        "row": 8,
+        "col": 12,
+        "text": "The village of the first sign",
+        "answer": "CANA",
+        "reference": "John 2:11"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 9,
+        "col": 0,
+        "text": "Healed with fingers in the ears",
+        "answer": "DEAF",
+        "reference": "Mark 7:33"
+      },
+      {
+        "number": 18,
+        "direction": "down",
+        "row": 9,
+        "col": 9,
+        "text": "He sank when he looked at the wind",
+        "answer": "PETER",
+        "reference": "Matthew 14:30"
+      },
+      {
+        "number": 19,
+        "direction": "down",
+        "row": 9,
+        "col": 14,
+        "text": "Six of stone, filled to the brim",
+        "answer": "JARS",
+        "reference": "John 2:7"
+      },
+      {
+        "number": 20,
+        "direction": "down",
+        "row": 9,
+        "col": 18,
+        "text": "Found in a fish's mouth, for the temple tax",
+        "answer": "COIN",
+        "reference": "Matthew 17:27"
+      },
+      {
+        "number": 21,
+        "direction": "across",
+        "row": 10,
+        "col": 5,
+        "text": "Peter's, healed of a fever at Capernaum",
+        "answer": "MOTHERINLAW",
+        "reference": "Matthew 8:14"
+      },
+      {
+        "number": 21,
+        "direction": "down",
+        "row": 10,
+        "col": 5,
+        "text": "Made with saliva and put on a blind man's eyes",
+        "answer": "MUD",
+        "reference": "John 9:6"
+      },
+      {
+        "number": 22,
+        "direction": "down",
+        "row": 10,
+        "col": 7,
+        "text": "\"___ koum\": little girl, get up",
+        "answer": "TALITHA",
+        "reference": "Mark 5:41"
+      },
+      {
+        "number": 23,
+        "direction": "across",
+        "row": 10,
+        "col": 17,
+        "text": "Opened up to lower a stretcher",
+        "answer": "ROOF",
+        "reference": "Mark 2:4"
+      },
+      {
+        "number": 24,
+        "direction": "across",
+        "row": 12,
+        "col": 1,
+        "text": "Born so, and healed with mud",
+        "answer": "BLIND",
+        "reference": "John 9:6"
+      },
+      {
+        "number": 25,
+        "direction": "across",
+        "row": 12,
+        "col": 14,
+        "text": "\"___!\" He commanded the wind, and it died down",
+        "answer": "SILENCE",
+        "reference": "Mark 4:39"
+      },
+      {
+        "number": 26,
+        "direction": "down",
+        "row": 12,
+        "col": 16,
+        "text": "Four days in the tomb when Jesus called him out",
+        "answer": "LAZARUS",
+        "reference": "John 11:39"
+      },
+      {
+        "number": 27,
+        "direction": "down",
+        "row": 12,
+        "col": 20,
+        "text": "\"Be opened\": the word to a deaf man",
+        "answer": "EPHPHATHA",
+        "reference": "Mark 7:34"
+      },
+      {
+        "number": 28,
+        "direction": "down",
+        "row": 13,
+        "col": 13,
+        "text": "It left Peter's mother-in-law at a touch",
+        "answer": "FEVER",
+        "reference": "Matthew 8:15"
+      },
+      {
+        "number": 29,
+        "direction": "down",
+        "row": 14,
+        "col": 5,
+        "text": "The region Jesus went through healing every disease",
+        "answer": "GALILEE",
+        "reference": "Matthew 4:23"
+      },
+      {
+        "number": 30,
+        "direction": "across",
+        "row": 14,
+        "col": 10,
+        "text": "What the water became at Cana",
+        "answer": "WINE",
+        "reference": "John 2:9"
+      },
+      {
+        "number": 31,
+        "direction": "across",
+        "row": 15,
+        "col": 0,
+        "text": "The town where a widow's son was raised at the gate",
+        "answer": "NAIN",
+        "reference": "Luke 7:11"
+      },
+      {
+        "number": 32,
+        "direction": "across",
+        "row": 16,
+        "col": 5,
+        "text": "Five of them, with two fish, for five thousand",
+        "answer": "LOAVES",
+        "reference": "John 6:9"
+      },
+      {
+        "number": 33,
+        "direction": "down",
+        "row": 16,
+        "col": 10,
+        "text": "Rebuked on the lake with a word",
+        "answer": "STORM",
+        "reference": "Mark 4:39"
+      },
+      {
+        "number": 34,
+        "direction": "across",
+        "row": 16,
+        "col": 12,
+        "text": "Ten were healed; one came back to say thanks",
+        "answer": "LEPERS",
+        "reference": "Luke 17:15"
+      },
+      {
+        "number": 35,
+        "direction": "down",
+        "row": 17,
+        "col": 3,
+        "text": "\"Get up, pick up your ___, and walk\"",
+        "answer": "MAT",
+        "reference": "John 5:8"
+      },
+      {
+        "number": 36,
+        "direction": "across",
+        "row": 18,
+        "col": 14,
+        "text": "Two small ones in a boy's lunch",
+        "answer": "FISH",
+        "reference": "John 6:9"
+      },
+      {
+        "number": 37,
+        "direction": "across",
+        "row": 19,
+        "col": 1,
+        "text": "The hand restored on a Sabbath",
+        "answer": "WITHERED",
+        "reference": "Mark 3:1"
+      },
+      {
+        "number": 38,
+        "direction": "across",
+        "row": 20,
+        "col": 10,
+        "text": "The servant whose ear was cut off, then healed",
+        "answer": "MALCHUS",
+        "reference": "John 18:10"
+      }
+    ],
+    "kind": "sunday"
+  },
+  {
+    "id": "sunday-010",
+    "title": "Stories He Told",
+    "difficulty": "medium",
+    "verse": "Jesus spoke all these things to the crowds in parables.",
+    "reference": "Matthew 13:34",
+    "publishDate": "2026-07-10",
+    "size": 21,
+    "grid": [
+      "WINESKINS.....M......",
+      "....A...E..C.LAZARUS.",
+      "....M..PEARL..N......",
+      "....A...D..O.SAND....",
+      "....R....NET..G....L.",
+      "PHARISEE...H..E..B.A.",
+      "....T...VINEYARD.A.M.",
+      "....A......S...E.R.P.",
+      "....N..R.T...TENANTS.",
+      "T....C.O.A.....A.S...",
+      "R...TAXCOLLECTOR..R..",
+      "E....L.K.E..O..I.SOIL",
+      "A.S..F...N.OIL.U..B..",
+      "SHEEP.L..T..N..SOWER.",
+      "U.R..WEEDS.B.....E...",
+      "R.V.W.A....A...JUDGE.",
+      "E.A.I.VIRGINS....D...",
+      "..N.D.E....Q.PRODIGAL",
+      "..THORNS...U.....N...",
+      "..S.W......E...PIGS..",
+      "........FIGTREE......"
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 0,
+        "text": "New wine bursts the old ones",
+        "answer": "WINESKINS",
+        "reference": "Matthew 9:17"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 4,
+        "text": "The neighbour who stopped on the Jericho road",
+        "answer": "SAMARITAN",
+        "reference": "Luke 10:33"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 0,
+        "col": 8,
+        "text": "Grows secretly, the sower knows not how",
+        "answer": "SEED",
+        "reference": "Mark 4:27"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 0,
+        "col": 14,
+        "text": "The dishonest one, commended for acting shrewdly",
+        "answer": "MANAGER",
+        "reference": "Luke 16:8"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 1,
+        "col": 11,
+        "text": "Wedding ones, missing on the guest who was thrown out",
+        "answer": "CLOTHES",
+        "reference": "Matthew 22:11"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 1,
+        "col": 13,
+        "text": "The beggar at the rich man's gate",
+        "answer": "LAZARUS",
+        "reference": "Luke 16:20"
+      },
+      {
+        "number": 7,
+        "direction": "across",
+        "row": 2,
+        "col": 7,
+        "text": "Of great price; the merchant sold all he had",
+        "answer": "PEARL",
+        "reference": "Matthew 13:46"
+      },
+      {
+        "number": 8,
+        "direction": "across",
+        "row": 3,
+        "col": 13,
+        "text": "The foolish builder's foundation",
+        "answer": "SAND",
+        "reference": "Matthew 7:26"
+      },
+      {
+        "number": 9,
+        "direction": "across",
+        "row": 4,
+        "col": 9,
+        "text": "Cast into the sea, gathering fish of every kind",
+        "answer": "NET",
+        "reference": "Matthew 13:47"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 4,
+        "col": 19,
+        "text": "Carried by the ten bridesmaids",
+        "answer": "LAMPS",
+        "reference": "Matthew 25:1"
+      },
+      {
+        "number": 11,
+        "direction": "across",
+        "row": 5,
+        "col": 0,
+        "text": "He prayed about himself in the temple",
+        "answer": "PHARISEE",
+        "reference": "Luke 18:11"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 5,
+        "col": 17,
+        "text": "The rich fool planned bigger ones",
+        "answer": "BARNS",
+        "reference": "Luke 12:18"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 6,
+        "col": 8,
+        "text": "Workers hired at every hour of the day",
+        "answer": "VINEYARD",
+        "reference": "Matthew 20:1"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 6,
+        "col": 15,
+        "text": "The day's wage every worker received",
+        "answer": "DENARIUS",
+        "reference": "Matthew 20:2"
+      },
+      {
+        "number": 15,
+        "direction": "down",
+        "row": 8,
+        "col": 7,
+        "text": "The wise builder's foundation",
+        "answer": "ROCK",
+        "reference": "Matthew 7:24"
+      },
+      {
+        "number": 16,
+        "direction": "down",
+        "row": 8,
+        "col": 9,
+        "text": "Five, two and one, entrusted before a journey",
+        "answer": "TALENTS",
+        "reference": "Matthew 25:15"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 8,
+        "col": 13,
+        "text": "They killed the owner's son to seize the vineyard",
+        "answer": "TENANTS",
+        "reference": "Matthew 21:38"
+      },
+      {
+        "number": 18,
+        "direction": "down",
+        "row": 9,
+        "col": 0,
+        "text": "Hidden in a field, bought with everything",
+        "answer": "TREASURE",
+        "reference": "Matthew 13:44"
+      },
+      {
+        "number": 19,
+        "direction": "down",
+        "row": 9,
+        "col": 5,
+        "text": "Fattened and killed for the homecoming feast",
+        "answer": "CALF",
+        "reference": "Luke 15:23"
+      },
+      {
+        "number": 20,
+        "direction": "across",
+        "row": 10,
+        "col": 4,
+        "text": "He beat his breast: \"God, have mercy on me, a sinner\"",
+        "answer": "TAXCOLLECTOR",
+        "reference": "Luke 18:13"
+      },
+      {
+        "number": 21,
+        "direction": "down",
+        "row": 10,
+        "col": 12,
+        "text": "Lost, swept for, and found",
+        "answer": "COIN",
+        "reference": "Luke 15:8"
+      },
+      {
+        "number": 22,
+        "direction": "down",
+        "row": 10,
+        "col": 18,
+        "text": "The best one, brought out for the returning son",
+        "answer": "ROBE",
+        "reference": "Luke 15:22"
+      },
+      {
+        "number": 23,
+        "direction": "across",
+        "row": 11,
+        "col": 17,
+        "text": "Good, yielding a hundredfold",
+        "answer": "SOIL",
+        "reference": "Matthew 13:8"
+      },
+      {
+        "number": 24,
+        "direction": "down",
+        "row": 12,
+        "col": 2,
+        "text": "Blessed if found watching when the master returns",
+        "answer": "SERVANTS",
+        "reference": "Luke 12:37"
+      },
+      {
+        "number": 25,
+        "direction": "across",
+        "row": 12,
+        "col": 11,
+        "text": "What the foolish bridesmaids ran short of",
+        "answer": "OIL",
+        "reference": "Matthew 25:3"
+      },
+      {
+        "number": 26,
+        "direction": "across",
+        "row": 13,
+        "col": 0,
+        "text": "Ninety-nine left in the open for the one",
+        "answer": "SHEEP",
+        "reference": "Luke 15:4"
+      },
+      {
+        "number": 27,
+        "direction": "down",
+        "row": 13,
+        "col": 6,
+        "text": "Hidden in three measures of flour",
+        "answer": "LEAVEN",
+        "reference": "Matthew 13:33"
+      },
+      {
+        "number": 28,
+        "direction": "across",
+        "row": 13,
+        "col": 15,
+        "text": "He scattered seed on four kinds of ground",
+        "answer": "SOWER",
+        "reference": "Matthew 13:3"
+      },
+      {
+        "number": 29,
+        "direction": "down",
+        "row": 13,
+        "col": 17,
+        "text": "The feast a king gave for his son",
+        "answer": "WEDDING",
+        "reference": "Matthew 22:2"
+      },
+      {
+        "number": 30,
+        "direction": "across",
+        "row": 14,
+        "col": 5,
+        "text": "Sown among the wheat by an enemy at night",
+        "answer": "WEEDS",
+        "reference": "Matthew 13:25"
+      },
+      {
+        "number": 31,
+        "direction": "down",
+        "row": 14,
+        "col": 11,
+        "text": "The invited guests all made excuses",
+        "answer": "BANQUET",
+        "reference": "Luke 14:18"
+      },
+      {
+        "number": 32,
+        "direction": "down",
+        "row": 15,
+        "col": 4,
+        "text": "She kept coming back for justice",
+        "answer": "WIDOW",
+        "reference": "Luke 18:3"
+      },
+      {
+        "number": 33,
+        "direction": "across",
+        "row": 15,
+        "col": 15,
+        "text": "Unjust, but worn down by a persistent widow",
+        "answer": "JUDGE",
+        "reference": "Luke 18:2"
+      },
+      {
+        "number": 34,
+        "direction": "across",
+        "row": 16,
+        "col": 6,
+        "text": "Ten with lamps, only five of them wise",
+        "answer": "VIRGINS",
+        "reference": "Matthew 25:1"
+      },
+      {
+        "number": 35,
+        "direction": "across",
+        "row": 17,
+        "col": 13,
+        "text": "Traditional name for the son who squandered his inheritance",
+        "answer": "PRODIGAL",
+        "reference": "Luke 15:13"
+      },
+      {
+        "number": 36,
+        "direction": "across",
+        "row": 18,
+        "col": 2,
+        "text": "They choked the seed that fell among them",
+        "answer": "THORNS",
+        "reference": "Matthew 13:7"
+      },
+      {
+        "number": 37,
+        "direction": "across",
+        "row": 19,
+        "col": 15,
+        "text": "What the younger son ended up feeding",
+        "answer": "PIGS",
+        "reference": "Luke 15:15"
+      },
+      {
+        "number": 38,
+        "direction": "across",
+        "row": 20,
+        "col": 8,
+        "text": "Fruitless, but given one more year",
+        "answer": "FIGTREE",
+        "reference": "Luke 13:8"
+      }
+    ],
+    "kind": "sunday"
+  },
+  {
+    "id": "sunday-011",
+    "title": "The Dreamer in Egypt",
+    "difficulty": "medium",
+    "verse": "As for you, what you intended against me for evil, God intended for good.",
+    "reference": "Genesis 50:20",
+    "publishDate": "2026-07-11",
+    "size": 21,
+    "grid": [
+      ".S.D......POTIPHAR...",
+      ".T.R...F.R.......A...",
+      "BAKER.JACOB....C.CUP.",
+      ".R.A...M.B.....O.H...",
+      "ISHMAELITES....W.E...",
+      "N..S...N.......SILVER",
+      "T...SPIES..........P.",
+      "EGYPT.....W....JUDAH.",
+      "R...E..BONES...O.O.R.",
+      "PIT.W..L..P..T.S.T.A.",
+      "R..ZAPHENATHPANEAH.I.",
+      "E...R..S.....M.P.A.M.",
+      "T...D..S.PHARAOH.N...",
+      ".....M.I.R...R.......",
+      "...GRAIN.I....A.S..R.",
+      ".....N.GOSHEN.SHEAVES",
+      ".....A...O....E.V..U.",
+      "WAGONS.BENJAMIN.E..B.",
+      ".....S........A.N..E.",
+      "..SIMEON......T....N.",
+      ".....H........H......"
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 1,
+        "text": "Eleven of them bowed in the second dream",
+        "answer": "STARS",
+        "reference": "Genesis 37:9"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 3,
+        "text": "Sheaves and stars, and later cows and grain",
+        "answer": "DREAMS",
+        "reference": "Genesis 37:8"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 0,
+        "col": 10,
+        "text": "Pharaoh's officer who bought Joseph",
+        "answer": "POTIPHAR",
+        "reference": "Genesis 39:1"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 0,
+        "col": 17,
+        "text": "Joseph's mother",
+        "answer": "RACHEL",
+        "reference": "Genesis 30:24"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 1,
+        "col": 7,
+        "text": "Seven years of it, foreseen in a dream",
+        "answer": "FAMINE",
+        "reference": "Genesis 41:30"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 1,
+        "col": 9,
+        "text": "Jacob's gift of many colours",
+        "answer": "ROBE",
+        "reference": "Genesis 37:3"
+      },
+      {
+        "number": 7,
+        "direction": "across",
+        "row": 2,
+        "col": 0,
+        "text": "Fellow prisoner whose dream meant death",
+        "answer": "BAKER",
+        "reference": "Genesis 40:22"
+      },
+      {
+        "number": 8,
+        "direction": "across",
+        "row": 2,
+        "col": 6,
+        "text": "The father who loved Joseph more than all his sons",
+        "answer": "JACOB",
+        "reference": "Genesis 37:3"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 2,
+        "col": 15,
+        "text": "Seven fat, then seven gaunt, in Pharaoh's dream",
+        "answer": "COWS",
+        "reference": "Genesis 41:4"
+      },
+      {
+        "number": 10,
+        "direction": "across",
+        "row": 2,
+        "col": 17,
+        "text": "Joseph's silver one, planted in Benjamin's sack",
+        "answer": "CUP",
+        "reference": "Genesis 44:2"
+      },
+      {
+        "number": 11,
+        "direction": "across",
+        "row": 4,
+        "col": 0,
+        "text": "Traders who bought Joseph for twenty shekels",
+        "answer": "ISHMAELITES",
+        "reference": "Genesis 37:28"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 4,
+        "col": 0,
+        "text": "What Joseph said only God could do with dreams",
+        "answer": "INTERPRET",
+        "reference": "Genesis 40:8"
+      },
+      {
+        "number": 12,
+        "direction": "across",
+        "row": 5,
+        "col": 15,
+        "text": "Returned in the brothers' sacks",
+        "answer": "SILVER",
+        "reference": "Genesis 42:25"
+      },
+      {
+        "number": 13,
+        "direction": "down",
+        "row": 5,
+        "col": 19,
+        "text": "Joseph's second son, fruitful in the land of affliction",
+        "answer": "EPHRAIM",
+        "reference": "Genesis 41:52"
+      },
+      {
+        "number": 14,
+        "direction": "across",
+        "row": 6,
+        "col": 4,
+        "text": "What Joseph accused his brothers of being",
+        "answer": "SPIES",
+        "reference": "Genesis 42:9"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 6,
+        "col": 4,
+        "text": "Joseph's house manager, who reassured the brothers",
+        "answer": "STEWARD",
+        "reference": "Genesis 43:23"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 7,
+        "col": 0,
+        "text": "Where Jacob's whole family went down",
+        "answer": "EGYPT",
+        "reference": "Genesis 46:6"
+      },
+      {
+        "number": 16,
+        "direction": "down",
+        "row": 7,
+        "col": 10,
+        "text": "What Joseph did when he made himself known",
+        "answer": "WEPT",
+        "reference": "Genesis 45:2"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 7,
+        "col": 15,
+        "text": "The brother who proposed selling Joseph instead of killing him",
+        "answer": "JUDAH",
+        "reference": "Genesis 37:26"
+      },
+      {
+        "number": 17,
+        "direction": "down",
+        "row": 7,
+        "col": 15,
+        "text": "The favourite son, sold by his brothers",
+        "answer": "JOSEPH",
+        "reference": "Genesis 37:28"
+      },
+      {
+        "number": 18,
+        "direction": "down",
+        "row": 7,
+        "col": 17,
+        "text": "Where Joseph found his brothers with the flock",
+        "answer": "DOTHAN",
+        "reference": "Genesis 37:17"
+      },
+      {
+        "number": 19,
+        "direction": "across",
+        "row": 8,
+        "col": 7,
+        "text": "Joseph's, to be carried up out of Egypt",
+        "answer": "BONES",
+        "reference": "Genesis 50:25"
+      },
+      {
+        "number": 19,
+        "direction": "down",
+        "row": 8,
+        "col": 7,
+        "text": "Jacob's, given to Joseph's sons with crossed hands",
+        "answer": "BLESSING",
+        "reference": "Genesis 48:14"
+      },
+      {
+        "number": 20,
+        "direction": "across",
+        "row": 9,
+        "col": 0,
+        "text": "The empty cistern the brothers threw him into",
+        "answer": "PIT",
+        "reference": "Genesis 37:24"
+      },
+      {
+        "number": 21,
+        "direction": "down",
+        "row": 9,
+        "col": 13,
+        "text": "Judah's daughter-in-law in the story's interlude",
+        "answer": "TAMAR",
+        "reference": "Genesis 38:6"
+      },
+      {
+        "number": 22,
+        "direction": "across",
+        "row": 10,
+        "col": 3,
+        "text": "Joseph's Egyptian name, given by Pharaoh",
+        "answer": "ZAPHENATHPANEAH",
+        "reference": "Genesis 41:45"
+      },
+      {
+        "number": 23,
+        "direction": "across",
+        "row": 12,
+        "col": 9,
+        "text": "He dreamed of seven cows by the Nile",
+        "answer": "PHARAOH",
+        "reference": "Genesis 41:2"
+      },
+      {
+        "number": 23,
+        "direction": "down",
+        "row": 12,
+        "col": 9,
+        "text": "Where a false accusation landed Joseph",
+        "answer": "PRISON",
+        "reference": "Genesis 39:20"
+      },
+      {
+        "number": 24,
+        "direction": "down",
+        "row": 13,
+        "col": 5,
+        "text": "Joseph's firstborn: \"God has made me forget\"",
+        "answer": "MANASSEH",
+        "reference": "Genesis 41:51"
+      },
+      {
+        "number": 25,
+        "direction": "across",
+        "row": 14,
+        "col": 3,
+        "text": "Stored in the cities against the lean years",
+        "answer": "GRAIN",
+        "reference": "Genesis 41:48"
+      },
+      {
+        "number": 26,
+        "direction": "down",
+        "row": 14,
+        "col": 14,
+        "text": "Joseph's Egyptian wife",
+        "answer": "ASENATH",
+        "reference": "Genesis 41:45"
+      },
+      {
+        "number": 27,
+        "direction": "down",
+        "row": 14,
+        "col": 16,
+        "text": "Years of plenty, then years of famine",
+        "answer": "SEVEN",
+        "reference": "Genesis 41:29"
+      },
+      {
+        "number": 28,
+        "direction": "down",
+        "row": 14,
+        "col": 19,
+        "text": "The brother who meant to rescue Joseph from the pit",
+        "answer": "REUBEN",
+        "reference": "Genesis 37:22"
+      },
+      {
+        "number": 29,
+        "direction": "across",
+        "row": 15,
+        "col": 7,
+        "text": "The land given to Jacob's family",
+        "answer": "GOSHEN",
+        "reference": "Genesis 47:6"
+      },
+      {
+        "number": 30,
+        "direction": "across",
+        "row": 15,
+        "col": 14,
+        "text": "The brothers' bowed to Joseph's in his first dream",
+        "answer": "SHEAVES",
+        "reference": "Genesis 37:7"
+      },
+      {
+        "number": 31,
+        "direction": "across",
+        "row": 17,
+        "col": 0,
+        "text": "Sent by Pharaoh to carry Jacob's household down",
+        "answer": "WAGONS",
+        "reference": "Genesis 45:19"
+      },
+      {
+        "number": 32,
+        "direction": "across",
+        "row": 17,
+        "col": 7,
+        "text": "The youngest brother Jacob feared to send",
+        "answer": "BENJAMIN",
+        "reference": "Genesis 42:4"
+      },
+      {
+        "number": 33,
+        "direction": "across",
+        "row": 19,
+        "col": 2,
+        "text": "The brother kept bound in Egypt as surety",
+        "answer": "SIMEON",
+        "reference": "Genesis 42:24"
+      }
+    ],
+    "kind": "sunday"
+  },
+  {
+    "id": "sunday-012",
+    "title": "Into the Promised Land",
+    "difficulty": "hard",
+    "verse": "Do not be afraid; do not be discouraged, for the LORD your God is with you wherever you go.",
+    "reference": "Joshua 1:9",
+    "publishDate": "2026-07-12",
+    "size": 21,
+    "grid": [
+      ".......G..BARAK...E.J",
+      ".......I.J..I.....G.O",
+      ".....C.L.EHUD.....L.S",
+      ".....A.G.P..D..MANOAH",
+      ".....N.A.H..L...C.N.U",
+      "...SCARLET.JERICHO..A",
+      ".....A...H.A....A..N.",
+      "GIDEON.F.A.W.HORNS.A.",
+      ".......O.H.B.E...U.Z.",
+      ".....S.X...O.B...N.I.",
+      "....THREEHUNDRED...R.",
+      "...D.E.S.O.E.O.E...I.",
+      ".FLEECE..N...N.B...T.",
+      "...L.H...E..S.TORCHES",
+      "J.GIBEON.Y..H..R....I",
+      "O..L.M.....MIDIANITES",
+      "RAHAB.....C.L..H..W.E",
+      "D..H.....DAGON....E.R",
+      "A.........L.H..JAEL.A",
+      "N....OTHNIEL......V..",
+      "..........B.ABIMELECH"
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 7,
+        "text": "Israel's first camp west of the Jordan",
+        "answer": "GILGAL",
+        "reference": "Joshua 4:19"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 0,
+        "col": 10,
+        "text": "He would not go to battle without Deborah",
+        "answer": "BARAK",
+        "reference": "Judges 4:8"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 0,
+        "col": 12,
+        "text": "Samson's, posed at his wedding feast",
+        "answer": "RIDDLE",
+        "reference": "Judges 14:12"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 0,
+        "col": 18,
+        "text": "The very fat king of Moab",
+        "answer": "EGLON",
+        "reference": "Judges 3:17"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 0,
+        "col": 20,
+        "text": "Moses' successor, who led Israel over the Jordan",
+        "answer": "JOSHUA",
+        "reference": "Joshua 1:1"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 1,
+        "col": 9,
+        "text": "His rash vow cost him his only daughter",
+        "answer": "JEPHTHAH",
+        "reference": "Judges 11:30"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 2,
+        "col": 5,
+        "text": "The land divided by lot among the tribes",
+        "answer": "CANAAN",
+        "reference": "Joshua 14:1"
+      },
+      {
+        "number": 8,
+        "direction": "across",
+        "row": 2,
+        "col": 9,
+        "text": "The left-handed judge with a hidden sword",
+        "answer": "EHUD",
+        "reference": "Judges 3:15"
+      },
+      {
+        "number": 9,
+        "direction": "across",
+        "row": 3,
+        "col": 15,
+        "text": "Samson's father",
+        "answer": "MANOAH",
+        "reference": "Judges 13:2"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 3,
+        "col": 16,
+        "text": "He took the devoted things and was stoned",
+        "answer": "ACHAN",
+        "reference": "Joshua 7:24"
+      },
+      {
+        "number": 11,
+        "direction": "across",
+        "row": 5,
+        "col": 3,
+        "text": "The cord tied in Rahab's window",
+        "answer": "SCARLET",
+        "reference": "Joshua 2:18"
+      },
+      {
+        "number": 12,
+        "direction": "across",
+        "row": 5,
+        "col": 11,
+        "text": "Its wall collapsed on the seventh day",
+        "answer": "JERICHO",
+        "reference": "Joshua 6:20"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 5,
+        "col": 11,
+        "text": "Of a donkey: a thousand men struck down with it",
+        "answer": "JAWBONE",
+        "reference": "Judges 15:15"
+      },
+      {
+        "number": 13,
+        "direction": "down",
+        "row": 6,
+        "col": 19,
+        "text": "Samson's vow, from birth",
+        "answer": "NAZIRITE",
+        "reference": "Judges 13:5"
+      },
+      {
+        "number": 14,
+        "direction": "across",
+        "row": 7,
+        "col": 0,
+        "text": "Found threshing wheat in a winepress",
+        "answer": "GIDEON",
+        "reference": "Judges 6:11"
+      },
+      {
+        "number": 15,
+        "direction": "down",
+        "row": 7,
+        "col": 7,
+        "text": "Three hundred, with torches tied to their tails",
+        "answer": "FOXES",
+        "reference": "Judges 15:4"
+      },
+      {
+        "number": 16,
+        "direction": "across",
+        "row": 7,
+        "col": 13,
+        "text": "Seven priests carried rams\u2019 ones before the ark",
+        "answer": "HORNS",
+        "reference": "Joshua 6:4"
+      },
+      {
+        "number": 16,
+        "direction": "down",
+        "row": 7,
+        "col": 13,
+        "text": "Caleb's inheritance in the hill country",
+        "answer": "HEBRON",
+        "reference": "Joshua 14:13"
+      },
+      {
+        "number": 17,
+        "direction": "down",
+        "row": 7,
+        "col": 17,
+        "text": "It stood still over Gibeon",
+        "answer": "SUN",
+        "reference": "Joshua 10:12"
+      },
+      {
+        "number": 18,
+        "direction": "down",
+        "row": 9,
+        "col": 5,
+        "text": "\"Choose for yourselves this day whom you will serve\"",
+        "answer": "SHECHEM",
+        "reference": "Joshua 24:15"
+      },
+      {
+        "number": 19,
+        "direction": "across",
+        "row": 10,
+        "col": 4,
+        "text": "The men who lapped water, kept for the battle",
+        "answer": "THREEHUNDRED",
+        "reference": "Judges 7:7"
+      },
+      {
+        "number": 20,
+        "direction": "down",
+        "row": 10,
+        "col": 9,
+        "text": "Found in the carcass of a lion",
+        "answer": "HONEY",
+        "reference": "Judges 14:8"
+      },
+      {
+        "number": 21,
+        "direction": "down",
+        "row": 10,
+        "col": 15,
+        "text": "The prophetess who judged Israel under a palm tree",
+        "answer": "DEBORAH",
+        "reference": "Judges 4:5"
+      },
+      {
+        "number": 22,
+        "direction": "down",
+        "row": 11,
+        "col": 3,
+        "text": "She had the seven braids cut",
+        "answer": "DELILAH",
+        "reference": "Judges 16:19"
+      },
+      {
+        "number": 23,
+        "direction": "across",
+        "row": 12,
+        "col": 1,
+        "text": "Wet then dry, to be sure of the sign",
+        "answer": "FLEECE",
+        "reference": "Judges 6:37"
+      },
+      {
+        "number": 24,
+        "direction": "down",
+        "row": 13,
+        "col": 12,
+        "text": "Where the tent of meeting was set up",
+        "answer": "SHILOH",
+        "reference": "Joshua 18:1"
+      },
+      {
+        "number": 25,
+        "direction": "across",
+        "row": 13,
+        "col": 14,
+        "text": "Hidden in jars, with trumpets in the other hand",
+        "answer": "TORCHES",
+        "reference": "Judges 7:16"
+      },
+      {
+        "number": 26,
+        "direction": "down",
+        "row": 13,
+        "col": 20,
+        "text": "Canaanite commander with nine hundred iron chariots",
+        "answer": "SISERA",
+        "reference": "Judges 4:3"
+      },
+      {
+        "number": 27,
+        "direction": "down",
+        "row": 14,
+        "col": 0,
+        "text": "Its waters stood in a heap while Israel crossed",
+        "answer": "JORDAN",
+        "reference": "Joshua 3:17"
+      },
+      {
+        "number": 28,
+        "direction": "across",
+        "row": 14,
+        "col": 2,
+        "text": "Its people tricked Israel with mouldy bread",
+        "answer": "GIBEON",
+        "reference": "Joshua 9:5"
+      },
+      {
+        "number": 29,
+        "direction": "across",
+        "row": 15,
+        "col": 11,
+        "text": "Gideon's enemies, as thick as locusts",
+        "answer": "MIDIANITES",
+        "reference": "Judges 6:5"
+      },
+      {
+        "number": 30,
+        "direction": "down",
+        "row": 15,
+        "col": 18,
+        "text": "Stones set up at Gilgal, one per tribe",
+        "answer": "TWELVE",
+        "reference": "Joshua 4:20"
+      },
+      {
+        "number": 31,
+        "direction": "across",
+        "row": 16,
+        "col": 0,
+        "text": "She hid the spies under stalks of flax",
+        "answer": "RAHAB",
+        "reference": "Joshua 2:6"
+      },
+      {
+        "number": 32,
+        "direction": "down",
+        "row": 16,
+        "col": 10,
+        "text": "At eighty-five, he asked for the hill country",
+        "answer": "CALEB",
+        "reference": "Joshua 14:10"
+      },
+      {
+        "number": 33,
+        "direction": "across",
+        "row": 17,
+        "col": 9,
+        "text": "The Philistine god whose temple Samson brought down",
+        "answer": "DAGON",
+        "reference": "Judges 16:23"
+      },
+      {
+        "number": 34,
+        "direction": "across",
+        "row": 18,
+        "col": 15,
+        "text": "She drove a tent peg through Sisera's temple",
+        "answer": "JAEL",
+        "reference": "Judges 4:21"
+      },
+      {
+        "number": 35,
+        "direction": "across",
+        "row": 19,
+        "col": 5,
+        "text": "The first judge, Caleb's nephew",
+        "answer": "OTHNIEL",
+        "reference": "Judges 3:9"
+      },
+      {
+        "number": 36,
+        "direction": "across",
+        "row": 20,
+        "col": 12,
+        "text": "Gideon's son, killed by a millstone dropped from a tower",
+        "answer": "ABIMELECH",
+        "reference": "Judges 9:53"
+      }
+    ],
+    "kind": "sunday"
+  },
+  {
+    "id": "sunday-013",
+    "title": "Things to Come",
+    "difficulty": "hard",
+    "verse": "Behold, I make all things new.",
+    "reference": "Revelation 21:5",
+    "publishDate": "2026-07-13",
+    "size": 21,
+    "grid": [
+      "..PATMOS.......M....B",
+      ".A.M..M.....SCROLL..A",
+      ".R.ELDERS......R....B",
+      ".M.N..G....W...N....Y",
+      ".A....ABADDON.MICHAEL",
+      ".G.........R...N....O",
+      ".E..B.D..P.M.W.GOLD.N",
+      ".D.TEARS.E.W.I.S.....",
+      ".D..A.A..R.O.T.THRONE",
+      "BOWLS.G..G.O.N.A....P",
+      ".N..THOUSANDYEARS...H",
+      "...L..N..M...S..I...E",
+      "A..O.....U...S..X.P.S",
+      "L..C...LAMB.SEALS.E.U",
+      "P..U...A.....S..I.A.S",
+      "HORSES.O........X.R..",
+      "A..T...D.NEWJERUSALEM",
+      "...SARDIS.....I.I.S..",
+      ".......C......V.X....",
+      ".PHILADELPHIA.E......",
+      ".......A.....TRUMPETS"
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 2,
+        "text": "The island of John's exile",
+        "answer": "PATMOS",
+        "reference": "Revelation 1:9"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 3,
+        "text": "\"___. Come, Lord Jesus!\"",
+        "answer": "AMEN",
+        "reference": "Revelation 22:20"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 0,
+        "col": 6,
+        "text": "The last letter, paired with the first",
+        "answer": "OMEGA",
+        "reference": "Revelation 1:8"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 0,
+        "col": 15,
+        "text": "\"The bright ___\": Jesus' name for Himself",
+        "answer": "MORNINGSTAR",
+        "reference": "Revelation 22:16"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 0,
+        "col": 20,
+        "text": "\"Fallen, fallen is ___ the great\"",
+        "answer": "BABYLON",
+        "reference": "Revelation 18:2"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 1,
+        "col": 1,
+        "text": "Where the kings of the earth are gathered",
+        "answer": "ARMAGEDDON",
+        "reference": "Revelation 16:16"
+      },
+      {
+        "number": 7,
+        "direction": "across",
+        "row": 1,
+        "col": 12,
+        "text": "Sealed with seven seals, in the right hand of Him on the throne",
+        "answer": "SCROLL",
+        "reference": "Revelation 5:1"
+      },
+      {
+        "number": 8,
+        "direction": "across",
+        "row": 2,
+        "col": 3,
+        "text": "Twenty-four, laying their crowns before the throne",
+        "answer": "ELDERS",
+        "reference": "Revelation 4:10"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 3,
+        "col": 11,
+        "text": "The star that made a third of the waters bitter",
+        "answer": "WORMWOOD",
+        "reference": "Revelation 8:11"
+      },
+      {
+        "number": 10,
+        "direction": "across",
+        "row": 4,
+        "col": 6,
+        "text": "The angel of the Abyss, by his Hebrew name",
+        "answer": "ABADDON",
+        "reference": "Revelation 9:11"
+      },
+      {
+        "number": 11,
+        "direction": "across",
+        "row": 4,
+        "col": 14,
+        "text": "He and his angels fought the dragon",
+        "answer": "MICHAEL",
+        "reference": "Revelation 12:7"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 6,
+        "col": 4,
+        "text": "Rising out of the sea with ten horns",
+        "answer": "BEAST",
+        "reference": "Revelation 13:1"
+      },
+      {
+        "number": 13,
+        "direction": "down",
+        "row": 6,
+        "col": 6,
+        "text": "Great and red, with seven heads",
+        "answer": "DRAGON",
+        "reference": "Revelation 12:3"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 6,
+        "col": 9,
+        "text": "The church \"where Satan's throne is\"",
+        "answer": "PERGAMUM",
+        "reference": "Revelation 2:13"
+      },
+      {
+        "number": 15,
+        "direction": "down",
+        "row": 6,
+        "col": 13,
+        "text": "Two, prophesying in sackcloth",
+        "answer": "WITNESSES",
+        "reference": "Revelation 11:3"
+      },
+      {
+        "number": 16,
+        "direction": "across",
+        "row": 6,
+        "col": 15,
+        "text": "Pure, the main street was made of it",
+        "answer": "GOLD",
+        "reference": "Revelation 21:21"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "Wiped from every eye",
+        "answer": "TEARS",
+        "reference": "Revelation 21:4"
+      },
+      {
+        "number": 18,
+        "direction": "across",
+        "row": 8,
+        "col": 15,
+        "text": "In heaven, with a rainbow around it like an emerald",
+        "answer": "THRONE",
+        "reference": "Revelation 4:3"
+      },
+      {
+        "number": 19,
+        "direction": "down",
+        "row": 8,
+        "col": 20,
+        "text": "The church that abandoned its first love",
+        "answer": "EPHESUS",
+        "reference": "Revelation 2:4"
+      },
+      {
+        "number": 20,
+        "direction": "across",
+        "row": 9,
+        "col": 0,
+        "text": "Seven, full of God's wrath, poured out",
+        "answer": "BOWLS",
+        "reference": "Revelation 16:1"
+      },
+      {
+        "number": 21,
+        "direction": "across",
+        "row": 10,
+        "col": 4,
+        "text": "How long the dragon was bound",
+        "answer": "THOUSANDYEARS",
+        "reference": "Revelation 20:2"
+      },
+      {
+        "number": 22,
+        "direction": "down",
+        "row": 10,
+        "col": 16,
+        "text": "The number of the beast, spelled out",
+        "answer": "SIXSIXSIX",
+        "reference": "Revelation 13:18"
+      },
+      {
+        "number": 23,
+        "direction": "down",
+        "row": 11,
+        "col": 3,
+        "text": "From the Abyss, with the sting of scorpions",
+        "answer": "LOCUSTS",
+        "reference": "Revelation 9:3"
+      },
+      {
+        "number": 24,
+        "direction": "down",
+        "row": 12,
+        "col": 0,
+        "text": "\"I am the ___ and the Omega\"",
+        "answer": "ALPHA",
+        "reference": "Revelation 1:8"
+      },
+      {
+        "number": 25,
+        "direction": "down",
+        "row": 12,
+        "col": 18,
+        "text": "The twelve gates were each a single one",
+        "answer": "PEARLS",
+        "reference": "Revelation 21:21"
+      },
+      {
+        "number": 26,
+        "direction": "across",
+        "row": 13,
+        "col": 7,
+        "text": "Worthy to open the scroll",
+        "answer": "LAMB",
+        "reference": "Revelation 5:6"
+      },
+      {
+        "number": 26,
+        "direction": "down",
+        "row": 13,
+        "col": 7,
+        "text": "Neither hot nor cold",
+        "answer": "LAODICEA",
+        "reference": "Revelation 3:16"
+      },
+      {
+        "number": 27,
+        "direction": "across",
+        "row": 13,
+        "col": 12,
+        "text": "The Lamb opened them one by one",
+        "answer": "SEALS",
+        "reference": "Revelation 6:1"
+      },
+      {
+        "number": 28,
+        "direction": "across",
+        "row": 15,
+        "col": 0,
+        "text": "White, red, black and pale",
+        "answer": "HORSES",
+        "reference": "Revelation 6:8"
+      },
+      {
+        "number": 29,
+        "direction": "across",
+        "row": 16,
+        "col": 9,
+        "text": "Coming down out of heaven, prepared as a bride",
+        "answer": "NEWJERUSALEM",
+        "reference": "Revelation 21:2"
+      },
+      {
+        "number": 30,
+        "direction": "down",
+        "row": 16,
+        "col": 14,
+        "text": "Of the water of life, clear as crystal",
+        "answer": "RIVER",
+        "reference": "Revelation 22:1"
+      },
+      {
+        "number": 31,
+        "direction": "across",
+        "row": 17,
+        "col": 3,
+        "text": "A reputation for being alive, but dead",
+        "answer": "SARDIS",
+        "reference": "Revelation 3:1"
+      },
+      {
+        "number": 32,
+        "direction": "across",
+        "row": 19,
+        "col": 1,
+        "text": "The church given an open door no one can shut",
+        "answer": "PHILADELPHIA",
+        "reference": "Revelation 3:8"
+      },
+      {
+        "number": 33,
+        "direction": "across",
+        "row": 20,
+        "col": 13,
+        "text": "Seven angels prepared to sound them",
+        "answer": "TRUMPETS",
+        "reference": "Revelation 8:6"
+      }
+    ],
+    "kind": "sunday"
+  },
+  {
     "id": "pack-advent-002",
     "title": "Hail, Thou That Art Highly Favoured",
     "difficulty": "easy",
