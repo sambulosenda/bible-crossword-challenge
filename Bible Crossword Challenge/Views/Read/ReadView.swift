@@ -37,22 +37,46 @@ struct ReadView: View {
     @State private var showReader = false
     @State private var showPlanReader = false
 
+    /// Search: a reference, a book, or words in the text — see
+    /// `ScriptureSearch`. Reaching a chapter was three taps with no other way
+    /// in until 2.9.
+    @State private var query = ""
+    @State private var results = ScriptureSearch.Results()
+    @State private var searchTarget: SearchTarget?
+    @State private var searchBook: BibleBook?
+    @AppStorage(RecentChapters.key) private var recentRaw = ""
+    @State private var recentTarget: RecentChapters.Entry?
+
+    /// A chapter (and maybe verse) a search result opens.
+    private struct SearchTarget: Hashable {
+        let book: String
+        let chapter: Int
+        let verse: Int?
+    }
+
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(spacing: Theme.Spacing.l) {
-                    // The habit first, then the bookmark, then the shelves.
-                    ReadingPlanCard(onRead: openPlanChapter)
-                    resumeCard
-                    MemoryVerseCard(
-                        dueCount: memoryVerses.dueCount,
-                        activeCount: memoryVerses.entries.count
-                    )
-                    JourneyCard(source: "read_tab")
-                    if !bookmarks.entries.isEmpty {
-                        bookmarksCard
+                SearchAware { searching in
+                    if searching {
+                        searchResults
+                    } else {
+                        VStack(spacing: Theme.Spacing.l) {
+                            // The habit first, then the bookmark, then the shelves.
+                            ReadingPlanCard(onRead: openPlanChapter)
+                            resumeCard
+                            recentRow
+                            MemoryVerseCard(
+                                dueCount: memoryVerses.dueCount,
+                                activeCount: memoryVerses.entries.count
+                            )
+                            JourneyCard(source: "read_tab")
+                            if !bookmarks.entries.isEmpty {
+                                bookmarksCard
+                            }
+                            browseSection
+                        }
                     }
-                    browseSection
                 }
                 .padding(Theme.Spacing.m)
                 .frame(maxWidth: 560)
@@ -60,6 +84,40 @@ struct ReadView: View {
             }
             .background(Theme.background)
             .navigationTitle("Read")
+            .searchable(text: $query, prompt: "Verse, chapter or words")
+            .onSubmit(of: .search) {
+                analytics.log(.readSearch(kind: results.kind, results: results.count))
+            }
+            .task(id: query) {
+                // Debounced, then off the main thread: a word scans 31,000
+                // verses, which is tens of milliseconds the keyboard shouldn't
+                // wait for.
+                let trimmed = query.trimmingCharacters(in: .whitespacesAndNewlines)
+                guard !trimmed.isEmpty else { results = ScriptureSearch.Results(); return }
+                try? await Task.sleep(for: .milliseconds(200))
+                guard !Task.isCancelled else { return }
+                await scripture.preload()
+                let books = scripture.books
+                let found = await Task.detached(priority: .userInitiated) {
+                    ScriptureSearch.search(trimmed, in: books)
+                }.value
+                guard !Task.isCancelled else { return }
+                results = found
+            }
+            .navigationDestination(item: $searchTarget) { target in
+                ChapterReaderView(
+                    startBook: target.book,
+                    startChapter: target.chapter,
+                    highlightVerse: target.verse,
+                    source: "read_search"
+                )
+            }
+            .navigationDestination(item: $searchBook) { book in
+                ChapterPickerView(book: book)
+            }
+            .navigationDestination(item: $recentTarget) { entry in
+                ChapterReaderView(startBook: entry.book, startChapter: entry.chapter, source: "read_recent")
+            }
             // Re-taken whenever the reader moves the bookmark, so coming back
             // from a chapter shows that chapter on the card.
             .task(id: "\(lastBook)#\(lastChapter)") {
@@ -95,6 +153,152 @@ struct ReadView: View {
             }
             .navigationDestination(for: MemoryPracticeRoute.self) { route in
                 MemoryPracticeView(referenceKey: route.referenceKey)
+            }
+        }
+    }
+
+    // MARK: - Search
+
+    /// Reads `isSearching`, which only exists below the `.searchable` view.
+    private struct SearchAware<Content: View>: View {
+        @Environment(\.isSearching) private var isSearching
+        @ViewBuilder let content: (Bool) -> Content
+        var body: some View { content(isSearching) }
+    }
+
+    @ViewBuilder
+    private var searchResults: some View {
+        let trimmed = query.trimmingCharacters(in: .whitespacesAndNewlines)
+        VStack(alignment: .leading, spacing: Theme.Spacing.s) {
+            if let ref = results.reference {
+                searchRow(
+                    title: ref.verse.map { "\(ref.book) \(ref.chapter):\($0)" } ?? "\(ref.book) \(ref.chapter)",
+                    detail: "Open chapter",
+                    symbol: "book"
+                ) {
+                    open(reference: ref)
+                }
+            }
+            if let book = results.book {
+                searchRow(title: book.name, detail: "\(book.chapterCount) chapters", symbol: "books.vertical") {
+                    analytics.log(.scriptureOpened(reference: book.name, source: "read_search"))
+                    searchBook = book
+                }
+            }
+            if !results.verses.isEmpty {
+                Text(results.verses.count == ScriptureSearch.maxHits
+                     ? "First \(ScriptureSearch.maxHits) verses"
+                     : "\(results.verses.count) \(results.verses.count == 1 ? "verse" : "verses")")
+                    .kicker()
+                    .padding(.horizontal, Theme.Spacing.xs)
+                    .padding(.top, Theme.Spacing.s)
+                ForEach(results.verses) { hit in
+                    Button {
+                        open(reference: ScriptureRef(book: hit.book, chapter: hit.chapter, verse: hit.verse))
+                    } label: {
+                        VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
+                            Text(hit.reference)
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundStyle(Theme.accent)
+                            Text(hit.text)
+                                .font(.scripture(.body))
+                                .foregroundStyle(.primary)
+                                .lineSpacing(3)
+                                .lineLimit(3)
+                                .multilineTextAlignment(.leading)
+                        }
+                        .padding(Theme.Spacing.m)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .elevatedCard()
+                    }
+                    .buttonStyle(PressableCardStyle())
+                    .accessibilityLabel("\(hit.reference). \(hit.text)")
+                }
+            }
+            if results.isEmpty && trimmed.count >= ScriptureSearch.minWordLength {
+                Text("Nothing found for “\(trimmed)”")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity)
+                    .padding(.top, Theme.Spacing.xl)
+            } else if results.isEmpty {
+                Text("Try “John 3:16”, “Ruth”, or “small voice”")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity)
+                    .padding(.top, Theme.Spacing.xl)
+            }
+        }
+    }
+
+    private func searchRow(title: String, detail: String, symbol: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            HStack(spacing: Theme.Spacing.m) {
+                Image(systemName: symbol)
+                    .font(.title3)
+                    .foregroundStyle(Theme.accent)
+                    .frame(width: 40, height: 40)
+                    .background(Theme.accent.opacity(0.14), in: .circle)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(title)
+                        .font(.headline)
+                        .foregroundStyle(.primary)
+                    Text(detail)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                Spacer(minLength: 0)
+                Image(systemName: "chevron.right")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(.secondary)
+            }
+            .padding(Theme.Spacing.m)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .elevatedCard()
+        }
+        .buttonStyle(PressableCardStyle())
+    }
+
+    private func open(reference ref: ScriptureRef) {
+        let text = ref.verse.map { "\(ref.book) \(ref.chapter):\($0)" } ?? "\(ref.book) \(ref.chapter)"
+        analytics.log(.scriptureOpened(reference: text, source: "read_search"))
+        searchTarget = SearchTarget(book: ref.book, chapter: ref.chapter, verse: ref.verse)
+    }
+
+    // MARK: - Recent
+
+    /// The last few chapters opened, minus the one the resume card already
+    /// shows. Hidden until there are any.
+    @ViewBuilder
+    private var recentRow: some View {
+        let point = snapshot ?? .placeholder
+        let entries = RecentChapters.entries(from: recentRaw)
+            .filter { !($0.book == point.book && $0.chapter == point.chapter) }
+        if !entries.isEmpty {
+            VStack(alignment: .leading, spacing: Theme.Spacing.s) {
+                Text("Recent")
+                    .kicker()
+                    .padding(.horizontal, Theme.Spacing.xs)
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: Theme.Spacing.s) {
+                        ForEach(entries) { entry in
+                            Button {
+                                analytics.log(.scriptureOpened(reference: entry.reference, source: "read_recent"))
+                                recentTarget = entry
+                            } label: {
+                                Label(entry.reference, systemImage: "clock")
+                                    .font(.subheadline.weight(.semibold))
+                                    .padding(.horizontal, Theme.Spacing.m)
+                                    .padding(.vertical, Theme.Spacing.s + 2)
+                                    .background(Theme.surface, in: .capsule)
+                                    .foregroundStyle(.primary)
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityHint("Opens \(entry.reference)")
+                        }
+                    }
+                }
+                .scrollClipDisabled()
             }
         }
     }

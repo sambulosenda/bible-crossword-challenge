@@ -81,6 +81,7 @@ struct ChapterReaderView: View {
     @AppStorage("read.lastBook") private var lastBook = ""
     @AppStorage("read.lastChapter") private var lastChapter = 0
     @AppStorage("read.fontSize") private var fontSize = 19.0
+    @AppStorage(RecentChapters.key) private var recentRaw = ""
 
     @State private var locations: [ChapterLoc] = []
     @State private var startIndex = 0
@@ -158,6 +159,11 @@ struct ChapterReaderView: View {
             if didSettle { pageTurns += 1 }
         }
         .onDisappear {
+            if locations.indices.contains(selection) {
+                recentRaw = RecentChapters.recording(
+                    book: locations[selection].book, chapter: locations[selection].chapter.number, in: recentRaw
+                )
+            }
             guard let source else { return }
             analytics.log(.readerClosed(
                 source: source,
@@ -220,6 +226,7 @@ struct ChapterReaderView: View {
         startIndex = idx
         selection = idx
         persist(idx)
+        recentRaw = RecentChapters.recording(book: startBook, chapter: startChapter, in: recentRaw)
         access = PuzzleAccess(provider: puzzleProvider)
         logChips(at: idx)
         didSettle = true
@@ -495,8 +502,11 @@ private struct ChapterPage: View {
         let number = Text("\(verse.number) ")
             .font(.system(size: fontSize * 0.68, weight: .bold))
             .foregroundStyle(Theme.accent)
+        // Serif, like every other place scripture is set (Today's verse, the
+        // completion card, the share card). Until 2.9 the reader — the one
+        // surface that exists for reading — was the exception.
         let body = Text(verse.text)
-            .font(.system(size: fontSize))
+            .font(.system(size: fontSize, design: .serif))
             .foregroundStyle(.primary)
         // A small mark after the text, inside the run so it wraps with it.
         let mark = bookmarked.contains(verse.number)

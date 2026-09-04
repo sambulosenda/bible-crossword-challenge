@@ -228,6 +228,10 @@ enum AnalyticsEvent {
     /// the usual puzzle-start event and need nothing new.
     case readPuzzleChipsShown(book: String, chapter: Int, count: Int, lockedCount: Int, source: String)
     case readPuzzleChipTapped(puzzleID: String, locked: Bool, source: String)
+    /// A submitted search on the Read tab. `kind` is what the query resolved
+    /// to — reference / book / word / none — and `results` how many rows it
+    /// produced. Reaching a chapter was three taps with no search until 2.9.
+    case readSearch(kind: String, results: Int)
     // The chapter-a-day plan. `day` is 1-based within the book.
     case planStarted(plan: String)
     case planChapterRead(plan: String, day: Int)
@@ -315,6 +319,7 @@ enum AnalyticsEvent {
         case .bookmarksOpened: return "bookmarks_opened"
         case .readPuzzleChipsShown: return "read_puzzle_chips_shown"
         case .readPuzzleChipTapped: return "read_puzzle_chip_tapped"
+        case .readSearch: return "read_search"
         case .planStarted: return "plan_started"
         case .planChapterRead: return "plan_chapter_read"
         case .planCompleted: return "plan_completed"
@@ -470,6 +475,8 @@ enum AnalyticsEvent {
             return ["book": book, "chapter": chapter, "count": count, "locked_count": lockedCount, "source": source]
         case .readPuzzleChipTapped(let puzzleID, let locked, let source):
             return ["puzzle_id": puzzleID, "locked": locked, "source": source]
+        case .readSearch(let kind, let results):
+            return ["kind": kind, "results": results]
         case .planStarted(let plan):
             return ["plan": plan]
         case .planChapterRead(let plan, let day), .planStopped(let plan, let day):
