@@ -217,6 +217,16 @@ enum AnalyticsEvent {
     /// verse-first hint sheet was opened out to the full chapter (always true
     /// for the chapter reader itself).
     case readerClosed(source: String, seconds: Int, chaptersPaged: Int, scrolledPastVerse: Bool, expanded: Bool)
+    /// The reader's long-press: `kind` is memorize / bookmark / share / copy.
+    /// Memorize from here is the first way into memory verses that isn't a
+    /// solved puzzle, so compare its share of `memory_verse_started`.
+    case verseAction(kind: String, reference: String)
+    case bookmarksOpened(count: Int)
+    // The chapter-a-day plan. `day` is 1-based within the book.
+    case planStarted(plan: String)
+    case planChapterRead(plan: String, day: Int)
+    case planCompleted(plan: String, days: Int)
+    case planStopped(plan: String, day: Int)
     /// The mini→daily chain: the completion screen's offer to roll straight
     /// into today's full puzzle. Completing a puzzle on day one is the
     /// strongest D1 retention signal we have, so the button is measured
@@ -295,6 +305,12 @@ enum AnalyticsEvent {
         case .familyBoardShared: return "family_board_shared"
         case .scriptureOpened: return "scripture_opened"
         case .readerClosed: return "reader_closed"
+        case .verseAction: return "verse_action"
+        case .bookmarksOpened: return "bookmarks_opened"
+        case .planStarted: return "plan_started"
+        case .planChapterRead: return "plan_chapter_read"
+        case .planCompleted: return "plan_completed"
+        case .planStopped: return "plan_stopped"
         case .completionChainTapped: return "completion_chain_tapped"
         case .memoryListOpened: return "memory_list_opened"
         case .memoryVerseStarted: return "memory_verse_started"
@@ -438,6 +454,16 @@ enum AnalyticsEvent {
             return ["puzzle_id": id, "size": size]
         case .scriptureOpened(let reference, let source):
             return ["reference": reference, "source": source]
+        case .verseAction(let kind, let reference):
+            return ["kind": kind, "reference": reference]
+        case .bookmarksOpened(let count):
+            return ["count": count]
+        case .planStarted(let plan):
+            return ["plan": plan]
+        case .planChapterRead(let plan, let day), .planStopped(let plan, let day):
+            return ["plan": plan, "day": day]
+        case .planCompleted(let plan, let days):
+            return ["plan": plan, "days": days]
         case .readerClosed(let source, let seconds, let chaptersPaged, let scrolledPastVerse, let expanded):
             return [
                 "source": source,

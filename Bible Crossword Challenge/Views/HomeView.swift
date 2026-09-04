@@ -25,6 +25,7 @@ struct HomeView: View {
     @Environment(StoreService.self) private var store
     @Environment(\.analytics) private var analytics
     @Environment(\.memoryVerses) private var memoryVerses
+    @Environment(\.readingPlans) private var readingPlans
     @Query private var records: [PuzzleRecord]
 
     /// Written by RootView when a launch breaks the streak; cleared here on
@@ -48,6 +49,9 @@ struct HomeView: View {
     /// Pushes the trophy list from the next-achievement card. Achievements
     /// lost their tab in 2.8, so the card is the only way in from Today.
     @State private var showAchievements = false
+    /// Pushes today's plan chapter. Only reachable while a plan is running —
+    /// the card doesn't render otherwise, so a non-reader's Today is unchanged.
+    @State private var showPlanReader = false
 
     private var dailyPuzzle: Puzzle? { puzzleProvider.dailyPuzzle() }
     private var dailyMini: Puzzle? { puzzleProvider.dailyMini() }
@@ -287,6 +291,12 @@ struct HomeView: View {
                     // instead of a full one. `source: "home_card"` is
                     // unchanged on purpose: the move is measured as a lift on
                     // the same PostHog event, not a new one.
+                    // A habit surface like the streak, so it sits with them:
+                    // only while a plan is running, one row, checked once
+                    // today's chapter is read. `readingPlans` needs no Bible
+                    // decode — the plan recorded its chapter count at start.
+                    ReadingPlanCard(compact: true, onRead: openPlanChapter)
+
                     if !store.isPremium {
                         UpgradeCard(
                             totalPuzzles: puzzleProvider.totalPuzzleCount,
@@ -357,6 +367,17 @@ struct HomeView: View {
             .navigationDestination(isPresented: $showAchievements) {
                 AchievementsView(profile: profile, source: "home_card")
             }
+            .navigationDestination(isPresented: $showPlanReader) {
+                if let plan = readingPlans.activePlan, let day = readingPlans.nextDay {
+                    ChapterReaderView(
+                        startBook: plan.book,
+                        startChapter: day,
+                        source: "read_plan",
+                        planChapter: PlanChapter(book: plan.book, chapter: day),
+                        onPlanChapterRead: { markPlanRead(plan, day: day) }
+                    )
+                }
+            }
             .navigationDestination(for: MemoryRoute.self) { _ in
                 MemoryVerseListView()
             }
@@ -381,6 +402,22 @@ struct HomeView: View {
         .padding(Theme.Spacing.l)
         .elevatedCard()
         .accessibilityElement(children: .combine)
+    }
+
+    // MARK: - Reading plan
+
+    private func openPlanChapter() {
+        guard let plan = readingPlans.activePlan, let day = readingPlans.nextDay else { return }
+        analytics.log(.scriptureOpened(reference: "\(plan.book) \(day)", source: "read_plan"))
+        showPlanReader = true
+    }
+
+    private func markPlanRead(_ plan: ReadingPlan, day: Int) {
+        guard readingPlans.markRead(day: day) else { return }
+        analytics.log(.planChapterRead(plan: plan.id, day: day))
+        if readingPlans.isComplete {
+            analytics.log(.planCompleted(plan: plan.id, days: day))
+        }
     }
 
     // MARK: - Derived state

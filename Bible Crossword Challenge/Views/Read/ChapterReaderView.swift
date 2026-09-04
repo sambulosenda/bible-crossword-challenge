@@ -6,8 +6,24 @@
 //  across book boundaries). Remembers the last chapter read, supports jump-to
 //  and adjustable text size, and flashes a deep-linked verse into view.
 //
+//  Touch and hold a verse for its actions — memorize, bookmark, share, copy.
+//  Memorize is the point: until 2.8 the only way into memory verses was a
+//  solved puzzle, so the reader fed nothing back into the game.
+//
 
 import SwiftUI
+
+/// What a verse's touch-and-hold menu offers.
+enum VerseAction: String {
+    case memorize, bookmark, share, copy
+}
+
+/// The chapter a reading plan asked for. The matching page shows a footer
+/// that marks the day read.
+struct PlanChapter: Equatable {
+    let book: String
+    let chapter: Int
+}
 
 struct ChapterReaderView: View {
     @Environment(\.scripture) private var scripture
@@ -18,8 +34,20 @@ struct ChapterReaderView: View {
     /// Which surface opened the reader. Nil when a host logs the close itself
     /// (the verse-first hint sheet), so one visit never reports twice.
     var source: String? = nil
+    /// Set when a reading plan opened the reader: that chapter's page ends
+    /// with "Mark chapter as read", which calls `onPlanChapterRead` and pops.
+    var planChapter: PlanChapter? = nil
+    var onPlanChapterRead: (() -> Void)? = nil
 
     @Environment(\.analytics) private var analytics
+    @Environment(\.memoryVerses) private var memoryVerses
+    @Environment(\.bookmarks) private var bookmarks
+    @Environment(\.displayScale) private var displayScale
+    @Environment(\.dismiss) private var dismiss
+    @Environment(StoreService.self) private var store
+    @State private var showPaywall = false
+    @State private var shareItems: ShareItems?
+    @State private var toast: String?
     @State private var openedAt = Date()
     /// Page turns after the opening chapter settled — the swipe from `0` to
     /// the start index in `build()` is setup, not reading.
@@ -51,14 +79,7 @@ struct ChapterReaderView: View {
             } else {
                 TabView(selection: $selection) {
                     ForEach(locations.indices, id: \.self) { i in
-                        ChapterPage(
-                            book: locations[i].book,
-                            chapter: locations[i].chapter,
-                            fontSize: fontSize,
-                            highlight: i == startIndex ? highlightVerse : nil,
-                            scrolledPast: $scrolledPastVerse
-                        )
-                        .tag(i)
+                        page(at: i).tag(i)
                     }
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))
@@ -84,7 +105,31 @@ struct ChapterReaderView: View {
                     .accessibilityLabel("Jump to book or chapter")
             }
         }
-        .task { build() }
+        .task {
+            await scripture.preload()
+            build()
+        }
+        .sheet(isPresented: $showPaywall) {
+            PaywallView(source: "memory_verse_limit")
+        }
+        .sheet(item: $shareItems) { share in
+            ShareSheet(items: share.items)
+        }
+        .overlay(alignment: .bottom) {
+            if let toast {
+                Text(toast)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Theme.onInk)
+                    .padding(.horizontal, Theme.Spacing.l)
+                    .padding(.vertical, Theme.Spacing.s)
+                    .background(Theme.ink, in: .capsule)
+                    .padding(.bottom, Theme.Spacing.xl)
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
+                    .accessibilityAddTraits(.updatesFrequently)
+            }
+        }
+        .animation(.spring(duration: 0.35), value: toast)
+        .sensoryFeedback(.success, trigger: toast) { _, new in new != nil }
         .onChange(of: selection) { _, i in
             persist(i)
             if didSettle { pageTurns += 1 }
@@ -107,6 +152,27 @@ struct ChapterReaderView: View {
                 showJump = false
             }
         }
+    }
+
+    /// One chapter's page. Its own function: inline in the `ForEach`, the
+    /// closures plus the bookmark and plan lookups were more than the type
+    /// checker would resolve in one expression.
+    private func page(at i: Int) -> ChapterPage {
+        let loc = locations[i]
+        let bookmarked: Set<Int> = bookmarks.bookmarkedVerses(book: loc.book, chapter: loc.chapter.number)
+        let isPlanChapter: Bool = planChapter == PlanChapter(book: loc.book, chapter: loc.chapter.number)
+        return ChapterPage(
+            book: loc.book,
+            chapter: loc.chapter,
+            fontSize: fontSize,
+            highlight: i == startIndex ? highlightVerse : nil,
+            scrolledPast: $scrolledPastVerse,
+            bookmarked: bookmarked,
+            memorizable: { verse in memorizeState(for: verse, in: loc) },
+            showsPlanFooter: isPlanChapter,
+            onAction: { action, verse in handle(action, verse, in: loc) },
+            onMarkRead: markPlanChapterRead
+        )
     }
 
     private var currentTitle: String {
@@ -137,6 +203,81 @@ struct ChapterReaderView: View {
         lastBook = locations[i].book
         lastChapter = locations[i].chapter.number
     }
+
+    // MARK: - Verse actions
+
+    /// The share sheet's payload, wrapped so `.sheet(item:)` can present it.
+    private struct ShareItems: Identifiable {
+        let id = UUID()
+        let items: [Any]
+    }
+
+    enum MemorizeState {
+        /// Can be started from here.
+        case available
+        /// Already in memory verses.
+        case held
+        /// Too long for the memory grid — see `MemoryCloze.isEligible`.
+        case ineligible
+    }
+
+    private func memorizeState(for verse: BibleVerse, in loc: ChapterLoc) -> MemorizeState {
+        let reference = reference(for: verse, in: loc)
+        if memoryVerses.entry(for: MemoryCloze.referenceKey(reference)) != nil { return .held }
+        return MemoryCloze.isEligible(verseText: verse.text) ? .available : .ineligible
+    }
+
+    private func reference(for verse: BibleVerse, in loc: ChapterLoc) -> String {
+        "\(loc.book) \(loc.chapter.number):\(verse.number)"
+    }
+
+    private func handle(_ action: VerseAction, _ verse: BibleVerse, in loc: ChapterLoc) {
+        let reference = reference(for: verse, in: loc)
+        analytics.log(.verseAction(kind: action.rawValue, reference: reference))
+        switch action {
+        case .memorize:
+            // Same gate as starting a candidate from the memory list.
+            guard memoryVerses.canStartNewVerse(isPremium: store.isPremium) else {
+                analytics.log(.paywallOpened(source: "memory_verse_limit"))
+                showPaywall = true
+                return
+            }
+            _ = memoryVerses.start(reference: reference, verseText: verse.text)
+            analytics.log(.memoryVerseStarted(reference: reference, level: 1))
+            show("Added to Memory Verses")
+        case .bookmark:
+            let kept = bookmarks.toggle(
+                book: loc.book, chapter: loc.chapter.number, verse: verse.number, verseText: verse.text
+            )
+            show(kept ? "Bookmarked" : "Bookmark removed")
+        case .share:
+            let renderer = ImageRenderer(content: VerseShareCard(verse: verse.text, reference: reference))
+            renderer.scale = displayScale
+            var items: [Any] = []
+            if let image = renderer.uiImage { items.append(image) }
+            items.append("“\(verse.text)” — \(reference)")
+            if let url = ShareConfig.storeURL { items.append(url) }
+            shareItems = ShareItems(items: items)
+        case .copy:
+            UIPasteboard.general.string = "“\(verse.text)” — \(reference)"
+            show("Copied")
+        }
+    }
+
+    private func show(_ message: String) {
+        toast = message
+        Task {
+            try? await Task.sleep(for: .seconds(1.8))
+            if toast == message { toast = nil }
+        }
+    }
+
+    // MARK: - Reading plan
+
+    private func markPlanChapterRead() {
+        onPlanChapterRead?()
+        dismiss()
+    }
 }
 
 // MARK: - One chapter's text
@@ -149,6 +290,13 @@ private struct ChapterPage: View {
     /// Set once the player scrolls this page by hand after a deep-linked
     /// verse has been brought into view. Only the highlighted page reports.
     @Binding var scrolledPast: Bool
+    /// Verse numbers bookmarked in this chapter.
+    let bookmarked: Set<Int>
+    let memorizable: (BibleVerse) -> ChapterReaderView.MemorizeState
+    /// Whether this is a reading plan's chapter for today.
+    let showsPlanFooter: Bool
+    let onAction: (VerseAction, BibleVerse) -> Void
+    let onMarkRead: () -> Void
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var flashing = false
@@ -166,6 +314,19 @@ private struct ChapterPage: View {
 
                     ForEach(chapter.verses) { verse in
                         verseRow(verse).id(verse.number)
+                    }
+
+                    if showsPlanFooter {
+                        Button(action: onMarkRead) {
+                            Label("Mark chapter as read", systemImage: "checkmark")
+                        }
+                        .buttonStyle(.pillProminent)
+                        .padding(.top, Theme.Spacing.l)
+                        // The pager ignores the bottom safe area so text can
+                        // run under the tab bar; the one control down here
+                        // must clear it.
+                        .padding(.bottom, 96)
+                        .accessibilityHint("Marks today's chapter read and returns")
                     }
                 }
                 // A measure a reader can actually track — scripture set across
@@ -204,8 +365,14 @@ private struct ChapterPage: View {
         let body = Text(verse.text)
             .font(.system(size: fontSize))
             .foregroundStyle(.primary)
+        // A small mark after the text, inside the run so it wraps with it.
+        let mark = bookmarked.contains(verse.number)
+            ? Text(" ") + Text(Image(systemName: "bookmark.fill"))
+                .font(.system(size: fontSize * 0.6))
+                .foregroundStyle(Theme.accent)
+            : Text("")
 
-        return (number + body)
+        return (number + body + mark)
             .lineSpacing(5)
             .fixedSize(horizontal: false, vertical: true)
             .padding(.vertical, 3)
@@ -215,6 +382,37 @@ private struct ChapterPage: View {
                 (flashing && verse.number == highlight) ? Theme.accent.opacity(0.18) : .clear,
                 in: .rect(cornerRadius: 8, style: .continuous)
             )
+            .contentShape(.rect)
+            .contextMenu { verseMenu(verse) }
+            .accessibilityLabel("Verse \(verse.number). \(verse.text)\(bookmarked.contains(verse.number) ? ". Bookmarked" : "")")
+            .accessibilityHint("Touch and hold for memorize, bookmark, share and copy")
+    }
+
+    @ViewBuilder
+    private func verseMenu(_ verse: BibleVerse) -> some View {
+        switch memorizable(verse) {
+        case .available:
+            Button { onAction(.memorize, verse) } label: {
+                Label("Memorize this verse", systemImage: "brain")
+            }
+        case .held:
+            Label("In Memory Verses", systemImage: "brain.fill")
+        case .ineligible:
+            EmptyView()
+        }
+        Button { onAction(.bookmark, verse) } label: {
+            if bookmarked.contains(verse.number) {
+                Label("Remove bookmark", systemImage: "bookmark.slash")
+            } else {
+                Label("Bookmark", systemImage: "bookmark")
+            }
+        }
+        Button { onAction(.share, verse) } label: {
+            Label("Share", systemImage: "square.and.arrow.up")
+        }
+        Button { onAction(.copy, verse) } label: {
+            Label("Copy", systemImage: "doc.on.doc")
+        }
     }
 }
 

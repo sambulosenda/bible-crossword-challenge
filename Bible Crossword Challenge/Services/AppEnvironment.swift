@@ -19,4 +19,6 @@ extension EnvironmentValues {
     @Entry var challengeHistory: ChallengeHistory = .shared
     @Entry var familyBoard: FamilyBoardService = .shared
     @Entry var memoryVerses: MemoryVerseStore = .shared
+    @Entry var bookmarks: BookmarkStore = .shared
+    @Entry var readingPlans: ReadingPlanStore = .shared
 }

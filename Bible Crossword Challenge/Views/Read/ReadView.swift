@@ -19,6 +19,8 @@ import SwiftUI
 struct ReadView: View {
     @Environment(\.scripture) private var scripture
     @Environment(\.memoryVerses) private var memoryVerses
+    @Environment(\.bookmarks) private var bookmarks
+    @Environment(\.readingPlans) private var plans
     @Environment(\.analytics) private var analytics
 
     // Written by `ChapterReaderView` as the reader is paged, so the card below
@@ -33,17 +35,23 @@ struct ReadView: View {
     /// main thread the first time the tab was drawn.
     @State private var snapshot: Snapshot?
     @State private var showReader = false
+    @State private var showPlanReader = false
 
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: Theme.Spacing.l) {
+                    // The habit first, then the bookmark, then the shelves.
+                    ReadingPlanCard(onRead: openPlanChapter)
                     resumeCard
                     MemoryVerseCard(
                         dueCount: memoryVerses.dueCount,
                         activeCount: memoryVerses.entries.count
                     )
                     JourneyCard(source: "read_tab")
+                    if !bookmarks.entries.isEmpty {
+                        bookmarksCard
+                    }
                     browseSection
                 }
                 .padding(Theme.Spacing.m)
@@ -70,6 +78,17 @@ struct ReadView: View {
                     source: point.isFresh ? "read_start" : "read_continue"
                 )
             }
+            .navigationDestination(isPresented: $showPlanReader) {
+                if let plan = plans.activePlan, let day = plans.nextDay {
+                    ChapterReaderView(
+                        startBook: plan.book,
+                        startChapter: day,
+                        source: "read_plan",
+                        planChapter: PlanChapter(book: plan.book, chapter: day),
+                        onPlanChapterRead: { markPlanRead(plan, day: day) }
+                    )
+                }
+            }
             // The memory list pushes practice by value, as it does from Today.
             .navigationDestination(for: MemoryRoute.self) { _ in
                 MemoryVerseListView(source: "read_tab")
@@ -78,6 +97,58 @@ struct ReadView: View {
                 MemoryPracticeView(referenceKey: route.referenceKey)
             }
         }
+    }
+
+    // MARK: - Reading plan
+
+    private func openPlanChapter() {
+        guard let plan = plans.activePlan, let day = plans.nextDay else { return }
+        analytics.log(.scriptureOpened(reference: "\(plan.book) \(day)", source: "read_plan"))
+        showPlanReader = true
+    }
+
+    private func markPlanRead(_ plan: ReadingPlan, day: Int) {
+        guard plans.markRead(day: day) else { return }
+        analytics.log(.planChapterRead(plan: plan.id, day: day))
+        if plans.isComplete {
+            analytics.log(.planCompleted(plan: plan.id, days: day))
+        }
+    }
+
+    // MARK: - Bookmarks
+
+    private var bookmarksCard: some View {
+        NavigationLink {
+            BookmarksView()
+        } label: {
+            HStack(spacing: Theme.Spacing.m) {
+                Image(systemName: "bookmark.fill")
+                    .font(.title2)
+                    .foregroundStyle(Theme.accent)
+                    .frame(width: 44, height: 44)
+                    .background(Theme.accent.opacity(0.14), in: .circle)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Bookmarks").kicker()
+                    Text(bookmarks.entries.first?.reference ?? "")
+                        .font(.headline)
+                        .foregroundStyle(.primary)
+                    Text("\(bookmarks.entries.count) \(bookmarks.entries.count == 1 ? "verse" : "verses") kept")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                Spacer(minLength: 0)
+                Image(systemName: "chevron.right")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(.secondary)
+            }
+            .padding(Theme.Spacing.l)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .elevatedCard()
+        }
+        .buttonStyle(PressableCardStyle())
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Bookmarks, \(bookmarks.entries.count) verses kept")
+        .accessibilityHint("Opens your bookmarked verses")
     }
 
     // MARK: - Snapshot
