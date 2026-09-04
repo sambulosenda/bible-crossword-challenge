@@ -129,6 +129,16 @@ const description =
   const reopen = document.getElementById('reopen')!;
   let who = 'your friend';
 
+  // Campaign token, so installs from a shared link show up in App Store
+  // Connect → Acquisition → Campaigns as `challenge` or `board` — the same
+  // mechanism the bio link uses (`/go/?s=`). In the 60 days to 2026-09-04,
+  // 23 challenges were sent and none was ever opened in the app; without
+  // this there was no way to tell "never tapped" from "installed and lost".
+  const cta = document.getElementById('cta') as HTMLAnchorElement;
+  const storeURL = new URL(cta.href);
+  storeURL.searchParams.set('ct', standings.length > 0 ? 'board' : 'challenge');
+  cta.href = storeURL.href;
+
   if (standings.length > 0) {
     document.getElementById('solo')!.hidden = true;
     document.getElementById('board')!.hidden = false;

@@ -38,6 +38,7 @@ const ALIASES = {
   'noahs-ark': 'daily-014',           // Noah and the Flood
   'psalm-23': 'mini-024',             // The Shepherd's Psalm (7×7 mini)
   'books-of-the-bible': 'daily-065',  // Books of the Old Testament
+  'armour-of-god': 'mini-026',        // The Whole Armor (title went US-spelling 2026-09-04)
 };
 
 const slugify = (t) =>
