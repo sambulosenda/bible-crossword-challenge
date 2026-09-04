@@ -136,7 +136,9 @@ struct ChapterReaderView: View {
             PaywallView(source: entry.source)
         }
         .sheet(item: $shareItems) { share in
-            ShareSheet(items: share.items)
+            ShareSheet(items: share.items) { completed in
+                analytics.log(.shareCompleted(kind: "share_verse", completed: completed))
+            }
         }
         .overlay(alignment: .bottom) {
             if let toast {
@@ -290,7 +292,7 @@ struct ChapterReaderView: View {
             var items: [Any] = []
             if let image = renderer.uiImage { items.append(image) }
             items.append("“\(verse.text)” — \(reference)")
-            if let url = ShareConfig.storeURL { items.append(url) }
+            if let url = ShareConfig.storeURL(kind: "share_verse") { items.append(url) }
             shareItems = ShareItems(items: items)
         case .copy:
             UIPasteboard.general.string = "“\(verse.text)” — \(reference)"

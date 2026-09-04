@@ -52,9 +52,14 @@ struct ShareCardView: View {
 
             Spacer(minLength: 0)
 
-            Text("Solve the daily Bible crossword")
-                .font(.caption.weight(.medium))
-                .foregroundStyle(ink.opacity(0.7))
+            VStack(spacing: 4) {
+                Text("Solve the daily Bible crossword")
+                    .font(.caption.weight(.medium))
+                    .foregroundStyle(ink.opacity(0.7))
+                Text(ShareConfig.siteName)
+                    .font(.caption2.weight(.semibold))
+                    .foregroundStyle(gold.opacity(0.9))
+            }
         }
         .padding(28)
         .frame(width: Self.size.width, height: Self.size.height)
@@ -127,10 +132,25 @@ struct ShareCardView: View {
     }
 }
 
-/// Share configuration. `storeURL` is appended to share captions so recipients
-/// have a tappable path to the App Store listing.
+/// Share configuration. Every share carries a link so a recipient has a
+/// tappable path to the app.
+///
+/// The link is the site's `/go/` page, not the App Store directly: `/go/`
+/// turns `s=` into the App Store campaign token, so installs from shares
+/// show in App Store Connect → Acquisition → Campaigns by kind, and it tells
+/// an Android or desktop recipient the app is iOS-only instead of dropping
+/// them on a store page they can't use. Shares were the raw store URL until
+/// 2.9 and were therefore invisible as an acquisition channel.
 enum ShareConfig {
-    static let storeURL: URL? = URL(string: "https://apps.apple.com/app/id6783034270")
+    /// Shown on the card images themselves — a picture can't carry a token,
+    /// but it can carry somewhere to type.
+    static let siteName = "biblecrosswordchallenge.com"
+
+    /// `kind` becomes the campaign token: `share_card` for the completion
+    /// scorecard, `share_verse` for a verse from the reader.
+    static func storeURL(kind: String) -> URL? {
+        URL(string: "https://biblecrosswordchallenge.com/go/?s=\(kind)")
+    }
 }
 
 #Preview {

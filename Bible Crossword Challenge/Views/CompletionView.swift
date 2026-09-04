@@ -24,7 +24,8 @@ struct CompletionView: View {
     var totalCompleted: Int = 0
     let onHome: () -> Void
 
-    @State private var shareImage: Image?
+    /// The rasterised scorecard, ready before the Share button can be reached.
+    @State private var shareUIImage: UIImage?
     /// Which entry point opened the paywall, carried *as* the sheet's item.
     ///
     /// This used to be a `Bool` plus a separate `paywallSource` string, set one
@@ -125,9 +126,17 @@ struct CompletionView: View {
         var text = "I solved “\(puzzle.title)” in \(TimeFormat.clock(seconds)) — \(streak)-day streak 🔥"
         let grid = ShareGrid.emoji(for: puzzle)
         if !grid.isEmpty { text += "\n\n\(grid)" }
-        if let url = ShareConfig.storeURL { text += "\n\n\(url.absoluteString)" }
+        if let url = ShareConfig.storeURL(kind: "share_card") { text += "\n\n\(url.absoluteString)" }
         return text
     }
+
+    /// The scorecard share, wrapped so `.sheet(item:)` presents it; a fresh id
+    /// per tap re-presents after a cancel.
+    private struct CardShare: Identifiable {
+        let id = UUID()
+        let items: [Any]
+    }
+    @State private var cardShare: CardShare?
 
     var body: some View {
         // Short content (the common case now: header, scorecard, verse)
@@ -1213,20 +1222,25 @@ struct CompletionView: View {
         .accessibilityHint("Challenge a friend, start a family board, or see the leaderboard")
     }
 
+    /// `ShareSheet` rather than `ShareLink`: the sheet reports whether the
+    /// share went through, and until 2.9 the scorecard — the app's most
+    /// shared surface — had no event at all, so its reach was a guess.
     private func shareButton(prominent: Bool) -> some View {
-        Group {
-            if let shareImage {
-                ShareLink(
-                    item: shareImage,
-                    message: Text(shareCaption),
-                    preview: SharePreview("Bible Crossword", image: shareImage)
-                ) { shareLabel }
-            } else {
-                // Fallback if image rendering failed.
-                ShareLink(item: shareCaption) { shareLabel }
-            }
+        Button {
+            analytics.log(.shareOpened(kind: "share_card"))
+            var items: [Any] = []
+            if let shareUIImage { items.append(shareUIImage) }
+            items.append(shareCaption)
+            cardShare = CardShare(items: items)
+        } label: {
+            shareLabel
         }
         .buttonStyle(PillButtonStyle(emphasis: prominent ? .primary : .tonal))
+        .sheet(item: $cardShare) { share in
+            ShareSheet(items: share.items) { completed in
+                analytics.log(.shareCompleted(kind: "share_card", completed: completed))
+            }
+        }
     }
 
     private var shareLabel: some View {
@@ -1263,9 +1277,7 @@ struct CompletionView: View {
             )
         )
         renderer.scale = displayScale
-        if let ui = renderer.uiImage {
-            shareImage = Image(uiImage: ui)
-        }
+        shareUIImage = renderer.uiImage
     }
 }
 

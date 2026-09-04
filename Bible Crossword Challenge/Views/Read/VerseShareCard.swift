@@ -43,9 +43,14 @@ struct VerseShareCard: View {
 
             Spacer(minLength: 0)
 
-            Text("Read the Bible, one clue at a time")
-                .font(.caption.weight(.medium))
-                .foregroundStyle(ink.opacity(0.7))
+            VStack(spacing: 4) {
+                Text("Read the Bible, one clue at a time")
+                    .font(.caption.weight(.medium))
+                    .foregroundStyle(ink.opacity(0.7))
+                Text(ShareConfig.siteName)
+                    .font(.caption2.weight(.semibold))
+                    .foregroundStyle(gold.opacity(0.9))
+            }
         }
         .padding(28)
         .frame(width: Self.size.width, height: Self.size.height)
