@@ -105,9 +105,9 @@ struct PremiumOfferView: View {
             } else if store.products.isEmpty {
                 productsPlaceholder
             } else {
-                staggered(plans, delay: 0.20)
-                staggered(trialTimeline, delay: 0.26)
-                staggered(socialProof, delay: 0.30)
+                staggered(socialProof, delay: 0.20)
+                staggered(plans, delay: 0.23)
+                staggered(trialTimeline, delay: 0.29)
             }
         }
     }
@@ -524,15 +524,36 @@ struct PremiumOfferView: View {
     /// In the non-premium branch deliberately: it argues for a purchase, and a
     /// player who already paid or is looking at a retry card isn't being asked
     /// for one.
+    /// The App Store rating, directly above the plan cards so the reassurance
+    /// lands right before the price does.
+    ///
+    /// It used to sit under the trial timeline, which on both surfaces put it
+    /// below the fold behind the pinned CTA — the one line meant to answer
+    /// "is this any good?" was the one line nobody scrolled to. The figure is
+    /// the store's own, rounded to one decimal, and is the only claim on the
+    /// page not derived from the product; update it by hand when it moves.
     private var socialProof: some View {
-        Text("★ 4.8 on the App Store")
-            .font(.footnote.weight(.medium))
-            .foregroundStyle(.secondary)
-            .frame(maxWidth: .infinity)
-            // VoiceOver reads the bare glyph as "black star", which turns the
-            // line into noise for exactly the reader it should reassure.
-            .accessibilityLabel("Rated 4.8 on the App Store")
+        HStack(spacing: Theme.Spacing.xs) {
+            HStack(spacing: 1) {
+                ForEach(0..<5, id: \.self) { _ in
+                    Image(systemName: "star.fill")
+                        .font(.caption2)
+                }
+            }
+            .foregroundStyle(.yellow)
+            Text("\(Self.appStoreRating) on the App Store")
+                .font(.footnote.weight(.medium))
+                .foregroundStyle(.secondary)
+        }
+        .frame(maxWidth: .infinity)
+        .accessibilityElement(children: .ignore)
+        // VoiceOver reads the bare glyphs as "black star" five times, which
+        // turns the line into noise for exactly the reader it should reassure.
+        .accessibilityLabel("Rated \(Self.appStoreRating) out of 5 on the App Store")
     }
+
+    /// The live average, one decimal, as the store page itself shows it.
+    private static let appStoreRating = "4.9"
 
     // MARK: - Trial timeline
 
@@ -671,41 +692,26 @@ struct PremiumOfferView: View {
         return "One-time purchase — yours forever."
     }
 
-    /// The headline figure on a card: the per-week equivalent, on both
-    /// subscriptions, so the two cards compare in one unit and the first number
-    /// the eye lands on is the smallest honest reading of the price.
+    /// The headline figure on a card: the billed price and its period, so the
+    /// first number the eye lands on is the one that actually leaves the
+    /// account. The per-week equivalent, which both subscriptions share as a
+    /// comparison unit, moves to the footnote underneath.
     ///
-    /// This used to be the billed price ("$24.99/year"). After the 2026-08-11
-    /// increase that number became the screen's largest price shock: paywall
-    /// openers tapping the CTA fell from 21% to 9% while everything downstream
-    /// of the tap improved — the people the figure scared off were exactly the
-    /// ones the free trial existed to convince. The billed price still appears
-    /// twice, in the card's own footnote and in the commitment line under the
-    /// CTA, so nothing about what actually leaves the account is hidden.
+    /// The per-week headline was introduced after the 2026-08-11 increase,
+    /// when the billed price was the screen's largest price shock (CTA taps
+    /// among paywall openers fell from 21% to 9%). It was swapped back on
+    /// 2026-09-07 to lead with the bigger figure; watch the CTA tap rate.
     private func planPrice(_ product: Product) -> String {
-        switch product.id {
-        case StoreService.yearlyID, StoreService.monthlyID:
-            return perWeekText(product).map { "\($0)/week" }
-                ?? product.displayPrice + (store.periodText(for: product) ?? "")
-        default:
-            return product.displayPrice + (store.periodText(for: product) ?? "")
-        }
+        product.displayPrice + (store.periodText(for: product) ?? "")
     }
 
-    /// The line under the price: what is actually billed, and how often — the
-    /// number the per-week figure above it is derived from. With both headline
-    /// figures in weeks the cards no longer need to restate each other's price
-    /// for comparison; what they need is the real charge, stated plainly.
-    ///
-    /// The trial does not appear here — it's already stated three times (the
-    /// subhead, the CTA, and the commitment line), and it reads as attached to
-    /// yearly because yearly is preselected.
+    /// The line under the price: the per-week equivalent on both
+    /// subscriptions, so the two cards compare in one unit and the ratio
+    /// between them matches the savings pill.
     private func planFootnote(_ product: Product) -> String {
         switch product.id {
-        case StoreService.yearlyID:
-            return "\(product.displayPrice) billed yearly"
-        case StoreService.monthlyID:
-            return "\(product.displayPrice) billed monthly"
+        case StoreService.yearlyID, StoreService.monthlyID:
+            return perWeekText(product).map { "\($0)/week" } ?? ""
         default:
             return "one-time"
         }

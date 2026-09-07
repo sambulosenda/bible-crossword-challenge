@@ -450,8 +450,15 @@ struct PremiumBenefit: Identifiable {
     /// fixed that but spent the list's opening words on what free lacks; the
     /// library is a claim about the shelf, not the reader's state, so a daily
     /// player can't catch it out either — and it stays affirmative. The row
-    /// still doesn't reach for packs, which the fourth row owns: one row for
-    /// the archive, one for replay, one for hints, one for packs.
+    /// still doesn't reach for packs, which the last row owns: one row for
+    /// the archive, one for hints, one for packs.
+    ///
+    /// Three rows, not four. "Replay any puzzle, any time" was cut on
+    /// 2026-09-07: it restated the library row (a shelf you own is a shelf
+    /// you can reopen), and the ~30pt it cost was what pushed the trial
+    /// timeline below the fold once the App Store rating moved above the
+    /// plan cards. The timeline is the page's strongest trust element; a
+    /// fourth benefit is not worth hiding it.
     ///
     /// Hint limits get their own row rather than sharing one with ads: they're
     /// the most-hit paywall trigger in the app, and pairing the strongest
@@ -466,10 +473,6 @@ struct PremiumBenefit: Identifiable {
                 // No "all" before the count: with it the row wraps on a 402pt
                 // screen, and the break landed between "all" and its number.
                 title: "The whole library — \(puzzleCount) puzzles"
-            ),
-            PremiumBenefit(
-                icon: "arrow.clockwise",
-                title: "Replay any puzzle, any time"
             ),
             PremiumBenefit(
                 icon: "lightbulb.fill",
