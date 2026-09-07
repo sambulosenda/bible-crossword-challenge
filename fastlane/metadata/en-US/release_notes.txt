@@ -1,5 +1,7 @@
 Thanks for playing Bible Crossword Challenge! This update includes:
 
+• Challenge a friend from any solved puzzle: your link opens that exact puzzle for them, with your time to beat — and if they don't have the app yet, it's waiting for them after they install
+• Premium is restored automatically for early subscribers who lost it after an update
 • A new Read tab: the whole Bible, with search by verse, chapter or words, and a Recent row to pick up where you left off
 • Touch and hold any verse to memorize, bookmark, share or copy it
 • Reading plans: one chapter a day through John, Mark, Proverbs, Genesis or Psalms, with today's chapter on the Today screen
