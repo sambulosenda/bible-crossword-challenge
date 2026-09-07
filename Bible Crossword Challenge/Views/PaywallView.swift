@@ -65,6 +65,10 @@ struct PaywallView: View {
     @State private var appearedAt: Date?
     @State private var didTapCTA = false
     @State private var didLogDismiss = false
+    /// Set by the ✕ before it dismisses. Anything else that ends the
+    /// presentation — a pull-down, or the parent taking the sheet away —
+    /// reaches `onDisappear` with this still nil and is logged as `swipe`.
+    @State private var exitReason: PaywallExit?
 
     private var selectedProduct: Product? {
         store.products.first { $0.id == selectedID }
@@ -99,6 +103,7 @@ struct PaywallView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button {
+                        exitReason = .close
                         dismiss()
                     } label: {
                         Image(systemName: "xmark")
@@ -140,7 +145,8 @@ struct PaywallView: View {
             analytics.log(.paywallDismissed(
                 source: source,
                 secondsOnScreen: Int(Date().timeIntervalSince(appearedAt).rounded()),
-                ctaTapped: didTapCTA
+                ctaTapped: didTapCTA,
+                exit: exitReason ?? .swipe
             ))
         }
         .task {

@@ -9,6 +9,28 @@
 
 import Foundation
 
+/// The control a player used to leave a paywall surface. Raw values are the
+/// `exit` property on `paywall_dismissed`.
+///
+/// Small on purpose. `close` is the ✕; `free_link` is "Continue with today's
+/// free puzzle" (onboarding only — the sheet has no free exit, the ✕ is it).
+/// `swipe` is the sheet pulled down, and also covers a parent view dismissing
+/// it, which SwiftUI can't tell apart in `onDisappear`. The last three are
+/// onboarding leaving on the player's behalf: after a purchase, after they
+/// backed out of Apple's sheet, or from the "Continue" that replaces the buy
+/// button once a Restore on that page finds them already subscribed.
+enum PaywallExit: String {
+    case close
+    case freeLink = "free_link"
+    case swipe
+    case purchase
+    case afterCancel = "after_cancel"
+    case premiumContinue = "premium_continue"
+    /// The CTA with no product behind it — should be unreachable, since the
+    /// button is hidden until products load, but the fallback exists in code.
+    case noPlan = "no_plan"
+}
+
 enum AnalyticsEvent {
     case appOpen
     // First-run funnel. `onboardingStep` fires on every entry to a page, so
@@ -147,7 +169,14 @@ enum AnalyticsEvent {
     /// second opinion here would drift from it (Ask to Buy, grants that land
     /// after the sheet is gone). A quit-the-app exit emits nothing — this event
     /// undercounts the hardest bounces, so read it beside session data.
-    case paywallDismissed(source: String, secondsOnScreen: Int, ctaTapped: Bool)
+    ///
+    /// `exit` names the control that took them out (see `PaywallExit`). Added
+    /// 2026-09-07 to answer one question: does the ✕ carry the exits, or does
+    /// the free-puzzle link? The ✕ was added on 2026-08-23 because a third of
+    /// onboarding reachers quit the app on the offer page rather than find a
+    /// way out; removing it again is only safe if the link is what people
+    /// actually use. Without this property the two were one row.
+    case paywallDismissed(source: String, secondsOnScreen: Int, ctaTapped: Bool, exit: PaywallExit)
     /// `source` names the surface whose button reached the system dialog
     /// (`onboarding`, `prompt`, `completion`, `streak_card`, `profile`) — the
     /// grant rate is per-ask, and without the source every surface's yes and no
@@ -413,11 +442,12 @@ enum AnalyticsEvent {
                 // is configured, and would be a different number.
                 "offers_trial": offersTrial,
             ]
-        case .paywallDismissed(let source, let secondsOnScreen, let ctaTapped):
+        case .paywallDismissed(let source, let secondsOnScreen, let ctaTapped, let exit):
             return [
                 "source": source,
                 "seconds_on_screen": secondsOnScreen,
                 "cta_tapped": ctaTapped,
+                "exit": exit.rawValue,
             ]
         case .dailyPuzzleStarted(let id, let isResume, let source):
             return ["puzzle_id": id, "is_resume": isResume, "source": source]

@@ -201,7 +201,7 @@ struct OnboardingView: View {
             // for; it exits to the free daily exactly like the button below.
             if onOffer {
                 Button {
-                    finish()
+                    finish(exit: .close)
                 } label: {
                     Image(systemName: "xmark")
                         .font(.system(size: 15, weight: .bold))
@@ -605,7 +605,7 @@ struct OnboardingView: View {
             // A Restore on this page can land here already subscribed. The
             // offer above has swapped to its premium badge; a buy button for
             // a product they own would only have StoreKit refuse it.
-            Button("Continue") { finish() }
+            Button("Continue") { finish(exit: .premiumContinue) }
                 .buttonStyle(.pillProminent)
         } else if !store.products.isEmpty {
             Button {
@@ -652,7 +652,7 @@ struct OnboardingView: View {
         // The vertical padding is the tap target: bare subheadline text is
         // ~20pt tall, and this is an exit — the one control that must never
         // take two tries. Same treatment as "Skip for now".
-        Button("Continue with today's free puzzle") { finish() }
+        Button("Continue with today's free puzzle") { finish(exit: .freeLink) }
             .font(.subheadline.weight(.semibold))
             .tint(.secondary)
             .padding(.vertical, Theme.Spacing.s)
@@ -797,7 +797,7 @@ struct OnboardingView: View {
     private func buySelectedPlan() {
         didTapPremiumCTA = true
         Task {
-            guard let plan = selectedPlan else { return finish() }
+            guard let plan = selectedPlan else { return finish(exit: .noPlan) }
             // The plan is named the same way the sheet names it, so the two
             // surfaces' `plan` values are comparable rather than one of them
             // always reading "yearly" because that was all it could sell.
@@ -815,10 +815,10 @@ struct OnboardingView: View {
             // ones that land after this screen is gone — see its `report`.
             switch await store.purchase(plan, source: "onboarding") {
             case .purchased:
-                finish()
+                finish(exit: .purchase)
             case .cancelled:
                 // Nothing to explain, continue on in.
-                finish()
+                finish(exit: .afterCancel)
             case .failed(let reason):
                 analytics.log(.purchaseFailed(plan: planName, source: "onboarding", reason: reason))
             case .pending:
@@ -834,7 +834,10 @@ struct OnboardingView: View {
         analytics.log(.onboardingStep(index: index, name: stepNames[index]))
     }
 
-    private func finish() {
+    /// `exit` names what took the player off the offer page — only read when
+    /// the offer page was reached, but every caller passes one so the label
+    /// can't be forgotten when a new exit is added.
+    private func finish(exit: PaywallExit) {
         nameFocused = false
         // Only when the offer page was actually reached — `finish()` is also
         // how a player who never got there would leave, if that ever happens.
@@ -842,7 +845,8 @@ struct OnboardingView: View {
             analytics.log(.paywallDismissed(
                 source: "onboarding",
                 secondsOnScreen: Int(Date().timeIntervalSince(premiumArrivedAt).rounded()),
-                ctaTapped: didTapPremiumCTA
+                ctaTapped: didTapPremiumCTA,
+                exit: exit
             ))
             self.premiumArrivedAt = nil
         }
