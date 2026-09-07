@@ -110,6 +110,9 @@ final class StoreService {
     private var reportedTransactionIDs: Set<UInt64>
 
     private static let reportedIDsKey = "storekit.reportedTransactionIDs"
+    /// Set once the pre-RevenueCat receipt has been posted (see
+    /// `syncLegacyPurchasesIfNeeded`).
+    private static let didSyncLegacyPurchasesKey = "revenuecat.didSyncLegacyPurchases"
     /// Enough to cover any plausible backlog of unfinished transactions without
     /// letting the list grow for the lifetime of the install.
     private static let reportedIDsLimit = 100
@@ -150,12 +153,48 @@ final class StoreService {
                 await self?.handle(update)
             }
         }
-        Task { await refresh() }
+        Task {
+            await syncLegacyPurchasesIfNeeded()
+            await refresh()
+        }
     }
 
     deinit {
         updatesTask?.cancel()
         customerInfoTask?.cancel()
+    }
+
+    /// Hand RevenueCat the StoreKit receipt once, for purchases it never saw.
+    ///
+    /// RevenueCat shipped in 2.2. Anyone who subscribed on 2.1 or earlier bought
+    /// through StoreKit directly, so their transaction exists only on Apple's
+    /// side — RevenueCat has no customer for them, `entitlements["pro"]` comes
+    /// back empty, and because every gate in the app reads that one flag with no
+    /// StoreKit fallback they lose all premium the moment they update, while
+    /// Apple keeps billing them. `syncPurchases` is RevenueCat's migration step
+    /// for exactly this: it posts the receipt so the existing subscription is
+    /// attached to this install's customer.
+    ///
+    /// Once per install, not once per launch: the call is expensive, and it
+    /// transfers purchases between app user ids, which is not something to
+    /// repeat behind the player's back. The flag is only set on success, so a
+    /// launch with no network retries on the next one rather than stranding
+    /// someone outside the entitlement permanently.
+    ///
+    /// Harmless for a fresh install — there is no receipt to post, and the
+    /// sync is a no-op that simply marks the flag.
+    private func syncLegacyPurchasesIfNeeded() async {
+        guard !UserDefaults.standard.bool(forKey: Self.didSyncLegacyPurchasesKey) else { return }
+        do {
+            apply(try await Purchases.shared.syncPurchases())
+            UserDefaults.standard.set(true, forKey: Self.didSyncLegacyPurchasesKey)
+        } catch {
+            // Deliberately not surfaced: the player never asked for this, and
+            // the next launch tries again. Restore remains the manual path.
+            #if DEBUG
+            print("⚠️ RevenueCat: legacy purchase sync failed — \(error)")
+            #endif
+        }
     }
 
     /// Load products and re-check entitlement. Safe to call repeatedly.
