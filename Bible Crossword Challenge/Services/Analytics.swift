@@ -109,6 +109,16 @@ enum AnalyticsEvent {
     /// other than the player simply cancelling, so "opened the paywall and
     /// didn't buy" can be split from "tried to buy and it broke".
     case purchaseFailed(plan: String, source: String, reason: String)
+    /// The player pressed the CTA, saw Apple's sheet, and backed out of it.
+    ///
+    /// Until 2026-09-07 this was only derivable — a `paywall_cta_tapped` with
+    /// nothing after it — which also matched a player who quit the app with
+    /// the sheet up, and needed a timestamp join to count. It is the single
+    /// largest leak in the funnel (17 cancels to 16 purchases in the 30 days
+    /// before this shipped), so it gets a row of its own, with the price the
+    /// sheet showed, from the one place that sees every cancel on every
+    /// surface: `StoreService.purchase`.
+    case purchaseCancelled(plan: String, source: String, offersTrial: Bool, amount: StoreService.PurchaseAmount)
     case paywallOpened(source: String)
     /// The moment someone commits — the buy button, before StoreKit takes over.
     ///
@@ -118,10 +128,8 @@ enum AnalyticsEvent {
     /// is the offer, the second is price shock or friction at the till — and
     /// the fix for one does nothing for the other.
     ///
-    /// A cancel is the tap with no `premium_purchased` and no `purchase_failed`
-    /// after it. Filter the purchase to `acquisition = in_app` when deriving
-    /// that: a renewal or a cross-device grant arrives with no tap in front of
-    /// it and would otherwise cancel one out.
+    /// A cancel at the sheet is its own event, `purchase_cancelled`; a tap with
+    /// nothing at all after it is a player who quit with the sheet up.
     case paywallCTATapped(plan: String, source: String, offersTrial: Bool)
     /// The player left a paywall surface — the ✕, a sheet swipe, the free-exit
     /// button, or the dismissal that follows a purchase. Fired by both selling
@@ -299,6 +307,7 @@ enum AnalyticsEvent {
         case .premiumPurchased: return "premium_purchased"
         case .subscriptionRenewed: return "subscription_renewed"
         case .purchaseFailed: return "purchase_failed"
+        case .purchaseCancelled: return "purchase_cancelled"
         case .paywallOpened: return "paywall_opened"
         case .paywallCTATapped: return "paywall_cta_tapped"
         case .paywallDismissed: return "paywall_dismissed"
@@ -381,6 +390,16 @@ enum AnalyticsEvent {
             ]
         case .purchaseFailed(let plan, let source, let reason):
             return ["plan": plan, "source": source, "reason": reason]
+        case .purchaseCancelled(let plan, let source, let offersTrial, let amount):
+            return [
+                "plan": plan,
+                "source": source,
+                "offers_trial": offersTrial,
+                // The number the sheet showed, so a cancel can be read against
+                // the price the player was looking at when they backed out.
+                "price_minor_units": amount.minorUnits,
+                "currency": amount.currencyCode,
+            ]
         case .paywallOpened(let source):
             return ["source": source]
         case .paywallCTATapped(let plan, let source, let offersTrial):

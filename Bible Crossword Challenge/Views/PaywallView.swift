@@ -40,6 +40,11 @@ struct PaywallView: View {
     /// every case, so it needs its own parameter rather than a title to match on.
     var contextPackID: String? = nil
 
+    /// The plan to open on, when the entry point knows which one the player
+    /// already chose — today only the trial re-offer, which puts them back on
+    /// the plan they backed out of rather than making them pick it again.
+    var initialPlanID: String? = nil
+
     @Environment(StoreService.self) private var store
     @Environment(\.analytics) private var analytics
     @Environment(\.puzzleProvider) private var puzzleProvider
@@ -120,6 +125,7 @@ struct PaywallView: View {
                 analytics.log(.paywallOpened(source: source))
             }
             if appearedAt == nil { appearedAt = Date() }
+            if let initialPlanID { selectedID = initialPlanID }
             // Default to the trial plan; fall back to whatever loaded.
             if selectedProduct == nil, let first = store.products.first {
                 selectedID = first.id
@@ -162,6 +168,7 @@ struct PaywallView: View {
         case packLocked = "pack_locked"
         case homeCard = "home_card"
         case archive
+        case trialAbandon = "trial_abandon"
     }
 
     private static let defaultHeadline = PremiumCopy.promise
@@ -202,6 +209,14 @@ struct PaywallView: View {
             return "Make it part of the morning."
         case .archive:
             return PremiumCopy.archive
+        case .trialAbandon:
+            // Names the thing they were one tap from, in the store's own
+            // words for its length. A player whose trial has since been used
+            // (or a plan that lost its offer) gets the standing promise.
+            if let product = selectedProduct, let offer = store.introOffer(for: product) {
+                return "Your \(offer.trialText) is still waiting."
+            }
+            return Self.defaultHeadline
         // `profile` and anything added later. A player who hasn't hit a wall
         // needs telling what the app is for, not what it withholds. (Onboarding
         // never arrives here — its premium page is part of `OnboardingView`.)

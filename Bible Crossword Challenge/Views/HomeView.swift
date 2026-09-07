@@ -53,6 +53,10 @@ struct HomeView: View {
     /// Decided once on appear so spending the impression can't hide the card
     /// mid-view.
     @State private var showStreakAsk = false
+    /// The trial re-offer sheet — see `TrialReoffer`. The plan is captured
+    /// with it so the sheet opens on the one the player backed out of.
+    @State private var showTrialReoffer = false
+    @State private var trialReofferPlanID: String?
     /// Pushes the trophy list from the next-achievement card. Achievements
     /// lost their tab in 2.8, so the card is the only way in from Today.
     @State private var showAchievements = false
@@ -110,6 +114,28 @@ struct HomeView: View {
     /// moment "a nudge tomorrow" stops being the app's want and becomes the
     /// player's. Comeback days are excluded: that card owns the moment, and a
     /// second ask under a broken streak reads as blame.
+    /// Offer the trial again to a player who backed out of Apple's sheet in
+    /// an earlier sitting. Returns whether it did, so the caller can hold the
+    /// other asks this appear.
+    private func maybeShowTrialReoffer() -> Bool {
+        #if DEBUG
+        // Same family as -uiForceStreakAsk: the real path needs a cancelled
+        // sheet and a relaunch.
+        if ProcessInfo.processInfo.arguments.contains("-uiForceTrialReoffer"),
+           !TrialReofferSession.forced {
+            TrialReofferSession.forced = true
+            trialReofferPlanID = StoreService.yearlyID
+            showTrialReoffer = true
+            return true
+        }
+        #endif
+        guard let planID = store.trialReofferPlanID else { return false }
+        trialReofferPlanID = planID
+        store.markTrialReofferShown()
+        showTrialReoffer = true
+        return true
+    }
+
     private func maybeShowStreakAsk() {
         #if DEBUG
         // Same family as -uiForceReminderPrompt — a 2-day streak with an
@@ -357,7 +383,15 @@ struct HomeView: View {
                 .containerRelativeFrame(.horizontal)
             }
             .background(Theme.background)
-            .onAppear { maybeShowStreakAsk() }
+            // One ask per sitting: the re-offer goes first because it answers
+            // intent the player already showed, and the streak card retries
+            // on the next appear anyway.
+            .onAppear {
+                if !maybeShowTrialReoffer() { maybeShowStreakAsk() }
+            }
+            .sheet(isPresented: $showTrialReoffer) {
+                PaywallView(source: TrialReoffer.source, initialPlanID: trialReofferPlanID)
+            }
             // Inline, because the greeting below is the screen's real title —
             // a large "Today" on top of it would be two headings for one page.
             .navigationTitle("Today")

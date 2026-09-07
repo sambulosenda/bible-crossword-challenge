@@ -113,6 +113,16 @@ final class StoreService {
     /// Set once the pre-RevenueCat receipt has been posted (see
     /// `syncLegacyPurchasesIfNeeded`).
     private static let didSyncLegacyPurchasesKey = "revenuecat.didSyncLegacyPurchases"
+    /// The last time the player backed out of Apple's sheet on a plan with a
+    /// trial, which plan, and whether that abandon has been re-offered. See
+    /// `TrialReoffer` for the rule and `trialReofferPlanID` for the read.
+    private static let trialAbandonedAtKey = "trial.abandonedAt"
+    private static let trialAbandonedPlanKey = "trial.abandonedPlanID"
+    private static let trialReofferShownKey = "trial.reofferShown"
+
+    /// When this process started. `TrialReoffer` uses it to tell a later
+    /// launch from the sitting the abandon happened in.
+    private let launchedAt = Date()
     /// Enough to cover any plausible backlog of unfinished transactions without
     /// letting the list grow for the lifetime of the install.
     private static let reportedIDsLimit = 100
@@ -253,6 +263,14 @@ final class StoreService {
                 // Nothing is coming, so drop the attribution rather than let it
                 // sit and mislabel whatever grant happens to arrive next.
                 pendingSource = nil
+                let offersTrial = introOffer(for: product) != nil
+                analytics.log(.purchaseCancelled(
+                    plan: Self.planName(for: product.id),
+                    source: source,
+                    offersTrial: offersTrial,
+                    amount: Self.amount(for: product)
+                ))
+                if offersTrial { recordTrialAbandon(product.id, source: source) }
                 return .cancelled
             }
 
@@ -373,6 +391,53 @@ final class StoreService {
     /// The one place `CustomerInfo` becomes app state.
     private func apply(_ info: CustomerInfo) {
         isPremium = info.entitlements[Self.entitlementID]?.isActive == true
+        // A grant from anywhere — this sheet, a restore, another device —
+        // answers the re-offer's question. Never ask it of a subscriber.
+        if isPremium { clearTrialAbandon() }
+    }
+
+    // MARK: - Trial re-offer
+
+    /// The plan to offer again, when `TrialReoffer` says this is the sitting
+    /// to do it in; nil otherwise. Read imperatively by Home on appear — it is
+    /// not observable, and doesn't need to be, because the answer only changes
+    /// between sittings.
+    var trialReofferPlanID: String? {
+        let defaults = UserDefaults.standard
+        let stamp = defaults.double(forKey: Self.trialAbandonedAtKey)
+        let state = TrialReoffer.State(
+            abandonedAt: stamp == 0 ? nil : Date(timeIntervalSinceReferenceDate: stamp),
+            isPremium: isPremium,
+            reofferShown: defaults.bool(forKey: Self.trialReofferShownKey),
+            launchedAt: launchedAt
+        )
+        guard TrialReoffer.decide(state) else { return nil }
+        return defaults.string(forKey: Self.trialAbandonedPlanKey)
+    }
+
+    /// Spend the one re-offer this abandon gets. The record stays so a second
+    /// cancel from the re-offer itself doesn't read as fresh intent.
+    func markTrialReofferShown() {
+        UserDefaults.standard.set(true, forKey: Self.trialReofferShownKey)
+    }
+
+    /// Only plans with a trial are recorded — the re-offer's whole pitch is
+    /// the free days, and a second paywall for a plan without them is a nag.
+    /// A cancel *from* the re-offer is not recorded either: that is the
+    /// second "no", and it is final until intent shows up somewhere else.
+    private func recordTrialAbandon(_ productID: String, source: String) {
+        guard source != TrialReoffer.source else { return }
+        let defaults = UserDefaults.standard
+        defaults.set(Date().timeIntervalSinceReferenceDate, forKey: Self.trialAbandonedAtKey)
+        defaults.set(productID, forKey: Self.trialAbandonedPlanKey)
+        defaults.set(false, forKey: Self.trialReofferShownKey)
+    }
+
+    private func clearTrialAbandon() {
+        let defaults = UserDefaults.standard
+        defaults.removeObject(forKey: Self.trialAbandonedAtKey)
+        defaults.removeObject(forKey: Self.trialAbandonedPlanKey)
+        defaults.removeObject(forKey: Self.trialReofferShownKey)
     }
 
     /// Analytics-only. Everything StoreKit grants without an in-app tap arrives
@@ -453,6 +518,17 @@ final class StoreService {
         let price = transaction.price ?? 0
         return PurchaseAmount(
             minorUnits: minorUnits(of: price, currencyCode: code),
+            currencyCode: code
+        )
+    }
+
+    /// The price a `Product` advertises, for the events that happen before any
+    /// transaction exists (a cancel at the sheet). Transactions keep their own
+    /// `amount(for:)`: what was charged can differ from what is listed.
+    private static func amount(for product: Product) -> PurchaseAmount {
+        let code = product.priceFormatStyle.currencyCode
+        return PurchaseAmount(
+            minorUnits: minorUnits(of: product.price, currencyCode: code),
             currencyCode: code
         )
     }
