@@ -226,7 +226,11 @@ enum AnalyticsEvent {
     /// presentation, 0 ever opened; whether links even leave the phone was
     /// unmeasurable. `challengeShareCancelled` is the other half of that split.
     case challengeSent(puzzleID: String)
-    case challengeOpened(puzzleID: String)
+    /// `via` is `link` (a tapped link, the app already installed) or
+    /// `pasteboard` (carried across an App Store install — the invite worked
+    /// on someone new). Zero of these had ever fired before 2026-09-07; the
+    /// split says which half of the fix is doing the work.
+    case challengeOpened(puzzleID: String, via: String)
     case challengeCompleted(puzzleID: String, won: Bool, deltaSeconds: Int)
     case challengeRematchSent(puzzleID: String)
     case challengeShareCancelled(puzzleID: String)
@@ -509,8 +513,8 @@ enum AnalyticsEvent {
             return ["quest_id": id]
         case .challengeSent(let id):
             return ["puzzle_id": id]
-        case .challengeOpened(let id):
-            return ["puzzle_id": id]
+        case .challengeOpened(let id, let via):
+            return ["puzzle_id": id, "via": via]
         case .challengeCompleted(let id, let won, let delta):
             return ["puzzle_id": id, "won": won, "delta_seconds": delta]
         case .challengeRematchSent(let id):

@@ -58,6 +58,7 @@ struct ChapterReaderView: View {
     @Environment(\.displayScale) private var displayScale
     @Environment(\.dismiss) private var dismiss
     @Environment(StoreService.self) private var store
+    @Environment(\.challengeService) private var challengeService
     @Environment(\.puzzleProvider) private var puzzleProvider
     @Environment(\.puzzleLaunch) private var puzzleLaunch
     @Query private var records: [PuzzleRecord]
@@ -229,7 +230,7 @@ struct ChapterReaderView: View {
         selection = idx
         persist(idx)
         recentRaw = RecentChapters.recording(book: startBook, chapter: startChapter, in: recentRaw)
-        access = PuzzleAccess(provider: puzzleProvider)
+        access = PuzzleAccess(provider: puzzleProvider, challengedIDs: challengeService.pendingPuzzleIDs)
         logChips(at: idx)
         didSettle = true
     }

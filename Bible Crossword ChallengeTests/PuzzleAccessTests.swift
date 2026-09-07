@@ -29,6 +29,25 @@ private func access(on date: Date, windowLength: Int = PuzzleAccess.windowLength
 
 struct PuzzleAccessTests {
 
+    // MARK: - Pending challenges
+
+    @Test func aPendingChallengeOpensThePuzzleItNamesAndNothingElse() throws {
+        let provider = PuzzleProvider.shared
+        let today = day(2026, 8, 8)
+        let old = try #require(provider.dailyPuzzle(for: day(2026, 7, 2), calendar: utc))
+        let plain = access(on: today)
+        #expect(!plain.canPlay(old, isPremium: false, hasProgress: false),
+                "a daily from five weeks ago is outside the window")
+
+        let challenged = PuzzleAccess(provider: provider, date: today, calendar: utc, challengedIDs: [old.id])
+        #expect(challenged.canPlay(old, isPremium: false, hasProgress: false))
+        // Playable, but not framed as part of this week's free window.
+        #expect(!challenged.isInWindow(old))
+        // The exception is per puzzle, not a general unlock.
+        let otherOld = try #require(provider.dailyPuzzle(for: day(2026, 7, 9), calendar: utc))
+        #expect(!challenged.canPlay(otherOld, isPremium: false, hasProgress: false))
+    }
+
     // MARK: - Window membership
 
     @Test func todaysDailyAndMiniAreFree() {

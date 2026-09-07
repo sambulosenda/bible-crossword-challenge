@@ -81,6 +81,10 @@ final class ChallengeService {
     /// `defaults`; exposed for observation so a view can react to acceptance.
     private(set) var challenges: [Challenge] = []
 
+    /// The puzzles with a challenge waiting — what `PuzzleAccess` opens for a
+    /// free player, so the invite never lands on a paywall.
+    var pendingPuzzleIDs: Set<String> { Set(challenges.map(\.puzzleID)) }
+
     init(
         defaults: UserDefaults = .standard,
         now: @escaping () -> Date = Date.init,

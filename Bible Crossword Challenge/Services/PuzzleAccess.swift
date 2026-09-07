@@ -39,13 +39,21 @@ struct PuzzleAccess {
 
     /// Ids currently inside the window, across every rotating pool.
     private let windowIDs: Set<String>
+    /// Puzzles a friend has challenged this player on. An invite that lands
+    /// on a paywall is not an invite, so the puzzle it names is playable for
+    /// as long as the challenge is pending — outside the window, and even a
+    /// pack exclusive. Kept apart from the window so Library doesn't frame it
+    /// as "free this week".
+    private let challengedIDs: Set<String>
 
     init(
         provider: PuzzleProvider,
         date: Date = RotationClock.now,
         calendar: Calendar = .current,
-        windowLength: Int = PuzzleAccess.windowLength
+        windowLength: Int = PuzzleAccess.windowLength,
+        challengedIDs: Set<String> = []
     ) {
+        self.challengedIDs = challengedIDs
         // Each pool rotates on its own index, so each gets its own window —
         // otherwise the smaller pool's window would be a slice of the larger
         // one's day count and drift out of step with what Home is serving.
@@ -78,6 +86,7 @@ struct PuzzleAccess {
     /// its last windowed day without playing it doesn't bank it forever.
     func canPlay(_ puzzle: Puzzle, isPremium: Bool, hasProgress: Bool) -> Bool {
         if isPremium { return true }
+        if challengedIDs.contains(puzzle.id) { return true }
         // Pack exclusives are sold with their pack and never enter a rotation,
         // so they have no window to fall into. Checked ahead of `hasProgress`
         // so a lapsed subscriber's pack history can't reopen them for free.

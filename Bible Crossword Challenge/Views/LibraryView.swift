@@ -23,6 +23,7 @@ struct LibraryView: View {
 
     @Environment(\.puzzleProvider) private var puzzleProvider
     @Environment(StoreService.self) private var store
+    @Environment(\.challengeService) private var challengeService
     @Query private var records: [PuzzleRecord]
 
     @State private var query = ""
@@ -97,7 +98,7 @@ struct LibraryView: View {
     /// The soft gate. Two small windows of ids — see `PuzzleAccess` for the rule
     /// and why it holds no persisted state.
     private var access: PuzzleAccess {
-        PuzzleAccess(provider: puzzleProvider)
+        PuzzleAccess(provider: puzzleProvider, challengedIDs: challengeService.pendingPuzzleIDs)
     }
 
     private func canPlay(_ puzzle: Puzzle, gate: PuzzleAccess) -> Bool {

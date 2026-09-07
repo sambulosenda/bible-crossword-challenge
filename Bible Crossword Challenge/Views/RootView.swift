@@ -34,6 +34,11 @@ struct RootView: View {
     /// closure). The payload is already stored by its own service; all that's
     /// deferred is the navigation.
     @State private var pendingNavPuzzleID: String?
+    /// Whether the clipboard looked like it held a web URL when this
+    /// not-yet-onboarded install launched. Decided prompt-free up front so the
+    /// one read that shows a banner happens only at the end of onboarding, and
+    /// only when there's something worth reading — see `DeferredChallenge`.
+    @State private var pasteboardMayHoldChallenge = false
     /// A challenge link from a newer app version or for an unknown puzzle.
     @State private var showChallengeUpdateAlert = false
     /// Navigation stack for the Today tab. Held here so a widget deep-link can
@@ -74,20 +79,23 @@ struct RootView: View {
                         if let id = pendingNavPuzzleID {
                             pendingNavPuzzleID = nil
                             openPuzzle(id: id)
-                        } else if let mini = puzzleProvider.dailyMini() {
-                            // Straight into the Mini rather than onto Today.
-                            //
-                            // Finishing one puzzle on day one is what predicts
-                            // coming back — 61% next-day return against 21% —
-                            // and the Mini is finished by two thirds of the
-                            // people who open it against fewer than half for the
-                            // 15×15. This is the highest-intent moment the app
-                            // gets, so it spends it on the puzzle most likely to
-                            // be finished instead of a screen of choices.
-                            //
-                            // Not a trap: it pushes onto the Today stack, so the
-                            // back button lands exactly where they'd have been.
-                            openPuzzle(id: mini.id)
+                        } else if pasteboardMayHoldChallenge {
+                            // The challenge that prompted this install, carried
+                            // across the App Store on the clipboard by the web
+                            // landing page. Reading it asks iOS's paste
+                            // permission, and the answer arrives asynchronously
+                            // — "Don't Allow", or anything that isn't a
+                            // challenge link, is simply the Mini path.
+                            pasteboardMayHoldChallenge = false
+                            Task {
+                                if let url = await DeferredChallenge.claimPastedLink() {
+                                    handleDeepLink(url, via: "pasteboard")
+                                } else {
+                                    openFirstPuzzle()
+                                }
+                            }
+                        } else {
+                            openFirstPuzzle()
                         }
                     }
                 } else {
@@ -165,6 +173,12 @@ struct RootView: View {
         .onOpenURL { url in
             handleDeepLink(url)
         }
+        .task {
+            // Fresh installs only. The classification is prompt-free; the
+            // clipboard itself is read once, at the end of onboarding.
+            guard !hasOnboarded else { return }
+            pasteboardMayHoldChallenge = await DeferredChallenge.pasteboardLooksLikeLink()
+        }
         // A tapped notification arrives through the notification-centre
         // delegate rather than `onOpenURL`, so it's handed here as a URL and
         // routed by the same code — one definition of where a link goes.
@@ -219,15 +233,24 @@ struct RootView: View {
         handleDeepLink(url)
     }
 
-    /// Deep-link entry: friend challenges (`challenge`), widget taps
-    /// (`play-daily`, see `StreakEntry.deepLinkURL`), and notification taps
-    /// (`pack`, from a season opening).
-    private func handleDeepLink(_ url: URL) {
-        guard url.scheme == "biblecrossword" else { return }
-
-        // Friend challenge. Accept the payload even before onboarding completes
-        // so an invite that prompts a fresh install still lands afterwards.
-        if url.host() == "challenge" {
+    /// Deep-link entry: friend challenges (`challenge`, on the custom scheme or
+    /// the https universal link), widget taps (`play-daily`, see
+    /// `StreakEntry.deepLinkURL`), and notification taps (`pack`, from a
+    /// season opening).
+    ///
+    /// `via` is how a challenge got here — `link` for a tapped link,
+    /// `pasteboard` for one carried across an App Store install (see
+    /// `DeferredChallenge`) — and rides on `challenge_opened`.
+    private func handleDeepLink(_ url: URL, via: String = "link") {
+        // Friend challenge or family board. Matched on the whole URL, not the
+        // scheme: the link the app actually shares is the https universal link,
+        // and until 2026-09-07 it fell at a `scheme == "biblecrossword"` guard
+        // here before the parser ever saw it. 23 challenges sent in the 60 days
+        // to 2026-09-04, none opened — this line was why. Accept the payload
+        // even before onboarding completes so an invite that prompts a fresh
+        // install still lands afterwards.
+        if let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
+           ChallengeService.isChallengeLink(url, components: components) {
             // A family board rides the same path and is told apart by its query,
             // so it has to be offered the link first: to the one-to-one parser a
             // board reads as a version it doesn't understand.
@@ -251,7 +274,7 @@ struct RootView: View {
             switch challengeService.parse(url) {
             case .valid(let challenge):
                 challengeService.accept(challenge)
-                analytics.log(.challengeOpened(puzzleID: challenge.puzzleID))
+                analytics.log(.challengeOpened(puzzleID: challenge.puzzleID, via: via))
                 if hasOnboarded {
                     openPuzzle(id: challenge.puzzleID)
                 } else {
@@ -264,6 +287,9 @@ struct RootView: View {
             }
             return
         }
+
+        // Everything below is the app's own scheme.
+        guard url.scheme == "biblecrossword" else { return }
 
         // Widget targets require a set-up player.
         guard hasOnboarded else { return }
@@ -317,6 +343,26 @@ struct RootView: View {
     /// directly plays it via `HomeView`'s destination — bypassing the Archive
     /// gate, so a free player can always take a friend's single challenge or
     /// join the family's board.
+    /// Where a new player lands when onboarding ends with nothing more
+    /// specific to open: straight into the Mini rather than onto Today.
+    ///
+    /// Straight into the Mini rather than onto Today.
+    ///
+    /// Finishing one puzzle on day one is what predicts
+    /// coming back — 61% next-day return against 21% —
+    /// and the Mini is finished by two thirds of the
+    /// people who open it against fewer than half for the
+    /// 15×15. This is the highest-intent moment the app
+    /// gets, so it spends it on the puzzle most likely to
+    /// be finished instead of a screen of choices.
+    ///
+    /// Not a trap: it pushes onto the Today stack, so the
+    /// back button lands exactly where they'd have been.
+    private func openFirstPuzzle() {
+        guard let mini = puzzleProvider.dailyMini() else { return }
+        openPuzzle(id: mini.id)
+    }
+
     private func openPuzzle(id: String) {
         guard let puzzle = puzzleProvider.puzzle(id: id) else { return }
         selectedTab = .today

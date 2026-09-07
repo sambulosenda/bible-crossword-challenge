@@ -138,6 +138,14 @@ const description =
   const storeURL = new URL(cta.href);
   storeURL.searchParams.set('ct', standings.length > 0 ? 'board' : 'challenge');
   cta.href = storeURL.href;
+  // Carry the link across the install. iOS has no deferred deep linking, so
+  // the app reads the clipboard back exactly once, at the end of its first
+  // onboarding, and only if it looks like a web URL (DeferredChallenge.swift).
+  // Fire-and-forget: the store navigation must not wait on it, and a denied
+  // clipboard is simply the old path — install, then open the Mini.
+  cta.addEventListener('click', () => {
+    navigator.clipboard?.writeText(location.href).catch(() => {});
+  });
 
   if (standings.length > 0) {
     document.getElementById('solo')!.hidden = true;

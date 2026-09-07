@@ -275,6 +275,7 @@ struct JourneyBookView: View {
     @Environment(\.openURL) private var openURL
     @Environment(\.dismiss) private var dismiss
     @Environment(StoreService.self) private var store
+    @Environment(\.challengeService) private var challengeService
     @Query private var records: [PuzzleRecord]
     @State private var showPaywall = false
 
@@ -308,7 +309,7 @@ struct JourneyBookView: View {
     @ViewBuilder
     private func row(_ puzzle: Puzzle) -> some View {
         let record = recordsByID[puzzle.id]
-        let access = PuzzleAccess(provider: puzzleProvider)
+        let access = PuzzleAccess(provider: puzzleProvider, challengedIDs: challengeService.pendingPuzzleIDs)
         // The map is a new way into the catalogue, so it answers to the same
         // gate as every other one — a browsable list of every puzzle would
         // otherwise be a way around the paywall.

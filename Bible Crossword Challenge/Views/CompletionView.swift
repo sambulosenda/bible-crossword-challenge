@@ -1143,15 +1143,23 @@ struct CompletionView: View {
         analytics.log(.reminderAskShown(source: ReminderAsk.Surface.completion.rawValue))
     }
 
-    /// The pinned bottom bar: one primary action plus the quiet exit. A Mini
-    /// solved with today's full puzzle still open makes the chain the primary
-    /// (the next solve is worth more than the share); otherwise Share leads.
-    /// The pinned bar: one primary action and a "more" menu. Chain (a Mini
-    /// solved with today's daily still open) or Share is the primary; the
-    /// challenge, family board and leaderboard live in the menu. They used to
-    /// be a card, a pill with a two-line hint and a button in the scroll — in
-    /// the 60 days to 2026-09-02, 8 players sent a challenge and 3 started a
-    /// board, and every other player scrolled past all of it.
+    /// The pinned bar: one primary action, a share icon, and a "more" menu.
+    ///
+    /// A Mini solved with today's daily still open makes the chain the primary
+    /// (the next solve is worth more than anything social). Otherwise the
+    /// challenge leads with Share beside it as an icon: the invite opens the
+    /// exact puzzle for the friend, carries a streak-freeze reward, and is the
+    /// one action on this screen that brings a new player in. Family board
+    /// and leaderboard stay in the menu.
+    ///
+    /// The challenge lived in that menu until 2026-09-07. Before that it was a
+    /// card, a pill and a button in the scroll — 60 days to 2026-09-02: 8
+    /// senders, everyone else scrolled past — and it was demoted on that read.
+    /// But every link sent in that window was also dropped on arrival by a
+    /// scheme guard in `RootView.handleDeepLink`, so the read measured a loop
+    /// with no receiving end. With the link fixed and a clipboard handoff for
+    /// fresh installs, the send earns the primary slot. Readout: senders per
+    /// completer against the old 3.6%, and `challenge_opened` finally above 0.
     private var pinnedActions: some View {
         HStack(spacing: Theme.Spacing.s) {
             if let chainTarget {
@@ -1169,25 +1177,68 @@ struct CompletionView: View {
                 }
                 .buttonStyle(.pillProminent)
                 .accessibilityHint("Closes this screen and opens today's full-size puzzle")
+            } else if challenge == nil {
+                challengeButton
+                shareIconButton
             } else {
+                // A challenge arrived for this puzzle: the result card already
+                // offers "Send Result Back", so Share leads and nothing doubles.
                 shareButton(prominent: true)
             }
 
             moreMenu
         }
+        // One presenter for every Share entry in the bar — the pill, the icon,
+        // and the menu item — so none of them has to own the sheet.
+        .sheet(item: $cardShare) { share in
+            ShareSheet(items: share.items) { completed in
+                analytics.log(.shareCompleted(kind: "share_card", completed: completed))
+            }
+        }
+    }
+
+    /// The invite, pinned. Same action and name prompt as the menu item had.
+    private var challengeButton: some View {
+        Button {
+            sendChallenge(rematch: lastOpponent != nil)
+        } label: {
+            Label(challengeTitle, systemImage: "flag.checkered")
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
+                .frame(maxWidth: .infinity)
+        }
+        .buttonStyle(.pillProminent)
+        .accessibilityHint("Shares this puzzle and your time with a friend")
+    }
+
+    /// Share as a 52pt circle, for the row where the challenge holds the pill.
+    private var shareIconButton: some View {
+        Button {
+            openShareCard()
+        } label: {
+            Image(systemName: "square.and.arrow.up")
+                .font(.body.weight(.semibold))
+                .foregroundStyle(.primary)
+                .frame(width: 52, height: 52)
+                .background(Color.primary.opacity(0.08), in: .circle)
+                .contentShape(.circle)
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel("Share")
     }
 
     /// Everything social that isn't the primary: same actions, same name
     /// prompt and share sheets, same events, one tap further away.
     private var moreMenu: some View {
         Menu {
-            // When the chain owns the primary slot, Share steps in here.
+            // When the chain owns the primary slot, Share and the challenge
+            // step in here; otherwise both are in the bar already. A challenge
+            // that arrived for this puzzle offers "Send Result Back" in the
+            // result card — don't double up.
             if chainTarget != nil {
                 shareButton(prominent: false)
             }
-            // A challenge that arrived for this puzzle already offers "Send
-            // Result Back" in the result card — don't double up.
-            if challenge == nil {
+            if challenge == nil && chainTarget != nil {
                 Button {
                     sendChallenge(rematch: lastOpponent != nil)
                 } label: {
@@ -1227,20 +1278,20 @@ struct CompletionView: View {
     /// shared surface — had no event at all, so its reach was a guess.
     private func shareButton(prominent: Bool) -> some View {
         Button {
-            analytics.log(.shareOpened(kind: "share_card"))
-            var items: [Any] = []
-            if let shareUIImage { items.append(shareUIImage) }
-            items.append(shareCaption)
-            cardShare = CardShare(items: items)
+            openShareCard()
         } label: {
             shareLabel
         }
         .buttonStyle(PillButtonStyle(emphasis: prominent ? .primary : .tonal))
-        .sheet(item: $cardShare) { share in
-            ShareSheet(items: share.items) { completed in
-                analytics.log(.shareCompleted(kind: "share_card", completed: completed))
-            }
-        }
+    }
+
+    /// Builds the scorecard share and hands it to the sheet on `pinnedActions`.
+    private func openShareCard() {
+        analytics.log(.shareOpened(kind: "share_card"))
+        var items: [Any] = []
+        if let shareUIImage { items.append(shareUIImage) }
+        items.append(shareCaption)
+        cardShare = CardShare(items: items)
     }
 
     private var shareLabel: some View {
