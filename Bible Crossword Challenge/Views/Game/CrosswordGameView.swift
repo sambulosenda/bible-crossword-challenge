@@ -108,8 +108,14 @@ struct CrosswordGameView: View {
         self.profile = profile
         self.entrySource = entrySource
         // Learning-window players get the shorter stall thresholds — see
-        // `GameViewModel.isLearning`.
-        _vm = State(initialValue: GameViewModel(puzzle: puzzle, learning: profile.isStillLearning))
+        // `GameViewModel.isLearning`. The holdout is read here, at the moment
+        // the model that owns the nudge is created, so the exposure lands on
+        // players who actually start a puzzle.
+        _vm = State(initialValue: GameViewModel(
+            puzzle: puzzle,
+            learning: profile.isStillLearning,
+            stallNudgeEnabled: FeatureFlags.isEnabled(.stallNudge)
+        ))
     }
 
     var body: some View {
@@ -445,12 +451,21 @@ struct CrosswordGameView: View {
                     } label: {
                         Text("Reveal Word")
                         Text(costLabel(.word))
-                        Image(systemName: "text.word.spacing")
+                        Image(systemName: canAfford(.word) ? "text.word.spacing" : "lock.fill")
                     }
                     Button(role: .destructive) {
-                        showRevealPuzzleConfirm = true
+                        // Straight to the wall when it can't be paid for.
+                        // Confirming a spend the next line refuses is the one
+                        // order these two steps must never run in.
+                        if canAfford(.puzzle) {
+                            showRevealPuzzleConfirm = true
+                        } else {
+                            useHint(.puzzle)
+                        }
                     } label: {
-                        Label("Reveal Puzzle", systemImage: "square.grid.3x3.fill")
+                        Text("Reveal Puzzle")
+                        Text(costLabel(.puzzle))
+                        Image(systemName: canAfford(.puzzle) ? "square.grid.3x3.fill" : "lock.fill")
                     }
                 }
                 // Checks are free: they judge what's on the grid without giving
@@ -607,10 +622,33 @@ struct CrosswordGameView: View {
         return "\(profile.hintsRemaining(isPremium: false, limit: freeHintLimit))"
     }
 
+    /// Whether this player's pool covers the rung. Premium and the learning
+    /// window hold `Int.max`, so both are always true for them.
+    private func canAfford(_ type: HintType) -> Bool {
+        profile.hintsRemaining(isPremium: store.isPremium, limit: freeHintLimit) >= type.cost
+    }
+
+    /// The rung's price — or, when it can't be paid, what's missing.
+    ///
+    /// A row reading "2 hints" to a player holding one is a row that lies: the
+    /// tap can only wall them, and they did the arithmetic before tapping. The
+    /// shipped three-a-day pool already produced that state near the end of a
+    /// day; `FeatureFlag.hintQuotaOne` makes it permanent, since a pool of one
+    /// can never reach Reveal Word (2) or Reveal Puzzle (3).
+    ///
+    /// The row stays visible rather than being hidden — unlike the verse rung,
+    /// which is absent on clues that have no reference. That rung is absent
+    /// because it doesn't exist for the clue; this one exists and is simply out
+    /// of reach, and saying so is what makes the wall — and the upgrade behind
+    /// it — legible instead of surprising.
     private func costLabel(_ type: HintType) -> String {
         // The learning window meters nothing, so the rungs must not claim a
         // price the tap won't charge.
         if !store.isPremium, profile.isStillLearning { return "Free" }
+        if type.cost > 0, !canAfford(type) {
+            let left = profile.hintsRemaining(isPremium: store.isPremium, limit: freeHintLimit)
+            return "\(left) left — needs \(type.cost)"
+        }
         switch type.cost {
         case 0: return "Free"
         case 1: return "1 hint"
@@ -637,6 +675,15 @@ struct CrosswordGameView: View {
     /// three rather than being counted as control — see `FeatureFlags`.
     private func resolveHintQuota() {
         guard !store.isPremium, !profile.isStillLearning else { return }
+        #if DEBUG
+        // Same family as -uiForcePremiumAsk. The real treatment arm needs a
+        // PostHog assignment, and the locked rungs it produces are otherwise
+        // only reachable by spending a real pool down on a real device.
+        if ProcessInfo.processInfo.arguments.contains("-uiForceHintQuotaOne") {
+            freeHintLimit = PlayerProfile.reducedHintLimit
+            return
+        }
+        #endif
         guard let isTreatment = FeatureFlags.value(of: .hintQuotaOne) else { return }
         FeatureFlags.registerVariant("hint_quota_variant", isTreatment: isTreatment)
         freeHintLimit = isTreatment ? PlayerProfile.reducedHintLimit : PlayerProfile.freeHintLimit

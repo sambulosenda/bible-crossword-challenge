@@ -479,6 +479,36 @@ struct EngineTests {
         vm.select(GridPos(row: 1, col: 0)); vm.enter("X")   // wrong on purpose
     }
 
+    /// The holdout: a control-group device (flag off) never nudges, however long
+    /// the stall — its metrics are the experiment's baseline.
+    @Test func stallNudgeHoldoutNeverFires() {
+        let vm = GameViewModel(puzzle: makePuzzle(), stallNudgeEnabled: false)
+        vm.isAttachedToWindow = true
+        fillFourOfFive(vm)
+        idle(vm, seconds: vm.stallNudgeSeconds * 3)
+        #expect(vm.stallNudgeTick == 0)
+        #expect(!vm.isStallNudgeActive)
+    }
+
+    /// Both tiers sit inside the holdout. A control group that still got the
+    /// early free letter would be answering a different question from the one
+    /// the flag asks.
+    @Test func stallNudgeHoldoutSuppressesTheEarlyTier() {
+        let vm = GameViewModel(puzzle: makePuzzle(), stallNudgeEnabled: false)
+        vm.isAttachedToWindow = true
+        vm.enter("C")   // 1 of 5 playable = 20%, the early tier's band
+        idle(vm, seconds: vm.earlyNudgeSeconds * 3)
+        #expect(vm.stallNudgeTick == 0)
+        #expect(!vm.isStallNudgeActive)
+    }
+
+    /// And the shipped default still nudges — the gate defaults to on, so an
+    /// unflagged build behaves exactly as released.
+    @Test func stallNudgeDefaultsToEnabled() {
+        let vm = GameViewModel(puzzle: makePuzzle())
+        #expect(vm.stallNudgeEnabled)
+    }
+
     @Test func stallNudgeDoesNotRefireWhileTheLineIsUp() {
         let vm = GameViewModel(puzzle: makePuzzle())
         vm.isAttachedToWindow = true

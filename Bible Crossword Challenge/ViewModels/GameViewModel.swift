@@ -191,6 +191,15 @@ final class GameViewModel {
     /// nudge has to arrive inside the patience they actually have.
     let isLearning: Bool
 
+    /// The stall-nudge holdout (`FeatureFlag.stallNudge`), resolved by the
+    /// creating view. A plain Bool so this model — and its tests — never
+    /// touches the flag SDK; a control-group device simply never nudges.
+    ///
+    /// Gates *both* tiers. The holdout's question is whether the rescue helps
+    /// at all, and a control group that still got the early free letter would
+    /// be answering a different one.
+    let stallNudgeEnabled: Bool
+
     /// Mid-solve idle threshold for everyone past the learning window.
     static let standardStallNudgeSeconds = 45
     /// Mid-solve idle threshold inside the learning window.
@@ -207,11 +216,17 @@ final class GameViewModel {
     /// Active seconds since the last player input — for nudge analytics.
     var secondsSinceLastInput: Int { accumulatedSeconds - lastInputSeconds }
 
-    init(puzzle: Puzzle, learning: Bool = false, now: Date = Date()) {
+    init(
+        puzzle: Puzzle,
+        learning: Bool = false,
+        now: Date = Date(),
+        stallNudgeEnabled: Bool = true
+    ) {
         self.puzzle = puzzle
         self.size = puzzle.size
         self.startDate = now
         self.isLearning = learning
+        self.stallNudgeEnabled = stallNudgeEnabled
 
         #if DEBUG
         // `-uiStallNudgeSeconds 5` shortens the stall wait for UI testing —
@@ -806,7 +821,7 @@ final class GameViewModel {
     private func maybeNudgeStall() {
         // While a line is up there is nothing to add; input takes it down and
         // restarts the idle clock, which is what re-arms the mid tier.
-        guard !isComplete, !isStallNudgeActive else { return }
+        guard stallNudgeEnabled, !isComplete, !isStallNudgeActive else { return }
         let idle = accumulatedSeconds - lastInputSeconds
         let total = totalPlayableCount
         guard total > 0 else { return }
