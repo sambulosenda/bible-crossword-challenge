@@ -59,7 +59,7 @@ enum AnalyticsEvent {
     /// `hintsUsed` is this sitting's hints. Fires when the screen leaves the
     /// window, so a quit via app-kill from the background is not counted — the
     /// numbers are a floor, not a census.
-    case puzzleAbandoned(puzzleID: String, fillPercent: Int, seconds: Int, wallSeconds: Int, hintsUsed: Int)
+    case puzzleAbandoned(puzzleID: String, fillPercent: Int, seconds: Int, wallSeconds: Int, hintsUsed: Int, cellTaps: Int, keyPresses: Int)
     case hintUsed(type: String, cost: Int)
     /// A paid hint tapped with no quota left. Logged at the wall, not at the
     /// paywall: the inline notice that replaced the auto-opened sheet
@@ -468,13 +468,17 @@ enum AnalyticsEvent {
             return ["puzzle_id": id, "is_resume": isResume, "source": source]
         case .dailyPuzzleCompleted(let id, let seconds):
             return ["puzzle_id": id, "seconds": seconds]
-        case .puzzleAbandoned(let id, let fillPercent, let seconds, let wallSeconds, let hintsUsed):
+        case .puzzleAbandoned(let id, let fillPercent, let seconds, let wallSeconds, let hintsUsed, let cellTaps, let keyPresses):
             return [
                 "puzzle_id": id,
                 "fill_percent": fillPercent,
                 "seconds": seconds,
                 "wall_seconds": wallSeconds,
                 "hints_used": hintsUsed,
+                // Splits the 0%-fill bounce three ways — see
+                // `GameViewModel.cellTaps`.
+                "cell_taps": cellTaps,
+                "key_presses": keyPresses,
             ]
         case .hintUsed(let type, let cost):
             return ["type": type, "cost": cost]

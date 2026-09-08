@@ -961,7 +961,9 @@ struct CrosswordGameView: View {
             fillPercent: fillPercent,
             seconds: vm.elapsed(),
             wallSeconds: Int(Date().timeIntervalSince(openedAt).rounded()),
-            hintsUsed: vm.hintsUsed
+            hintsUsed: vm.hintsUsed,
+            cellTaps: vm.cellTaps,
+            keyPresses: vm.keyPresses
         ))
     }
 

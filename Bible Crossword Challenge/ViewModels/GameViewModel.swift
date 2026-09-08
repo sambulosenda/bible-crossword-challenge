@@ -230,6 +230,25 @@ final class GameViewModel {
     /// Active seconds since the last player input — for nudge analytics.
     var secondsSinceLastInput: Int { accumulatedSeconds - lastInputSeconds }
 
+    /// Grid cells tapped this sitting, and keys pressed. Both count attempts,
+    /// not effects: a tap on a block and a letter typed then deleted each
+    /// count, because the question they answer is whether the player engaged
+    /// at all.
+    ///
+    /// They exist to split the app's largest abandon bucket, which `fill` alone
+    /// cannot: install-day players who quit under 10% fill do so at exactly 0%
+    /// — 148 abandons from 38 users in the 45 days to 2026-09-08, median 4.5
+    /// seconds. "Typed nothing" has three very different causes and one fix
+    /// each: never touched the grid (the screen itself is the rejection),
+    /// tapped but never typed (they couldn't work out how), or typed and
+    /// cleared it (the clues beat them). Reported on `puzzle_abandoned`.
+    ///
+    /// Per sitting, not per puzzle: the model is rebuilt each time the screen
+    /// opens, so a resumed puzzle starts these at zero — which is what makes
+    /// "did they do anything *this time*" answerable.
+    private(set) var cellTaps = 0
+    private(set) var keyPresses = 0
+
     init(
         puzzle: Puzzle,
         learning: Bool = false,
@@ -366,6 +385,15 @@ final class GameViewModel {
 
     // MARK: - Selection
 
+    /// A genuine finger on a cell. Separate from `select` because that is also
+    /// how hardware-keyboard cursor movement travels, and a cursor step is not
+    /// a tap. Counted before the selectable guard: tapping a block is still the
+    /// player touching the grid, and for this question that is the whole point.
+    func tapCell(_ pos: GridPos) {
+        cellTaps += 1
+        select(pos)
+    }
+
     func select(_ pos: GridPos) {
         guard isSelectable(pos) else { return }
         noteInput()
@@ -425,6 +453,7 @@ final class GameViewModel {
     // MARK: - Entry
 
     func enter(_ letter: Character) {
+        keyPresses += 1
         guard isSelectable(selected) else { return }
         noteInput()
         // Hint-revealed cells are locked — typing skips over them instead of
@@ -450,6 +479,7 @@ final class GameViewModel {
     }
 
     func delete() {
+        keyPresses += 1
         noteInput()
         var cleared: GridPos?
         let current = grid[selected.row][selected.col]

@@ -171,7 +171,7 @@ struct CrosswordGridView: View {
                             showError: vm.autoCheck || cell.isCheckedWrong,
                             showCorrect: showCorrectOverlay,
                             flash: flashing.contains(pos),
-                            onTap: { vm.select(pos) }
+                            onTap: { vm.tapCell(pos) }
                         )
                         .equatable()
                         .id(pos)
