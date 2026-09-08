@@ -25,7 +25,7 @@ import Foundation
 enum TrialReoffer {
     /// The paywall `source` for the re-offer, so its open → tap → purchase
     /// funnel is read on its own and never re-records an abandon of itself.
-    static let source = "trial_abandon"
+    static let source = PaywallSource.trialAbandon
 
     /// How long a cancelled sheet stays worth revisiting. Two weeks: past
     /// that the player has either settled into the free daily or left, and

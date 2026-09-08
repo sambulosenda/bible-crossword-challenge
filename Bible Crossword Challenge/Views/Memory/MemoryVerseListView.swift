@@ -55,7 +55,7 @@ struct MemoryVerseListView: View {
         .background(Theme.background)
         .onAppear { analytics.log(.memoryListOpened(source: source)) }
         .sheet(isPresented: $showPaywall) {
-            PaywallView(source: "memory_verse_limit")
+            PaywallView(source: .memoryVerseLimit)
         }
         .navigationDestination(isPresented: Binding(
             get: { startedKey != nil },
@@ -175,7 +175,7 @@ struct MemoryVerseListView: View {
 
     private func startCandidate(_ candidate: MemoryVerseStore.Candidate) {
         guard memoryVerses.canStartNewVerse(isPremium: store.isPremium) else {
-            analytics.log(.paywallOpened(source: "memory_verse_limit"))
+            analytics.log(.paywallOpened(source: PaywallSource.memoryVerseLimit.rawValue))
             showPaywall = true
             return
         }

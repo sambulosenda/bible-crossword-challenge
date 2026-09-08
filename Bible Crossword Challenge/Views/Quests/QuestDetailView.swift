@@ -63,7 +63,7 @@ struct QuestDetailView: View {
         .navigationTitle(quest.title)
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $showPaywall) {
-            PaywallView(source: "quest_locked")
+            PaywallView(source: .questLocked)
         }
         // questCompleted is logged in the game screen's completion hook, so it
         // fires exactly once even if this screen is never revisited.

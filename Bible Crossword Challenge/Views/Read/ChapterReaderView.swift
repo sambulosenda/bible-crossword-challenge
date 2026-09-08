@@ -275,8 +275,8 @@ struct ChapterReaderView: View {
         case .memorize:
             // Same gate as starting a candidate from the memory list.
             guard memoryVerses.canStartNewVerse(isPremium: store.isPremium) else {
-                analytics.log(.paywallOpened(source: "memory_verse_limit"))
-                paywall = PaywallEntry(source: "memory_verse_limit")
+                analytics.log(.paywallOpened(source: PaywallSource.memoryVerseLimit.rawValue))
+                paywall = PaywallEntry(source: .memoryVerseLimit)
                 return
             }
             _ = memoryVerses.start(reference: reference, verseText: verse.text)
@@ -350,8 +350,8 @@ struct ChapterReaderView: View {
     private func handleChip(_ chip: PuzzleChip) {
         analytics.log(.readPuzzleChipTapped(puzzleID: chip.puzzle.id, locked: chip.locked, source: source ?? ""))
         if chip.locked {
-            analytics.log(.paywallOpened(source: "read_chip"))
-            paywall = PaywallEntry(source: "read_chip")
+            analytics.log(.paywallOpened(source: PaywallSource.readChip.rawValue))
+            paywall = PaywallEntry(source: .readChip)
         } else {
             puzzleLaunch.play(id: chip.puzzle.id)
         }

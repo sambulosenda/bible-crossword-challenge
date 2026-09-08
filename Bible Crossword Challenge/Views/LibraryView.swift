@@ -139,7 +139,7 @@ struct LibraryView: View {
                 // Source stays "archive" even though the screen is now called
                 // Library — renaming it would split this entry point's
                 // conversion history in Firebase at an arbitrary point.
-                PaywallView(source: "archive")
+                PaywallView(source: .archive)
             }
         }
     }

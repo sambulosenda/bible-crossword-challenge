@@ -140,7 +140,7 @@ struct OnboardingView: View {
             // onboarding conversion can be compared against in-app sources.
             if newPage == lastPage && !didLogPaywallOpen {
                 didLogPaywallOpen = true
-                analytics.log(.paywallOpened(source: "onboarding"))
+                analytics.log(.paywallOpened(source: PaywallSource.onboarding.rawValue))
             }
             // First arrival only, like the open above: swiping back to the
             // name page and returning shouldn't reset the clock.

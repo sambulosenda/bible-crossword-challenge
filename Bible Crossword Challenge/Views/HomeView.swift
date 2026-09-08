@@ -50,6 +50,9 @@ struct HomeView: View {
     @AppStorage("completionReminderAsksShown") private var completionReminderAsksShown = 0
     @AppStorage("streakReminderAskShown") private var streakReminderAskShown = false
     @AppStorage("reminderAskLastDay") private var reminderAskLastDay = 0.0
+    /// This player has been assigned an arm of the proactive premium ask. Set
+    /// in *both* arms, once ever — see `PremiumAsk.isEligible`.
+    @AppStorage("premiumAskAssigned") private var premiumAskAssigned = false
     /// Decided once on appear so spending the impression can't hide the card
     /// mid-view.
     @State private var showStreakAsk = false
@@ -57,6 +60,8 @@ struct HomeView: View {
     /// with it so the sheet opens on the one the player backed out of.
     @State private var showTrialReoffer = false
     @State private var trialReofferPlanID: String?
+    /// The proactive premium ask — see `PremiumAsk`. Treatment arm only.
+    @State private var showPremiumAsk = false
     /// Pushes the trophy list from the next-achievement card. Achievements
     /// lost their tab in 2.8, so the card is the only way in from Today.
     @State private var showAchievements = false
@@ -133,6 +138,54 @@ struct HomeView: View {
         trialReofferPlanID = planID
         store.markTrialReofferShown()
         showTrialReoffer = true
+        return true
+    }
+
+    /// The app's one proactive ask. Returns true when this player was assigned
+    /// an arm, whichever arm it was — a control assignment spends the sitting's
+    /// ask budget exactly as the sheet does, or the two arms would differ by
+    /// more than the sheet and the reminder prompts would fill the gap in one.
+    ///
+    /// Assignment order matters: eligibility is decided first, from the
+    /// player's own state, and the flag is read only once they qualify. Reading
+    /// it earlier would log an exposure for every launch by every player and
+    /// bury the eligible population in noise.
+    private func maybeShowPremiumAsk() -> Bool {
+        #if DEBUG
+        // Same family as -uiForceTrialReoffer: the real path needs five solves
+        // on a later day than the install.
+        if ProcessInfo.processInfo.arguments.contains("-uiForcePremiumAsk"),
+           !PremiumAskSession.forced {
+            PremiumAskSession.forced = true
+            showPremiumAsk = true
+            return true
+        }
+        #endif
+        let state = PremiumAsk.State(
+            isPremium: store.isPremium,
+            entitlementsKnown: store.entitlementsResolved,
+            totalCompleted: profile.totalPuzzlesCompleted,
+            assigned: premiumAskAssigned,
+            anyAskThisSession: ReminderAskSession.asked,
+            isInstallDay: Calendar.current.isDateInToday(profile.createdAt)
+        )
+        guard PremiumAsk.isEligible(state) else { return false }
+
+        // PostHog's real answer, not the shipped default: a player the
+        // experiment hasn't actually bucketed must not be spent on it. Nil
+        // means flags haven't loaded, this device has never reached PostHog, or
+        // the flag doesn't exist yet — all of which mean "not now", not
+        // "control". They come back tomorrow, still eligible.
+        guard let isTreatment = FeatureFlags.value(of: .premiumAsk) else { return false }
+        FeatureFlags.registerVariant("paywall_variant", isTreatment: isTreatment)
+        premiumAskAssigned = true
+        // Spends the shared budget in both arms — see the note above.
+        ReminderAskSession.asked = true
+        analytics.log(.premiumAskAssigned(
+            variant: isTreatment ? "treatment" : "control",
+            completed: profile.totalPuzzlesCompleted
+        ))
+        if isTreatment { showPremiumAsk = true }
         return true
     }
 
@@ -383,14 +436,19 @@ struct HomeView: View {
                 .containerRelativeFrame(.horizontal)
             }
             .background(Theme.background)
-            // One ask per sitting: the re-offer goes first because it answers
-            // intent the player already showed, and the streak card retries
-            // on the next appear anyway.
+            // One ask per sitting, in order of how much the player has already
+            // told us. The trial re-offer answers intent they actually showed
+            // (they read the price and pressed the button), the premium ask
+            // answers a habit they built, and the streak card asks for
+            // something free — and it retries on the next appear anyway.
             .onAppear {
-                if !maybeShowTrialReoffer() { maybeShowStreakAsk() }
+                if !maybeShowTrialReoffer(), !maybeShowPremiumAsk() { maybeShowStreakAsk() }
             }
             .sheet(isPresented: $showTrialReoffer) {
                 PaywallView(source: TrialReoffer.source, initialPlanID: trialReofferPlanID)
+            }
+            .sheet(isPresented: $showPremiumAsk) {
+                PaywallView(source: PremiumAsk.source)
             }
             // Inline, because the greeting below is the screen's real title —
             // a large "Today" on top of it would be two headings for one page.
@@ -1096,7 +1154,7 @@ private struct UpgradeCard: View {
         }
         .buttonStyle(PressableCardStyle())
         .sheet(isPresented: $showPaywall) {
-            PaywallView(source: "home_card")
+            PaywallView(source: .homeCard)
         }
     }
 }

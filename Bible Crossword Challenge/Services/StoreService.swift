@@ -67,6 +67,19 @@ final class StoreService {
     private static let revenueCatAPIKey = "appl_iWdaXgiKMfmIiTcqlsaDKkIdJxQ"
 
     private(set) var isPremium = false
+    /// True once RevenueCat has told us, even once, whether this player has the
+    /// entitlement.
+    ///
+    /// `isPremium` starts `false` and is filled in asynchronously, so on every
+    /// launch there is a window where a subscriber is indistinguishable from a
+    /// free player. Nothing that *withholds* something cares — a lock that
+    /// resolves a moment later is invisible. Anything that speaks up on its own
+    /// does: `PremiumAsk` would otherwise open a paywall in a paying player's
+    /// face on a slow launch, and stamp them into an experiment they can't be
+    /// part of. RevenueCat's stream replays its cached `CustomerInfo` straight
+    /// away, so in practice this is true almost immediately; when it isn't, the
+    /// ask waits for the next sitting, which costs nothing.
+    private(set) var entitlementsResolved = false
     private(set) var products: [Product] = []
     private(set) var purchaseInFlight = false
     /// True when the last product load ended with nothing to show — drives the
@@ -391,6 +404,7 @@ final class StoreService {
     /// The one place `CustomerInfo` becomes app state.
     private func apply(_ info: CustomerInfo) {
         isPremium = info.entitlements[Self.entitlementID]?.isActive == true
+        entitlementsResolved = true
         // A grant from anywhere — this sheet, a restore, another device —
         // answers the re-offer's question. Never ask it of a subscriber.
         if isPremium { clearTrialAbandon() }
@@ -426,7 +440,7 @@ final class StoreService {
     /// A cancel *from* the re-offer is not recorded either: that is the
     /// second "no", and it is final until intent shows up somewhere else.
     private func recordTrialAbandon(_ productID: String, source: String) {
-        guard source != TrialReoffer.source else { return }
+        guard source != TrialReoffer.source.rawValue else { return }
         let defaults = UserDefaults.standard
         defaults.set(Date().timeIntervalSinceReferenceDate, forKey: Self.trialAbandonedAtKey)
         defaults.set(productID, forKey: Self.trialAbandonedPlanKey)

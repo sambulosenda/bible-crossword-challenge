@@ -234,7 +234,7 @@ struct CrosswordGameView: View {
             ClueListView(vm: vm)
         }
         .sheet(isPresented: $showPaywall) {
-            PaywallView(source: "hint_limit")
+            PaywallView(source: .hintLimit)
         }
         // Presented locally like the clue list's reader — the ReaderRouter
         // cover hangs off the tab bar and would detach this view from its

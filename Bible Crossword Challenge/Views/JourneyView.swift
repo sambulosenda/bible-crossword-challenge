@@ -302,7 +302,7 @@ struct JourneyBookView: View {
         .navigationTitle(book.name)
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $showPaywall) {
-            PaywallView(source: "journey")
+            PaywallView(source: .journey)
         }
     }
 

@@ -94,7 +94,7 @@ struct ProfileView: View {
                 ChallengeHistoryView(profile: profile)
             }
             .sheet(isPresented: $showPaywall) {
-                PaywallView(source: "profile")
+                PaywallView(source: .profile)
             }
             .manageSubscriptionsSheet(isPresented: $showManageSubscriptions)
             .purchaseNoticeAlert(store)

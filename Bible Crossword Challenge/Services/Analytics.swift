@@ -177,6 +177,16 @@ enum AnalyticsEvent {
     /// way out; removing it again is only safe if the link is what people
     /// actually use. Without this property the two were one row.
     case paywallDismissed(source: String, secondsOnScreen: Int, ctaTapped: Bool, exit: PaywallExit)
+    /// A player reached the point where the app would bring Premium up by
+    /// itself, and was assigned an arm of that experiment. See `PremiumAsk`.
+    ///
+    /// Fired by **both** arms, which is the whole point: `treatment` goes on to
+    /// open `paywall_opened` with `source=premium_ask`, `control` sees nothing.
+    /// Without the control half the comparison group would be every player who
+    /// never reached five solves, and the readout would measure engagement
+    /// instead of the ask. Every event after this one also carries
+    /// `paywall_variant` — see `FeatureFlags.registerVariant`.
+    case premiumAskAssigned(variant: String, completed: Int)
     /// `source` names the surface whose button reached the system dialog
     /// (`onboarding`, `prompt`, `completion`, `streak_card`, `profile`) — the
     /// grant rate is per-ask, and without the source every surface's yes and no
@@ -344,6 +354,7 @@ enum AnalyticsEvent {
         case .paywallOpened: return "paywall_opened"
         case .paywallCTATapped: return "paywall_cta_tapped"
         case .paywallDismissed: return "paywall_dismissed"
+        case .premiumAskAssigned: return "premium_ask_assigned"
         case .notificationPermission: return "notification_permission"
         case .reminderAskShown: return "reminder_ask_shown"
         case .reminderDeclined: return "reminder_declined"
@@ -493,6 +504,8 @@ enum AnalyticsEvent {
             return ["achievement_id": id]
         case .notificationPermission(let granted, let source):
             return ["granted": granted, "source": source]
+        case .premiumAskAssigned(let variant, let completed):
+            return ["variant": variant, "completed": completed]
         case .reminderAskShown(let source):
             return ["source": source]
         case .reminderDeclined(let source):

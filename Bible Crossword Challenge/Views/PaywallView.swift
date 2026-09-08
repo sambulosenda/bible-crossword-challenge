@@ -21,10 +21,14 @@ import SwiftData
 import StoreKit
 
 struct PaywallView: View {
-    /// Where this paywall was opened from (e.g. "archive", "hint_limit").
-    /// Attributed on both `paywall_opened` and `premium_purchased` so each
-    /// entry point's view → purchase conversion can be compared.
-    let source: String
+    /// Where this paywall was opened from. Attributed on both `paywall_opened`
+    /// and `premium_purchased` so each entry point's view → purchase conversion
+    /// can be compared, and it chooses the promise at the top of the screen.
+    ///
+    /// A `PaywallSource` rather than the string it used to be: the headline
+    /// switch was failable, and four live entry points had quietly fallen
+    /// through it to the generic promise. See `PaywallSource`.
+    let source: PaywallSource
 
     /// What the player just ran into, when the entry point can name it — today
     /// only the seasonal pack behind `pack_locked`. The promise for a pack that
@@ -85,7 +89,7 @@ struct PaywallView: View {
                     headline: headlineText,
                     progressLine: progressLine,
                     selectedID: $selectedID,
-                    showsLockedPacks: showsLockedPacks,
+                    showsLockedPacks: source.showsLockedPacks,
                     highlightedPackID: contextPackID
                 )
                 .padding(.horizontal, Theme.Spacing.l)
@@ -127,7 +131,7 @@ struct PaywallView: View {
             // Every presentation logs exactly once, whatever the entry point.
             if !didLogOpen {
                 didLogOpen = true
-                analytics.log(.paywallOpened(source: source))
+                analytics.log(.paywallOpened(source: source.rawValue))
             }
             if appearedAt == nil { appearedAt = Date() }
             if let initialPlanID { selectedID = initialPlanID }
@@ -143,7 +147,7 @@ struct PaywallView: View {
             guard !didLogDismiss, let appearedAt else { return }
             didLogDismiss = true
             analytics.log(.paywallDismissed(
-                source: source,
+                source: source.rawValue,
                 secondsOnScreen: Int(Date().timeIntervalSince(appearedAt).rounded()),
                 ctaTapped: didTapCTA,
                 exit: exitReason ?? .swipe
@@ -162,84 +166,32 @@ struct PaywallView: View {
 
     // MARK: - Headline
 
-    /// The entry points that get their own promise. Deliberately a failable
-    /// `init(rawValue:)` rather than a match on bare strings: a source that is
-    /// renamed, added, or mistyped falls through to the default line instead of
-    /// leaving the largest text on the screen blank.
-    private enum Entry: String {
-        case hintLimit = "hint_limit"
-        case completion
-        case miniCompletion = "mini_completion"
-        case packCompletion = "pack_completion"
-        case packLocked = "pack_locked"
-        case homeCard = "home_card"
-        case archive
-        case trialAbandon = "trial_abandon"
-    }
-
-    private static let defaultHeadline = PremiumCopy.promise
-
-    /// The locked-pack strip only shows when the player just bounced off a
-    /// pack — there it's evidence about the very thing they asked for. From
-    /// every other entry point it was a second icon-row list stacked under the
-    /// benefits, eight rows of prose standing between the promise and the
-    /// price, about content the player hadn't expressed any interest in.
-    private var showsLockedPacks: Bool {
-        switch Entry(rawValue: source) {
-        case .packLocked, .packCompletion: return true
-        default: return false
-        }
-    }
-
-    /// The promise, chosen by where the player came from. Someone who just hit
-    /// a hint wall and someone browsing from their profile are asking different
-    /// questions, and `source` is already threaded through for attribution — so
-    /// the copy can follow it without any new plumbing, and `premium_purchased`
-    /// already carries the same value to judge it by later.
+    /// The promise, chosen by where the player came from — and refined here in
+    /// the two cases where this screen knows something `PaywallSource` can't.
+    ///
+    /// Everything else lives on the type, exhaustively, so an entry point added
+    /// later cannot reach the screen without a line of its own. That is exactly
+    /// what went wrong before: the match was a failable `init(rawValue:)`, and
+    /// `memory_verse_limit`, `journey`, `quest_locked` and `read_chip` all fell
+    /// through it to the standing promise without a word in any log.
     private var headlineText: String {
-        switch Entry(rawValue: source) {
-        case .hintLimit:
-            return "Never stuck for long."
-        case .completion:
-            return solvedTally ?? Self.defaultHeadline
-        case .miniCompletion:
-            return "Two minutes was just the start."
-        case .packCompletion:
-            return "The rest of the pack is waiting."
+        switch source {
         case .packLocked:
             // A seasonal pack states its own constraint; an evergreen one has
             // none to state, and inventing urgency for it would be a lie.
             if let subject { return "\(subject) is only here this season." }
-            return "The collections are waiting."
-        case .homeCard:
-            return "Make it part of the morning."
-        case .archive:
-            return PremiumCopy.archive
+            return source.headline
         case .trialAbandon:
-            // Names the thing they were one tap from, in the store's own
-            // words for its length. A player whose trial has since been used
-            // (or a plan that lost its offer) gets the standing promise.
+            // Names the thing they were one tap from, in the store's own words
+            // for its length. A player whose trial has since been used (or a
+            // plan that lost its offer) gets the standing promise.
             if let product = selectedProduct, let offer = store.introOffer(for: product) {
                 return "Your \(offer.trialText) is still waiting."
             }
-            return Self.defaultHeadline
-        // `profile` and anything added later. A player who hasn't hit a wall
-        // needs telling what the app is for, not what it withholds. (Onboarding
-        // never arrives here — its premium page is part of `OnboardingView`.)
-        case nil:
-            return Self.defaultHeadline
+            return source.headline
+        default:
+            return source.headline
         }
-    }
-
-    /// "12 down. 165 more waiting." — the player's own two numbers, on the one
-    /// screen where they've just finished something and the next one is the
-    /// question. "Waiting", not "to go": the remainder is supply, and "to go"
-    /// framed it as a debt — 165 puzzles owed rather than 165 on the shelf.
-    private var solvedTally: String? {
-        let solved = completedRecords.count
-        let remaining = puzzleProvider.totalPuzzleCount - solved
-        guard solved > 0, remaining > 0 else { return nil }
-        return "\(solved) down. \(remaining) more waiting."
     }
 
     /// The player's own gap, stated as a fact and nothing more. A personal
@@ -248,9 +200,6 @@ struct PaywallView: View {
     ///
     /// Hidden at zero: "You've solved 0" is a discouragement, not a nudge.
     private var progressLine: String? {
-        // Suppressed when the headline is already the tally — the two lines
-        // carry identical numbers and reading them in sequence stutters.
-        if Entry(rawValue: source) == .completion, solvedTally != nil { return nil }
         let solved = completedRecords.count
         guard solved > 0 else { return nil }
         return "You've solved \(solved) of \(puzzleProvider.totalPuzzleCount)."
@@ -301,17 +250,17 @@ struct PaywallView: View {
                     // reports nothing at all.
                     analytics.log(.paywallCTATapped(
                         plan: plan,
-                        source: source,
+                        source: source.rawValue,
                         offersTrial: store.introOfferText(for: product) != nil
                     ))
                     // `premium_purchased` is emitted by StoreService, which sees
                     // every grant rather than only the ones that finish inside
                     // this call. Logging it here as well would double-count.
-                    switch await store.purchase(product, source: source) {
+                    switch await store.purchase(product, source: source.rawValue) {
                     case .purchased:
                         break
                     case .failed(let reason):
-                        analytics.log(.purchaseFailed(plan: plan, source: source, reason: reason))
+                        analytics.log(.purchaseFailed(plan: plan, source: source.rawValue, reason: reason))
                     case .cancelled, .pending:
                         break
                     }

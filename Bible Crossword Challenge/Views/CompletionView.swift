@@ -695,7 +695,7 @@ struct CompletionView: View {
             let locked = ctx.pack.isPremium && !store.isPremium
             Button {
                 if locked {
-                    paywallEntry = PaywallEntry(source: "pack_completion")
+                    paywallEntry = PaywallEntry(source: .packCompletion)
                 } else if let url = URL(string: "biblecrossword://puzzle?id=\(next.id)") {
                     openURL(url)
                     onHome()
@@ -745,7 +745,7 @@ struct CompletionView: View {
     /// celebration stays the hero.
     private var miniUpsellCard: some View {
         Button {
-            paywallEntry = PaywallEntry(source: "mini_completion")
+            paywallEntry = PaywallEntry(source: .miniCompletion)
         } label: {
             HStack(spacing: Theme.Spacing.m) {
                 Image(systemName: "bolt.circle.fill")
@@ -1363,6 +1363,6 @@ private extension View {
 /// rather than ride alongside a separate `isPresented` flag — see the comment
 /// on `CompletionView.paywallEntry` for the mis-attribution that cost.
 struct PaywallEntry: Identifiable {
-    let source: String
-    var id: String { source }
+    let source: PaywallSource
+    var id: String { source.rawValue }
 }
