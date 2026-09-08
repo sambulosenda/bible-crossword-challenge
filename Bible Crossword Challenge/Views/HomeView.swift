@@ -263,7 +263,7 @@ struct HomeView: View {
         let record = daily.flatMap { d in records.first { $0.puzzleID == d.id } }
         let mini = dailyMini
         let miniRecord = mini.flatMap { m in records.first { $0.puzzleID == m.id } }
-        let leadsWithMini = profile.totalPuzzlesCompleted < 3 && mini != nil
+        let leadsWithMini = profile.isStillLearning && mini != nil
 
         return NavigationStack(path: $path) {
             ScrollView {
@@ -326,7 +326,19 @@ struct HomeView: View {
                     // The week's peak, Sunday through Saturday. Below the two
                     // dailies: the Special is a sitting you choose, not the
                     // habit the streak depends on.
-                    if let sunday = sundaySpecial {
+                    //
+                    // Absent inside the learning window, on the same threshold
+                    // that hands those players the Mini above. It was the one
+                    // puzzle surface on this screen with no such gate, and it
+                    // is the worst thing a first-day player can open: of 17 who
+                    // started one on their install day (2.5+, 45 days to
+                    // 2026-09-08) 5 finished, and 22% of those starts were
+                    // abandoned under 10% fill within 15 seconds — against 3%
+                    // on the Mini. A 21×21 handed to someone who has just
+                    // solved a two-letter tutorial is a wall with a card around
+                    // it. It comes back at three finishes, with everything else
+                    // the window withholds.
+                    if let sunday = sundaySpecial, !profile.isStillLearning {
                         CompactPuzzleCard(
                             puzzle: sunday,
                             billing: .sunday,
