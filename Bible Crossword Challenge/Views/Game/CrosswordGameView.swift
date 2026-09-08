@@ -52,6 +52,9 @@ struct CrosswordGameView: View {
     /// each. Now the wall is a one-line notice that names what's still free
     /// (the verse and the checks) and carries the upgrade as a tap.
     @State private var showHintLimitNote = false
+    /// The rung the player was refused, so the note can say why rather than
+    /// assuming the pool is empty — see `hintLimitHeadline`.
+    @State private var hintLimitType: HintType?
     /// Bumped on every wall hit so the auto-dismiss timer restarts from the
     /// latest tap — `.task(id:)` cancels and re-runs on change, where a plain
     /// `.task` would keep the first hit's clock while the note is already up.
@@ -582,7 +585,7 @@ struct CrosswordGameView: View {
                 .font(.caption.weight(.semibold))
                 .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 1) {
-                Text("No hints left today")
+                Text(hintLimitHeadline)
                     .font(.caption.weight(.semibold))
                 Text(vm.activeSlot?.reference != nil
                      ? "The verse and checks are still free."
@@ -616,6 +619,17 @@ struct CrosswordGameView: View {
         .background(Theme.accent.opacity(0.12), in: .capsule)
     }
 
+    /// What the wall actually is for the rung that was tapped.
+    ///
+    /// It said "No hints left today" for every refusal, which is wrong in two
+    /// of the three cases: a player holding one hint who taps Reveal Word has
+    /// hints left, and under a reduced pool "today" is not the problem at all.
+    private var hintLimitHeadline: String {
+        if let type = hintLimitType, isBeyondPool(type) { return "That one needs Premium" }
+        let left = profile.hintsRemaining(isPremium: store.isPremium, limit: freeHintLimit)
+        return left == 0 ? "No hints left today" : "Not enough hints for that"
+    }
+
     private var hintsRemainingText: String {
         if store.isPremium { return "Unlimited" }
         if profile.isStillLearning { return "Free while you learn" }
@@ -626,6 +640,17 @@ struct CrosswordGameView: View {
     /// window hold `Int.max`, so both are always true for them.
     private func canAfford(_ type: HintType) -> Bool {
         profile.hintsRemaining(isPremium: store.isPremium, limit: freeHintLimit) >= type.cost
+    }
+
+    /// Whether the rung costs more than a full day's pool — unreachable by
+    /// waiting, not merely unaffordable right now.
+    ///
+    /// Never true at the shipped pool of three, where Reveal Puzzle costs
+    /// exactly a full day and tomorrow really does fix it. Under
+    /// `FeatureFlag.hintQuotaOne` it is true of Reveal Word (2) and Reveal
+    /// Puzzle (3) permanently, which is the distinction the copy has to make.
+    private func isBeyondPool(_ type: HintType) -> Bool {
+        !store.isPremium && !profile.isStillLearning && type.cost > freeHintLimit
     }
 
     /// The rung's price — or, when it can't be paid, what's missing.
@@ -646,6 +671,11 @@ struct CrosswordGameView: View {
         // price the tap won't charge.
         if !store.isPremium, profile.isStillLearning { return "Free" }
         if type.cost > 0, !canAfford(type) {
+            // Out of reach for good, not just today. A pool this size can never
+            // cover the rung however long the player waits, so the arithmetic
+            // ("0 left — needs 3") would be true and the implied remedy false:
+            // it reads as "not yet" when it means "not without Premium".
+            if isBeyondPool(type) { return "Needs Premium" }
             let left = profile.hintsRemaining(isPremium: store.isPremium, limit: freeHintLimit)
             return "\(left) left — needs \(type.cost)"
         }
@@ -694,6 +724,7 @@ struct CrosswordGameView: View {
         // A word (cost 2) with 1 left paywalls with no partial spend.
         guard profile.hintsRemaining(isPremium: store.isPremium, limit: freeHintLimit) >= type.cost else {
             analytics.log(.hintLimitReached(type: type.rawValue))
+            hintLimitType = type
             hintLimitHits += 1
             withAnimation(.snappy) { showHintLimitNote = true }
             return
