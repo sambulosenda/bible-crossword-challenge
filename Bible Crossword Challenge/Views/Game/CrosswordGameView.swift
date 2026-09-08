@@ -92,6 +92,14 @@ struct CrosswordGameView: View {
     /// The passage a verse hint opened, presented as a local sheet (see the
     /// `.sheet(item:)` note below for why not `ReaderRouter`).
     @State private var verseHintTarget: ReaderRouter.Target?
+    /// The daily hint pool this player is playing under — the shipped three, or
+    /// the tightened one under `FeatureFlag.hintQuotaOne`.
+    ///
+    /// Resolved once per puzzle rather than read at each use: every read emits
+    /// `$feature_flag_called`, and the quota is consulted on every menu open
+    /// and every hint tap. Opening a puzzle is the moment the pool takes
+    /// effect, which is where the exposure belongs.
+    @State private var freeHintLimit = PlayerProfile.freeHintLimit
     /// Keeps the screen focused so a hardware keyboard can type into the grid.
     @FocusState private var gridFocused: Bool
 
@@ -306,6 +314,7 @@ struct CrosswordGameView: View {
         }
         .task {
             gridFocused = true
+            resolveHintQuota()
             GameViewModel.seedAutoCheckIfNeeded(totalCompleted: profile.totalPuzzlesCompleted)
             // Straight from defaults, not the property wrapper: @AppStorage may
             // not observe a write made earlier in this same runloop turn.
@@ -595,7 +604,7 @@ struct CrosswordGameView: View {
     private var hintsRemainingText: String {
         if store.isPremium { return "Unlimited" }
         if profile.isStillLearning { return "Free while you learn" }
-        return "\(profile.hintsRemaining(isPremium: false))"
+        return "\(profile.hintsRemaining(isPremium: false, limit: freeHintLimit))"
     }
 
     private func costLabel(_ type: HintType) -> String {
@@ -619,10 +628,24 @@ struct CrosswordGameView: View {
         analytics.log(.checkUsed(scope: scope.rawValue, wrongCount: wrong))
     }
 
+    /// Picks this player's daily pool and buckets them, once per puzzle.
+    ///
+    /// Only free players past the learning window are assigned: nobody else can
+    /// feel the change, and enrolling them would dilute the arms with players
+    /// whose experience is identical either way. `value(of:)` rather than
+    /// `isEnabled` so a device PostHog hasn't answered for keeps the shipped
+    /// three rather than being counted as control — see `FeatureFlags`.
+    private func resolveHintQuota() {
+        guard !store.isPremium, !profile.isStillLearning else { return }
+        guard let isTreatment = FeatureFlags.value(of: .hintQuotaOne) else { return }
+        FeatureFlags.registerVariant("hint_quota_variant", isTreatment: isTreatment)
+        freeHintLimit = isTreatment ? PlayerProfile.reducedHintLimit : PlayerProfile.freeHintLimit
+    }
+
     private func useHint(_ type: HintType) {
         // `>= cost`, never subtraction: premium's remaining is Int.max.
         // A word (cost 2) with 1 left paywalls with no partial spend.
-        guard profile.hintsRemaining(isPremium: store.isPremium) >= type.cost else {
+        guard profile.hintsRemaining(isPremium: store.isPremium, limit: freeHintLimit) >= type.cost else {
             analytics.log(.hintLimitReached(type: type.rawValue))
             hintLimitHits += 1
             withAnimation(.snappy) { showHintLimitNote = true }

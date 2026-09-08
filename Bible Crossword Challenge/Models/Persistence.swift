@@ -273,7 +273,21 @@ enum SyncMerge {
 // MARK: - Hint helpers
 
 extension PlayerProfile {
+    /// The daily hint pool a free player past the learning window gets.
+    ///
+    /// The shipped value. `hintsRemaining(isPremium:limit:)` takes the limit as
+    /// a parameter rather than reading this directly, so the experiment in
+    /// `FeatureFlag.hintQuotaOne` can hand it a different one without this type
+    /// learning about PostHog.
     static let freeHintLimit = 3
+
+    /// The tightened pool under test — see `FeatureFlag.hintQuotaOne`.
+    ///
+    /// At 1, `HintType.word` (cost 2) and `HintType.puzzle` (cost 3) can never
+    /// be afforded, so the ladder collapses to the free verse rung, one letter,
+    /// and the paywall. That is the mechanism, not a side effect: 75% of the
+    /// free person-days that spend a hint today spend more than one.
+    static let reducedHintLimit = 1
     /// Most freezes a player can hold at once, so milestone rewards don't stack
     /// into an indefinite safety net.
     static let maxStreakFreezes = 3
@@ -289,10 +303,15 @@ extension PlayerProfile {
     /// 2026-08-28, measure via `premium_purchased` source mix.)
     var isStillLearning: Bool { totalPuzzlesCompleted < 3 }
 
-    func hintsRemaining(isPremium: Bool, now: Date = Date(), calendar: Calendar = .current) -> Int {
+    func hintsRemaining(
+        isPremium: Bool,
+        limit: Int = PlayerProfile.freeHintLimit,
+        now: Date = Date(),
+        calendar: Calendar = .current
+    ) -> Int {
         if isPremium || isStillLearning { return .max }
         let usedToday = calendar.isDate(hintsDate ?? .distantPast, inSameDayAs: now) ? hintsUsedToday : 0
-        return max(0, Self.freeHintLimit - usedToday)
+        return max(0, limit - usedToday)
     }
 
     func consumeHint(cost: Int = 1, now: Date = Date(), calendar: Calendar = .current) {

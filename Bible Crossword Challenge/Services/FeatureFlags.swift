@@ -38,10 +38,16 @@ enum FeatureFlag: String {
     /// gets today's app, not an unproven sheet.
     case premiumAsk = "premium-ask"
 
+    /// Cuts the free daily hint pool from three to one
+    /// (`PlayerProfile.reducedHintLimit`). Default **off** — three is shipped
+    /// behavior, so a device we can't measure keeps the app it has.
+    case hintQuotaOne = "hint-quota-one"
+
     var defaultValue: Bool {
         switch self {
         case .stallNudge: return true
         case .premiumAsk: return false
+        case .hintQuotaOne: return false
         }
     }
 }
