@@ -437,7 +437,7 @@ struct CrosswordGameView: View {
                         Button {
                             useVerseHint()
                         } label: {
-                            Text("Show the Verse")
+                            Text(HintType.verse.title)
                             Text(costLabel(.verse))
                             Image(systemName: "book")
                         }
@@ -445,14 +445,14 @@ struct CrosswordGameView: View {
                     Button {
                         useHint(.letter)
                     } label: {
-                        Text("Reveal Letter")
+                        Text(HintType.letter.title)
                         Text(costLabel(.letter))
                         Image(systemName: "a.square")
                     }
                     Button {
                         useHint(.word)
                     } label: {
-                        Text("Reveal Word")
+                        Text(HintType.word.title)
                         Text(costLabel(.word))
                         Image(systemName: canAfford(.word) ? "text.word.spacing" : "lock.fill")
                     }
@@ -466,7 +466,7 @@ struct CrosswordGameView: View {
                             useHint(.puzzle)
                         }
                     } label: {
-                        Text("Reveal Puzzle")
+                        Text(HintType.puzzle.title)
                         Text(costLabel(.puzzle))
                         Image(systemName: canAfford(.puzzle) ? "square.grid.3x3.fill" : "lock.fill")
                     }
@@ -602,7 +602,7 @@ struct CrosswordGameView: View {
             } label: {
                 // Explicit: the container's accent foreground otherwise
                 // cascades into the label and paints it accent-on-accent.
-                Text("Unlimited")
+                Text("Get Premium")
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(.white)
             }
@@ -610,7 +610,7 @@ struct CrosswordGameView: View {
             .buttonBorderShape(.capsule)
             .controlSize(.mini)
             .tint(Theme.accent)
-            .accessibilityLabel("Get unlimited hints")
+            .accessibilityLabel("Get Premium")
             .accessibilityHint("Opens Premium upgrade options")
         }
         .foregroundStyle(Theme.accent)
@@ -625,9 +625,15 @@ struct CrosswordGameView: View {
     /// of the three cases: a player holding one hint who taps Reveal Word has
     /// hints left, and under a reduced pool "today" is not the problem at all.
     private var hintLimitHeadline: String {
-        if let type = hintLimitType, isBeyondPool(type) { return "That one needs Premium" }
         let left = profile.hintsRemaining(isPremium: store.isPremium, limit: freeHintLimit)
-        return left == 0 ? "No hints left today" : "Not enough hints for that"
+        guard let type = hintLimitType else {
+            return left == 0 ? "That's your hints for today" : "Not enough hints for that"
+        }
+        // Naming the rung beats "that one": the player tapped a specific thing
+        // and the wall should answer about that thing.
+        if isBeyondPool(type) { return "\(type.title) is a Premium hint" }
+        if left == 0 { return "That's your hints for today" }
+        return "\(type.title) costs \(type.cost) hints"
     }
 
     private var hintsRemainingText: String {
@@ -672,12 +678,17 @@ struct CrosswordGameView: View {
         if !store.isPremium, profile.isStillLearning { return "Free" }
         if type.cost > 0, !canAfford(type) {
             // Out of reach for good, not just today. A pool this size can never
-            // cover the rung however long the player waits, so the arithmetic
-            // ("0 left — needs 3") would be true and the implied remedy false:
-            // it reads as "not yet" when it means "not without Premium".
-            if isBeyondPool(type) { return "Needs Premium" }
-            let left = profile.hintsRemaining(isPremium: store.isPremium, limit: freeHintLimit)
-            return "\(left) left — needs \(type.cost)"
+            // cover the rung however long the player waits, so a countdown
+            // would be true and its implied remedy false — it would read as
+            // "not yet" when it means "not without Premium". Named as a thing
+            // Premium *has* rather than a thing the player lacks: the row is
+            // the only place most players ever learn the rung exists.
+            if isBeyondPool(type) { return "Premium hint" }
+            // The remedy, not the arithmetic. "0 left — needs 2" made the
+            // reader do the subtraction and still didn't answer the question
+            // they actually have, which is when it comes back — and the section
+            // header above already states the count once.
+            return "Back tomorrow"
         }
         switch type.cost {
         case 0: return "Free"

@@ -21,6 +21,20 @@ enum HintType: String {
     /// Fills the whole grid — the give-up button. Confirmed before use.
     case puzzle
 
+    /// The rung's name, as the menu lists it.
+    ///
+    /// Here rather than in the view because two surfaces say it now — the menu
+    /// row and the wall that refuses it — and a wall naming a rung the menu
+    /// calls something else is worse than a wall that names nothing.
+    var title: String {
+        switch self {
+        case .verse: "Show the Verse"
+        case .letter: "Reveal Letter"
+        case .word: "Reveal Word"
+        case .puzzle: "Reveal Puzzle"
+        }
+    }
+
     /// Daily-quota cost. The ladder: verse is free (the player still does the
     /// finding — and reading Scripture is the point), a letter is the standard
     /// unit, a whole word — nearly an answer button — costs two, and the
