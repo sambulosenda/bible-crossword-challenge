@@ -1,11 +1,5 @@
-Thanks for playing Bible Crossword Challenge! This update includes:
+Thanks for playing Bible Crossword Challenge! A smaller update this time:
 
-• Challenge a friend from any solved puzzle: your link opens that exact puzzle for them, with your time to beat — and if they don't have the app yet, it's waiting for them after they install
-• Premium is restored automatically for early subscribers who lost it after an update
-• A new Read tab: the whole Bible, with search by verse, chapter or words, and a Recent row to pick up where you left off
-• Touch and hold any verse to memorize, bookmark, share or copy it
-• Reading plans: one chapter a day through John, Mark, Proverbs, Genesis or Psalms, with today's chapter on the Today screen
-• Every chapter ends with the puzzles drawn from it, so reading leads back to the grid
-• Eight new Sunday Specials: David, Joseph, Daniel, the parables, the miracles, Joshua and Judges, Ruth and Esther, Revelation
-• The verse hint now opens on the verse itself, with the whole chapter one tap away
-• Achievements have moved into your Profile
+• Hints now say plainly what each one costs and when your free hints come back, instead of leaving you to work it out
+• The Sunday 21×21 waits until you've finished a few puzzles, so your first days start gentler
+• Clearer, more consistent wording wherever Premium comes up
