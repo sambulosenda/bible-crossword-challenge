@@ -861,21 +861,39 @@ struct EngineTests {
         #expect(vm.snapshot()["0,1"] == "a")
     }
 
+    /// Starts a paced gift and returns once it is provably mid-reveal.
+    ///
+    /// The letter interval is deliberately enormous: the reveal parks on the
+    /// first sleep and stays there, so "still revealing" cannot expire while
+    /// the test works. Polling for the start (rather than sleeping a guessed
+    /// amount) removes the other side of the same race — a loaded machine may
+    /// not have run the task's first letter yet. An earlier version slept 60ms
+    /// against a 50ms interval and flaked exactly as you would expect.
+    ///
+    /// Cancel the returned task when done: the flush leaves nothing to place,
+    /// and cancelling collapses the outstanding sleep so the test doesn't pay
+    /// the full interval.
+    private func startPacedReveal(_ vm: GameViewModel) async -> Task<Slot?, Never> {
+        let reveal = Task { await vm.giftStarterWordPaced(letterInterval: .seconds(30)) }
+        while !vm.isRevealingStarterWord {
+            await Task.yield()
+        }
+        return reveal
+    }
+
     @Test func typingDuringTheRevealLandsTheWholeGiftFirst() async {
         // The hazard the flush exists for: a player who types while the word
         // is still assembling must never see a half-gifted grid, and must
         // never be able to type into one of the gift's own squares.
         let vm = GameViewModel(puzzle: makePuzzle())
-        let reveal = Task { await vm.giftStarterWordPaced(letterInterval: .milliseconds(50)) }
-        // Interrupt after the first letter but before the word finishes.
-        try? await Task.sleep(for: .milliseconds(60))
-        #expect(vm.isRevealingStarterWord)
+        let reveal = await startPacedReveal(vm)
         vm.enter("Z")
         // Every gifted letter is present and correct despite the interruption.
         #expect(vm.cell(at: GridPos(row: 0, col: 0)).entry == "C")
         #expect(vm.cell(at: GridPos(row: 0, col: 1)).entry == "A")
         #expect(vm.cell(at: GridPos(row: 0, col: 2)).entry == "T")
         #expect(!vm.isRevealingStarterWord)
+        reveal.cancel()
         await reveal.value
         // Still whole after the reveal task unwinds — no double commit, and
         // the gift's cells were never overwritten by the typed letter.
@@ -885,23 +903,27 @@ struct EngineTests {
 
     @Test func aTapDuringTheRevealLandsTheWholeGift() async {
         let vm = GameViewModel(puzzle: makePuzzle())
-        let reveal = Task { await vm.giftStarterWordPaced(letterInterval: .milliseconds(50)) }
-        try? await Task.sleep(for: .milliseconds(60))
+        let reveal = await startPacedReveal(vm)
         vm.tapCell(GridPos(row: 0, col: 2))
         #expect(!vm.isRevealingStarterWord)
         #expect(vm.cell(at: GridPos(row: 0, col: 2)).entry == "T")
+        reveal.cancel()
         await reveal.value
         #expect(vm.cell(at: GridPos(row: 0, col: 0)).entry == "C")
     }
 
     @Test func pacedGiftRefusesASecondGiftWhileRevealing() async {
         let vm = GameViewModel(puzzle: makePuzzle())
-        let reveal = Task { await vm.giftStarterWordPaced(letterInterval: .milliseconds(50)) }
-        try? await Task.sleep(for: .milliseconds(60))
+        let reveal = await startPacedReveal(vm)
         // A re-entrant caller must not interleave a second word into the grid.
         #expect(vm.giftStarterWord() == nil)
+        // Cancelled mid-reveal with no flush: the remaining letters still land
+        // and commit, which is the cancellation guarantee the view relies on
+        // when its screen is dismissed part-way through.
+        reveal.cancel()
         await reveal.value
         #expect(vm.cell(at: GridPos(row: 0, col: 2)).entry == "T")
+        #expect(!vm.isRevealingStarterWord)
     }
 
     @Test func pacedGiftRefusesWhenTheGridHasAnyProgress() async {
