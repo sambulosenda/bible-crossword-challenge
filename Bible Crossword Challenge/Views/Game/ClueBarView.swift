@@ -9,6 +9,9 @@ import SwiftUI
 
 struct ClueBarView: View {
     @Bindable var vm: GameViewModel
+    /// At accessibility text sizes the pill can no longer share the number
+    /// line without running into it, so it falls back to its own row there.
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     /// Runs the stall nudge's action when the line is tapped — a whole-puzzle
     /// check, the verse, or a free letter per `vm.stallNudgeKind`. Owned by the
     /// game view so the analytics and check/hint plumbing stay in one place.
@@ -22,50 +25,106 @@ struct ClueBarView: View {
     var onVerseTap: (() -> Void)? = nil
 
     var body: some View {
-        VStack(spacing: 0) {
-            // The stall line outranks the endgame countdown while active: a
-            // stuck player needs an action, not encouragement.
-            if vm.isStallNudgeActive {
-                Button {
-                    onStallTap?()
-                } label: {
-                    Label(stallNudgeText, systemImage: stallNudgeIcon)
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(Theme.accent)
-                        .frame(maxWidth: .infinity)
-                        .padding(.top, Theme.Spacing.xs)
-                        .contentShape(.rect)
-                }
-                .buttonStyle(.plain)
-                .accessibilityHint(stallNudgeAccessibilityHint)
-                .transition(.move(edge: .bottom).combined(with: .opacity))
-            } else if let nudge = endgameNudge {
-                Text(nudge)
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(Theme.accent)
-                    .frame(maxWidth: .infinity)
-                    .padding(.top, Theme.Spacing.xs)
-                    .transition(.move(edge: .bottom).combined(with: .opacity))
+        VStack(spacing: Theme.Spacing.s) {
+            if dynamicTypeSize.isAccessibilitySize {
+                inlineNudge.frame(maxWidth: .infinity)
             }
             clueRow
         }
         .animation(.snappy, value: endgameNudge)
         .animation(.snappy, value: vm.isStallNudgeActive)
-        .padding(.horizontal, Theme.Spacing.xs)
-        .padding(.vertical, Theme.Spacing.xs)
+        .padding(.horizontal, Theme.Spacing.s)
+        // Room to breathe on both edges. The bar sits between a grid and a
+        // keyboard with no margin of its own, so 4pt read as content jammed
+        // against both; the bottom also has to clear the progress strip.
+        // Affordable because moving the nudge onto the number line gave back
+        // a whole row — this spends part of it and the bar is still shorter
+        // than it was.
+        .padding(.top, Theme.Spacing.s)
+        .padding(.bottom, Theme.Spacing.s + Theme.Spacing.xs)
         .background(Color(.secondarySystemBackground))
         .overlay(alignment: .bottom) { progressStrip }
+    }
+
+    /// The rescue offer and the endgame countdown, sharing the clue-number
+    /// line rather than claiming a row of their own above the bar.
+    ///
+    /// As its own row it grew the bar, and the grid takes whatever height is
+    /// left (`maxHeight: .infinity` in CrosswordGameView) — so every cell
+    /// resized and reflowed the moment the nudge appeared, which is precisely
+    /// the moment the player was already stuck. It also sat furthest from the
+    /// clue it refers to, and pushed that clue away from the keyboard. On the
+    /// number line it costs no height at all: the number is short and the rest
+    /// of that line was dead space.
+    ///
+    /// The stall line still outranks the endgame countdown while active: a
+    /// stuck player needs an action, not encouragement.
+    /// The nudge's appearance only, with no behaviour. Rendered twice: once
+    /// hidden inside the clue button to reserve its footprint on the number
+    /// line, and once for real in the overlay on top. The overlay alone can't
+    /// do the job — it takes no part in layout, so at longer clue numbers or
+    /// larger text the pill simply sat on top of "10 Down".
+    @ViewBuilder
+    private var nudgeBody: some View {
+        if vm.isStallNudgeActive {
+            Label(stallNudgeText, systemImage: stallNudgeIcon)
+                .font(.caption2.weight(.semibold))
+                .foregroundStyle(Theme.accent)
+                .lineLimit(1)
+                // The verse variant is the longest string here and only just
+                // clears an iPhone-mini-width column; shrink it a little
+                // rather than truncate an offer mid-word.
+                .minimumScaleFactor(0.85)
+                .padding(.horizontal, Theme.Spacing.s)
+                .padding(.vertical, Theme.Spacing.xs)
+                .background(Theme.accent.opacity(0.12), in: .capsule)
+        } else if let nudge = endgameNudge {
+            Text(nudge)
+                .font(.caption2.weight(.semibold))
+                .foregroundStyle(Theme.accent)
+                .lineLimit(1)
+                .minimumScaleFactor(0.85)
+                .padding(.vertical, Theme.Spacing.xs)
+        }
+    }
+
+    /// The interactive nudge. Only the stall tier is tappable — the endgame
+    /// line is encouragement, with nothing to act on.
+    @ViewBuilder
+    private var inlineNudge: some View {
+        if vm.isStallNudgeActive {
+            Button {
+                onStallTap?()
+            } label: {
+                nudgeBody.contentShape(.capsule)
+            }
+            .buttonStyle(.plain)
+            .accessibilityHint(stallNudgeAccessibilityHint)
+            // Fades in place. The old row slid up from the bar's edge, which
+            // only read as motion because the bar was growing underneath it.
+            .transition(.opacity)
+        } else if endgameNudge != nil {
+            nudgeBody
+                .accessibilityHidden(true)
+                .transition(.opacity)
+        }
     }
 
     /// The stall line's copy, matched to the action the tap performs. The
     /// early tier promises a letter, not a check — under 40% fill there is
     /// nothing worth checking, and a vague "stuck?" with no offer is exactly
     /// the line a quitting player ignores.
+    /// Short by necessity: sharing the number line leaves roughly 150pt on a
+    /// 402pt screen, and the old full sentences ran to ~178pt — they fit only
+    /// by pressing right up against "10 Down", which is what made the bar feel
+    /// airless. The "Stuck?" prefix is what got cut, and the existing note
+    /// below argues that is the right half to lose: the offer is the part that
+    /// stops a quitting player, not the question.
     private var stallNudgeText: String {
         switch vm.stallNudgeKind {
-        case .checkAnswers: "Stuck? Check your answers"
-        case .readVerse: "Stuck? Read the verse — it's free"
-        case .freeLetter: "Stuck? Tap for a free letter"
+        case .checkAnswers: "Check answers"
+        case .readVerse: "Read the verse"
+        case .freeLetter: "Free letter"
         }
     }
 
@@ -92,8 +151,8 @@ struct ClueBarView: View {
     private var endgameNudge: String? {
         guard !vm.puzzle.isMini, !vm.isComplete else { return nil }
         switch vm.remainingClueCount {
-        case 1: return "Last clue — you've got this!"
-        case 2: return "Only 2 clues to go!"
+        case 1: return "Last clue!"
+        case 2: return "2 clues to go!"
         default: return nil
         }
     }
@@ -113,15 +172,33 @@ struct ClueBarView: View {
             Button {
                 vm.toggleDirection()
             } label: {
-                VStack(alignment: .leading, spacing: 2) {
+                VStack(alignment: .leading, spacing: Theme.Spacing.s) {
                     if let slot = vm.activeSlot {
-                        Text("\(slot.number) \(slot.direction.label)")
-                            .font(.caption.weight(.semibold))
-                            .foregroundStyle(Theme.accent)
+                        HStack(spacing: Theme.Spacing.s) {
+                            Text("\(slot.number) \(slot.direction.label)")
+                                .font(.caption.weight(.semibold))
+                                .foregroundStyle(Theme.accent)
+                                .layoutPriority(1)
+                            // Without this the row hugs its content and the
+                            // spacer collapses, parking the pill against the
+                            // number instead of out at the column's edge.
+                            Spacer(minLength: Theme.Spacing.m)
+                            // Invisible twin of the overlaid pill: it claims
+                            // the width so the number can never collide with
+                            // it, and collapses to nothing when no nudge is
+                            // showing.
+                            nudgeBody.hidden()
+                        }
+                        .frame(maxWidth: .infinity)
                         Text(slot.clue)
                             .font(.callout)
                             .foregroundStyle(.primary)
-                            .lineLimit(2)
+                            // Reserved, not just capped: without it a one-line
+                            // clue and a two-line clue give the bar different
+                            // heights, so the grid reflowed on plain clue
+                            // navigation too — the same bug as the nudge row,
+                            // just triggered more often.
+                            .lineLimit(2, reservesSpace: true)
                     } else {
                         Text("Select a cell to begin")
                             .font(.callout)
@@ -135,6 +212,12 @@ struct ClueBarView: View {
             .accessibilityElement(children: .combine)
             .accessibilityLabel(clueAccessibilityLabel)
             .accessibilityHint("Switches between across and down")
+            // Overlaid rather than stacked into the label: it must stay its
+            // own focusable control, and `children: .combine` above would
+            // swallow it into the clue element if it were a child.
+            .overlay(alignment: .topTrailing) {
+                if !dynamicTypeSize.isAccessibilitySize { inlineNudge }
+            }
 
             // Only on clues that have a passage: an always-present icon would
             // advertise a hint most clues can't offer yet, and a dimmed one is
