@@ -354,9 +354,18 @@ struct CrosswordGameView: View {
             // one-shot version spent the whole on-ramp on a single puzzle.
             // Free: no hint spent, `usedHint` untouched, so an unaided solve
             // still counts. Never on a resume or replay.
+            //
+            // Paced, not instant: the letters land one at a time so the player
+            // watches a letter arrive in a square. A word that is simply there
+            // when the screen opens taught nothing — see
+            // `GameViewModel.giftStarterWordPaced`. The banner follows the
+            // reveal rather than racing it, so the demonstration lands first
+            // and the caption only names what was just shown.
             if profile.isStillLearning,
                !rec.isCompleted, !isResume,
-               let gifted = vm.giftStarterWord() {
+               let gifted = await vm.giftStarterWordPaced(
+                   letterInterval: reduceMotion ? .zero : .milliseconds(170)
+               ) {
                 withAnimation(.snappy) { showStarterGiftNote = true }
                 analytics.log(.starterWordGifted(
                     puzzleID: puzzle.id,

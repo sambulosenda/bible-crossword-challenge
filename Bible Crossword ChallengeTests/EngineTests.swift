@@ -835,6 +835,84 @@ struct EngineTests {
         #expect(vm2.activeSlot?.answer == "CAT")
     }
 
+    // MARK: - Paced starter reveal
+
+    @Test func pacedGiftLandsTheSameWordAsTheInstantGift() async {
+        let vm = GameViewModel(puzzle: makePuzzle())
+        let gifted = await vm.giftStarterWordPaced(letterInterval: .zero)
+        #expect(gifted?.answer == "CAT")
+        #expect(vm.cell(at: GridPos(row: 0, col: 0)).entry == "C")
+        #expect(vm.cell(at: GridPos(row: 0, col: 1)).entry == "A")
+        #expect(vm.cell(at: GridPos(row: 0, col: 2)).entry == "T")
+        #expect(vm.hintsUsed == 0)
+        #expect(!vm.isComplete)
+        // Same landing spot as the instant path: a crossing word, not the gift.
+        #expect(vm.activeSlot?.answer == "COD")
+        // The reveal is over, so nothing is left half-open.
+        #expect(!vm.isRevealingStarterWord)
+    }
+
+    @Test func pacedGiftLocksItsCellsLikeTheInstantGift() async {
+        let vm = GameViewModel(puzzle: makePuzzle())
+        await vm.giftStarterWordPaced(letterInterval: .zero)
+        vm.select(GridPos(row: 0, col: 1))
+        vm.enter("X")
+        #expect(vm.cell(at: GridPos(row: 0, col: 1)).entry == "A")
+        #expect(vm.snapshot()["0,1"] == "a")
+    }
+
+    @Test func typingDuringTheRevealLandsTheWholeGiftFirst() async {
+        // The hazard the flush exists for: a player who types while the word
+        // is still assembling must never see a half-gifted grid, and must
+        // never be able to type into one of the gift's own squares.
+        let vm = GameViewModel(puzzle: makePuzzle())
+        let reveal = Task { await vm.giftStarterWordPaced(letterInterval: .milliseconds(50)) }
+        // Interrupt after the first letter but before the word finishes.
+        try? await Task.sleep(for: .milliseconds(60))
+        #expect(vm.isRevealingStarterWord)
+        vm.enter("Z")
+        // Every gifted letter is present and correct despite the interruption.
+        #expect(vm.cell(at: GridPos(row: 0, col: 0)).entry == "C")
+        #expect(vm.cell(at: GridPos(row: 0, col: 1)).entry == "A")
+        #expect(vm.cell(at: GridPos(row: 0, col: 2)).entry == "T")
+        #expect(!vm.isRevealingStarterWord)
+        await reveal.value
+        // Still whole after the reveal task unwinds — no double commit, and
+        // the gift's cells were never overwritten by the typed letter.
+        #expect(vm.cell(at: GridPos(row: 0, col: 1)).entry == "A")
+        #expect(vm.hintsUsed == 0)
+    }
+
+    @Test func aTapDuringTheRevealLandsTheWholeGift() async {
+        let vm = GameViewModel(puzzle: makePuzzle())
+        let reveal = Task { await vm.giftStarterWordPaced(letterInterval: .milliseconds(50)) }
+        try? await Task.sleep(for: .milliseconds(60))
+        vm.tapCell(GridPos(row: 0, col: 2))
+        #expect(!vm.isRevealingStarterWord)
+        #expect(vm.cell(at: GridPos(row: 0, col: 2)).entry == "T")
+        await reveal.value
+        #expect(vm.cell(at: GridPos(row: 0, col: 0)).entry == "C")
+    }
+
+    @Test func pacedGiftRefusesASecondGiftWhileRevealing() async {
+        let vm = GameViewModel(puzzle: makePuzzle())
+        let reveal = Task { await vm.giftStarterWordPaced(letterInterval: .milliseconds(50)) }
+        try? await Task.sleep(for: .milliseconds(60))
+        // A re-entrant caller must not interleave a second word into the grid.
+        #expect(vm.giftStarterWord() == nil)
+        await reveal.value
+        #expect(vm.cell(at: GridPos(row: 0, col: 2)).entry == "T")
+    }
+
+    @Test func pacedGiftRefusesWhenTheGridHasAnyProgress() async {
+        let vm = GameViewModel(puzzle: makePuzzle())
+        vm.enter("C")
+        let gifted = await vm.giftStarterWordPaced(letterInterval: .zero)
+        #expect(gifted == nil)
+        #expect(!vm.isRevealingStarterWord)
+        #expect(vm.cell(at: GridPos(row: 0, col: 1)).entry == nil)
+    }
+
     @Test func giftRefusesWhenTheGridHasAnyProgress() {
         let vm = GameViewModel(puzzle: makePuzzle())
         vm.enter("C")

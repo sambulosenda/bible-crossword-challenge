@@ -249,6 +249,17 @@ final class GameViewModel {
     private(set) var cellTaps = 0
     private(set) var keyPresses = 0
 
+    /// The starter gift mid-reveal: the slot being filled and how many of its
+    /// letters have landed. Non-nil only while `giftStarterWordPaced` is
+    /// dropping letters — the synchronous `giftStarterWord()` opens and closes
+    /// it inside one call, so nothing outside ever observes it set.
+    private var pendingGift: (slot: Slot, placed: Int)?
+
+    /// True while the starter word is still assembling. The grid is a valid,
+    /// partially-gifted state throughout; this exists so the view can hold any
+    /// "your turn" cue back until the word has actually landed.
+    var isRevealingStarterWord: Bool { pendingGift != nil }
+
     init(
         puzzle: Puzzle,
         learning: Bool = false,
@@ -391,6 +402,7 @@ final class GameViewModel {
     /// player touching the grid, and for this question that is the whole point.
     func tapCell(_ pos: GridPos) {
         cellTaps += 1
+        flushStarterGift()
         select(pos)
     }
 
@@ -454,6 +466,7 @@ final class GameViewModel {
 
     func enter(_ letter: Character) {
         keyPresses += 1
+        flushStarterGift()
         guard isSelectable(selected) else { return }
         noteInput()
         // Hint-revealed cells are locked — typing skips over them instead of
@@ -480,6 +493,7 @@ final class GameViewModel {
 
     func delete() {
         keyPresses += 1
+        flushStarterGift()
         noteInput()
         var cleared: GridPos?
         let current = grid[selected.row][selected.col]
@@ -666,19 +680,83 @@ final class GameViewModel {
     /// existing progress — a resume must never be overwritten.
     @discardableResult
     func giftStarterWord() -> Slot? {
-        guard !isComplete, !hasAnyEntries, let slot = activeSlot else { return nil }
-        for (i, pos) in slot.positions.enumerated() {
-            grid[pos.row][pos.col].entry = Array(slot.answer)[i]
-            grid[pos.row][pos.col].isRevealed = true
+        guard let slot = beginStarterGift() else { return nil }
+        while placeNextStarterLetter() {}
+        commitStarterGift()
+        return slot
+    }
+
+    /// Paced twin of `giftStarterWord()`: the same gift, but the letters drop
+    /// in one at a time so the player *watches* a letter land in a square.
+    ///
+    /// The instant fill solved the wrong half of the problem. On 2.10 — the
+    /// first build carrying `cellTaps`/`keyPresses` — 4 of the 6 abandons in
+    /// the 10–25% fill band had zero of both, and that band is the one the
+    /// gift itself creates: the foothold arrived, the player never touched
+    /// the grid, and left anyway (46% of all 2.10 abandons never interacted;
+    /// on the Mini, 5 of 7). A word that is simply *there* when the screen
+    /// opens teaches nothing. A word that visibly assembles demonstrates the
+    /// mechanic the gift banner only describes.
+    ///
+    /// Cancellation-safe: a cancelled sleep just places the remainder without
+    /// waiting, so a dismissed screen still leaves a whole, committed gift.
+    @discardableResult
+    func giftStarterWordPaced(letterInterval: Duration = .milliseconds(170)) async -> Slot? {
+        guard let slot = beginStarterGift() else { return nil }
+        while placeNextStarterLetter() {
+            try? await Task.sleep(for: letterInterval)
         }
+        // Nil already when player input flushed the gift mid-reveal.
+        if pendingGift != nil { commitStarterGift() }
+        return slot
+    }
+
+    /// Shared guard for both gift paths. Refuses a second gift while one is
+    /// still revealing, so a re-entrant caller can't interleave two words.
+    private func beginStarterGift() -> Slot? {
+        guard !isComplete, !hasAnyEntries, pendingGift == nil,
+              let slot = activeSlot else { return nil }
+        pendingGift = (slot, 0)
+        return slot
+    }
+
+    /// Lands the next letter of the pending gift. False once the word is full
+    /// (or the gift was flushed), which is what ends the paced loop.
+    @discardableResult
+    private func placeNextStarterLetter() -> Bool {
+        guard let gift = pendingGift,
+              gift.placed < gift.slot.positions.count else { return false }
+        let pos = gift.slot.positions[gift.placed]
+        grid[pos.row][pos.col].entry = Array(gift.slot.answer)[gift.placed]
+        grid[pos.row][pos.col].isRevealed = true
+        pendingGift = (gift.slot, gift.placed + 1)
+        return true
+    }
+
+    /// Close the gift: land anything outstanding, fire the win moment, move on.
+    @discardableResult
+    private func commitStarterGift() -> Slot? {
+        guard let gift = pendingGift else { return nil }
+        while placeNextStarterLetter() {}
+        pendingGift = nil
         // Loud on purpose: the cascade flash and flame pulse are the win
         // moment the gift was built to manufacture — silent, it read as
         // pre-filled furniture, not a head start. No completion check — a
         // gift must never finish a puzzle, and every shipped grid has more
         // than one word.
-        refreshSolvedSlots(around: slot.positions)
-        advanceToNextIncompleteSlot(after: slot)
-        return slot
+        refreshSolvedSlots(around: gift.slot.positions)
+        advanceToNextIncompleteSlot(after: gift.slot)
+        return gift.slot
+    }
+
+    /// Player input lands the rest of the gift at once. A half-revealed word
+    /// must never be a surface anyone can type into: the paced reveal owns the
+    /// grid only until the player reaches for it, and then it gets out of the
+    /// way. Called before the input is applied, so the letter or tap acts on
+    /// the settled grid (and on the crossing word the commit selects).
+    private func flushStarterGift() {
+        guard pendingGift != nil else { return }
+        commitStarterGift()
     }
 
     // MARK: - Word completion tracking
