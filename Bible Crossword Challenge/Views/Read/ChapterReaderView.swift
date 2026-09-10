@@ -280,7 +280,7 @@ struct ChapterReaderView: View {
                 return
             }
             _ = memoryVerses.start(reference: reference, verseText: verse.text)
-            analytics.log(.memoryVerseStarted(reference: reference, level: 1))
+            analytics.log(.memoryVerseAdded(reference: reference, source: "reader"))
             show("Added to Memory Verses")
         case .bookmark:
             let kept = bookmarks.toggle(

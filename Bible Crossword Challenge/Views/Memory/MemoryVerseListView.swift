@@ -62,7 +62,7 @@ struct MemoryVerseListView: View {
             set: { if !$0 { startedKey = nil } }
         )) {
             if let startedKey {
-                MemoryPracticeView(referenceKey: startedKey)
+                MemoryPracticeView(referenceKey: startedKey, source: "list")
             }
         }
     }
@@ -119,6 +119,17 @@ struct MemoryVerseListView: View {
                         Image(systemName: "medal.fill")
                             .font(.caption)
                             .foregroundStyle(.yellow)
+                    } else if let at = memoryVerses.levelUpAvailableAt(entry) {
+                        // The anti-grind wait, said out loud: a flawless round
+                        // inside it practices but doesn't level.
+                        Text("Level up in \(TimeFormat.countdown(at.timeIntervalSinceNow))")
+                            .font(.caption2.weight(.bold))
+                            .lineLimit(1)
+                            .fixedSize()
+                            .padding(.horizontal, Theme.Spacing.s)
+                            .padding(.vertical, 2)
+                            .background(Color.primary.opacity(0.08), in: .capsule)
+                            .foregroundStyle(.secondary)
                     }
                     Spacer(minLength: 0)
                     MasteryDots(level: entry.level)
@@ -180,6 +191,7 @@ struct MemoryVerseListView: View {
             return
         }
         let entry = memoryVerses.start(reference: candidate.reference, verseText: candidate.verseText)
+        analytics.log(.memoryVerseAdded(reference: candidate.reference, source: "list"))
         startedKey = entry.referenceKey
     }
 
@@ -223,6 +235,9 @@ struct MemoryVerseListView: View {
             parts.append("Level \(entry.level) of \(MemoryVerseStore.masteredLevel)")
         }
         if isDue { parts.append("Due for review") }
+        if let at = memoryVerses.levelUpAvailableAt(entry) {
+            parts.append("Next level-up in \(TimeFormat.countdown(at.timeIntervalSinceNow))")
+        }
         return parts.joined(separator: ". ")
     }
 }

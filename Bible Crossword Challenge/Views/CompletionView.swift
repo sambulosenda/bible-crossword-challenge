@@ -92,6 +92,7 @@ struct CompletionView: View {
     @Environment(\.requestReview) private var requestReview
     @Environment(\.puzzleProvider) private var puzzleProvider
     @Environment(\.readerRouter) private var readerRouter
+    @Environment(\.memoryVerses) private var memoryVerses
     @Environment(\.analytics) private var analytics
     @Environment(\.challengeService) private var challengeService
     @Environment(\.challengeHistory) private var challengeHistory
@@ -950,6 +951,8 @@ struct CompletionView: View {
                 .font(.subheadline.weight(.semibold))
                 .foregroundStyle(.secondary)
 
+            memorizeButton
+
             Button {
                 analytics.log(.scriptureOpened(reference: puzzle.reference, source: "puzzle_completion"))
                 readerRouter.open(reference: puzzle.reference, source: "puzzle_completion")
@@ -966,6 +969,47 @@ struct CompletionView: View {
         .padding(.horizontal, Theme.Spacing.m)
         .padding(.vertical, Theme.Spacing.s)
         .frame(maxWidth: .infinity)
+    }
+
+    /// "Try it from memory": the verse they just filled in, as the level-1
+    /// cloze grid, one tap away. A pill, not a link — this screen has already
+    /// run that comparison: the chain pill is tapped by 111 of 203 solvers a
+    /// month, the "Read the passage" link under this verse by 2. Absent when
+    /// the free shelf is full rather than shown to bounce off the paywall
+    /// (38 opens, 0 buys in the 30 days to 2026-09-10). A verse already on
+    /// the shelf offers practice instead of a second add.
+    @ViewBuilder
+    private var memorizeButton: some View {
+        if MemoryCloze.isEligible(verseText: puzzle.verse) {
+            let key = MemoryCloze.referenceKey(puzzle.reference)
+            let held = memoryVerses.entry(for: key) != nil
+            if held || memoryVerses.canStartNewVerse(isPremium: store.isPremium) {
+                Button {
+                    if !held {
+                        memoryVerses.start(reference: puzzle.reference, verseText: puzzle.verse)
+                        analytics.log(.memoryVerseAdded(reference: puzzle.reference, source: "completion"))
+                    }
+                    // The same route as the chain pill: a link, so the push
+                    // lands a turn after this cover and the grid are gone.
+                    var link = URLComponents()
+                    link.scheme = "biblecrossword"
+                    link.host = "memory"
+                    link.queryItems = [
+                        URLQueryItem(name: "ref", value: key),
+                        URLQueryItem(name: "src", value: "completion"),
+                    ]
+                    if let url = link.url {
+                        openURL(url)
+                        onHome()
+                    }
+                } label: {
+                    Label(held ? "Practice it from memory" : "Try it from memory", systemImage: "brain")
+                }
+                .buttonStyle(.pillTonal)
+                .padding(.top, Theme.Spacing.xs)
+                .accessibilityHint("Closes this screen and opens the verse as a memory grid")
+            }
+        }
     }
 
     private var freezeCard: some View {

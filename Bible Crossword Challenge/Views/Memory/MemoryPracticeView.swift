@@ -16,10 +16,14 @@ import SwiftUI
 /// Navigation value pushing a practice session for a held verse.
 struct MemoryPracticeRoute: Hashable {
     let referenceKey: String
+    /// Which surface pushed the session — `memory_verse_started.source`.
+    var source: String = "list"
 }
 
 struct MemoryPracticeView: View {
     let referenceKey: String
+    /// Which surface opened the session — `memory_verse_started.source`.
+    var source: String = "list"
 
     @Environment(\.memoryVerses) private var memoryVerses
     @Environment(\.analytics) private var analytics
@@ -85,7 +89,7 @@ struct MemoryPracticeView: View {
 
         if !didLogStart {
             didLogStart = true
-            analytics.log(.memoryVerseStarted(reference: entry.reference, level: entry.playLevel))
+            analytics.log(.memoryVerseStarted(reference: entry.reference, level: entry.playLevel, source: source))
         }
     }
 
@@ -269,6 +273,12 @@ struct MemoryPracticeView: View {
         }
         if let vm, vm.hintsUsed > 0 {
             return "Practiced with hints — finish a round without them to raise your level."
+        }
+        // The spacing held the level. Say how long, or a flawless round that
+        // "didn't count" reads as a bug and the next attempt is a re-run now.
+        if let entry, let at = memoryVerses.levelUpAvailableAt(entry) {
+            let wait = TimeFormat.countdown(at.timeIntervalSinceNow)
+            return "Flawless. Level-ups need a break between rounds — the next one counts in \(wait)."
         }
         return "Practiced. Come back after a break to raise your level."
     }

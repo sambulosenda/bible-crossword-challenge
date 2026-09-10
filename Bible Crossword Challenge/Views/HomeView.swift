@@ -496,7 +496,7 @@ struct HomeView: View {
                 MemoryVerseListView()
             }
             .navigationDestination(for: MemoryPracticeRoute.self) { route in
-                MemoryPracticeView(referenceKey: route.referenceKey)
+                MemoryPracticeView(referenceKey: route.referenceKey, source: route.source)
             }
         }
     }

@@ -23,6 +23,7 @@ struct RootView: View {
     @Environment(\.notifications) private var notifications
     @Environment(\.gameCenter) private var gameCenter
     @Environment(\.readerRouter) private var readerRouter
+    @Environment(\.memoryVerses) private var memoryVerses
     @Environment(\.puzzleLaunch) private var puzzleLaunch
     @Environment(\.puzzleProvider) private var puzzleProvider
     @Environment(\.challengeService) private var challengeService
@@ -302,6 +303,23 @@ struct RootView: View {
            let puzzle = puzzleProvider.puzzle(id: id) {
             selectedTab = .today
             todayPath = NavigationPath([puzzle])
+            return
+        }
+
+        // A memory verse (`biblecrossword://memory?ref=…&src=…`) — the
+        // completion screen's "Try it from memory". A link rather than a
+        // direct path write for the reason the chain above is one: the cover
+        // is coming down and the grid popping in the same beat, and a path
+        // replaced inside that beat pushed a practice screen that rendered
+        // blank. The URL lands a turn later, once the stack has settled.
+        // Only a verse already on the shelf: the link doesn't add.
+        if url.host() == "memory",
+           let items = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems,
+           let key = items.first(where: { $0.name == "ref" })?.value,
+           memoryVerses.entry(for: key) != nil {
+            let source = items.first(where: { $0.name == "src" })?.value ?? "link"
+            selectedTab = .today
+            todayPath = NavigationPath([MemoryPracticeRoute(referenceKey: key, source: source)])
             return
         }
 

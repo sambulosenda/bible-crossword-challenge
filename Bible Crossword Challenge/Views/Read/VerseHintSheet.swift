@@ -19,6 +19,8 @@ struct VerseHintSheet: View {
 
     @Environment(\.scripture) private var scripture
     @Environment(\.analytics) private var analytics
+    @Environment(\.memoryVerses) private var memoryVerses
+    @Environment(StoreService.self) private var store
     @Environment(\.dismiss) private var dismiss
 
     @State private var window: [BibleVerse]?
@@ -89,17 +91,53 @@ struct VerseHintSheet: View {
                     }
                 }
 
-                Button {
-                    expanded = true
-                } label: {
-                    Label("Read the chapter", systemImage: "book")
+                VStack(spacing: Theme.Spacing.s) {
+                    Button {
+                        expanded = true
+                    } label: {
+                        Label("Read the chapter", systemImage: "book")
+                    }
+                    .buttonStyle(.pillTonal)
+
+                    memorizeButton(verses)
                 }
-                .buttonStyle(.pillTonal)
             }
             .frame(maxWidth: 640, alignment: .leading)
             .frame(maxWidth: .infinity)
             .padding(.horizontal, Theme.Spacing.l)
             .padding(.vertical, Theme.Spacing.m)
+        }
+    }
+
+    /// The verse the clue came from, into memory verses in one tap. This
+    /// sheet is where players actually meet the verse (92% of reader opens
+    /// in the 30 days to 2026-09-03) and it offered nothing to do with it —
+    /// the chapter long-press that does was found by one player in a month.
+    /// Adds without leaving the grid; practice waits on Today's card. Absent
+    /// when the free shelf is full: a door onto a paywall isn't worth showing
+    /// (38 opens, 0 buys in the 30 days to 2026-09-10).
+    @ViewBuilder
+    private func memorizeButton(_ verses: [BibleVerse]) -> some View {
+        if let number = target.verse,
+           let verse = verses.first(where: { $0.number == number }),
+           MemoryCloze.isEligible(verseText: verse.text) {
+            if memoryVerses.entry(for: MemoryCloze.referenceKey(reference)) != nil {
+                Label("In Memory Verses", systemImage: "brain.fill")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, Theme.Spacing.s)
+                    .accessibilityLabel("\(reference) is in your memory verses")
+            } else if memoryVerses.canStartNewVerse(isPremium: store.isPremium) {
+                Button {
+                    memoryVerses.start(reference: reference, verseText: verse.text)
+                    analytics.log(.memoryVerseAdded(reference: reference, source: "hint_sheet"))
+                } label: {
+                    Label("Learn it by heart", systemImage: "brain")
+                }
+                .buttonStyle(.pillTonal)
+                .accessibilityHint("Adds the verse to your memory verses")
+            }
         }
     }
 

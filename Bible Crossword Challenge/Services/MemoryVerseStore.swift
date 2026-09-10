@@ -101,6 +101,18 @@ final class MemoryVerseStore {
 
     var dueCount: Int { entries.count(where: isDue) }
 
+    /// When a flawless round would next raise this verse's level, while the
+    /// anti-grind spacing is still holding it. Nil once a level-up is
+    /// available (or the verse is mastered). The practice sheet and the list
+    /// row say the wait out loud: in the 60 days to 2026-09-10, 24 of 61
+    /// rounds at levels 2–3 were hint-free and didn't count, and nothing told
+    /// the player why or for how long.
+    func levelUpAvailableAt(_ entry: Entry) -> Date? {
+        guard !entry.isMastered, let last = entry.lastLeveledUpAt else { return nil }
+        let at = last.addingTimeInterval(Self.levelUpSpacing)
+        return at > now() ? at : nil
+    }
+
     // MARK: - Gating
 
     /// Free players hold up to `freeVerseLimit` verses; mastered ones don't

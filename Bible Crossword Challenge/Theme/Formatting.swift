@@ -17,6 +17,19 @@ enum TimeFormat {
         }
         return String(format: "%d:%02d", minutes, secs)
     }
+
+    /// A wait, rounded up to the minute: "3h 40m", "40m", or "under a
+    /// minute". For a countdown read once, not a ticking clock.
+    static func countdown(_ seconds: TimeInterval) -> String {
+        guard seconds >= 60 else { return "under a minute" }
+        let minutes = Int((seconds / 60).rounded(.up))
+        let hours = minutes / 60
+        let rest = minutes % 60
+        if hours > 0 {
+            return rest > 0 ? "\(hours)h \(rest)m" : "\(hours)h"
+        }
+        return "\(minutes)m"
+    }
 }
 
 enum ShareGrid {

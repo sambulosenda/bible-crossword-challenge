@@ -152,7 +152,7 @@ struct ReadView: View {
                 MemoryVerseListView(source: "read_tab")
             }
             .navigationDestination(for: MemoryPracticeRoute.self) { route in
-                MemoryPracticeView(referenceKey: route.referenceKey)
+                MemoryPracticeView(referenceKey: route.referenceKey, source: route.source)
             }
         }
     }

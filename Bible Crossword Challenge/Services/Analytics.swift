@@ -269,8 +269,8 @@ enum AnalyticsEvent {
     /// for the chapter reader itself).
     case readerClosed(source: String, seconds: Int, chaptersPaged: Int, scrolledPastVerse: Bool, expanded: Bool)
     /// The reader's long-press: `kind` is memorize / bookmark / share / copy.
-    /// Memorize from here is the first way into memory verses that isn't a
-    /// solved puzzle, so compare its share of `memory_verse_started`.
+    /// Memorize from here was the first way into memory verses that isn't a
+    /// solved puzzle; `memory_verse_added.source` now names every door.
     case verseAction(kind: String, reference: String)
     case bookmarksOpened(count: Int)
     /// The puzzle chips at the foot of a chapter — the reader's way back into
@@ -304,8 +304,16 @@ enum AnalyticsEvent {
     // grid was built at, so the level-4 hint rate — the full-recall cliff —
     // can be read directly. `leveled_up` false with `hints_used` 0 means the
     // anti-grind spacing held the level, not a failure.
+    //
+    // `added` is a verse entering the list; `started` is a practice session
+    // opening. Both carry `source` — the door: `list`, `completion` (the
+    // solve's verse block), `hint_sheet` (the verse hint mid-grid), or
+    // `reader` (the chapter long-press). In the 30 days to 2026-09-10 the
+    // list was the only door in use — 37 of 38 list opens came from the Today
+    // card — so the split is the readout on the two doors added since.
     case memoryListOpened(source: String)
-    case memoryVerseStarted(reference: String, level: Int)
+    case memoryVerseAdded(reference: String, source: String)
+    case memoryVerseStarted(reference: String, level: Int, source: String)
     case memoryVerseCompleted(reference: String, level: Int, leveledUp: Bool, hintsUsed: Int)
     case memoryVerseMastered(reference: String)
     // The two screens re-homed in 2.8: the journey map moved from Profile to
@@ -388,6 +396,7 @@ enum AnalyticsEvent {
         case .planStopped: return "plan_stopped"
         case .completionChainTapped: return "completion_chain_tapped"
         case .memoryListOpened: return "memory_list_opened"
+        case .memoryVerseAdded: return "memory_verse_added"
         case .memoryVerseStarted: return "memory_verse_started"
         case .memoryVerseCompleted: return "memory_verse_completed"
         case .memoryVerseMastered: return "memory_verse_mastered"
@@ -578,8 +587,10 @@ enum AnalyticsEvent {
             return ["from_puzzle_id": from, "to_puzzle_id": to]
         case .memoryListOpened(let source):
             return ["source": source]
-        case .memoryVerseStarted(let reference, let level):
-            return ["reference": reference, "level": level]
+        case .memoryVerseAdded(let reference, let source):
+            return ["reference": reference, "source": source]
+        case .memoryVerseStarted(let reference, let level, let source):
+            return ["reference": reference, "level": level, "source": source]
         case .memoryVerseCompleted(let reference, let level, let leveledUp, let hintsUsed):
             return [
                 "reference": reference,
