@@ -52,3 +52,6 @@ fastlane/play-store-credentials.json
 
 # Android Studio writes this at the repo root, not under android/
 .idea/
+
+# Local MCP server registration (machine-specific localhost endpoints)
+.mcp.json
