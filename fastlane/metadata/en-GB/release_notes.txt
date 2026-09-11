@@ -1,5 +1,7 @@
-Thanks for playing Bible Crossword Challenge! A smaller update this time:
+Thanks for playing Bible Crossword Challenge! This one is about the verses:
 
-• Hints now say plainly what each one costs and when your free hints come back, instead of leaving you to work it out
-• The Sunday 21×21 waits until you've finished a few puzzles, so your first days start gentler
-• Clearer, more consistent wording wherever Premium comes up
+• Finish a puzzle and one tap starts learning its verse by heart, right there under the verse
+• Same from the verse hint mid‑puzzle — add it to memory without leaving the grid
+• Practice now says when your next level‑up counts, instead of leaving you to guess
+• Your starter word arrives a letter at a time, so a first puzzle shows you how it works instead of just handing you the answer
+• The clue bar has room to breathe — steadier text, and the grid no longer shifts when a hint appears
