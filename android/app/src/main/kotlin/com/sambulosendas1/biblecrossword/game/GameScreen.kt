@@ -40,6 +40,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.sambulosendas1.biblecrossword.domain.completion.CompletionOutcome
 import com.sambulosendas1.biblecrossword.domain.content.GridPos
 import com.sambulosendas1.biblecrossword.domain.content.Puzzle
 import com.sambulosendas1.biblecrossword.domain.engine.CheckScope
@@ -100,6 +101,9 @@ private fun SolveSurface(
     modifier: Modifier,
     onClose: () -> Unit,
 ) {
+    val prefsState by viewModel.prefs.collectAsStateWithLifecycle()
+    val pendingStreakBreak = prefsState.pendingStreakBreak
+    val completedThisWeek by viewModel.completedThisWeek.collectAsStateWithLifecycle()
     val engine = holder.engine
     val state = holder.state
     val colors = BccTheme.colors
@@ -114,6 +118,7 @@ private fun SolveSurface(
     var showChecks by remember { mutableStateOf(false) }
     var showClues by remember { mutableStateOf(false) }
     var showComplete by remember { mutableStateOf(false) }
+    val completion by viewModel.completion.collectAsStateWithLifecycle()
     var confirmReveal by remember { mutableStateOf(false) }
 
     /** Every mutation goes through here so nothing can change the grid without saving it. */
@@ -158,8 +163,13 @@ private fun SolveSurface(
         }
         engine.onComplete = {
             haptics.success()
-            showComplete = true
-            viewModel.saveNow(engine)
+            // Hold the grid long enough for its celebration wave to finish
+            // before the payoff screen covers it.
+            scope.launch {
+                viewModel.complete(engine, puzzle, pendingStreakBreak)
+                delay(CompletionOutcome.celebrationHoldMillis(puzzle.size, reduceMotion = false))
+                showComplete = true
+            }
         }
         onDispose {
             engine.onWordCompleted = null
@@ -319,12 +329,17 @@ private fun SolveSurface(
         )
     }
 
-    if (showComplete) {
-        AlertDialog(
-            onDismissRequest = { showComplete = false },
-            title = { Text("Solved") },
-            text = { Text("${puzzle.title} in ${clockText(state.elapsedSeconds)}") },
-            confirmButton = { TextButton(onClick = { showComplete = false; onClose() }) { Text("Done") } },
-        )
+    completion?.let { result ->
+        if (showComplete) {
+            CompletionScreen(
+                puzzle = puzzle,
+                result = result,
+                completedThisWeek = completedThisWeek,
+                onClose = onClose,
+                // The invite loop and the share card land in P8.
+                onChallenge = {},
+                onShare = {},
+            )
+        }
     }
 }

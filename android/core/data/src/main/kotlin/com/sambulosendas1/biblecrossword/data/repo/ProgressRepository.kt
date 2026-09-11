@@ -47,10 +47,18 @@ class ProgressRepository @Inject constructor(
     fun observeRecords(): Flow<Map<String, PuzzleRecord>> =
         recordDao.observeAll().map { list -> list.associate { it.puzzleID to it.toDomain() } }
 
+    /** A one-shot read of every record, keyed by puzzle id. */
+    suspend fun observeRecordsSnapshot(): Map<String, PuzzleRecord> =
+        recordDao.getAll().associate { it.puzzleID to it.toDomain() }
+
     suspend fun saveRecord(record: PuzzleRecord) {
         recordDao.upsert(record.copy(updatedAt = Instant.now()).toEntity())
     }
 
     /** Puzzles the player has actually worked on — the free tier's grandfather clause. */
     suspend fun startedPuzzleIDs(): Set<String> = recordDao.getAll().map { it.puzzleID }.toSet()
+
+    /** Puzzles actually finished — what pack and quest credit is judged against. */
+    suspend fun completedPuzzleIDs(): Set<String> =
+        recordDao.getAll().filter { it.isCompleted }.map { it.puzzleID }.toSet()
 }

@@ -2,8 +2,11 @@ package com.sambulosendas1.biblecrossword.game
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sambulosendas1.biblecrossword.data.content.ContentRepository
 import com.sambulosendas1.biblecrossword.data.prefs.AppPrefs
+import com.sambulosendas1.biblecrossword.data.prefs.AppSignals
 import com.sambulosendas1.biblecrossword.data.repo.ProgressRepository
+import com.sambulosendas1.biblecrossword.domain.completion.CompletionOutcome
 import com.sambulosendas1.biblecrossword.domain.content.Puzzle
 import com.sambulosendas1.biblecrossword.domain.engine.GameEngine
 import com.sambulosendas1.biblecrossword.domain.engine.HintType
@@ -32,7 +35,9 @@ import javax.inject.Inject
 @HiltViewModel
 class GameViewModel @Inject constructor(
     private val progress: ProgressRepository,
-    private val prefs: AppPrefs,
+    private val appPrefs: AppPrefs,
+    private val content: ContentRepository,
+    private val signals: AppSignals,
 ) : ViewModel() {
 
     sealed interface Load {
@@ -50,6 +55,21 @@ class GameViewModel @Inject constructor(
     /** Set when a hint was refused for want of quota — the screen shows the wall. */
     private val _hintWall = MutableStateFlow<HintType?>(null)
     val hintWall: StateFlow<HintType?> = _hintWall.asStateFlow()
+
+    /** The resolved completion, once the puzzle is solved — drives the payoff screen. */
+    private val _completion = MutableStateFlow<CompletionOutcome.Result?>(null)
+    val completion: StateFlow<CompletionOutcome.Result?> = _completion.asStateFlow()
+
+    /** Durable preferences, for the comeback debt the completion has to clear. */
+    val prefs: StateFlow<com.sambulosendas1.biblecrossword.data.prefs.Prefs> get() = appPrefs.state
+
+    /**
+     * Weekdays carrying a completion, for the scorecard row. Recomputed after
+     * the solve is written — read at load time it would omit today's, which is
+     * the one dot the player just earned and is looking for.
+     */
+    private val _completedThisWeek = MutableStateFlow<Set<java.time.DayOfWeek>>(emptySet())
+    val completedThisWeek: StateFlow<Set<java.time.DayOfWeek>> = _completedThisWeek.asStateFlow()
 
     private var profile: PlayerProfile = PlayerProfile()
     private var record: PuzzleRecord? = null
@@ -74,8 +94,8 @@ class GameViewModel @Inject constructor(
             // player inside the learning window, OFF for anyone who learned the
             // grid without it. Flipping a veteran's game under them is worse
             // than making a beginner find a toggle.
-            val seeded = prefs.awaitReady().autoCheckErrors
-                ?: GameEngine.seedAutoCheck(profile.totalPuzzlesCompleted).also { prefs.setAutoCheckErrors(it) }
+            val seeded = appPrefs.awaitReady().autoCheckErrors
+                ?: GameEngine.seedAutoCheck(profile.totalPuzzlesCompleted).also { appPrefs.setAutoCheckErrors(it) }
 
             val engine = GameEngine(puzzle, isLearning = profile.isStillLearning)
             engine.autoCheck = seeded
@@ -86,6 +106,7 @@ class GameViewModel @Inject constructor(
                 engine.seedElapsed(saved.elapsedSeconds)
                 engine.restore(saved.entries, saved.pencil)
             }
+            refreshWeek()
             refreshQuota()
             _load.value = Load.Ready(GameStateHolder(engine))
         }
@@ -139,6 +160,41 @@ class GameViewModel @Inject constructor(
 
     fun dismissHintWall() { _hintWall.value = null }
 
+    /**
+     * The solve landed. Resolves the whole outcome — streak, stats, pack and
+     * quest credit, achievements — in one pure step, then persists it.
+     *
+     * Analytics and the leaderboard post are deliberately read off the result
+     * rather than computed here, so the ordering lives in one tested place.
+     */
+    fun complete(engine: GameEngine, puzzle: Puzzle, pendingStreakBreak: Int) {
+        if (_completion.value != null) return
+        viewModelScope.launch {
+            val catalogue = content.catalogue()
+            val result = CompletionOutcome.resolve(
+                CompletionOutcome.Context(
+                    puzzle = puzzle,
+                    seconds = engine.elapsed(),
+                    profile = profile,
+                    record = record,
+                    solvedPuzzleIDs = progress.completedPuzzleIDs(),
+                    packs = catalogue.packs,
+                    quests = catalogue.quests,
+                    pendingStreakBreak = pendingStreakBreak,
+                    comebackSource = signals.consumeComebackSource().orEmpty(),
+                    now = Instant.now(),
+                )
+            )
+            profile = result.profile
+            record = result.record.copy(entries = engine.snapshot(), pencil = emptyMap())
+            progress.saveProfile(profile)
+            progress.saveRecord(record!!)
+            if (result.isComeback) appPrefs.setPendingStreakBreak(0)
+            refreshWeek()
+            _completion.value = result
+        }
+    }
+
     /** Debounced: typing fires this on every keystroke. */
     fun save(engine: GameEngine) {
         val id = puzzleID ?: return
@@ -172,6 +228,12 @@ class GameViewModel @Inject constructor(
     private fun markHintUsed(used: Boolean) {
         val id = puzzleID ?: return
         record = (record ?: PuzzleRecord(puzzleID = id)).copy(usedHint = used)
+    }
+
+    private suspend fun refreshWeek() {
+        _completedThisWeek.value = com.sambulosendas1.biblecrossword.domain.today.StreakWeek.completedWeekdays(
+            progress.observeRecordsSnapshot().values.mapNotNull { it.completedAt }, Instant.now(),
+        )
     }
 
     private fun refreshQuota() {

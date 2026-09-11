@@ -7,7 +7,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -18,15 +19,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.sambulosendas1.biblecrossword.data.content.ContentRepository
 import com.sambulosendas1.biblecrossword.data.prefs.AppPrefs
 import com.sambulosendas1.biblecrossword.domain.content.Puzzle
 import com.sambulosendas1.biblecrossword.game.GameScreen
+import com.sambulosendas1.biblecrossword.today.TodayScreen
 import com.sambulosendas1.biblecrossword.ui.haptics.LocalHaptics
 import com.sambulosendas1.biblecrossword.ui.haptics.rememberHaptics
 import com.sambulosendas1.biblecrossword.ui.theme.BccTheme
 import dagger.hilt.android.AndroidEntryPoint
-import java.time.LocalDate
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -44,23 +49,46 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val current by prefs.state.collectAsStateWithLifecycle()
-            // P3 harness: today's Mini, straight into the solve loop. The tab
-            // shell and Today screen arrive in P4.
-            var puzzle by remember { mutableStateOf<Puzzle?>(null) }
-            LaunchedEffect(Unit) {
-                puzzle = content.catalogue().dailyMini(LocalDate.now())
-            }
             BccTheme(appTheme = current.appTheme) {
                 CompositionLocalProvider(LocalHaptics provides rememberHaptics()) {
-                    val loaded = puzzle
-                    if (loaded == null) {
-                        Box(Modifier.fillMaxSize().background(BccTheme.colors.background), Alignment.Center) {
-                            Text(getString(R.string.content_loading), color = BccTheme.colors.secondaryLabel)
-                        }
-                    } else {
-                        GameScreen(puzzle = loaded)
-                    }
+                    AppNavigation(content)
                 }
+            }
+        }
+    }
+}
+
+private object Routes {
+    const val TODAY = "today"
+    const val GAME = "game/{puzzleId}"
+    fun game(puzzleId: String) = "game/$puzzleId"
+}
+
+/**
+ * Today → Game. The tab shell (Packs, Library, Read, Profile) arrives with
+ * those screens; routing them before they exist would be four empty tabs.
+ */
+@Composable
+private fun AppNavigation(
+    content: ContentRepository,
+    navController: NavHostController = rememberNavController(),
+) {
+    NavHost(navController, startDestination = Routes.TODAY) {
+        composable(Routes.TODAY) {
+            TodayScreen(onPlay = { puzzle -> navController.navigate(Routes.game(puzzle.id)) })
+        }
+        composable(Routes.GAME) { entry ->
+            val puzzleId = entry.arguments?.getString("puzzleId").orEmpty()
+            var puzzle by remember(puzzleId) { mutableStateOf<Puzzle?>(null) }
+            LaunchedEffect(puzzleId) { puzzle = content.catalogue().puzzle(puzzleId) }
+
+            val loaded = puzzle
+            if (loaded == null) {
+                Box(Modifier.fillMaxSize().background(BccTheme.colors.background), Alignment.Center) {
+                    CircularProgressIndicator(color = BccTheme.colors.accent)
+                }
+            } else {
+                GameScreen(puzzle = loaded, onClose = { navController.popBackStack() })
             }
         }
     }
