@@ -266,6 +266,112 @@ struct SpecVectorsTests {
         try emit(file)
     }
 
+    // MARK: Analytics vocabulary
+
+    /// The event names and parameter keys, exactly as iOS emits them.
+    ///
+    /// This is the one family that protects something already live: the
+    /// PostHog and Firebase projects are **shared with the iOS app**. An
+    /// Android build emitting `daily_puzzle_completed` with a different
+    /// parameter spelling doesn't merely fail to measure Android — it pollutes
+    /// dashboards, saved insights, and the arms of the running experiments.
+    ///
+    /// Every case is constructed rather than parsed, so the names and keys are
+    /// whatever the shipping code actually produces.
+    @Test func analyticsVocabulary() throws {
+        var file = VectorFile(
+            family: "analytics",
+            description: "AnalyticsEvent names and parameter keys. Kotlin must emit the same name and the same key set for each, plus a platform property.",
+            source: ["Services/Analytics.swift", "Services/FeatureFlags.swift"]
+        )
+        let amount = StoreService.PurchaseAmount(minorUnits: 1299, currencyCode: "USD")
+        let events: [AnalyticsEvent] = [
+        AnalyticsEvent.appOpen,
+        .onboardingStep(index: 1, name: "welcome"),
+        .onboardingFirstSolve(solved: true, attempts: 2),
+        .onboardingCompleted(solvedFirstClue: true),
+        .dailyPuzzleStarted(puzzleID: "daily-001", isResume: false, source: "home"),
+        .dailyPuzzleCompleted(puzzleID: "daily-001", seconds: 154),
+        .puzzleAbandoned(puzzleID: "daily-001", fillPercent: 40, seconds: 60, wallSeconds: 70, hintsUsed: 1, cellTaps: 3, keyPresses: 9),
+        .hintUsed(type: "letter", cost: 1),
+        .hintLimitReached(type: "word"),
+        .checkUsed(scope: "word", wrongCount: 2),
+        .stallNudgeShown(puzzleID: "daily-001", fillPercent: 50, idleSeconds: 45, kind: "check"),
+        .stallNudgeTapped(puzzleID: "daily-001", fillPercent: 50, idleSeconds: 45, kind: "check"),
+        .starterWordGifted(puzzleID: "daily-001", answerLength: 5),
+        .widgetOpened(destination: "daily"),
+        .streakUpdated(streak: 7),
+        .streakBroken(previousLength: 12),
+        .streakComebackStarted(source: "organic"),
+        .achievementUnlocked(id: "bible-beginner"),
+        .premiumPurchased(plan: "yearly", source: "onboarding", isTrial: true, amount: amount, acquisition: "purchase"),
+        .subscriptionRenewed(plan: "yearly", isTrial: false, amount: amount),
+        .purchaseFailed(plan: "yearly", source: "onboarding", reason: "network"),
+        .purchaseCancelled(plan: "yearly", source: "onboarding", offersTrial: true, amount: amount),
+        .paywallOpened(source: "hint_limit"),
+        .paywallCTATapped(plan: "yearly", source: "hint_limit", offersTrial: true),
+        .paywallDismissed(source: "hint_limit", secondsOnScreen: 12, ctaTapped: false, exit: .close),
+        .premiumAskAssigned(variant: "treatment", completed: 5),
+        .notificationPermission(granted: true, source: "completion"),
+        .reminderAskShown(source: "completion"),
+        .reminderDeclined(source: "completion"),
+        .reminderSettingChanged(enabled: true),
+        .reviewPromptRequested(trigger: "milestone_10", totalCompleted: 10),
+        .packOpened(id: "first-steps", source: "packs"),
+        .packCompleted(id: "first-steps"),
+        .questOpened(id: "beginnings", source: "home"),
+        .questStepCompleted(id: "beginnings", step: 2, total: 5),
+        .questCompleted(id: "beginnings"),
+        .challengeSent(puzzleID: "daily-001"),
+        .challengeOpened(puzzleID: "daily-001", via: "link"),
+        .challengeCompleted(puzzleID: "daily-001", won: true, deltaSeconds: -12),
+        .challengeRematchSent(puzzleID: "daily-001"),
+        .challengeShareCancelled(puzzleID: "daily-001"),
+        .familyBoardStarted(puzzleID: "daily-001"),
+        .familyBoardOpened(puzzleID: "daily-001", size: 3),
+        .familyBoardShared(puzzleID: "daily-001", size: 3),
+        .scriptureOpened(reference: "John 3:16", source: "hint"),
+        .readerClosed(source: "hint", seconds: 30, chaptersPaged: 1, scrolledPastVerse: true, expanded: false),
+        .verseAction(kind: "bookmark", reference: "John 3:16"),
+        .bookmarksOpened(count: 4),
+        .readPuzzleChipsShown(book: "John", chapter: 3, count: 2, lockedCount: 1, source: "read"),
+        .readPuzzleChipTapped(puzzleID: "daily-001", locked: false, source: "read"),
+        .readSearch(kind: "reference", results: 1),
+        .shareOpened(kind: "scorecard"),
+        .shareCompleted(kind: "scorecard", completed: true),
+        .planStarted(plan: "john"),
+        .planChapterRead(plan: "john", day: 3),
+        .planCompleted(plan: "john", days: 21),
+        .planStopped(plan: "john", day: 3),
+        .completionChainTapped(fromPuzzleID: "daily-001", toPuzzleID: "mini-001"),
+        .memoryListOpened(source: "completion"),
+        .memoryVerseAdded(reference: "John 3:16", source: "completion"),
+        .memoryVerseStarted(reference: "John 3:16", level: 1, source: "memory"),
+        .memoryVerseCompleted(reference: "John 3:16", level: 1, leveledUp: true, hintsUsed: 0),
+        .memoryVerseMastered(reference: "John 3:16"),
+        .journeyOpened(source: "profile"),
+        .achievementsOpened(source: "profile"),
+        .appCrash(signal: 11, exceptionType: 1, exceptionCode: 0, reason: "x", build: "21", os: "26.0", frames: "a", appFrames: "b"),
+        .appHang(seconds: 2.5, build: "21", os: "26.0", frames: "a", appFrames: "b"),
+        ]
+        for event in events {
+            file.cases.append(VectorCase(
+                name: event.name,
+                given: ["case": String(describing: event).prefix(while: { $0 != "(" }).description],
+                expect: ["name": event.name, "parameterKeys": event.parameters.keys.sorted()]
+            ))
+        }
+        file.constants = [
+            // Listed rather than derived: PaywallExit isn't CaseIterable, and a
+            // test is not a reason to widen app code.
+            "paywallExits": [
+                PaywallExit.close, .freeLink, .swipe, .purchase, .afterCancel, .premiumContinue, .noPlan,
+            ].map(\.rawValue),
+            "eventCount": events.count,
+        ]
+        try emit(file)
+    }
+
     // MARK: Hint quota
 
     @Test func hintQuota() throws {

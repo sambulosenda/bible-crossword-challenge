@@ -30,9 +30,9 @@ class SpecVectorsTest {
         assertThat(dir.isDirectory).isTrue()
         val files = dir.listFiles { f -> f.extension == "json" }!!.map { it.nameWithoutExtension }.sorted()
         assertThat(files).containsExactly(
-            "achievements", "challenge_links", "constants", "engine_timer", "engine_traces",
-            "hint_quota", "premium_ask", "puzzle_access", "reminder_ask", "review_ask",
-            "rotation", "streaks", "sync_merge", "trial_reoffer",
+            "achievements", "analytics", "challenge_links", "constants", "engine_timer",
+            "engine_traces", "hint_quota", "premium_ask", "puzzle_access", "reminder_ask",
+            "review_ask", "rotation", "streaks", "sync_merge", "trial_reoffer",
         ).inOrder()
     }
 

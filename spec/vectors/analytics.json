@@ -1,0 +1,914 @@
+{
+  "cases" : [
+    {
+      "expect" : {
+        "name" : "app_open",
+        "parameterKeys" : [
+
+        ]
+      },
+      "given" : {
+        "case" : "appOpen"
+      },
+      "name" : "app_open"
+    },
+    {
+      "expect" : {
+        "name" : "onboarding_step",
+        "parameterKeys" : [
+          "step_index",
+          "step_name"
+        ]
+      },
+      "given" : {
+        "case" : "onboardingStep"
+      },
+      "name" : "onboarding_step"
+    },
+    {
+      "expect" : {
+        "name" : "onboarding_first_solve",
+        "parameterKeys" : [
+          "attempts",
+          "solved"
+        ]
+      },
+      "given" : {
+        "case" : "onboardingFirstSolve"
+      },
+      "name" : "onboarding_first_solve"
+    },
+    {
+      "expect" : {
+        "name" : "onboarding_completed",
+        "parameterKeys" : [
+          "solved_first_clue"
+        ]
+      },
+      "given" : {
+        "case" : "onboardingCompleted"
+      },
+      "name" : "onboarding_completed"
+    },
+    {
+      "expect" : {
+        "name" : "daily_puzzle_started",
+        "parameterKeys" : [
+          "is_resume",
+          "puzzle_id",
+          "source"
+        ]
+      },
+      "given" : {
+        "case" : "dailyPuzzleStarted"
+      },
+      "name" : "daily_puzzle_started"
+    },
+    {
+      "expect" : {
+        "name" : "daily_puzzle_completed",
+        "parameterKeys" : [
+          "puzzle_id",
+          "seconds"
+        ]
+      },
+      "given" : {
+        "case" : "dailyPuzzleCompleted"
+      },
+      "name" : "daily_puzzle_completed"
+    },
+    {
+      "expect" : {
+        "name" : "puzzle_abandoned",
+        "parameterKeys" : [
+          "cell_taps",
+          "fill_percent",
+          "hints_used",
+          "key_presses",
+          "puzzle_id",
+          "seconds",
+          "wall_seconds"
+        ]
+      },
+      "given" : {
+        "case" : "puzzleAbandoned"
+      },
+      "name" : "puzzle_abandoned"
+    },
+    {
+      "expect" : {
+        "name" : "hint_used",
+        "parameterKeys" : [
+          "cost",
+          "type"
+        ]
+      },
+      "given" : {
+        "case" : "hintUsed"
+      },
+      "name" : "hint_used"
+    },
+    {
+      "expect" : {
+        "name" : "hint_limit_reached",
+        "parameterKeys" : [
+          "type"
+        ]
+      },
+      "given" : {
+        "case" : "hintLimitReached"
+      },
+      "name" : "hint_limit_reached"
+    },
+    {
+      "expect" : {
+        "name" : "check_used",
+        "parameterKeys" : [
+          "scope",
+          "wrong_count"
+        ]
+      },
+      "given" : {
+        "case" : "checkUsed"
+      },
+      "name" : "check_used"
+    },
+    {
+      "expect" : {
+        "name" : "stall_nudge_shown",
+        "parameterKeys" : [
+          "fill_percent",
+          "idle_seconds",
+          "kind",
+          "puzzle_id"
+        ]
+      },
+      "given" : {
+        "case" : "stallNudgeShown"
+      },
+      "name" : "stall_nudge_shown"
+    },
+    {
+      "expect" : {
+        "name" : "stall_nudge_tapped",
+        "parameterKeys" : [
+          "fill_percent",
+          "idle_seconds",
+          "kind",
+          "puzzle_id"
+        ]
+      },
+      "given" : {
+        "case" : "stallNudgeTapped"
+      },
+      "name" : "stall_nudge_tapped"
+    },
+    {
+      "expect" : {
+        "name" : "starter_word_gifted",
+        "parameterKeys" : [
+          "answer_length",
+          "puzzle_id"
+        ]
+      },
+      "given" : {
+        "case" : "starterWordGifted"
+      },
+      "name" : "starter_word_gifted"
+    },
+    {
+      "expect" : {
+        "name" : "widget_opened",
+        "parameterKeys" : [
+          "destination"
+        ]
+      },
+      "given" : {
+        "case" : "widgetOpened"
+      },
+      "name" : "widget_opened"
+    },
+    {
+      "expect" : {
+        "name" : "streak_updated",
+        "parameterKeys" : [
+          "streak"
+        ]
+      },
+      "given" : {
+        "case" : "streakUpdated"
+      },
+      "name" : "streak_updated"
+    },
+    {
+      "expect" : {
+        "name" : "streak_broken",
+        "parameterKeys" : [
+          "previous_length"
+        ]
+      },
+      "given" : {
+        "case" : "streakBroken"
+      },
+      "name" : "streak_broken"
+    },
+    {
+      "expect" : {
+        "name" : "streak_comeback_started",
+        "parameterKeys" : [
+          "source"
+        ]
+      },
+      "given" : {
+        "case" : "streakComebackStarted"
+      },
+      "name" : "streak_comeback_started"
+    },
+    {
+      "expect" : {
+        "name" : "achievement_unlocked",
+        "parameterKeys" : [
+          "achievement_id"
+        ]
+      },
+      "given" : {
+        "case" : "achievementUnlocked"
+      },
+      "name" : "achievement_unlocked"
+    },
+    {
+      "expect" : {
+        "name" : "premium_purchased",
+        "parameterKeys" : [
+          "acquisition",
+          "currency",
+          "is_trial",
+          "plan",
+          "price_minor_units",
+          "revenue_minor_units",
+          "source"
+        ]
+      },
+      "given" : {
+        "case" : "premiumPurchased"
+      },
+      "name" : "premium_purchased"
+    },
+    {
+      "expect" : {
+        "name" : "subscription_renewed",
+        "parameterKeys" : [
+          "currency",
+          "is_trial",
+          "plan",
+          "price_minor_units",
+          "revenue_minor_units"
+        ]
+      },
+      "given" : {
+        "case" : "subscriptionRenewed"
+      },
+      "name" : "subscription_renewed"
+    },
+    {
+      "expect" : {
+        "name" : "purchase_failed",
+        "parameterKeys" : [
+          "plan",
+          "reason",
+          "source"
+        ]
+      },
+      "given" : {
+        "case" : "purchaseFailed"
+      },
+      "name" : "purchase_failed"
+    },
+    {
+      "expect" : {
+        "name" : "purchase_cancelled",
+        "parameterKeys" : [
+          "currency",
+          "offers_trial",
+          "plan",
+          "price_minor_units",
+          "source"
+        ]
+      },
+      "given" : {
+        "case" : "purchaseCancelled"
+      },
+      "name" : "purchase_cancelled"
+    },
+    {
+      "expect" : {
+        "name" : "paywall_opened",
+        "parameterKeys" : [
+          "source"
+        ]
+      },
+      "given" : {
+        "case" : "paywallOpened"
+      },
+      "name" : "paywall_opened"
+    },
+    {
+      "expect" : {
+        "name" : "paywall_cta_tapped",
+        "parameterKeys" : [
+          "offers_trial",
+          "plan",
+          "source"
+        ]
+      },
+      "given" : {
+        "case" : "paywallCTATapped"
+      },
+      "name" : "paywall_cta_tapped"
+    },
+    {
+      "expect" : {
+        "name" : "paywall_dismissed",
+        "parameterKeys" : [
+          "cta_tapped",
+          "exit",
+          "seconds_on_screen",
+          "source"
+        ]
+      },
+      "given" : {
+        "case" : "paywallDismissed"
+      },
+      "name" : "paywall_dismissed"
+    },
+    {
+      "expect" : {
+        "name" : "premium_ask_assigned",
+        "parameterKeys" : [
+          "completed",
+          "variant"
+        ]
+      },
+      "given" : {
+        "case" : "premiumAskAssigned"
+      },
+      "name" : "premium_ask_assigned"
+    },
+    {
+      "expect" : {
+        "name" : "notification_permission",
+        "parameterKeys" : [
+          "granted",
+          "source"
+        ]
+      },
+      "given" : {
+        "case" : "notificationPermission"
+      },
+      "name" : "notification_permission"
+    },
+    {
+      "expect" : {
+        "name" : "reminder_ask_shown",
+        "parameterKeys" : [
+          "source"
+        ]
+      },
+      "given" : {
+        "case" : "reminderAskShown"
+      },
+      "name" : "reminder_ask_shown"
+    },
+    {
+      "expect" : {
+        "name" : "reminder_declined",
+        "parameterKeys" : [
+          "source"
+        ]
+      },
+      "given" : {
+        "case" : "reminderDeclined"
+      },
+      "name" : "reminder_declined"
+    },
+    {
+      "expect" : {
+        "name" : "reminder_setting_changed",
+        "parameterKeys" : [
+          "enabled"
+        ]
+      },
+      "given" : {
+        "case" : "reminderSettingChanged"
+      },
+      "name" : "reminder_setting_changed"
+    },
+    {
+      "expect" : {
+        "name" : "review_prompt_requested",
+        "parameterKeys" : [
+          "total_completed",
+          "trigger"
+        ]
+      },
+      "given" : {
+        "case" : "reviewPromptRequested"
+      },
+      "name" : "review_prompt_requested"
+    },
+    {
+      "expect" : {
+        "name" : "pack_opened",
+        "parameterKeys" : [
+          "pack_id",
+          "source"
+        ]
+      },
+      "given" : {
+        "case" : "packOpened"
+      },
+      "name" : "pack_opened"
+    },
+    {
+      "expect" : {
+        "name" : "pack_completed",
+        "parameterKeys" : [
+          "pack_id"
+        ]
+      },
+      "given" : {
+        "case" : "packCompleted"
+      },
+      "name" : "pack_completed"
+    },
+    {
+      "expect" : {
+        "name" : "quest_opened",
+        "parameterKeys" : [
+          "quest_id",
+          "source"
+        ]
+      },
+      "given" : {
+        "case" : "questOpened"
+      },
+      "name" : "quest_opened"
+    },
+    {
+      "expect" : {
+        "name" : "quest_step_completed",
+        "parameterKeys" : [
+          "quest_id",
+          "step",
+          "total"
+        ]
+      },
+      "given" : {
+        "case" : "questStepCompleted"
+      },
+      "name" : "quest_step_completed"
+    },
+    {
+      "expect" : {
+        "name" : "quest_completed",
+        "parameterKeys" : [
+          "quest_id"
+        ]
+      },
+      "given" : {
+        "case" : "questCompleted"
+      },
+      "name" : "quest_completed"
+    },
+    {
+      "expect" : {
+        "name" : "challenge_sent",
+        "parameterKeys" : [
+          "puzzle_id"
+        ]
+      },
+      "given" : {
+        "case" : "challengeSent"
+      },
+      "name" : "challenge_sent"
+    },
+    {
+      "expect" : {
+        "name" : "challenge_opened",
+        "parameterKeys" : [
+          "puzzle_id",
+          "via"
+        ]
+      },
+      "given" : {
+        "case" : "challengeOpened"
+      },
+      "name" : "challenge_opened"
+    },
+    {
+      "expect" : {
+        "name" : "challenge_completed",
+        "parameterKeys" : [
+          "delta_seconds",
+          "puzzle_id",
+          "won"
+        ]
+      },
+      "given" : {
+        "case" : "challengeCompleted"
+      },
+      "name" : "challenge_completed"
+    },
+    {
+      "expect" : {
+        "name" : "challenge_rematch_sent",
+        "parameterKeys" : [
+          "puzzle_id"
+        ]
+      },
+      "given" : {
+        "case" : "challengeRematchSent"
+      },
+      "name" : "challenge_rematch_sent"
+    },
+    {
+      "expect" : {
+        "name" : "challenge_share_cancelled",
+        "parameterKeys" : [
+          "puzzle_id"
+        ]
+      },
+      "given" : {
+        "case" : "challengeShareCancelled"
+      },
+      "name" : "challenge_share_cancelled"
+    },
+    {
+      "expect" : {
+        "name" : "family_board_started",
+        "parameterKeys" : [
+          "puzzle_id"
+        ]
+      },
+      "given" : {
+        "case" : "familyBoardStarted"
+      },
+      "name" : "family_board_started"
+    },
+    {
+      "expect" : {
+        "name" : "family_board_opened",
+        "parameterKeys" : [
+          "puzzle_id",
+          "size"
+        ]
+      },
+      "given" : {
+        "case" : "familyBoardOpened"
+      },
+      "name" : "family_board_opened"
+    },
+    {
+      "expect" : {
+        "name" : "family_board_shared",
+        "parameterKeys" : [
+          "puzzle_id",
+          "size"
+        ]
+      },
+      "given" : {
+        "case" : "familyBoardShared"
+      },
+      "name" : "family_board_shared"
+    },
+    {
+      "expect" : {
+        "name" : "scripture_opened",
+        "parameterKeys" : [
+          "reference",
+          "source"
+        ]
+      },
+      "given" : {
+        "case" : "scriptureOpened"
+      },
+      "name" : "scripture_opened"
+    },
+    {
+      "expect" : {
+        "name" : "reader_closed",
+        "parameterKeys" : [
+          "chapters_paged",
+          "expanded",
+          "scrolled_past_verse",
+          "seconds",
+          "source"
+        ]
+      },
+      "given" : {
+        "case" : "readerClosed"
+      },
+      "name" : "reader_closed"
+    },
+    {
+      "expect" : {
+        "name" : "verse_action",
+        "parameterKeys" : [
+          "kind",
+          "reference"
+        ]
+      },
+      "given" : {
+        "case" : "verseAction"
+      },
+      "name" : "verse_action"
+    },
+    {
+      "expect" : {
+        "name" : "bookmarks_opened",
+        "parameterKeys" : [
+          "count"
+        ]
+      },
+      "given" : {
+        "case" : "bookmarksOpened"
+      },
+      "name" : "bookmarks_opened"
+    },
+    {
+      "expect" : {
+        "name" : "read_puzzle_chips_shown",
+        "parameterKeys" : [
+          "book",
+          "chapter",
+          "count",
+          "locked_count",
+          "source"
+        ]
+      },
+      "given" : {
+        "case" : "readPuzzleChipsShown"
+      },
+      "name" : "read_puzzle_chips_shown"
+    },
+    {
+      "expect" : {
+        "name" : "read_puzzle_chip_tapped",
+        "parameterKeys" : [
+          "locked",
+          "puzzle_id",
+          "source"
+        ]
+      },
+      "given" : {
+        "case" : "readPuzzleChipTapped"
+      },
+      "name" : "read_puzzle_chip_tapped"
+    },
+    {
+      "expect" : {
+        "name" : "read_search",
+        "parameterKeys" : [
+          "kind",
+          "results"
+        ]
+      },
+      "given" : {
+        "case" : "readSearch"
+      },
+      "name" : "read_search"
+    },
+    {
+      "expect" : {
+        "name" : "share_opened",
+        "parameterKeys" : [
+          "kind"
+        ]
+      },
+      "given" : {
+        "case" : "shareOpened"
+      },
+      "name" : "share_opened"
+    },
+    {
+      "expect" : {
+        "name" : "share_completed",
+        "parameterKeys" : [
+          "completed",
+          "kind"
+        ]
+      },
+      "given" : {
+        "case" : "shareCompleted"
+      },
+      "name" : "share_completed"
+    },
+    {
+      "expect" : {
+        "name" : "plan_started",
+        "parameterKeys" : [
+          "plan"
+        ]
+      },
+      "given" : {
+        "case" : "planStarted"
+      },
+      "name" : "plan_started"
+    },
+    {
+      "expect" : {
+        "name" : "plan_chapter_read",
+        "parameterKeys" : [
+          "day",
+          "plan"
+        ]
+      },
+      "given" : {
+        "case" : "planChapterRead"
+      },
+      "name" : "plan_chapter_read"
+    },
+    {
+      "expect" : {
+        "name" : "plan_completed",
+        "parameterKeys" : [
+          "days",
+          "plan"
+        ]
+      },
+      "given" : {
+        "case" : "planCompleted"
+      },
+      "name" : "plan_completed"
+    },
+    {
+      "expect" : {
+        "name" : "plan_stopped",
+        "parameterKeys" : [
+          "day",
+          "plan"
+        ]
+      },
+      "given" : {
+        "case" : "planStopped"
+      },
+      "name" : "plan_stopped"
+    },
+    {
+      "expect" : {
+        "name" : "completion_chain_tapped",
+        "parameterKeys" : [
+          "from_puzzle_id",
+          "to_puzzle_id"
+        ]
+      },
+      "given" : {
+        "case" : "completionChainTapped"
+      },
+      "name" : "completion_chain_tapped"
+    },
+    {
+      "expect" : {
+        "name" : "memory_list_opened",
+        "parameterKeys" : [
+          "source"
+        ]
+      },
+      "given" : {
+        "case" : "memoryListOpened"
+      },
+      "name" : "memory_list_opened"
+    },
+    {
+      "expect" : {
+        "name" : "memory_verse_added",
+        "parameterKeys" : [
+          "reference",
+          "source"
+        ]
+      },
+      "given" : {
+        "case" : "memoryVerseAdded"
+      },
+      "name" : "memory_verse_added"
+    },
+    {
+      "expect" : {
+        "name" : "memory_verse_started",
+        "parameterKeys" : [
+          "level",
+          "reference",
+          "source"
+        ]
+      },
+      "given" : {
+        "case" : "memoryVerseStarted"
+      },
+      "name" : "memory_verse_started"
+    },
+    {
+      "expect" : {
+        "name" : "memory_verse_completed",
+        "parameterKeys" : [
+          "hints_used",
+          "level",
+          "leveled_up",
+          "reference"
+        ]
+      },
+      "given" : {
+        "case" : "memoryVerseCompleted"
+      },
+      "name" : "memory_verse_completed"
+    },
+    {
+      "expect" : {
+        "name" : "memory_verse_mastered",
+        "parameterKeys" : [
+          "reference"
+        ]
+      },
+      "given" : {
+        "case" : "memoryVerseMastered"
+      },
+      "name" : "memory_verse_mastered"
+    },
+    {
+      "expect" : {
+        "name" : "journey_opened",
+        "parameterKeys" : [
+          "source"
+        ]
+      },
+      "given" : {
+        "case" : "journeyOpened"
+      },
+      "name" : "journey_opened"
+    },
+    {
+      "expect" : {
+        "name" : "achievements_opened",
+        "parameterKeys" : [
+          "source"
+        ]
+      },
+      "given" : {
+        "case" : "achievementsOpened"
+      },
+      "name" : "achievements_opened"
+    },
+    {
+      "expect" : {
+        "name" : "app_crash",
+        "parameterKeys" : [
+          "app_frames",
+          "build",
+          "exception_code",
+          "exception_type",
+          "frames",
+          "os",
+          "reason",
+          "signal"
+        ]
+      },
+      "given" : {
+        "case" : "appCrash"
+      },
+      "name" : "app_crash"
+    },
+    {
+      "expect" : {
+        "name" : "app_hang",
+        "parameterKeys" : [
+          "app_frames",
+          "build",
+          "frames",
+          "os",
+          "seconds"
+        ]
+      },
+      "given" : {
+        "case" : "appHang"
+      },
+      "name" : "app_hang"
+    }
+  ],
+  "constants" : {
+    "eventCount" : 67,
+    "paywallExits" : [
+      "close",
+      "free_link",
+      "swipe",
+      "purchase",
+      "after_cancel",
+      "premium_continue",
+      "no_plan"
+    ]
+  },
+  "description" : "AnalyticsEvent names and parameter keys. Kotlin must emit the same name and the same key set for each, plus a platform property.",
+  "family" : "analytics",
+  "source" : [
+    "Services/Analytics.swift",
+    "Services/FeatureFlags.swift"
+  ]
+}
