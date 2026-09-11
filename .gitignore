@@ -55,3 +55,6 @@ fastlane/play-store-credentials.json
 
 # Local MCP server registration (machine-specific localhost endpoints)
 .mcp.json
+
+# Marketing source assets (raw clips, storyboards) — kept local, not in git history
+marketing/promo/
