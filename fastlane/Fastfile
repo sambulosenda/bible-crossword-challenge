@@ -58,4 +58,43 @@ platform :ios do
       force: options.fetch(:force, false),
     )
   end
+
+  desc "Upload an already-built .ipa without re-archiving. Use when upload_build " \
+       "produced build/*.ipa but the upload leg failed — saves the ~25 minute archive."
+  lane :upload_ipa do |options|
+    upload_to_testflight(
+      api_key: asc_api_key,
+      ipa: options.fetch(:ipa, "build/Bible Crossword Challenge.ipa"),
+      skip_waiting_for_build_processing: true,
+    )
+  end
+
+  desc "Submit an editable version for App Store review: pushes metadata for every " \
+       "locale, selects the build, answers export compliance and IDFA, and submits. " \
+       "Pass version:X.Y and build:N. Never uploads a binary or screenshots — the " \
+       "screenshot set already on the version is left untouched. Add auto_release:true " \
+       "to go live the moment Apple approves; the default holds it for a manual " \
+       "release. Run upload_build first and let the build finish processing."
+  lane :submit do |options|
+    deliver(
+      api_key: asc_api_key,
+      app_version: options.fetch(:version),
+      build_number: options[:build]&.to_s,
+      submit_for_review: true,
+      automatic_release: options.fetch(:auto_release, false),
+      force: options.fetch(:force, true),
+      skip_binary_upload: true,
+      skip_screenshots: true,
+      skip_metadata: false,
+      run_precheck_before_submit: true,
+      precheck_include_in_app_purchases: false,
+      submission_information: {
+        # No ad network or attribution SDK ships in the app (install attribution
+        # is App Store campaign tokens only), and it uses nothing beyond HTTPS
+        # and system crypto.
+        add_id_info_uses_idfa: false,
+        export_compliance_uses_encryption: false,
+      },
+    )
+  end
 end
