@@ -1,0 +1,105 @@
+{
+  "cases" : [
+    {
+      "expect" : {
+        "show" : false
+      },
+      "given" : {
+        "abandonedHoursAgo" : null,
+        "isPremium" : false,
+        "launchedHoursAgo" : 1,
+        "reofferShown" : false
+      },
+      "name" : "state 0"
+    },
+    {
+      "expect" : {
+        "show" : false
+      },
+      "given" : {
+        "abandonedHoursAgo" : 2,
+        "isPremium" : true,
+        "launchedHoursAgo" : 1,
+        "reofferShown" : false
+      },
+      "name" : "state 1"
+    },
+    {
+      "expect" : {
+        "show" : false
+      },
+      "given" : {
+        "abandonedHoursAgo" : 2,
+        "isPremium" : false,
+        "launchedHoursAgo" : 1,
+        "reofferShown" : true
+      },
+      "name" : "state 2"
+    },
+    {
+      "expect" : {
+        "show" : false
+      },
+      "given" : {
+        "abandonedHoursAgo" : 0.5,
+        "isPremium" : false,
+        "launchedHoursAgo" : 1,
+        "reofferShown" : false
+      },
+      "name" : "state 3"
+    },
+    {
+      "expect" : {
+        "show" : true
+      },
+      "given" : {
+        "abandonedHoursAgo" : 2,
+        "isPremium" : false,
+        "launchedHoursAgo" : 1,
+        "reofferShown" : false
+      },
+      "name" : "state 4"
+    },
+    {
+      "expect" : {
+        "show" : true
+      },
+      "given" : {
+        "abandonedHoursAgo" : 20,
+        "isPremium" : false,
+        "launchedHoursAgo" : 24,
+        "reofferShown" : false
+      },
+      "name" : "state 5"
+    },
+    {
+      "expect" : {
+        "show" : true
+      },
+      "given" : {
+        "abandonedHoursAgo" : 335,
+        "isPremium" : false,
+        "launchedHoursAgo" : 1,
+        "reofferShown" : false
+      },
+      "name" : "state 6"
+    },
+    {
+      "expect" : {
+        "show" : false
+      },
+      "given" : {
+        "abandonedHoursAgo" : 337,
+        "isPremium" : false,
+        "launchedHoursAgo" : 1,
+        "reofferShown" : false
+      },
+      "name" : "state 7"
+    }
+  ],
+  "description" : "TrialReoffer.decide. `abandonedHoursAgo` / `launchedHoursAgo` are hours before the fixed now (UTC noon), so same-day vs later-day is exact.",
+  "family" : "trial_reoffer",
+  "source" : [
+    "Models/TrialReoffer.swift"
+  ]
+}

@@ -1,0 +1,185 @@
+{
+  "cases" : [
+    {
+      "expect" : {
+        "survivor" : {
+          "bestSolveSeconds" : 250,
+          "bestStreak" : 9,
+          "completedPackIDs" : [
+            "first-steps",
+            "women-of-the-bible"
+          ],
+          "completedQuestIDs" : [
+            "beginnings"
+          ],
+          "createdDaysAgo" : 60,
+          "currentStreak" : 5,
+          "hardCompleted" : 1,
+          "hintsDaysAgo" : 0,
+          "hintsUsedToday" : 1,
+          "lastCompletedDaysAgo" : 0,
+          "lastFreezeUsedDaysAgo" : 2,
+          "noHintSolves" : 4,
+          "streakFreezes" : 3,
+          "totalPuzzlesCompleted" : 20,
+          "unlockedAchievementIDs" : [
+            "bible-beginner",
+            "unaided"
+          ],
+          "username" : "Sam"
+        }
+      },
+      "given" : {
+        "op" : "mergeProfiles",
+        "profiles" : [
+          {
+            "bestSolveSeconds" : 400,
+            "bestStreak" : 9,
+            "completedPackIDs" : [
+              "first-steps"
+            ],
+            "completedQuestIDs" : [
+
+            ],
+            "createdDaysAgo" : 60,
+            "currentStreak" : 3,
+            "hardCompleted" : 1,
+            "hintsDaysAgo" : 1,
+            "hintsUsedToday" : 2,
+            "lastCompletedDaysAgo" : 1,
+            "lastFreezeUsedDaysAgo" : 5,
+            "noHintSolves" : 2,
+            "streakFreezes" : 3,
+            "totalPuzzlesCompleted" : 20,
+            "unlockedAchievementIDs" : [
+              "bible-beginner"
+            ],
+            "username" : "Friend"
+          },
+          {
+            "bestSolveSeconds" : 250,
+            "bestStreak" : 5,
+            "completedPackIDs" : [
+              "women-of-the-bible"
+            ],
+            "completedQuestIDs" : [
+              "beginnings"
+            ],
+            "createdDaysAgo" : 10,
+            "currentStreak" : 5,
+            "hardCompleted" : 0,
+            "hintsDaysAgo" : 0,
+            "hintsUsedToday" : 1,
+            "lastCompletedDaysAgo" : 0,
+            "lastFreezeUsedDaysAgo" : 2,
+            "noHintSolves" : 4,
+            "streakFreezes" : 2,
+            "totalPuzzlesCompleted" : 12,
+            "unlockedAchievementIDs" : [
+              "unaided",
+              "bible-beginner"
+            ],
+            "username" : "Sam"
+          },
+          {
+            "bestSolveSeconds" : null,
+            "bestStreak" : 0,
+            "completedPackIDs" : [
+
+            ],
+            "completedQuestIDs" : [
+
+            ],
+            "createdDaysAgo" : 3,
+            "currentStreak" : 0,
+            "hardCompleted" : 0,
+            "hintsDaysAgo" : null,
+            "hintsUsedToday" : 0,
+            "lastCompletedDaysAgo" : null,
+            "lastFreezeUsedDaysAgo" : null,
+            "noHintSolves" : 0,
+            "streakFreezes" : 1,
+            "totalPuzzlesCompleted" : 0,
+            "unlockedAchievementIDs" : [
+
+            ],
+            "username" : "Friend"
+          }
+        ]
+      },
+      "name" : "three profiles, oldest survives with the best of each"
+    },
+    {
+      "expect" : {
+        "survivor" : {
+          "completedDaysAgo" : 4,
+          "elapsedSeconds" : 500,
+          "entries" : {
+
+          },
+          "isCompleted" : true,
+          "pencil" : {
+
+          },
+          "puzzleID" : "daily-001",
+          "updatedDaysAgo" : 2,
+          "usedHint" : true
+        }
+      },
+      "given" : {
+        "op" : "mergeRecords",
+        "records" : [
+          {
+            "completedDaysAgo" : null,
+            "elapsedSeconds" : 120,
+            "entries" : {
+              "0,0" : "A"
+            },
+            "isCompleted" : false,
+            "pencil" : {
+
+            },
+            "puzzleID" : "daily-001",
+            "updatedDaysAgo" : 0,
+            "usedHint" : false
+          },
+          {
+            "completedDaysAgo" : 4,
+            "elapsedSeconds" : 600,
+            "entries" : {
+              "0,0" : "A",
+              "0,1" : "b"
+            },
+            "isCompleted" : true,
+            "pencil" : {
+
+            },
+            "puzzleID" : "daily-001",
+            "updatedDaysAgo" : 4,
+            "usedHint" : true
+          },
+          {
+            "completedDaysAgo" : 2,
+            "elapsedSeconds" : 500,
+            "entries" : {
+
+            },
+            "isCompleted" : true,
+            "pencil" : {
+
+            },
+            "puzzleID" : "daily-001",
+            "updatedDaysAgo" : 2,
+            "usedHint" : false
+          }
+        ]
+      },
+      "name" : "completed beats in-progress, latest completed wins, earliest completion date kept, usedHint OR'd"
+    }
+  ],
+  "description" : "SyncMerge.mergeProfiles / mergeRecords: the most generous value of each field survives. Profiles are listed oldest-created first; records in array order.",
+  "family" : "sync_merge",
+  "source" : [
+    "Models/Persistence.swift — enum SyncMerge"
+  ]
+}

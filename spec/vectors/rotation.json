@@ -1,0 +1,381 @@
+{
+  "cases" : [
+    {
+      "expect" : {
+        "daily" : "daily-092",
+        "dailyWindow" : [
+          "daily-092",
+          "daily-091",
+          "daily-090",
+          "daily-089",
+          "daily-088",
+          "daily-087",
+          "daily-086"
+        ],
+        "dayIndex" : -1,
+        "mini" : "mini-090",
+        "miniWindow" : [
+          "mini-090",
+          "mini-030",
+          "mini-089",
+          "mini-029",
+          "mini-088",
+          "mini-087",
+          "mini-028"
+        ],
+        "sunday" : "sunday-008",
+        "weekIndex" : -1
+      },
+      "given" : {
+        "date" : "2026-06-30"
+      },
+      "name" : "2026-06-30"
+    },
+    {
+      "expect" : {
+        "daily" : "daily-001",
+        "dailyWindow" : [
+          "daily-001",
+          "daily-092",
+          "daily-091",
+          "daily-090",
+          "daily-089",
+          "daily-088",
+          "daily-087"
+        ],
+        "dayIndex" : 0,
+        "mini" : "mini-031",
+        "miniWindow" : [
+          "mini-031",
+          "mini-090",
+          "mini-030",
+          "mini-089",
+          "mini-029",
+          "mini-088",
+          "mini-087"
+        ],
+        "sunday" : "sunday-008",
+        "weekIndex" : -1
+      },
+      "given" : {
+        "date" : "2026-07-01"
+      },
+      "name" : "2026-07-01"
+    },
+    {
+      "expect" : {
+        "daily" : "daily-002",
+        "dailyWindow" : [
+          "daily-002",
+          "daily-001",
+          "daily-092",
+          "daily-091",
+          "daily-090",
+          "daily-089",
+          "daily-088"
+        ],
+        "dayIndex" : 1,
+        "mini" : "mini-001",
+        "miniWindow" : [
+          "mini-001",
+          "mini-031",
+          "mini-090",
+          "mini-030",
+          "mini-089",
+          "mini-029",
+          "mini-088"
+        ],
+        "sunday" : "sunday-008",
+        "weekIndex" : -1
+      },
+      "given" : {
+        "date" : "2026-07-02"
+      },
+      "name" : "2026-07-02"
+    },
+    {
+      "expect" : {
+        "daily" : "daily-005",
+        "dailyWindow" : [
+          "daily-005",
+          "daily-004",
+          "daily-003",
+          "daily-002",
+          "daily-001",
+          "daily-092",
+          "daily-091"
+        ],
+        "dayIndex" : 4,
+        "mini" : "mini-003",
+        "miniWindow" : [
+          "mini-003",
+          "mini-002",
+          "mini-032",
+          "mini-001",
+          "mini-031",
+          "mini-090",
+          "mini-030"
+        ],
+        "sunday" : "sunday-009",
+        "weekIndex" : 0
+      },
+      "given" : {
+        "date" : "2026-07-05"
+      },
+      "name" : "2026-07-05"
+    },
+    {
+      "expect" : {
+        "daily" : "daily-039",
+        "dailyWindow" : [
+          "daily-039",
+          "daily-038",
+          "daily-037",
+          "daily-036",
+          "daily-035",
+          "daily-034",
+          "daily-033"
+        ],
+        "dayIndex" : 38,
+        "mini" : "mini-054",
+        "miniWindow" : [
+          "mini-054",
+          "mini-015",
+          "mini-053",
+          "mini-052",
+          "mini-014",
+          "mini-013",
+          "mini-051"
+        ],
+        "sunday" : "sunday-013",
+        "weekIndex" : 4
+      },
+      "given" : {
+        "date" : "2026-08-08"
+      },
+      "name" : "2026-08-08"
+    },
+    {
+      "expect" : {
+        "daily" : "daily-040",
+        "dailyWindow" : [
+          "daily-040",
+          "daily-039",
+          "daily-038",
+          "daily-037",
+          "daily-036",
+          "daily-035",
+          "daily-034"
+        ],
+        "dayIndex" : 39,
+        "mini" : "mini-055",
+        "miniWindow" : [
+          "mini-055",
+          "mini-054",
+          "mini-015",
+          "mini-053",
+          "mini-052",
+          "mini-014",
+          "mini-013"
+        ],
+        "sunday" : "sunday-001",
+        "weekIndex" : 5
+      },
+      "given" : {
+        "date" : "2026-08-09"
+      },
+      "name" : "2026-08-09"
+    },
+    {
+      "expect" : {
+        "daily" : "daily-046",
+        "dailyWindow" : [
+          "daily-046",
+          "daily-045",
+          "daily-044",
+          "daily-043",
+          "daily-042",
+          "daily-041",
+          "daily-040"
+        ],
+        "dayIndex" : 45,
+        "mini" : "mini-059",
+        "miniWindow" : [
+          "mini-059",
+          "mini-058",
+          "mini-017",
+          "mini-016",
+          "mini-057",
+          "mini-056",
+          "mini-055"
+        ],
+        "sunday" : "sunday-001",
+        "weekIndex" : 5
+      },
+      "given" : {
+        "date" : "2026-08-15"
+      },
+      "name" : "2026-08-15"
+    },
+    {
+      "expect" : {
+        "daily" : "daily-066",
+        "dailyWindow" : [
+          "daily-066",
+          "daily-065",
+          "daily-064",
+          "daily-063",
+          "daily-062",
+          "daily-061",
+          "daily-060"
+        ],
+        "dayIndex" : 65,
+        "mini" : "mini-022",
+        "miniWindow" : [
+          "mini-022",
+          "mini-074",
+          "mini-073",
+          "mini-072",
+          "mini-071",
+          "mini-070",
+          "mini-021"
+        ],
+        "sunday" : "sunday-004",
+        "weekIndex" : 8
+      },
+      "given" : {
+        "date" : "2026-09-04"
+      },
+      "name" : "2026-09-04"
+    },
+    {
+      "expect" : {
+        "daily" : "daily-086",
+        "dailyWindow" : [
+          "daily-086",
+          "daily-085",
+          "daily-084",
+          "daily-083",
+          "daily-082",
+          "daily-081",
+          "daily-080"
+        ],
+        "dayIndex" : 177,
+        "mini" : "mini-089",
+        "miniWindow" : [
+          "mini-089",
+          "mini-029",
+          "mini-088",
+          "mini-087",
+          "mini-028",
+          "mini-086",
+          "mini-085"
+        ],
+        "sunday" : "sunday-007",
+        "weekIndex" : 24
+      },
+      "given" : {
+        "date" : "2026-12-25"
+      },
+      "name" : "2026-12-25"
+    },
+    {
+      "expect" : {
+        "daily" : "daily-060",
+        "dailyWindow" : [
+          "daily-060",
+          "daily-059",
+          "daily-058",
+          "daily-057",
+          "daily-056",
+          "daily-055",
+          "daily-054"
+        ],
+        "dayIndex" : 243,
+        "mini" : "mini-073",
+        "miniWindow" : [
+          "mini-073",
+          "mini-072",
+          "mini-071",
+          "mini-070",
+          "mini-021",
+          "mini-069",
+          "mini-068"
+        ],
+        "sunday" : "sunday-004",
+        "weekIndex" : 34
+      },
+      "given" : {
+        "date" : "2027-03-01"
+      },
+      "name" : "2027-03-01"
+    },
+    {
+      "expect" : {
+        "daily" : "daily-090",
+        "dailyWindow" : [
+          "daily-090",
+          "daily-089",
+          "daily-088",
+          "daily-087",
+          "daily-086",
+          "daily-085",
+          "daily-084"
+        ],
+        "dayIndex" : 365,
+        "mini" : "mini-033",
+        "miniWindow" : [
+          "mini-033",
+          "mini-003",
+          "mini-002",
+          "mini-032",
+          "mini-001",
+          "mini-031",
+          "mini-090"
+        ],
+        "sunday" : "sunday-008",
+        "weekIndex" : 51
+      },
+      "given" : {
+        "date" : "2027-07-01"
+      },
+      "name" : "2027-07-01"
+    },
+    {
+      "expect" : {
+        "daily" : "daily-057",
+        "dailyWindow" : [
+          "daily-057",
+          "daily-056",
+          "daily-055",
+          "daily-054",
+          "daily-053",
+          "daily-052",
+          "daily-051"
+        ],
+        "dayIndex" : 608,
+        "mini" : "mini-077",
+        "miniWindow" : [
+          "mini-077",
+          "mini-076",
+          "mini-075",
+          "mini-022",
+          "mini-074",
+          "mini-073",
+          "mini-072"
+        ],
+        "sunday" : "sunday-004",
+        "weekIndex" : 86
+      },
+      "given" : {
+        "date" : "2028-02-29"
+      },
+      "name" : "2028-02-29"
+    }
+  ],
+  "description" : "PuzzleProvider day/week indexing and which puzzle each pool serves on a UTC calendar date. Pins the epoch, the Sunday-week rule, the Sunday offset and the rolling window walk.",
+  "family" : "rotation",
+  "source" : [
+    "Services/PuzzleProvider.swift"
+  ]
+}

@@ -1,0 +1,285 @@
+{
+  "cases" : [
+
+  ],
+  "constants" : {
+    "achievements" : [
+      {
+        "detail" : "Complete 5 puzzles",
+        "goal" : {
+          "target" : 5,
+          "type" : "puzzles"
+        },
+        "id" : "bible-beginner",
+        "symbol" : "book",
+        "title" : "Bible Beginner"
+      },
+      {
+        "detail" : "Solve a puzzle without hints",
+        "goal" : {
+          "target" : 1,
+          "type" : "noHints"
+        },
+        "id" : "unaided",
+        "symbol" : "hand.raised.slash",
+        "title" : "Unaided"
+      },
+      {
+        "detail" : "Solve a puzzle in under 5 minutes",
+        "goal" : {
+          "maxSeconds" : 300,
+          "type" : "fastSolve"
+        },
+        "id" : "quick-wit",
+        "symbol" : "bolt.fill",
+        "title" : "Quick Wit"
+      },
+      {
+        "detail" : "Complete 25 puzzles",
+        "goal" : {
+          "target" : 25,
+          "type" : "puzzles"
+        },
+        "id" : "disciple",
+        "symbol" : "figure.walk",
+        "title" : "Disciple"
+      },
+      {
+        "detail" : "Solve a puzzle in under 2 minutes",
+        "goal" : {
+          "maxSeconds" : 120,
+          "type" : "fastSolve"
+        },
+        "id" : "lightning-round",
+        "symbol" : "bolt.horizontal.fill",
+        "title" : "Lightning Round"
+      },
+      {
+        "detail" : "Complete 5 hard puzzles",
+        "goal" : {
+          "difficulty" : "hard",
+          "target" : 5,
+          "type" : "difficulty"
+        },
+        "id" : "trial-by-fire",
+        "symbol" : "mountain.2.fill",
+        "title" : "Trial by Fire"
+      },
+      {
+        "detail" : "Solve 10 puzzles without hints",
+        "goal" : {
+          "target" : 10,
+          "type" : "noHints"
+        },
+        "id" : "purist",
+        "symbol" : "sparkles",
+        "title" : "Purist"
+      },
+      {
+        "detail" : "Complete 100 puzzles",
+        "goal" : {
+          "target" : 100,
+          "type" : "puzzles"
+        },
+        "id" : "scholar",
+        "symbol" : "graduationcap",
+        "title" : "Scholar"
+      },
+      {
+        "detail" : "Reach a 30 day streak",
+        "goal" : {
+          "target" : 30,
+          "type" : "streak"
+        },
+        "id" : "evangelist",
+        "symbol" : "flame",
+        "title" : "Evangelist"
+      },
+      {
+        "detail" : "Reach a 100 day streak",
+        "goal" : {
+          "target" : 100,
+          "type" : "streak"
+        },
+        "id" : "apostle",
+        "symbol" : "crown",
+        "title" : "Apostle"
+      },
+      {
+        "detail" : "Complete a puzzle pack",
+        "goal" : {
+          "target" : 1,
+          "type" : "packsCompleted"
+        },
+        "id" : "pathfinder",
+        "symbol" : "square.stack.3d.up.fill",
+        "title" : "Pathfinder"
+      },
+      {
+        "detail" : "Complete 3 puzzle packs",
+        "goal" : {
+          "target" : 3,
+          "type" : "packsCompleted"
+        },
+        "id" : "collector",
+        "symbol" : "books.vertical.fill",
+        "title" : "Collector"
+      },
+      {
+        "detail" : "Walk a Journey to its end",
+        "goal" : {
+          "target" : 1,
+          "type" : "questsCompleted"
+        },
+        "id" : "first-journey",
+        "symbol" : "map.fill",
+        "title" : "First Journey"
+      },
+      {
+        "detail" : "Complete 3 Journeys",
+        "goal" : {
+          "target" : 3,
+          "type" : "questsCompleted"
+        },
+        "id" : "pilgrim",
+        "symbol" : "signpost.right.fill",
+        "title" : "Pilgrim"
+      }
+    ],
+    "challengeLinks" : {
+      "currentVersion" : 1,
+      "host" : "challenge",
+      "placeholderName" : "Friend",
+      "scheme" : "biblecrossword",
+      "webHost" : "biblecrosswordchallenge.com",
+      "webPath" : "/challenge/"
+    },
+    "featureFlags" : {
+      "hint-quota-one" : false,
+      "premium-ask" : false,
+      "stall-nudge" : true
+    },
+    "hints" : {
+      "checkScopes" : [
+        "letter",
+        "word",
+        "puzzle"
+      ],
+      "costs" : {
+        "letter" : 1,
+        "puzzle" : 3,
+        "verse" : 0,
+        "word" : 2
+      },
+      "freeHintLimit" : 3,
+      "learningWindowCompletions" : 3,
+      "reducedHintLimit" : 1,
+      "titles" : {
+        "letter" : "Reveal Letter",
+        "puzzle" : "Reveal Puzzle",
+        "verse" : "Show the Verse",
+        "word" : "Reveal Word"
+      }
+    },
+    "paywallSources" : [
+      "hint_limit",
+      "home_card",
+      "profile",
+      "archive",
+      "pack_locked",
+      "pack_completion",
+      "mini_completion",
+      "quest_locked",
+      "journey",
+      "memory_verse_limit",
+      "read_chip",
+      "trial_abandon",
+      "premium_ask",
+      "onboarding"
+    ],
+    "premiumAsk" : {
+      "minCompletions" : 5,
+      "paywallSource" : "premium_ask"
+    },
+    "puzzleAccess" : {
+      "packExclusivePrefix" : "pack-",
+      "windowLength" : 7
+    },
+    "reminderAsk" : {
+      "maxCompletionAsks" : 3,
+      "streakCardFloor" : 2,
+      "surfaces" : [
+        "completion",
+        "streak_card",
+        "prompt"
+      ]
+    },
+    "reviewAsk" : {
+      "milestones" : [
+        3,
+        10,
+        30,
+        75,
+        150,
+        300
+      ],
+      "minimumGapDays" : 14,
+      "minimumInstallAgeDays" : 3,
+      "streakFloor" : 7,
+      "versionFloor" : 30
+    },
+    "rotation" : {
+      "epochDay" : "2026-07-01",
+      "poolCounts" : {
+        "all" : 241,
+        "daily" : 92,
+        "mini" : 90,
+        "sunday" : 13
+      },
+      "sundayRotationOffset" : 5
+    },
+    "stallNudge" : {
+      "earlyNudgeCap" : 30,
+      "kinds" : [
+        "check",
+        "verse",
+        "free_letter"
+      ],
+      "learningEarlyNudgeSeconds" : 12,
+      "learningStallNudgeSeconds" : 20,
+      "maxMidSolveNudges" : 3,
+      "midSolveFillThreshold" : 0.40000000000000002,
+      "standardStallNudgeSeconds" : 45
+    },
+    "starterGift" : {
+      "letterIntervalMilliseconds" : 170
+    },
+    "streaks" : {
+      "freezeMilestoneEveryDays" : 7,
+      "maxStreakFreezes" : 3,
+      "startingFreezes" : 1
+    },
+    "timer" : {
+      "maxTickDeltaSeconds" : 1.5
+    },
+    "trialReoffer" : {
+      "paywallSource" : "trial_abandon",
+      "windowDays" : 14
+    }
+  },
+  "description" : "Named constants the rules depend on. Kotlin should assert equality against each at test time.",
+  "family" : "constants",
+  "source" : [
+    "Models/Persistence.swift",
+    "ViewModels/GameViewModel.swift",
+    "Models/PremiumAsk.swift",
+    "Models/ReminderAsk.swift",
+    "Models/ReviewAsk.swift",
+    "Models/TrialReoffer.swift",
+    "Services/PuzzleAccess.swift",
+    "Services/PuzzleProvider.swift",
+    "Services/FeatureFlags.swift",
+    "Services/ChallengeService.swift",
+    "Models/PaywallSource.swift"
+  ]
+}

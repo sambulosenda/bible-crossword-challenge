@@ -1,0 +1,374 @@
+{
+  "cases" : [
+    {
+      "expect" : {
+        "currentStreak" : 0,
+        "lastCompletedDaysAgo" : null,
+        "lastFreezeUsedDaysAgo" : null,
+        "outcome" : {
+          "kind" : "unchanged"
+        },
+        "streakFreezes" : 1
+      },
+      "given" : {
+        "currentStreak" : 0,
+        "lastCompletedDaysAgo" : null,
+        "op" : "normalize",
+        "streakFreezes" : 1
+      },
+      "name" : "normalize · streak 0 · last never · freezes 1"
+    },
+    {
+      "expect" : {
+        "currentStreak" : 5,
+        "lastCompletedDaysAgo" : 0,
+        "lastFreezeUsedDaysAgo" : null,
+        "outcome" : {
+          "kind" : "unchanged"
+        },
+        "streakFreezes" : 1
+      },
+      "given" : {
+        "currentStreak" : 5,
+        "lastCompletedDaysAgo" : 0,
+        "op" : "normalize",
+        "streakFreezes" : 1
+      },
+      "name" : "normalize · streak 5 · last 0d ago · freezes 1"
+    },
+    {
+      "expect" : {
+        "currentStreak" : 5,
+        "lastCompletedDaysAgo" : 1,
+        "lastFreezeUsedDaysAgo" : null,
+        "outcome" : {
+          "kind" : "unchanged"
+        },
+        "streakFreezes" : 1
+      },
+      "given" : {
+        "currentStreak" : 5,
+        "lastCompletedDaysAgo" : 1,
+        "op" : "normalize",
+        "streakFreezes" : 1
+      },
+      "name" : "normalize · streak 5 · last 1d ago · freezes 1"
+    },
+    {
+      "expect" : {
+        "currentStreak" : 5,
+        "lastCompletedDaysAgo" : 1,
+        "lastFreezeUsedDaysAgo" : 0,
+        "outcome" : {
+          "kind" : "freezeSaved"
+        },
+        "streakFreezes" : 0
+      },
+      "given" : {
+        "currentStreak" : 5,
+        "lastCompletedDaysAgo" : 2,
+        "op" : "normalize",
+        "streakFreezes" : 1
+      },
+      "name" : "normalize · streak 5 · last 2d ago · freezes 1"
+    },
+    {
+      "expect" : {
+        "currentStreak" : 0,
+        "lastCompletedDaysAgo" : 2,
+        "lastFreezeUsedDaysAgo" : null,
+        "outcome" : {
+          "kind" : "broken",
+          "previous" : 5
+        },
+        "streakFreezes" : 0
+      },
+      "given" : {
+        "currentStreak" : 5,
+        "lastCompletedDaysAgo" : 2,
+        "op" : "normalize",
+        "streakFreezes" : 0
+      },
+      "name" : "normalize · streak 5 · last 2d ago · freezes 0"
+    },
+    {
+      "expect" : {
+        "currentStreak" : 0,
+        "lastCompletedDaysAgo" : 3,
+        "lastFreezeUsedDaysAgo" : null,
+        "outcome" : {
+          "kind" : "broken",
+          "previous" : 5
+        },
+        "streakFreezes" : 3
+      },
+      "given" : {
+        "currentStreak" : 5,
+        "lastCompletedDaysAgo" : 3,
+        "op" : "normalize",
+        "streakFreezes" : 3
+      },
+      "name" : "normalize · streak 5 · last 3d ago · freezes 3"
+    },
+    {
+      "expect" : {
+        "currentStreak" : 0,
+        "lastCompletedDaysAgo" : 2,
+        "lastFreezeUsedDaysAgo" : null,
+        "outcome" : {
+          "kind" : "unchanged"
+        },
+        "streakFreezes" : 1
+      },
+      "given" : {
+        "currentStreak" : 0,
+        "lastCompletedDaysAgo" : 2,
+        "op" : "normalize",
+        "streakFreezes" : 1
+      },
+      "name" : "normalize · streak 0 · last 2d ago · freezes 1"
+    },
+    {
+      "expect" : {
+        "currentStreak" : 0,
+        "lastCompletedDaysAgo" : 9,
+        "lastFreezeUsedDaysAgo" : null,
+        "outcome" : {
+          "kind" : "unchanged"
+        },
+        "streakFreezes" : 1
+      },
+      "given" : {
+        "currentStreak" : 0,
+        "lastCompletedDaysAgo" : 9,
+        "op" : "normalize",
+        "streakFreezes" : 1
+      },
+      "name" : "normalize · streak 0 · last 9d ago · freezes 1"
+    },
+    {
+      "expect" : {
+        "currentStreak" : 0,
+        "lastCompletedDaysAgo" : 30,
+        "lastFreezeUsedDaysAgo" : null,
+        "outcome" : {
+          "kind" : "broken",
+          "previous" : 12
+        },
+        "streakFreezes" : 2
+      },
+      "given" : {
+        "currentStreak" : 12,
+        "lastCompletedDaysAgo" : 30,
+        "op" : "normalize",
+        "streakFreezes" : 2
+      },
+      "name" : "normalize · streak 12 · last 30d ago · freezes 2"
+    },
+    {
+      "expect" : {
+        "advanced" : true,
+        "bestStreak" : 1,
+        "currentStreak" : 1,
+        "lastCompletedDaysAgo" : 0,
+        "streakFreezes" : 1,
+        "totalPuzzlesCompleted" : 1
+      },
+      "given" : {
+        "bestStreak" : 0,
+        "currentStreak" : 0,
+        "isReplay" : false,
+        "lastCompletedDaysAgo" : null,
+        "op" : "registerCompletion",
+        "streakFreezes" : 1,
+        "totalPuzzlesCompleted" : 0
+      },
+      "name" : "register · streak 0 · last never · replay false · freezes 1"
+    },
+    {
+      "expect" : {
+        "advanced" : true,
+        "bestStreak" : 4,
+        "currentStreak" : 4,
+        "lastCompletedDaysAgo" : 0,
+        "streakFreezes" : 1,
+        "totalPuzzlesCompleted" : 6
+      },
+      "given" : {
+        "bestStreak" : 3,
+        "currentStreak" : 3,
+        "isReplay" : false,
+        "lastCompletedDaysAgo" : 1,
+        "op" : "registerCompletion",
+        "streakFreezes" : 1,
+        "totalPuzzlesCompleted" : 5
+      },
+      "name" : "register · streak 3 · last 1d ago · replay false · freezes 1"
+    },
+    {
+      "expect" : {
+        "advanced" : false,
+        "bestStreak" : 3,
+        "currentStreak" : 3,
+        "lastCompletedDaysAgo" : 0,
+        "streakFreezes" : 1,
+        "totalPuzzlesCompleted" : 6
+      },
+      "given" : {
+        "bestStreak" : 3,
+        "currentStreak" : 3,
+        "isReplay" : false,
+        "lastCompletedDaysAgo" : 0,
+        "op" : "registerCompletion",
+        "streakFreezes" : 1,
+        "totalPuzzlesCompleted" : 5
+      },
+      "name" : "register · streak 3 · last 0d ago · replay false · freezes 1"
+    },
+    {
+      "expect" : {
+        "advanced" : true,
+        "bestStreak" : 9,
+        "currentStreak" : 1,
+        "lastCompletedDaysAgo" : 0,
+        "streakFreezes" : 1,
+        "totalPuzzlesCompleted" : 6
+      },
+      "given" : {
+        "bestStreak" : 9,
+        "currentStreak" : 3,
+        "isReplay" : false,
+        "lastCompletedDaysAgo" : 4,
+        "op" : "registerCompletion",
+        "streakFreezes" : 1,
+        "totalPuzzlesCompleted" : 5
+      },
+      "name" : "register · streak 3 · last 4d ago · replay false · freezes 1"
+    },
+    {
+      "expect" : {
+        "advanced" : true,
+        "bestStreak" : 7,
+        "currentStreak" : 7,
+        "lastCompletedDaysAgo" : 0,
+        "streakFreezes" : 2,
+        "totalPuzzlesCompleted" : 21
+      },
+      "given" : {
+        "bestStreak" : 6,
+        "currentStreak" : 6,
+        "isReplay" : false,
+        "lastCompletedDaysAgo" : 1,
+        "op" : "registerCompletion",
+        "streakFreezes" : 1,
+        "totalPuzzlesCompleted" : 20
+      },
+      "name" : "register · streak 6 · last 1d ago · replay false · freezes 1"
+    },
+    {
+      "expect" : {
+        "advanced" : true,
+        "bestStreak" : 7,
+        "currentStreak" : 7,
+        "lastCompletedDaysAgo" : 0,
+        "streakFreezes" : 3,
+        "totalPuzzlesCompleted" : 21
+      },
+      "given" : {
+        "bestStreak" : 6,
+        "currentStreak" : 6,
+        "isReplay" : false,
+        "lastCompletedDaysAgo" : 1,
+        "op" : "registerCompletion",
+        "streakFreezes" : 3,
+        "totalPuzzlesCompleted" : 20
+      },
+      "name" : "register · streak 6 · last 1d ago · replay false · freezes 3"
+    },
+    {
+      "expect" : {
+        "advanced" : true,
+        "bestStreak" : 14,
+        "currentStreak" : 14,
+        "lastCompletedDaysAgo" : 0,
+        "streakFreezes" : 3,
+        "totalPuzzlesCompleted" : 41
+      },
+      "given" : {
+        "bestStreak" : 13,
+        "currentStreak" : 13,
+        "isReplay" : false,
+        "lastCompletedDaysAgo" : 1,
+        "op" : "registerCompletion",
+        "streakFreezes" : 2,
+        "totalPuzzlesCompleted" : 40
+      },
+      "name" : "register · streak 13 · last 1d ago · replay false · freezes 2"
+    },
+    {
+      "expect" : {
+        "advanced" : false,
+        "bestStreak" : 6,
+        "currentStreak" : 6,
+        "lastCompletedDaysAgo" : 0,
+        "streakFreezes" : 1,
+        "totalPuzzlesCompleted" : 21
+      },
+      "given" : {
+        "bestStreak" : 6,
+        "currentStreak" : 6,
+        "isReplay" : false,
+        "lastCompletedDaysAgo" : 0,
+        "op" : "registerCompletion",
+        "streakFreezes" : 1,
+        "totalPuzzlesCompleted" : 20
+      },
+      "name" : "register · streak 6 · last 0d ago · replay false · freezes 1"
+    },
+    {
+      "expect" : {
+        "advanced" : true,
+        "bestStreak" : 4,
+        "currentStreak" : 4,
+        "lastCompletedDaysAgo" : 0,
+        "streakFreezes" : 1,
+        "totalPuzzlesCompleted" : 5
+      },
+      "given" : {
+        "bestStreak" : 3,
+        "currentStreak" : 3,
+        "isReplay" : true,
+        "lastCompletedDaysAgo" : 1,
+        "op" : "registerCompletion",
+        "streakFreezes" : 1,
+        "totalPuzzlesCompleted" : 5
+      },
+      "name" : "register · streak 3 · last 1d ago · replay true · freezes 1"
+    },
+    {
+      "expect" : {
+        "advanced" : true,
+        "bestStreak" : 1,
+        "currentStreak" : 1,
+        "lastCompletedDaysAgo" : 0,
+        "streakFreezes" : 1,
+        "totalPuzzlesCompleted" : 0
+      },
+      "given" : {
+        "bestStreak" : 0,
+        "currentStreak" : 0,
+        "isReplay" : true,
+        "lastCompletedDaysAgo" : null,
+        "op" : "registerCompletion",
+        "streakFreezes" : 1,
+        "totalPuzzlesCompleted" : 0
+      },
+      "name" : "register · streak 0 · last never · replay true · freezes 1"
+    }
+  ],
+  "description" : "Streaks.normalize (launch) and Streaks.registerCompletion (solve). All dates are day offsets from an unemitted fixed now, on a UTC calendar.",
+  "family" : "streaks",
+  "source" : [
+    "Models/Persistence.swift — enum Streaks"
+  ]
+}

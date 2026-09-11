@@ -1,0 +1,2447 @@
+{
+  "cases" : [
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 0,
+        "isPremium" : false,
+        "limit" : 3,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 3 · learning · used 0 · stamped never · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 0,
+        "isPremium" : true,
+        "limit" : 3,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 3 · learning · used 0 · stamped never · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 0,
+        "isPremium" : false,
+        "limit" : 3,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 3 · learning · used 0 · stamped 0d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 0,
+        "isPremium" : true,
+        "limit" : 3,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 3 · learning · used 0 · stamped 0d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 0,
+        "isPremium" : false,
+        "limit" : 3,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 3 · learning · used 0 · stamped 1d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 0,
+        "isPremium" : true,
+        "limit" : 3,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 3 · learning · used 0 · stamped 1d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 1,
+        "isPremium" : false,
+        "limit" : 3,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 3 · learning · used 1 · stamped never · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 1,
+        "isPremium" : true,
+        "limit" : 3,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 3 · learning · used 1 · stamped never · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 1,
+        "isPremium" : false,
+        "limit" : 3,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 3 · learning · used 1 · stamped 0d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 1,
+        "isPremium" : true,
+        "limit" : 3,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 3 · learning · used 1 · stamped 0d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 1,
+        "isPremium" : false,
+        "limit" : 3,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 3 · learning · used 1 · stamped 1d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 1,
+        "isPremium" : true,
+        "limit" : 3,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 3 · learning · used 1 · stamped 1d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 2,
+        "isPremium" : false,
+        "limit" : 3,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 3 · learning · used 2 · stamped never · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 2,
+        "isPremium" : true,
+        "limit" : 3,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 3 · learning · used 2 · stamped never · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 2,
+        "isPremium" : false,
+        "limit" : 3,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 3 · learning · used 2 · stamped 0d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 2,
+        "isPremium" : true,
+        "limit" : 3,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 3 · learning · used 2 · stamped 0d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 2,
+        "isPremium" : false,
+        "limit" : 3,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 3 · learning · used 2 · stamped 1d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 2,
+        "isPremium" : true,
+        "limit" : 3,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 3 · learning · used 2 · stamped 1d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 3,
+        "isPremium" : false,
+        "limit" : 3,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 3 · learning · used 3 · stamped never · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 3,
+        "isPremium" : true,
+        "limit" : 3,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 3 · learning · used 3 · stamped never · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 3,
+        "isPremium" : false,
+        "limit" : 3,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 3 · learning · used 3 · stamped 0d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 3,
+        "isPremium" : true,
+        "limit" : 3,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 3 · learning · used 3 · stamped 0d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 3,
+        "isPremium" : false,
+        "limit" : 3,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 3 · learning · used 3 · stamped 1d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 3,
+        "isPremium" : true,
+        "limit" : 3,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 3 · learning · used 3 · stamped 1d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 4,
+        "isPremium" : false,
+        "limit" : 3,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 3 · learning · used 4 · stamped never · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 4,
+        "isPremium" : true,
+        "limit" : 3,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 3 · learning · used 4 · stamped never · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 4,
+        "isPremium" : false,
+        "limit" : 3,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 3 · learning · used 4 · stamped 0d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 4,
+        "isPremium" : true,
+        "limit" : 3,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 3 · learning · used 4 · stamped 0d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 4,
+        "isPremium" : false,
+        "limit" : 3,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 3 · learning · used 4 · stamped 1d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 4,
+        "isPremium" : true,
+        "limit" : 3,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 3 · learning · used 4 · stamped 1d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 3
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 0,
+        "isPremium" : false,
+        "limit" : 3,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 3 · graduated · used 0 · stamped never · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 0,
+        "isPremium" : true,
+        "limit" : 3,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 3 · graduated · used 0 · stamped never · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 3
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 0,
+        "isPremium" : false,
+        "limit" : 3,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 3 · graduated · used 0 · stamped 0d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 0,
+        "isPremium" : true,
+        "limit" : 3,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 3 · graduated · used 0 · stamped 0d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 3
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 0,
+        "isPremium" : false,
+        "limit" : 3,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 3 · graduated · used 0 · stamped 1d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 0,
+        "isPremium" : true,
+        "limit" : 3,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 3 · graduated · used 0 · stamped 1d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 3
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 1,
+        "isPremium" : false,
+        "limit" : 3,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 3 · graduated · used 1 · stamped never · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 1,
+        "isPremium" : true,
+        "limit" : 3,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 3 · graduated · used 1 · stamped never · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 2
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 1,
+        "isPremium" : false,
+        "limit" : 3,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 3 · graduated · used 1 · stamped 0d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 1,
+        "isPremium" : true,
+        "limit" : 3,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 3 · graduated · used 1 · stamped 0d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 3
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 1,
+        "isPremium" : false,
+        "limit" : 3,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 3 · graduated · used 1 · stamped 1d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 1,
+        "isPremium" : true,
+        "limit" : 3,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 3 · graduated · used 1 · stamped 1d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 3
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 2,
+        "isPremium" : false,
+        "limit" : 3,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 3 · graduated · used 2 · stamped never · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 2,
+        "isPremium" : true,
+        "limit" : 3,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 3 · graduated · used 2 · stamped never · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 1
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 2,
+        "isPremium" : false,
+        "limit" : 3,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 3 · graduated · used 2 · stamped 0d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 2,
+        "isPremium" : true,
+        "limit" : 3,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 3 · graduated · used 2 · stamped 0d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 3
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 2,
+        "isPremium" : false,
+        "limit" : 3,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 3 · graduated · used 2 · stamped 1d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 2,
+        "isPremium" : true,
+        "limit" : 3,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 3 · graduated · used 2 · stamped 1d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 3
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 3,
+        "isPremium" : false,
+        "limit" : 3,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 3 · graduated · used 3 · stamped never · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 3,
+        "isPremium" : true,
+        "limit" : 3,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 3 · graduated · used 3 · stamped never · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 0
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 3,
+        "isPremium" : false,
+        "limit" : 3,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 3 · graduated · used 3 · stamped 0d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 3,
+        "isPremium" : true,
+        "limit" : 3,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 3 · graduated · used 3 · stamped 0d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 3
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 3,
+        "isPremium" : false,
+        "limit" : 3,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 3 · graduated · used 3 · stamped 1d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 3,
+        "isPremium" : true,
+        "limit" : 3,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 3 · graduated · used 3 · stamped 1d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 3
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 4,
+        "isPremium" : false,
+        "limit" : 3,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 3 · graduated · used 4 · stamped never · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 4,
+        "isPremium" : true,
+        "limit" : 3,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 3 · graduated · used 4 · stamped never · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 0
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 4,
+        "isPremium" : false,
+        "limit" : 3,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 3 · graduated · used 4 · stamped 0d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 4,
+        "isPremium" : true,
+        "limit" : 3,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 3 · graduated · used 4 · stamped 0d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 3
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 4,
+        "isPremium" : false,
+        "limit" : 3,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 3 · graduated · used 4 · stamped 1d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 4,
+        "isPremium" : true,
+        "limit" : 3,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 3 · graduated · used 4 · stamped 1d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 3
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 0,
+        "isPremium" : false,
+        "limit" : 3,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 3 · veteran · used 0 · stamped never · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 0,
+        "isPremium" : true,
+        "limit" : 3,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 3 · veteran · used 0 · stamped never · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 3
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 0,
+        "isPremium" : false,
+        "limit" : 3,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 3 · veteran · used 0 · stamped 0d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 0,
+        "isPremium" : true,
+        "limit" : 3,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 3 · veteran · used 0 · stamped 0d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 3
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 0,
+        "isPremium" : false,
+        "limit" : 3,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 3 · veteran · used 0 · stamped 1d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 0,
+        "isPremium" : true,
+        "limit" : 3,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 3 · veteran · used 0 · stamped 1d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 3
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 1,
+        "isPremium" : false,
+        "limit" : 3,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 3 · veteran · used 1 · stamped never · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 1,
+        "isPremium" : true,
+        "limit" : 3,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 3 · veteran · used 1 · stamped never · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 2
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 1,
+        "isPremium" : false,
+        "limit" : 3,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 3 · veteran · used 1 · stamped 0d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 1,
+        "isPremium" : true,
+        "limit" : 3,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 3 · veteran · used 1 · stamped 0d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 3
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 1,
+        "isPremium" : false,
+        "limit" : 3,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 3 · veteran · used 1 · stamped 1d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 1,
+        "isPremium" : true,
+        "limit" : 3,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 3 · veteran · used 1 · stamped 1d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 3
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 2,
+        "isPremium" : false,
+        "limit" : 3,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 3 · veteran · used 2 · stamped never · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 2,
+        "isPremium" : true,
+        "limit" : 3,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 3 · veteran · used 2 · stamped never · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 1
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 2,
+        "isPremium" : false,
+        "limit" : 3,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 3 · veteran · used 2 · stamped 0d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 2,
+        "isPremium" : true,
+        "limit" : 3,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 3 · veteran · used 2 · stamped 0d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 3
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 2,
+        "isPremium" : false,
+        "limit" : 3,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 3 · veteran · used 2 · stamped 1d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 2,
+        "isPremium" : true,
+        "limit" : 3,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 3 · veteran · used 2 · stamped 1d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 3
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 3,
+        "isPremium" : false,
+        "limit" : 3,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 3 · veteran · used 3 · stamped never · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 3,
+        "isPremium" : true,
+        "limit" : 3,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 3 · veteran · used 3 · stamped never · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 0
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 3,
+        "isPremium" : false,
+        "limit" : 3,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 3 · veteran · used 3 · stamped 0d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 3,
+        "isPremium" : true,
+        "limit" : 3,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 3 · veteran · used 3 · stamped 0d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 3
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 3,
+        "isPremium" : false,
+        "limit" : 3,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 3 · veteran · used 3 · stamped 1d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 3,
+        "isPremium" : true,
+        "limit" : 3,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 3 · veteran · used 3 · stamped 1d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 3
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 4,
+        "isPremium" : false,
+        "limit" : 3,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 3 · veteran · used 4 · stamped never · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 4,
+        "isPremium" : true,
+        "limit" : 3,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 3 · veteran · used 4 · stamped never · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 0
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 4,
+        "isPremium" : false,
+        "limit" : 3,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 3 · veteran · used 4 · stamped 0d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 4,
+        "isPremium" : true,
+        "limit" : 3,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 3 · veteran · used 4 · stamped 0d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 3
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 4,
+        "isPremium" : false,
+        "limit" : 3,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 3 · veteran · used 4 · stamped 1d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 4,
+        "isPremium" : true,
+        "limit" : 3,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 3 · veteran · used 4 · stamped 1d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 0,
+        "isPremium" : false,
+        "limit" : 1,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 1 · learning · used 0 · stamped never · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 0,
+        "isPremium" : true,
+        "limit" : 1,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 1 · learning · used 0 · stamped never · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 0,
+        "isPremium" : false,
+        "limit" : 1,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 1 · learning · used 0 · stamped 0d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 0,
+        "isPremium" : true,
+        "limit" : 1,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 1 · learning · used 0 · stamped 0d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 0,
+        "isPremium" : false,
+        "limit" : 1,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 1 · learning · used 0 · stamped 1d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 0,
+        "isPremium" : true,
+        "limit" : 1,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 1 · learning · used 0 · stamped 1d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 1,
+        "isPremium" : false,
+        "limit" : 1,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 1 · learning · used 1 · stamped never · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 1,
+        "isPremium" : true,
+        "limit" : 1,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 1 · learning · used 1 · stamped never · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 1,
+        "isPremium" : false,
+        "limit" : 1,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 1 · learning · used 1 · stamped 0d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 1,
+        "isPremium" : true,
+        "limit" : 1,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 1 · learning · used 1 · stamped 0d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 1,
+        "isPremium" : false,
+        "limit" : 1,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 1 · learning · used 1 · stamped 1d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 1,
+        "isPremium" : true,
+        "limit" : 1,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 1 · learning · used 1 · stamped 1d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 2,
+        "isPremium" : false,
+        "limit" : 1,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 1 · learning · used 2 · stamped never · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 2,
+        "isPremium" : true,
+        "limit" : 1,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 1 · learning · used 2 · stamped never · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 2,
+        "isPremium" : false,
+        "limit" : 1,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 1 · learning · used 2 · stamped 0d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 2,
+        "isPremium" : true,
+        "limit" : 1,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 1 · learning · used 2 · stamped 0d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 2,
+        "isPremium" : false,
+        "limit" : 1,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 1 · learning · used 2 · stamped 1d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 2,
+        "isPremium" : true,
+        "limit" : 1,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 1 · learning · used 2 · stamped 1d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 3,
+        "isPremium" : false,
+        "limit" : 1,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 1 · learning · used 3 · stamped never · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 3,
+        "isPremium" : true,
+        "limit" : 1,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 1 · learning · used 3 · stamped never · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 3,
+        "isPremium" : false,
+        "limit" : 1,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 1 · learning · used 3 · stamped 0d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 3,
+        "isPremium" : true,
+        "limit" : 1,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 1 · learning · used 3 · stamped 0d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 3,
+        "isPremium" : false,
+        "limit" : 1,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 1 · learning · used 3 · stamped 1d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 3,
+        "isPremium" : true,
+        "limit" : 1,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 1 · learning · used 3 · stamped 1d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 4,
+        "isPremium" : false,
+        "limit" : 1,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 1 · learning · used 4 · stamped never · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 4,
+        "isPremium" : true,
+        "limit" : 1,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 1 · learning · used 4 · stamped never · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 4,
+        "isPremium" : false,
+        "limit" : 1,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 1 · learning · used 4 · stamped 0d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 4,
+        "isPremium" : true,
+        "limit" : 1,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 1 · learning · used 4 · stamped 0d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 4,
+        "isPremium" : false,
+        "limit" : 1,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 1 · learning · used 4 · stamped 1d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 4,
+        "isPremium" : true,
+        "limit" : 1,
+        "totalCompleted" : 2
+      },
+      "name" : "limit 1 · learning · used 4 · stamped 1d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 0,
+        "isPremium" : false,
+        "limit" : 1,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 1 · graduated · used 0 · stamped never · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 0,
+        "isPremium" : true,
+        "limit" : 1,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 1 · graduated · used 0 · stamped never · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 1
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 0,
+        "isPremium" : false,
+        "limit" : 1,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 1 · graduated · used 0 · stamped 0d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 0,
+        "isPremium" : true,
+        "limit" : 1,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 1 · graduated · used 0 · stamped 0d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 0,
+        "isPremium" : false,
+        "limit" : 1,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 1 · graduated · used 0 · stamped 1d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 0,
+        "isPremium" : true,
+        "limit" : 1,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 1 · graduated · used 0 · stamped 1d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 1,
+        "isPremium" : false,
+        "limit" : 1,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 1 · graduated · used 1 · stamped never · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 1,
+        "isPremium" : true,
+        "limit" : 1,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 1 · graduated · used 1 · stamped never · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 0
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 1,
+        "isPremium" : false,
+        "limit" : 1,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 1 · graduated · used 1 · stamped 0d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 1,
+        "isPremium" : true,
+        "limit" : 1,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 1 · graduated · used 1 · stamped 0d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 1,
+        "isPremium" : false,
+        "limit" : 1,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 1 · graduated · used 1 · stamped 1d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 1,
+        "isPremium" : true,
+        "limit" : 1,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 1 · graduated · used 1 · stamped 1d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 2,
+        "isPremium" : false,
+        "limit" : 1,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 1 · graduated · used 2 · stamped never · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 2,
+        "isPremium" : true,
+        "limit" : 1,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 1 · graduated · used 2 · stamped never · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 0
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 2,
+        "isPremium" : false,
+        "limit" : 1,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 1 · graduated · used 2 · stamped 0d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 2,
+        "isPremium" : true,
+        "limit" : 1,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 1 · graduated · used 2 · stamped 0d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 2,
+        "isPremium" : false,
+        "limit" : 1,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 1 · graduated · used 2 · stamped 1d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 2,
+        "isPremium" : true,
+        "limit" : 1,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 1 · graduated · used 2 · stamped 1d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 3,
+        "isPremium" : false,
+        "limit" : 1,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 1 · graduated · used 3 · stamped never · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 3,
+        "isPremium" : true,
+        "limit" : 1,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 1 · graduated · used 3 · stamped never · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 0
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 3,
+        "isPremium" : false,
+        "limit" : 1,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 1 · graduated · used 3 · stamped 0d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 3,
+        "isPremium" : true,
+        "limit" : 1,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 1 · graduated · used 3 · stamped 0d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 3,
+        "isPremium" : false,
+        "limit" : 1,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 1 · graduated · used 3 · stamped 1d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 3,
+        "isPremium" : true,
+        "limit" : 1,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 1 · graduated · used 3 · stamped 1d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 4,
+        "isPremium" : false,
+        "limit" : 1,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 1 · graduated · used 4 · stamped never · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 4,
+        "isPremium" : true,
+        "limit" : 1,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 1 · graduated · used 4 · stamped never · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 0
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 4,
+        "isPremium" : false,
+        "limit" : 1,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 1 · graduated · used 4 · stamped 0d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 4,
+        "isPremium" : true,
+        "limit" : 1,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 1 · graduated · used 4 · stamped 0d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 4,
+        "isPremium" : false,
+        "limit" : 1,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 1 · graduated · used 4 · stamped 1d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 4,
+        "isPremium" : true,
+        "limit" : 1,
+        "totalCompleted" : 3
+      },
+      "name" : "limit 1 · graduated · used 4 · stamped 1d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 0,
+        "isPremium" : false,
+        "limit" : 1,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 1 · veteran · used 0 · stamped never · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 0,
+        "isPremium" : true,
+        "limit" : 1,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 1 · veteran · used 0 · stamped never · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 1
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 0,
+        "isPremium" : false,
+        "limit" : 1,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 1 · veteran · used 0 · stamped 0d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 0,
+        "isPremium" : true,
+        "limit" : 1,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 1 · veteran · used 0 · stamped 0d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 0,
+        "isPremium" : false,
+        "limit" : 1,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 1 · veteran · used 0 · stamped 1d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 0,
+        "isPremium" : true,
+        "limit" : 1,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 1 · veteran · used 0 · stamped 1d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 1,
+        "isPremium" : false,
+        "limit" : 1,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 1 · veteran · used 1 · stamped never · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 1,
+        "isPremium" : true,
+        "limit" : 1,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 1 · veteran · used 1 · stamped never · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 0
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 1,
+        "isPremium" : false,
+        "limit" : 1,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 1 · veteran · used 1 · stamped 0d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 1,
+        "isPremium" : true,
+        "limit" : 1,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 1 · veteran · used 1 · stamped 0d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 1,
+        "isPremium" : false,
+        "limit" : 1,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 1 · veteran · used 1 · stamped 1d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 1,
+        "isPremium" : true,
+        "limit" : 1,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 1 · veteran · used 1 · stamped 1d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 2,
+        "isPremium" : false,
+        "limit" : 1,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 1 · veteran · used 2 · stamped never · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 2,
+        "isPremium" : true,
+        "limit" : 1,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 1 · veteran · used 2 · stamped never · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 0
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 2,
+        "isPremium" : false,
+        "limit" : 1,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 1 · veteran · used 2 · stamped 0d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 2,
+        "isPremium" : true,
+        "limit" : 1,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 1 · veteran · used 2 · stamped 0d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 2,
+        "isPremium" : false,
+        "limit" : 1,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 1 · veteran · used 2 · stamped 1d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 2,
+        "isPremium" : true,
+        "limit" : 1,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 1 · veteran · used 2 · stamped 1d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 3,
+        "isPremium" : false,
+        "limit" : 1,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 1 · veteran · used 3 · stamped never · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 3,
+        "isPremium" : true,
+        "limit" : 1,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 1 · veteran · used 3 · stamped never · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 0
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 3,
+        "isPremium" : false,
+        "limit" : 1,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 1 · veteran · used 3 · stamped 0d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 3,
+        "isPremium" : true,
+        "limit" : 1,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 1 · veteran · used 3 · stamped 0d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 3,
+        "isPremium" : false,
+        "limit" : 1,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 1 · veteran · used 3 · stamped 1d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 3,
+        "isPremium" : true,
+        "limit" : 1,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 1 · veteran · used 3 · stamped 1d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 4,
+        "isPremium" : false,
+        "limit" : 1,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 1 · veteran · used 4 · stamped never · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 4,
+        "isPremium" : true,
+        "limit" : 1,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 1 · veteran · used 4 · stamped never · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 0
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 4,
+        "isPremium" : false,
+        "limit" : 1,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 1 · veteran · used 4 · stamped 0d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 4,
+        "isPremium" : true,
+        "limit" : 1,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 1 · veteran · used 4 · stamped 0d ago · premium true"
+    },
+    {
+      "expect" : {
+        "remaining" : 1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 4,
+        "isPremium" : false,
+        "limit" : 1,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 1 · veteran · used 4 · stamped 1d ago · premium false"
+    },
+    {
+      "expect" : {
+        "remaining" : -1
+      },
+      "given" : {
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 4,
+        "isPremium" : true,
+        "limit" : 1,
+        "totalCompleted" : 10
+      },
+      "name" : "limit 1 · veteran · used 4 · stamped 1d ago · premium true"
+    },
+    {
+      "expect" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 1
+      },
+      "given" : {
+        "cost" : 1,
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 0,
+        "op" : "consumeHint",
+        "totalCompleted" : 10
+      },
+      "name" : "consume cost 1 · completed 10 · used 0 · stamped never"
+    },
+    {
+      "expect" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 2
+      },
+      "given" : {
+        "cost" : 1,
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 1,
+        "op" : "consumeHint",
+        "totalCompleted" : 10
+      },
+      "name" : "consume cost 1 · completed 10 · used 1 · stamped 0d ago"
+    },
+    {
+      "expect" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 3
+      },
+      "given" : {
+        "cost" : 2,
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 1,
+        "op" : "consumeHint",
+        "totalCompleted" : 10
+      },
+      "name" : "consume cost 2 · completed 10 · used 1 · stamped 0d ago"
+    },
+    {
+      "expect" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 1
+      },
+      "given" : {
+        "cost" : 1,
+        "hintsDaysAgo" : 1,
+        "hintsUsedToday" : 3,
+        "op" : "consumeHint",
+        "totalCompleted" : 10
+      },
+      "name" : "consume cost 1 · completed 10 · used 3 · stamped 1d ago"
+    },
+    {
+      "expect" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 2
+      },
+      "given" : {
+        "cost" : 0,
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 2,
+        "op" : "consumeHint",
+        "totalCompleted" : 10
+      },
+      "name" : "consume cost 0 · completed 10 · used 2 · stamped 0d ago"
+    },
+    {
+      "expect" : {
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 0
+      },
+      "given" : {
+        "cost" : 3,
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 0,
+        "op" : "consumeHint",
+        "totalCompleted" : 2
+      },
+      "name" : "consume cost 3 · completed 2 · used 0 · stamped never"
+    },
+    {
+      "expect" : {
+        "hintsDaysAgo" : 0,
+        "hintsUsedToday" : 3
+      },
+      "given" : {
+        "cost" : 3,
+        "hintsDaysAgo" : null,
+        "hintsUsedToday" : 0,
+        "op" : "consumeHint",
+        "totalCompleted" : 3
+      },
+      "name" : "consume cost 3 · completed 3 · used 0 · stamped never"
+    }
+  ],
+  "description" : "hintsRemaining(isPremium:limit:) and consumeHint(cost:) over the daily pool at both sizes. `remaining` of -1 means unlimited (Swift Int.max).",
+  "family" : "hint_quota",
+  "source" : [
+    "Models/Persistence.swift — extension PlayerProfile (Hint helpers)"
+  ]
+}

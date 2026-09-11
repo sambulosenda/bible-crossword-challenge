@@ -1,0 +1,291 @@
+{
+  "cases" : [
+    {
+      "expect" : {
+        "elapsedAfterEach" : [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      "given" : {
+        "seedElapsed" : 0,
+        "ticks" : [
+          {
+            "at" : 0,
+            "attached" : true,
+            "suppressed" : false
+          },
+          {
+            "at" : 1,
+            "attached" : true,
+            "suppressed" : false
+          },
+          {
+            "at" : 2,
+            "attached" : true,
+            "suppressed" : false
+          },
+          {
+            "at" : 3,
+            "attached" : true,
+            "suppressed" : false
+          },
+          {
+            "at" : 4,
+            "attached" : true,
+            "suppressed" : false
+          },
+          {
+            "at" : 5,
+            "attached" : true,
+            "suppressed" : false
+          }
+        ]
+      },
+      "name" : "steady one-second ticks"
+    },
+    {
+      "expect" : {
+        "elapsedAfterEach" : [
+          0,
+          1
+        ]
+      },
+      "given" : {
+        "seedElapsed" : 0,
+        "ticks" : [
+          {
+            "at" : 0,
+            "attached" : true,
+            "suppressed" : false
+          },
+          {
+            "at" : 10,
+            "attached" : true,
+            "suppressed" : false
+          }
+        ]
+      },
+      "name" : "first tick only sets the baseline"
+    },
+    {
+      "expect" : {
+        "elapsedAfterEach" : [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "given" : {
+        "seedElapsed" : 0,
+        "ticks" : [
+          {
+            "at" : 0,
+            "attached" : true,
+            "suppressed" : false
+          },
+          {
+            "at" : 1,
+            "attached" : true,
+            "suppressed" : false
+          },
+          {
+            "at" : 60,
+            "attached" : true,
+            "suppressed" : false
+          },
+          {
+            "at" : 61,
+            "attached" : true,
+            "suppressed" : false
+          }
+        ]
+      },
+      "name" : "gap is capped at 1.5s"
+    },
+    {
+      "expect" : {
+        "elapsedAfterEach" : [
+          0,
+          0,
+          0,
+          1,
+          1,
+          2
+        ]
+      },
+      "given" : {
+        "seedElapsed" : 0,
+        "ticks" : [
+          {
+            "at" : 0,
+            "attached" : true,
+            "suppressed" : false
+          },
+          {
+            "at" : 0.40000000000000002,
+            "attached" : true,
+            "suppressed" : false
+          },
+          {
+            "at" : 0.80000000000000004,
+            "attached" : true,
+            "suppressed" : false
+          },
+          {
+            "at" : 1.2000000000000002,
+            "attached" : true,
+            "suppressed" : false
+          },
+          {
+            "at" : 1.6000000000000001,
+            "attached" : true,
+            "suppressed" : false
+          },
+          {
+            "at" : 2,
+            "attached" : true,
+            "suppressed" : false
+          }
+        ]
+      },
+      "name" : "fractions carry"
+    },
+    {
+      "expect" : {
+        "elapsedAfterEach" : [
+          0,
+          1,
+          1,
+          1,
+          1,
+          2
+        ]
+      },
+      "given" : {
+        "seedElapsed" : 0,
+        "ticks" : [
+          {
+            "at" : 0,
+            "attached" : true,
+            "suppressed" : false
+          },
+          {
+            "at" : 1,
+            "attached" : true,
+            "suppressed" : false
+          },
+          {
+            "at" : 2,
+            "attached" : false,
+            "suppressed" : false
+          },
+          {
+            "at" : 30,
+            "attached" : false,
+            "suppressed" : false
+          },
+          {
+            "at" : 31,
+            "attached" : true,
+            "suppressed" : false
+          },
+          {
+            "at" : 32,
+            "attached" : true,
+            "suppressed" : false
+          }
+        ]
+      },
+      "name" : "detached ticks drop the baseline"
+    },
+    {
+      "expect" : {
+        "elapsedAfterEach" : [
+          0,
+          1,
+          1,
+          1,
+          1,
+          2
+        ]
+      },
+      "given" : {
+        "seedElapsed" : 0,
+        "ticks" : [
+          {
+            "at" : 0,
+            "attached" : true,
+            "suppressed" : false
+          },
+          {
+            "at" : 1,
+            "attached" : true,
+            "suppressed" : false
+          },
+          {
+            "at" : 2,
+            "attached" : true,
+            "suppressed" : true
+          },
+          {
+            "at" : 40,
+            "attached" : true,
+            "suppressed" : true
+          },
+          {
+            "at" : 41,
+            "attached" : true,
+            "suppressed" : false
+          },
+          {
+            "at" : 42,
+            "attached" : true,
+            "suppressed" : false
+          }
+        ]
+      },
+      "name" : "suppressed (verse sheet) ticks drop the baseline"
+    },
+    {
+      "expect" : {
+        "elapsedAfterEach" : [
+          3600,
+          3601,
+          3602
+        ]
+      },
+      "given" : {
+        "seedElapsed" : 3600,
+        "ticks" : [
+          {
+            "at" : 0,
+            "attached" : true,
+            "suppressed" : false
+          },
+          {
+            "at" : 1,
+            "attached" : true,
+            "suppressed" : false
+          },
+          {
+            "at" : 2,
+            "attached" : true,
+            "suppressed" : false
+          }
+        ]
+      },
+      "name" : "seeded elapsed resumes without a jump"
+    }
+  ],
+  "description" : "GameViewModel.tick(now:) — offsets are seconds from an unemitted base instant. `attached`/`suppressed` are set before each tick.",
+  "family" : "engine_timer",
+  "source" : [
+    "ViewModels/GameViewModel.swift — Timing"
+  ]
+}

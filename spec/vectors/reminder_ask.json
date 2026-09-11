@@ -1,0 +1,269 @@
+{
+  "cases" : [
+    {
+      "expect" : {
+        "completion" : true,
+        "prompt" : true,
+        "streak_card" : false
+      },
+      "given" : {
+        "askedThisSession" : false,
+        "completionAsksShown" : 0,
+        "currentStreak" : 0,
+        "isInstallDay" : false,
+        "lastAskDaysAgo" : null,
+        "permissionUndetermined" : true,
+        "remindersEnabled" : false,
+        "returnDaySheetShown" : false,
+        "streakAskShown" : false,
+        "totalCompleted" : 1
+      },
+      "name" : "state 0"
+    },
+    {
+      "expect" : {
+        "completion" : false,
+        "prompt" : false,
+        "streak_card" : false
+      },
+      "given" : {
+        "askedThisSession" : false,
+        "completionAsksShown" : 0,
+        "currentStreak" : 0,
+        "isInstallDay" : false,
+        "lastAskDaysAgo" : null,
+        "permissionUndetermined" : true,
+        "remindersEnabled" : false,
+        "returnDaySheetShown" : false,
+        "streakAskShown" : false,
+        "totalCompleted" : 0
+      },
+      "name" : "state 1"
+    },
+    {
+      "expect" : {
+        "completion" : false,
+        "prompt" : false,
+        "streak_card" : false
+      },
+      "given" : {
+        "askedThisSession" : false,
+        "completionAsksShown" : 0,
+        "currentStreak" : 5,
+        "isInstallDay" : false,
+        "lastAskDaysAgo" : null,
+        "permissionUndetermined" : true,
+        "remindersEnabled" : true,
+        "returnDaySheetShown" : false,
+        "streakAskShown" : false,
+        "totalCompleted" : 5
+      },
+      "name" : "state 2"
+    },
+    {
+      "expect" : {
+        "completion" : false,
+        "prompt" : false,
+        "streak_card" : false
+      },
+      "given" : {
+        "askedThisSession" : false,
+        "completionAsksShown" : 0,
+        "currentStreak" : 5,
+        "isInstallDay" : false,
+        "lastAskDaysAgo" : null,
+        "permissionUndetermined" : false,
+        "remindersEnabled" : false,
+        "returnDaySheetShown" : false,
+        "streakAskShown" : false,
+        "totalCompleted" : 5
+      },
+      "name" : "state 3"
+    },
+    {
+      "expect" : {
+        "completion" : false,
+        "prompt" : false,
+        "streak_card" : false
+      },
+      "given" : {
+        "askedThisSession" : true,
+        "completionAsksShown" : 0,
+        "currentStreak" : 5,
+        "isInstallDay" : false,
+        "lastAskDaysAgo" : null,
+        "permissionUndetermined" : true,
+        "remindersEnabled" : false,
+        "returnDaySheetShown" : false,
+        "streakAskShown" : false,
+        "totalCompleted" : 5
+      },
+      "name" : "state 4"
+    },
+    {
+      "expect" : {
+        "completion" : false,
+        "prompt" : false,
+        "streak_card" : false
+      },
+      "given" : {
+        "askedThisSession" : false,
+        "completionAsksShown" : 0,
+        "currentStreak" : 5,
+        "isInstallDay" : false,
+        "lastAskDaysAgo" : 0,
+        "permissionUndetermined" : true,
+        "remindersEnabled" : false,
+        "returnDaySheetShown" : false,
+        "streakAskShown" : false,
+        "totalCompleted" : 5
+      },
+      "name" : "state 5"
+    },
+    {
+      "expect" : {
+        "completion" : true,
+        "prompt" : true,
+        "streak_card" : true
+      },
+      "given" : {
+        "askedThisSession" : false,
+        "completionAsksShown" : 0,
+        "currentStreak" : 5,
+        "isInstallDay" : false,
+        "lastAskDaysAgo" : 1,
+        "permissionUndetermined" : true,
+        "remindersEnabled" : false,
+        "returnDaySheetShown" : false,
+        "streakAskShown" : false,
+        "totalCompleted" : 5
+      },
+      "name" : "state 6"
+    },
+    {
+      "expect" : {
+        "completion" : true,
+        "prompt" : true,
+        "streak_card" : true
+      },
+      "given" : {
+        "askedThisSession" : false,
+        "completionAsksShown" : 2,
+        "currentStreak" : 5,
+        "isInstallDay" : false,
+        "lastAskDaysAgo" : 1,
+        "permissionUndetermined" : true,
+        "remindersEnabled" : false,
+        "returnDaySheetShown" : false,
+        "streakAskShown" : false,
+        "totalCompleted" : 5
+      },
+      "name" : "state 7"
+    },
+    {
+      "expect" : {
+        "completion" : false,
+        "prompt" : true,
+        "streak_card" : true
+      },
+      "given" : {
+        "askedThisSession" : false,
+        "completionAsksShown" : 3,
+        "currentStreak" : 5,
+        "isInstallDay" : false,
+        "lastAskDaysAgo" : 1,
+        "permissionUndetermined" : true,
+        "remindersEnabled" : false,
+        "returnDaySheetShown" : false,
+        "streakAskShown" : false,
+        "totalCompleted" : 5
+      },
+      "name" : "state 8"
+    },
+    {
+      "expect" : {
+        "completion" : false,
+        "prompt" : true,
+        "streak_card" : false
+      },
+      "given" : {
+        "askedThisSession" : false,
+        "completionAsksShown" : 3,
+        "currentStreak" : 1,
+        "isInstallDay" : false,
+        "lastAskDaysAgo" : 1,
+        "permissionUndetermined" : true,
+        "remindersEnabled" : false,
+        "returnDaySheetShown" : false,
+        "streakAskShown" : false,
+        "totalCompleted" : 5
+      },
+      "name" : "state 9"
+    },
+    {
+      "expect" : {
+        "completion" : false,
+        "prompt" : true,
+        "streak_card" : false
+      },
+      "given" : {
+        "askedThisSession" : false,
+        "completionAsksShown" : 3,
+        "currentStreak" : 2,
+        "isInstallDay" : false,
+        "lastAskDaysAgo" : 1,
+        "permissionUndetermined" : true,
+        "remindersEnabled" : false,
+        "returnDaySheetShown" : false,
+        "streakAskShown" : true,
+        "totalCompleted" : 5
+      },
+      "name" : "state 10"
+    },
+    {
+      "expect" : {
+        "completion" : true,
+        "prompt" : false,
+        "streak_card" : false
+      },
+      "given" : {
+        "askedThisSession" : false,
+        "completionAsksShown" : 0,
+        "currentStreak" : 0,
+        "isInstallDay" : true,
+        "lastAskDaysAgo" : null,
+        "permissionUndetermined" : true,
+        "remindersEnabled" : false,
+        "returnDaySheetShown" : false,
+        "streakAskShown" : false,
+        "totalCompleted" : 1
+      },
+      "name" : "state 11"
+    },
+    {
+      "expect" : {
+        "completion" : true,
+        "prompt" : false,
+        "streak_card" : false
+      },
+      "given" : {
+        "askedThisSession" : false,
+        "completionAsksShown" : 0,
+        "currentStreak" : 0,
+        "isInstallDay" : false,
+        "lastAskDaysAgo" : null,
+        "permissionUndetermined" : true,
+        "remindersEnabled" : false,
+        "returnDaySheetShown" : true,
+        "streakAskShown" : false,
+        "totalCompleted" : 1
+      },
+      "name" : "state 12"
+    }
+  ],
+  "description" : "ReminderAsk.decide for each surface. `lastAskDaysAgo` null = never asked.",
+  "family" : "reminder_ask",
+  "source" : [
+    "Models/ReminderAsk.swift"
+  ]
+}

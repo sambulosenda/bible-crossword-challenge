@@ -1,0 +1,681 @@
+{
+  "cases" : [
+    {
+      "expect" : {
+        "canPlay" : true,
+        "isInWindow" : true
+      },
+      "given" : {
+        "date" : "2026-08-08",
+        "hasProgress" : false,
+        "isChallenged" : false,
+        "isPremium" : false,
+        "puzzleID" : "daily-039"
+      },
+      "name" : "today's daily · premium false · progress false · challenged false"
+    },
+    {
+      "expect" : {
+        "canPlay" : true,
+        "isInWindow" : true
+      },
+      "given" : {
+        "date" : "2026-08-08",
+        "hasProgress" : false,
+        "isChallenged" : true,
+        "isPremium" : false,
+        "puzzleID" : "daily-039"
+      },
+      "name" : "today's daily · premium false · progress false · challenged true"
+    },
+    {
+      "expect" : {
+        "canPlay" : true,
+        "isInWindow" : true
+      },
+      "given" : {
+        "date" : "2026-08-08",
+        "hasProgress" : true,
+        "isChallenged" : false,
+        "isPremium" : false,
+        "puzzleID" : "daily-039"
+      },
+      "name" : "today's daily · premium false · progress true · challenged false"
+    },
+    {
+      "expect" : {
+        "canPlay" : true,
+        "isInWindow" : true
+      },
+      "given" : {
+        "date" : "2026-08-08",
+        "hasProgress" : true,
+        "isChallenged" : true,
+        "isPremium" : false,
+        "puzzleID" : "daily-039"
+      },
+      "name" : "today's daily · premium false · progress true · challenged true"
+    },
+    {
+      "expect" : {
+        "canPlay" : true,
+        "isInWindow" : true
+      },
+      "given" : {
+        "date" : "2026-08-08",
+        "hasProgress" : false,
+        "isChallenged" : false,
+        "isPremium" : true,
+        "puzzleID" : "daily-039"
+      },
+      "name" : "today's daily · premium true · progress false · challenged false"
+    },
+    {
+      "expect" : {
+        "canPlay" : true,
+        "isInWindow" : true
+      },
+      "given" : {
+        "date" : "2026-08-08",
+        "hasProgress" : false,
+        "isChallenged" : true,
+        "isPremium" : true,
+        "puzzleID" : "daily-039"
+      },
+      "name" : "today's daily · premium true · progress false · challenged true"
+    },
+    {
+      "expect" : {
+        "canPlay" : true,
+        "isInWindow" : true
+      },
+      "given" : {
+        "date" : "2026-08-08",
+        "hasProgress" : true,
+        "isChallenged" : false,
+        "isPremium" : true,
+        "puzzleID" : "daily-039"
+      },
+      "name" : "today's daily · premium true · progress true · challenged false"
+    },
+    {
+      "expect" : {
+        "canPlay" : true,
+        "isInWindow" : true
+      },
+      "given" : {
+        "date" : "2026-08-08",
+        "hasProgress" : true,
+        "isChallenged" : true,
+        "isPremium" : true,
+        "puzzleID" : "daily-039"
+      },
+      "name" : "today's daily · premium true · progress true · challenged true"
+    },
+    {
+      "expect" : {
+        "canPlay" : true,
+        "isInWindow" : true
+      },
+      "given" : {
+        "date" : "2026-08-08",
+        "hasProgress" : false,
+        "isChallenged" : false,
+        "isPremium" : false,
+        "puzzleID" : "mini-054"
+      },
+      "name" : "today's mini · premium false · progress false · challenged false"
+    },
+    {
+      "expect" : {
+        "canPlay" : true,
+        "isInWindow" : true
+      },
+      "given" : {
+        "date" : "2026-08-08",
+        "hasProgress" : false,
+        "isChallenged" : true,
+        "isPremium" : false,
+        "puzzleID" : "mini-054"
+      },
+      "name" : "today's mini · premium false · progress false · challenged true"
+    },
+    {
+      "expect" : {
+        "canPlay" : true,
+        "isInWindow" : true
+      },
+      "given" : {
+        "date" : "2026-08-08",
+        "hasProgress" : true,
+        "isChallenged" : false,
+        "isPremium" : false,
+        "puzzleID" : "mini-054"
+      },
+      "name" : "today's mini · premium false · progress true · challenged false"
+    },
+    {
+      "expect" : {
+        "canPlay" : true,
+        "isInWindow" : true
+      },
+      "given" : {
+        "date" : "2026-08-08",
+        "hasProgress" : true,
+        "isChallenged" : true,
+        "isPremium" : false,
+        "puzzleID" : "mini-054"
+      },
+      "name" : "today's mini · premium false · progress true · challenged true"
+    },
+    {
+      "expect" : {
+        "canPlay" : true,
+        "isInWindow" : true
+      },
+      "given" : {
+        "date" : "2026-08-08",
+        "hasProgress" : false,
+        "isChallenged" : false,
+        "isPremium" : true,
+        "puzzleID" : "mini-054"
+      },
+      "name" : "today's mini · premium true · progress false · challenged false"
+    },
+    {
+      "expect" : {
+        "canPlay" : true,
+        "isInWindow" : true
+      },
+      "given" : {
+        "date" : "2026-08-08",
+        "hasProgress" : false,
+        "isChallenged" : true,
+        "isPremium" : true,
+        "puzzleID" : "mini-054"
+      },
+      "name" : "today's mini · premium true · progress false · challenged true"
+    },
+    {
+      "expect" : {
+        "canPlay" : true,
+        "isInWindow" : true
+      },
+      "given" : {
+        "date" : "2026-08-08",
+        "hasProgress" : true,
+        "isChallenged" : false,
+        "isPremium" : true,
+        "puzzleID" : "mini-054"
+      },
+      "name" : "today's mini · premium true · progress true · challenged false"
+    },
+    {
+      "expect" : {
+        "canPlay" : true,
+        "isInWindow" : true
+      },
+      "given" : {
+        "date" : "2026-08-08",
+        "hasProgress" : true,
+        "isChallenged" : true,
+        "isPremium" : true,
+        "puzzleID" : "mini-054"
+      },
+      "name" : "today's mini · premium true · progress true · challenged true"
+    },
+    {
+      "expect" : {
+        "canPlay" : true,
+        "isInWindow" : true
+      },
+      "given" : {
+        "date" : "2026-08-08",
+        "hasProgress" : false,
+        "isChallenged" : false,
+        "isPremium" : false,
+        "puzzleID" : "sunday-013"
+      },
+      "name" : "this week's sunday · premium false · progress false · challenged false"
+    },
+    {
+      "expect" : {
+        "canPlay" : true,
+        "isInWindow" : true
+      },
+      "given" : {
+        "date" : "2026-08-08",
+        "hasProgress" : false,
+        "isChallenged" : true,
+        "isPremium" : false,
+        "puzzleID" : "sunday-013"
+      },
+      "name" : "this week's sunday · premium false · progress false · challenged true"
+    },
+    {
+      "expect" : {
+        "canPlay" : true,
+        "isInWindow" : true
+      },
+      "given" : {
+        "date" : "2026-08-08",
+        "hasProgress" : true,
+        "isChallenged" : false,
+        "isPremium" : false,
+        "puzzleID" : "sunday-013"
+      },
+      "name" : "this week's sunday · premium false · progress true · challenged false"
+    },
+    {
+      "expect" : {
+        "canPlay" : true,
+        "isInWindow" : true
+      },
+      "given" : {
+        "date" : "2026-08-08",
+        "hasProgress" : true,
+        "isChallenged" : true,
+        "isPremium" : false,
+        "puzzleID" : "sunday-013"
+      },
+      "name" : "this week's sunday · premium false · progress true · challenged true"
+    },
+    {
+      "expect" : {
+        "canPlay" : true,
+        "isInWindow" : true
+      },
+      "given" : {
+        "date" : "2026-08-08",
+        "hasProgress" : false,
+        "isChallenged" : false,
+        "isPremium" : true,
+        "puzzleID" : "sunday-013"
+      },
+      "name" : "this week's sunday · premium true · progress false · challenged false"
+    },
+    {
+      "expect" : {
+        "canPlay" : true,
+        "isInWindow" : true
+      },
+      "given" : {
+        "date" : "2026-08-08",
+        "hasProgress" : false,
+        "isChallenged" : true,
+        "isPremium" : true,
+        "puzzleID" : "sunday-013"
+      },
+      "name" : "this week's sunday · premium true · progress false · challenged true"
+    },
+    {
+      "expect" : {
+        "canPlay" : true,
+        "isInWindow" : true
+      },
+      "given" : {
+        "date" : "2026-08-08",
+        "hasProgress" : true,
+        "isChallenged" : false,
+        "isPremium" : true,
+        "puzzleID" : "sunday-013"
+      },
+      "name" : "this week's sunday · premium true · progress true · challenged false"
+    },
+    {
+      "expect" : {
+        "canPlay" : true,
+        "isInWindow" : true
+      },
+      "given" : {
+        "date" : "2026-08-08",
+        "hasProgress" : true,
+        "isChallenged" : true,
+        "isPremium" : true,
+        "puzzleID" : "sunday-013"
+      },
+      "name" : "this week's sunday · premium true · progress true · challenged true"
+    },
+    {
+      "expect" : {
+        "canPlay" : false,
+        "isInWindow" : false
+      },
+      "given" : {
+        "date" : "2026-08-08",
+        "hasProgress" : false,
+        "isChallenged" : false,
+        "isPremium" : false,
+        "puzzleID" : "daily-009"
+      },
+      "name" : "a daily from 30 days ago · premium false · progress false · challenged false"
+    },
+    {
+      "expect" : {
+        "canPlay" : true,
+        "isInWindow" : false
+      },
+      "given" : {
+        "date" : "2026-08-08",
+        "hasProgress" : false,
+        "isChallenged" : true,
+        "isPremium" : false,
+        "puzzleID" : "daily-009"
+      },
+      "name" : "a daily from 30 days ago · premium false · progress false · challenged true"
+    },
+    {
+      "expect" : {
+        "canPlay" : true,
+        "isInWindow" : false
+      },
+      "given" : {
+        "date" : "2026-08-08",
+        "hasProgress" : true,
+        "isChallenged" : false,
+        "isPremium" : false,
+        "puzzleID" : "daily-009"
+      },
+      "name" : "a daily from 30 days ago · premium false · progress true · challenged false"
+    },
+    {
+      "expect" : {
+        "canPlay" : true,
+        "isInWindow" : false
+      },
+      "given" : {
+        "date" : "2026-08-08",
+        "hasProgress" : true,
+        "isChallenged" : true,
+        "isPremium" : false,
+        "puzzleID" : "daily-009"
+      },
+      "name" : "a daily from 30 days ago · premium false · progress true · challenged true"
+    },
+    {
+      "expect" : {
+        "canPlay" : true,
+        "isInWindow" : false
+      },
+      "given" : {
+        "date" : "2026-08-08",
+        "hasProgress" : false,
+        "isChallenged" : false,
+        "isPremium" : true,
+        "puzzleID" : "daily-009"
+      },
+      "name" : "a daily from 30 days ago · premium true · progress false · challenged false"
+    },
+    {
+      "expect" : {
+        "canPlay" : true,
+        "isInWindow" : false
+      },
+      "given" : {
+        "date" : "2026-08-08",
+        "hasProgress" : false,
+        "isChallenged" : true,
+        "isPremium" : true,
+        "puzzleID" : "daily-009"
+      },
+      "name" : "a daily from 30 days ago · premium true · progress false · challenged true"
+    },
+    {
+      "expect" : {
+        "canPlay" : true,
+        "isInWindow" : false
+      },
+      "given" : {
+        "date" : "2026-08-08",
+        "hasProgress" : true,
+        "isChallenged" : false,
+        "isPremium" : true,
+        "puzzleID" : "daily-009"
+      },
+      "name" : "a daily from 30 days ago · premium true · progress true · challenged false"
+    },
+    {
+      "expect" : {
+        "canPlay" : true,
+        "isInWindow" : false
+      },
+      "given" : {
+        "date" : "2026-08-08",
+        "hasProgress" : true,
+        "isChallenged" : true,
+        "isPremium" : true,
+        "puzzleID" : "daily-009"
+      },
+      "name" : "a daily from 30 days ago · premium true · progress true · challenged true"
+    },
+    {
+      "expect" : {
+        "canPlay" : false,
+        "isInWindow" : false
+      },
+      "given" : {
+        "date" : "2026-08-08",
+        "hasProgress" : false,
+        "isChallenged" : false,
+        "isPremium" : false,
+        "puzzleID" : "mini-005"
+      },
+      "name" : "a mini from 30 days ago · premium false · progress false · challenged false"
+    },
+    {
+      "expect" : {
+        "canPlay" : true,
+        "isInWindow" : false
+      },
+      "given" : {
+        "date" : "2026-08-08",
+        "hasProgress" : false,
+        "isChallenged" : true,
+        "isPremium" : false,
+        "puzzleID" : "mini-005"
+      },
+      "name" : "a mini from 30 days ago · premium false · progress false · challenged true"
+    },
+    {
+      "expect" : {
+        "canPlay" : true,
+        "isInWindow" : false
+      },
+      "given" : {
+        "date" : "2026-08-08",
+        "hasProgress" : true,
+        "isChallenged" : false,
+        "isPremium" : false,
+        "puzzleID" : "mini-005"
+      },
+      "name" : "a mini from 30 days ago · premium false · progress true · challenged false"
+    },
+    {
+      "expect" : {
+        "canPlay" : true,
+        "isInWindow" : false
+      },
+      "given" : {
+        "date" : "2026-08-08",
+        "hasProgress" : true,
+        "isChallenged" : true,
+        "isPremium" : false,
+        "puzzleID" : "mini-005"
+      },
+      "name" : "a mini from 30 days ago · premium false · progress true · challenged true"
+    },
+    {
+      "expect" : {
+        "canPlay" : true,
+        "isInWindow" : false
+      },
+      "given" : {
+        "date" : "2026-08-08",
+        "hasProgress" : false,
+        "isChallenged" : false,
+        "isPremium" : true,
+        "puzzleID" : "mini-005"
+      },
+      "name" : "a mini from 30 days ago · premium true · progress false · challenged false"
+    },
+    {
+      "expect" : {
+        "canPlay" : true,
+        "isInWindow" : false
+      },
+      "given" : {
+        "date" : "2026-08-08",
+        "hasProgress" : false,
+        "isChallenged" : true,
+        "isPremium" : true,
+        "puzzleID" : "mini-005"
+      },
+      "name" : "a mini from 30 days ago · premium true · progress false · challenged true"
+    },
+    {
+      "expect" : {
+        "canPlay" : true,
+        "isInWindow" : false
+      },
+      "given" : {
+        "date" : "2026-08-08",
+        "hasProgress" : true,
+        "isChallenged" : false,
+        "isPremium" : true,
+        "puzzleID" : "mini-005"
+      },
+      "name" : "a mini from 30 days ago · premium true · progress true · challenged false"
+    },
+    {
+      "expect" : {
+        "canPlay" : true,
+        "isInWindow" : false
+      },
+      "given" : {
+        "date" : "2026-08-08",
+        "hasProgress" : true,
+        "isChallenged" : true,
+        "isPremium" : true,
+        "puzzleID" : "mini-005"
+      },
+      "name" : "a mini from 30 days ago · premium true · progress true · challenged true"
+    },
+    {
+      "expect" : {
+        "canPlay" : false,
+        "isInWindow" : false
+      },
+      "given" : {
+        "date" : "2026-08-08",
+        "hasProgress" : false,
+        "isChallenged" : false,
+        "isPremium" : false,
+        "puzzleID" : "pack-advent-002"
+      },
+      "name" : "a pack exclusive · premium false · progress false · challenged false"
+    },
+    {
+      "expect" : {
+        "canPlay" : true,
+        "isInWindow" : false
+      },
+      "given" : {
+        "date" : "2026-08-08",
+        "hasProgress" : false,
+        "isChallenged" : true,
+        "isPremium" : false,
+        "puzzleID" : "pack-advent-002"
+      },
+      "name" : "a pack exclusive · premium false · progress false · challenged true"
+    },
+    {
+      "expect" : {
+        "canPlay" : false,
+        "isInWindow" : false
+      },
+      "given" : {
+        "date" : "2026-08-08",
+        "hasProgress" : true,
+        "isChallenged" : false,
+        "isPremium" : false,
+        "puzzleID" : "pack-advent-002"
+      },
+      "name" : "a pack exclusive · premium false · progress true · challenged false"
+    },
+    {
+      "expect" : {
+        "canPlay" : true,
+        "isInWindow" : false
+      },
+      "given" : {
+        "date" : "2026-08-08",
+        "hasProgress" : true,
+        "isChallenged" : true,
+        "isPremium" : false,
+        "puzzleID" : "pack-advent-002"
+      },
+      "name" : "a pack exclusive · premium false · progress true · challenged true"
+    },
+    {
+      "expect" : {
+        "canPlay" : true,
+        "isInWindow" : false
+      },
+      "given" : {
+        "date" : "2026-08-08",
+        "hasProgress" : false,
+        "isChallenged" : false,
+        "isPremium" : true,
+        "puzzleID" : "pack-advent-002"
+      },
+      "name" : "a pack exclusive · premium true · progress false · challenged false"
+    },
+    {
+      "expect" : {
+        "canPlay" : true,
+        "isInWindow" : false
+      },
+      "given" : {
+        "date" : "2026-08-08",
+        "hasProgress" : false,
+        "isChallenged" : true,
+        "isPremium" : true,
+        "puzzleID" : "pack-advent-002"
+      },
+      "name" : "a pack exclusive · premium true · progress false · challenged true"
+    },
+    {
+      "expect" : {
+        "canPlay" : true,
+        "isInWindow" : false
+      },
+      "given" : {
+        "date" : "2026-08-08",
+        "hasProgress" : true,
+        "isChallenged" : false,
+        "isPremium" : true,
+        "puzzleID" : "pack-advent-002"
+      },
+      "name" : "a pack exclusive · premium true · progress true · challenged false"
+    },
+    {
+      "expect" : {
+        "canPlay" : true,
+        "isInWindow" : false
+      },
+      "given" : {
+        "date" : "2026-08-08",
+        "hasProgress" : true,
+        "isChallenged" : true,
+        "isPremium" : true,
+        "puzzleID" : "pack-advent-002"
+      },
+      "name" : "a pack exclusive · premium true · progress true · challenged true"
+    }
+  ],
+  "description" : "PuzzleAccess.canPlay / isInWindow truth table on one date, over four puzzle kinds × premium × progress × challenged.",
+  "family" : "puzzle_access",
+  "source" : [
+    "Services/PuzzleAccess.swift"
+  ]
+}

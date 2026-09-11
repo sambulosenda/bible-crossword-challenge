@@ -1,0 +1,286 @@
+{
+  "cases" : [
+    {
+      "expect" : {
+        "outcome" : {
+          "challengerName" : "Sam",
+          "kind" : "valid",
+          "puzzleID" : "daily-001",
+          "seconds" : 154
+        }
+      },
+      "given" : {
+        "op" : "parse",
+        "url" : "biblecrossword://challenge?v=1&p=daily-001&t=154&n=Sam"
+      },
+      "name" : "biblecrossword://challenge?v=1&p=daily-001&t=154&n=Sam"
+    },
+    {
+      "expect" : {
+        "outcome" : {
+          "challengerName" : "Sam",
+          "kind" : "valid",
+          "puzzleID" : "daily-001",
+          "seconds" : 154
+        }
+      },
+      "given" : {
+        "op" : "parse",
+        "url" : "https://biblecrosswordchallenge.com/challenge/?v=1&p=daily-001&t=154&n=Sam"
+      },
+      "name" : "https://biblecrosswordchallenge.com/challenge/?v=1&p=daily-001&t=154&n=Sam"
+    },
+    {
+      "expect" : {
+        "outcome" : {
+          "challengerName" : "Sam",
+          "kind" : "valid",
+          "puzzleID" : "daily-001",
+          "seconds" : 154
+        }
+      },
+      "given" : {
+        "op" : "parse",
+        "url" : "https://www.biblecrosswordchallenge.com/challenge/?v=1&p=daily-001&t=154&n=Sam"
+      },
+      "name" : "https://www.biblecrosswordchallenge.com/challenge/?v=1&p=daily-001&t=154&n=Sam"
+    },
+    {
+      "expect" : {
+        "outcome" : {
+          "challengerName" : "A very long name ind",
+          "kind" : "valid",
+          "puzzleID" : "mini-001",
+          "seconds" : 60
+        }
+      },
+      "given" : {
+        "op" : "parse",
+        "url" : "https://biblecrosswordchallenge.com/challenge?v=1&p=mini-001&t=60&n=A%20very%20long%20name%20indeed%20yes"
+      },
+      "name" : "https://biblecrosswordchallenge.com/challenge?v=1&p=mini-001&t=60&n=A%20very%20long%20name%20indeed%20yes"
+    },
+    {
+      "expect" : {
+        "outcome" : {
+          "challengerName" : "A friend",
+          "kind" : "valid",
+          "puzzleID" : "daily-001",
+          "seconds" : 154
+        }
+      },
+      "given" : {
+        "op" : "parse",
+        "url" : "https://biblecrosswordchallenge.com/challenge/?v=1&p=daily-001&t=154"
+      },
+      "name" : "https://biblecrosswordchallenge.com/challenge/?v=1&p=daily-001&t=154"
+    },
+    {
+      "expect" : {
+        "outcome" : {
+          "challengerName" : "A friend",
+          "kind" : "valid",
+          "puzzleID" : "daily-001",
+          "seconds" : 154
+        }
+      },
+      "given" : {
+        "op" : "parse",
+        "url" : "https://biblecrosswordchallenge.com/challenge/?v=1&p=daily-001&t=154&n=%20%20"
+      },
+      "name" : "https://biblecrosswordchallenge.com/challenge/?v=1&p=daily-001&t=154&n=%20%20"
+    },
+    {
+      "expect" : {
+        "outcome" : {
+          "kind" : "needsUpdate"
+        }
+      },
+      "given" : {
+        "op" : "parse",
+        "url" : "https://biblecrosswordchallenge.com/challenge/?v=2&p=daily-001&t=154&n=Sam"
+      },
+      "name" : "https://biblecrosswordchallenge.com/challenge/?v=2&p=daily-001&t=154&n=Sam"
+    },
+    {
+      "expect" : {
+        "outcome" : {
+          "kind" : "needsUpdate"
+        }
+      },
+      "given" : {
+        "op" : "parse",
+        "url" : "https://biblecrosswordchallenge.com/challenge/?v=1&p=daily-999&t=154&n=Sam"
+      },
+      "name" : "https://biblecrosswordchallenge.com/challenge/?v=1&p=daily-999&t=154&n=Sam"
+    },
+    {
+      "expect" : {
+        "outcome" : {
+          "kind" : "notAChallenge"
+        }
+      },
+      "given" : {
+        "op" : "parse",
+        "url" : "https://biblecrosswordchallenge.com/challenge/?p=daily-001&t=154&n=Sam"
+      },
+      "name" : "https://biblecrosswordchallenge.com/challenge/?p=daily-001&t=154&n=Sam"
+    },
+    {
+      "expect" : {
+        "outcome" : {
+          "kind" : "notAChallenge"
+        }
+      },
+      "given" : {
+        "op" : "parse",
+        "url" : "https://biblecrosswordchallenge.com/challenge/?v=1&p=daily-001&t=0&n=Sam"
+      },
+      "name" : "https://biblecrosswordchallenge.com/challenge/?v=1&p=daily-001&t=0&n=Sam"
+    },
+    {
+      "expect" : {
+        "outcome" : {
+          "kind" : "notAChallenge"
+        }
+      },
+      "given" : {
+        "op" : "parse",
+        "url" : "https://biblecrosswordchallenge.com/challenge/?v=1&p=daily-001&t=86401&n=Sam"
+      },
+      "name" : "https://biblecrosswordchallenge.com/challenge/?v=1&p=daily-001&t=86401&n=Sam"
+    },
+    {
+      "expect" : {
+        "outcome" : {
+          "kind" : "notAChallenge"
+        }
+      },
+      "given" : {
+        "op" : "parse",
+        "url" : "https://biblecrosswordchallenge.com/challenge/?v=1&p=daily-001&t=abc&n=Sam"
+      },
+      "name" : "https://biblecrosswordchallenge.com/challenge/?v=1&p=daily-001&t=abc&n=Sam"
+    },
+    {
+      "expect" : {
+        "outcome" : {
+          "kind" : "notAChallenge"
+        }
+      },
+      "given" : {
+        "op" : "parse",
+        "url" : "https://biblecrosswordchallenge.com/challenge/?v=1&p=&t=154&n=Sam"
+      },
+      "name" : "https://biblecrosswordchallenge.com/challenge/?v=1&p=&t=154&n=Sam"
+    },
+    {
+      "expect" : {
+        "outcome" : {
+          "kind" : "notAChallenge"
+        }
+      },
+      "given" : {
+        "op" : "parse",
+        "url" : "https://biblecrosswordchallenge.com/other/?v=1&p=daily-001&t=154&n=Sam"
+      },
+      "name" : "https://biblecrosswordchallenge.com/other/?v=1&p=daily-001&t=154&n=Sam"
+    },
+    {
+      "expect" : {
+        "outcome" : {
+          "kind" : "notAChallenge"
+        }
+      },
+      "given" : {
+        "op" : "parse",
+        "url" : "https://example.com/challenge/?v=1&p=daily-001&t=154&n=Sam"
+      },
+      "name" : "https://example.com/challenge/?v=1&p=daily-001&t=154&n=Sam"
+    },
+    {
+      "expect" : {
+        "outcome" : {
+          "kind" : "notAChallenge"
+        }
+      },
+      "given" : {
+        "op" : "parse",
+        "url" : "biblecrossword://memory"
+      },
+      "name" : "biblecrossword://memory"
+    },
+    {
+      "expect" : {
+        "outcome" : {
+          "challengerName" : "Sam",
+          "kind" : "valid",
+          "puzzleID" : "daily-001",
+          "seconds" : 154
+        }
+      },
+      "given" : {
+        "op" : "parse",
+        "url" : "https://biblecrosswordchallenge.com/challenge/?v=1&p=daily-001&t=154&n=Sam&e=154%3ASam&e=200%3AJo"
+      },
+      "name" : "https://biblecrosswordchallenge.com/challenge/?v=1&p=daily-001&t=154&n=Sam&e=154%3ASam&e=200%3AJo"
+    },
+    {
+      "expect" : {
+        "schemeURL" : "biblecrossword://challenge?v=1&p=daily-001&t=154&n=Sam",
+        "webURL" : "https://biblecrosswordchallenge.com/challenge/?v=1&p=daily-001&t=154&n=Sam"
+      },
+      "given" : {
+        "name" : "Sam",
+        "op" : "build",
+        "puzzleID" : "daily-001",
+        "seconds" : 154
+      },
+      "name" : "build · daily-001 · 154s · \"Sam\""
+    },
+    {
+      "expect" : {
+        "schemeURL" : "biblecrossword://challenge?v=1&p=mini-001&t=60&n=A%20very%20long%20name%20ind",
+        "webURL" : "https://biblecrosswordchallenge.com/challenge/?v=1&p=mini-001&t=60&n=A%20very%20long%20name%20ind"
+      },
+      "given" : {
+        "name" : "A very long name indeed yes",
+        "op" : "build",
+        "puzzleID" : "mini-001",
+        "seconds" : 60
+      },
+      "name" : "build · mini-001 · 60s · \"A very long name indeed yes\""
+    },
+    {
+      "expect" : {
+        "schemeURL" : "biblecrossword://challenge?v=1&p=daily-001&t=154&n=Ana%20%26%20Bob",
+        "webURL" : "https://biblecrosswordchallenge.com/challenge/?v=1&p=daily-001&t=154&n=Ana%20%26%20Bob"
+      },
+      "given" : {
+        "name" : "Ana & Bob",
+        "op" : "build",
+        "puzzleID" : "daily-001",
+        "seconds" : 154
+      },
+      "name" : "build · daily-001 · 154s · \"Ana & Bob\""
+    },
+    {
+      "expect" : {
+        "schemeURL" : "biblecrossword://challenge?v=1&p=daily-001&t=154&n=",
+        "webURL" : "https://biblecrosswordchallenge.com/challenge/?v=1&p=daily-001&t=154&n="
+      },
+      "given" : {
+        "name" : "",
+        "op" : "build",
+        "puzzleID" : "daily-001",
+        "seconds" : 154
+      },
+      "name" : "build · daily-001 · 154s · \"\""
+    }
+  ],
+  "description" : "ChallengeService.parse outcomes and the outgoing URL builders. `puzzleExists` is stubbed to {daily-001, mini-001} so the corpus is bundle-independent.",
+  "family" : "challenge_links",
+  "source" : [
+    "Services/ChallengeService.swift"
+  ]
+}

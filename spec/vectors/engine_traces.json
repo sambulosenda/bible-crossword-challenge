@@ -1,0 +1,3291 @@
+{
+  "cases" : [
+    {
+      "expect" : {
+        "cellTaps" : 0,
+        "checks" : [
+
+        ],
+        "entries" : {
+
+        },
+        "keyPresses" : 5,
+        "pencil" : {
+
+        },
+        "slots" : [
+          {
+            "answer" : "WELL",
+            "id" : "1-across",
+            "length" : 4,
+            "start" : [
+              0,
+              3
+            ]
+          },
+          {
+            "answer" : "REBEKAH",
+            "id" : "4-across",
+            "length" : 7,
+            "start" : [
+              3,
+              0
+            ]
+          },
+          {
+            "answer" : "WATER",
+            "id" : "1-down",
+            "length" : 5,
+            "start" : [
+              0,
+              3
+            ]
+          },
+          {
+            "answer" : "BRIDE",
+            "id" : "2-down",
+            "length" : 5,
+            "start" : [
+              2,
+              0
+            ]
+          },
+          {
+            "answer" : "NAHOR",
+            "id" : "3-down",
+            "length" : 5,
+            "start" : [
+              2,
+              5
+            ]
+          }
+        ],
+        "steps" : [
+          {
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 0,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                3
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 0
+          },
+          {
+            "input" : {
+              "letter" : "X",
+              "op" : "enter"
+            },
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 1,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                4
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 1
+          },
+          {
+            "input" : {
+              "letter" : "Y",
+              "op" : "enter"
+            },
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 2,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                5
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 2
+          },
+          {
+            "input" : {
+              "op" : "delete"
+            },
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 1,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                4
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 3
+          },
+          {
+            "input" : {
+              "op" : "delete"
+            },
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 0,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                3
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 4
+          },
+          {
+            "input" : {
+              "op" : "delete"
+            },
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 0,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                3
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 5
+          }
+        ],
+        "wordsCompleted" : [
+
+        ]
+      },
+      "given" : {
+        "learning" : false,
+        "puzzleID" : "mini-031",
+        "script" : [
+          {
+            "letter" : "X",
+            "op" : "enter"
+          },
+          {
+            "letter" : "Y",
+            "op" : "enter"
+          },
+          {
+            "op" : "delete"
+          },
+          {
+            "op" : "delete"
+          },
+          {
+            "op" : "delete"
+          }
+        ]
+      },
+      "name" : "opening selection and typing along a word"
+    },
+    {
+      "expect" : {
+        "cellTaps" : 0,
+        "checks" : [
+
+        ],
+        "entries" : {
+          "0,3" : "W",
+          "0,4" : "E",
+          "0,5" : "L",
+          "0,6" : "L"
+        },
+        "keyPresses" : 4,
+        "pencil" : {
+
+        },
+        "slots" : [
+          {
+            "answer" : "WELL",
+            "id" : "1-across",
+            "length" : 4,
+            "start" : [
+              0,
+              3
+            ]
+          },
+          {
+            "answer" : "REBEKAH",
+            "id" : "4-across",
+            "length" : 7,
+            "start" : [
+              3,
+              0
+            ]
+          },
+          {
+            "answer" : "WATER",
+            "id" : "1-down",
+            "length" : 5,
+            "start" : [
+              0,
+              3
+            ]
+          },
+          {
+            "answer" : "BRIDE",
+            "id" : "2-down",
+            "length" : 5,
+            "start" : [
+              2,
+              0
+            ]
+          },
+          {
+            "answer" : "NAHOR",
+            "id" : "3-down",
+            "length" : 5,
+            "start" : [
+              2,
+              5
+            ]
+          }
+        ],
+        "steps" : [
+          {
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 0,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                3
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 0
+          },
+          {
+            "input" : {
+              "id" : "1-across",
+              "op" : "selectSlot"
+            },
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 0,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                3
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 1
+          },
+          {
+            "input" : {
+              "letter" : "W",
+              "op" : "enter"
+            },
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 1,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                4
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 2
+          },
+          {
+            "input" : {
+              "letter" : "E",
+              "op" : "enter"
+            },
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 2,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                5
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 3
+          },
+          {
+            "input" : {
+              "letter" : "L",
+              "op" : "enter"
+            },
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 3,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                6
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 4
+          },
+          {
+            "input" : {
+              "letter" : "L",
+              "op" : "enter"
+            },
+            "state" : {
+              "activeSlot" : "1-down",
+              "direction" : "down",
+              "filled" : 4,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 4,
+              "selected" : [
+                1,
+                3
+              ],
+              "wordSolveTick" : 1
+            },
+            "step" : 5
+          }
+        ],
+        "wordsCompleted" : [
+          "1-across"
+        ]
+      },
+      "given" : {
+        "learning" : false,
+        "puzzleID" : "mini-031",
+        "script" : [
+          {
+            "id" : "1-across",
+            "op" : "selectSlot"
+          },
+          {
+            "letter" : "W",
+            "op" : "enter"
+          },
+          {
+            "letter" : "E",
+            "op" : "enter"
+          },
+          {
+            "letter" : "L",
+            "op" : "enter"
+          },
+          {
+            "letter" : "L",
+            "op" : "enter"
+          }
+        ]
+      },
+      "name" : "solve one word correctly, watch the cursor move on"
+    },
+    {
+      "expect" : {
+        "cellTaps" : 0,
+        "checks" : [
+          {
+            "correct" : [
+
+            ],
+            "wrong" : 4
+          }
+        ],
+        "entries" : {
+          "0,3" : "Z",
+          "0,4" : "Q",
+          "0,5" : "Q",
+          "0,6" : "Q"
+        },
+        "keyPresses" : 5,
+        "pencil" : {
+
+        },
+        "slots" : [
+          {
+            "answer" : "WELL",
+            "id" : "1-across",
+            "length" : 4,
+            "start" : [
+              0,
+              3
+            ]
+          },
+          {
+            "answer" : "REBEKAH",
+            "id" : "4-across",
+            "length" : 7,
+            "start" : [
+              3,
+              0
+            ]
+          },
+          {
+            "answer" : "WATER",
+            "id" : "1-down",
+            "length" : 5,
+            "start" : [
+              0,
+              3
+            ]
+          },
+          {
+            "answer" : "BRIDE",
+            "id" : "2-down",
+            "length" : 5,
+            "start" : [
+              2,
+              0
+            ]
+          },
+          {
+            "answer" : "NAHOR",
+            "id" : "3-down",
+            "length" : 5,
+            "start" : [
+              2,
+              5
+            ]
+          }
+        ],
+        "steps" : [
+          {
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 0,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                3
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 0
+          },
+          {
+            "input" : {
+              "id" : "1-across",
+              "op" : "selectSlot"
+            },
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 0,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                3
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 1
+          },
+          {
+            "input" : {
+              "letter" : "Q",
+              "op" : "enter"
+            },
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 1,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                4
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 2
+          },
+          {
+            "input" : {
+              "letter" : "Q",
+              "op" : "enter"
+            },
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 2,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                5
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 3
+          },
+          {
+            "input" : {
+              "letter" : "Q",
+              "op" : "enter"
+            },
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 3,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                6
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 4
+          },
+          {
+            "input" : {
+              "letter" : "Q",
+              "op" : "enter"
+            },
+            "state" : {
+              "activeSlot" : "1-down",
+              "direction" : "down",
+              "filled" : 4,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                1,
+                3
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 5
+          },
+          {
+            "input" : {
+              "id" : "1-across",
+              "op" : "selectSlot"
+            },
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 4,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                3
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 6
+          },
+          {
+            "input" : {
+              "op" : "check",
+              "scope" : "word"
+            },
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 4,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "result" : 4,
+              "selected" : [
+                0,
+                3
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 7
+          },
+          {
+            "input" : {
+              "letter" : "Z",
+              "op" : "enter"
+            },
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 4,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                4
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 8
+          }
+        ],
+        "wordsCompleted" : [
+
+        ]
+      },
+      "given" : {
+        "learning" : false,
+        "puzzleID" : "mini-031",
+        "script" : [
+          {
+            "id" : "1-across",
+            "op" : "selectSlot"
+          },
+          {
+            "letter" : "Q",
+            "op" : "enter"
+          },
+          {
+            "letter" : "Q",
+            "op" : "enter"
+          },
+          {
+            "letter" : "Q",
+            "op" : "enter"
+          },
+          {
+            "letter" : "Q",
+            "op" : "enter"
+          },
+          {
+            "id" : "1-across",
+            "op" : "selectSlot"
+          },
+          {
+            "op" : "check",
+            "scope" : "word"
+          },
+          {
+            "letter" : "Z",
+            "op" : "enter"
+          }
+        ]
+      },
+      "name" : "wrong letters then a word check"
+    },
+    {
+      "expect" : {
+        "cellTaps" : 0,
+        "checks" : [
+
+        ],
+        "entries" : {
+          "0,3" : "W"
+        },
+        "keyPresses" : 1,
+        "pencil" : {
+
+        },
+        "slots" : [
+          {
+            "answer" : "WELL",
+            "id" : "1-across",
+            "length" : 4,
+            "start" : [
+              0,
+              3
+            ]
+          },
+          {
+            "answer" : "REBEKAH",
+            "id" : "4-across",
+            "length" : 7,
+            "start" : [
+              3,
+              0
+            ]
+          },
+          {
+            "answer" : "WATER",
+            "id" : "1-down",
+            "length" : 5,
+            "start" : [
+              0,
+              3
+            ]
+          },
+          {
+            "answer" : "BRIDE",
+            "id" : "2-down",
+            "length" : 5,
+            "start" : [
+              2,
+              0
+            ]
+          },
+          {
+            "answer" : "NAHOR",
+            "id" : "3-down",
+            "length" : 5,
+            "start" : [
+              2,
+              5
+            ]
+          }
+        ],
+        "steps" : [
+          {
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 0,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                3
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 0
+          },
+          {
+            "input" : {
+              "id" : "1-across",
+              "op" : "selectSlot"
+            },
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 0,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                3
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 1
+          },
+          {
+            "input" : {
+              "letter" : "W",
+              "op" : "enter"
+            },
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 1,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                4
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 2
+          },
+          {
+            "input" : {
+              "id" : "1-across",
+              "op" : "selectSlot"
+            },
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 1,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                4
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 3
+          }
+        ],
+        "wordsCompleted" : [
+
+        ]
+      },
+      "given" : {
+        "learning" : false,
+        "puzzleID" : "mini-031",
+        "script" : [
+          {
+            "id" : "1-across",
+            "op" : "selectSlot"
+          },
+          {
+            "letter" : "W",
+            "op" : "enter"
+          },
+          {
+            "id" : "1-across",
+            "op" : "selectSlot"
+          }
+        ]
+      },
+      "name" : "selectSlot lands on the first empty cell of the word"
+    },
+    {
+      "expect" : {
+        "cellTaps" : 0,
+        "checks" : [
+
+        ],
+        "entries" : {
+
+        },
+        "keyPresses" : 6,
+        "pencil" : {
+
+        },
+        "slots" : [
+          {
+            "answer" : "WELL",
+            "id" : "1-across",
+            "length" : 4,
+            "start" : [
+              0,
+              3
+            ]
+          },
+          {
+            "answer" : "REBEKAH",
+            "id" : "4-across",
+            "length" : 7,
+            "start" : [
+              3,
+              0
+            ]
+          },
+          {
+            "answer" : "WATER",
+            "id" : "1-down",
+            "length" : 5,
+            "start" : [
+              0,
+              3
+            ]
+          },
+          {
+            "answer" : "BRIDE",
+            "id" : "2-down",
+            "length" : 5,
+            "start" : [
+              2,
+              0
+            ]
+          },
+          {
+            "answer" : "NAHOR",
+            "id" : "3-down",
+            "length" : 5,
+            "start" : [
+              2,
+              5
+            ]
+          }
+        ],
+        "steps" : [
+          {
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 0,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                3
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 0
+          },
+          {
+            "input" : {
+              "on" : true,
+              "op" : "pencilMode"
+            },
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 0,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                3
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 1
+          },
+          {
+            "input" : {
+              "letter" : "A",
+              "op" : "enter"
+            },
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 1,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                4
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 2
+          },
+          {
+            "input" : {
+              "letter" : "B",
+              "op" : "enter"
+            },
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 2,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                5
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 3
+          },
+          {
+            "input" : {
+              "on" : false,
+              "op" : "pencilMode"
+            },
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 2,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                5
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 4
+          },
+          {
+            "input" : {
+              "letter" : "C",
+              "op" : "enter"
+            },
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 3,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                6
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 5
+          },
+          {
+            "input" : {
+              "op" : "delete"
+            },
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 2,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                5
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 6
+          },
+          {
+            "input" : {
+              "op" : "delete"
+            },
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 1,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                4
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 7
+          },
+          {
+            "input" : {
+              "op" : "delete"
+            },
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 0,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                3
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 8
+          }
+        ],
+        "wordsCompleted" : [
+
+        ]
+      },
+      "given" : {
+        "learning" : false,
+        "puzzleID" : "mini-031",
+        "script" : [
+          {
+            "on" : true,
+            "op" : "pencilMode"
+          },
+          {
+            "letter" : "A",
+            "op" : "enter"
+          },
+          {
+            "letter" : "B",
+            "op" : "enter"
+          },
+          {
+            "on" : false,
+            "op" : "pencilMode"
+          },
+          {
+            "letter" : "C",
+            "op" : "enter"
+          },
+          {
+            "op" : "delete"
+          },
+          {
+            "op" : "delete"
+          },
+          {
+            "op" : "delete"
+          }
+        ]
+      },
+      "name" : "pencil letters never complete and never count"
+    },
+    {
+      "expect" : {
+        "cellTaps" : 0,
+        "checks" : [
+
+        ],
+        "entries" : {
+          "0,3" : "w",
+          "0,4" : "e",
+          "0,5" : "l",
+          "0,6" : "l"
+        },
+        "keyPresses" : 0,
+        "pencil" : {
+
+        },
+        "slots" : [
+          {
+            "answer" : "WELL",
+            "id" : "1-across",
+            "length" : 4,
+            "start" : [
+              0,
+              3
+            ]
+          },
+          {
+            "answer" : "REBEKAH",
+            "id" : "4-across",
+            "length" : 7,
+            "start" : [
+              3,
+              0
+            ]
+          },
+          {
+            "answer" : "WATER",
+            "id" : "1-down",
+            "length" : 5,
+            "start" : [
+              0,
+              3
+            ]
+          },
+          {
+            "answer" : "BRIDE",
+            "id" : "2-down",
+            "length" : 5,
+            "start" : [
+              2,
+              0
+            ]
+          },
+          {
+            "answer" : "NAHOR",
+            "id" : "3-down",
+            "length" : 5,
+            "start" : [
+              2,
+              5
+            ]
+          }
+        ],
+        "steps" : [
+          {
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 0,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                3
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 0
+          },
+          {
+            "input" : {
+              "op" : "revealLetter"
+            },
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 1,
+              "hintsUsed" : 1,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "result" : true,
+              "selected" : [
+                0,
+                4
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 1
+          },
+          {
+            "input" : {
+              "op" : "revealWord"
+            },
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 4,
+              "hintsUsed" : 2,
+              "isComplete" : false,
+              "remainingClues" : 4,
+              "result" : true,
+              "selected" : [
+                0,
+                4
+              ],
+              "wordSolveTick" : 1
+            },
+            "step" : 2
+          },
+          {
+            "input" : {
+              "op" : "revealWord"
+            },
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 4,
+              "hintsUsed" : 2,
+              "isComplete" : false,
+              "remainingClues" : 4,
+              "result" : false,
+              "selected" : [
+                0,
+                4
+              ],
+              "wordSolveTick" : 1
+            },
+            "step" : 3
+          },
+          {
+            "input" : {
+              "op" : "toggleDirection"
+            },
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 4,
+              "hintsUsed" : 2,
+              "isComplete" : false,
+              "remainingClues" : 4,
+              "selected" : [
+                0,
+                4
+              ],
+              "wordSolveTick" : 1
+            },
+            "step" : 4
+          },
+          {
+            "input" : {
+              "op" : "revealLetter"
+            },
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 4,
+              "hintsUsed" : 2,
+              "isComplete" : false,
+              "remainingClues" : 4,
+              "result" : false,
+              "selected" : [
+                0,
+                4
+              ],
+              "wordSolveTick" : 1
+            },
+            "step" : 5
+          }
+        ],
+        "wordsCompleted" : [
+          "1-across"
+        ]
+      },
+      "given" : {
+        "learning" : false,
+        "puzzleID" : "mini-031",
+        "script" : [
+          {
+            "op" : "revealLetter"
+          },
+          {
+            "op" : "revealWord"
+          },
+          {
+            "op" : "revealWord"
+          },
+          {
+            "op" : "toggleDirection"
+          },
+          {
+            "op" : "revealLetter"
+          }
+        ]
+      },
+      "name" : "hints: letter, word, then refuse when nothing left in the word"
+    },
+    {
+      "expect" : {
+        "cellTaps" : 1,
+        "checks" : [
+
+        ],
+        "entries" : {
+          "0,3" : "w"
+        },
+        "keyPresses" : 1,
+        "pencil" : {
+
+        },
+        "slots" : [
+          {
+            "answer" : "WELL",
+            "id" : "1-across",
+            "length" : 4,
+            "start" : [
+              0,
+              3
+            ]
+          },
+          {
+            "answer" : "REBEKAH",
+            "id" : "4-across",
+            "length" : 7,
+            "start" : [
+              3,
+              0
+            ]
+          },
+          {
+            "answer" : "WATER",
+            "id" : "1-down",
+            "length" : 5,
+            "start" : [
+              0,
+              3
+            ]
+          },
+          {
+            "answer" : "BRIDE",
+            "id" : "2-down",
+            "length" : 5,
+            "start" : [
+              2,
+              0
+            ]
+          },
+          {
+            "answer" : "NAHOR",
+            "id" : "3-down",
+            "length" : 5,
+            "start" : [
+              2,
+              5
+            ]
+          }
+        ],
+        "steps" : [
+          {
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 0,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                3
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 0
+          },
+          {
+            "input" : {
+              "op" : "revealLetter"
+            },
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 1,
+              "hintsUsed" : 1,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "result" : true,
+              "selected" : [
+                0,
+                4
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 1
+          },
+          {
+            "input" : {
+              "col" : 3,
+              "op" : "tap",
+              "row" : 0
+            },
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 1,
+              "hintsUsed" : 1,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                3
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 2
+          },
+          {
+            "input" : {
+              "letter" : "Q",
+              "op" : "enter"
+            },
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 1,
+              "hintsUsed" : 1,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                4
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 3
+          }
+        ],
+        "wordsCompleted" : [
+
+        ]
+      },
+      "given" : {
+        "learning" : false,
+        "puzzleID" : "mini-031",
+        "script" : [
+          {
+            "op" : "revealLetter"
+          },
+          {
+            "col" : 3,
+            "op" : "tap",
+            "row" : 0
+          },
+          {
+            "letter" : "Q",
+            "op" : "enter"
+          }
+        ]
+      },
+      "name" : "typing into a locked cell skips it"
+    },
+    {
+      "expect" : {
+        "cellTaps" : 0,
+        "checks" : [
+
+        ],
+        "entries" : {
+          "0,3" : "w",
+          "0,4" : "e",
+          "0,5" : "l",
+          "0,6" : "l",
+          "1,3" : "M"
+        },
+        "keyPresses" : 1,
+        "pencil" : {
+
+        },
+        "slots" : [
+          {
+            "answer" : "WELL",
+            "id" : "1-across",
+            "length" : 4,
+            "start" : [
+              0,
+              3
+            ]
+          },
+          {
+            "answer" : "REBEKAH",
+            "id" : "4-across",
+            "length" : 7,
+            "start" : [
+              3,
+              0
+            ]
+          },
+          {
+            "answer" : "WATER",
+            "id" : "1-down",
+            "length" : 5,
+            "start" : [
+              0,
+              3
+            ]
+          },
+          {
+            "answer" : "BRIDE",
+            "id" : "2-down",
+            "length" : 5,
+            "start" : [
+              2,
+              0
+            ]
+          },
+          {
+            "answer" : "NAHOR",
+            "id" : "3-down",
+            "length" : 5,
+            "start" : [
+              2,
+              5
+            ]
+          }
+        ],
+        "steps" : [
+          {
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 0,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                3
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 0
+          },
+          {
+            "input" : {
+              "op" : "giftStarterWord"
+            },
+            "state" : {
+              "activeSlot" : "1-down",
+              "direction" : "down",
+              "filled" : 4,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 4,
+              "result" : "1-across",
+              "selected" : [
+                1,
+                3
+              ],
+              "wordSolveTick" : 1
+            },
+            "step" : 1
+          },
+          {
+            "input" : {
+              "op" : "giftStarterWord"
+            },
+            "state" : {
+              "activeSlot" : "1-down",
+              "direction" : "down",
+              "filled" : 4,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 4,
+              "result" : null,
+              "selected" : [
+                1,
+                3
+              ],
+              "wordSolveTick" : 1
+            },
+            "step" : 2
+          },
+          {
+            "input" : {
+              "letter" : "M",
+              "op" : "enter"
+            },
+            "state" : {
+              "activeSlot" : "1-down",
+              "direction" : "down",
+              "filled" : 5,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 4,
+              "selected" : [
+                2,
+                3
+              ],
+              "wordSolveTick" : 1
+            },
+            "step" : 3
+          }
+        ],
+        "wordsCompleted" : [
+          "1-across"
+        ]
+      },
+      "given" : {
+        "learning" : true,
+        "puzzleID" : "mini-031",
+        "script" : [
+          {
+            "op" : "giftStarterWord"
+          },
+          {
+            "op" : "giftStarterWord"
+          },
+          {
+            "letter" : "M",
+            "op" : "enter"
+          }
+        ]
+      },
+      "name" : "starter gift fills the opening word and moves to a crosser"
+    },
+    {
+      "expect" : {
+        "cellTaps" : 0,
+        "checks" : [
+
+        ],
+        "entries" : {
+          "0,3" : "w",
+          "0,4" : "e",
+          "0,5" : "l",
+          "0,6" : "l",
+          "1,3" : "a",
+          "2,0" : "b",
+          "2,3" : "t",
+          "2,5" : "n",
+          "3,0" : "r",
+          "3,1" : "e",
+          "3,2" : "b",
+          "3,3" : "e",
+          "3,4" : "k",
+          "3,5" : "a",
+          "3,6" : "h",
+          "4,0" : "i",
+          "4,3" : "r",
+          "4,5" : "h",
+          "5,0" : "d",
+          "5,5" : "o",
+          "6,0" : "e",
+          "6,5" : "r"
+        },
+        "keyPresses" : 0,
+        "pencil" : {
+
+        },
+        "slots" : [
+          {
+            "answer" : "WELL",
+            "id" : "1-across",
+            "length" : 4,
+            "start" : [
+              0,
+              3
+            ]
+          },
+          {
+            "answer" : "REBEKAH",
+            "id" : "4-across",
+            "length" : 7,
+            "start" : [
+              3,
+              0
+            ]
+          },
+          {
+            "answer" : "WATER",
+            "id" : "1-down",
+            "length" : 5,
+            "start" : [
+              0,
+              3
+            ]
+          },
+          {
+            "answer" : "BRIDE",
+            "id" : "2-down",
+            "length" : 5,
+            "start" : [
+              2,
+              0
+            ]
+          },
+          {
+            "answer" : "NAHOR",
+            "id" : "3-down",
+            "length" : 5,
+            "start" : [
+              2,
+              5
+            ]
+          }
+        ],
+        "steps" : [
+          {
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 0,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                3
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 0
+          },
+          {
+            "input" : {
+              "op" : "revealPuzzle"
+            },
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 22,
+              "hintsUsed" : 1,
+              "isComplete" : true,
+              "remainingClues" : 5,
+              "result" : true,
+              "selected" : [
+                0,
+                3
+              ],
+              "wordSolveTick" : 1
+            },
+            "step" : 1
+          },
+          {
+            "input" : {
+              "op" : "revealPuzzle"
+            },
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 22,
+              "hintsUsed" : 1,
+              "isComplete" : true,
+              "remainingClues" : 5,
+              "result" : false,
+              "selected" : [
+                0,
+                3
+              ],
+              "wordSolveTick" : 1
+            },
+            "step" : 2
+          }
+        ],
+        "wordsCompleted" : [
+
+        ]
+      },
+      "given" : {
+        "learning" : false,
+        "puzzleID" : "mini-031",
+        "script" : [
+          {
+            "op" : "revealPuzzle"
+          },
+          {
+            "op" : "revealPuzzle"
+          }
+        ]
+      },
+      "name" : "give up fills everything and completes"
+    },
+    {
+      "expect" : {
+        "cellTaps" : 0,
+        "checks" : [
+
+        ],
+        "entries" : {
+          "0,3" : "W",
+          "0,4" : "E",
+          "0,5" : "L",
+          "0,6" : "L",
+          "1,3" : "A",
+          "2,0" : "B",
+          "2,3" : "T",
+          "2,5" : "N",
+          "3,0" : "R",
+          "3,1" : "E",
+          "3,2" : "B",
+          "3,3" : "E",
+          "3,4" : "K",
+          "3,5" : "A",
+          "3,6" : "H",
+          "4,0" : "I",
+          "4,3" : "R",
+          "4,5" : "H",
+          "5,0" : "D",
+          "5,5" : "O",
+          "6,0" : "E",
+          "6,5" : "R"
+        },
+        "keyPresses" : 22,
+        "pencil" : {
+
+        },
+        "slots" : [
+          {
+            "answer" : "WELL",
+            "id" : "1-across",
+            "length" : 4,
+            "start" : [
+              0,
+              3
+            ]
+          },
+          {
+            "answer" : "REBEKAH",
+            "id" : "4-across",
+            "length" : 7,
+            "start" : [
+              3,
+              0
+            ]
+          },
+          {
+            "answer" : "WATER",
+            "id" : "1-down",
+            "length" : 5,
+            "start" : [
+              0,
+              3
+            ]
+          },
+          {
+            "answer" : "BRIDE",
+            "id" : "2-down",
+            "length" : 5,
+            "start" : [
+              2,
+              0
+            ]
+          },
+          {
+            "answer" : "NAHOR",
+            "id" : "3-down",
+            "length" : 5,
+            "start" : [
+              2,
+              5
+            ]
+          }
+        ],
+        "steps" : [
+          {
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 0,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                3
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 0
+          },
+          {
+            "input" : {
+              "letter" : "W",
+              "op" : "enter"
+            },
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 1,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                4
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 1
+          },
+          {
+            "input" : {
+              "letter" : "E",
+              "op" : "enter"
+            },
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 2,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                5
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 2
+          },
+          {
+            "input" : {
+              "letter" : "L",
+              "op" : "enter"
+            },
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 3,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                6
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 3
+          },
+          {
+            "input" : {
+              "letter" : "L",
+              "op" : "enter"
+            },
+            "state" : {
+              "activeSlot" : "1-down",
+              "direction" : "down",
+              "filled" : 4,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 4,
+              "selected" : [
+                1,
+                3
+              ],
+              "wordSolveTick" : 1
+            },
+            "step" : 4
+          },
+          {
+            "input" : {
+              "letter" : "A",
+              "op" : "enter"
+            },
+            "state" : {
+              "activeSlot" : "1-down",
+              "direction" : "down",
+              "filled" : 5,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 4,
+              "selected" : [
+                2,
+                3
+              ],
+              "wordSolveTick" : 1
+            },
+            "step" : 5
+          },
+          {
+            "input" : {
+              "letter" : "T",
+              "op" : "enter"
+            },
+            "state" : {
+              "activeSlot" : "1-down",
+              "direction" : "down",
+              "filled" : 6,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 4,
+              "selected" : [
+                3,
+                3
+              ],
+              "wordSolveTick" : 1
+            },
+            "step" : 6
+          },
+          {
+            "input" : {
+              "letter" : "E",
+              "op" : "enter"
+            },
+            "state" : {
+              "activeSlot" : "1-down",
+              "direction" : "down",
+              "filled" : 7,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 4,
+              "selected" : [
+                4,
+                3
+              ],
+              "wordSolveTick" : 1
+            },
+            "step" : 7
+          },
+          {
+            "input" : {
+              "letter" : "R",
+              "op" : "enter"
+            },
+            "state" : {
+              "activeSlot" : "4-across",
+              "direction" : "across",
+              "filled" : 8,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 3,
+              "selected" : [
+                3,
+                0
+              ],
+              "wordSolveTick" : 2
+            },
+            "step" : 8
+          },
+          {
+            "input" : {
+              "letter" : "R",
+              "op" : "enter"
+            },
+            "state" : {
+              "activeSlot" : "4-across",
+              "direction" : "across",
+              "filled" : 9,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 3,
+              "selected" : [
+                3,
+                1
+              ],
+              "wordSolveTick" : 2
+            },
+            "step" : 9
+          },
+          {
+            "input" : {
+              "letter" : "E",
+              "op" : "enter"
+            },
+            "state" : {
+              "activeSlot" : "4-across",
+              "direction" : "across",
+              "filled" : 10,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 3,
+              "selected" : [
+                3,
+                2
+              ],
+              "wordSolveTick" : 2
+            },
+            "step" : 10
+          },
+          {
+            "input" : {
+              "letter" : "B",
+              "op" : "enter"
+            },
+            "state" : {
+              "activeSlot" : "4-across",
+              "direction" : "across",
+              "filled" : 11,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 3,
+              "selected" : [
+                3,
+                4
+              ],
+              "wordSolveTick" : 2
+            },
+            "step" : 11
+          },
+          {
+            "input" : {
+              "letter" : "K",
+              "op" : "enter"
+            },
+            "state" : {
+              "activeSlot" : "4-across",
+              "direction" : "across",
+              "filled" : 12,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 3,
+              "selected" : [
+                3,
+                5
+              ],
+              "wordSolveTick" : 2
+            },
+            "step" : 12
+          },
+          {
+            "input" : {
+              "letter" : "A",
+              "op" : "enter"
+            },
+            "state" : {
+              "activeSlot" : "4-across",
+              "direction" : "across",
+              "filled" : 13,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 3,
+              "selected" : [
+                3,
+                6
+              ],
+              "wordSolveTick" : 2
+            },
+            "step" : 13
+          },
+          {
+            "input" : {
+              "letter" : "H",
+              "op" : "enter"
+            },
+            "state" : {
+              "activeSlot" : "2-down",
+              "direction" : "down",
+              "filled" : 14,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 2,
+              "selected" : [
+                2,
+                0
+              ],
+              "wordSolveTick" : 3
+            },
+            "step" : 14
+          },
+          {
+            "input" : {
+              "letter" : "B",
+              "op" : "enter"
+            },
+            "state" : {
+              "activeSlot" : "2-down",
+              "direction" : "down",
+              "filled" : 15,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 2,
+              "selected" : [
+                4,
+                0
+              ],
+              "wordSolveTick" : 3
+            },
+            "step" : 15
+          },
+          {
+            "input" : {
+              "letter" : "I",
+              "op" : "enter"
+            },
+            "state" : {
+              "activeSlot" : "2-down",
+              "direction" : "down",
+              "filled" : 16,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 2,
+              "selected" : [
+                5,
+                0
+              ],
+              "wordSolveTick" : 3
+            },
+            "step" : 16
+          },
+          {
+            "input" : {
+              "letter" : "D",
+              "op" : "enter"
+            },
+            "state" : {
+              "activeSlot" : "2-down",
+              "direction" : "down",
+              "filled" : 17,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 2,
+              "selected" : [
+                6,
+                0
+              ],
+              "wordSolveTick" : 3
+            },
+            "step" : 17
+          },
+          {
+            "input" : {
+              "letter" : "E",
+              "op" : "enter"
+            },
+            "state" : {
+              "activeSlot" : "3-down",
+              "direction" : "down",
+              "filled" : 18,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 1,
+              "selected" : [
+                2,
+                5
+              ],
+              "wordSolveTick" : 4
+            },
+            "step" : 18
+          },
+          {
+            "input" : {
+              "letter" : "N",
+              "op" : "enter"
+            },
+            "state" : {
+              "activeSlot" : "3-down",
+              "direction" : "down",
+              "filled" : 19,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 1,
+              "selected" : [
+                4,
+                5
+              ],
+              "wordSolveTick" : 4
+            },
+            "step" : 19
+          },
+          {
+            "input" : {
+              "letter" : "H",
+              "op" : "enter"
+            },
+            "state" : {
+              "activeSlot" : "3-down",
+              "direction" : "down",
+              "filled" : 20,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 1,
+              "selected" : [
+                5,
+                5
+              ],
+              "wordSolveTick" : 4
+            },
+            "step" : 20
+          },
+          {
+            "input" : {
+              "letter" : "O",
+              "op" : "enter"
+            },
+            "state" : {
+              "activeSlot" : "3-down",
+              "direction" : "down",
+              "filled" : 21,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 1,
+              "selected" : [
+                6,
+                5
+              ],
+              "wordSolveTick" : 4
+            },
+            "step" : 21
+          },
+          {
+            "input" : {
+              "letter" : "R",
+              "op" : "enter"
+            },
+            "state" : {
+              "activeSlot" : "3-down",
+              "direction" : "down",
+              "filled" : 22,
+              "hintsUsed" : 0,
+              "isComplete" : true,
+              "remainingClues" : 1,
+              "selected" : [
+                6,
+                5
+              ],
+              "wordSolveTick" : 5
+            },
+            "step" : 22
+          }
+        ],
+        "wordsCompleted" : [
+          "1-across",
+          "1-down",
+          "4-across",
+          "2-down"
+        ]
+      },
+      "given" : {
+        "learning" : false,
+        "puzzleID" : "mini-031",
+        "script" : [
+          {
+            "letter" : "W",
+            "op" : "enter"
+          },
+          {
+            "letter" : "E",
+            "op" : "enter"
+          },
+          {
+            "letter" : "L",
+            "op" : "enter"
+          },
+          {
+            "letter" : "L",
+            "op" : "enter"
+          },
+          {
+            "letter" : "A",
+            "op" : "enter"
+          },
+          {
+            "letter" : "T",
+            "op" : "enter"
+          },
+          {
+            "letter" : "E",
+            "op" : "enter"
+          },
+          {
+            "letter" : "R",
+            "op" : "enter"
+          },
+          {
+            "letter" : "R",
+            "op" : "enter"
+          },
+          {
+            "letter" : "E",
+            "op" : "enter"
+          },
+          {
+            "letter" : "B",
+            "op" : "enter"
+          },
+          {
+            "letter" : "K",
+            "op" : "enter"
+          },
+          {
+            "letter" : "A",
+            "op" : "enter"
+          },
+          {
+            "letter" : "H",
+            "op" : "enter"
+          },
+          {
+            "letter" : "B",
+            "op" : "enter"
+          },
+          {
+            "letter" : "I",
+            "op" : "enter"
+          },
+          {
+            "letter" : "D",
+            "op" : "enter"
+          },
+          {
+            "letter" : "E",
+            "op" : "enter"
+          },
+          {
+            "letter" : "N",
+            "op" : "enter"
+          },
+          {
+            "letter" : "H",
+            "op" : "enter"
+          },
+          {
+            "letter" : "O",
+            "op" : "enter"
+          },
+          {
+            "letter" : "R",
+            "op" : "enter"
+          }
+        ]
+      },
+      "name" : "full solve following the cursor"
+    },
+    {
+      "expect" : {
+        "cellTaps" : 1,
+        "checks" : [
+
+        ],
+        "entries" : {
+          "0,3" : "w"
+        },
+        "keyPresses" : 2,
+        "pencil" : {
+          "0,4" : "Z"
+        },
+        "slots" : [
+          {
+            "answer" : "WELL",
+            "id" : "1-across",
+            "length" : 4,
+            "start" : [
+              0,
+              3
+            ]
+          },
+          {
+            "answer" : "REBEKAH",
+            "id" : "4-across",
+            "length" : 7,
+            "start" : [
+              3,
+              0
+            ]
+          },
+          {
+            "answer" : "WATER",
+            "id" : "1-down",
+            "length" : 5,
+            "start" : [
+              0,
+              3
+            ]
+          },
+          {
+            "answer" : "BRIDE",
+            "id" : "2-down",
+            "length" : 5,
+            "start" : [
+              2,
+              0
+            ]
+          },
+          {
+            "answer" : "NAHOR",
+            "id" : "3-down",
+            "length" : 5,
+            "start" : [
+              2,
+              5
+            ]
+          }
+        ],
+        "steps" : [
+          {
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 0,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                3
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 0
+          },
+          {
+            "input" : {
+              "entries" : {
+                "0,3" : "w"
+              },
+              "op" : "restore",
+              "pencil" : {
+                "0,4" : "Z"
+              }
+            },
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 2,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                3
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 1
+          },
+          {
+            "input" : {
+              "col" : 3,
+              "op" : "tap",
+              "row" : 0
+            },
+            "state" : {
+              "activeSlot" : "1-down",
+              "direction" : "down",
+              "filled" : 2,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                3
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 2
+          },
+          {
+            "input" : {
+              "letter" : "Q",
+              "op" : "enter"
+            },
+            "state" : {
+              "activeSlot" : "1-down",
+              "direction" : "down",
+              "filled" : 2,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                1,
+                3
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 3
+          },
+          {
+            "input" : {
+              "op" : "delete"
+            },
+            "state" : {
+              "activeSlot" : "1-down",
+              "direction" : "down",
+              "filled" : 2,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                3
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 4
+          }
+        ],
+        "wordsCompleted" : [
+
+        ]
+      },
+      "given" : {
+        "learning" : false,
+        "puzzleID" : "mini-031",
+        "script" : [
+          {
+            "entries" : {
+              "0,3" : "w"
+            },
+            "op" : "restore",
+            "pencil" : {
+              "0,4" : "Z"
+            }
+          },
+          {
+            "col" : 3,
+            "op" : "tap",
+            "row" : 0
+          },
+          {
+            "letter" : "Q",
+            "op" : "enter"
+          },
+          {
+            "op" : "delete"
+          }
+        ]
+      },
+      "name" : "restore with a locked letter and a pencil mark"
+    },
+    {
+      "expect" : {
+        "cellTaps" : 0,
+        "checks" : [
+
+        ],
+        "entries" : {
+
+        },
+        "keyPresses" : 0,
+        "pencil" : {
+
+        },
+        "slots" : [
+          {
+            "answer" : "WELL",
+            "id" : "1-across",
+            "length" : 4,
+            "start" : [
+              0,
+              3
+            ]
+          },
+          {
+            "answer" : "REBEKAH",
+            "id" : "4-across",
+            "length" : 7,
+            "start" : [
+              3,
+              0
+            ]
+          },
+          {
+            "answer" : "WATER",
+            "id" : "1-down",
+            "length" : 5,
+            "start" : [
+              0,
+              3
+            ]
+          },
+          {
+            "answer" : "BRIDE",
+            "id" : "2-down",
+            "length" : 5,
+            "start" : [
+              2,
+              0
+            ]
+          },
+          {
+            "answer" : "NAHOR",
+            "id" : "3-down",
+            "length" : 5,
+            "start" : [
+              2,
+              5
+            ]
+          }
+        ],
+        "steps" : [
+          {
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 0,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                3
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 0
+          },
+          {
+            "input" : {
+              "colDelta" : 1,
+              "op" : "moveSelection",
+              "rowDelta" : 0
+            },
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 0,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                4
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 1
+          },
+          {
+            "input" : {
+              "colDelta" : 1,
+              "op" : "moveSelection",
+              "rowDelta" : 0
+            },
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 0,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                5
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 2
+          },
+          {
+            "input" : {
+              "colDelta" : 0,
+              "op" : "moveSelection",
+              "rowDelta" : 1
+            },
+            "state" : {
+              "activeSlot" : "3-down",
+              "direction" : "down",
+              "filled" : 0,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                2,
+                5
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 3
+          },
+          {
+            "input" : {
+              "colDelta" : 0,
+              "op" : "moveSelection",
+              "rowDelta" : -1
+            },
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 0,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                5
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 4
+          },
+          {
+            "input" : {
+              "colDelta" : -1,
+              "op" : "moveSelection",
+              "rowDelta" : 0
+            },
+            "state" : {
+              "activeSlot" : "1-across",
+              "direction" : "across",
+              "filled" : 0,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 5,
+              "selected" : [
+                0,
+                4
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 5
+          }
+        ],
+        "wordsCompleted" : [
+
+        ]
+      },
+      "given" : {
+        "learning" : false,
+        "puzzleID" : "mini-031",
+        "script" : [
+          {
+            "colDelta" : 1,
+            "op" : "moveSelection",
+            "rowDelta" : 0
+          },
+          {
+            "colDelta" : 1,
+            "op" : "moveSelection",
+            "rowDelta" : 0
+          },
+          {
+            "colDelta" : 0,
+            "op" : "moveSelection",
+            "rowDelta" : 1
+          },
+          {
+            "colDelta" : 0,
+            "op" : "moveSelection",
+            "rowDelta" : -1
+          },
+          {
+            "colDelta" : -1,
+            "op" : "moveSelection",
+            "rowDelta" : 0
+          }
+        ]
+      },
+      "name" : "hardware cursor walks over blocks"
+    },
+    {
+      "expect" : {
+        "cellTaps" : 0,
+        "checks" : [
+
+        ],
+        "entries" : {
+          "3,11" : "L",
+          "3,12" : "I",
+          "3,13" : "O",
+          "3,14" : "N"
+        },
+        "keyPresses" : 4,
+        "pencil" : {
+
+        },
+        "slots" : [
+          {
+            "answer" : "RAVEN",
+            "id" : "4-across",
+            "length" : 5,
+            "start" : [
+              3,
+              3
+            ]
+          },
+          {
+            "answer" : "LION",
+            "id" : "5-across",
+            "length" : 4,
+            "start" : [
+              3,
+              11
+            ]
+          },
+          {
+            "answer" : "SWINE",
+            "id" : "7-across",
+            "length" : 5,
+            "start" : [
+              5,
+              0
+            ]
+          },
+          {
+            "answer" : "LOCUST",
+            "id" : "9-across",
+            "length" : 6,
+            "start" : [
+              5,
+              9
+            ]
+          },
+          {
+            "answer" : "SERPENT",
+            "id" : "10-across",
+            "length" : 7,
+            "start" : [
+              7,
+              4
+            ]
+          },
+          {
+            "answer" : "FISH",
+            "id" : "12-across",
+            "length" : 4,
+            "start" : [
+              8,
+              1
+            ]
+          },
+          {
+            "answer" : "DOVE",
+            "id" : "13-across",
+            "length" : 4,
+            "start" : [
+              10,
+              1
+            ]
+          },
+          {
+            "answer" : "LAMB",
+            "id" : "15-across",
+            "length" : 4,
+            "start" : [
+              10,
+              8
+            ]
+          },
+          {
+            "answer" : "CAMEL",
+            "id" : "17-across",
+            "length" : 5,
+            "start" : [
+              12,
+              10
+            ]
+          },
+          {
+            "answer" : "DONKEY",
+            "id" : "18-across",
+            "length" : 6,
+            "start" : [
+              13,
+              0
+            ]
+          },
+          {
+            "answer" : "WHALE",
+            "id" : "1-down",
+            "length" : 5,
+            "start" : [
+              1,
+              4
+            ]
+          },
+          {
+            "answer" : "LEOPARD",
+            "id" : "2-down",
+            "length" : 7,
+            "start" : [
+              2,
+              6
+            ]
+          },
+          {
+            "answer" : "HORSE",
+            "id" : "3-down",
+            "length" : 5,
+            "start" : [
+              2,
+              13
+            ]
+          },
+          {
+            "answer" : "GOAT",
+            "id" : "6-down",
+            "length" : 4,
+            "start" : [
+              4,
+              10
+            ]
+          },
+          {
+            "answer" : "WOLF",
+            "id" : "8-down",
+            "length" : 4,
+            "start" : [
+              5,
+              1
+            ]
+          },
+          {
+            "answer" : "SHEEP",
+            "id" : "10-down",
+            "length" : 5,
+            "start" : [
+              7,
+              4
+            ]
+          },
+          {
+            "answer" : "EAGLE",
+            "id" : "11-down",
+            "length" : 5,
+            "start" : [
+              7,
+              8
+            ]
+          },
+          {
+            "answer" : "OXEN",
+            "id" : "14-down",
+            "length" : 4,
+            "start" : [
+              10,
+              2
+            ]
+          },
+          {
+            "answer" : "BEAR",
+            "id" : "16-down",
+            "length" : 4,
+            "start" : [
+              10,
+              11
+            ]
+          }
+        ],
+        "steps" : [
+          {
+            "state" : {
+              "activeSlot" : "5-across",
+              "direction" : "across",
+              "filled" : 0,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 19,
+              "selected" : [
+                3,
+                11
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 0
+          },
+          {
+            "input" : {
+              "letter" : "L",
+              "op" : "enter"
+            },
+            "state" : {
+              "activeSlot" : "5-across",
+              "direction" : "across",
+              "filled" : 1,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 19,
+              "selected" : [
+                3,
+                12
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 1
+          },
+          {
+            "input" : {
+              "letter" : "I",
+              "op" : "enter"
+            },
+            "state" : {
+              "activeSlot" : "5-across",
+              "direction" : "across",
+              "filled" : 2,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 19,
+              "selected" : [
+                3,
+                13
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 2
+          },
+          {
+            "input" : {
+              "letter" : "O",
+              "op" : "enter"
+            },
+            "state" : {
+              "activeSlot" : "5-across",
+              "direction" : "across",
+              "filled" : 3,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 19,
+              "selected" : [
+                3,
+                14
+              ],
+              "wordSolveTick" : 0
+            },
+            "step" : 3
+          },
+          {
+            "input" : {
+              "letter" : "N",
+              "op" : "enter"
+            },
+            "state" : {
+              "activeSlot" : "3-down",
+              "direction" : "down",
+              "filled" : 4,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 18,
+              "selected" : [
+                2,
+                13
+              ],
+              "wordSolveTick" : 1
+            },
+            "step" : 4
+          },
+          {
+            "input" : {
+              "by" : 1,
+              "op" : "advanceClue"
+            },
+            "state" : {
+              "activeSlot" : "6-down",
+              "direction" : "down",
+              "filled" : 4,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 18,
+              "selected" : [
+                4,
+                10
+              ],
+              "wordSolveTick" : 1
+            },
+            "step" : 5
+          },
+          {
+            "input" : {
+              "by" : -1,
+              "op" : "advanceClue"
+            },
+            "state" : {
+              "activeSlot" : "3-down",
+              "direction" : "down",
+              "filled" : 4,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 18,
+              "selected" : [
+                2,
+                13
+              ],
+              "wordSolveTick" : 1
+            },
+            "step" : 6
+          },
+          {
+            "input" : {
+              "by" : -1,
+              "op" : "advanceClue"
+            },
+            "state" : {
+              "activeSlot" : "2-down",
+              "direction" : "down",
+              "filled" : 4,
+              "hintsUsed" : 0,
+              "isComplete" : false,
+              "remainingClues" : 18,
+              "selected" : [
+                2,
+                6
+              ],
+              "wordSolveTick" : 1
+            },
+            "step" : 7
+          }
+        ],
+        "wordsCompleted" : [
+          "5-across"
+        ]
+      },
+      "given" : {
+        "learning" : false,
+        "puzzleID" : "daily-001",
+        "script" : [
+          {
+            "letter" : "L",
+            "op" : "enter"
+          },
+          {
+            "letter" : "I",
+            "op" : "enter"
+          },
+          {
+            "letter" : "O",
+            "op" : "enter"
+          },
+          {
+            "letter" : "N",
+            "op" : "enter"
+          },
+          {
+            "by" : 1,
+            "op" : "advanceClue"
+          },
+          {
+            "by" : -1,
+            "op" : "advanceClue"
+          },
+          {
+            "by" : -1,
+            "op" : "advanceClue"
+          }
+        ]
+      },
+      "name" : "daily: finish the shortest word, cursor prefers a crosser"
+    }
+  ],
+  "description" : "GameViewModel driven by input scripts against bundled puzzles (loaded by id from the shared puzzles.json). `state` after init is step 0. Entries: uppercase = player letter, lowercase = hint-locked.",
+  "family" : "engine_traces",
+  "source" : [
+    "ViewModels/GameViewModel.swift"
+  ]
+}
