@@ -35,3 +35,20 @@ vendor/bundle
 # Local asset workspaces
 promo-video/
 simulator-screenshots/
+
+# Android / Gradle (android/)
+.gradle/
+.kotlin/
+local.properties
+captures/
+.cxx/
+*.apk
+*.aab
+*.aar
+*.jks
+*.keystore
+android/app/release/
+fastlane/play-store-credentials.json
+
+# Android Studio writes this at the repo root, not under android/
+.idea/

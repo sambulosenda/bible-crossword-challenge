@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Placeholder until the Compose theme lands in P1. The splash screen is
+         the hydration barrier for DataStore (plan §6a), so it is wired now. -->
+    <style name="Theme.BibleCrossword" parent="Theme.SplashScreen">
+        <item name="postSplashScreenTheme">@style/Theme.BibleCrossword.Main</item>
+    </style>
+    <style name="Theme.BibleCrossword.Main" parent="android:Theme.Material.Light.NoActionBar" />
+</resources>

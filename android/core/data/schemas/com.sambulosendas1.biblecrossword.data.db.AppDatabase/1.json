@@ -1,0 +1,194 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "ac9b43303c2f275b37adf141f38de4bf",
+    "entities": [
+      {
+        "tableName": "player_profile",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `username` TEXT NOT NULL DEFAULT 'Friend', `currentStreak` INTEGER NOT NULL DEFAULT 0, `bestStreak` INTEGER NOT NULL DEFAULT 0, `totalPuzzlesCompleted` INTEGER NOT NULL DEFAULT 0, `lastCompletedAt` INTEGER, `hintsUsedToday` INTEGER NOT NULL DEFAULT 0, `hintsAt` INTEGER, `unlockedAchievementIDs` TEXT NOT NULL DEFAULT '[]', `bestSolveSeconds` INTEGER, `noHintSolves` INTEGER NOT NULL DEFAULT 0, `hardCompleted` INTEGER NOT NULL DEFAULT 0, `completedPackIDs` TEXT NOT NULL DEFAULT '[]', `completedQuestIDs` TEXT NOT NULL DEFAULT '[]', `streakFreezes` INTEGER NOT NULL DEFAULT 1, `lastFreezeUsedAt` INTEGER, `createdAt` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "username",
+            "columnName": "username",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "'Friend'"
+          },
+          {
+            "fieldPath": "currentStreak",
+            "columnName": "currentStreak",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "bestStreak",
+            "columnName": "bestStreak",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "totalPuzzlesCompleted",
+            "columnName": "totalPuzzlesCompleted",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "lastCompletedAt",
+            "columnName": "lastCompletedAt",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "hintsUsedToday",
+            "columnName": "hintsUsedToday",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "hintsAt",
+            "columnName": "hintsAt",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "unlockedAchievementIDs",
+            "columnName": "unlockedAchievementIDs",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "'[]'"
+          },
+          {
+            "fieldPath": "bestSolveSeconds",
+            "columnName": "bestSolveSeconds",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "noHintSolves",
+            "columnName": "noHintSolves",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "hardCompleted",
+            "columnName": "hardCompleted",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "completedPackIDs",
+            "columnName": "completedPackIDs",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "'[]'"
+          },
+          {
+            "fieldPath": "completedQuestIDs",
+            "columnName": "completedQuestIDs",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "'[]'"
+          },
+          {
+            "fieldPath": "streakFreezes",
+            "columnName": "streakFreezes",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "1"
+          },
+          {
+            "fieldPath": "lastFreezeUsedAt",
+            "columnName": "lastFreezeUsedAt",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "puzzle_record",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`puzzleID` TEXT NOT NULL, `isCompleted` INTEGER NOT NULL DEFAULT 0, `completedAt` INTEGER, `elapsedSeconds` INTEGER NOT NULL DEFAULT 0, `entriesData` TEXT, `pencilData` TEXT, `usedHint` INTEGER NOT NULL DEFAULT 0, `updatedAt` INTEGER NOT NULL, PRIMARY KEY(`puzzleID`))",
+        "fields": [
+          {
+            "fieldPath": "puzzleID",
+            "columnName": "puzzleID",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isCompleted",
+            "columnName": "isCompleted",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "completedAt",
+            "columnName": "completedAt",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "elapsedSeconds",
+            "columnName": "elapsedSeconds",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "entriesData",
+            "columnName": "entriesData",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "pencilData",
+            "columnName": "pencilData",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "usedHint",
+            "columnName": "usedHint",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "updatedAt",
+            "columnName": "updatedAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "puzzleID"
+          ]
+        }
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ac9b43303c2f275b37adf141f38de4bf')"
+    ]
+  }
+}

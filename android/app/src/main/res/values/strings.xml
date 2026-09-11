@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Every user-facing string lives here from day one (requirements §14):
+         the iOS app hardcodes English, so translation later is a content
+         task on Android rather than a refactor. -->
+    <string name="app_name">Bible Crossword</string>
+    <string name="today_kicker">Verse of the day</string>
+    <string name="placeholder_verse">Thy word is a lamp unto my feet, and a light unto my path.</string>
+    <string name="content_loading">Loading…</string>
+    <string name="content_summary">%1$d puzzles · %2$d books · %3$d verses</string>
+</resources>
