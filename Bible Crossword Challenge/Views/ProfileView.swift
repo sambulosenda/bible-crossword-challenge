@@ -77,6 +77,7 @@ struct ProfileView: View {
                         unlocked: unlockedCount,
                         total: Achievements.all.count
                     )
+                    leaderboardSection
                     challengesSection
                     premiumSection
                     preferencesSection
@@ -260,12 +261,24 @@ struct ProfileView: View {
             }
             .padding(.horizontal, Theme.Spacing.m)
             .padding(.vertical, Theme.Spacing.s + 2)
+        }
+    }
 
-            // Persistent way back to this week's Mini standings — the only other
-            // entry point is the post-solve completion screen. Hidden when the
-            // player isn't signed in to Game Center.
-            if gameCenter.isAuthenticated {
-                RowDivider()
+    // MARK: - Leaderboard
+
+    /// The standing way back to this week's Mini leaderboard — the only other
+    /// entry point is the post-solve completion screen.
+    ///
+    /// Its own section rather than a row under Preferences, where it used to
+    /// sit: it opens Game Center, and a destination parked among switches
+    /// reads as one more thing to adjust. Placed with the stats and badges,
+    /// which is what a leaderboard is about.
+    ///
+    /// Hidden when the player isn't signed in to Game Center.
+    @ViewBuilder
+    private var leaderboardSection: some View {
+        if gameCenter.isAuthenticated {
+            SettingsSection("Game Center") {
                 SettingsButtonRow(
                     title: "Weekly leaderboard",
                     symbol: "trophy.fill",

@@ -564,6 +564,17 @@ struct CrosswordGameView: View {
                     Toggle(isOn: $autoCheckErrors) {
                         Label("Auto-Check", systemImage: "checkmark.seal")
                     }
+                    // Wanting the clock gone is a mid-solve feeling, so the
+                    // switch belongs beside the clock rather than three taps
+                    // away in Profile — the same `@AppStorage` as that row, so
+                    // the two never disagree. Left out during a challenge,
+                    // where `clockVisible` keeps the clock on regardless and
+                    // the switch would do nothing.
+                    if incomingChallenge == nil {
+                        Toggle(isOn: $showSolveTimer) {
+                            Label("Show Timer", systemImage: "timer")
+                        }
+                    }
                 }
             } label: {
                 // Titled, not a bare glyph: every hint and check lives behind

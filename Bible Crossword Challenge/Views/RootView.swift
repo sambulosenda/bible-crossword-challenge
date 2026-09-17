@@ -439,6 +439,19 @@ struct RootView: View {
                 ProfileView(profile: profile)
             }
         }
+        // Hardware keyboard on iPad: ⌘, is where people reach for an app's
+        // settings, and this app's live in Profile. A zero-opacity button
+        // rather than a Scene `.commands` block — the tab selection is this
+        // view's state, and lifting it into the App to register one shortcut
+        // would be the larger change. `.opacity(0)` rather than `.hidden()`,
+        // which would take the button out of the hierarchy and the shortcut
+        // with it.
+        .background {
+            Button("Settings") { selectedTab = .profile }
+                .keyboardShortcut(",", modifiers: .command)
+                .opacity(0)
+                .accessibilityHidden(true)
+        }
         // A verse reference tapped anywhere sets the router target and the
         // reader is presented modally over the current tab; the Read tab hosts
         // the same reader for browsing.
