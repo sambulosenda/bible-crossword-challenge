@@ -12,6 +12,9 @@ xcuserdata/
 .swiftpm/
 .build/
 
+# Headless simulator builds (DerivedData)
+.build-sim/
+
 # Tooling scratch
 *.pyc
 __pycache__/
