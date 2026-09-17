@@ -157,7 +157,11 @@ struct ReminderCopyTests {
         let copy = NotificationService.reminderCopy(
             dayOffset: 1, streak: 0, completedToday: false, projectedLapse: 3
         )
-        #expect(copy == NotificationService.winBack(lapseDays: 3)!)
+        let winBack = NotificationService.winBack(lapseDays: 3)!
+        #expect(copy.title == winBack.title)
+        #expect(copy.body == winBack.body)
+        // And it goes out quiet — see `reminderCopy`.
+        #expect(copy.passive)
     }
 }
 

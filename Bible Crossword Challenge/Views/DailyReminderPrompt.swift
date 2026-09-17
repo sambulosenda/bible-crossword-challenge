@@ -200,7 +200,12 @@ enum ReminderOptIn {
         if granted {
             UserDefaults.standard.set(true, forKey: "remindersEnabled")
             analytics.log(.reminderSettingChanged(enabled: true))
-            await notifications.reschedule(for: profile, enabled: true, minutes: minutes)
+            await notifications.reschedule(
+                for: profile, enabled: true, minutes: minutes,
+                // Granting a reminder never turns on pack news: that is a
+                // separate, explicit opt-in in Profile.
+                packNews: UserDefaults.standard.bool(forKey: "packNewsEnabled")
+            )
         }
         return granted
     }

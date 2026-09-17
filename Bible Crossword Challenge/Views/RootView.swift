@@ -55,6 +55,7 @@ struct RootView: View {
     @AppStorage("hasOnboarded") private var hasOnboarded = false
     @AppStorage("remindersEnabled") private var remindersEnabled = false
     @AppStorage("reminderMinutes") private var reminderMinutes = ReminderTime.defaultMinutes
+    @AppStorage("packNewsEnabled") private var packNewsEnabled = false
     /// Set the first time the day-2 reminder prompt is shown, whatever the
     /// answer. One second ask is a nudge; a recurring one is nagging.
     /// Start-of-day stamp of the last reminder ask on any surface (this sheet,
@@ -138,7 +139,10 @@ struct RootView: View {
             WidgetBridge.publish(profile, context: context)
             gameCenter.authenticate()
             analytics.log(.appOpen)
-            await notifications.reschedule(for: profile, enabled: remindersEnabled, minutes: reminderMinutes)
+            await notifications.reschedule(
+                for: profile, enabled: remindersEnabled,
+                minutes: reminderMinutes, packNews: packNewsEnabled
+            )
             // Read before any ask surface decides: the asks only make sense
             // while the system prompt is still unspent.
             await notifications.refreshStatus()
@@ -168,7 +172,10 @@ struct RootView: View {
                 // and the Profile toggle sent them straight back to Settings.
                 await notifications.refreshStatus()
                 completePendingReminderOptIn()
-                await notifications.reschedule(for: profile, enabled: remindersEnabled, minutes: reminderMinutes)
+                await notifications.reschedule(
+                    for: profile, enabled: remindersEnabled,
+                    minutes: reminderMinutes, packNews: packNewsEnabled
+                )
             }
         }
         .onOpenURL { url in

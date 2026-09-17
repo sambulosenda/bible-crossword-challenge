@@ -32,6 +32,9 @@ struct ProfileView: View {
     /// finishes the opt-in if they come back having allowed them.
     @AppStorage("pendingReminderOptIn") private var pendingReminderOptIn = false
     @AppStorage("reminderMinutes") private var reminderMinutes = ReminderTime.defaultMinutes
+    /// Seasonal pack announcements. Promotional, so it is its own opt-in and
+    /// starts off — see `NotificationService.scheduleSeasonOpenings`.
+    @AppStorage("packNewsEnabled") private var packNewsEnabled = false
     /// Mirrors the in-game hint-menu toggle; seeded per player at launch
     /// (see `GameViewModel.seedAutoCheckIfNeeded`, called from RootView).
     @AppStorage("autoCheckErrors") private var autoCheckErrors = false
@@ -334,10 +337,27 @@ struct ProfileView: View {
                 .onChange(of: reminderMinutes) { _, _ in
                     rescheduleReminders()
                 }
+
+                RowDivider()
+                // Pack news is app news, not the daily nudge, so it needs its
+                // own yes. It lives here rather than inside the opt-in asks
+                // because those are deliberately one question each, and a
+                // promotional opt-in smuggled into them would be the very
+                // thing this switch exists to undo.
+                Toggle(isOn: Binding(
+                    get: { packNewsEnabled },
+                    set: { handlePackNewsToggle($0) }
+                )) {
+                    SettingsRowLabel(title: "New puzzle packs", symbol: "sparkles", tint: .pink)
+                }
+                .settingsRowInsets()
+                .tint(Theme.accent)
             }
         } footer: {
             if notifications.authorizationStatus == .denied {
                 Text("Notifications are turned off for this app. Enable them in Settings to receive your daily reminder.")
+            } else if remindersEnabled && notifications.authorizationStatus == .authorized {
+                Text("New puzzle packs sends one note on the morning a seasonal pack opens — a few times a year. Your daily reminder is separate.")
             }
         }
     }
@@ -473,9 +493,20 @@ struct ProfileView: View {
         }
     }
 
+    /// The player asked for (or declined) seasonal pack news. Only reachable
+    /// while notifications are already authorized, so there is no permission
+    /// path here — only the schedule.
+    private func handlePackNewsToggle(_ enabled: Bool) {
+        packNewsEnabled = enabled
+        rescheduleReminders()
+    }
+
     private func rescheduleReminders() {
         Task {
-            await notifications.reschedule(for: profile, enabled: remindersEnabled, minutes: reminderMinutes)
+            await notifications.reschedule(
+                for: profile, enabled: remindersEnabled,
+                minutes: reminderMinutes, packNews: packNewsEnabled
+            )
         }
     }
 

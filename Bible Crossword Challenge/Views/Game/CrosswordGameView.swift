@@ -33,6 +33,7 @@ struct CrosswordGameView: View {
 
     @AppStorage("remindersEnabled") private var remindersEnabled = false
     @AppStorage("reminderMinutes") private var reminderMinutes = ReminderTime.defaultMinutes
+    @AppStorage("packNewsEnabled") private var packNewsEnabled = false
     /// Marks wrong letters as they're typed. Seeded per player on first entry
     /// (see `GameViewModel.seedAutoCheckIfNeeded`), toggleable from the hint
     /// menu and Profile → Gameplay.
@@ -945,7 +946,10 @@ struct CrosswordGameView: View {
 
         // Today's puzzle is now solved — drop today's reminder and refresh copy.
         Task {
-            await notifications.reschedule(for: profile, enabled: remindersEnabled, minutes: reminderMinutes)
+            await notifications.reschedule(
+                for: profile, enabled: remindersEnabled,
+                minutes: reminderMinutes, packNews: packNewsEnabled
+            )
         }
 
         // Hold the cover long enough for the grid's celebration wave (a diagonal

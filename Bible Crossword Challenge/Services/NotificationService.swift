@@ -4,6 +4,11 @@
 //
 //  Schedules the daily reminder, streak-risk nudge and season openings as local
 //  notifications — no server, no APNs.
+//  Two consents, not one: the reminder asks cover the daily nudge and the
+//  streak nudge, and season openings are promotional, so they ride on their own
+//  switch in Profile and are off until asked for (see `scheduleSeasonOpenings`).
+//  Nothing here claims Time Sensitive — win-back copy goes out Passive and
+//  silent, everything else Active.
 //  A lapse of three days, a week, or a fortnight rewrites that day's reminder
 //  rather than adding one (see `winBack`), so the number of notifications a
 //  player gets never depends on how long they have been away.
@@ -51,6 +56,12 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
     /// at once on the one day a seasonal pack has to make an impression.
     private let seasonOpeningMinutes = 10 * 60
 
+    /// Notification Center groups by thread. The daily nudge and seasonal pack
+    /// news are different conversations, and someone who lets one pile up
+    /// shouldn't have to read past it to find the other.
+    private static let reminderThread = "daily-reminder"
+    private static let packNewsThread = "pack-news"
+
     private override init() {
         super.init()
         center.delegate = self
@@ -90,7 +101,9 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
     // MARK: - Scheduling
 
     /// Convenience that derives streak context from the profile.
-    func reschedule(for profile: PlayerProfile, enabled: Bool, minutes: Int) async {
+    func reschedule(
+        for profile: PlayerProfile, enabled: Bool, minutes: Int, packNews: Bool
+    ) async {
         let calendar = Calendar.current
         let completedToday = calendar.isDate(
             profile.lastCompletedDate ?? .distantPast, inSameDayAs: Date()
@@ -98,6 +111,7 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
         await reschedule(
             enabled: enabled,
             minutes: minutes,
+            packNews: packNews,
             streak: profile.currentStreak,
             completedToday: completedToday,
             freezes: profile.streakFreezes,
@@ -128,8 +142,9 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
     /// expression because a default argument is evaluated outside the actor and
     /// `PuzzleProvider.shared` is main-actor isolated. Tests pass their own.
     func reschedule(
-        enabled: Bool, minutes: Int, streak: Int, completedToday: Bool, freezes: Int = 0,
-        daysSinceLastSolve: Int? = nil, packs: [PuzzlePack]? = nil
+        enabled: Bool, minutes: Int, packNews: Bool = false, streak: Int,
+        completedToday: Bool, freezes: Int = 0, daysSinceLastSolve: Int? = nil,
+        packs: [PuzzlePack]? = nil
     ) async {
         let packs = packs ?? PuzzleProvider.shared.packs
         center.removeAllPendingNotificationRequests()
@@ -162,7 +177,13 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
             )
             content.title = copy.title
             content.body = copy.body
-            content.sound = .default
+            // Win-back copy goes out quiet. Someone who has ignored the app for
+            // a week is the last person whose screen should light up, and the
+            // day they finally hear from us is the day they are likeliest to
+            // turn the reminder off rather than open it.
+            content.interruptionLevel = copy.passive ? .passive : .active
+            content.sound = copy.passive ? nil : .default
+            content.threadIdentifier = Self.reminderThread
 
             let components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: fireDate)
             let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
@@ -174,7 +195,11 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
             minutes: minutes, streak: streak, completedToday: completedToday,
             freezes: freezes, calendar: calendar, now: now
         )
-        await scheduleSeasonOpenings(packs: packs, calendar: calendar, now: now)
+        // Only for players who asked for it, and off until they do — see
+        // `scheduleSeasonOpenings`.
+        if packNews {
+            await scheduleSeasonOpenings(packs: packs, calendar: calendar, now: now)
+        }
     }
 
     /// One notice per seasonal pack that opens inside the scheduling horizon.
@@ -184,9 +209,16 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
     /// already opened is no longer an upcoming opening — so the notice can only
     /// ever be scheduled for a day the season actually begins, and only once.
     ///
-    /// Premium packs are announced to free players too. Browsing a pack is free,
-    /// the season is the honest reason to look now, and the paywall it leads to
-    /// is exactly the surface a seasonal pack exists to feed.
+    /// Sent only to players who turned on pack news in Profile. An opening
+    /// notice announces content and leads to a paywall, which makes it
+    /// promotional however useful it is — and the HIG is explicit that
+    /// promotional notifications need their own permission and their own
+    /// in-app switch. Every reminder ask in this app collects consent for one
+    /// thing, a daily nudge about today's puzzle, so pack news cannot ride
+    /// along on it.
+    ///
+    /// Premium packs are announced to opted-in free players too. Browsing a
+    /// pack is free, and the season is the honest reason to look now.
     private func scheduleSeasonOpenings(
         packs: [PuzzlePack], calendar: Calendar, now: Date
     ) async {
@@ -205,7 +237,11 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
             content.title = "\(pack.title) is open ✨"
             content.body = "\(pack.puzzleIDs.count) puzzles for the season. "
                 + "They're here until it's over."
-            content.sound = .default
+            // Passive and silent. This is news on a morning the calendar chose,
+            // not a response to anything the player did, so it can wait in
+            // Notification Center until they look.
+            content.interruptionLevel = .passive
+            content.threadIdentifier = Self.packNewsThread
             // Lands on the pack itself rather than the app's front door, so the
             // tap arrives where the notification was about — and `pack_opened`
             // can attribute the visit to the notification that caused it.
@@ -250,6 +286,11 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
             ? "Solve today's Bible puzzle to keep it alive — or a freeze will cover you tonight."
             : "Solve today's Bible puzzle before the day is over to keep it alive."
         content.sound = .default
+        // Active, not Time Sensitive: a streak is a thing the app invented, and
+        // breaking through a Focus for it would be exactly the overstatement
+        // that teaches people to turn an app's notifications off.
+        content.interruptionLevel = .active
+        content.threadIdentifier = Self.reminderThread
 
         let components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: fireDate)
         let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
@@ -283,26 +324,31 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
     /// Copy is written for how things stand at *fire time*, assuming no solve
     /// in between — any solve triggers a full reschedule, so the assumption
     /// can't outlive itself.
+    /// `passive` asks for the Passive interruption level and no sound: true
+    /// for win-back copy, which is addressed to someone who has already been
+    /// ignoring us.
     static func reminderCopy(
         dayOffset: Int, streak: Int, completedToday: Bool, projectedLapse: Int?
-    ) -> (title: String, body: String) {
+    ) -> (title: String, body: String, passive: Bool) {
         let streakSaveOffset = completedToday ? 1 : 0
         if streak > 0 && dayOffset == streakSaveOffset {
             if streak == 1 {
                 return (
                     "Make it two days running 🔥",
-                    "You solved yesterday's Bible puzzle. Solve today's and it's a streak."
+                    "You solved yesterday's Bible puzzle. Solve today's and it's a streak.",
+                    passive: false
                 )
             }
             return (
                 "Keep your streak alive 🔥",
-                "You're on a \(streak)-day streak. Solve today's Bible puzzle to keep it going."
+                "You're on a \(streak)-day streak. Solve today's Bible puzzle to keep it going.",
+                passive: false
             )
         }
         if let projectedLapse, let winBack = winBack(lapseDays: projectedLapse) {
-            return winBack
+            return (winBack.title, winBack.body, passive: true)
         }
-        return ("Today's puzzle is ready", prompts[dayOffset % prompts.count])
+        return ("Today's puzzle is ready", prompts[dayOffset % prompts.count], passive: false)
     }
 
     /// Copy for the day a lapse reaches three days, a week, or a fortnight —
