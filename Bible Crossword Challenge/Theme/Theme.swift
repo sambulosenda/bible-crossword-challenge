@@ -27,27 +27,46 @@ enum Theme {
     /// scripture, streak week row), not the hue.
     static let accent = Color.accentColor
 
-    /// Resolves one colour across all four contexts the system can ask for:
-    /// light and dark, each at default and increased contrast.
+    /// Resolves one colour across every context the system can ask for: light
+    /// and dark, each at default and increased contrast, and — in dark only —
+    /// each at the base and elevated interface levels.
     ///
-    /// Every custom colour goes through here so none of them can ship with two
-    /// of the four again. They used to answer only to light and dark, which
-    /// meant Increase Contrast moved the system colours around them — the
-    /// accent, the tints, the bars — while the canvas, the cards and the ink
-    /// pills stayed exactly where they were. The setting's whole job on this
-    /// app's screens is telling a white card from the paper behind it, and that
-    /// was the one pair that did not respond.
+    /// Every custom colour goes through here so none of them can ship with half
+    /// its contexts filled in again. They used to answer only to light and
+    /// dark, which meant Increase Contrast moved the system colours around them
+    /// — the accent, the tints, the bars — while the canvas, the cards and the
+    /// ink pills stayed exactly where they were. The setting's whole job on
+    /// this app's screens is telling a white card from the paper behind it, and
+    /// that was the one pair that did not respond.
+    ///
+    /// Elevation is the same story one layer up. In dark, the system lifts a
+    /// background when its view comes to the front — a sheet, a popover — so
+    /// the layer reads as being on top of the screen rather than replacing it.
+    /// A custom background opts out of that, and this app sets one on every
+    /// screen: the clue list over the grid was the same near-black as the grid,
+    /// with a corner radius as the only clue that anything had been presented.
+    /// Light has no base/elevated split — the system's own backgrounds resolve
+    /// identically there — so only dark carries elevated values, and only the
+    /// colours with a reason to lift pass them.
     private static func adaptive(
         light: UIColor,
         lightHighContrast: UIColor,
         dark: UIColor,
-        darkHighContrast: UIColor
+        darkHighContrast: UIColor,
+        darkElevated: UIColor? = nil,
+        darkElevatedHighContrast: UIColor? = nil
     ) -> Color {
         Color(uiColor: UIColor { trait in
             let high = trait.accessibilityContrast == .high
-            return trait.userInterfaceStyle == .dark
-                ? (high ? darkHighContrast : dark)
-                : (high ? lightHighContrast : light)
+            guard trait.userInterfaceStyle == .dark else {
+                return high ? lightHighContrast : light
+            }
+            guard trait.userInterfaceLevel == .elevated else {
+                return high ? darkHighContrast : dark
+            }
+            return high
+                ? (darkElevatedHighContrast ?? darkHighContrast)
+                : (darkElevated ?? dark)
         })
     }
 
@@ -72,7 +91,9 @@ enum Theme {
         light: UIColor(red: 0.969, green: 0.961, blue: 0.949, alpha: 1),          // paper #F7F5F2
         lightHighContrast: UIColor(red: 0.906, green: 0.894, blue: 0.875, alpha: 1),
         dark: UIColor(red: 0.055, green: 0.051, blue: 0.047, alpha: 1),           // warm near-black
-        darkHighContrast: UIColor(red: 0.027, green: 0.024, blue: 0.022, alpha: 1)
+        darkHighContrast: UIColor(red: 0.027, green: 0.024, blue: 0.022, alpha: 1),
+        darkElevated: UIColor(red: 0.098, green: 0.094, blue: 0.090, alpha: 1),
+        darkElevatedHighContrast: UIColor(red: 0.075, green: 0.071, blue: 0.067, alpha: 1)
     )
 
     /// Card surface: white on paper in light; a warm elevated grey in dark.
@@ -80,11 +101,17 @@ enum Theme {
     /// White has nowhere to go in light, so there the separation is won by the
     /// canvas above. In dark the card lifts instead — the canvas is already
     /// close to black.
+    ///
+    /// It lifts with the canvas when elevated, by the same step, so a card
+    /// inside a sheet keeps exactly the separation it has on a screen. Lifting
+    /// the canvas alone would have closed the gap and swallowed the cards.
     static let surface = adaptive(
         light: .white,
         lightHighContrast: .white,
         dark: UIColor(red: 0.110, green: 0.106, blue: 0.102, alpha: 1),           // #1C1B1A
-        darkHighContrast: UIColor(red: 0.157, green: 0.153, blue: 0.149, alpha: 1)
+        darkHighContrast: UIColor(red: 0.157, green: 0.153, blue: 0.149, alpha: 1),
+        darkElevated: UIColor(red: 0.153, green: 0.149, blue: 0.145, alpha: 1),
+        darkElevatedHighContrast: UIColor(red: 0.200, green: 0.196, blue: 0.192, alpha: 1)
     )
 
     /// "Ink" — the solid fill behind the one loud pill CTA per screen
