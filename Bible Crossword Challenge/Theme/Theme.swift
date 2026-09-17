@@ -27,41 +27,84 @@ enum Theme {
     /// scripture, streak week row), not the hue.
     static let accent = Color.accentColor
 
+    /// Resolves one colour across all four contexts the system can ask for:
+    /// light and dark, each at default and increased contrast.
+    ///
+    /// Every custom colour goes through here so none of them can ship with two
+    /// of the four again. They used to answer only to light and dark, which
+    /// meant Increase Contrast moved the system colours around them — the
+    /// accent, the tints, the bars — while the canvas, the cards and the ink
+    /// pills stayed exactly where they were. The setting's whole job on this
+    /// app's screens is telling a white card from the paper behind it, and that
+    /// was the one pair that did not respond.
+    private static func adaptive(
+        light: UIColor,
+        lightHighContrast: UIColor,
+        dark: UIColor,
+        darkHighContrast: UIColor
+    ) -> Color {
+        Color(uiColor: UIColor { trait in
+            let high = trait.accessibilityContrast == .high
+            return trait.userInterfaceStyle == .dark
+                ? (high ? darkHighContrast : dark)
+                : (high ? lightHighContrast : light)
+        })
+    }
+
     /// The rim on celebration badges (solve, achievement, freeze). One token so
     /// the three badges can't drift apart, and darker on paper so the gold still
     /// reads against a light background.
-    static let badgeRim = Color(uiColor: UIColor { trait in
-        trait.userInterfaceStyle == .dark
-            ? UIColor(red: 0.976, green: 0.800, blue: 0.298, alpha: 1) // #F9CC4C
-            : UIColor(red: 0.804, green: 0.596, blue: 0.106, alpha: 1) // #CD981B
-    })
+    static let badgeRim = adaptive(
+        light: UIColor(red: 0.804, green: 0.596, blue: 0.106, alpha: 1),          // #CD981B
+        lightHighContrast: UIColor(red: 0.671, green: 0.478, blue: 0.055, alpha: 1),
+        dark: UIColor(red: 0.976, green: 0.800, blue: 0.298, alpha: 1),           // #F9CC4C
+        darkHighContrast: UIColor(red: 1.0, green: 0.867, blue: 0.451, alpha: 1)
+    )
 
     // MARK: - Surfaces
 
     /// Warm paper canvas instead of the cool system grey.
-    static let background = Color(uiColor: UIColor { trait in
-        trait.userInterfaceStyle == .dark
-            ? UIColor(red: 0.055, green: 0.051, blue: 0.047, alpha: 1) // warm near-black
-            : UIColor(red: 0.969, green: 0.961, blue: 0.949, alpha: 1) // paper #F7F5F2
-    })
+    ///
+    /// Increased contrast pulls the paper down and away from the white card on
+    /// top of it, which is the same move the system makes with its own grouped
+    /// backgrounds. The warmth is kept: this is a darker paper, not a grey one.
+    static let background = adaptive(
+        light: UIColor(red: 0.969, green: 0.961, blue: 0.949, alpha: 1),          // paper #F7F5F2
+        lightHighContrast: UIColor(red: 0.906, green: 0.894, blue: 0.875, alpha: 1),
+        dark: UIColor(red: 0.055, green: 0.051, blue: 0.047, alpha: 1),           // warm near-black
+        darkHighContrast: UIColor(red: 0.027, green: 0.024, blue: 0.022, alpha: 1)
+    )
 
     /// Card surface: white on paper in light; a warm elevated grey in dark.
-    static let surface = Color(uiColor: UIColor { trait in
-        trait.userInterfaceStyle == .dark
-            ? UIColor(red: 0.110, green: 0.106, blue: 0.102, alpha: 1) // #1C1B1A
-            : .white
-    })
+    ///
+    /// White has nowhere to go in light, so there the separation is won by the
+    /// canvas above. In dark the card lifts instead — the canvas is already
+    /// close to black.
+    static let surface = adaptive(
+        light: .white,
+        lightHighContrast: .white,
+        dark: UIColor(red: 0.110, green: 0.106, blue: 0.102, alpha: 1),           // #1C1B1A
+        darkHighContrast: UIColor(red: 0.157, green: 0.153, blue: 0.149, alpha: 1)
+    )
 
     /// "Ink" — the solid fill behind the one loud pill CTA per screen
     /// (black-on-light, white-on-dark, YouVersion's primary-button move).
-    static let ink = Color(uiColor: UIColor { trait in
-        trait.userInterfaceStyle == .dark ? .white : UIColor(white: 0.07, alpha: 1)
-    })
+    /// Increased contrast takes it the rest of the way to black and white.
+    static let ink = adaptive(
+        light: UIColor(white: 0.07, alpha: 1),
+        lightHighContrast: .black,
+        dark: .white,
+        darkHighContrast: .white
+    )
 
-    /// Text/icon colour on an `ink` fill.
-    static let onInk = Color(uiColor: UIColor { trait in
-        trait.userInterfaceStyle == .dark ? UIColor(white: 0.07, alpha: 1) : .white
-    })
+    /// Text/icon colour on an `ink` fill. Mirrors `ink` so the pair always
+    /// resolves to opposite ends of the same axis.
+    static let onInk = adaptive(
+        light: .white,
+        lightHighContrast: .white,
+        dark: UIColor(white: 0.07, alpha: 1),
+        darkHighContrast: .black
+    )
 }
 
 // MARK: - Scripture type

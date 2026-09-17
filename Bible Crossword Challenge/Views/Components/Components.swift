@@ -273,24 +273,35 @@ struct DifficultyBadge: View {
     let difficulty: PuzzleDifficulty
 
     @Environment(\.colorScheme) private var scheme
+    @Environment(\.colorSchemeContrast) private var contrast
 
     var body: some View {
         Text(difficulty.label)
             .font(.caption.weight(.semibold))
             .padding(.horizontal, Theme.Spacing.s)
             .padding(.vertical, 4)
-            .background(difficulty.tint.opacity(0.18), in: .capsule)
+            // The capsule firms up under increased contrast too. A tint at 0.18
+            // is a whisper of a shape, and the setting is asking for the shape.
+            .background(difficulty.tint.opacity(contrast == .increased ? 0.28 : 0.18), in: .capsule)
             .foregroundStyle(textColor)
     }
 
     /// The bright system tints fail WCAG contrast on the faint tinted capsule in
-    /// light mode, so use a darker same-hue shade there. Dark mode reads fine.
+    /// light mode, so use a darker same-hue shade there.
+    ///
+    /// Dark mode reads fine on the system tint, and that tint already carries
+    /// its own increased-contrast variant, so dark needs nothing here. Light is
+    /// hand-mixed and therefore has to mix its own darker step as well.
     private var textColor: Color {
         guard scheme == .light else { return difficulty.tint }
+        let high = contrast == .increased
         switch difficulty {
-        case .easy:   return Color(red: 0.10, green: 0.42, blue: 0.18)
-        case .medium: return Color(red: 0.55, green: 0.31, blue: 0.0)
-        case .hard:   return Color(red: 0.70, green: 0.12, blue: 0.12)
+        case .easy:   return high ? Color(red: 0.04, green: 0.31, blue: 0.11)
+                                  : Color(red: 0.10, green: 0.42, blue: 0.18)
+        case .medium: return high ? Color(red: 0.42, green: 0.22, blue: 0.0)
+                                  : Color(red: 0.55, green: 0.31, blue: 0.0)
+        case .hard:   return high ? Color(red: 0.55, green: 0.06, blue: 0.06)
+                                  : Color(red: 0.70, green: 0.12, blue: 0.12)
         }
     }
 }
