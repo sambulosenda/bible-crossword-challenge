@@ -491,7 +491,7 @@ struct CrosswordGameView: View {
             StreakFlameView(streak: profile.currentStreak, pulseTick: vm.wordSolveTick)
         }
         ToolbarItem(placement: .principal) {
-            timerView
+            timerSlot
         }
         ToolbarItem(placement: .topBarTrailing) {
             Menu {
@@ -607,6 +607,42 @@ struct CrosswordGameView: View {
     /// racing a friend's time, where a hidden clock makes the race unplayable.
     private var clockVisible: Bool {
         showSolveTimer || incomingChallenge != nil
+    }
+
+    /// The clock, tappable to put it away — and the leaf tappable to bring it
+    /// back. Wanting the timer gone is a mid-solve feeling, and a tap on the
+    /// thing itself is the shortest route to acting on it. The Hints menu
+    /// keeps its labelled "Show Timer" row all the same: a bare tap target
+    /// announces itself to nobody, and the menu is where someone looks when
+    /// they wonder whether the option exists at all.
+    ///
+    /// No button while racing a friend. `clockVisible` keeps the clock on for
+    /// a challenge whatever this setting says, so a tap that appeared to do
+    /// nothing would read as a broken control — better to have nothing to tap.
+    ///
+    /// The label is left to the content underneath, so VoiceOver still reads
+    /// the elapsed time rather than a verb about hiding it; the hint carries
+    /// what the tap does.
+    @ViewBuilder
+    private var timerSlot: some View {
+        if incomingChallenge == nil {
+            Button {
+                showSolveTimer.toggle()
+            } label: {
+                timerView
+                    // Grows a 16pt leaf into something a thumb can actually
+                    // hit. Nothing moves: the principal slot is centred, the
+                    // content is fixed-size, and the toolbar row is already
+                    // this tall — only the target grows to the 44pt floor.
+                    .padding(.horizontal, Theme.Spacing.s)
+                    .frame(minWidth: 44, minHeight: 44)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityHint(showSolveTimer ? "Hides the timer" : "Shows the timer")
+        } else {
+            timerView
+        }
     }
 
     @ViewBuilder
