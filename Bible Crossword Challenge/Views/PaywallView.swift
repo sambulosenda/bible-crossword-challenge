@@ -357,6 +357,29 @@ enum PremiumCopy {
     /// the app.
     static let promise = "More time in the Word, one clue at a time."
 
+    /// The upsell cards' button, on Today and in Profile.
+    ///
+    /// "See plans" was accurate — the button opens the paywall, it doesn't buy
+    /// anything — but accuracy was all it had. It describes the app's plumbing
+    /// instead of offering the reader something, and a plan is what you read
+    /// when you have already decided to pay, not what persuades you to look.
+    ///
+    /// Where a free trial is really on the table the button names it, because
+    /// that is the offer and the reason to tap. It still doesn't overstate the
+    /// tap: it says *try*, and the paywall behind it is where the trial
+    /// actually starts. The duration comes off the product, so a 3-day offer
+    /// can never be advertised as a week.
+    ///
+    /// With nothing to offer — products still loading, or a player who has
+    /// already spent their trial — it falls back to "See plans" rather than
+    /// promising a free week they can't have. That fallback is the honest
+    /// half of the old button, kept for the case it was right about.
+    static func cardCTA(_ store: StoreService) -> String {
+        guard let yearly = store.yearly,
+              let offer = store.introOffer(for: yearly) else { return "See plans" }
+        return "Try \(offer.duration) free"
+    }
+
     /// The archive's promise. Shared because the Library locked state and the
     /// paywall it opens (`source: "archive"`) are one tap apart — a different
     /// headline on each made a single journey look like two pitches.

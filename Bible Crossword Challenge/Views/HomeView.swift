@@ -1082,6 +1082,9 @@ private struct UpgradeCard: View {
 
     @ScaledMetric(relativeTo: .title) private var iconSize = 44
     @State private var showPaywall = false
+    /// Read here rather than passed in: the CTA names the trial only when the
+    /// product actually carries one — see `PremiumCopy.cardCTA`.
+    @Environment(StoreService.self) private var store
 
     /// The player's own progress when they have some, and what's behind the
     /// wall when they don't.
@@ -1141,10 +1144,11 @@ private struct UpgradeCard: View {
                     // puzzle and a full-width ink capsule here would compete
                     // with that hero's own Continue button.
                     //
-                    // "See plans", not "Unlock": this opens the paywall, it doesn't
-                    // buy anything, and a button that overstates what it does is
-                    // how a tap becomes a back-out.
-                    Text("See plans")
+                    // Never "Unlock": this opens the paywall, it doesn't buy
+                    // anything, and a button that overstates what it does is
+                    // how a tap becomes a back-out. What it may do is name the
+                    // free trial when there is one — see `PremiumCopy.cardCTA`.
+                    Text(PremiumCopy.cardCTA(store))
                         .font(.caption.weight(.bold))
                         .foregroundStyle(Theme.onInk)
                         .padding(.horizontal, Theme.Spacing.m)

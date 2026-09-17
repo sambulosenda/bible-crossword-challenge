@@ -232,10 +232,12 @@ struct ProfileView: View {
             }
             .multilineTextAlignment(.center)
 
-            // "See plans", not "Unlock": this opens the paywall, it doesn't buy
-            // anything, and a button that overstates what it does is how a tap
-            // becomes a back-out.
-            Button("See plans") { showPaywall = true }
+            // Never "Unlock": this opens the paywall, it doesn't buy anything,
+            // and a button that overstates what it does is how a tap becomes a
+            // back-out. What it may do is name the free trial when there is
+            // one — see `PremiumCopy.cardCTA`. Same string as Today's card:
+            // one offer, said one way.
+            Button(PremiumCopy.cardCTA(store)) { showPaywall = true }
                 .buttonStyle(.pillProminent)
         }
         .padding(Theme.Spacing.l)
