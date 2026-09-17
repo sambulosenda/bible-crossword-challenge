@@ -1,7 +1,9 @@
-Thanks for playing Bible Crossword Challenge! This one is about the verses:
+Thanks for playing Bible Crossword Challenge! This one is about the puzzle meeting you where you are:
 
-• Finish a puzzle and one tap starts learning its verse by heart, right there under the verse
-• Same from the verse hint mid‑puzzle — add it to memory without leaving the grid
-• Practice now says when your next level‑up counts, instead of leaving you to guess
-• Your starter word arrives a letter at a time, so a first puzzle shows you how it works instead of just handing you the answer
-• The clue bar has room to breathe — steadier text, and the grid no longer shifts when a hint appears
+• Turn your phone sideways and the grid comes with you — board on one side, clue and keys on the other
+• Set your text larger and the clue stays whole, instead of trailing off mid-word
+• Sunday's big grids zoom with a pinch, and answer VoiceOver's zoom as well
+• Increase Contrast is answered throughout now, not just light and dark
+• Reduce Motion is honoured wherever the app celebrates
+• Tap the clock to put it away mid-puzzle — your time is still recorded
+• New packs ask for their own yes, so agreeing to a daily reminder isn't agreeing to everything
