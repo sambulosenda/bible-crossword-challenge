@@ -407,7 +407,7 @@ struct LibraryView: View {
                 .font(.subheadline.weight(.semibold))
                 .foregroundStyle(.primary)
             Text("This week's seven are free, and anything you start stays yours.")
-                .font(.caption)
+                .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
         }

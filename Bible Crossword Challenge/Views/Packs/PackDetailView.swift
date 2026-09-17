@@ -203,7 +203,7 @@ struct PackDetailView: View {
                 }
 
                 Text(journeyLine(fresh: fresh))
-                    .font(.caption)
+                    .font(.subheadline)
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
             }

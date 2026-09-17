@@ -244,7 +244,7 @@ struct ReadView: View {
                         .font(.headline)
                         .foregroundStyle(.primary)
                     Text(detail)
-                        .font(.caption)
+                        .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
                 Spacer(minLength: 0)

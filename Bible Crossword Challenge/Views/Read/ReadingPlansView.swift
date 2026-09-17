@@ -131,7 +131,7 @@ struct ReadingPlanCard: View {
                         .font(.headline)
                         .foregroundStyle(.primary)
                     Text("One chapter each day, with today's waiting here.")
-                        .font(.caption)
+                        .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
                 Spacer(minLength: 0)

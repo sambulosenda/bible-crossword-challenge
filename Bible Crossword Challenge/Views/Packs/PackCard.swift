@@ -37,8 +37,14 @@ struct PackCard: View {
                         packBadge
                     }
                 }
+                // Subheadline, not caption: this is the only description of
+                // what is inside a pack, on the screen where someone decides
+                // whether to pay for it. Caption grey is the size the rest of
+                // this card's metadata uses — clue counts, progress — and a
+                // sentence that has to be read to make a decision should not
+                // be set in the same breath as the numbers beside it.
                 Text(pack.blurb)
-                    .font(.caption)
+                    .font(.subheadline)
                     .foregroundStyle(.secondary)
                     .lineLimit(2)
                     .fixedSize(horizontal: false, vertical: true)

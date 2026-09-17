@@ -257,7 +257,7 @@ struct QuestCard: View {
                     }
                 }
                 Text(quest.blurb)
-                    .font(.caption)
+                    .font(.subheadline)
                     .foregroundStyle(.secondary)
                     .lineLimit(2)
                     .fixedSize(horizontal: false, vertical: true)

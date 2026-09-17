@@ -241,7 +241,7 @@ struct ReminderAskRow: View {
                     Text("Same time tomorrow?")
                         .font(.subheadline.weight(.semibold))
                     Text("One nudge a day, at \(reminderTimeText). Change it any time.")
-                        .font(.caption)
+                        .font(.subheadline)
                         .foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
                 }

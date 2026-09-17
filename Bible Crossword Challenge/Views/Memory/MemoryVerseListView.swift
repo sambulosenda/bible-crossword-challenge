@@ -264,7 +264,7 @@ struct MemoryVerseCard: View {
                         .font(.headline)
                         .foregroundStyle(.primary)
                     Text(subtitle)
-                        .font(.caption)
+                        .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
                 Spacer(minLength: 0)
