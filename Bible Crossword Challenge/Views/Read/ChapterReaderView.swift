@@ -386,6 +386,18 @@ private struct ChapterPage: View {
     let onChip: (PuzzleChip) -> Void
     let onMarkRead: () -> Void
 
+    /// The system's Dynamic Type multiplier, read as a metric that scales from
+    /// 100. `fontSize` is a raw point value the reader's own control sets, so
+    /// on its own it ignored the text size chosen in Settings entirely —
+    /// someone reading everything else at an accessibility size opened a
+    /// chapter and got 19pt. The control now picks the base and the system
+    /// setting multiplies it, the way a reader's size control should compose
+    /// with Dynamic Type rather than replace it.
+    @ScaledMetric(relativeTo: .body) private var typeScale: Double = 100
+
+    /// The reader's base size with the system's text-size setting applied.
+    private var readingSize: Double { fontSize * typeScale / 100 }
+
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var flashing = false
     /// True after the programmatic scroll to the verse has landed — offsets
@@ -502,19 +514,22 @@ private struct ChapterPage: View {
     }
 
     private func verseRow(_ verse: BibleVerse) -> some View {
+        // Floored at the platform's 11pt minimum: at the smallest base the
+        // reader offers, a proportional number came out at 9.5pt and the
+        // bookmark at 8.4.
         let number = Text("\(verse.number) ")
-            .font(.system(size: fontSize * 0.68, weight: .bold))
+            .font(.system(size: max(readingSize * 0.68, 11), weight: .bold))
             .foregroundStyle(Theme.accent)
         // Serif, like every other place scripture is set (Today's verse, the
         // completion card, the share card). Until 2.9 the reader — the one
         // surface that exists for reading — was the exception.
         let body = Text(verse.text)
-            .font(.system(size: fontSize, design: .serif))
+            .font(.system(size: readingSize, design: .serif))
             .foregroundStyle(.primary)
         // A small mark after the text, inside the run so it wraps with it.
         let mark = bookmarked.contains(verse.number)
             ? Text(" ") + Text(Image(systemName: "bookmark.fill"))
-                .font(.system(size: fontSize * 0.6))
+                .font(.system(size: max(readingSize * 0.6, 11)))
                 .foregroundStyle(Theme.accent)
             : Text("")
 

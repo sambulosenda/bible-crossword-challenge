@@ -100,6 +100,10 @@ struct MiniCrossword: View {
         // The cascade runs on the diagonal so the fragment assembles from its
         // top-left corner rather than row by row, which reads as mechanical.
         let delay = Double(p.row + p.col) * 0.05
+        // Hoisted out of the view chain: inline, the `max` calls pushed the
+        // expression past what the type checker would resolve in time.
+        let numberSize = max(side * 0.28, 9)
+        let letterSize = max(side * 0.5, 12)
 
         return RoundedRectangle(cornerRadius: 10, style: .continuous)
             .fill(isFocused ? Theme.accent : Theme.surface)
@@ -113,7 +117,7 @@ struct MiniCrossword: View {
             .overlay(alignment: .topLeading) {
                 if let n = numbers[p] {
                     Text("\(n)")
-                        .font(.system(size: 10, weight: .semibold))
+                        .font(.system(size: numberSize, weight: .semibold))
                         .foregroundStyle(isFocused ? Theme.onInk.opacity(0.9) : .secondary)
                         .padding(3)
                 }
@@ -123,10 +127,13 @@ struct MiniCrossword: View {
                     // Givens and typed letters look identical, as they do on a
                     // real grid — the accent fill marks where you are, not
                     // which letters are yours.
+                    // Sized off the cell, like the real grid's, rather than a
+                    // text style shrunk to half to survive a large setting —
+                    // a letter has one cell to live in either way, and
+                    // halving a title3 put it under the readable floor.
                     Text(String(letter))
-                        .font(.system(.title3, design: .rounded).weight(.semibold))
+                        .font(.system(size: letterSize, weight: .semibold, design: .rounded))
                         .lineLimit(1)
-                        .minimumScaleFactor(0.5)
                         .foregroundStyle(isFocused ? Theme.onInk : .primary)
                         .transition(.scale(scale: 0.6).combined(with: .opacity))
                 }

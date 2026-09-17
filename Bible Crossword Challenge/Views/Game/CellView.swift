@@ -67,8 +67,16 @@ struct CellView: View, Equatable {
                     }
 
                     if let number = cell.number {
+                        // The number is the cell's only tie to its clue, and
+                        // purely proportional it was the first thing to become
+                        // unreadable: 6pt on the 24pt cell a 15x15 gets in
+                        // portrait. It keeps a floor of its own and a heavier
+                        // weight. 11pt — the platform minimum — does not fit
+                        // inside a 24pt cell without crowding the letter; the
+                        // real remedy for a board this tight is the zoom
+                        // viewport, which `CrosswordGridView` falls back to.
                         Text("\(number)")
-                            .font(.system(size: side * 0.26, weight: .medium))
+                            .font(.system(size: max(side * 0.28, 9), weight: .semibold))
                             .foregroundStyle(isSelected ? Color.white.opacity(0.9) : .secondary)
                             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                             .padding(.leading, side * 0.07)
@@ -81,7 +89,11 @@ struct CellView: View, Equatable {
                         // pen letters as the real grid.
                         Text(String(entry))
                             .font(.system(
-                                size: side * (cell.isPencil ? 0.42 : 0.5),
+                                // Floored so a pencilled letter stays readable
+                                // on a small cell, while keeping enough of a
+                                // gap from the pen letter above it to read as
+                                // provisional.
+                                size: max(side * (cell.isPencil ? 0.42 : 0.5), cell.isPencil ? 10 : 12),
                                 weight: cell.isPencil ? .regular : .semibold,
                                 design: .rounded
                             ))
@@ -96,7 +108,9 @@ struct CellView: View, Equatable {
                     // Non-colour cue for correctness when colour can't be relied on.
                     if differentiateWithoutColor, errorVisible || correctVisible {
                         Image(systemName: errorVisible ? "xmark" : "checkmark")
-                            .font(.system(size: side * 0.22, weight: .bold))
+                            // This mark is the whole non-colour cue, so it gets
+                            // the same floor treatment as the number.
+                            .font(.system(size: max(side * 0.24, 9), weight: .bold))
                             .foregroundStyle(errorVisible ? Color.red : Color.green)
                             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
                             .padding(side * 0.06)

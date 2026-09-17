@@ -827,7 +827,7 @@ private struct LeadPuzzleCard: View {
                 Text("You've played this one before")
             }
         }
-        .lineLimit(1)
+        .lineLimit(2)
         .minimumScaleFactor(0.8)
         .font(.subheadline.weight(.semibold))
         .foregroundStyle(Theme.accent)

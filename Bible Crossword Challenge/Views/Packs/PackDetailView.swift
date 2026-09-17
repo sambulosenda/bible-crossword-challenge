@@ -229,8 +229,12 @@ struct PackDetailView: View {
         let state: BibleJourney.BookProgress.State = explored ? .touched : .untouched
         return Text(book.name)
             .font(.caption.weight(.medium))
-            .lineLimit(1)
-            .minimumScaleFactor(0.7)
+            // A second line rather than 8pt type: the longest book names run
+            // to "1 Thessalonians", and shrinking a 12pt caption by a third to
+            // keep them on one line is the app overriding the size the reader
+            // asked for.
+            .lineLimit(2)
+            .minimumScaleFactor(0.8)
             .foregroundStyle(JourneyStyle.text(state))
             .padding(.horizontal, Theme.Spacing.s)
             .padding(.vertical, 8)

@@ -250,11 +250,15 @@ struct WeekRow: View {
         // Seven circles divide the width they're given rather than each taking a
         // Dynamic-Type-scaled size: at accessibility sizes a fixed metric grew
         // the row past the screen and dragged every card on Today out with it.
-        // The glyph still scales, and shrinks to fit once the circle can't.
+        // The glyph still scales, and shrinks to fit once the circle can't —
+        // but only to 0.8. A seventh of a card is around 50pt and the glyph is
+        // a single character, so it fits at every size the system offers; the
+        // old half-size allowance was insuring against a squeeze that cannot
+        // happen, at the price of a 6pt letter if it ever did.
         .frame(maxWidth: .infinity)
         .aspectRatio(1, contentMode: .fit)
         .lineLimit(1)
-        .minimumScaleFactor(0.5)
+        .minimumScaleFactor(0.8)
     }
 
     private func letter(for day: Int) -> String {

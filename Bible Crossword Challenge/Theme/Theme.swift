@@ -194,10 +194,26 @@ extension View {
     /// Muted grey by default (as on YouVersion's "VERSE OF THE DAY" label) so
     /// the scarlet stays reserved for interactive and identity moments.
     func kicker(_ color: Color = Color.secondary) -> some View {
-        self
+        modifier(Kicker(color: color))
+    }
+}
+
+/// Letterspaced uppercase eyebrow. The letterspacing is deliberate — it is what
+/// makes a 12pt uppercase run read as a label rather than shouting — but it is
+/// set as a scaled metric rather than a flat point value: `tracking` takes
+/// absolute points, so a fixed 1.0 stayed 1.0 while the caption grew to 30pt
+/// and the letterspacing quietly tightened away to nothing at the sizes that
+/// need it most.
+private struct Kicker: ViewModifier {
+    let color: Color
+
+    @ScaledMetric(relativeTo: .caption) private var tracking: CGFloat = 1.0
+
+    func body(content: Content) -> some View {
+        content
             .font(.caption.weight(.bold))
             .textCase(.uppercase)
-            .tracking(1.0)
+            .tracking(tracking)
             .foregroundStyle(color)
     }
 }

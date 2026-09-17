@@ -191,8 +191,8 @@ private struct JourneyChip: View {
         HStack(spacing: 4) {
             Text(row.name)
                 .font(.caption.weight(row.state == .deep ? .semibold : .regular))
-                .lineLimit(1)
-                .minimumScaleFactor(0.7)
+                .lineLimit(2)
+                .minimumScaleFactor(0.8)
             Spacer(minLength: 0)
             if row.solved > 0 {
                 Text("\(row.solved)")
