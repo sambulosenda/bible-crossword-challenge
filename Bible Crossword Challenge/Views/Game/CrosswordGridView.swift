@@ -45,6 +45,10 @@ struct CrosswordGridView: View {
     /// cell holds neither a legible letter nor a hittable target, and fitting
     /// the board on screen has stopped buying anything — see `body`.
     private static let minimumFittedSide: CGFloat = 24
+    /// One press of the accessibility zoom action. Coarse on purpose: the
+    /// whole range is fit→44pt, and a stepper you have to work a dozen times
+    /// is its own kind of inaccessible.
+    private static let zoomStep: CGFloat = 1.5
 
     var body: some View {
         GeometryReader { geo in
@@ -123,6 +127,17 @@ struct CrosswordGridView: View {
                     )
             }
             .simultaneousGesture(magnify(fit: fit))
+            // Pinch is the only way to work this viewport, and it is a gesture
+            // not everyone can make. Zoom mode is also where a large text size
+            // lands the ordinary 15×15 (see `body`), so the people most likely
+            // to be here are the ones least likely to pinch.
+            .accessibilityZoomAction { action in
+                let base = zoomSide ?? max(fit, Self.comfortableSide)
+                let factor = action.direction == .zoomIn
+                    ? Self.zoomStep
+                    : 1 / Self.zoomStep
+                zoomSide = clamped(base * factor, fit: fit)
+            }
             .onChange(of: vm.selected) { _, pos in
                 scrollTo(pos, proxy: proxy)
             }
