@@ -2,7 +2,7 @@ Thanks for playing Bible Crossword Challenge! This one is about the puzzle meeti
 
 • Turn your phone sideways and the grid comes with you — board on one side, clue and keys on the other
 • Set your text larger and the clue stays whole, instead of trailing off mid-word
-• Sunday's big grids zoom with a pinch, and answer VoiceOver's zoom as well
+• Sunday's big grids pan and zoom with a pinch
 • Increase Contrast is answered throughout now, not just light and dark
 • Reduce Motion is honoured wherever the app celebrates
 • Tap the clock to put it away mid-puzzle — your time is still recorded
