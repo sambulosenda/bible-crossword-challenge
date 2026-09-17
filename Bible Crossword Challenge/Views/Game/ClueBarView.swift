@@ -46,6 +46,63 @@ struct ClueBarView: View {
         .overlay(alignment: .bottom) { progressStrip }
     }
 
+    /// The clue itself.
+    ///
+    /// Two of the three modifiers here are one decision: how much room the
+    /// clue gets. `reservesSpace` needs a concrete count, so the unreserved
+    /// case is a separate branch rather than a `nil` passed through.
+    @ViewBuilder
+    private func clueText(_ clue: String) -> some View {
+        let text = Text(clue)
+            .font(.callout)
+            .foregroundStyle(.primary)
+        Group {
+            if let clueLines {
+                // Reserved, not just capped: without it a one-line clue and a
+                // two-line clue give the bar different heights, so the grid
+                // reflowed on plain clue navigation too — the same bug as the
+                // nudge row, just triggered more often.
+                text.lineLimit(clueLines, reservesSpace: true)
+            } else {
+                text.lineLimit(nil)
+            }
+        }
+        // The clue is the puzzle. Two lines holds the longest one written (72
+        // characters) at the default size and nothing larger, so every step up
+        // cut the clue off mid-word — at AX5 it read "The Bible's fir…" and the
+        // puzzle could not be solved at all. The ceiling is the keyboard's, for
+        // the keyboard's reason: ten fixed columns and three rows below cannot
+        // give any more.
+        .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
+    }
+
+    /// Lines reserved for the clue, or `nil` to let it run as long as it must.
+    ///
+    /// Two lines is a fixed height, which is the point: it stops the bar —
+    /// and so the grid above it — resizing every time you step to a clue of a
+    /// different length. That holds up to the accessibility sizes, where the
+    /// glyphs stop growing at the cap but the wrap keeps tightening: measured
+    /// on device, a capped line takes about fourteen characters, so the
+    /// longest clue written wants five lines and the next one written could
+    /// want six. Any fixed number is a guess that truncates the clue the day
+    /// it is wrong, so above the cap there is no number — the clue is the
+    /// puzzle, and a bar that changes height is a smaller price than a clue
+    /// that can't be read.
+    ///
+    /// The price is not nothing. On a phone at these sizes the grid is in its
+    /// pan/zoom viewport (`CrosswordGridView.body` falls back to it once the
+    /// fitted cell would drop under 24pt), where cell size comes from
+    /// `zoomSide` and not from the height left over, so the cells hold still
+    /// and only the viewport changes. On a screen roomy enough to stay in the
+    /// fitted layout — an iPad at the lower accessibility sizes — stepping to
+    /// a longer clue does still resize the cells, which is the reflow the
+    /// reservation was added to stop. Traded knowingly: that reflow is a
+    /// wobble, and the truncation it was preventing was a clue you could not
+    /// read at all.
+    private var clueLines: Int? {
+        dynamicTypeSize.isAccessibilitySize ? nil : 2
+    }
+
     /// The rescue offer and the endgame countdown, sharing the clue-number
     /// line rather than claiming a row of their own above the bar.
     ///
@@ -186,19 +243,16 @@ struct ClueBarView: View {
                             // Invisible twin of the overlaid pill: it claims
                             // the width so the number can never collide with
                             // it, and collapses to nothing when no nudge is
-                            // showing.
-                            nudgeBody.hidden()
+                            // showing. Only on the line they actually share:
+                            // at accessibility sizes the nudge has its own row
+                            // (see `body`), so reserving for it here was pure
+                            // theft — it squeezed "19 Across" down to "19 A…".
+                            if !dynamicTypeSize.isAccessibilitySize {
+                                nudgeBody.hidden()
+                            }
                         }
                         .frame(maxWidth: .infinity)
-                        Text(slot.clue)
-                            .font(.callout)
-                            .foregroundStyle(.primary)
-                            // Reserved, not just capped: without it a one-line
-                            // clue and a two-line clue give the bar different
-                            // heights, so the grid reflowed on plain clue
-                            // navigation too — the same bug as the nudge row,
-                            // just triggered more often.
-                            .lineLimit(2, reservesSpace: true)
+                        clueText(slot.clue)
                     } else {
                         Text("Select a cell to begin")
                             .font(.callout)
