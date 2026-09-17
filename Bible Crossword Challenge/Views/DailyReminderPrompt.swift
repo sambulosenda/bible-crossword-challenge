@@ -245,7 +245,10 @@ struct ReminderAskRow: View {
                 VStack(alignment: .leading, spacing: 1) {
                     Text("Same time tomorrow?")
                         .font(.subheadline.weight(.semibold))
-                    Text("One nudge a day, at \(reminderTimeText). Change it any time.")
+                    // Not "one a day": a player with a streak also gets the
+                    // 9 PM last call, so the old line promised a quota the
+                    // scheduler was never going to keep.
+                    Text("A nudge at \(reminderTimeText), plus a last call if your streak is about to break. Change it any time.")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)

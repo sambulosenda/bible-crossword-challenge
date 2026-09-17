@@ -328,7 +328,21 @@ struct ProfileView: View {
             .settingsRowInsets()
             .tint(Theme.accent)
 
-            if remindersEnabled && notifications.authorizationStatus == .authorized {
+            if notifications.authorizationStatus == .denied {
+                RowDivider()
+                // A door, not a sentence. The toggle above can't be turned on
+                // from inside the app once permission is refused, and the
+                // footer explaining that was the only thing on screen saying
+                // so — text where the player needed somewhere to tap.
+                SettingsButtonRow(
+                    title: "Open Settings", symbol: "gear",
+                    tint: .secondary, external: true
+                ) {
+                    openNotificationSettings()
+                }
+            }
+
+            if remindersEnabled && notifications.canDeliver {
                 RowDivider()
                 DatePicker(selection: reminderTime, displayedComponents: .hourAndMinute) {
                     SettingsRowLabel(title: "Time", symbol: "clock.fill", tint: Theme.accent)
@@ -356,10 +370,29 @@ struct ProfileView: View {
         } footer: {
             if notifications.authorizationStatus == .denied {
                 Text("Notifications are turned off for this app. Enable them in Settings to receive your daily reminder.")
-            } else if remindersEnabled && notifications.authorizationStatus == .authorized {
-                Text("New puzzle packs sends one note on the morning a seasonal pack opens — a few times a year. Your daily reminder is separate.")
+            } else if remindersEnabled && notifications.canDeliver {
+                Text(remindersFooterText)
             }
         }
+    }
+
+    /// Everything the Reminders section will actually send, said plainly —
+    /// the one place in the app that gives the full count, since the opt-in
+    /// asks have room for a sentence and this has room for three.
+    ///
+    /// The last call is conditional because the scheduler's is: a reminder set
+    /// at 9 PM or later leaves no room for it and none is scheduled (see
+    /// `NotificationService.scheduleStreakRiskNudge`), and a settings screen
+    /// describing a notification that will never arrive is its own small lie.
+    private var remindersFooterText: String {
+        let lastCall = ReminderTime.date(fromMinutes: NotificationService.streakRiskMinutes)
+            .formatted(date: .omitted, time: .shortened)
+        var lines = ["One reminder a day, at the time above."]
+        if reminderMinutes < NotificationService.streakRiskMinutes {
+            lines.append("On an evening a streak is about to break, a last call at \(lastCall).")
+        }
+        lines.append("New puzzle packs is separate — a note the morning a seasonal pack opens, a few times a year.")
+        return lines.joined(separator: " ")
     }
 
     // MARK: - Challenges
@@ -476,20 +509,24 @@ struct ProfileView: View {
             case .denied:
                 // Can't grant from inside the app — bounce to Settings, leave off.
                 remindersEnabled = false
-                // Remember that turning it on was the intent. The switch above
-                // is off because permission is missing, not because the player
-                // changed their mind, and without this they come back from
-                // Settings having allowed notifications only to find the toggle
-                // still off and have to ask a second time.
-                pendingReminderOptIn = true
-                if let url = URL(string: UIApplication.openSettingsURLString) {
-                    openURL(url)
-                }
+                openNotificationSettings()
             default:
                 remindersEnabled = true
                 analytics.log(.reminderSettingChanged(enabled: true))
                 rescheduleReminders()
             }
+        }
+    }
+
+    /// Hands the player to this app's page in Settings, remembering that they
+    /// meant to turn the reminder on. The switch is off because permission is
+    /// missing, not because they changed their mind, and without the flag they
+    /// come back having allowed notifications only to find it still off and
+    /// have to ask a second time — see `RootView.completePendingReminderOptIn`.
+    private func openNotificationSettings() {
+        pendingReminderOptIn = true
+        if let url = URL(string: UIApplication.openSettingsURLString) {
+            openURL(url)
         }
     }
 

@@ -35,6 +35,20 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
     /// after a request. Views read this to decide what settings UI to show.
     private(set) var authorizationStatus: UNAuthorizationStatus = .notDetermined
 
+    /// Whether the system will deliver what we schedule. Provisional and
+    /// ephemeral authorization both do — quietly, but they deliver — so every
+    /// caller asks this rather than comparing against `.authorized` itself.
+    /// Three places used to make that comparison independently and disagree:
+    /// `RootView` finished an interrupted opt-in on provisional, while
+    /// `reschedule` refused to schedule anything for it, which would have left
+    /// a player switched on with an empty schedule and nothing to explain it.
+    var canDeliver: Bool {
+        switch authorizationStatus {
+        case .authorized, .provisional, .ephemeral: return true
+        default: return false
+        }
+    }
+
     /// The deep link from a tapped notification, waiting to be routed.
     /// `RootView` observes it, opens it through the same handler as an external
     /// URL, and clears it — so a notification target and a widget target can
@@ -47,8 +61,10 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
     private let horizonDays = 14
 
     /// When the streak-risk nudge fires (9:00 PM) — late enough to be a last
-    /// call, early enough to leave time to solve.
-    private let streakRiskMinutes = 21 * 60
+    /// call, early enough to leave time to solve. Not private: Profile states
+    /// the hour in words, and a settings screen describing a time the scheduler
+    /// doesn't use is worse than one that says nothing.
+    static let streakRiskMinutes = 21 * 60
 
     /// When a season-opening notice fires (10:00 AM). Deliberately not the
     /// player's reminder time: this is news, not a nudge, and sharing a minute
@@ -82,6 +98,27 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
             pendingURL = url
         }
         completionHandler()
+    }
+
+    /// A notification arriving while the app is open.
+    ///
+    /// Reminders are suppressed: every one of them exists to get the player
+    /// back into the app, and they are already here — showing the banner would
+    /// interrupt the very solve it was asking for. (This was also the previous
+    /// behaviour, by omission. iOS suppresses foreground notifications when a
+    /// delegate declines to answer, so the rule was real but unwritten.)
+    ///
+    /// Pack news is the exception. A season opens once, the notice is the only
+    /// announcement it gets, and dropping it because the player happened to be
+    /// mid-puzzle at 10 AM means they never hear about it at all.
+    func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        willPresent notification: UNNotification,
+        withCompletionHandler completionHandler:
+            @escaping (UNNotificationPresentationOptions) -> Void
+    ) {
+        let isPackNews = notification.request.content.threadIdentifier == Self.packNewsThread
+        completionHandler(isPackNews ? [.banner, .list] : [])
     }
 
     // MARK: - Authorization
@@ -150,7 +187,7 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
         center.removeAllPendingNotificationRequests()
         guard enabled else { return }
         await refreshStatus()
-        guard authorizationStatus == .authorized else { return }
+        guard canDeliver else { return }
 
         let calendar = Calendar.current
         let now = Date()
@@ -268,11 +305,12 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
         minutes: Int, streak: Int, completedToday: Bool, freezes: Int,
         calendar: Calendar, now: Date
     ) async {
-        guard streak > 0, minutes < streakRiskMinutes else { return }
+        guard streak > 0, minutes < Self.streakRiskMinutes else { return }
         guard let day = calendar.date(
             byAdding: .day, value: completedToday ? 1 : 0, to: calendar.startOfDay(for: now)
         ), let fireDate = calendar.date(
-            bySettingHour: streakRiskMinutes / 60, minute: streakRiskMinutes % 60,
+            bySettingHour: Self.streakRiskMinutes / 60,
+            minute: Self.streakRiskMinutes % 60,
             second: 0, of: day
         ), fireDate > now else { return }
 

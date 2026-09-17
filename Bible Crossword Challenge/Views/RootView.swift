@@ -214,19 +214,16 @@ struct RootView: View {
     /// time reads as the app having ignored them.
     private func completePendingReminderOptIn() {
         guard pendingReminderOptIn else { return }
-        switch notifications.authorizationStatus {
-        case .authorized, .provisional, .ephemeral:
+        if notifications.canDeliver {
             pendingReminderOptIn = false
             remindersEnabled = true
             analytics.log(.reminderSettingChanged(enabled: true))
-        case .denied:
+        } else if notifications.authorizationStatus == .denied {
             // They looked at Settings and left notifications off. That's an
             // answer; stop waiting for one.
             pendingReminderOptIn = false
-        default:
-            // Still undetermined — Settings may not have been opened yet.
-            break
         }
+        // Otherwise still undetermined — Settings may not have been opened yet.
     }
 
     // The day-2 reminder sheet no longer opens here. It moved to the
