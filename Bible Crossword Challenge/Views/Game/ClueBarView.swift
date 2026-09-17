@@ -162,7 +162,7 @@ struct ClueBarView: View {
             Button {
                 vm.advanceClue(by: -1)
             } label: {
-                Image(systemName: "chevron.left")
+                Image(systemName: "chevron.backward")
                     .font(.headline)
                     .frame(width: 44, height: 44)
                     .contentShape(.rect)
@@ -239,7 +239,7 @@ struct ClueBarView: View {
             Button {
                 vm.advanceClue(by: 1)
             } label: {
-                Image(systemName: "chevron.right")
+                Image(systemName: "chevron.forward")
                     .font(.headline)
                     .frame(width: 44, height: 44)
                     .contentShape(.rect)

@@ -687,7 +687,7 @@ private struct AchievementsCard: View {
                         .foregroundStyle(.secondary)
                 }
                 Spacer(minLength: 0)
-                Image(systemName: "chevron.right")
+                Image(systemName: "chevron.forward")
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(.secondary)
             }
@@ -900,11 +900,11 @@ private struct SettingsButtonRow: View {
             HStack(spacing: Theme.Spacing.s) {
                 SettingsRowLabel(title: title, symbol: symbol, tint: tint)
                 Spacer(minLength: Theme.Spacing.s)
-                Image(systemName: external ? "arrow.up.right" : "chevron.right")
+                Image(systemName: external ? "arrow.up.forward" : "chevron.forward")
                     .font(.footnote.weight(.semibold))
                     .foregroundStyle(.tertiary)
                     // Decorative — without this VoiceOver appends the symbol's
-                    // name ("arrow up right") to the row's label.
+                    // name ("arrow up forward") to the row's label.
                     .accessibilityHidden(true)
             }
             .settingsRowInsets()

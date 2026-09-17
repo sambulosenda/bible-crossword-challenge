@@ -622,7 +622,7 @@ private struct TodayHeader: View {
                 HStack(spacing: 4) {
                     Text(verse.reference)
                         .font(.headline)
-                    Image(systemName: "chevron.right")
+                    Image(systemName: "chevron.forward")
                         .font(.caption.weight(.bold))
                 }
                 .foregroundStyle(Theme.accent)
@@ -1209,7 +1209,7 @@ private struct CompactPuzzleCard: View {
                 }
 
                 Spacer(minLength: 0)
-                Image(systemName: "chevron.right")
+                Image(systemName: "chevron.forward")
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(.secondary)
             }

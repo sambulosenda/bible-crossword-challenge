@@ -297,7 +297,7 @@ struct PackDetailView: View {
                 .font(.caption.weight(.medium))
                 .foregroundStyle(.orange)
         case .start:
-            Image(systemName: "chevron.right")
+            Image(systemName: "chevron.forward")
                 .font(.subheadline.weight(.semibold))
                 .foregroundStyle(.secondary)
         }

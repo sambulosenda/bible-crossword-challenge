@@ -630,6 +630,10 @@ struct CrosswordGameView: View {
                 showSolveTimer.toggle()
             } label: {
                 timerView
+                    // Animated here rather than at the tap, so the swap looks
+                    // the same however the setting was changed — this button,
+                    // the Hints menu, or Profile.
+                    .animation(.snappy(duration: 0.22), value: clockVisible)
                     // Grows a 16pt leaf into something a thumb can actually
                     // hit. Nothing moves: the principal slot is centred, the
                     // content is fixed-size, and the toolbar row is already
@@ -656,6 +660,7 @@ struct CrosswordGameView: View {
                     .foregroundStyle(.green)
                     .monospacedDigit()
                     .fixedSize()
+                    .transition(zenSwap)
             } else {
                 zenMark
             }
@@ -671,6 +676,7 @@ struct CrosswordGameView: View {
                         Text(TimeFormat.clock(vm.elapsed()))
                             .monospacedDigit()
                             .fixedSize()
+                            .transition(zenSwap)
                     } else {
                         zenMark
                     }
@@ -688,7 +694,17 @@ struct CrosswordGameView: View {
         Image(systemName: "leaf.fill")
             .font(.subheadline)
             .foregroundStyle(.secondary)
+            .transition(zenSwap)
             .accessibilityLabel("Zen mode, timer hidden")
+    }
+
+    /// How the clock and the leaf trade places. Swapping with no transition
+    /// reads as a glitch rather than a change of mode. This is the idea behind
+    /// the SF Symbols Replace animation but not its API: `.symbolEffect(
+    /// .replace)` goes symbol to symbol, and here text gives way to a symbol.
+    /// Reduce Motion keeps the cross-fade and drops the scale.
+    private var zenSwap: AnyTransition {
+        reduceMotion ? .opacity : .scale(scale: 0.7).combined(with: .opacity)
     }
 
     /// "No hints left today" plus the two rungs that still cost nothing, and
