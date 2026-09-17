@@ -307,6 +307,7 @@ struct MasteryDots: View {
     var animateTo: Bool = false
 
     @State private var shown = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         HStack(spacing: 4) {
@@ -314,14 +315,18 @@ struct MasteryDots: View {
                 Circle()
                     .fill(dot <= level ? Theme.accent : Color(.tertiarySystemFill))
                     .frame(width: 8, height: 8)
-                    .scaleEffect(animateTo && dot == level && !shown ? 0.1 : 1)
+                    .scaleEffect(pops && dot == level && !shown ? 0.1 : 1)
             }
         }
         .onAppear {
-            guard animateTo else { return }
+            guard pops else { return }
             withAnimation(.spring(duration: 0.5, bounce: 0.5).delay(0.3)) { shown = true }
         }
         .accessibilityElement()
         .accessibilityLabel("Mastery level \(level) of \(MemoryVerseStore.masteredLevel)")
     }
+
+    /// The pop is decoration on top of the dot the level-up already fills in,
+    /// so Reduce Motion drops it and the dot is simply there.
+    private var pops: Bool { animateTo && !reduceMotion }
 }
