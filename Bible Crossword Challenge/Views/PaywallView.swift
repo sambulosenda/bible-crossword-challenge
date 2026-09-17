@@ -406,22 +406,41 @@ struct PremiumBenefit: Identifiable {
     /// Onboarding's premium page and the paywall are the same offer at two
     /// moments, and while each kept its own copy they drifted: the paywall was
     /// rewritten to three outcome-led rows while onboarding still advertised
-    /// four, including a "No ads, ever" the app can't really honour and a
-    /// "whole library" that repeated the row above it. A player who saw both
-    /// was reading two different products.
+    /// four, including a "No ads, ever" the app can't really honour. A player
+    /// who saw both was reading two different products.
     ///
-    /// Counts are passed in from the bundle rather than written as "100+" or
-    /// "four", so no claim here can go stale as puzzles and packs are added.
+    /// Hints lead. They are the most-hit paywall trigger in the app, so most
+    /// readers arrive here mid-frustration with a hint they were refused —
+    /// and the list used to open on shelf inventory instead, making them read
+    /// past their own reason for coming. The row says what the lifted limit
+    /// means rather than naming the limit: "No hint limits" was a negation
+    /// aimed at someone already annoyed.
     ///
-    /// The first row says "the whole library" rather than "all N puzzles,
-    /// unlocked" or the old "not just today's". "Unlocked" described a state
-    /// the reader was not in — it invited them to check, find today's puzzle
-    /// playable, and discount the other two rows with it. "Not just today's"
-    /// fixed that but spent the list's opening words on what free lacks; the
-    /// library is a claim about the shelf, not the reader's state, so a daily
-    /// player can't catch it out either — and it stays affirmative. The row
-    /// still doesn't reach for packs, which the last row owns: one row for
-    /// the archive, one for hints, one for packs.
+    /// The library row carries the only number on the page. The count comes
+    /// from the bundle rather than a written "100+", so it can't go stale, and
+    /// it earns its place by being large and checkable. What changed is the
+    /// job it does: "the whole library" described a shelf, and a shelf is not
+    /// a reason to pay — today's puzzle is already free. "Catch up" names what
+    /// the archive actually buys. (An earlier "not just today's" said the same
+    /// thing by negation and spent the opening words on what free lacks; this
+    /// stays affirmative.)
+    ///
+    /// Every row here is costed in lines, not words. The column takes about
+    /// 28 characters, and a first draft of this row ran to two — which with
+    /// the packs row below it grew the card by 50pt and put the trial
+    /// timeline under the fold, the very thing the fourth benefit was cut to
+    /// prevent. Any rewrite here has to be checked on screen against the
+    /// timeline, not just read.
+    ///
+    /// The packs row names seasons instead of counting packs. Counting was
+    /// the real weakness: all 59 pack puzzles are inside the library count
+    /// above, so "All 9 packs" advertised the same content a second time at a
+    /// smaller number, and a smaller number next to 241 reads as a discount on
+    /// the first claim. What packs genuinely add is the calendar — Lent,
+    /// Easter, Advent and Christmas carry real date windows in `packs.json` —
+    /// and a thing that comes back every year is the honest argument for a
+    /// subscription over a one-off. "Each new one" stays because it rides on
+    /// the entitlement, not on a release schedule anyone has to keep.
     ///
     /// Three rows, not four. "Replay any puzzle, any time" was cut on
     /// 2026-09-07: it restated the library row (a shelf you own is a shelf
@@ -430,30 +449,24 @@ struct PremiumBenefit: Identifiable {
     /// plan cards. The timeline is the page's strongest trust element; a
     /// fourth benefit is not worth hiding it.
     ///
-    /// Hint limits get their own row rather than sharing one with ads: they're
-    /// the most-hit paywall trigger in the app, and pairing the strongest
-    /// reason to subscribe with the weakest one buried it. "No ads" is gone
-    /// entirely, and so is the ad scaffold behind it: the app serves no
-    /// advertising, so there is nothing for Premium to remove. Add the row
-    /// back only alongside a real ad integration.
-    static func all(puzzleCount: Int, packCount: Int) -> [PremiumBenefit] {
+    /// "No ads" is gone entirely, and so is the ad scaffold behind it: the app
+    /// serves no advertising, so there is nothing for Premium to remove — and
+    /// free players have no ads either, which makes it an argument for the
+    /// product rather than for paying. Add the row back only alongside a real
+    /// ad integration.
+    static func all(puzzleCount: Int) -> [PremiumBenefit] {
         [
             PremiumBenefit(
-                icon: "square.grid.3x3.fill",
-                // No "all" before the count: with it the row wraps on a 402pt
-                // screen, and the break landed between "all" and its number.
-                title: "The whole library — \(puzzleCount) puzzles"
-            ),
-            PremiumBenefit(
                 icon: "lightbulb.fill",
-                // What the lifted limit means, not the limit: "No hint limits"
-                // was the list's second negation, and the reader it matters to
-                // is mid-frustration — say the outcome they want instead.
                 title: "Hints whenever you need them"
             ),
             PremiumBenefit(
+                icon: "square.grid.3x3.fill",
+                title: "Catch up on all \(puzzleCount) puzzles"
+            ),
+            PremiumBenefit(
                 icon: "rectangle.stack.fill",
-                title: "All \(packCount) packs, and every new one"
+                title: "Lent, Advent, Christmas — every collection, and each new one"
             ),
         ]
     }

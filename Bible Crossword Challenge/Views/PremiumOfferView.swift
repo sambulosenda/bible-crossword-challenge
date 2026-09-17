@@ -196,8 +196,7 @@ struct PremiumOfferView: View {
     private var featureList: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.s) {
             ForEach(PremiumBenefit.all(
-                puzzleCount: puzzleProvider.totalPuzzleCount,
-                packCount: puzzleProvider.packs.filter(\.isPremium).count
+                puzzleCount: puzzleProvider.totalPuzzleCount
             )) { benefit in
                 HStack(alignment: .top, spacing: Theme.Spacing.m) {
                     // Accent, not green: green means "solved" everywhere else
