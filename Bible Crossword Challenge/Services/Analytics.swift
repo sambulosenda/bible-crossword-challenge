@@ -209,6 +209,15 @@ enum AnalyticsEvent {
     /// `DailyReminderPrompt` ask the same question at very different moments.
     case reminderDeclined(source: String)
     case reminderSettingChanged(enabled: Bool)
+    /// Seasonal pack news turned on or off in Profile — a separate consent from
+    /// the daily reminder, so a separate event.
+    ///
+    /// It has no ask surface of its own: the row is the only way to reach it,
+    /// and it starts off. Whether seasonal packs keep a notification channel at
+    /// all rests on how many people ever find it and say yes, which is a number
+    /// nothing else in this enum can answer — `reminder_setting_changed` counts
+    /// a different consent, and pack notices no longer follow from it.
+    case packNewsSettingChanged(enabled: Bool)
     /// The system review prompt was *called* (Apple decides whether it shows —
     /// display rate is invisible, so calls are the only tunable denominator).
     /// `trigger` names the `ReviewAsk` rung ("milestone_75", "streak",
@@ -367,6 +376,7 @@ enum AnalyticsEvent {
         case .reminderAskShown: return "reminder_ask_shown"
         case .reminderDeclined: return "reminder_declined"
         case .reminderSettingChanged: return "reminder_setting_changed"
+        case .packNewsSettingChanged: return "pack_news_setting_changed"
         case .reviewPromptRequested: return "review_prompt_requested"
         case .packOpened: return "pack_opened"
         case .packCompleted: return "pack_completed"
@@ -524,6 +534,8 @@ enum AnalyticsEvent {
         case .reminderDeclined(let source):
             return ["source": source]
         case .reminderSettingChanged(let enabled):
+            return ["enabled": enabled]
+        case .packNewsSettingChanged(let enabled):
             return ["enabled": enabled]
         case .reviewPromptRequested(let trigger, let totalCompleted):
             return ["trigger": trigger, "total_completed": totalCompleted]

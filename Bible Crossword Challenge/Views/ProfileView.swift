@@ -498,6 +498,7 @@ struct ProfileView: View {
     /// path here — only the schedule.
     private func handlePackNewsToggle(_ enabled: Bool) {
         packNewsEnabled = enabled
+        analytics.log(.packNewsSettingChanged(enabled: enabled))
         rescheduleReminders()
     }
 
