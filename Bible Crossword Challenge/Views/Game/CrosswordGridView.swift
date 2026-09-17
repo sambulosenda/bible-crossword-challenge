@@ -41,13 +41,29 @@ struct CrosswordGridView: View {
     /// The default zoom shows readable, tappable cells rather than the whole
     /// board — the first act on a big grid is reading a clue, not surveying.
     private static let comfortableSide: CGFloat = 30
+    /// The smallest cell the fitted layout is allowed to produce. Under this a
+    /// cell holds neither a legible letter nor a hittable target, and fitting
+    /// the board on screen has stopped buying anything — see `body`.
+    private static let minimumFittedSide: CGFloat = 24
 
     var body: some View {
-        Group {
-            if vm.size > Self.zoomThreshold {
-                zoomableGrid
+        GeometryReader { geo in
+            // Fit or zoom is a question about the container, not just the
+            // puzzle. A 15×15 fits comfortably in portrait and not at all in
+            // landscape, or at accessibility text sizes, where the clue bar and
+            // keypad leave the grid a sliver. `fittedGrid` had no floor, so it
+            // went on shrinking past the point of use: ~5pt cells at AX5, and
+            // in landscape nothing at all — the grid was absent from the screen
+            // and from the accessibility tree alike.
+            //
+            // Below `minimumFittedSide` the whole-board view is given up for
+            // the same pan/zoom viewport the 21×21 uses. A grid you can reach
+            // beats a grid you can see all of.
+            let fit = floor(min(geo.size.width, geo.size.height) / CGFloat(vm.size))
+            if vm.size > Self.zoomThreshold || fit < Self.minimumFittedSide {
+                zoomableGrid(in: geo.size)
             } else {
-                fittedGrid
+                fittedGrid(side: fit)
             }
         }
         .sensoryFeedback(.impact(weight: .light), trigger: wordTick)
@@ -72,52 +88,49 @@ struct CrosswordGridView: View {
         }
     }
 
-    // MARK: - Fit mode (≤ 15×15, the shipped behavior)
+    // MARK: - Fit mode (the shipped behavior, whenever the cells stay usable)
 
-    private var fittedGrid: some View {
-        GeometryReader { geo in
-            let available = min(geo.size.width, geo.size.height)
-            let side = floor(available / CGFloat(vm.size))
-            let total = side * CGFloat(vm.size)
+    /// Centred in whatever rect `body` measured. The square frame that used to
+    /// do the centring (`aspectRatio(1, .fit)`) is gone with it: it sized the
+    /// grid to the *shorter* side of the container, which is exactly how a
+    /// landscape screen reduced the board to nothing.
+    private func fittedGrid(side: CGFloat) -> some View {
+        let total = side * CGFloat(vm.size)
 
-            gridRows(side: side)
-                .frame(width: total, height: total)
-                .modifier(ShakeEffect(animatableData: CGFloat(shakeTick)))
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-        }
-        .aspectRatio(1, contentMode: .fit)
+        return gridRows(side: side)
+            .frame(width: total, height: total)
+            .modifier(ShakeEffect(animatableData: CGFloat(shakeTick)))
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
-    // MARK: - Zoom mode (Sunday Specials)
+    // MARK: - Zoom mode (Sunday Specials, and any container too small to fit)
 
-    private var zoomableGrid: some View {
-        GeometryReader { geo in
-            let fit = floor(min(geo.size.width, geo.size.height) / CGFloat(vm.size))
-            let side = zoomSide.map { clamped($0, fit: fit) } ?? max(fit, Self.comfortableSide)
-            let total = side * CGFloat(vm.size)
+    private func zoomableGrid(in size: CGSize) -> some View {
+        let fit = floor(min(size.width, size.height) / CGFloat(vm.size))
+        let side = zoomSide.map { clamped($0, fit: fit) } ?? max(fit, Self.comfortableSide)
+        let total = side * CGFloat(vm.size)
 
-            ScrollViewReader { proxy in
-                ScrollView([.horizontal, .vertical], showsIndicators: false) {
-                    gridRows(side: side)
-                        .frame(width: total, height: total)
-                        .modifier(ShakeEffect(animatableData: CGFloat(shakeTick)))
-                        // Centered while zoomed out smaller than the viewport;
-                        // a plain ScrollView would pin it top-leading.
-                        .frame(
-                            width: max(total, geo.size.width),
-                            height: max(total, geo.size.height)
-                        )
-                }
-                .simultaneousGesture(magnify(fit: fit))
-                .onChange(of: vm.selected) { _, pos in
-                    scrollTo(pos, proxy: proxy)
-                }
-                .onAppear {
-                    if zoomSide == nil { zoomSide = max(fit, Self.comfortableSide) }
-                    // Without animation: arriving on a screen already framed on
-                    // your cursor, not watching it travel there.
-                    proxy.scrollTo(vm.selected, anchor: .center)
-                }
+        return ScrollViewReader { proxy in
+            ScrollView([.horizontal, .vertical], showsIndicators: false) {
+                gridRows(side: side)
+                    .frame(width: total, height: total)
+                    .modifier(ShakeEffect(animatableData: CGFloat(shakeTick)))
+                    // Centered while zoomed out smaller than the viewport;
+                    // a plain ScrollView would pin it top-leading.
+                    .frame(
+                        width: max(total, size.width),
+                        height: max(total, size.height)
+                    )
+            }
+            .simultaneousGesture(magnify(fit: fit))
+            .onChange(of: vm.selected) { _, pos in
+                scrollTo(pos, proxy: proxy)
+            }
+            .onAppear {
+                if zoomSide == nil { zoomSide = max(fit, Self.comfortableSide) }
+                // Without animation: arriving on a screen already framed on
+                // your cursor, not watching it travel there.
+                proxy.scrollTo(vm.selected, anchor: .center)
             }
         }
     }

@@ -28,6 +28,7 @@ struct CrosswordGameView: View {
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
     @Environment(StoreService.self) private var store
 
     @AppStorage("remindersEnabled") private var remindersEnabled = false
@@ -123,72 +124,70 @@ struct CrosswordGameView: View {
 
     var body: some View {
         Group {
-            if horizontalSizeClass == .regular {
-                // iPad (and large-phone landscape): the clue list stops being a
-                // sheet and becomes a standing side panel — grid and keyboard on
-                // the left, every clue in view on the right, the way a paper
-                // crossword sits next to its clues.
+            if verticalSizeClass == .compact {
+                // Landscape on a phone. Height is the scarce dimension here —
+                // about 400pt, most of it spent on the top bar, clue bar and
+                // keypad — so `solveSurface` lays itself out side by side and
+                // gives the grid the full height. Checked before the regular
+                // branch on purpose: a large phone in landscape is regular
+                // width, and grid + keypad + a standing clue list is three
+                // columns in 950pt, which leaves the grid narrower than the
+                // keyboard. The clue list stays a toolbar sheet here.
+                solveSurface
+            } else if horizontalSizeClass == .regular {
+                // iPad: the clue list stops being a sheet and becomes a
+                // standing side panel — grid and keyboard on the left, every
+                // clue in view on the right, the way a paper crossword sits
+                // next to its clues.
                 HStack(spacing: 0) {
-                    solveColumn
+                    solveSurface
                     Divider().ignoresSafeArea(edges: .bottom)
                     ClueListView(vm: vm, embedded: true)
                         .frame(width: 340)
                 }
             } else {
-                solveColumn
+                solveSurface
             }
         }
         .background(Theme.background)
     }
 
-    /// The solving surface: challenge chip, grid, clue bar and keyboard. The
-    /// whole screen in compact width; the left column beside the clue panel in
-    /// regular width.
-    private var solveColumn: some View {
-        VStack(spacing: 0) {
-            if let challenge = incomingChallenge {
-                ChallengeTargetChip(name: challenge.challengerName, seconds: challenge.seconds)
-                    .padding(.top, Theme.Spacing.xs)
-            }
+    /// How much width the clue bar and keypad take when they move beside the
+    /// grid. Ten key columns plus their gutters: under this the keys are
+    /// narrower than a fingertip, and much over it the grid starts paying for
+    /// keys that were already big enough.
+    private static let landscapeKeypadWidth: CGFloat = 400
 
-            if showHintLimitNote {
-                hintLimitNote
-                    .padding(.top, Theme.Spacing.xs)
-                    .transition(.move(edge: .top).combined(with: .opacity))
-                    .task(id: hintLimitHits) {
-                        try? await Task.sleep(for: .seconds(10))
-                        withAnimation(.snappy) { showHintLimitNote = false }
+    /// The solving surface: notes, grid, clue bar and keyboard. Stacked in
+    /// portrait and on iPad (where it is the left column beside the clue
+    /// panel); side by side in landscape on a phone.
+    private var solveSurface: some View {
+        Group {
+            if verticalSizeClass == .compact {
+                HStack(spacing: 0) {
+                    gridArea
+                    Divider()
+                    VStack(spacing: 0) {
+                        // The notes ride at the top of this column rather than
+                        // over the grid: in landscape a banner above the board
+                        // is height the board cannot spare, and a stall nudge
+                        // that resizes every cell arrives exactly when the
+                        // player is already stuck.
+                        solveNotes
+                        Spacer(minLength: 0)
+                        clueBar
+                        keypad
                     }
+                    .frame(width: Self.landscapeKeypadWidth)
+                }
+            } else {
+                VStack(spacing: 0) {
+                    solveNotes
+                    gridArea
+                    clueBar
+                    keypad
+                }
             }
-
-            if showStarterGiftNote {
-                Label("Your first word is filled in — you take it from here!", systemImage: "gift.fill")
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(Theme.accent)
-                    .padding(.horizontal, Theme.Spacing.m)
-                    .padding(.vertical, Theme.Spacing.xs)
-                    .background(Theme.accent.opacity(0.12), in: .capsule)
-                    .padding(.top, Theme.Spacing.xs)
-                    .transition(.move(edge: .top).combined(with: .opacity))
-                    .task {
-                        try? await Task.sleep(for: .seconds(8))
-                        withAnimation(.snappy) { showStarterGiftNote = false }
-                    }
-            }
-
-            CrosswordGridView(vm: vm)
-                .padding(Theme.Spacing.m)
-                .frame(maxHeight: .infinity)
-
-            ClueBarView(vm: vm, onStallTap: runStallAction, onVerseTap: useVerseHint)
-
-            LetterKeyboardView(
-                isPencilMode: vm.isPencilMode,
-                onLetter: { vm.enter($0) },
-                onDelete: { vm.delete() },
-                onTogglePencil: { vm.isPencilMode.toggle() }
-            )
-            .background(Color(.systemBackground))
         }
         .background(Theme.background)
         .background(
@@ -422,6 +421,65 @@ struct CrosswordGameView: View {
             saveProgress()
             logAbandonIfNeeded()
         }
+    }
+
+    // MARK: - The surface's pieces, arranged by `solveSurface`
+
+    /// Transient banners: the challenge target, the hint-limit note, the
+    /// starter-word gift. Each retires itself on a timer.
+    @ViewBuilder
+    private var solveNotes: some View {
+        if let challenge = incomingChallenge {
+            ChallengeTargetChip(name: challenge.challengerName, seconds: challenge.seconds)
+                .padding(.top, Theme.Spacing.xs)
+        }
+
+        if showHintLimitNote {
+            hintLimitNote
+                .padding(.top, Theme.Spacing.xs)
+                .transition(.move(edge: .top).combined(with: .opacity))
+                .task(id: hintLimitHits) {
+                    try? await Task.sleep(for: .seconds(10))
+                    withAnimation(.snappy) { showHintLimitNote = false }
+                }
+        }
+
+        if showStarterGiftNote {
+            Label("Your first word is filled in — you take it from here!", systemImage: "gift.fill")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(Theme.accent)
+                .padding(.horizontal, Theme.Spacing.m)
+                .padding(.vertical, Theme.Spacing.xs)
+                .background(Theme.accent.opacity(0.12), in: .capsule)
+                .padding(.top, Theme.Spacing.xs)
+                .transition(.move(edge: .top).combined(with: .opacity))
+                .task {
+                    try? await Task.sleep(for: .seconds(8))
+                    withAnimation(.snappy) { showStarterGiftNote = false }
+                }
+        }
+    }
+
+    /// Takes every point the arrangement can spare in both directions; the grid
+    /// decides for itself whether that is enough to show the whole board.
+    private var gridArea: some View {
+        CrosswordGridView(vm: vm)
+            .padding(Theme.Spacing.m)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    private var clueBar: some View {
+        ClueBarView(vm: vm, onStallTap: runStallAction, onVerseTap: useVerseHint)
+    }
+
+    private var keypad: some View {
+        LetterKeyboardView(
+            isPencilMode: vm.isPencilMode,
+            onLetter: { vm.enter($0) },
+            onDelete: { vm.delete() },
+            onTogglePencil: { vm.isPencilMode.toggle() }
+        )
+        .background(Color(.systemBackground))
     }
 
     // MARK: - Toolbar

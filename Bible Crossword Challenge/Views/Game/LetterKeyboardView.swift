@@ -23,6 +23,14 @@ struct LetterKeyboardView: View {
     /// glyphs aren't clipped.
     @ScaledMetric(relativeTo: .title3) private var keyHeight: CGFloat = 46
 
+    /// The same ceiling the `dynamicTypeSize` cap in `body` puts on the glyphs,
+    /// applied by hand because that modifier can't reach this property:
+    /// `@ScaledMetric` resolves against the environment this view *receives*,
+    /// and the cap only governs the environment it *passes down*. Left uncapped
+    /// the keys went on growing under capped letters, and three rows of them
+    /// pushed the grid off the bottom of the screen.
+    private var cappedKeyHeight: CGFloat { min(keyHeight, 60) }
+
     private let rows = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"]
 
     var body: some View {
@@ -50,6 +58,12 @@ struct LetterKeyboardView: View {
         // keeps the view full-width so a call site's background still spans.
         .frame(maxWidth: 560)
         .frame(maxWidth: .infinity)
+        // Glyphs scale; columns can't. The pad is ten fixed columns across the
+        // screen's width, so past this size a letter is wider than the cap it
+        // sits in — Q and W overlapped and M was clipped — and three rows of
+        // grown keys pushed the grid off the screen entirely. Height still
+        // scales with `keyHeight`, up to the same cap.
+        .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
         .sensoryFeedback(.selection, trigger: lastKeyTick)
     }
 
@@ -60,7 +74,7 @@ struct LetterKeyboardView: View {
         } label: {
             Text(String(letter))
                 .font(.system(.title3, design: .rounded).weight(.semibold))
-                .frame(maxWidth: .infinity, minHeight: keyHeight)
+                .frame(maxWidth: .infinity, minHeight: cappedKeyHeight)
         }
         .buttonStyle(KeyButtonStyle())
         .accessibilityLabel(String(letter))
@@ -75,7 +89,7 @@ struct LetterKeyboardView: View {
         } label: {
             Image(systemName: isPencilMode ? "pencil.circle.fill" : "pencil")
                 .font(.title3)
-                .frame(maxWidth: .infinity, minHeight: keyHeight)
+                .frame(maxWidth: .infinity, minHeight: cappedKeyHeight)
                 .foregroundStyle(isPencilMode ? Theme.accent : .primary)
         }
         .buttonStyle(KeyButtonStyle())
@@ -92,7 +106,7 @@ struct LetterKeyboardView: View {
         } label: {
             Image(systemName: "delete.left")
                 .font(.title3)
-                .frame(maxWidth: .infinity, minHeight: keyHeight)
+                .frame(maxWidth: .infinity, minHeight: cappedKeyHeight)
         }
         .buttonStyle(KeyButtonStyle())
         .accessibilityLabel("Delete")
