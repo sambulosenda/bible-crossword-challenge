@@ -53,6 +53,9 @@ sealed class AnalyticsEvent(val name: String, val parameters: Map<String, Any?> 
             "puzzle_id" to puzzleID, "fill_percent" to fillPercent, "seconds" to seconds,
             "wall_seconds" to wallSeconds, "hints_used" to hintsUsed,
             "cell_taps" to cellTaps, "key_presses" to keyPresses,
+            // Derived here, not at the call site, so one definition governs
+            // every query on both platforms.
+            "bounce" to (cellTaps == 0 && keyPresses == 0 && wallSeconds < BOUNCE_WALL_SECONDS),
         ),
     )
 
@@ -256,6 +259,18 @@ sealed class AnalyticsEvent(val name: String, val parameters: Map<String, Any?> 
          */
         const val PLATFORM_KEY = "platform"
         const val PLATFORM = "android"
+
+        /**
+         * Wall-clock ceiling for a `bounce` on [PuzzleAbandoned]: an exit with
+         * no cell tap and no key press below this is someone who opened the
+         * screen and left, not someone who tried and gave up.
+         *
+         * Fifteen seconds is where the iOS data separates rather than a round
+         * number — of 152 zero-interaction exits in the 21 days to 2026-09-18,
+         * 136 were under 15s wall and the rest fall off a cliff. Mirrors iOS
+         * `AnalyticsEvent.bounceWallSeconds`; the two must not drift.
+         */
+        const val BOUNCE_WALL_SECONDS = 15
     }
 }
 

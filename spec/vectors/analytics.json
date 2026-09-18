@@ -81,6 +81,7 @@
       "expect" : {
         "name" : "puzzle_abandoned",
         "parameterKeys" : [
+          "bounce",
           "cell_taps",
           "fill_percent",
           "hints_used",

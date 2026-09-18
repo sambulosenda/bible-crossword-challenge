@@ -60,6 +60,24 @@ enum AnalyticsEvent {
     /// window, so a quit via app-kill from the background is not counted — the
     /// numbers are a floor, not a census.
     case puzzleAbandoned(puzzleID: String, fillPercent: Int, seconds: Int, wallSeconds: Int, hintsUsed: Int, cellTaps: Int, keyPresses: Int)
+
+    /// Wall-clock ceiling for a `bounce`: an exit with no cell tap and no key
+    /// press below this is someone who opened the screen and left, not someone
+    /// who tried and gave up.
+    ///
+    /// Fifteen seconds is where the data separates, not a round number. Of the
+    /// 152 zero-interaction exits in the 21 days to 2026-09-18, 136 were under
+    /// 15s wall (81 under 5s, 55 from 5–15s) and then it falls off a cliff:
+    /// 6 in 15–30s, 6 in 30–120s. The ones past the cliff average 36% fill —
+    /// a gifted grid someone actually considered — so they are real
+    /// abandonments and must stay in the rate.
+    ///
+    /// This matters because these exits are a third of `puzzle_abandoned` and
+    /// nothing could ever rescue them: the median is 2s active / 4s wall, and
+    /// the earliest stall nudge fires at 12s. Every abandonment number tuned
+    /// before this flag existed — nudge timings, gift thresholds — was fitted
+    /// against a metric a third of which was noise.
+    static let bounceWallSeconds = 15
     case hintUsed(type: String, cost: Int)
     /// A paid hint tapped with no quota left. Logged at the wall, not at the
     /// paywall: the inline notice that replaced the auto-opened sheet
@@ -506,6 +524,10 @@ enum AnalyticsEvent {
                 // `GameViewModel.cellTaps`.
                 "cell_taps": cellTaps,
                 "key_presses": keyPresses,
+                // Derived here rather than at the call site so one definition
+                // governs every query, insight and dashboard.
+                "bounce": cellTaps == 0 && keyPresses == 0
+                    && wallSeconds < Self.bounceWallSeconds,
             ]
         case .hintUsed(let type, let cost):
             return ["type": type, "cost": cost]
