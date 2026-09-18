@@ -222,7 +222,15 @@ struct CompletionView: View {
         // behind the "more" menu beside it (see `pinnedActions`).
         // The exit is a close button where a full-screen cover keeps it, not
         // a second line under the primary pill.
-        .overlay(alignment: .topLeading) {
+        //
+        // Trailing, matching every other ✕ in the app and the platform: a
+        // lone ✕ leading reads as Cancel or Back, which is what the top-left
+        // corner means in a two-button sheet. This does cost something — the
+        // game's own back button sits at the same leading spot this cover
+        // opens over, so the exit no longer lands under a hand that just used
+        // it. Consistency won: the player meets this screen far more often
+        // from the Today card than mid-game.
+        .overlay(alignment: .topTrailing) {
             Button {
                 onHome()
             } label: {
@@ -236,7 +244,7 @@ struct CompletionView: View {
                     .shadow(color: .black.opacity(0.10), radius: 8, y: 2)
             }
             .buttonStyle(.plain)
-            .padding(.leading, Theme.Spacing.m)
+            .padding(.trailing, Theme.Spacing.m)
             .padding(.top, Theme.Spacing.xs)
             .accessibilityLabel("Close")
             // An overlay sits after the scroll content in the tree; VoiceOver

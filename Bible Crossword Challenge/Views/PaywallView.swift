@@ -105,7 +105,9 @@ struct PaywallView: View {
             // also means the page above can grow later without re-checking.
             .safeAreaInset(edge: .bottom) { pinnedPurchaseBar }
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
+                // Trailing, like every other ✕ in the app. Leading is where a
+                // sheet's Cancel lives; this is a dismiss, not a cancel.
+                ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         exitReason = .close
                         dismiss()
