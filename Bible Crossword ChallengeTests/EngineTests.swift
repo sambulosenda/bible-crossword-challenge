@@ -726,8 +726,9 @@ struct EngineTests {
         vm.delete()
         #expect(vm.cell(at: GridPos(row: 0, col: 1)).entry == "A")
         // And it persists as a reveal (lowercase in the snapshot), so a
-        // relaunch restores the gift still locked.
-        #expect(vm.snapshot()["0,1"] == "a")
+        // relaunch restores the gift still locked — with the marker that keeps
+        // it separable from a hint the player asked for.
+        #expect(vm.snapshot()["0,1"] == "a" + GameViewModel.giftMarker)
     }
 
     // MARK: - Next-word selection after a solve
@@ -858,7 +859,32 @@ struct EngineTests {
         vm.select(GridPos(row: 0, col: 1))
         vm.enter("X")
         #expect(vm.cell(at: GridPos(row: 0, col: 1)).entry == "A")
-        #expect(vm.snapshot()["0,1"] == "a")
+        // Lowercase still carries the lock. The marker rides on top of it so a
+        // gift stays distinguishable from a hint the player actually asked for.
+        #expect(vm.snapshot()["0,1"] == "a" + GameViewModel.giftMarker)
+        #expect(vm.cell(at: GridPos(row: 0, col: 1)).isGift)
+    }
+
+    /// The gift marker has to survive a relaunch. A player who solves across two
+    /// sittings otherwise shares a grid reporting the free starter word as help
+    /// they asked for — and that is the learning-window cohort, the one whose
+    /// shares the result block exists to earn.
+    @Test func giftAndHintStaySeparateAcrossASnapshotRoundTrip() {
+        let vm = GameViewModel(puzzle: makePuzzle())
+        vm.giftStarterWord()          // CAT across the top
+        _ = vm.revealLetter()         // a real hint, in the crossing COD
+        #expect(vm.hintsUsed == 1)    // the gift itself stayed free
+
+        let resumed = GameViewModel(puzzle: makePuzzle())
+        resumed.restore(vm.snapshot())
+
+        let gifted = resumed.cell(at: GridPos(row: 0, col: 1))
+        #expect(gifted.isGift)
+        #expect(gifted.isRevealed)
+
+        let hinted = resumed.cell(at: GridPos(row: 1, col: 0))
+        #expect(hinted.isRevealed)
+        #expect(!hinted.isGift)
     }
 
     /// Starts a paced gift and returns once it is provably mid-reveal.

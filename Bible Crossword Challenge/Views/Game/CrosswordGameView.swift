@@ -273,6 +273,8 @@ struct CrosswordGameView: View {
                 seconds: challengeReplaySeconds ?? vm.completionSeconds,
                 streak: profile.currentStreak,
                 newAchievements: newlyUnlocked,
+                resultGrid: ShareGrid.result(for: vm.grid),
+                hintsUsed: vm.hintsUsed,
                 earnedFreeze: earnedFreeze,
                 isComeback: isComeback,
                 totalCompleted: profile.totalPuzzlesCompleted,

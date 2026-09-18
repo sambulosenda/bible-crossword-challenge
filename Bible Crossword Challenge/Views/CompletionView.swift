@@ -16,6 +16,13 @@ struct CompletionView: View {
     let seconds: Int
     let streak: Int
     let newAchievements: [Achievement]
+    /// The solve, rendered for sharing. Built in `CrosswordGameView` where the
+    /// finished grid is in scope — this screen has no other use for cell state.
+    let resultGrid: ShareGrid.Render
+    /// Hints the player actually asked for. The starter gift is free by design
+    /// and never lands here, which is what lets the stat line say "no hints"
+    /// honestly for a player who was handed a foothold.
+    let hintsUsed: Int
     var earnedFreeze: Bool = false
     /// True when this solve restarted a streak that had broken. Only changes how
     /// the streak reads — a comeback deserves naming, not a second celebration
@@ -24,8 +31,6 @@ struct CompletionView: View {
     var totalCompleted: Int = 0
     let onHome: () -> Void
 
-    /// The rasterised scorecard, ready before the Share button can be reached.
-    @State private var shareUIImage: UIImage?
     /// Which entry point opened the paywall, carried *as* the sheet's item.
     ///
     /// This used to be a `Bool` plus a separate `paywallSource` string, set one
@@ -86,7 +91,6 @@ struct CompletionView: View {
     /// leaderboard button can say where the player sits instead of just that
     /// a board exists. Nil until it loads (or when it can't).
     @State private var weeklyRank: (rank: Int, total: Int)?
-    @Environment(\.displayScale) private var displayScale
     @Environment(\.openURL) private var openURL
     @Environment(\.gameCenter) private var gameCenter
     @Environment(\.requestReview) private var requestReview
@@ -123,10 +127,28 @@ struct CompletionView: View {
     /// mid-view.
     @State private var showReminderAsk = false
 
+    private var kindLabel: String {
+        switch puzzle.kind ?? .daily {
+        case .mini: return "Mini"
+        case .sunday: return "Sunday Special"
+        case .daily: return "Daily"
+        }
+    }
+
+    /// Time, help taken, streak — the three things two players can compare.
+    private var statLine: String {
+        let help = hintsUsed == 0
+            ? "no hints"
+            : "\(hintsUsed) hint\(hintsUsed == 1 ? "" : "s")"
+        return "\(TimeFormat.clock(seconds)) · \(help) · 🔥 \(streak)"
+    }
+
+    /// Plain text on purpose: the whole mechanic is that this can be pasted
+    /// into any thread. Nothing here is a link preview or an attachment.
     private var shareCaption: String {
-        var text = "I solved “\(puzzle.title)” in \(TimeFormat.clock(seconds)) — \(streak)-day streak 🔥"
-        let grid = ShareGrid.emoji(for: puzzle)
-        if !grid.isEmpty { text += "\n\n\(grid)" }
+        var text = "Bible Crossword · \(kindLabel) · “\(puzzle.title)”"
+        if !resultGrid.isEmpty { text += "\n\n\(resultGrid.text)" }
+        text += "\n\n\(statLine)"
         if let url = ShareConfig.storeURL(kind: "share_card") { text += "\n\n\(url.absoluteString)" }
         return text
     }
@@ -242,7 +264,6 @@ struct CompletionView: View {
                 }
         }
         .onAppear {
-            renderShareCard()
             maybeRequestReview()
             processIncomingChallenge()
             loadLastOpponent()
@@ -1329,13 +1350,19 @@ struct CompletionView: View {
         .buttonStyle(PillButtonStyle(emphasis: prominent ? .primary : .tonal))
     }
 
-    /// Builds the scorecard share and hands it to the sheet on `pinnedActions`.
+    /// Builds the result block and hands it to the sheet on `pinnedActions`.
     private func openShareCard() {
-        analytics.log(.shareOpened(kind: "share_card"))
-        var items: [Any] = []
-        if let shareUIImage { items.append(shareUIImage) }
-        items.append(shareCaption)
-        cardShare = CardShare(items: items)
+        analytics.log(.resultShareOpened(
+            puzzleID: puzzle.id,
+            puzzleKind: (puzzle.kind ?? .daily).rawValue,
+            hintsUsed: hintsUsed,
+            seconds: seconds,
+            gridCells: resultGrid.cells
+        ))
+        // Text only. An image alongside it makes Messages render a photo
+        // attachment and bury the block underneath — and the block, pasteable
+        // into any thread, is the thing worth sending.
+        cardShare = CardShare(items: [shareCaption])
     }
 
     private var shareLabel: some View {
@@ -1357,23 +1384,6 @@ struct CompletionView: View {
         var isBoard = false
     }
 
-    /// Rasterise the spoiler-free result card so it can be shared as an image.
-    /// `ImageRenderer.uiImage` is synchronous, so the image is ready before the
-    /// user can reach the Share button.
-    private func renderShareCard() {
-        let renderer = ImageRenderer(
-            content: ShareCardView(
-                title: puzzle.title,
-                seconds: seconds,
-                streak: streak,
-                verse: puzzle.verse,
-                reference: puzzle.reference,
-                grid: puzzle.grid
-            )
-        )
-        renderer.scale = displayScale
-        shareUIImage = renderer.uiImage
-    }
 }
 
 // MARK: - Scroll edge

@@ -86,6 +86,11 @@ final class GameViewModel {
     private(set) var hintsUsed: Int = 0
     private(set) var isComplete: Bool = false
 
+    /// Suffix appended to a gifted cell's snapshot value. Deliberately not a
+    /// letter: `restore` takes the letter from `value.uppercased().first`, so
+    /// anything alphabetic here would be read back as the entry itself.
+    static let giftMarker = "~"
+
     /// Immutable creation time — used only as the `TimelineView` cadence anchor.
     let startDate: Date
     private(set) var completionSeconds: Int = 0
@@ -729,6 +734,7 @@ final class GameViewModel {
         let pos = gift.slot.positions[gift.placed]
         grid[pos.row][pos.col].entry = Array(gift.slot.answer)[gift.placed]
         grid[pos.row][pos.col].isRevealed = true
+        grid[pos.row][pos.col].isGift = true
         pendingGift = (gift.slot, gift.placed + 1)
         return true
     }
@@ -1080,9 +1086,24 @@ final class GameViewModel {
                 if let entry = cell.entry {
                     // Lowercase marks a hint-revealed (locked) cell, so the lock
                     // survives relaunch without a record-schema change.
-                    out[cell.pos.storageKey] = cell.isRevealed
-                        ? String(entry).lowercased()
-                        : String(entry)
+                    //
+                    // A gift cell is a reveal the player never asked for, so it
+                    // carries `giftMarker` on top of the lowercase lock. Same
+                    // reasoning as the lock itself: a third state as a new
+                    // `PuzzleRecord` field would mean a CloudKit schema deploy,
+                    // and a missing `CD_` column is exactly what broke fleet
+                    // sync once already (`CD_pencilData`, 2026-08-29).
+                    //
+                    // `restore` reads `first` for the lock and `uppercased()`
+                    // for the letter, so the suffix is invisible to both, and
+                    // `PuzzleRecord.hasPlayerEntries` still sees no uppercase —
+                    // a gift is not player progress.
+                    guard cell.isRevealed else {
+                        out[cell.pos.storageKey] = String(entry)
+                        continue
+                    }
+                    let locked = String(entry).lowercased()
+                    out[cell.pos.storageKey] = cell.isGift ? locked + Self.giftMarker : locked
                 }
             }
         }
@@ -1123,6 +1144,7 @@ final class GameViewModel {
             guard r >= 0, r < size, c >= 0, c < size, !grid[r][c].isBlock else { continue }
             grid[r][c].entry = letter
             grid[r][c].isRevealed = raw.isLowercase
+            grid[r][c].isGift = value.hasSuffix(Self.giftMarker)
         }
         for (key, value) in pencil {
             let parts = key.split(separator: ",").compactMap { Int($0) }

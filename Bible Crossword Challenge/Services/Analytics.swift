@@ -298,6 +298,14 @@ enum AnalyticsEvent {
     /// is the tap; `shareCompleted` is the sheet closing, with whether a
     /// destination was actually picked.
     case shareOpened(kind: String)
+    /// The completion screen's result block, which carries enough about the
+    /// solve to segment sends: does a clean solve travel further than a hinted
+    /// one, and does the Mini (which renders 1:1) beat the downsampled Daily.
+    /// Logs as `share_opened` with the same `share_card` token, so the ASC
+    /// Campaigns series stays continuous across this change.
+    case resultShareOpened(
+        puzzleID: String, puzzleKind: String, hintsUsed: Int, seconds: Int, gridCells: Int
+    )
     case shareCompleted(kind: String, completed: Bool)
     // The chapter-a-day plan. `day` is 1-based within the book.
     case planStarted(plan: String)
@@ -398,7 +406,7 @@ enum AnalyticsEvent {
         case .readPuzzleChipsShown: return "read_puzzle_chips_shown"
         case .readPuzzleChipTapped: return "read_puzzle_chip_tapped"
         case .readSearch: return "read_search"
-        case .shareOpened: return "share_opened"
+        case .shareOpened, .resultShareOpened: return "share_opened"
         case .shareCompleted: return "share_completed"
         case .planStarted: return "plan_started"
         case .planChapterRead: return "plan_chapter_read"
@@ -579,6 +587,15 @@ enum AnalyticsEvent {
             return ["kind": kind, "results": results]
         case .shareOpened(let kind):
             return ["kind": kind]
+        case .resultShareOpened(let puzzleID, let puzzleKind, let hintsUsed, let seconds, let gridCells):
+            return [
+                "kind": "share_card",
+                "puzzle_id": puzzleID,
+                "puzzle_kind": puzzleKind,
+                "hints_used": hintsUsed,
+                "seconds": seconds,
+                "grid_cells": gridCells,
+            ]
         case .shareCompleted(let kind, let completed):
             return ["kind": kind, "completed": completed]
         case .planStarted(let plan):

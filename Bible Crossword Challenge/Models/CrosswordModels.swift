@@ -105,6 +105,11 @@ struct CellState: Hashable {
     let number: Int?
     var entry: Character?
     var isRevealed: Bool = false
+    /// A cell filled by the new-player starter gift rather than by a hint the
+    /// player asked for. Gift cells lock exactly like a reveal, so `isRevealed`
+    /// alone can't tell the two apart — and a shared result that paints the
+    /// gift as help-taken misreports the one cohort whose shares matter most.
+    var isGift: Bool = false
     /// A provisional (pencil) letter. Pencil entries never count toward word
     /// or puzzle completion — only committed pen letters do.
     var isPencil: Bool = false
