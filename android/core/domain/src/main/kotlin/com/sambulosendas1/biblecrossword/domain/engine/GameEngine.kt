@@ -3,6 +3,7 @@ package com.sambulosendas1.biblecrossword.domain.engine
 import com.sambulosendas1.biblecrossword.domain.content.ClueDirection
 import com.sambulosendas1.biblecrossword.domain.content.GridPos
 import com.sambulosendas1.biblecrossword.domain.content.Puzzle
+import com.sambulosendas1.biblecrossword.domain.progress.EntriesCodec
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
 import kotlin.math.abs
@@ -495,7 +496,7 @@ class GameEngine(
         val (slot, placed) = pendingGift ?: return false
         if (placed >= slot.positions.size) return false
         val pos = slot.positions[placed]
-        set(pos) { it.copy(entry = slot.answer[placed], isRevealed = true) }
+        set(pos) { it.copy(entry = slot.answer[placed], isRevealed = true, isGift = true) }
         pendingGift = slot to placed + 1
         return true
     }
@@ -709,13 +710,20 @@ class GameEngine(
 
     // MARK: - Resume snapshot
 
-    /** Committed (pen) letters only; lowercase marks a hint-revealed cell. */
+    /**
+     * Committed (pen) letters only; lowercase marks a hint-revealed cell, and
+     * a gifted one carries [EntriesCodec.GIFT_MARKER] on top of the lock.
+     */
     fun snapshot(): Map<String, String> {
         val out = LinkedHashMap<String, String>()
         for (row in grid) for (c in row) {
             if (c.isBlock || c.isPencil) continue
             val entry = c.entry ?: continue
-            out[c.pos.storageKey] = if (c.isRevealed) entry.toString().lowercase() else entry.toString()
+            out[c.pos.storageKey] = when {
+                !c.isRevealed -> entry.toString()
+                c.isGift -> entry.toString().lowercase() + EntriesCodec.GIFT_MARKER
+                else -> entry.toString().lowercase()
+            }
         }
         return out
     }
@@ -737,7 +745,13 @@ class GameEngine(
             val raw = value.firstOrNull() ?: continue
             val letter = value.uppercase().firstOrNull() ?: continue
             if (pos.row !in 0 until size || pos.col !in 0 until size || cell(pos).isBlock) continue
-            set(pos) { it.copy(entry = letter, isRevealed = raw.isLowerCase()) }
+            set(pos) {
+                it.copy(
+                    entry = letter,
+                    isRevealed = raw.isLowerCase(),
+                    isGift = EntriesCodec.isGift(value),
+                )
+            }
         }
         for ((key, value) in pencil) {
             val pos = GridPos.fromStorageKey(key) ?: continue

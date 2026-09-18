@@ -37,6 +37,13 @@ data class CellState(
     val number: Int?,
     val entry: Char? = null,
     val isRevealed: Boolean = false,
+    /**
+     * Filled by the new-player starter gift rather than by a hint the player
+     * asked for. Gift cells lock exactly like a reveal, so [isRevealed] alone
+     * cannot tell the two apart — and a shared result that reads the gift as
+     * help taken misreports the one cohort whose shares matter most.
+     */
+    val isGift: Boolean = false,
     /** A provisional (pencil) letter. Pencil never counts toward completion. */
     val isPencil: Boolean = false,
     /** Marked wrong by a one-shot check; cleared the moment the cell is edited. */

@@ -38,4 +38,22 @@ class EntriesCodecTest {
         assertThat(EntriesCodec.hasPlayerEntries(mapOf("0,0" to "w", "0,1" to "E"), emptyMap())).isTrue()
         assertThat(EntriesCodec.hasPlayerEntries(emptyMap(), mapOf("0,0" to "Z"))).isTrue()
     }
+
+    @Test
+    fun `the gift marker rides on the lock without disturbing it`() {
+        val gifted = "w" + EntriesCodec.GIFT_MARKER
+
+        // Still locked, still not player progress, still decodes to the letter.
+        assertThat(EntriesCodec.isLocked(gifted)).isTrue()
+        assertThat(EntriesCodec.isGift(gifted)).isTrue()
+        assertThat(EntriesCodec.hasPlayerEntries(mapOf("0,0" to gifted), emptyMap())).isFalse()
+        assertThat(gifted.uppercase().first()).isEqualTo('W')
+
+        // A hint the player asked for is locked but not gifted.
+        assertThat(EntriesCodec.isGift("w")).isFalse()
+        assertThat(EntriesCodec.isGift("W")).isFalse()
+
+        assertThat(EntriesCodec.decode(EntriesCodec.encode(mapOf("0,0" to gifted))))
+            .isEqualTo(mapOf("0,0" to gifted))
+    }
 }
