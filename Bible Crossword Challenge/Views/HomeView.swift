@@ -95,7 +95,13 @@ struct HomeView: View {
     /// discovery problem the badge exists to solve. Same reasoning that already
     /// put seasonal packs at the front.
     private var collectionPacks: [PuzzlePack] {
-        let available = puzzleProvider.availablePacks()
+        // Same shadowing rule as the Packs tab: a collection that ships as a
+        // Journey is not also a collection. Home carries a Journey card of its
+        // own, so without this the carousel offered "The Life of David" a few
+        // hundred points below the Journey promoting the same nine puzzles.
+        let available = PuzzlePack.notShadowedByQuests(
+            puzzleProvider.availablePacks(), quests: puzzleProvider.quests
+        )
         let seasonal = available.filter(\.isSeasonal)
         let rest = available.filter { !$0.isSeasonal }
         return seasonal + rest.filter { $0.isNew() } + rest.filter { !$0.isNew() }
@@ -943,11 +949,16 @@ private struct PackTile: View {
     var body: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.s) {
             HStack {
-                Image(systemName: pack.coverSymbol)
-                    .font(.title3)
-                    .foregroundStyle(pack.accent)
-                    .frame(width: coverSize, height: coverSize)
-                    .background(pack.accent.opacity(0.14), in: .rect(cornerRadius: 12, style: .continuous))
+                // Neutral while locked — colour means "you can open this" on
+                // every surface that lists a collection, not just the Packs tab.
+                CollectionCover(
+                    symbol: pack.coverSymbol,
+                    accent: pack.accent,
+                    isLocked: isLocked,
+                    side: coverSize,
+                    font: .title3,
+                    cornerRadius: 12
+                )
                 Spacer(minLength: 0)
                 if isLocked {
                     Image(systemName: "crown.fill")

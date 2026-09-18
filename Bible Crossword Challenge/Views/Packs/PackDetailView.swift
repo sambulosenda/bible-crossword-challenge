@@ -96,11 +96,16 @@ struct PackDetailView: View {
     private var header: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.m) {
             HStack(spacing: Theme.Spacing.m) {
-                Image(systemName: pack.coverSymbol)
-                    .font(.largeTitle)
-                    .foregroundStyle(pack.accent)
-                    .frame(width: 64, height: 64)
-                    .background(pack.accent.opacity(0.14), in: .rect(cornerRadius: 16, style: .continuous))
+                // Neutral while locked, like the row it was opened from:
+                // colour on these screens means "you can open this".
+                CollectionCover(
+                    symbol: pack.coverSymbol,
+                    accent: pack.accent,
+                    isLocked: isLocked,
+                    side: 64,
+                    font: .largeTitle,
+                    cornerRadius: 16
+                )
                 VStack(alignment: .leading, spacing: 2) {
                     Text(pack.title).font(.title2.weight(.bold))
                     Text(pack.blurb)

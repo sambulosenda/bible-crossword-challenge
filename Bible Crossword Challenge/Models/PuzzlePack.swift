@@ -354,6 +354,39 @@ extension PuzzlePack {
     }
 }
 
+// MARK: - Shadowing
+
+extension PuzzlePack {
+    /// `packs` with any collection a Journey already covers removed.
+    ///
+    /// A Journey and a pack can be the same collection under two names:
+    /// `life-of-david` and `parables-of-jesus` each ship as both, with the
+    /// same id, the same title and the same nine puzzles. On the Packs tab
+    /// that put one collection on screen twice — once under Journeys, again
+    /// under All Collections, both crowned — which reads as two things to buy
+    /// rather than one, and makes the catalogue look twice the size it is.
+    ///
+    /// The Journey wins. An ordered, paced run is the stronger daily-return
+    /// pitch (it is why the Journeys section sits first), and the pack is
+    /// still reachable everywhere else that links one directly.
+    ///
+    /// The match is exact and on content, not just id: the pack is dropped
+    /// only while it holds precisely the puzzles the Journey holds. Let the
+    /// two memberships diverge and the collection is genuinely a second thing
+    /// again, so it comes back on its own rather than staying hidden by a
+    /// rule nobody remembers writing.
+    static func notShadowedByQuests(_ packs: [PuzzlePack], quests: [QuestLine]) -> [PuzzlePack] {
+        let questContents = Dictionary(
+            quests.map { ($0.id, Set($0.puzzleIDs)) },
+            uniquingKeysWith: { first, _ in first }
+        )
+        return packs.filter { pack in
+            guard let steps = questContents[pack.id] else { return true }
+            return steps != Set(pack.puzzleIDs)
+        }
+    }
+}
+
 // MARK: - Progress
 
 /// Play-through progress for a pack, derived from the player's saved records.

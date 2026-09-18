@@ -75,11 +75,16 @@ struct QuestDetailView: View {
     private var header: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.m) {
             HStack(spacing: Theme.Spacing.m) {
-                Image(systemName: quest.coverSymbol)
-                    .font(.largeTitle)
-                    .foregroundStyle(quest.accent)
-                    .frame(width: 64, height: 64)
-                    .background(quest.accent.opacity(0.14), in: .rect(cornerRadius: 16, style: .continuous))
+                // Neutral while locked, like the row it was opened from:
+                // colour on these screens means "you can open this".
+                CollectionCover(
+                    symbol: quest.coverSymbol,
+                    accent: quest.accent,
+                    isLocked: isLocked,
+                    side: 64,
+                    font: .largeTitle,
+                    cornerRadius: 16
+                )
                 VStack(alignment: .leading, spacing: 2) {
                     Text(quest.title).font(.title2.weight(.bold))
                     Text(quest.blurb)
@@ -209,22 +214,38 @@ struct QuestDetailView: View {
 
     // MARK: - Locked
 
+    /// Deliberately the same shape as `PackDetailView.lockedState`. These two
+    /// screens are one tap apart from the same list, and they used to disagree
+    /// about everything: a default-tinted crown against a yellow one, a stock
+    /// `.borderedProminent` blue button against the app's ink pill, and no
+    /// statement of how much the Journey actually contains. Two house styles
+    /// for one lock, on the two screens that ask for money.
     private var lockedState: some View {
         VStack(spacing: Theme.Spacing.m) {
-            ContentUnavailableView(
-                "Premium Journey",
-                systemImage: "crown.fill",
-                description: Text("Unlock Premium to walk every Journey, a step a day.")
-            )
-            Button {
-                showPaywall = true
-            } label: {
-                Text("Unlock Premium")
-                    .frame(maxWidth: .infinity)
+            ContentUnavailableView {
+                Label("Premium Journey", systemImage: "crown.fill")
+                    .foregroundStyle(.yellow)
+            } description: {
+                Text(lockedDescription)
+            } actions: {
+                Button {
+                    showPaywall = true
+                } label: {
+                    Text("Unlock Premium")
+                }
+                .buttonStyle(.pillProminent)
+                .frame(maxWidth: 280)
             }
-            .buttonStyle(.borderedProminent)
-            .controlSize(.large)
         }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, Theme.Spacing.xl)
+    }
+
+    /// States the size of the Journey, the way the pack lock states the size
+    /// of the collection — the one concrete fact the screen already knows.
+    private var lockedDescription: String {
+        "Unlock \(quest.title) and every other Journey with Premium — "
+            + "\(quest.puzzleIDs.count) steps, one a day."
     }
 }
 
@@ -236,64 +257,89 @@ struct QuestCard: View {
     let progress: QuestProgress
     let isLocked: Bool
 
-    @ScaledMetric(relativeTo: .title) private var iconSize = 52
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @ScaledMetric(relativeTo: .title) private var iconSize = 44
+
+    private var isStacked: Bool { CollectionCardLayout.isStacked(dynamicTypeSize) }
 
     var body: some View {
-        HStack(spacing: Theme.Spacing.m) {
-            Image(systemName: quest.coverSymbol)
-                .font(.title2)
-                .foregroundStyle(quest.accent)
-                .frame(width: iconSize, height: iconSize)
-                .background(quest.accent.opacity(0.14), in: .rect(cornerRadius: 14, style: .continuous))
-            VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
-                HStack(spacing: Theme.Spacing.xs) {
-                    Text(quest.title)
-                        .font(.headline)
-                        .foregroundStyle(.primary)
-                    if isLocked {
-                        Image(systemName: "crown.fill")
-                            .font(.caption2)
-                            .foregroundStyle(.yellow)
+        Group {
+            if isStacked {
+                VStack(alignment: .leading, spacing: Theme.Spacing.m) {
+                    HStack(spacing: Theme.Spacing.m) {
+                        cover
+                        Spacer(minLength: 0)
+                        chevron
                     }
+                    details
                 }
-                Text(quest.blurb)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(2)
-                    .fixedSize(horizontal: false, vertical: true)
-                // Locked states size, not progress — same reasoning as
-                // `PackCard`: premium quests overlap the daily rotation.
-                if isLocked {
-                    Text("\(progress.total) steps, one a day")
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
-                        .monospacedDigit()
-                        .padding(.top, 2)
-                } else if progress.isComplete {
-                    Label("Complete", systemImage: "checkmark.seal.fill")
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(.green)
-                        .padding(.top, 2)
-                } else {
-                    ProgressView(value: progress.fraction)
-                        .tint(quest.accent)
-                        .padding(.top, 2)
-                    Text("Step \(min(progress.solved + 1, progress.total)) of \(progress.total)")
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
-                        .monospacedDigit()
+            } else {
+                HStack(spacing: Theme.Spacing.m) {
+                    cover
+                    details
+                    Spacer(minLength: 0)
+                    chevron
                 }
             }
-            Spacer(minLength: 0)
-            Image(systemName: "chevron.forward")
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(.secondary)
         }
         .padding(Theme.Spacing.l)
         .frame(maxWidth: .infinity, alignment: .leading)
         .elevatedCard()
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(accessibilityLabel)
+    }
+
+    private var cover: some View {
+        CollectionCover(
+            symbol: quest.coverSymbol,
+            accent: quest.accent,
+            isLocked: isLocked,
+            side: CollectionCardLayout.coverSize(iconSize)
+        )
+    }
+
+    private var chevron: some View {
+        Image(systemName: "chevron.forward")
+            .font(.subheadline.weight(.semibold))
+            .foregroundStyle(.secondary)
+    }
+
+    private var details: some View {
+        VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
+            CollectionCardLayout.title(quest.title, locked: isLocked)
+            Text(quest.blurb)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .lineLimit(CollectionCardLayout.blurbLineLimit(dynamicTypeSize))
+                .fixedSize(horizontal: false, vertical: true)
+            status
+        }
+    }
+
+    // Locked states size, not progress — same reasoning as
+    // `PackCard`: premium quests overlap the daily rotation.
+    @ViewBuilder
+    private var status: some View {
+        if isLocked {
+            Text("\(progress.total) steps, one a day")
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+                .monospacedDigit()
+                .padding(.top, 2)
+        } else if progress.isComplete {
+            Label("Complete", systemImage: "checkmark.seal.fill")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.green)
+                .padding(.top, 2)
+        } else {
+            ProgressView(value: progress.fraction)
+                .tint(quest.accent)
+                .padding(.top, 2)
+            Text(QuestProgress.stepLine(solved: progress.solved, total: progress.total))
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+                .monospacedDigit()
+        }
     }
 
     private var accessibilityLabel: String {
@@ -304,9 +350,17 @@ struct QuestCard: View {
         } else {
             parts.append(progress.isComplete
                 ? "Complete"
-                : "Step \(min(progress.solved + 1, progress.total)) of \(progress.total)")
+                : QuestProgress.stepLine(solved: progress.solved, total: progress.total))
         }
         return parts.joined(separator: ". ")
+    }
+}
+
+extension QuestProgress {
+    /// "Step 1 of 5" — shared by the row and the lead card so the same run
+    /// can't be described two ways on one screen.
+    static func stepLine(solved: Int, total: Int) -> String {
+        "Step \(min(solved + 1, total)) of \(total)"
     }
 }
 

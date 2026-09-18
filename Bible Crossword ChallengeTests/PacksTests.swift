@@ -435,6 +435,72 @@ struct NewPackBadgeTests {
     }
 }
 
+// MARK: - Quest shadowing
+
+struct PackQuestShadowingTests {
+
+    @Test func packCoveredByAQuestOfTheSamePuzzlesIsDropped() {
+        let pack = PuzzlePack.fixture(id: "life-of-david", puzzleIDs: ["a", "b", "c"])
+        let quest = QuestLine.fixture(id: "life-of-david", puzzleIDs: ["a", "b", "c"])
+        #expect(PuzzlePack.notShadowedByQuests([pack], quests: [quest]).isEmpty)
+    }
+
+    @Test func orderIsNotWhatMakesThemTheSameCollection() {
+        // A Journey is ordered and a pack is not, so the *sequence* differing
+        // is expected and must not count as different content.
+        let pack = PuzzlePack.fixture(id: "p", puzzleIDs: ["a", "b", "c"])
+        let quest = QuestLine.fixture(id: "p", puzzleIDs: ["c", "a", "b"])
+        #expect(PuzzlePack.notShadowedByQuests([pack], quests: [quest]).isEmpty)
+    }
+
+    @Test func divergedMembershipBringsThePackBack() {
+        let pack = PuzzlePack.fixture(id: "p", puzzleIDs: ["a", "b", "c", "d"])
+        let quest = QuestLine.fixture(id: "p", puzzleIDs: ["a", "b", "c"])
+        #expect(PuzzlePack.notShadowedByQuests([pack], quests: [quest]).map(\.id) == ["p"])
+    }
+
+    @Test func aSharedIdIsNotEnoughOnItsOwn() {
+        let pack = PuzzlePack.fixture(id: "p", puzzleIDs: ["a"])
+        let quest = QuestLine.fixture(id: "p", puzzleIDs: ["z"])
+        #expect(PuzzlePack.notShadowedByQuests([pack], quests: [quest]).map(\.id) == ["p"])
+    }
+
+    @Test func packsWithNoMatchingQuestAreUntouched() {
+        let packs = [
+            PuzzlePack.fixture(id: "first-steps", puzzleIDs: ["a"]),
+            PuzzlePack.fixture(id: "exodus", puzzleIDs: ["b"]),
+        ]
+        let quest = QuestLine.fixture(id: "beginnings", puzzleIDs: ["a"])
+        #expect(PuzzlePack.notShadowedByQuests(packs, quests: [quest]).map(\.id)
+                == ["first-steps", "exodus"])
+    }
+
+    @Test func orderOfTheSurvivingPacksIsPreserved() {
+        let packs = ["a", "b", "c"].map { PuzzlePack.fixture(id: $0, puzzleIDs: [$0]) }
+        let quest = QuestLine.fixture(id: "b", puzzleIDs: ["b"])
+        #expect(PuzzlePack.notShadowedByQuests(packs, quests: [quest]).map(\.id) == ["a", "c"])
+    }
+
+    /// The rule exists because of what is actually in the bundle today; if the
+    /// authored content stops overlapping, this test says so rather than the
+    /// screen quietly regaining a duplicate row.
+    @Test func theBundledPacksAndQuestsStillOverlapAsExpected() {
+        let provider = PuzzleProvider.shared
+        let shadowed = Set(provider.packs.map(\.id))
+            .subtracting(PuzzlePack.notShadowedByQuests(provider.packs, quests: provider.quests).map(\.id))
+        #expect(shadowed == ["life-of-david", "parables-of-jesus"])
+    }
+}
+
+private extension QuestLine {
+    static func fixture(id: String, puzzleIDs: [String]) -> QuestLine {
+        QuestLine(
+            id: id, title: id, blurb: "", coverSymbol: "star", accentHex: nil,
+            isPremium: false, puzzleIDs: puzzleIDs
+        )
+    }
+}
+
 private extension PuzzlePack {
     static let fixtureEvergreen = PuzzlePack.fixture(id: "e", puzzleIDs: ["x"])
 
