@@ -178,12 +178,13 @@ private struct ElevatedCard: ViewModifier {
     var cornerRadius: CGFloat
 
     func body(content: Content) -> some View {
-        // White card on warm paper, lifted by a whisper of shadow (YouVersion
-        // separates cards with soft elevation, not borders). The shadow is
-        // near-invisible in dark mode, where the lighter fill does the work.
+        // White card on warm paper, separated by the fill alone — the way
+        // the system's own grouped content sits flat on iOS 26, where the
+        // floating Liquid Glass bars are the one layer that lifts. A 5%
+        // shadow used to ride under every card; thirty of them side by side
+        // on a wide window read as haze.
         content
             .background(fill, in: .rect(cornerRadius: cornerRadius, style: .continuous))
-            .shadow(color: .black.opacity(0.05), radius: 10, y: 3)
     }
 }
 
