@@ -45,6 +45,11 @@ struct CrosswordGameView: View {
 
     @State private var vm: GameViewModel
     @State private var showClues = false
+    /// The window the game actually has, read off the view itself. Size classes
+    /// alone misjudge the foldable: iPhone Duo unfolded in landscape reports
+    /// regular/regular — an iPad's classes — in 678×466pt, about half an iPad's
+    /// height, so the layout decisions below check the size too.
+    @State private var containerSize: CGSize = .zero
     @State private var showCompletion = false
     @State private var showPaywall = false
     /// The hint wall, inline. Tapping a paid hint with no quota left used to
@@ -125,17 +130,19 @@ struct CrosswordGameView: View {
 
     var body: some View {
         Group {
-            if verticalSizeClass == .compact {
-                // Landscape on a phone. Height is the scarce dimension here —
+            switch solveLayout {
+            case .sideBySide:
+                // A short, wide window: a phone in landscape, or the Duo
+                // unfolded and turned. Height is the scarce dimension here —
                 // about 400pt, most of it spent on the top bar, clue bar and
                 // keypad — so `solveSurface` lays itself out side by side and
-                // gives the grid the full height. Checked before the regular
-                // branch on purpose: a large phone in landscape is regular
+                // gives the grid the full height. Decided before the clue
+                // panel on purpose: a large phone in landscape is regular
                 // width, and grid + keypad + a standing clue list is three
                 // columns in 950pt, which leaves the grid narrower than the
                 // keyboard. The clue list stays a toolbar sheet here.
                 solveSurface
-            } else if horizontalSizeClass == .regular {
+            case .withCluePanel:
                 // iPad: the clue list stops being a sheet and becomes a
                 // standing side panel — grid and keyboard on the left, every
                 // clue in view on the right, the way a paper crossword sits
@@ -144,13 +151,56 @@ struct CrosswordGameView: View {
                     solveSurface
                     Divider().ignoresSafeArea(edges: .bottom)
                     ClueListView(vm: vm, embedded: true)
-                        .frame(width: 340)
+                        .frame(width: Self.cluePanelWidth)
                 }
-            } else {
+            case .stacked:
                 solveSurface
             }
         }
         .background(Theme.background)
+        .onGeometryChange(for: CGSize.self) { proxy in
+            proxy.size
+        } action: { size in
+            containerSize = size
+        }
+    }
+
+    private enum SolveLayout {
+        /// Notes, grid, clue bar and keypad in one column. Phones in portrait.
+        case stacked
+        /// Grid beside a column of clue bar and keypad. Short, wide windows.
+        case sideBySide
+        /// `stacked` beside a standing clue list. Windows wide enough for both.
+        case withCluePanel
+    }
+
+    /// Width of the standing clue list in `withCluePanel`.
+    private static let cluePanelWidth: CGFloat = 340
+
+    /// Under this height a wide window goes side by side even when its size
+    /// classes say otherwise. The Duo unfolded in landscape is 466pt tall;
+    /// the shortest iPad in landscape is 744pt.
+    private static let shortHeight: CGFloat = 520
+
+    /// Which arrangement the window gets. Size classes first, then the
+    /// measured size where the classes alone would pick wrong: a regular/
+    /// regular window that is too short for a stacked column (the Duo
+    /// unfolded in landscape) goes side by side, and one too narrow to seat a
+    /// legible keypad beside the clue panel (the Duo unfolded in portrait, at
+    /// 466pt) keeps the clue list as a sheet. Before the first measurement the
+    /// classes decide on their own.
+    private var solveLayout: SolveLayout {
+        let size = containerSize
+        let measured = size != .zero
+        if verticalSizeClass == .compact
+            || (measured && size.width > size.height && size.height < Self.shortHeight) {
+            return .sideBySide
+        }
+        if horizontalSizeClass == .regular
+            && (!measured || size.width - Self.cluePanelWidth >= Self.landscapeKeypadWidth) {
+            return .withCluePanel
+        }
+        return .stacked
     }
 
     /// How much width the clue bar and keypad take when they move beside the
@@ -164,7 +214,7 @@ struct CrosswordGameView: View {
     /// panel); side by side in landscape on a phone.
     private var solveSurface: some View {
         Group {
-            if verticalSizeClass == .compact {
+            if solveLayout == .sideBySide {
                 HStack(spacing: 0) {
                     gridArea
                     Divider()
@@ -591,9 +641,9 @@ struct CrosswordGameView: View {
             }
             .accessibilityLabel("Hints and check answers")
         }
-        // In regular width the clue list is a standing side panel, so a button
-        // that opens it as a sheet would be a second copy of what's on screen.
-        if horizontalSizeClass != .regular {
+        // With the clue list standing as a side panel, a button that opens it
+        // as a sheet would be a second copy of what's on screen.
+        if solveLayout != .withCluePanel {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
                     showClues = true
