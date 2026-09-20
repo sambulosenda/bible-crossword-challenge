@@ -30,7 +30,10 @@ struct ReaderModal: View {
             )
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Close") { dismiss() }
+                    // A symbol, not the word: a title-only item can't go on
+                    // iPhone Duo's side rail, and would hold a horizontal bar
+                    // open across the cover for itself.
+                    Button { dismiss() } label: { Label("Close", systemImage: "xmark") }
                 }
             }
         }
