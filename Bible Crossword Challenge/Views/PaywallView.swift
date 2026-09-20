@@ -103,7 +103,7 @@ struct PaywallView: View {
             // further down; on a 667pt screen it had fallen below the fold,
             // which means scrolling to find the primary action. Anchoring it
             // also means the page above can grow later without re-checking.
-            .safeAreaInset(edge: .bottom) { pinnedPurchaseBar }
+            .modifier(PinnedBar { pinnedPurchaseBar })
             .toolbar {
                 // Trailing, like every other ✕ in the app. Leading is where a
                 // sheet's Cancel lives; this is a dismiss, not a cancel.
@@ -122,11 +122,7 @@ struct PaywallView: View {
                 // so a second copy was only competing with the close button for
                 // the top of the screen.
             }
-            // Opaque, and in the page's own colour: the bar is transparent by
-            // default, which put the serif hero underneath the close button as
-            // soon as the content scrolled.
-            .toolbarBackground(.visible, for: .navigationBar)
-            .toolbarBackground(Theme.background, for: .navigationBar)
+            .modifier(LegacyOpaqueNavigationBar())
         }
         .onAppear {
             // Every presentation logs exactly once, whatever the entry point.
@@ -227,16 +223,7 @@ struct PaywallView: View {
         .padding(.horizontal, Theme.Spacing.l)
         .padding(.top, Theme.Spacing.m)
         .padding(.bottom, Theme.Spacing.s)
-        // The fill matches the canvas, so the bar reads continuous with
-        // the page below it without needing to bleed into the safe area.
-        .background(Theme.background)
-        .overlay(alignment: .top) {
-            // A hairline, because content scrolls underneath and the
-            // bar needs an edge to read as a separate layer.
-            Rectangle()
-                .fill(Color.primary.opacity(0.08))
-                .frame(height: 1)
-        }
+        .modifier(LegacyBarEdge())
     }
 
     private var purchaseSection: some View {
@@ -500,4 +487,57 @@ struct PremiumBenefit: Identifiable {
 enum LegalLinks {
     static let terms = URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!
     static let privacy = URL(string: "https://biblecrosswordchallenge.com/privacy.html")!
+}
+
+// MARK: - Bars, by system
+
+/// The purchase bar as a system bar on iOS 26, where the scroll edge effect
+/// blurs the page under it the way it does under a toolbar; a plain inset
+/// before that, with its own fill and hairline (see `LegacyBarEdge`).
+private struct PinnedBar<Bar: View>: ViewModifier {
+    @ViewBuilder let bar: () -> Bar
+
+    func body(content: Content) -> some View {
+        if #available(iOS 26.0, *) {
+            content.safeAreaBar(edge: .bottom) { bar() }
+        } else {
+            content.safeAreaInset(edge: .bottom) { bar() }
+        }
+    }
+}
+
+/// Before iOS 26 the bar needs its own edge: the fill matches the canvas so
+/// it reads continuous with the page, and a hairline separates it from the
+/// content scrolling underneath. On 26 the system draws that edge.
+private struct LegacyBarEdge: ViewModifier {
+    func body(content: Content) -> some View {
+        if #available(iOS 26.0, *) {
+            content
+        } else {
+            content
+                .background(Theme.background)
+                .overlay(alignment: .top) {
+                    Rectangle()
+                        .fill(Color.primary.opacity(0.08))
+                        .frame(height: 1)
+                }
+        }
+    }
+}
+
+/// Before iOS 26 the navigation bar is transparent by default, which put the
+/// serif hero underneath the close button as soon as the content scrolled;
+/// an opaque bar in the page's own colour fixed it. On 26 the scroll edge
+/// effect does that job, and a custom bar background would paint over it —
+/// and over the side rail on iPhone Duo.
+private struct LegacyOpaqueNavigationBar: ViewModifier {
+    func body(content: Content) -> some View {
+        if #available(iOS 26.0, *) {
+            content
+        } else {
+            content
+                .toolbarBackground(.visible, for: .navigationBar)
+                .toolbarBackground(Theme.background, for: .navigationBar)
+        }
+    }
 }
