@@ -121,12 +121,11 @@ struct ChapterReaderView: View {
                     Button { fontSize = max(fontSize - 2, 14) } label: { Label("Smaller text", systemImage: "textformat.size.smaller") }
                         .disabled(fontSize <= 14)
                 } label: {
-                    Image(systemName: "textformat.size")
+                    Label("Text size", systemImage: "textformat.size")
                 }
             }
             ToolbarItem(placement: .topBarTrailing) {
-                Button { showJump = true } label: { Image(systemName: "list.bullet") }
-                    .accessibilityLabel("Jump to book or chapter")
+                Button { showJump = true } label: { Label("Jump to book or chapter", systemImage: "list.bullet") }
             }
         }
         .task {

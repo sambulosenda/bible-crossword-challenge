@@ -160,10 +160,28 @@ struct CompletionView: View {
         let items: [Any]
     }
     @State private var cardShare: CardShare?
+    /// Whether the bars are a side rail. The bar's primary actions keep
+    /// their words on a phone, which takes a custom view — a bottom bar
+    /// reduces a Label to its glyph — and a rail can't carry a custom view,
+    /// so they become Labels there. See `barLabel`.
+    @State private var barsVertical = false
 
     var body: some View {
+        // A navigation stack for its bars alone. The close button and the
+        // action bar are toolbar items, so the system owns where they go —
+        // top and bottom on a phone, the side rail on iPhone Duo — along
+        // with the scroll edges under them.
+        NavigationStack {
+            content
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar { toolbarContent }
+                .observeVerticalBars($barsVertical)
+        }
+    }
+
+    private var content: some View {
         // Short content (the common case now: header, scorecard, verse)
-        // centres between the top and the pinned bar instead of leaving
+        // centres between the top and the bottom bar instead of leaving
         // the bottom third empty; taller content scrolls as before.
         GeometryReader { viewport in
             ScrollView {
@@ -217,59 +235,12 @@ struct CompletionView: View {
             }
         }
         .background(Theme.background)
-        .softTopScrollEdge()
-        // HIG: a pinned bottom bar carries one primary action; the rest sits
-        // behind the "more" menu beside it (see `pinnedActions`).
-        // The exit is a close button where a full-screen cover keeps it, not
-        // a second line under the primary pill.
-        //
-        // Trailing, matching every other ✕ in the app and the platform: a
-        // lone ✕ leading reads as Cancel or Back, which is what the top-left
-        // corner means in a two-button sheet. This does cost something — the
-        // game's own back button sits at the same leading spot this cover
-        // opens over, so the exit no longer lands under a hand that just used
-        // it. Consistency won: the player meets this screen far more often
-        // from the Today card than mid-game.
-        .overlay(alignment: .topTrailing) {
-            Button {
-                onHome()
-            } label: {
-                Image(systemName: "xmark")
-                    .font(.body.weight(.semibold))
-                    .foregroundStyle(.primary)
-                    .frame(width: 44, height: 44)
-                    .background(Theme.surface, in: .circle)
-                    // Floats over scrolled content, so it needs the lift a
-                    // resting card doesn't.
-                    .shadow(color: .black.opacity(0.10), radius: 8, y: 2)
+        // One presenter for every Share entry in the bar — the pill, the icon,
+        // and the menu item — so none of them has to own the sheet.
+        .sheet(item: $cardShare) { share in
+            ShareSheet(items: share.items) { completed in
+                analytics.log(.shareCompleted(kind: "share_card", completed: completed))
             }
-            .buttonStyle(.plain)
-            .padding(.trailing, Theme.Spacing.m)
-            .padding(.top, Theme.Spacing.xs)
-            .accessibilityLabel("Close")
-            // An overlay sits after the scroll content in the tree; VoiceOver
-            // should reach the exit first, as it would on a system sheet.
-            .accessibilitySortPriority(1)
-        }
-        // Content fades under the bar rather than being cut by a rule.
-        .safeAreaInset(edge: .bottom) {
-            pinnedActions
-                .padding(.horizontal, Theme.Spacing.l)
-                .padding(.vertical, Theme.Spacing.s)
-                .frame(maxWidth: 520)
-                .frame(maxWidth: .infinity)
-                .background {
-                    Theme.background
-                        .overlay(alignment: .top) {
-                            LinearGradient(
-                                colors: [Theme.background.opacity(0), Theme.background],
-                                startPoint: .top, endPoint: .bottom
-                            )
-                            .frame(height: Theme.Spacing.l)
-                            .offset(y: -Theme.Spacing.l)
-                        }
-                        .ignoresSafeArea()
-                }
         }
         .onAppear {
             maybeRequestReview()
@@ -1216,26 +1187,30 @@ struct CompletionView: View {
         analytics.log(.reminderAskShown(source: ReminderAsk.Surface.completion.rawValue))
     }
 
-    /// The pinned bar: one primary action, a share icon, and a "more" menu.
+    /// The bar: one primary action, Share beside it when it isn't the
+    /// primary, and everything else social in the system overflow menu.
+    /// Separate items rather than one HStack, because the system can only
+    /// carry an item it can name — an icon on a side rail, icon and title in
+    /// the overflow — and never a custom view.
     ///
-    /// A Mini solved with today's daily still open makes the chain the primary
-    /// (the next solve is worth more than anything social). Otherwise the
-    /// challenge leads with Share beside it as an icon: the invite opens the
-    /// exact puzzle for the friend, carries a streak-freeze reward, and is the
-    /// one action on this screen that brings a new player in. Family board
-    /// and leaderboard stay in the menu.
-    ///
-    /// The challenge lived in that menu until 2026-09-07. Before that it was a
-    /// card, a pill and a button in the scroll — 60 days to 2026-09-02: 8
-    /// senders, everyone else scrolled past — and it was demoted on that read.
-    /// But every link sent in that window was also dropped on arrival by a
-    /// scheme guard in `RootView.handleDeepLink`, so the read measured a loop
-    /// with no receiving end. With the link fixed and a clipboard handoff for
-    /// fresh installs, the send earns the primary slot. Readout: senders per
-    /// completer against the old 3.6%, and `challenge_opened` finally above 0.
-    private var pinnedActions: some View {
-        HStack(spacing: Theme.Spacing.s) {
-            if let chainTarget {
+    /// The exit is trailing, matching every other ✕ in the app and the
+    /// platform: a lone ✕ leading reads as Cancel or Back, which is what the
+    /// top-left corner means in a two-button sheet. This does cost something —
+    /// the game's own back button sits at the leading spot this cover opens
+    /// over, so the exit no longer lands under a hand that just used it.
+    /// Consistency won: the player meets this screen far more often from the
+    /// Today card than mid-game.
+    @ToolbarContentBuilder
+    private var toolbarContent: some ToolbarContent {
+        ToolbarItem(placement: .topBarTrailing) {
+            Button {
+                onHome()
+            } label: {
+                Label("Close", systemImage: "xmark")
+            }
+        }
+        if let chainTarget {
+            ToolbarItem(placement: .bottomBar) {
                 Button {
                     analytics.log(.completionChainTapped(
                         fromPuzzleID: puzzle.id, toPuzzleID: chainTarget.id
@@ -1245,120 +1220,137 @@ struct CompletionView: View {
                         onHome()
                     }
                 } label: {
-                    Label("Play Today's Full Puzzle", systemImage: "play.fill")
-                        .frame(maxWidth: .infinity)
+                    barLabel("Play Today's Full Puzzle", systemImage: "play.fill")
                 }
-                .buttonStyle(.pillProminent)
+                .buttonStyle(.borderedProminent)
                 .accessibilityHint("Closes this screen and opens today's full-size puzzle")
-            } else if challenge == nil {
+            }
+        } else if challenge == nil {
+            ToolbarItem(placement: .bottomBar) {
                 challengeButton
-                shareIconButton
-            } else {
-                // A challenge arrived for this puzzle: the result card already
-                // offers "Send Result Back", so Share leads and nothing doubles.
+            }
+            ToolbarItem(placement: .bottomBar) {
+                shareButton(prominent: false)
+            }
+        } else {
+            // A challenge arrived for this puzzle: the result card already
+            // offers "Send Result Back", so Share leads and nothing doubles.
+            ToolbarItem(placement: .bottomBar) {
                 shareButton(prominent: true)
             }
-
-            moreMenu
         }
-        // One presenter for every Share entry in the bar — the pill, the icon,
-        // and the menu item — so none of them has to own the sheet.
-        .sheet(item: $cardShare) { share in
-            ShareSheet(items: share.items) { completed in
-                analytics.log(.shareCompleted(kind: "share_card", completed: completed))
+        if hasOverflowActions {
+            if #available(iOS 27.0, *) {
+                ToolbarOverflowMenu {
+                    overflowActions
+                }
+            } else {
+                ToolbarItem(placement: .bottomBar) {
+                    Menu {
+                        overflowActions
+                    } label: {
+                        Label("More", systemImage: "ellipsis")
+                    }
+                }
             }
         }
     }
 
-    /// The invite, pinned. Same action and name prompt as the menu item had.
+    /// The invite, in the bar. Same action and name prompt as the menu item had.
     private var challengeButton: some View {
         Button {
             sendChallenge(rematch: lastOpponent != nil)
         } label: {
-            Label(challengeTitle, systemImage: "flag.checkered")
-                .lineLimit(1)
-                .minimumScaleFactor(0.8)
-                .frame(maxWidth: .infinity)
+            barLabel(challengeTitle, systemImage: "flag.checkered")
         }
-        .buttonStyle(.pillProminent)
+        .buttonStyle(.borderedProminent)
         .accessibilityHint("Shares this puzzle and your time with a friend")
     }
 
-    /// Share as a 52pt circle, for the row where the challenge holds the pill.
-    private var shareIconButton: some View {
-        Button {
-            openShareCard()
-        } label: {
-            Image(systemName: "square.and.arrow.up")
-                .font(.body.weight(.semibold))
-                .foregroundStyle(.primary)
-                .frame(width: 52, height: 52)
-                .background(Color.primary.opacity(0.08), in: .circle)
-                .contentShape(.circle)
+    /// A bar primary's label: icon and words on a phone, where a bottom bar
+    /// would reduce a Label to its glyph; a Label on a side rail, which draws
+    /// the icon and can't take a custom view at all.
+    @ViewBuilder
+    private func barLabel(_ title: String, systemImage: String) -> some View {
+        if barsVertical {
+            Label(title, systemImage: systemImage)
+        } else {
+            HStack(spacing: 6) {
+                Image(systemName: systemImage)
+                Text(title)
+            }
+            .font(.body.weight(.semibold))
         }
-        .buttonStyle(.plain)
-        .accessibilityLabel("Share")
+    }
+
+    /// Whether the overflow menu has anything in it — an empty ellipsis is
+    /// a button that does nothing.
+    private var hasOverflowActions: Bool {
+        chainTarget != nil
+            || (challenge == nil && chainTarget != nil)
+            || board == nil
+            || (puzzle.isMini && gameCenter.isAuthenticated)
     }
 
     /// Everything social that isn't the primary: same actions, same name
     /// prompt and share sheets, same events, one tap further away.
-    private var moreMenu: some View {
-        Menu {
-            // When the chain owns the primary slot, Share and the challenge
-            // step in here; otherwise both are in the bar already. A challenge
-            // that arrived for this puzzle offers "Send Result Back" in the
-            // result card — don't double up.
-            if chainTarget != nil {
-                shareButton(prominent: false)
+    @ViewBuilder
+    private var overflowActions: some View {
+        // When the chain owns the primary slot, Share and the challenge
+        // step in here; otherwise both are in the bar already. A challenge
+        // that arrived for this puzzle offers "Send Result Back" in the
+        // result card — don't double up.
+        if chainTarget != nil {
+            Button {
+                openShareCard()
+            } label: {
+                shareLabel
             }
-            if challenge == nil && chainTarget != nil {
-                Button {
-                    sendChallenge(rematch: lastOpponent != nil)
-                } label: {
-                    Label(challengeTitle, systemImage: "flag.checkered")
-                }
-            }
-            if board == nil {
-                Button {
-                    startBoard()
-                } label: {
-                    Label("Start a Family Board", systemImage: "person.3")
-                }
-            }
-            if puzzle.isMini && gameCenter.isAuthenticated {
-                Button {
-                    gameCenter.showWeeklyMiniLeaderboard()
-                } label: {
-                    Label(weeklyRankTitle, systemImage: "trophy")
-                }
-            }
-        } label: {
-            Image(systemName: "ellipsis")
-                .font(.body.weight(.semibold))
-                .foregroundStyle(.primary)
-                .frame(width: 52, height: 52)
-                .background(Color.primary.opacity(0.08), in: .circle)
-                .contentShape(.circle)
         }
-        // A Menu label takes the accent tint; the glyph should read as ink.
-        .buttonStyle(.plain)
-        .accessibilityLabel("More")
-        .accessibilityHint("Challenge a friend, start a family board, or see the leaderboard")
+        if challenge == nil && chainTarget != nil {
+            Button {
+                sendChallenge(rematch: lastOpponent != nil)
+            } label: {
+                Label(challengeTitle, systemImage: "flag.checkered")
+            }
+        }
+        if board == nil {
+            Button {
+                startBoard()
+            } label: {
+                Label("Start a Family Board", systemImage: "person.3")
+            }
+        }
+        if puzzle.isMini && gameCenter.isAuthenticated {
+            Button {
+                gameCenter.showWeeklyMiniLeaderboard()
+            } label: {
+                Label(weeklyRankTitle, systemImage: "trophy")
+            }
+        }
     }
 
-    /// `ShareSheet` rather than `ShareLink`: the sheet reports whether the
-    /// share went through, and until 2.9 the scorecard — the app's most
-    /// shared surface — had no event at all, so its reach was a guess.
+    /// Share in the bar: prominent when it leads the row, plain beside the
+    /// challenge.
+    @ViewBuilder
     private func shareButton(prominent: Bool) -> some View {
-        Button {
-            openShareCard()
-        } label: {
-            shareLabel
+        if prominent {
+            Button {
+                openShareCard()
+            } label: {
+                barLabel("Share", systemImage: "square.and.arrow.up")
+            }
+            .buttonStyle(.borderedProminent)
+        } else {
+            Button {
+                openShareCard()
+            } label: {
+                shareLabel
+            }
         }
-        .buttonStyle(PillButtonStyle(emphasis: prominent ? .primary : .tonal))
     }
 
-    /// Builds the result block and hands it to the sheet on `pinnedActions`.
+    /// Builds the result block and hands it to the sheet on `content`.
     private func openShareCard() {
         analytics.log(.resultShareOpened(
             puzzleID: puzzle.id,
@@ -1375,7 +1367,6 @@ struct CompletionView: View {
 
     private var shareLabel: some View {
         Label("Share", systemImage: "square.and.arrow.up")
-            .frame(maxWidth: .infinity)
     }
 
     /// An outgoing challenge to hand to the share sheet. Identifiable so it can
@@ -1392,31 +1383,6 @@ struct CompletionView: View {
         var isBoard = false
     }
 
-}
-
-// MARK: - Scroll edge
-
-private extension View {
-    /// This screen is full-bleed with no navigation bar, so scrolled content
-    /// runs straight into the clock and Dynamic Island. iOS 26's scroll edge
-    /// effect needs a bar to blur into and there isn't one here, so cap the
-    /// status area with the same `.bar` material the actions row already uses.
-    ///
-    /// The cap is a zero-height view pinned to the top of the safe area; letting
-    /// it ignore the top edge stretches it up over exactly the inset, whatever
-    /// the device.
-    func softTopScrollEdge() -> some View {
-        overlay(alignment: .top) {
-            Color.clear
-                .frame(height: 0)
-                .background {
-                    Rectangle()
-                        .fill(.bar)
-                        .ignoresSafeArea(edges: .top)
-                }
-                .allowsHitTesting(false)
-        }
-    }
 }
 
 /// The paywall's entry point, as a sheet item.

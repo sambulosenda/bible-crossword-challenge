@@ -112,11 +112,10 @@ struct PaywallView: View {
                         exitReason = .close
                         dismiss()
                     } label: {
-                        Image(systemName: "xmark")
+                        Label("Close", systemImage: "xmark")
                             .font(.system(size: 15, weight: .bold))
                     }
                     .tint(.secondary)
-                    .accessibilityLabel("Close")
                 }
                 // No Restore up here any more: it lives in the pinned footer
                 // with the other housekeeping links, which never scrolls away,

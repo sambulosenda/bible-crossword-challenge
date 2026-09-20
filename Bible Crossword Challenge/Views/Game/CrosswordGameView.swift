@@ -50,6 +50,13 @@ struct CrosswordGameView: View {
     /// regular/regular — an iPad's classes — in 678×466pt, about half an iPad's
     /// height, so the layout decisions below check the size too.
     @State private var containerSize: CGSize = .zero
+    /// Whether the system has put this screen's bars on a side rail (iPhone
+    /// Duo closed, or open in landscape). A custom toolbar view is never
+    /// presented vertically — it would hold a second, horizontal bar open
+    /// above the rail — so the clock and streak leave the toolbar for the
+    /// solve surface when this is set, and the Hints menu becomes a Label
+    /// the rail can draw as an icon.
+    @State private var barsVertical = false
     @State private var showCompletion = false
     @State private var showPaywall = false
     /// The hint wall, inline. Tapping a paid hint with no quota left used to
@@ -163,6 +170,12 @@ struct CrosswordGameView: View {
         } action: { size in
             containerSize = size
         }
+        .observeVerticalBars($barsVertical)
+        // The clue list opened as a sheet on a phone-sized window is a second
+        // copy of the panel once the window grows enough to stand it.
+        .onChange(of: solveLayout) { _, layout in
+            if layout == .withCluePanel { showClues = false }
+        }
     }
 
     private enum SolveLayout {
@@ -214,11 +227,35 @@ struct CrosswordGameView: View {
     /// panel); side by side in landscape on a phone.
     private var solveSurface: some View {
         Group {
-            if solveLayout == .sideBySide {
+            if #available(iOS 27.1, *) {
+                // The system's own two-pane container: side by side when the
+                // window is wider than tall, stacked otherwise — the same
+                // rule as the branches below — and on iPhone Duo it moves
+                // the seam off the fold, which a hand-rolled stack can't.
+                ArrangementView {
+                    gridArea
+                } secondary: {
+                    VStack(spacing: 0) {
+                        railStatusRow
+                        solveNotes
+                        // Beside the grid the column is full-height, so the
+                        // clue bar and keypad sit at its foot where the
+                        // thumbs are; under the grid there is no slack to
+                        // spend.
+                        if containerSize.width > containerSize.height {
+                            Spacer(minLength: 0)
+                        }
+                        clueBar
+                        keypad
+                    }
+                }
+                .arrangementViewStyle(.split)
+            } else if solveLayout == .sideBySide {
                 HStack(spacing: 0) {
                     gridArea
                     Divider()
                     VStack(spacing: 0) {
+                        railStatusRow
                         // The notes ride at the top of this column rather than
                         // over the grid: in landscape a banner above the board
                         // is height the board cannot spare, and a stall nudge
@@ -233,6 +270,7 @@ struct CrosswordGameView: View {
                 }
             } else {
                 VStack(spacing: 0) {
+                    railStatusRow
                     solveNotes
                     gridArea
                     clueBar
@@ -478,6 +516,25 @@ struct CrosswordGameView: View {
 
     // MARK: - The surface's pieces, arranged by `solveSurface`
 
+    /// The streak and the clock while the bars are a side rail. Both are
+    /// custom toolbar views, which the rail cannot take, so they sit in a
+    /// slim row above the board instead of holding a horizontal bar open.
+    /// The clock view drives the solve timer's ticks, so it must render in
+    /// exactly one place: here when the rail has it, the toolbar otherwise.
+    @ViewBuilder
+    private var railStatusRow: some View {
+        if barsVertical {
+            HStack {
+                StreakFlameView(streak: profile.currentStreak, pulseTick: vm.wordSolveTick)
+                Spacer()
+                timerSlot
+            }
+            .font(.subheadline.weight(.medium))
+            .padding(.horizontal, Theme.Spacing.m)
+            .padding(.top, Theme.Spacing.xs)
+        }
+    }
+
     /// Transient banners: the challenge target, the hint-limit note, the
     /// starter-word gift. Each retires itself on a timer.
     @ViewBuilder
@@ -537,98 +594,96 @@ struct CrosswordGameView: View {
 
     // MARK: - Toolbar
 
-    @ToolbarContentBuilder
-    private var toolbarContent: some ToolbarContent {
-        ToolbarItem(placement: .topBarLeading) {
-            StreakFlameView(streak: profile.currentStreak, pulseTick: vm.wordSolveTick)
-        }
-        ToolbarItem(placement: .principal) {
-            timerSlot
-        }
-        ToolbarItem(placement: .topBarTrailing) {
-            Menu {
-                Section("Hints left: \(hintsRemainingText)") {
-                    // The hint ladder, gentlest rung first. Two Texts in a
-                    // Button label render as title + cost subtitle in a Menu.
-                    // Absent (not disabled) when the clue has no reference —
-                    // a dimmed row would advertise a hint most clues can't
-                    // offer yet. See ClueListView for the same discipline.
-                    if vm.activeSlot?.reference != nil {
-                        Button {
-                            useVerseHint()
-                        } label: {
-                            Text(HintType.verse.title)
-                            Text(costLabel(.verse))
-                            Image(systemName: "book")
-                        }
-                    }
+    /// Every hint and check, behind one button.
+    private var hintsMenu: some View {
+        Menu {
+            Section("Hints left: \(hintsRemainingText)") {
+                // The hint ladder, gentlest rung first. Two Texts in a
+                // Button label render as title + cost subtitle in a Menu.
+                // Absent (not disabled) when the clue has no reference —
+                // a dimmed row would advertise a hint most clues can't
+                // offer yet. See ClueListView for the same discipline.
+                if vm.activeSlot?.reference != nil {
                     Button {
-                        useHint(.letter)
+                        useVerseHint()
                     } label: {
-                        Text(HintType.letter.title)
-                        Text(costLabel(.letter))
-                        Image(systemName: "a.square")
-                    }
-                    Button {
-                        useHint(.word)
-                    } label: {
-                        Text(HintType.word.title)
-                        Text(costLabel(.word))
-                        Image(systemName: canAfford(.word) ? "text.word.spacing" : "lock.fill")
-                    }
-                    Button(role: .destructive) {
-                        // Straight to the wall when it can't be paid for.
-                        // Confirming a spend the next line refuses is the one
-                        // order these two steps must never run in.
-                        if canAfford(.puzzle) {
-                            showRevealPuzzleConfirm = true
-                        } else {
-                            useHint(.puzzle)
-                        }
-                    } label: {
-                        Text(HintType.puzzle.title)
-                        Text(costLabel(.puzzle))
-                        Image(systemName: canAfford(.puzzle) ? "square.grid.3x3.fill" : "lock.fill")
+                        Text(HintType.verse.title)
+                        Text(costLabel(.verse))
+                        Image(systemName: "book")
                     }
                 }
-                // Checks are free: they judge what's on the grid without giving
-                // anything away, which is a different economy from hints.
-                Section("Check") {
-                    Button {
-                        runCheck(.letter)
-                    } label: {
-                        Label("Check Letter", systemImage: "checkmark.square")
+                Button {
+                    useHint(.letter)
+                } label: {
+                    Text(HintType.letter.title)
+                    Text(costLabel(.letter))
+                    Image(systemName: "a.square")
+                }
+                Button {
+                    useHint(.word)
+                } label: {
+                    Text(HintType.word.title)
+                    Text(costLabel(.word))
+                    Image(systemName: canAfford(.word) ? "text.word.spacing" : "lock.fill")
+                }
+                Button(role: .destructive) {
+                    // Straight to the wall when it can't be paid for.
+                    // Confirming a spend the next line refuses is the one
+                    // order these two steps must never run in.
+                    if canAfford(.puzzle) {
+                        showRevealPuzzleConfirm = true
+                    } else {
+                        useHint(.puzzle)
                     }
-                    Button {
-                        runCheck(.word)
-                    } label: {
-                        Label("Check Word", systemImage: "checkmark.rectangle")
-                    }
-                    Button {
-                        runCheck(.puzzle)
-                    } label: {
-                        Label("Check Puzzle", systemImage: "checkmark.circle")
+                } label: {
+                    Text(HintType.puzzle.title)
+                    Text(costLabel(.puzzle))
+                    Image(systemName: canAfford(.puzzle) ? "square.grid.3x3.fill" : "lock.fill")
+                }
+            }
+            // Checks are free: they judge what's on the grid without giving
+            // anything away, which is a different economy from hints.
+            Section("Check") {
+                Button {
+                    runCheck(.letter)
+                } label: {
+                    Label("Check Letter", systemImage: "checkmark.square")
+                }
+                Button {
+                    runCheck(.word)
+                } label: {
+                    Label("Check Word", systemImage: "checkmark.rectangle")
+                }
+                Button {
+                    runCheck(.puzzle)
+                } label: {
+                    Label("Check Puzzle", systemImage: "checkmark.circle")
+                }
+            }
+            Section {
+                // Persistent as-you-type marking; the one-shot checks above
+                // stay for players who keep it off.
+                Toggle(isOn: $autoCheckErrors) {
+                    Label("Auto-Check", systemImage: "checkmark.seal")
+                }
+                // Wanting the clock gone is a mid-solve feeling, so the
+                // switch belongs beside the clock rather than three taps
+                // away in Profile — the same `@AppStorage` as that row, so
+                // the two never disagree. Left out during a challenge,
+                // where `clockVisible` keeps the clock on regardless and
+                // the switch would do nothing.
+                if incomingChallenge == nil {
+                    Toggle(isOn: $showSolveTimer) {
+                        Label("Show Timer", systemImage: "timer")
                     }
                 }
-                Section {
-                    // Persistent as-you-type marking; the one-shot checks above
-                    // stay for players who keep it off.
-                    Toggle(isOn: $autoCheckErrors) {
-                        Label("Auto-Check", systemImage: "checkmark.seal")
-                    }
-                    // Wanting the clock gone is a mid-solve feeling, so the
-                    // switch belongs beside the clock rather than three taps
-                    // away in Profile — the same `@AppStorage` as that row, so
-                    // the two never disagree. Left out during a challenge,
-                    // where `clockVisible` keeps the clock on regardless and
-                    // the switch would do nothing.
-                    if incomingChallenge == nil {
-                        Toggle(isOn: $showSolveTimer) {
-                            Label("Show Timer", systemImage: "timer")
-                        }
-                    }
-                }
-            } label: {
+            }
+        } label: {
+            if barsVertical {
+                // A side rail draws an item's icon and keeps its title for
+                // the overflow menu, and only a Label can go vertical at all.
+                Label("Hints", systemImage: "lightbulb")
+            } else {
                 // Titled, not a bare glyph: every hint and check lives behind
                 // this one button, and the unlabeled lightbulb was invisible
                 // to exactly the stuck new player it exists for. An HStack,
@@ -639,7 +694,33 @@ struct CrosswordGameView: View {
                 }
                 .font(.subheadline.weight(.medium))
             }
-            .accessibilityLabel("Hints and check answers")
+        }
+        .accessibilityLabel("Hints and check answers")
+    }
+
+    @ToolbarContentBuilder
+    private var toolbarContent: some ToolbarContent {
+        // Custom views, so a side rail can't take them; `railStatusRow`
+        // shows them on the board instead.
+        if !barsVertical {
+            ToolbarItem(placement: .topBarLeading) {
+                StreakFlameView(streak: profile.currentStreak, pulseTick: vm.wordSolveTick)
+            }
+            ToolbarItem(placement: .principal) {
+                timerSlot
+            }
+        }
+        // Kept in the bar longest when the rail runs out of room: it is
+        // the one control a stuck player needs.
+        if #available(iOS 27.0, *) {
+            ToolbarItem(placement: .topBarTrailing) {
+                hintsMenu
+            }
+            .visibilityPriority(.high)
+        } else {
+            ToolbarItem(placement: .topBarTrailing) {
+                hintsMenu
+            }
         }
         // With the clue list standing as a side panel, a button that opens it
         // as a sheet would be a second copy of what's on screen.
@@ -648,9 +729,8 @@ struct CrosswordGameView: View {
                 Button {
                     showClues = true
                 } label: {
-                    Image(systemName: "list.bullet")
+                    Label("Clue list", systemImage: "list.bullet")
                 }
-                .accessibilityLabel("Clue list")
             }
         }
     }

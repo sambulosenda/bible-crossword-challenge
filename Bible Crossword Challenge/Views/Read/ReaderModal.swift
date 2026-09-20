@@ -29,7 +29,7 @@ struct ReaderModal: View {
                 source: target.source
             )
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
+                ToolbarItem(placement: .cancellationAction) {
                     Button("Close") { dismiss() }
                 }
             }

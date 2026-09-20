@@ -154,9 +154,8 @@ struct MemoryPracticeView: View {
                         Label("Peek at the Verse", systemImage: "book")
                     }
                 } label: {
-                    Image(systemName: "lightbulb")
+                    Label("Hints", systemImage: "lightbulb")
                 }
-                .accessibilityLabel("Hints")
             }
         }
     }
