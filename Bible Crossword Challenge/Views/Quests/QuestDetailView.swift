@@ -46,18 +46,15 @@ struct QuestDetailView: View {
     private var isLocked: Bool { quest.isPremium && !store.isPremium }
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: Theme.Spacing.l) {
-                header
-                if isLocked {
-                    lockedState
-                } else {
-                    stepList
-                }
+        // The Journey on the left of a wide window, its steps on the right.
+        CardColumns(alignment: .leading) {
+            header
+        } more: {
+            if isLocked {
+                lockedState
+            } else {
+                stepList
             }
-            .padding(Theme.Spacing.m)
-            .frame(maxWidth: 560)
-            .frame(maxWidth: .infinity)
         }
         .background(Theme.background)
         .navigationTitle(quest.title)

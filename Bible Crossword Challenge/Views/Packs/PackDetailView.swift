@@ -57,21 +57,19 @@ struct PackDetailView: View {
     private static let seasonEndFormat = Date.FormatStyle().day().month(.wide)
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: Theme.Spacing.l) {
-                header
-                // Shown locked as well as unlocked: which books a collection
-                // covers is part of deciding whether to buy it.
-                booksCard
-                if isLocked {
-                    lockedState
-                } else {
-                    puzzleList
-                }
+        // The collection on the left of a wide window, its puzzles on the
+        // right.
+        CardColumns(alignment: .leading) {
+            header
+            // Shown locked as well as unlocked: which books a collection
+            // covers is part of deciding whether to buy it.
+            booksCard
+        } more: {
+            if isLocked {
+                lockedState
+            } else {
+                puzzleList
             }
-            .padding(Theme.Spacing.m)
-            .frame(maxWidth: 560)
-            .frame(maxWidth: .infinity)
         }
         .background(Theme.background)
         .navigationTitle(pack.title)

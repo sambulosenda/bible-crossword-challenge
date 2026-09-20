@@ -29,16 +29,14 @@ struct JourneyView: View {
     @State private var rows: [BibleJourney.BookProgress] = []
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: Theme.Spacing.l) {
-                summaryCard
-                legend
-                testamentSection(.old)
-                testamentSection(.new)
-            }
-            .padding(Theme.Spacing.m)
-            .frame(maxWidth: 560)
-            .frame(maxWidth: .infinity)
+        // The summary and legend on the left of a wide window, the map on
+        // the right.
+        CardColumns {
+            summaryCard
+            legend
+        } more: {
+            testamentSection(.old)
+            testamentSection(.new)
         }
         .background(Theme.background)
         .navigationTitle("Your journey")

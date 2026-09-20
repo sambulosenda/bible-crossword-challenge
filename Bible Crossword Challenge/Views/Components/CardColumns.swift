@@ -14,62 +14,63 @@ import SwiftUI
 
 struct CardColumns<Lead: View, More: View>: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-    @State private var containerSize: CGSize = .zero
 
     /// The readable width of a column.
     var maxWidth: CGFloat = 560
+    /// How the cards line up inside a column.
+    var alignment: HorizontalAlignment = .center
     /// What the tab is for: first in one column, the left of two.
     @ViewBuilder let lead: () -> Lead
     /// The rest, in the order it already had.
     @ViewBuilder let more: () -> More
 
     var body: some View {
-        Group {
+        // Measured on the way in rather than through state: a tab root that
+        // was first laid out closed kept its stale size after the device
+        // opened, and stayed one column. A GeometryReader has no state to
+        // go stale, and fills its container, which is what the columns do.
+        GeometryReader { proxy in
+            let twoColumns = Self.twoColumns(horizontalSizeClass, proxy.size)
             if twoColumns {
                 if #available(iOS 27.1, *) {
                     // The system's split arrangement moves the seam off a
                     // partial fold; horizontal only, because two stacked
                     // scroll views would be the phone layout done worse.
                     ArrangementView {
-                        column { lead() }
+                        column(split: true) { lead() }
                     } secondary: {
-                        column { more() }
+                        column(split: true) { more() }
                     }
                     .arrangementViewStyle(.split.axes(.horizontal))
                 } else {
                     HStack(spacing: 0) {
-                        column { lead() }
-                        column { more() }
+                        column(split: true) { lead() }
+                        column(split: true) { more() }
                     }
                 }
             } else {
-                column {
+                column(split: false) {
                     lead()
                     more()
                 }
             }
-        }
-        .onGeometryChange(for: CGSize.self) { proxy in
-            proxy.size
-        } action: { size in
-            containerSize = size
         }
     }
 
     /// Regular width and wider than tall. Size class alone would split an
     /// iPad in portrait, which has the height for one column and not the
     /// width for two.
-    private var twoColumns: Bool {
-        horizontalSizeClass == .regular && containerSize.width > containerSize.height
+    private static func twoColumns(_ sizeClass: UserInterfaceSizeClass?, _ size: CGSize) -> Bool {
+        sizeClass == .regular && size.width > size.height
     }
 
     /// One scrolling column of cards at the readable width.
-    private func column<Content: View>(@ViewBuilder _ content: () -> Content) -> some View {
+    private func column<Content: View>(split: Bool, @ViewBuilder _ content: () -> Content) -> some View {
         ScrollView {
-            VStack(spacing: Theme.Spacing.l, content: content)
+            VStack(alignment: alignment, spacing: Theme.Spacing.l, content: content)
                 .padding(Theme.Spacing.m)
                 .frame(maxWidth: maxWidth)
-                .modifier(ColumnWidth(pinToContainer: !twoColumns))
+                .modifier(ColumnWidth(pinToContainer: !split))
         }
     }
 }
