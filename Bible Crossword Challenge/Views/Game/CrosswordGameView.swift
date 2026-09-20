@@ -264,7 +264,7 @@ struct CrosswordGameView: View {
                         // where the thumbs are. Under the grid there is no
                         // slack to spend.
                         if solveLayout == .cluesInColumn {
-                            ClueListView(vm: vm, embedded: true)
+                            columnClueList
                         } else if containerSize.width > containerSize.height {
                             Spacer(minLength: 0)
                         }
@@ -286,7 +286,7 @@ struct CrosswordGameView: View {
                         // player is already stuck.
                         solveNotes
                         if solveLayout == .cluesInColumn {
-                            ClueListView(vm: vm, embedded: true)
+                            columnClueList
                         } else {
                             Spacer(minLength: 0)
                         }
@@ -604,6 +604,13 @@ struct CrosswordGameView: View {
                     withAnimation(.snappy) { showStarterGiftNote = false }
                 }
         }
+    }
+
+    /// The clue list standing in the keypad's column. Its last row scrolls
+    /// to rest a breath above the clue bar rather than flush against it.
+    private var columnClueList: some View {
+        ClueListView(vm: vm, embedded: true)
+            .contentMargins(.bottom, Theme.Spacing.m, for: .scrollContent)
     }
 
     /// Takes every point the arrangement can spare in both directions; the grid
