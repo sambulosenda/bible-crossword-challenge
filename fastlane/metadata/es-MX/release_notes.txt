@@ -1,9 +1,8 @@
-Thanks for playing Bible Crossword Challenge! This one is about the puzzle meeting you where you are:
+Thanks for playing Bible Crossword Challenge! This one is about the app fitting the phone in your hand:
 
-• Turn your phone sideways and the grid comes with you — board on one side, clue and keys on the other
-• Set your text larger and the clue stays whole, instead of trailing off mid-word
-• Sunday's big grids pan and zoom with a pinch
-• Increase Contrast is answered throughout now, not just light and dark
-• Reduce Motion is honoured wherever the app celebrates
-• Tap the clock to put it away mid-puzzle — your time is still recorded
-• New packs ask for their own yes, so agreeing to a daily reminder isn't agreeing to everything
+• Ready for iPhone Duo — closed, it's the phone you know; open it and the day's verse and puzzle sit side by side, and in a puzzle the clue list stands next to the grid
+• Controls follow the display — on the Duo they move to the side, so the board keeps the height
+• Cards sit flat on the page now, the way the rest of iOS does
+• Share a finished puzzle as a spoiler-free block that shows how you solved it, not what the answers were
+• Close buttons live in the trailing corner everywhere, under the same thumb
+• Clearer tab icons — the Library is a grid, your Profile is you
