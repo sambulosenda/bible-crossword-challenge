@@ -87,7 +87,10 @@ enum ShareGrid {
     /// byte-identical for everyone who solved it, and on the 21x21 Sunday a
     /// solid 7x7 rectangle (2% black) once downsampled.
     static func result(for grid: [[CellState]]) -> Render {
-        var fills = grid.map { $0.map(Fill.init) }
+        // A closure, not `Fill.init` as a value: the initializer is main-actor
+        // isolated like everything here, and a bare function reference is a
+        // nonisolated value that can't carry that.
+        var fills = grid.map { $0.map { Fill($0) } }
 
         // Trim all-block border rows and columns. 39 of 138 dailies carry an
         // all-block last row as authored padding; at eight coarse rows that is

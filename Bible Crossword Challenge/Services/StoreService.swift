@@ -355,6 +355,7 @@ final class StoreService {
             case .notEntitled: return "not_entitled"
             case .unknown: return "unknown"
             case .unsupported: return "unsupported"
+            case .invalidPresentationContext: return "invalid_presentation_context"
             @unknown default: return "unknown"
             }
         case let purchaseError as Product.PurchaseError:
@@ -367,6 +368,7 @@ final class StoreService {
             case .invalidOfferPrice: return "invalid_offer_price"
             case .invalidOfferSignature: return "invalid_offer_signature"
             case .missingOfferParameters: return "missing_offer_params"
+            case .paymentMethodBindingConfigurationRequired: return "payment_method_binding_required"
             @unknown default: return "purchase_error"
             }
         default:

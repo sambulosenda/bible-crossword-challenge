@@ -10,7 +10,10 @@
 
 import Foundation
 
-enum ScriptureSearch {
+/// Pure functions over immutable scripture, so `nonisolated`: the search runs
+/// on a detached task to keep a 31,000-verse scan off the main thread, which
+/// the project's main-actor-by-default isolation would otherwise forbid.
+nonisolated enum ScriptureSearch {
     struct VerseHit: Hashable, Identifiable {
         let book: String
         let chapter: Int
