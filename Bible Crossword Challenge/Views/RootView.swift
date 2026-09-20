@@ -429,13 +429,16 @@ struct RootView: View {
             Tab("Packs", systemImage: "square.stack.3d.up", value: RootTab.packs) {
                 PacksView(profile: profile, path: $packsPath)
             }
-            Tab("Library", systemImage: "books.vertical", value: RootTab.library) {
+            // A grid, not a bookshelf: the Library is the puzzle archive, and a
+            // shelf of books beside the Read tab's book made the two read as one.
+            Tab("Library", systemImage: "square.grid.3x3", value: RootTab.library) {
                 LibraryView(profile: profile)
             }
             Tab("Read", systemImage: "book", value: RootTab.read) {
                 ReadView()
             }
-            Tab("Profile", systemImage: "person", value: RootTab.profile) {
+            // The HIG's standard symbol for Account, User and Profile.
+            Tab("Profile", systemImage: "person.crop.circle", value: RootTab.profile) {
                 ProfileView(profile: profile)
             }
         }
