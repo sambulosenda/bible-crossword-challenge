@@ -358,7 +358,11 @@ struct CrosswordGameView: View {
             vm.toggleDirection()
             return .handled
         }
-        .navigationTitle(puzzle.title)
+        // With the bars on a side rail the title is the only thing left in
+        // the top bar, and it holds a 44pt strip open across the whole width
+        // for it. The title moves to the status row instead and the bar
+        // gets nothing, so the board starts at the top.
+        .navigationTitle(barsVertical ? "" : puzzle.title)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar(.hidden, for: .tabBar)
         .toolbar { toolbarContent }
@@ -553,6 +557,11 @@ struct CrosswordGameView: View {
         if barsVertical {
             HStack {
                 StreakFlameView(streak: profile.currentStreak, pulseTick: vm.wordSolveTick)
+                Spacer()
+                // The title, evicted from the top bar (see `.navigationTitle`).
+                Text(puzzle.title)
+                    .font(.subheadline.weight(.semibold))
+                    .lineLimit(1)
                 Spacer()
                 timerSlot
             }
