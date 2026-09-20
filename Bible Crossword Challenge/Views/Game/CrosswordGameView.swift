@@ -160,7 +160,7 @@ struct CrosswordGameView: View {
                     ClueListView(vm: vm, embedded: true)
                         .frame(width: Self.cluePanelWidth)
                 }
-            case .stacked:
+            case .stacked, .cluesInColumn:
                 solveSurface
             }
         }
@@ -173,8 +173,8 @@ struct CrosswordGameView: View {
         .observeVerticalBars($barsVertical)
         // The clue list opened as a sheet on a phone-sized window is a second
         // copy of the panel once the window grows enough to stand it.
-        .onChange(of: solveLayout) { _, layout in
-            if layout == .withCluePanel { showClues = false }
+        .onChange(of: cluesStanding) { _, standing in
+            if standing { showClues = false }
         }
     }
 
@@ -185,33 +185,53 @@ struct CrosswordGameView: View {
         case sideBySide
         /// `stacked` beside a standing clue list. Windows wide enough for both.
         case withCluePanel
+        /// `sideBySide` with the clue list standing in the keypad's column,
+        /// above the clue bar. A regular window that is wide but short —
+        /// iPhone Duo open in landscape, 951×669pt — has no height to stack
+        /// a column beside a panel, and plenty beside the grid.
+        case cluesInColumn
+    }
+
+    /// Whether the clue list is on screen as a panel rather than a sheet.
+    private var cluesStanding: Bool {
+        solveLayout == .withCluePanel || solveLayout == .cluesInColumn
     }
 
     /// Width of the standing clue list in `withCluePanel`.
     private static let cluePanelWidth: CGFloat = 340
 
     /// Under this height a wide window goes side by side even when its size
-    /// classes say otherwise. The Duo unfolded in landscape is 466pt tall;
-    /// the shortest iPad in landscape is 744pt.
+    /// classes say otherwise: a column of grid, clue bar and keypad cannot
+    /// fit, so the grid takes the height and the rest a column beside it.
     private static let shortHeight: CGFloat = 520
 
+    /// Under this height a wide regular window keeps the clue list standing
+    /// but moves it into the keypad's column. The Duo open in landscape is
+    /// 669pt tall; the shortest iPad in landscape is 744pt and keeps its
+    /// full-height panel.
+    private static let shortRegularHeight: CGFloat = 720
+
     /// Which arrangement the window gets. Size classes first, then the
-    /// measured size where the classes alone would pick wrong: a regular/
-    /// regular window that is too short for a stacked column (the Duo
-    /// unfolded in landscape) goes side by side, and one too narrow to seat a
-    /// legible keypad beside the clue panel (the Duo unfolded in portrait, at
-    /// 466pt) keeps the clue list as a sheet. Before the first measurement the
-    /// classes decide on their own.
+    /// measured size where the classes alone would pick wrong. iPhone Duo
+    /// open reports regular/regular like an iPad, in 951×669pt landscape and
+    /// 669×951pt portrait: landscape is too short to stack a column beside
+    /// the clue panel, so the clues join the keypad's column; portrait is
+    /// too narrow to seat a legible keypad beside a panel, so the clue list
+    /// stays a sheet. Before the first measurement the classes decide.
     private var solveLayout: SolveLayout {
         let size = containerSize
         let measured = size != .zero
-        if verticalSizeClass == .compact
-            || (measured && size.width > size.height && size.height < Self.shortHeight) {
+        let wide = measured && size.width > size.height
+        if verticalSizeClass == .compact || (wide && size.height < Self.shortHeight) {
             return .sideBySide
         }
-        if horizontalSizeClass == .regular
-            && (!measured || size.width - Self.cluePanelWidth >= Self.landscapeKeypadWidth) {
-            return .withCluePanel
+        if horizontalSizeClass == .regular {
+            if wide && size.height < Self.shortRegularHeight {
+                return .cluesInColumn
+            }
+            if !measured || size.width - Self.cluePanelWidth >= Self.landscapeKeypadWidth {
+                return .withCluePanel
+            }
         }
         return .stacked
     }
@@ -238,11 +258,14 @@ struct CrosswordGameView: View {
                     VStack(spacing: 0) {
                         railStatusRow
                         solveNotes
-                        // Beside the grid the column is full-height, so the
-                        // clue bar and keypad sit at its foot where the
-                        // thumbs are; under the grid there is no slack to
-                        // spend.
-                        if containerSize.width > containerSize.height {
+                        // Beside the grid the column is full-height: the
+                        // clue list stands in the slack when it has one,
+                        // otherwise the clue bar and keypad sit at the foot
+                        // where the thumbs are. Under the grid there is no
+                        // slack to spend.
+                        if solveLayout == .cluesInColumn {
+                            ClueListView(vm: vm, embedded: true)
+                        } else if containerSize.width > containerSize.height {
                             Spacer(minLength: 0)
                         }
                         clueBar
@@ -250,7 +273,7 @@ struct CrosswordGameView: View {
                     }
                 }
                 .arrangementViewStyle(.split)
-            } else if solveLayout == .sideBySide {
+            } else if solveLayout == .sideBySide || solveLayout == .cluesInColumn {
                 HStack(spacing: 0) {
                     gridArea
                     Divider()
@@ -262,7 +285,11 @@ struct CrosswordGameView: View {
                         // that resizes every cell arrives exactly when the
                         // player is already stuck.
                         solveNotes
-                        Spacer(minLength: 0)
+                        if solveLayout == .cluesInColumn {
+                            ClueListView(vm: vm, embedded: true)
+                        } else {
+                            Spacer(minLength: 0)
+                        }
                         clueBar
                         keypad
                     }
@@ -724,7 +751,7 @@ struct CrosswordGameView: View {
         }
         // With the clue list standing as a side panel, a button that opens it
         // as a sheet would be a second copy of what's on screen.
-        if solveLayout != .withCluePanel {
+        if !cluesStanding {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
                     showClues = true

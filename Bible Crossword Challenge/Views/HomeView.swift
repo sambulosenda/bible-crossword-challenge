@@ -262,6 +262,10 @@ struct HomeView: View {
         })
     }
 
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    /// The window, for the one-or-two-column decision. See `twoColumns`.
+    @State private var containerSize: CGSize = .zero
+
     var body: some View {
         // Resolve the daily puzzle + its record once per body pass; the verse
         // card derives from the puzzle so it never spoils today's answer.
@@ -272,188 +276,49 @@ struct HomeView: View {
         let leadsWithMini = profile.isStillLearning && mini != nil
 
         return NavigationStack(path: $path) {
-            ScrollView {
-                VStack(spacing: Theme.Spacing.l) {
-                    TodayHeader(verse: verseOfTheDay(excluding: daily))
-
-                    // A player still inside their first three finishes leads
-                    // with the Mini; everyone else leads with the daily.
-                    //
-                    // Finishing one puzzle on the first day is what separates a
-                    // player who comes back from one who doesn't — measured at
-                    // 61% next-day return against 21%. The Mini is finished by
-                    // two thirds of the people who start it and the 15×15 by
-                    // fewer than half, but 92% of first-ever puzzle starts were
-                    // the 15×15, because it owns the hero card and the Mini sat
-                    // in a row underneath it. New players came out of a
-                    // two-letter tutorial and were handed a 19-clue grid.
-                    //
-                    // Originally only the literal first solve; extended to the
-                    // first three because one Mini finish was handing players
-                    // straight back to the 19-clue cliff on day two, before the
-                    // habit existed. After three finishes the screen is the one
-                    // everybody else has, permanently — the daily is the habit,
-                    // the Mini is just a gentler way in.
-                    if leadsWithMini, let mini {
-                        LeadPuzzleCard(
-                            puzzle: mini,
-                            billing: .mini,
-                            presentation: .of(record: miniRecord, on: Date()),
-                            progress: inProgressFraction(mini, record: miniRecord)
-                        )
-                        if let daily {
-                            CompactPuzzleCard(
-                                puzzle: daily,
-                                billing: .daily,
-                                presentation: .of(record: record, on: Date())
-                            )
+            Group {
+                if twoColumns {
+                    // A wide regular window — iPhone Duo open in landscape,
+                    // an iPad on its side — held one 560pt column in the
+                    // middle of the paper with a third of the width blank
+                    // each side, and the fold ran straight through it. Two
+                    // columns use the width, and the seam between them is
+                    // where a partial fold wants it. The lead column is
+                    // today's puzzles; the other is the habit and the
+                    // shelf, in the order they already had.
+                    if #available(iOS 27.1, *) {
+                        ArrangementView {
+                            column {
+                                leadColumn(daily: daily, record: record, mini: mini,
+                                           miniRecord: miniRecord, leadsWithMini: leadsWithMini)
+                            }
+                        } secondary: {
+                            column { moreColumn }
                         }
+                        .arrangementViewStyle(.split.axes(.horizontal))
                     } else {
-                        if let daily {
-                            LeadPuzzleCard(
-                                puzzle: daily,
-                                billing: .daily,
-                                presentation: .of(record: record, on: Date()),
-                                progress: inProgressFraction(daily, record: record)
-                            )
-                        } else {
-                            emptyDailyCard
-                        }
-
-                        if let mini {
-                            CompactPuzzleCard(
-                                puzzle: mini,
-                                billing: .mini,
-                                presentation: .of(record: miniRecord, on: Date())
-                            )
+                        HStack(spacing: 0) {
+                            column {
+                                leadColumn(daily: daily, record: record, mini: mini,
+                                           miniRecord: miniRecord, leadsWithMini: leadsWithMini)
+                            }
+                            column { moreColumn }
                         }
                     }
-
-                    // The week's peak, Sunday through Saturday. Below the two
-                    // dailies: the Special is a sitting you choose, not the
-                    // habit the streak depends on.
-                    //
-                    // Absent inside the learning window, on the same threshold
-                    // that hands those players the Mini above. It was the one
-                    // puzzle surface on this screen with no such gate, and it
-                    // is the worst thing a first-day player can open: of 17 who
-                    // started one on their install day (2.5+, 45 days to
-                    // 2026-09-08) 5 finished, and 22% of those starts were
-                    // abandoned under 10% fill within 15 seconds — against 3%
-                    // on the Mini. A 21×21 handed to someone who has just
-                    // solved a two-letter tutorial is a wall with a card around
-                    // it. It comes back at three finishes, with everything else
-                    // the window withholds.
-                    if let sunday = sundaySpecial, !profile.isStillLearning {
-                        CompactPuzzleCard(
-                            puzzle: sunday,
-                            billing: .sunday,
-                            presentation: sundayPresentation(
-                                records.first { $0.puzzleID == sunday.id }
-                            )
-                        )
+                } else {
+                    column {
+                        leadColumn(daily: daily, record: record, mini: mini,
+                                   miniRecord: miniRecord, leadsWithMini: leadsWithMini)
+                        moreColumn
                     }
-
-                    // Instead of, not above: a comeback card stacked on a flame
-                    // card reading 0 would state the loss twice and answer it
-                    // once. The two are mutually exclusive by construction
-                    // anyway — a freeze save means the streak survived, so it
-                    // can't also have broken.
-                    if pendingStreakBreak > 0 {
-                        ComebackCard(
-                            previousStreak: pendingStreakBreak,
-                            playLabel: comebackPlayLabel,
-                            onPlay: startComeback,
-                            onDismiss: { pendingStreakBreak = 0 }
-                        )
-                    } else {
-                        StreakCard(
-                            current: profile.currentStreak,
-                            best: profile.bestStreak,
-                            freezes: profile.streakFreezes,
-                            savedRecently: freezeSavedToday,
-                            completedWeekdays: completedWeekdaysThisWeek
-                        )
-
-                        // Right under the streak it protects. Once ever, and
-                        // never on a day any other surface already asked.
-                        if showStreakAsk {
-                            ReminderAskCard(
-                                profile: profile,
-                                surface: .streakCard,
-                                kicker: "Protect your streak",
-                                headline: "A daily nudge keeps it alive.",
-                                onFinish: { withAnimation { showStreakAsk = false } }
-                            )
-                        }
-                    }
-
-                    // Under the habit surfaces (puzzles, streak), above the
-                    // discovery ones. This card lived at the very bottom and
-                    // reached 21 users/25 taps in 30 days — about 6.5% of
-                    // actives ever saw it. Here it's one short scroll away
-                    // instead of a full one. `source: "home_card"` is
-                    // unchanged on purpose: the move is measured as a lift on
-                    // the same PostHog event, not a new one.
-                    // A habit surface like the streak, so it sits with them:
-                    // only while a plan is running, one row, checked once
-                    // today's chapter is read. `readingPlans` needs no Bible
-                    // decode — the plan recorded its chapter count at start.
-                    ReadingPlanCard(compact: true, onRead: openPlanChapter)
-
-                    if !store.isPremium {
-                        UpgradeCard(
-                            totalPuzzles: puzzleProvider.totalPuzzleCount,
-                            solvedPuzzles: records.count { $0.isCompleted }
-                        )
-                    }
-
-                    if !collectionPacks.isEmpty {
-                        CollectionsCarousel(
-                            packs: collectionPacks,
-                            recordsByID: recordsByID,
-                            isPremium: store.isPremium
-                        )
-                    }
-
-                    // The first unfinished Journey, hidden once they're all
-                    // walked. A locked premium quest still shows — the card is
-                    // a discovery surface, and its detail screen carries the
-                    // paywall.
-                    if let quest = activeQuest {
-                        QuestHomeCard(
-                            quest: quest,
-                            progress: QuestProgress(quest: quest, recordsByID: recordsByID)
-                        )
-                    }
-
-                    Button {
-                        showAchievements = true
-                    } label: {
-                        NextAchievementCard(profile: profile)
-                    }
-                    .buttonStyle(PressableCardStyle())
-                    .accessibilityHint("Opens every achievement")
-
-                    // Below the achievement card: the mode earns attention
-                    // through its due badge, not its position.
-                    MemoryVerseCard(
-                        dueCount: memoryVerses.dueCount,
-                        activeCount: memoryVerses.entries.count
-                    )
                 }
-                .padding(Theme.Spacing.m)
-                .frame(maxWidth: 560)
-                // The scroll content's width is pinned to the scroll
-                // container, not left to the column's own measurement. Left
-                // to itself the column came out two-thirds of a point wider
-                // than the screen (fractional layout out of the readable-width
-                // chain), which made the vertical scroller horizontally
-                // scrollable — the whole page could be dragged and bounced
-                // left and right.
-                .containerRelativeFrame(.horizontal)
             }
             .background(Theme.background)
+            .onGeometryChange(for: CGSize.self) { proxy in
+                proxy.size
+            } action: { size in
+                containerSize = size
+            }
             // One ask per sitting, in order of how much the player has already
             // told us. The trial re-offer answers intent they actually showed
             // (they read the price and pressed the button), the premium ask
@@ -508,6 +373,210 @@ struct HomeView: View {
     }
 
     // MARK: - Empty state (only reachable if the bundled puzzle set is missing)
+
+    /// Whether the window is wide enough, and regular enough, for the cards
+    /// to sit in two columns rather than one.
+    private var twoColumns: Bool {
+        horizontalSizeClass == .regular && containerSize.width > containerSize.height
+    }
+
+    /// One scrolling column of cards at the app's readable width.
+    private func column<Content: View>(@ViewBuilder _ content: () -> Content) -> some View {
+        ScrollView {
+            VStack(spacing: Theme.Spacing.l, content: content)
+                .padding(Theme.Spacing.m)
+                .frame(maxWidth: 560)
+                // The scroll content's width is pinned to the scroll
+                // container, not left to the column's own measurement. Left
+                // to itself the column came out two-thirds of a point wider
+                // than the screen (fractional layout out of the readable-width
+                // chain), which made the vertical scroller horizontally
+                // scrollable — the whole page could be dragged and bounced
+                // left and right.
+                .containerRelativeFrame(.horizontal)
+        }
+    }
+
+    /// Today's puzzles: the verse, the lead card and the ones under it.
+    @ViewBuilder
+    private func leadColumn(
+        daily: Puzzle?, record: PuzzleRecord?, mini: Puzzle?, miniRecord: PuzzleRecord?,
+        leadsWithMini: Bool
+    ) -> some View {
+        TodayHeader(verse: verseOfTheDay(excluding: daily))
+
+        // A player still inside their first three finishes leads
+        // with the Mini; everyone else leads with the daily.
+        //
+        // Finishing one puzzle on the first day is what separates a
+        // player who comes back from one who doesn't — measured at
+        // 61% next-day return against 21%. The Mini is finished by
+        // two thirds of the people who start it and the 15×15 by
+        // fewer than half, but 92% of first-ever puzzle starts were
+        // the 15×15, because it owns the hero card and the Mini sat
+        // in a row underneath it. New players came out of a
+        // two-letter tutorial and were handed a 19-clue grid.
+        //
+        // Originally only the literal first solve; extended to the
+        // first three because one Mini finish was handing players
+        // straight back to the 19-clue cliff on day two, before the
+        // habit existed. After three finishes the screen is the one
+        // everybody else has, permanently — the daily is the habit,
+        // the Mini is just a gentler way in.
+        if leadsWithMini, let mini {
+            LeadPuzzleCard(
+                puzzle: mini,
+                billing: .mini,
+                presentation: .of(record: miniRecord, on: Date()),
+                progress: inProgressFraction(mini, record: miniRecord)
+            )
+            if let daily {
+                CompactPuzzleCard(
+                    puzzle: daily,
+                    billing: .daily,
+                    presentation: .of(record: record, on: Date())
+                )
+            }
+        } else {
+            if let daily {
+                LeadPuzzleCard(
+                    puzzle: daily,
+                    billing: .daily,
+                    presentation: .of(record: record, on: Date()),
+                    progress: inProgressFraction(daily, record: record)
+                )
+            } else {
+                emptyDailyCard
+            }
+
+            if let mini {
+                CompactPuzzleCard(
+                    puzzle: mini,
+                    billing: .mini,
+                    presentation: .of(record: miniRecord, on: Date())
+                )
+            }
+        }
+
+        // The week's peak, Sunday through Saturday. Below the two
+        // dailies: the Special is a sitting you choose, not the
+        // habit the streak depends on.
+        //
+        // Absent inside the learning window, on the same threshold
+        // that hands those players the Mini above. It was the one
+        // puzzle surface on this screen with no such gate, and it
+        // is the worst thing a first-day player can open: of 17 who
+        // started one on their install day (2.5+, 45 days to
+        // 2026-09-08) 5 finished, and 22% of those starts were
+        // abandoned under 10% fill within 15 seconds — against 3%
+        // on the Mini. A 21×21 handed to someone who has just
+        // solved a two-letter tutorial is a wall with a card around
+        // it. It comes back at three finishes, with everything else
+        // the window withholds.
+        if let sunday = sundaySpecial, !profile.isStillLearning {
+            CompactPuzzleCard(
+                puzzle: sunday,
+                billing: .sunday,
+                presentation: sundayPresentation(
+                    records.first { $0.puzzleID == sunday.id }
+                )
+            )
+        }
+
+        // Instead of, not above: a comeback card stacked on a flame
+        // card reading 0 would state the loss twice and answer it
+        // once. The two are mutually exclusive by construction
+        // anyway — a freeze save means the streak survived, so it
+        // can't also have broken.
+    }
+
+    /// The habit and the shelf: streak, plan, upgrade, packs, quest,
+    /// achievements, memory verses.
+    @ViewBuilder
+    private var moreColumn: some View {
+        if pendingStreakBreak > 0 {
+            ComebackCard(
+                previousStreak: pendingStreakBreak,
+                playLabel: comebackPlayLabel,
+                onPlay: startComeback,
+                onDismiss: { pendingStreakBreak = 0 }
+            )
+        } else {
+            StreakCard(
+                current: profile.currentStreak,
+                best: profile.bestStreak,
+                freezes: profile.streakFreezes,
+                savedRecently: freezeSavedToday,
+                completedWeekdays: completedWeekdaysThisWeek
+            )
+
+            // Right under the streak it protects. Once ever, and
+            // never on a day any other surface already asked.
+            if showStreakAsk {
+                ReminderAskCard(
+                    profile: profile,
+                    surface: .streakCard,
+                    kicker: "Protect your streak",
+                    headline: "A daily nudge keeps it alive.",
+                    onFinish: { withAnimation { showStreakAsk = false } }
+                )
+            }
+        }
+
+        // Under the habit surfaces (puzzles, streak), above the
+        // discovery ones. This card lived at the very bottom and
+        // reached 21 users/25 taps in 30 days — about 6.5% of
+        // actives ever saw it. Here it's one short scroll away
+        // instead of a full one. `source: "home_card"` is
+        // unchanged on purpose: the move is measured as a lift on
+        // the same PostHog event, not a new one.
+        // A habit surface like the streak, so it sits with them:
+        // only while a plan is running, one row, checked once
+        // today's chapter is read. `readingPlans` needs no Bible
+        // decode — the plan recorded its chapter count at start.
+        ReadingPlanCard(compact: true, onRead: openPlanChapter)
+
+        if !store.isPremium {
+            UpgradeCard(
+                totalPuzzles: puzzleProvider.totalPuzzleCount,
+                solvedPuzzles: records.count { $0.isCompleted }
+            )
+        }
+
+        if !collectionPacks.isEmpty {
+            CollectionsCarousel(
+                packs: collectionPacks,
+                recordsByID: recordsByID,
+                isPremium: store.isPremium
+            )
+        }
+
+        // The first unfinished Journey, hidden once they're all
+        // walked. A locked premium quest still shows — the card is
+        // a discovery surface, and its detail screen carries the
+        // paywall.
+        if let quest = activeQuest {
+            QuestHomeCard(
+                quest: quest,
+                progress: QuestProgress(quest: quest, recordsByID: recordsByID)
+            )
+        }
+
+        Button {
+            showAchievements = true
+        } label: {
+            NextAchievementCard(profile: profile)
+        }
+        .buttonStyle(PressableCardStyle())
+        .accessibilityHint("Opens every achievement")
+
+        // Below the achievement card: the mode earns attention
+        // through its due badge, not its position.
+        MemoryVerseCard(
+            dueCount: memoryVerses.dueCount,
+            activeCount: memoryVerses.entries.count
+        )
+    }
 
     private var emptyDailyCard: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.s) {
