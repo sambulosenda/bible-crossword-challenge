@@ -262,10 +262,6 @@ struct HomeView: View {
         })
     }
 
-    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-    /// The window, for the one-or-two-column decision. See `twoColumns`.
-    @State private var containerSize: CGSize = .zero
-
     var body: some View {
         // Resolve the daily puzzle + its record once per body pass; the verse
         // card derives from the puzzle so it never spoils today's answer.
@@ -276,49 +272,13 @@ struct HomeView: View {
         let leadsWithMini = profile.isStillLearning && mini != nil
 
         return NavigationStack(path: $path) {
-            Group {
-                if twoColumns {
-                    // A wide regular window — iPhone Duo open in landscape,
-                    // an iPad on its side — held one 560pt column in the
-                    // middle of the paper with a third of the width blank
-                    // each side, and the fold ran straight through it. Two
-                    // columns use the width, and the seam between them is
-                    // where a partial fold wants it. The lead column is
-                    // today's puzzles; the other is the habit and the
-                    // shelf, in the order they already had.
-                    if #available(iOS 27.1, *) {
-                        ArrangementView {
-                            column {
-                                leadColumn(daily: daily, record: record, mini: mini,
-                                           miniRecord: miniRecord, leadsWithMini: leadsWithMini)
-                            }
-                        } secondary: {
-                            column { moreColumn }
-                        }
-                        .arrangementViewStyle(.split.axes(.horizontal))
-                    } else {
-                        HStack(spacing: 0) {
-                            column {
-                                leadColumn(daily: daily, record: record, mini: mini,
-                                           miniRecord: miniRecord, leadsWithMini: leadsWithMini)
-                            }
-                            column { moreColumn }
-                        }
-                    }
-                } else {
-                    column {
-                        leadColumn(daily: daily, record: record, mini: mini,
-                                   miniRecord: miniRecord, leadsWithMini: leadsWithMini)
-                        moreColumn
-                    }
-                }
+            CardColumns {
+                leadColumn(daily: daily, record: record, mini: mini,
+                           miniRecord: miniRecord, leadsWithMini: leadsWithMini)
+            } more: {
+                moreColumn
             }
             .background(Theme.background)
-            .onGeometryChange(for: CGSize.self) { proxy in
-                proxy.size
-            } action: { size in
-                containerSize = size
-            }
             // One ask per sitting, in order of how much the player has already
             // told us. The trial re-offer answers intent they actually showed
             // (they read the price and pressed the button), the premium ask
@@ -373,29 +333,6 @@ struct HomeView: View {
     }
 
     // MARK: - Empty state (only reachable if the bundled puzzle set is missing)
-
-    /// Whether the window is wide enough, and regular enough, for the cards
-    /// to sit in two columns rather than one.
-    private var twoColumns: Bool {
-        horizontalSizeClass == .regular && containerSize.width > containerSize.height
-    }
-
-    /// One scrolling column of cards at the app's readable width.
-    private func column<Content: View>(@ViewBuilder _ content: () -> Content) -> some View {
-        ScrollView {
-            VStack(spacing: Theme.Spacing.l, content: content)
-                .padding(Theme.Spacing.m)
-                .frame(maxWidth: 560)
-                // The scroll content's width is pinned to the scroll
-                // container, not left to the column's own measurement. Left
-                // to itself the column came out two-thirds of a point wider
-                // than the screen (fractional layout out of the readable-width
-                // chain), which made the vertical scroller horizontally
-                // scrollable — the whole page could be dragged and bounced
-                // left and right.
-                .containerRelativeFrame(.horizontal)
-        }
-    }
 
     /// Today's puzzles: the verse, the lead card and the ones under it.
     @ViewBuilder

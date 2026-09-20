@@ -60,37 +60,35 @@ struct ProfileView: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(spacing: Theme.Spacing.l) {
-                    identityCard
-                    ProfileStatsCard(
-                        streak: profile.currentStreak,
-                        solved: profile.totalPuzzlesCompleted,
-                        bestStreak: profile.bestStreak,
-                        bestSolveSeconds: profile.bestSolveSeconds,
-                        freezes: profile.streakFreezes,
-                        unlocked: unlockedCount,
-                        totalAchievements: Achievements.all.count
-                    )
-                    AchievementsCard(
-                        profile: profile,
-                        unlocked: unlockedCount,
-                        total: Achievements.all.count
-                    )
-                    leaderboardSection
-                    challengesSection
-                    premiumSection
-                    preferencesSection
-                    gameplaySection
-                    remindersSection
-                    supportSection
-                    #if DEBUG
-                    developerSection
-                    #endif
-                }
-                .padding(Theme.Spacing.m)
-                .frame(maxWidth: 560)
-                .frame(maxWidth: .infinity)
+            // The player on the left of a wide window, the settings on the
+            // right.
+            CardColumns {
+                identityCard
+                ProfileStatsCard(
+                    streak: profile.currentStreak,
+                    solved: profile.totalPuzzlesCompleted,
+                    bestStreak: profile.bestStreak,
+                    bestSolveSeconds: profile.bestSolveSeconds,
+                    freezes: profile.streakFreezes,
+                    unlocked: unlockedCount,
+                    totalAchievements: Achievements.all.count
+                )
+                AchievementsCard(
+                    profile: profile,
+                    unlocked: unlockedCount,
+                    total: Achievements.all.count
+                )
+                leaderboardSection
+                challengesSection
+            } more: {
+                premiumSection
+                preferencesSection
+                gameplaySection
+                remindersSection
+                supportSection
+                #if DEBUG
+                developerSection
+                #endif
             }
             .background(Theme.background)
             .navigationTitle("Profile")

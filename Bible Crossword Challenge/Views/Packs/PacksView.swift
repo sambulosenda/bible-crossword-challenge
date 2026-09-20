@@ -86,22 +86,20 @@ struct PacksView: View {
         let evergreen = packs.filter { !$0.isSeasonal && $0.id != lead?.packID }
         let anythingAbove = lead != nil || !shownQuests.isEmpty || !seasonal.isEmpty
 
-        return ScrollView {
-            VStack(spacing: Theme.Spacing.l) {
-                leadCard(lead)
-                questSection(quests: shownQuests, recordsByID: recordsByID)
-                if !seasonal.isEmpty {
-                    section("In Season", packs: seasonal, recordsByID: recordsByID)
-                }
-                section(
-                    anythingAbove ? "All Collections" : nil,
-                    packs: evergreen,
-                    recordsByID: recordsByID
-                )
+        // The lead and the Journeys on the left of a wide window, the
+        // collections on the right.
+        return CardColumns {
+            leadCard(lead)
+            questSection(quests: shownQuests, recordsByID: recordsByID)
+        } more: {
+            if !seasonal.isEmpty {
+                section("In Season", packs: seasonal, recordsByID: recordsByID)
             }
-            .padding(Theme.Spacing.m)
-            .frame(maxWidth: 560)
-            .frame(maxWidth: .infinity)
+            section(
+                anythingAbove ? "All Collections" : nil,
+                packs: evergreen,
+                recordsByID: recordsByID
+            )
         }
         .background(Theme.background)
     }

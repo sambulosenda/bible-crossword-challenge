@@ -56,31 +56,34 @@ struct ReadView: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                SearchAware { searching in
-                    if searching {
+            SearchAware { searching in
+                if searching {
+                    ScrollView {
                         searchResults
-                    } else {
-                        VStack(spacing: Theme.Spacing.l) {
-                            // The habit first, then the bookmark, then the shelves.
-                            ReadingPlanCard(onRead: openPlanChapter)
-                            resumeCard
-                            recentRow
-                            MemoryVerseCard(
-                                dueCount: memoryVerses.dueCount,
-                                activeCount: memoryVerses.entries.count
-                            )
-                            JourneyCard(source: "read_tab")
-                            if !bookmarks.entries.isEmpty {
-                                bookmarksCard
-                            }
-                            browseSection
+                            .padding(Theme.Spacing.m)
+                            .frame(maxWidth: 560)
+                            .frame(maxWidth: .infinity)
+                    }
+                } else {
+                    // The habit and the bookmark on the left of a wide
+                    // window, the shelves on the right.
+                    CardColumns {
+                        // The habit first, then the bookmark, then the shelves.
+                        ReadingPlanCard(onRead: openPlanChapter)
+                        resumeCard
+                        recentRow
+                    } more: {
+                        MemoryVerseCard(
+                            dueCount: memoryVerses.dueCount,
+                            activeCount: memoryVerses.entries.count
+                        )
+                        JourneyCard(source: "read_tab")
+                        if !bookmarks.entries.isEmpty {
+                            bookmarksCard
                         }
+                        browseSection
                     }
                 }
-                .padding(Theme.Spacing.m)
-                .frame(maxWidth: 560)
-                .frame(maxWidth: .infinity)
             }
             .background(Theme.background)
             .navigationTitle("Read")
