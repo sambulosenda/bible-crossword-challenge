@@ -258,14 +258,17 @@ struct CrosswordGameView: View {
                     VStack(spacing: 0) {
                         railStatusRow
                         solveNotes
-                        // Beside the grid the column is full-height: the
-                        // clue list stands in the slack when it has one,
-                        // otherwise the clue bar and keypad sit at the foot
-                        // where the thumbs are. Under the grid there is no
-                        // slack to spend.
+                        // The clue list stands in the column's slack when it
+                        // has one; otherwise the clue bar and keypad sink to
+                        // the foot of their pane, where the thumbs are. That
+                        // matters beside the grid, and on iPhone Duo folded
+                        // like a laptop, where the pane below the hinge is
+                        // taller than the keypad. Under the grid on a phone
+                        // the pane is sized to its content, so the spacer
+                        // costs nothing there.
                         if solveLayout == .cluesInColumn {
                             columnClueList
-                        } else if containerSize.width > containerSize.height {
+                        } else {
                             Spacer(minLength: 0)
                         }
                         clueBar
