@@ -248,10 +248,10 @@ struct CrosswordGameView: View {
     private var solveSurface: some View {
         Group {
             if #available(iOS 27.1, *) {
-                // The system's own two-pane container: side by side when the
-                // window is wider than tall, stacked otherwise — the same
-                // rule as the branches below — and on iPhone Duo it moves
-                // the seam off the fold, which a hand-rolled stack can't.
+                // The system's own two-pane container. It picks the axis
+                // from the window's size and size classes — its rule, not
+                // the branches below — and on iPhone Duo it moves the seam
+                // off the fold, which a hand-rolled stack can't.
                 ArrangementView {
                     gridArea
                 } secondary: {
@@ -274,6 +274,13 @@ struct CrosswordGameView: View {
                         clueBar
                         keypad
                     }
+                    // Left to itself the split sizes this pane by ratio;
+                    // hold it to the same keypad width the fallback
+                    // column gets.
+                    .splitArrangementLayoutSize(
+                        minWidth: Self.landscapeKeypadWidth,
+                        idealWidth: Self.landscapeKeypadWidth
+                    )
                 }
                 .arrangementViewStyle(.split)
             } else if solveLayout == .sideBySide || solveLayout == .cluesInColumn {
