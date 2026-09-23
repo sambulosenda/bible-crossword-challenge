@@ -148,20 +148,38 @@ struct CrosswordGameView: View {
                 // width, and grid + keypad + a standing clue list is three
                 // columns in 950pt, which leaves the grid narrower than the
                 // keyboard. The clue list stays a toolbar sheet here.
-                solveSurface
+                solveSurface()
             case .withCluePanel:
                 // iPad: the clue list stops being a sheet and becomes a
                 // standing side panel — grid and keyboard on the left, every
                 // clue in view on the right, the way a paper crossword sits
                 // next to its clues.
-                HStack(spacing: 0) {
-                    solveSurface
-                    Divider().ignoresSafeArea(edges: .bottom)
-                    ClueListView(vm: vm, embedded: true)
-                        .frame(width: Self.cluePanelWidth)
+                if #available(iOS 27.1, *) {
+                    // The system's split owns the seam here too, so the
+                    // panel is sized by the arrangement rather than beside
+                    // it. The surface inside stays one column: left to its
+                    // own arrangement it could split again and put three
+                    // columns in the window.
+                    ArrangementView {
+                        solveSurface(stacked: true)
+                    } secondary: {
+                        ClueListView(vm: vm, embedded: true)
+                            .splitArrangementLayoutSize(
+                                minWidth: Self.cluePanelWidth,
+                                idealWidth: Self.cluePanelWidth
+                            )
+                    }
+                    .arrangementViewStyle(.split.axes(.horizontal))
+                } else {
+                    HStack(spacing: 0) {
+                        solveSurface()
+                        Divider().ignoresSafeArea(edges: .bottom)
+                        ClueListView(vm: vm, embedded: true)
+                            .frame(width: Self.cluePanelWidth)
+                    }
                 }
             case .stacked, .cluesInColumn:
-                solveSurface
+                solveSurface()
             }
         }
         .background(Theme.background)
@@ -244,10 +262,19 @@ struct CrosswordGameView: View {
 
     /// The solving surface: notes, grid, clue bar and keyboard. Stacked in
     /// portrait and on iPad (where it is the left column beside the clue
-    /// panel); side by side in landscape on a phone.
-    private var solveSurface: some View {
+    /// panel); side by side in landscape on a phone. `stacked` keeps it one
+    /// column whatever the window, for when it is itself a pane.
+    private func solveSurface(stacked: Bool = false) -> some View {
         Group {
-            if #available(iOS 27.1, *) {
+            if stacked {
+                VStack(spacing: 0) {
+                    railStatusRow
+                    solveNotes
+                    gridArea
+                    clueBar
+                    keypad
+                }
+            } else if #available(iOS 27.1, *) {
                 // The system's own two-pane container. It picks the axis
                 // from the window's size and size classes — its rule, not
                 // the branches below — and on iPhone Duo it moves the seam
