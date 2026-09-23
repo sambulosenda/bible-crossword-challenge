@@ -37,19 +37,19 @@ struct CardColumns<Lead: View, More: View>: View {
                     // partial fold; horizontal only, because two stacked
                     // scroll views would be the phone layout done worse.
                     ArrangementView {
-                        column(split: true) { lead() }
+                        column(width: nil) { lead() }
                     } secondary: {
-                        column(split: true) { more() }
+                        column(width: nil) { more() }
                     }
                     .arrangementViewStyle(.split.axes(.horizontal))
                 } else {
                     HStack(spacing: 0) {
-                        column(split: true) { lead() }
-                        column(split: true) { more() }
+                        column(width: nil) { lead() }
+                        column(width: nil) { more() }
                     }
                 }
             } else {
-                column(split: false) {
+                column(width: proxy.size.width) {
                     lead()
                     more()
                 }
@@ -64,36 +64,41 @@ struct CardColumns<Lead: View, More: View>: View {
         sizeClass == .regular && size.width > size.height
     }
 
-    /// One scrolling column of cards at the readable width.
-    private func column<Content: View>(split: Bool, @ViewBuilder _ content: () -> Content) -> some View {
+    /// One scrolling column of cards at the readable width. `width` is the
+    /// measured window width when the column stands alone, `nil` in a split.
+    private func column<Content: View>(width: CGFloat?, @ViewBuilder _ content: () -> Content) -> some View {
         ScrollView {
             VStack(alignment: alignment, spacing: Theme.Spacing.l, content: content)
                 .padding(Theme.Spacing.m)
                 .frame(maxWidth: maxWidth)
-                .modifier(ColumnWidth(pinToContainer: !split))
+                .modifier(ColumnWidth(width: width))
         }
     }
 }
 
 /// How a column's content takes its width.
 ///
-/// Alone, the scroll content's width is pinned to the scroll container
-/// rather than left to the column's own measurement: left to itself the
-/// column came out two-thirds of a point wider than the screen (fractional
-/// layout out of the readable-width chain), which made the vertical
-/// scroller horizontally scrollable — the whole page could be dragged and
-/// bounced left and right.
+/// Alone, the scroll content's width is pinned to the width the
+/// GeometryReader measured rather than left to the column's own
+/// measurement: left to itself the column came out two-thirds of a point
+/// wider than the screen (fractional layout out of the readable-width
+/// chain), which made the vertical scroller horizontally scrollable — the
+/// whole page could be dragged and bounced left and right. Not
+/// `containerRelativeFrame`: its container is the scroll view, which sizes
+/// to this content, so after iPhone Duo folds the column held the open
+/// width (867pt on a 382pt screen) — the cards sat off-centre and ran
+/// under the rail.
 ///
 /// In a split, `containerRelativeFrame` resolves to the window, not the
 /// pane, and every column came out 560pt wide over the pane's edge — the
 /// left ran under the right, the right under the rail. There the column
 /// simply fills the pane it was given.
 private struct ColumnWidth: ViewModifier {
-    let pinToContainer: Bool
+    let width: CGFloat?
 
     func body(content: Content) -> some View {
-        if pinToContainer {
-            content.containerRelativeFrame(.horizontal)
+        if let width {
+            content.frame(width: width)
         } else {
             content.frame(maxWidth: .infinity)
         }
