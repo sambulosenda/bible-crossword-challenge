@@ -154,6 +154,11 @@ struct LibraryView: View {
                 }
             }
             .navigationTitle("Library")
+            // Inline, like Today: a large title can't collapse over a list with
+            // a pinned inset above it — it vanished and left a blank band.
+            // The bar then carries the title, the search field and the type
+            // picker as one fixed header, which is what this screen is for.
+            .navigationBarTitleDisplayMode(.inline)
             .navigationDestination(for: Puzzle.self) { puzzle in
                 CrosswordGameView(puzzle: puzzle, profile: profile, entrySource: "library")
             }
@@ -170,8 +175,6 @@ struct LibraryView: View {
 
     private var premiumList: some View {
         List {
-            kindSection
-
             if query.isEmpty, statusFilter != .completed, let next = nextUnsolved {
                 Section {
                     nextUnsolvedRow(next)
@@ -215,8 +218,13 @@ struct LibraryView: View {
         .frame(maxWidth: 640)
         .frame(maxWidth: .infinity)
         .background(Theme.background)
-        .searchable(text: $query, prompt: "Search titles or verses")
+        .searchable(
+            text: $query,
+            placement: .navigationBarDrawer(displayMode: .always),
+            prompt: "Search titles or verses"
+        )
         .toolbar { filterMenu }
+        .safeAreaInset(edge: .top, spacing: 0) { kindPicker }
         .overlay {
             if filtered.isEmpty && filteredSundays.isEmpty && filteredMinis.isEmpty {
                 if query.isEmpty {
@@ -386,8 +394,6 @@ struct LibraryView: View {
         let hiddenLocked = split.locked.count - locked.count
 
         return List {
-            kindSection
-
             // The same jump premium players get. Free players had none, so
             // the way to their next puzzle was to scroll past their solved ones.
             if query.isEmpty, statusFilter != .completed, let next {
@@ -426,8 +432,13 @@ struct LibraryView: View {
         .frame(maxWidth: 640)
         .frame(maxWidth: .infinity)
         .background(Theme.background)
-        .searchable(text: $query, prompt: "Search titles or verses")
+        .searchable(
+            text: $query,
+            placement: .navigationBarDrawer(displayMode: .always),
+            prompt: "Search titles or verses"
+        )
         .toolbar { filterMenu }
+        .safeAreaInset(edge: .top, spacing: 0) { kindPicker }
         .overlay {
             if split.free.isEmpty && split.locked.isEmpty {
                 if query.isEmpty {
@@ -450,19 +461,21 @@ struct LibraryView: View {
 
     /// Daily, Mini or Sunday, up front rather than inside the filter menu:
     /// they're different lengths of sitting, and the choice is the first one
-    /// a player makes here.
-    private var kindSection: some View {
-        Section {
-            Picker("Puzzle type", selection: $kind) {
-                ForEach(LibraryKind.allCases) { kind in
-                    Text(kind.label).tag(kind)
-                }
+    /// a player makes here. Pinned above the list rather than its first row,
+    /// so changing type deep in a long list doesn't mean scrolling back up.
+    private var kindPicker: some View {
+        Picker("Puzzle type", selection: $kind) {
+            ForEach(LibraryKind.allCases) { kind in
+                Text(kind.label).tag(kind)
             }
-            .pickerStyle(.segmented)
-            .labelsHidden()
-            .listRowBackground(Color.clear)
-            .listRowInsets(EdgeInsets())
         }
+        .pickerStyle(.segmented)
+        .labelsHidden()
+        .padding(.horizontal, Theme.Spacing.m)
+        .padding(.vertical, Theme.Spacing.s)
+        .frame(maxWidth: 640)
+        .frame(maxWidth: .infinity)
+        .background(Theme.background)
     }
 
     /// States the allowance in the player's own terms, without claiming dates.

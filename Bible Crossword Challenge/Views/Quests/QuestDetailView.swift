@@ -49,6 +49,7 @@ struct QuestDetailView: View {
         // The Journey on the left of a wide window, its steps on the right.
         CardColumns(alignment: .leading) {
             header
+                .onScrolledUnderBar { headerScrolledAway = $0 }
         } more: {
             if isLocked {
                 lockedState
@@ -59,6 +60,9 @@ struct QuestDetailView: View {
         .background(Theme.background)
         .navigationTitle(quest.title)
         .navigationBarTitleDisplayMode(.inline)
+        // The header card names the screen; the bar takes the name over only
+        // once the header has scrolled under it.
+        .revealedTitle(quest.title, when: headerScrolledAway)
         .sheet(isPresented: $showPaywall) {
             PaywallView(source: .questLocked)
         }
@@ -68,6 +72,8 @@ struct QuestDetailView: View {
     }
 
     // MARK: - Header
+
+    @State private var headerScrolledAway = false
 
     private var header: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.m) {

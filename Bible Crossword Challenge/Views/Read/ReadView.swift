@@ -365,6 +365,7 @@ struct ReadView: View {
             HStack(spacing: Theme.Spacing.m) {
                 Image(systemName: "bookmark.fill")
                     .font(.title2)
+                    .dynamicTypeSize(...DynamicTypeSize.xxLarge)
                     .foregroundStyle(Theme.accent)
                     .frame(width: 44, height: 44)
                     .background(Theme.accent.opacity(0.14), in: .circle)

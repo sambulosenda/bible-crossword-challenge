@@ -229,7 +229,21 @@ struct HomeView: View {
         let record = daily.flatMap { d in records.first { $0.puzzleID == d.id } }
         let mini = dailyMini
         let miniRecord = mini.flatMap { m in records.first { $0.puzzleID == m.id } }
-        let leadsWithMini = profile.isStillLearning && mini != nil
+        // The Mini also leads on a repeat day — the daily rotation has come
+        // round to a puzzle this player already finished, and today's Mini is
+        // one they haven't. A repeat in the hero is the weakest first thing
+        // Today can say to someone who has been here three months; any finish
+        // keeps the streak (`Streaks.registerCompletion`), so leading with the
+        // new puzzle costs the habit nothing. The repeat stays one row down.
+        let dailyIsRepeat: Bool = {
+            if case .playedBefore = DailyPresentation.of(record: record, on: Date()) { return true }
+            return false
+        }()
+        let miniIsNew: Bool = {
+            if case .play = DailyPresentation.of(record: miniRecord, on: Date()) { return true }
+            return false
+        }()
+        let leadsWithMini = mini != nil && (profile.isStillLearning || (dailyIsRepeat && miniIsNew))
 
         return NavigationStack(path: $path) {
             CardColumns {
@@ -820,11 +834,16 @@ private struct LeadPuzzleCard: View {
                 Label("Play again", systemImage: "arrow.clockwise")
             }
             .buttonStyle(.pillTonal)
-        case .playedBefore:
+        case .playedBefore(let previous):
             // Prominent, unlike the solved-today replay: this *is* the day's
-            // action, and the streak depends on it being taken.
+            // action, and the streak depends on it being taken. It names the
+            // time to beat — a repeat offered as a target, not a rerun.
             NavigationLink(value: puzzle) {
-                Label("Play again", systemImage: "arrow.clockwise")
+                if let previous, previous > 0 {
+                    Label("Beat \(TimeFormat.clock(previous))", systemImage: "stopwatch")
+                } else {
+                    Label("Play again", systemImage: "arrow.clockwise")
+                }
             }
             .buttonStyle(.pillProminent)
         case .play(let status):

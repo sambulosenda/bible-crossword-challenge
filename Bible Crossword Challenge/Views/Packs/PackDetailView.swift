@@ -66,6 +66,7 @@ struct PackDetailView: View {
         // right.
         CardColumns(alignment: .leading) {
             header
+                .onScrolledUnderBar { headerScrolledAway = $0 }
             // Shown locked as well as unlocked: which books a collection
             // covers is part of deciding whether to buy it.
             booksCard
@@ -82,6 +83,9 @@ struct PackDetailView: View {
         }
         .navigationTitle(pack.title)
         .navigationBarTitleDisplayMode(.inline)
+        // The header card names the screen; the bar takes the name over only
+        // once the header has scrolled under it.
+        .revealedTitle(pack.title, when: headerScrolledAway)
         .sheet(isPresented: $showPaywall) {
             // A seasonal pack gets its name into the promise: "the collections
             // are waiting" is true all year, and this one isn't.
@@ -98,6 +102,8 @@ struct PackDetailView: View {
     }
 
     // MARK: - Header
+
+    @State private var headerScrolledAway = false
 
     private var header: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.m) {

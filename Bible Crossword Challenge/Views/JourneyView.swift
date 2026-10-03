@@ -402,13 +402,18 @@ struct JourneyCard: View {
         NavigationLink {
             JourneyView(source: source)
         } label: {
+            // The same row shape as Memory verses and Bookmarks beside it on
+            // the Read tab: a disc icon, a headline, a caption.
             HStack(spacing: Theme.Spacing.m) {
                 Image(systemName: "map.fill")
-                    .font(.title)
+                    .font(.title2)
+                    .dynamicTypeSize(...DynamicTypeSize.xxLarge)
                     .foregroundStyle(Theme.accent)
+                    .frame(width: 44, height: 44)
+                    .background(Theme.accent.opacity(0.14), in: .circle)
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Books explored")
-                        .font(.subheadline.weight(.semibold))
+                        .font(.headline)
                         .foregroundStyle(.primary)
                     Text(journeySummary)
                         .font(.caption)

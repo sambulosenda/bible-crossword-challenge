@@ -305,3 +305,45 @@ struct DifficultyBadge: View {
         }
     }
 }
+
+// MARK: - Title revealed on scroll
+
+/// For a detail screen whose header card already names it: the bar shows the
+/// title only once that header has scrolled up under it — the App Store's
+/// detail-page pattern — rather than saying the name twice on arrival.
+/// `navigationTitle` stays set underneath, so the back button on any screen
+/// pushed from here still reads the name.
+private struct RevealedTitle: ViewModifier {
+    let title: String
+    let isRevealed: Bool
+
+    func body(content: Content) -> some View {
+        content.toolbar {
+            ToolbarItem(placement: .principal) {
+                Text(title)
+                    .font(.headline)
+                    .lineLimit(1)
+                    .opacity(isRevealed ? 1 : 0)
+                    .animation(.easeOut(duration: 0.15), value: isRevealed)
+                    .accessibilityHidden(!isRevealed)
+            }
+        }
+    }
+}
+
+extension View {
+    func revealedTitle(_ title: String, when isRevealed: Bool) -> some View {
+        modifier(RevealedTitle(title: title, isRevealed: isRevealed))
+    }
+
+    /// Reports whether this view has (nearly) scrolled up under the navigation
+    /// bar. The bar ends a little under 120pt in window space on current
+    /// iPhones; 150 trips once only the header's last strip is left, by which
+    /// point the name it carries is long gone — at 120 a short page could
+    /// never scroll far enough to hand the name to the bar.
+    func onScrolledUnderBar(_ action: @escaping (Bool) -> Void) -> some View {
+        onGeometryChange(for: Bool.self) { proxy in
+            proxy.frame(in: .global).maxY < 150
+        } action: { action($0) }
+    }
+}
