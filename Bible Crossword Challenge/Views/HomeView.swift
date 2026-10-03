@@ -2,11 +2,13 @@
 //  HomeView.swift
 //  Bible Crossword Challenge
 //
-//  The "Today" tab. The screen opens like a page rather than a dashboard: a
-//  greeting and the date, the day's verse set in serif on the bare paper, and
-//  only then the daily puzzle — the one card that carries a tint, so the hero
-//  is unmistakable among the white cards below it (mini, streak, collections,
-//  next achievement, upgrade, and a bottom banner placeholder).
+//  The "Today" tab. The screen opens like a page rather than a dashboard: the
+//  day's verse set in serif on the bare paper, and only then the daily puzzle
+//  — the one card that carries a tint and the one pill, so the hero is
+//  unmistakable among the white cards below it: the day's other puzzles, the
+//  streak, "Keep going" (plan, Journey, memory verses, next badge), the packs
+//  shelf, and the upgrade card last. Uppercase labels are section headers
+//  only; cards name themselves.
 //
 //  Each card is its own `View` type with narrow VALUE inputs so SwiftUI can
 //  skip re-evaluating cards whose inputs didn't change (e.g. the verse card
@@ -92,7 +94,25 @@ struct HomeView: View {
         )
         let seasonal = available.filter(\.isSeasonal)
         let rest = available.filter { !$0.isSeasonal }
-        return seasonal + rest.filter { $0.isNew() } + rest.filter { !$0.isNew() }
+        let timely = seasonal + rest.filter { $0.isNew() } + rest.filter { !$0.isNew() }
+
+        // Then by what the player can do with each, keeping the timely order
+        // within a group: one they're partway through, one they can start,
+        // one behind Premium, and last one they've finished. The carousel
+        // used to open on "First Steps — Complete" for anyone past the
+        // tutorial, a dead end in the first slot with every tile after it
+        // locked.
+        let records = recordsByID
+        func rank(_ pack: PuzzlePack) -> Int {
+            let progress = PackProgress(pack: pack, recordsByID: records)
+            let locked = pack.isPremium && !store.isPremium
+            if locked { return 2 }
+            if progress.isComplete { return 3 }
+            return progress.solved > 0 ? 0 : 1
+        }
+        return timely.enumerated()
+            .sorted { (rank($0.element), $0.offset) < (rank($1.element), $1.offset) }
+            .map(\.element)
     }
 
     /// The first Journey with steps left, in authored order (the free quest is
@@ -302,32 +322,48 @@ struct HomeView: View {
                 presentation: .of(record: miniRecord, on: Date()),
                 progress: inProgressFraction(mini, record: miniRecord)
             )
-            if let daily {
-                CompactPuzzleCard(
-                    puzzle: daily,
-                    billing: .daily,
-                    presentation: .of(record: record, on: Date())
-                )
-            }
+        } else if let daily {
+            LeadPuzzleCard(
+                puzzle: daily,
+                billing: .daily,
+                presentation: .of(record: record, on: Date()),
+                progress: inProgressFraction(daily, record: record)
+            )
         } else {
-            if let daily {
-                LeadPuzzleCard(
-                    puzzle: daily,
-                    billing: .daily,
-                    presentation: .of(record: record, on: Date()),
-                    progress: inProgressFraction(daily, record: record)
-                )
-            } else {
-                emptyDailyCard
-            }
+            emptyDailyCard
+        }
 
-            if let mini {
-                CompactPuzzleCard(
-                    puzzle: mini,
-                    billing: .mini,
-                    presentation: .of(record: miniRecord, on: Date())
-                )
+        // The day's other puzzles as rows of one card, not a card each:
+        // they are one idea ("also today"), and two white cards stacked
+        // under the hero read as two more headlines.
+        let companions = companionPuzzles(
+            daily: daily, record: record, mini: mini, miniRecord: miniRecord,
+            leadsWithMini: leadsWithMini
+        )
+        if !companions.isEmpty {
+            CompanionPuzzlesCard(rows: companions)
+        }
+    }
+
+    /// What sits under the hero: whichever daily it isn't carrying, then the
+    /// Sunday Special.
+    private func companionPuzzles(
+        daily: Puzzle?, record: PuzzleRecord?, mini: Puzzle?, miniRecord: PuzzleRecord?,
+        leadsWithMini: Bool
+    ) -> [CompanionPuzzle] {
+        var rows: [CompanionPuzzle] = []
+        if leadsWithMini, mini != nil {
+            if let daily {
+                rows.append(CompanionPuzzle(
+                    puzzle: daily, billing: .daily,
+                    presentation: .of(record: record, on: Date())
+                ))
             }
+        } else if let mini {
+            rows.append(CompanionPuzzle(
+                puzzle: mini, billing: .mini,
+                presentation: .of(record: miniRecord, on: Date())
+            ))
         }
 
         // The week's peak, Sunday through Saturday. Below the two
@@ -346,26 +382,23 @@ struct HomeView: View {
         // it. It comes back at three finishes, with everything else
         // the window withholds.
         if let sunday = sundaySpecial, !profile.isStillLearning {
-            CompactPuzzleCard(
-                puzzle: sunday,
-                billing: .sunday,
-                presentation: sundayPresentation(
-                    records.first { $0.puzzleID == sunday.id }
-                )
-            )
+            rows.append(CompanionPuzzle(
+                puzzle: sunday, billing: .sunday,
+                presentation: sundayPresentation(records.first { $0.puzzleID == sunday.id })
+            ))
         }
-
-        // Instead of, not above: a comeback card stacked on a flame
-        // card reading 0 would state the loss twice and answer it
-        // once. The two are mutually exclusive by construction
-        // anyway — a freeze save means the streak survived, so it
-        // can't also have broken.
+        return rows
     }
 
     /// The habit and the shelf: streak, plan, upgrade, packs, quest,
     /// achievements, memory verses.
     @ViewBuilder
     private var moreColumn: some View {
+        // Instead of, not above: a comeback card stacked on a flame
+        // card reading 0 would state the loss twice and answer it
+        // once. The two are mutually exclusive by construction
+        // anyway — a freeze save means the streak survived, so it
+        // can't also have broken.
         if pendingStreakBreak > 0 {
             ComebackCard(
                 previousStreak: pendingStreakBreak,
@@ -395,24 +428,57 @@ struct HomeView: View {
             }
         }
 
-        // Under the habit surfaces (puzzles, streak), above the
-        // discovery ones. This card lived at the very bottom and
-        // reached 21 users/25 taps in 30 days — about 6.5% of
-        // actives ever saw it. Here it's one short scroll away
-        // instead of a full one. `source: "home_card"` is
-        // unchanged on purpose: the move is measured as a lift on
-        // the same PostHog event, not a new one.
-        // A habit surface like the streak, so it sits with them:
-        // only while a plan is running, one row, checked once
-        // today's chapter is read. `readingPlans` needs no Bible
-        // decode — the plan recorded its chapter count at start.
-        ReadingPlanCard(compact: true, onRead: openPlanChapter)
+        // Ordered by what players actually open, not by what the app
+        // wants opened. 30 days to 2026-10-03: packs carousel 76
+        // players, Journey 66, next achievement 63, memory verses 35
+        // (348 opens), the Premium card 22. The Premium card sat
+        // directly under the streak, above all of it; it now closes
+        // the column. `source: "home_card"` is unchanged on purpose,
+        // so the move reads as a change on the same event.
+        //
+        // One header for the three things that carry on from day to
+        // day, instead of an uppercase kicker on each card — Today had
+        // seven of those, and a label per card is a label nobody reads.
+        VStack(alignment: .leading, spacing: Theme.Spacing.s) {
+            Text("Keep going").kicker()
+                .padding(.horizontal, Theme.Spacing.xs)
 
-        if !store.isPremium {
-            UpgradeCard(
-                totalPuzzles: puzzleProvider.totalPuzzleCount,
-                solvedPuzzles: records.count { $0.isCompleted }
+            // A habit surface like the streak: only while a plan is
+            // running, one row, checked once today's chapter is read.
+            // `readingPlans` needs no Bible decode — the plan recorded
+            // its chapter count at start.
+            ReadingPlanCard(compact: true, onRead: openPlanChapter)
+
+            // The first unfinished Journey, hidden once they're all
+            // walked. A locked premium quest still shows — the card is
+            // a discovery surface, and its detail screen carries the
+            // paywall.
+            if let quest = activeQuest {
+                QuestHomeCard(
+                    quest: quest,
+                    progress: QuestProgress(quest: quest, recordsByID: recordsByID)
+                )
+            }
+
+            MemoryVerseCard(
+                dueCount: memoryVerses.dueCount,
+                activeCount: memoryVerses.entries.count,
+                showsKicker: false
             )
+
+            // A row like its neighbours rather than a card of its own with an
+            // uppercase label and a progress bar: the badge is one more thing
+            // to keep going at, and a full card for it made the column a
+            // screen longer. Gone once every badge is earned.
+            if let next = Achievements.all.first(where: { !$0.isUnlocked(by: profile) }) {
+                Button {
+                    showAchievements = true
+                } label: {
+                    NextAchievementRow(achievement: next, profile: profile)
+                }
+                .buttonStyle(PressableCardStyle())
+                .accessibilityHint("Opens every achievement")
+            }
         }
 
         if !collectionPacks.isEmpty {
@@ -423,31 +489,12 @@ struct HomeView: View {
             )
         }
 
-        // The first unfinished Journey, hidden once they're all
-        // walked. A locked premium quest still shows — the card is
-        // a discovery surface, and its detail screen carries the
-        // paywall.
-        if let quest = activeQuest {
-            QuestHomeCard(
-                quest: quest,
-                progress: QuestProgress(quest: quest, recordsByID: recordsByID)
+        if !store.isPremium {
+            UpgradeCard(
+                totalPuzzles: puzzleProvider.totalPuzzleCount,
+                solvedPuzzles: records.count { $0.isCompleted }
             )
         }
-
-        Button {
-            showAchievements = true
-        } label: {
-            NextAchievementCard(profile: profile)
-        }
-        .buttonStyle(PressableCardStyle())
-        .accessibilityHint("Opens every achievement")
-
-        // Below the achievement card: the mode earns attention
-        // through its due badge, not its position.
-        MemoryVerseCard(
-            dueCount: memoryVerses.dueCount,
-            activeCount: memoryVerses.entries.count
-        )
     }
 
     private var emptyDailyCard: some View {
@@ -595,19 +642,12 @@ private struct TodayHeader: View {
 private enum PuzzleBilling {
     case daily, mini, sunday
 
-    var kicker: String {
+    /// The kind of puzzle, as the companion rows name it in their subtitle.
+    var name: String {
         switch self {
-        case .daily: "DAILY PUZZLE"
-        case .mini: "DAILY MINI"
-        case .sunday: "SUNDAY SPECIAL"
-        }
-    }
-
-    var symbol: String {
-        switch self {
-        case .daily: "calendar"
-        case .mini: "square.grid.3x3"
-        case .sunday: "sparkles"
+        case .daily: "Daily Puzzle"
+        case .mini: "Daily Mini"
+        case .sunday: "Sunday Special"
         }
     }
 
@@ -625,8 +665,8 @@ private enum PuzzleBilling {
     func blurb(_ puzzle: Puzzle) -> String {
         switch self {
         case .daily: "\(puzzle.size)×\(puzzle.size) · \(puzzle.clueCount) clues"
-        case .mini: "\(puzzle.size)×\(puzzle.size) · A quick two-minute puzzle"
-        case .sunday: "\(puzzle.size)×\(puzzle.size) · This week's big grid"
+        case .mini: "\(puzzle.size)×\(puzzle.size) · two minutes"
+        case .sunday: "\(puzzle.size)×\(puzzle.size) · this week's big grid"
         }
     }
 }
@@ -675,11 +715,8 @@ private struct LeadPuzzleCard: View {
             // No kicker: the card is the hero, its title names the puzzle and
             // the meta row says the size; the compact card below names the
             // other one. Seven uppercase labels on Today was two too many.
-            HStack {
-                Spacer()
-                DifficultyBadge(difficulty: puzzle.difficulty)
-            }
-
+            // The difficulty rides in the meta row: alone on a row of its own
+            // above the title it cost ~30pt of empty card.
             HStack(alignment: .top, spacing: Theme.Spacing.m) {
                 VStack(alignment: .leading, spacing: Theme.Spacing.m) {
                     Text(puzzle.title)
@@ -691,8 +728,8 @@ private struct LeadPuzzleCard: View {
                         solvedReward(seconds)
                     case .playedBefore(let previous):
                         // Presented as playable, because it is: the meta row is
-                        // what an unsolved puzzle shows, and the pill turns the
-                        // old time into a target rather than a full stop.
+                        // what an unsolved puzzle shows, and the old time is
+                        // stated as a target rather than a full stop.
                         metaRow
                         replayPrompt(previous)
                     case .play:
@@ -721,20 +758,15 @@ private struct LeadPuzzleCard: View {
         .accessibilityAddTraits(.isHeader)
     }
 
-    @ViewBuilder
-    private var metaLabels: some View {
-        Label("\(puzzle.clueCount) clues", systemImage: "list.bullet")
-        Label("\(puzzle.size)×\(puzzle.size)", systemImage: "square.grid.3x3")
-    }
-
+    /// One line of plain text. It was a difficulty capsule and two icon
+    /// labels, and with the status pill and the button under it the card
+    /// stacked four capsule shapes — the button is the only one that should
+    /// look like something to press.
     private var metaRow: some View {
-        // Stacks vertically when the labels can't fit side by side (large Dynamic Type).
-        ViewThatFits(in: .horizontal) {
-            HStack(spacing: Theme.Spacing.m) { metaLabels }
-            VStack(alignment: .leading, spacing: Theme.Spacing.xs) { metaLabels }
-        }
-        .font(.subheadline)
-        .foregroundStyle(.secondary)
+        Text("\(puzzle.difficulty.label) · \(puzzle.clueCount) clues · \(puzzle.size)×\(puzzle.size)")
+            .font(.subheadline)
+            .foregroundStyle(.secondary)
+            .fixedSize(horizontal: false, vertical: true)
     }
 
     // The win moment: leads with the time the user just earned, echoing the
@@ -753,34 +785,28 @@ private struct LeadPuzzleCard: View {
             }
         }
         .font(.subheadline.weight(.semibold))
-        .padding(.horizontal, Theme.Spacing.m)
-        .padding(.vertical, Theme.Spacing.s)
-        .background(Color.green.opacity(0.12), in: .capsule)
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     /// The rotation has come back around to a puzzle this player finished on an
     /// earlier day. Accent, not green: green is this app's word for "done", and
     /// today is not.
+    /// Plain text under the meta row, not an accent capsule: primary weight
+    /// carries the target, and the card keeps a single pill — the button.
     private func replayPrompt(_ previous: Int?) -> some View {
-        HStack(spacing: Theme.Spacing.xs) {
-            Image(systemName: "arrow.triangle.2.circlepath")
-            // Concatenated rather than two views in the stack: as one `Text` it
-            // wraps as a phrase instead of breaking between "beat" and the time.
+        Group {
+            // Concatenated rather than two views in a stack: as one `Text` it
+            // wraps as a phrase instead of breaking between "best" and the time.
             if let previous, previous > 0 {
-                Text("Played before · beat ")
+                Text("Played before · your best ")
                     + Text(TimeFormat.clock(previous)).monospacedDigit()
             } else {
                 Text("You've played this one before")
             }
         }
-        .lineLimit(2)
-        .minimumScaleFactor(0.8)
         .font(.subheadline.weight(.semibold))
-        .foregroundStyle(Theme.accent)
-        .padding(.horizontal, Theme.Spacing.m)
-        .padding(.vertical, Theme.Spacing.s)
-        .background(Theme.accent.opacity(0.14), in: .capsule)
+        .foregroundStyle(.primary)
+        .fixedSize(horizontal: false, vertical: true)
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 
@@ -843,7 +869,8 @@ private struct CollectionsCarousel: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.s) {
-            Label("COLLECTIONS", systemImage: "square.stack.3d.up").kicker()
+            // "Packs", as the tab, the paywall and Settings call them.
+            Text("Packs").kicker()
                 .padding(.horizontal, Theme.Spacing.xs)
 
             ScrollView(.horizontal, showsIndicators: false) {
@@ -882,6 +909,13 @@ private struct PackTile: View {
     /// New badge pushed its puzzle count out past the bottom edge. Scaled rather
     /// than a larger constant, because the text inside it scales.
     @ScaledMetric(relativeTo: .subheadline) private var tileHeight = 176
+    @Environment(\.dynamicTypeSize) private var typeSize
+
+    /// 160 holds a two-line title at standard sizes. At accessibility sizes the
+    /// tile widens instead of clipping — at 160 the largest type cut every
+    /// title to "She…" and broke "puzzles" across two lines. Still a
+    /// carousel, so a wider tile costs a swipe, not the layout.
+    private var tileWidth: CGFloat { typeSize.isAccessibilitySize ? 280 : 160 }
 
     /// The one badge this tile shows, if any. The tile's own `Spacer` absorbs
     /// the extra line, so the carousel's fixed height still holds.
@@ -943,7 +977,7 @@ private struct PackTile: View {
             }
         }
         .padding(Theme.Spacing.m)
-        .frame(width: 160, height: tileHeight, alignment: .topLeading)
+        .frame(width: tileWidth, height: tileHeight, alignment: .topLeading)
         .elevatedCard()
         .accessibilityElement(children: .ignore)
         .accessibilityAddTraits(.isButton)
@@ -961,64 +995,57 @@ private struct PackTile: View {
     }
 }
 
-// MARK: - Next achievement card
+// MARK: - Next achievement row
 
-private struct NextAchievementCard: View {
+/// The next badge, in the same row shape as the Journey and memory verses
+/// above it.
+private struct NextAchievementRow: View {
+    let achievement: Achievement
     let profile: PlayerProfile
 
-    @ScaledMetric(relativeTo: .title) private var iconSize = 52
-
     var body: some View {
-        if let next = Achievements.all.first(where: { !$0.isUnlocked(by: profile) }) {
-            VStack(alignment: .leading, spacing: Theme.Spacing.m) {
-                Label("NEXT ACHIEVEMENT", systemImage: "target").kicker()
-                HStack(spacing: Theme.Spacing.m) {
-                    iconTile(next.symbol)
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(next.title).font(.headline)
-                        Text(next.detail).font(.caption).foregroundStyle(.secondary)
-                    }
-                    Spacer(minLength: 0)
-                    Text(next.progressText(for: profile))
-                        .font(.subheadline.weight(.semibold))
-                        .monospacedDigit()
-                        .foregroundStyle(.secondary)
-                }
-                ProgressView(value: next.progress(for: profile))
-                    .tint(Theme.accent)
+        HStack(spacing: Theme.Spacing.m) {
+            Image(systemName: achievement.symbol)
+                .font(.title2)
+                // The disc is a fixed 44pt, so the glyph stops growing
+                // where the disc does instead of spilling out of it.
+                .dynamicTypeSize(...DynamicTypeSize.xxLarge)
+                .foregroundStyle(Theme.accent)
+                .frame(width: 44, height: 44)
+                .background(Theme.accent.opacity(0.14), in: .circle)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(achievement.title)
+                    .font(.headline)
+                    .foregroundStyle(.primary)
+                Text(subtitle)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
-            .padding(Theme.Spacing.l)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .elevatedCard()
-            .accessibilityElement(children: .ignore)
-            .accessibilityLabel("Next achievement: \(next.title), \(next.detail), \(next.progressText(for: profile)) complete")
-        } else {
-            VStack(alignment: .leading, spacing: Theme.Spacing.m) {
-                Label("ACHIEVEMENTS", systemImage: "star.circle.fill").kicker()
-                HStack(spacing: Theme.Spacing.m) {
-                    iconTile("star.circle.fill")
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("All achievements unlocked").font(.headline)
-                        Text("You've completed every milestone.")
-                            .font(.caption).foregroundStyle(.secondary)
-                    }
-                    Spacer(minLength: 0)
-                }
-            }
-            .padding(Theme.Spacing.l)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .elevatedCard()
-            .accessibilityElement(children: .ignore)
-            .accessibilityLabel("All achievements unlocked. You've completed every milestone.")
+            Spacer(minLength: 0)
+            Image(systemName: "chevron.forward")
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(.secondary)
         }
+        .padding(Theme.Spacing.l)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .elevatedCard()
+        .accessibilityElement(children: .ignore)
+        .accessibilityAddTraits(.isButton)
+        .accessibilityLabel("Next badge: \(achievement.title). \(achievement.detail). \(progress)")
     }
 
-    private func iconTile(_ symbol: String) -> some View {
-        Image(systemName: symbol)
-            .font(.title2)
-            .foregroundStyle(Theme.accent)
-            .frame(width: iconSize, height: iconSize)
-            .background(Theme.accent.opacity(0.14), in: .circle)
+    /// "Next badge · 3 / 5", or for a time goal the player's best against it —
+    /// a time goal is met or not, so a bar for it sat empty until the day it
+    /// jumped to full.
+    private var subtitle: String { "Next badge · \(progress)" }
+
+    private var progress: String {
+        if case .fastSolve(let max) = achievement.goal {
+            let goal = "under \(TimeFormat.clock(max))"
+            guard let best = profile.bestSolveSeconds else { return goal }
+            return "best \(TimeFormat.clock(best)), goal \(goal)"
+        }
+        return achievement.progressText(for: profile)
     }
 }
 
@@ -1033,6 +1060,8 @@ private struct UpgradeCard: View {
     let solvedPuzzles: Int
 
     @ScaledMetric(relativeTo: .title) private var iconSize = 44
+    /// At accessibility sizes the crown gives its width to the copy.
+    @Environment(\.dynamicTypeSize) private var typeSize
     @State private var showPaywall = false
     /// Read here rather than passed in: the CTA names the trial only when the
     /// product actually carries one — see `PremiumCopy.cardCTA`.
@@ -1047,7 +1076,10 @@ private struct UpgradeCard: View {
         guard solvedPuzzles > 0 else {
             return "Every themed pack, and hints whenever you need them."
         }
-        return "You've solved \(solvedPuzzles) — the rest are waiting."
+        // "Of them", tying the count to the headline's total: a bare "You've
+        // solved 16" sat against Profile's "47 Solved", which counts every
+        // finish including replays.
+        return "You've finished \(solvedPuzzles) of them — the rest are waiting."
     }
 
     var body: some View {
@@ -1068,11 +1100,13 @@ private struct UpgradeCard: View {
                 // Accent, not secondary grey. A greyed-out crown on a grey disc
                 // reads as a disabled control rather than an invitation, which
                 // is a poor look on the one card asking for money.
-                Image(systemName: "crown.fill")
-                    .font(.title3)
-                    .foregroundStyle(Theme.accent)
-                    .frame(width: iconSize, height: iconSize)
-                    .background(Theme.accent.opacity(0.14), in: .circle)
+                if !typeSize.isAccessibilitySize {
+                    Image(systemName: "crown.fill")
+                        .font(.title3)
+                        .foregroundStyle(Theme.accent)
+                        .frame(width: iconSize, height: iconSize)
+                        .background(Theme.accent.opacity(0.14), in: .circle)
+                }
                 VStack(alignment: .leading, spacing: Theme.Spacing.s) {
                     VStack(alignment: .leading, spacing: 2) {
                         // Was "Go Premium": the app's own word for its SKU, which
@@ -1091,10 +1125,10 @@ private struct UpgradeCard: View {
                     // A filled pill is the app's own language for an action (Start
                     // Puzzle, the paywall CTA, Library's unlock button).
                     //
-                    // Still hugging its text rather than the full-width pill
-                    // Profile's upsell uses: this card sits under the daily
-                    // puzzle and a full-width ink capsule here would compete
-                    // with that hero's own Continue button.
+                    // Still hugging its text rather than a full-width pill:
+                    // this card sits under the daily puzzle and a full-width
+                    // ink capsule here would compete with that hero's own
+                    // Continue button.
                     //
                     // Never "Unlock": this opens the paywall, it doesn't buy
                     // anything, and a button that overstates what it does is
@@ -1106,7 +1140,10 @@ private struct UpgradeCard: View {
                         .padding(.horizontal, Theme.Spacing.m)
                         .padding(.vertical, Theme.Spacing.s)
                         .background(Theme.ink, in: .capsule)
-                        .fixedSize()
+                        // Hugs its text, but may wrap: unbreakable, at the
+                        // largest type it ran wider than the screen and pulled
+                        // every card on Today out to the left with it.
+                        .fixedSize(horizontal: false, vertical: true)
                 }
                 Spacer(minLength: 0)
             }
@@ -1127,13 +1164,43 @@ private struct UpgradeCard: View {
     }
 }
 
-// MARK: - Daily Mini card
+// MARK: - Companion puzzles
 //
-// A compact companion to the hero card: the quick 7×7 for days (or moments)
-// the full puzzle is too big. Kept visually lighter than the daily so it
-// reads as the second course, not a competing headline.
+// The day's other puzzles under the hero — the quick 7×7 for days (or
+// moments) the full puzzle is too big, and the week's Sunday Special. Rows of
+// one card rather than a card each: kept visually lighter than the hero so
+// they read as the second course, not competing headlines.
 
-private struct CompactPuzzleCard: View {
+/// One row of `CompanionPuzzlesCard`.
+private struct CompanionPuzzle: Identifiable {
+    let puzzle: Puzzle
+    let billing: PuzzleBilling
+    let presentation: DailyPresentation
+
+    var id: String { puzzle.id }
+}
+
+private struct CompanionPuzzlesCard: View {
+    let rows: [CompanionPuzzle]
+
+    var body: some View {
+        VStack(spacing: 0) {
+            ForEach(Array(rows.enumerated()), id: \.element.id) { index, row in
+                if index > 0 {
+                    Divider().padding(.leading, Theme.Spacing.l)
+                }
+                CompactPuzzleRow(
+                    puzzle: row.puzzle,
+                    billing: row.billing,
+                    presentation: row.presentation
+                )
+            }
+        }
+        .elevatedCard()
+    }
+}
+
+private struct CompactPuzzleRow: View {
     let puzzle: Puzzle
     let billing: PuzzleBilling
     let presentation: DailyPresentation
@@ -1153,12 +1220,15 @@ private struct CompactPuzzleCard: View {
                     .font(.title)
                     .foregroundStyle(isSolvedToday ? .green : Theme.accent)
 
+                // No uppercase kicker: Today keeps those for section headers.
+                // The puzzle's name leads and its kind opens the line under it.
                 VStack(alignment: .leading, spacing: 2) {
-                    Label(billing.kicker, systemImage: billing.symbol).kicker()
+                    // Wraps rather than truncates: at large type a one-line
+                    // limit cut "Queens and Kinsmen" to "Queen…".
                     Text(puzzle.title)
                         .font(.headline)
                         .foregroundStyle(.primary)
-                        .lineLimit(1)
+                        .fixedSize(horizontal: false, vertical: true)
                     Text(subtitle)
                         .font(.caption)
                         .foregroundStyle(.secondary)
@@ -1171,7 +1241,7 @@ private struct CompactPuzzleCard: View {
             }
             .padding(Theme.Spacing.l)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .elevatedCard()
+            .contentShape(.rect)
         }
         .buttonStyle(PressableCardStyle())
         .accessibilityElement(children: .ignore)
@@ -1192,7 +1262,9 @@ private struct CompactPuzzleCard: View {
         }
     }
 
-    private var subtitle: String {
+    private var subtitle: String { "\(billing.name) · \(state)" }
+
+    private var state: String {
         switch presentation {
         case .solvedToday(let seconds):
             if let secs = seconds, secs > 0 {
@@ -1201,7 +1273,7 @@ private struct CompactPuzzleCard: View {
             return "Solved"
         case .playedBefore(let previous):
             if let previous, previous > 0 {
-                return "Played before · beat \(TimeFormat.clock(previous))"
+                return "Played before · your best \(TimeFormat.clock(previous))"
             }
             return "Played before · go again"
         case .play(.inProgress):
@@ -1214,7 +1286,7 @@ private struct CompactPuzzleCard: View {
     private var accessibilityLabel: String {
         switch presentation {
         case .solvedToday, .playedBefore, .play(.inProgress):
-            return "\(billing.spoken). \(puzzle.title). \(subtitle)."
+            return "\(billing.spoken). \(puzzle.title). \(state)."
         case .play:
             return "\(billing.spoken). \(puzzle.title). \(billing.blurb(puzzle))."
         }

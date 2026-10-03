@@ -24,6 +24,7 @@ struct PacksView: View {
     @Environment(\.puzzleProvider) private var puzzleProvider
     @Environment(StoreService.self) private var store
     @Query private var records: [PuzzleRecord]
+    @State private var showPaywall = false
 
     /// The collection promoted to the top of the tab, carried with the
     /// progress that was already computed to choose it.
@@ -55,7 +56,7 @@ struct PacksView: View {
             Group {
                 if packs.isEmpty && quests.isEmpty {
                     ContentUnavailableView(
-                        "No Collections Yet",
+                        "No Packs Yet",
                         systemImage: "square.stack.3d.up",
                         description: Text("Themed puzzle packs will appear here.")
                     )
@@ -64,6 +65,12 @@ struct PacksView: View {
                 }
             }
             .navigationTitle("Packs")
+            .sheet(isPresented: $showPaywall) {
+                // `pack_locked` rather than a new label: the offer stands over
+                // the locked packs themselves, and a new source would move the
+                // cross-platform constants for a surface this quiet.
+                PaywallView(source: .packLocked)
+            }
             .navigationDestination(for: PackRoute.self) { route in
                 PackDetailView(pack: route.pack, profile: profile, source: route.source)
             }
@@ -84,22 +91,33 @@ struct PacksView: View {
         let shownQuests = quests.filter { $0.id != lead?.questID }
         let seasonal = packs.filter { $0.isSeasonal && $0.id != lead?.packID }
         let evergreen = packs.filter { !$0.isSeasonal && $0.id != lead?.packID }
-        let anythingAbove = lead != nil || !shownQuests.isEmpty || !seasonal.isEmpty
+
+        // A free player's locked Journeys and packs gather under one offer
+        // instead of a crown on every row: five of seven rows were crowned
+        // and nothing on the tab said, once, what would open them. Seasonal
+        // packs stay in their own section either way — the season is the
+        // reason to look now.
+        let openQuests = shownQuests.filter { !isLocked($0.isPremium) }
+        let lockedQuests = shownQuests.filter { isLocked($0.isPremium) }
+        let openPacks = evergreen.filter { !isLocked($0.isPremium) }
+        let lockedPacks = evergreen.filter { isLocked($0.isPremium) }
+        let anythingAbove = lead != nil || !openQuests.isEmpty || !seasonal.isEmpty
 
         // The lead and the Journeys on the left of a wide window, the
         // collections on the right.
         return CardColumns {
             leadCard(lead)
-            questSection(quests: shownQuests, recordsByID: recordsByID)
+            questSection(quests: openQuests, recordsByID: recordsByID)
         } more: {
             if !seasonal.isEmpty {
                 section("In Season", packs: seasonal, recordsByID: recordsByID)
             }
             section(
-                anythingAbove ? "All Collections" : nil,
-                packs: evergreen,
+                anythingAbove ? (store.isPremium ? "All Packs" : "Free") : nil,
+                packs: openPacks,
                 recordsByID: recordsByID
             )
+            premiumSection(quests: lockedQuests, packs: lockedPacks, recordsByID: recordsByID)
         }
         .background(Theme.background)
     }
@@ -163,7 +181,7 @@ struct PacksView: View {
                         blurb: pack.blurb,
                         symbol: pack.coverSymbol,
                         accent: pack.accent,
-                        meta: "Collection · \(progress.solved) of \(progress.total) solved",
+                        meta: "Pack · \(progress.solved) of \(progress.total) solved",
                         action: action
                     )
                 }
@@ -174,7 +192,80 @@ struct PacksView: View {
         }
     }
 
+    private func isLocked(_ isPremiumContent: Bool) -> Bool {
+        isPremiumContent && !store.isPremium
+    }
+
     // MARK: - Sections
+
+    /// Everything Premium would open, under one offer. The rows keep their
+    /// neutral covers but drop the crown — the header already says it.
+    @ViewBuilder
+    private func premiumSection(
+        quests: [QuestLine], packs: [PuzzlePack], recordsByID: [String: PuzzleRecord]
+    ) -> some View {
+        if !quests.isEmpty || !packs.isEmpty {
+            VStack(alignment: .leading, spacing: Theme.Spacing.s) {
+                Text("With Premium").kicker().padding(.horizontal, Theme.Spacing.xs)
+                premiumOffer(count: quests.count + packs.count)
+                ForEach(quests) { quest in
+                    NavigationLink(value: QuestRoute(quest: quest, source: .packs)) {
+                        QuestCard(
+                            quest: quest,
+                            progress: QuestProgress(quest: quest, recordsByID: recordsByID),
+                            isLocked: true,
+                            showsCrown: false
+                        )
+                    }
+                    .buttonStyle(PressableCardStyle())
+                }
+                ForEach(packs) { pack in
+                    NavigationLink(value: PackRoute(pack: pack, source: .packs)) {
+                        PackCard(
+                            pack: pack,
+                            progress: PackProgress(pack: pack, recordsByID: recordsByID),
+                            isLocked: true,
+                            showsCrown: false
+                        )
+                    }
+                    .buttonStyle(PressableCardStyle())
+                }
+            }
+        }
+    }
+
+    /// The one offer on the tab. Same pill and same words as Today's card —
+    /// one offer, said one way (see `PremiumCopy.cardCTA`).
+    private func premiumOffer(count: Int) -> some View {
+        Button {
+            showPaywall = true
+        } label: {
+            VStack(alignment: .leading, spacing: Theme.Spacing.m) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Every pack and Journey")
+                        .font(.headline)
+                        .foregroundStyle(.primary)
+                    Text("\(count) more to play below, plus hints whenever you need them.")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                Text(PremiumCopy.cardCTA(store))
+                    .font(.subheadline.weight(.bold))
+                    .foregroundStyle(Theme.onInk)
+                    .padding(.horizontal, Theme.Spacing.m)
+                    .padding(.vertical, Theme.Spacing.s)
+                    .background(Theme.ink, in: .capsule)
+                    // Hugs its text but may wrap — see Today's UpgradeCard.
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .padding(Theme.Spacing.l)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .elevatedCard()
+        }
+        .buttonStyle(PressableCardStyle())
+        .accessibilityHint("Opens Premium plans")
+    }
 
     /// The Journeys sit above the packs: an ordered, paced run is the stronger
     /// daily-return pitch, and there are only a few of them.

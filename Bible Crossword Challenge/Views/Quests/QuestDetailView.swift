@@ -253,6 +253,8 @@ struct QuestCard: View {
     let quest: QuestLine
     let progress: QuestProgress
     let isLocked: Bool
+    /// Off under the Packs tab's "With Premium" header, which says it once.
+    var showsCrown = true
 
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @ScaledMetric(relativeTo: .title) private var iconSize = 44
@@ -303,7 +305,7 @@ struct QuestCard: View {
 
     private var details: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
-            CollectionCardLayout.title(quest.title, locked: isLocked)
+            CollectionCardLayout.title(quest.title, locked: isLocked && showsCrown)
             Text(quest.blurb)
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
@@ -372,13 +374,21 @@ struct QuestHomeCard: View {
     var body: some View {
         NavigationLink(value: QuestRoute(quest: quest, source: .home)) {
             HStack(spacing: Theme.Spacing.m) {
+                // The app's accent, not the Journey's own colour: on Today it
+                // sits in a column of accent icons, where one green disc read
+                // as a different kind of thing. The Packs tab keeps the
+                // per-Journey colour on its covers.
                 Image(systemName: quest.coverSymbol)
                     .font(.title2)
-                    .foregroundStyle(quest.accent)
+                    .foregroundStyle(Theme.accent)
+                    // The disc is a fixed 44pt, so the glyph stops growing
+                    // where the disc does instead of spilling out of it.
+                    .dynamicTypeSize(...DynamicTypeSize.xxLarge)
                     .frame(width: 44, height: 44)
-                    .background(quest.accent.opacity(0.14), in: .circle)
+                    .background(Theme.accent.opacity(0.14), in: .circle)
+                // No kicker: Today's "Keep going" header names the group, and
+                // the subtitle says it's a journey.
                 VStack(alignment: .leading, spacing: 2) {
-                    Label("JOURNEY", systemImage: "map").kicker()
                     Text(headline)
                         .font(.headline)
                         .foregroundStyle(.primary)
@@ -408,8 +418,9 @@ struct QuestHomeCard: View {
     private var headline: String { quest.title }
 
     private var subtitle: String {
-        if progress.solved == 0 { return "Start the journey · \(progress.total) steps, one a day" }
+        if progress.solved == 0 { return "Journey · \(progress.total) steps, one a day" }
         if progress.steppedToday { return "Step \(progress.solved) of \(progress.total) done · next one tomorrow" }
-        return "Day \(progress.solved + 1) of \(progress.total) · the next step is ready"
+        // "Step", as the Packs tab and the journey itself count it.
+        return "Journey · \(QuestProgress.stepLine(solved: progress.solved, total: progress.total)) is ready"
     }
 }

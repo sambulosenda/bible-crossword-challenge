@@ -6,6 +6,11 @@
 //  Premium packs show their contents but route play through the paywall (the
 //  free starter pack plays straight through). Celebrates a fully-solved pack.
 //
+//  Locked, it lists the puzzles with a lock on each and pins one offer to the
+//  bottom. Until 2026-10 a locked pack hid its list behind a centred crown
+//  block — the page sold a pack without showing what was in it, from the
+//  entry point that converts best (3 purchases from 14 openers in 60 days).
+//
 
 import SwiftUI
 import SwiftData
@@ -66,12 +71,15 @@ struct PackDetailView: View {
             booksCard
         } more: {
             if isLocked {
-                lockedState
+                lockedPuzzleList
             } else {
                 puzzleList
             }
         }
         .background(Theme.background)
+        .safeAreaInset(edge: .bottom) {
+            if isLocked { lockedOffer }
+        }
         .navigationTitle(pack.title)
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $showPaywall) {
@@ -194,7 +202,7 @@ struct PackDetailView: View {
             let fresh = books.filter { !explored.contains($0.name) }
 
             VStack(alignment: .leading, spacing: Theme.Spacing.m) {
-                Text("Books in this collection").kicker()
+                Text("Books in this pack").kicker()
 
                 LazyVGrid(
                     columns: [GridItem(.adaptive(minimum: 96), spacing: Theme.Spacing.s)],
@@ -215,15 +223,17 @@ struct PackDetailView: View {
             .elevatedCard()
             .accessibilityElement(children: .ignore)
             .accessibilityLabel(
-                "Books in this collection: \(books.map(\.name).formatted(.list(type: .and))). "
+                "Books in this pack: \(books.map(\.name).formatted(.list(type: .and))). "
                 + journeyLine(fresh: fresh)
             )
         }
     }
 
     private func journeyLine(fresh: [BibleCanon.Book]) -> String {
-        guard !fresh.isEmpty else { return "All of these are already part of your journey." }
-        return "Finishing this adds \(fresh.map(\.name).formatted(.list(type: .and))) to your journey."
+        // Not "your journey": the Packs tab calls its paced runs Journeys, and
+        // the same word for the book map made one screen mean two things.
+        guard !fresh.isEmpty else { return "You've already played puzzles from all of these." }
+        return "Finishing this adds \(fresh.map(\.name).formatted(.list(type: .and))) to the books you've explored."
     }
 
     /// Explored books borrow the map's own fill, so the two screens agree about
@@ -308,34 +318,71 @@ struct PackDetailView: View {
 
     // MARK: - Locked state
 
-    private var lockedState: some View {
-        VStack(spacing: Theme.Spacing.m) {
-            ContentUnavailableView {
-                Label("Premium Collection", systemImage: "crown.fill")
-                    .foregroundStyle(.yellow)
-            } description: {
-                Text(lockedDescription)
-            } actions: {
+    /// The pack's puzzles, shown rather than withheld: the titles are what a
+    /// player is deciding to pay for. Each row opens the paywall.
+    private var lockedPuzzleList: some View {
+        VStack(alignment: .leading, spacing: Theme.Spacing.s) {
+            Text("Included with Premium").kicker()
+                .padding(.horizontal, Theme.Spacing.xs)
+            ForEach(puzzles) { puzzle in
                 Button {
                     showPaywall = true
                 } label: {
-                    Text("Unlock Premium")
+                    HStack(spacing: Theme.Spacing.m) {
+                        VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
+                            Text(puzzle.title).font(.headline).foregroundStyle(.primary)
+                            HStack(spacing: Theme.Spacing.s) {
+                                DifficultyBadge(difficulty: puzzle.difficulty)
+                                Text("\(puzzle.clueCount) clues")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                        Spacer(minLength: 0)
+                        Image(systemName: "lock.fill")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                            .accessibilityHidden(true)
+                    }
+                    .padding(Theme.Spacing.l)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .elevatedCard()
                 }
-                .buttonStyle(.pillProminent)
-                .frame(maxWidth: 280)
+                .buttonStyle(PressableCardStyle())
+                .accessibilityLabel("\(puzzle.title). \(puzzle.difficulty.label). \(puzzle.clueCount) clues. Premium")
+                .accessibilityHint("Opens Premium plans")
             }
         }
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, Theme.Spacing.xl)
     }
 
-    /// States the size of the pack, and for a seasonal one the date it goes
-    /// away. The deadline is the honest reason to decide now, and it's a fact
-    /// the app already knows — so it belongs here rather than in urgency copy.
-    private var lockedDescription: String {
-        let base = "Unlock \(pack.title) and every other collection with Premium — "
-            + "\(pack.puzzleIDs.count) themed puzzles in this pack alone."
+    /// One offer, pinned where the thumb is. Same words as every other card
+    /// that opens the paywall — never "Unlock", which overstates a tap that
+    /// only opens it (see `PremiumCopy.cardCTA`). It replaced a "Premium
+    /// Collection" headline in system yellow: 1.39:1 on the paper canvas.
+    private var lockedOffer: some View {
+        VStack(spacing: Theme.Spacing.s) {
+            Text(lockedNote)
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+            Button(PremiumCopy.cardCTA(store)) { showPaywall = true }
+                .buttonStyle(.pillProminent)
+        }
+        .padding(.horizontal, Theme.Spacing.m)
+        .padding(.top, Theme.Spacing.s)
+        .padding(.bottom, Theme.Spacing.s)
+        .frame(maxWidth: 560)
+        .frame(maxWidth: .infinity)
+        .background(Theme.background)
+    }
+
+    /// For a seasonal pack, the date it goes away — the honest reason to decide
+    /// now, and a fact the app already knows, so it belongs here rather than in
+    /// urgency copy.
+    private var lockedNote: String {
+        let base = "Opens with every pack and Journey in Premium."
         guard let end = pack.seasonEnd() else { return base }
-        return base + " This one is only here until \(end.formatted(Self.seasonEndFormat))."
+        return "Here until \(end.formatted(Self.seasonEndFormat)). " + base
     }
 }

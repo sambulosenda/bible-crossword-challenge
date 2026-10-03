@@ -78,7 +78,7 @@ enum PaywallSource: String, CaseIterable, Hashable {
         case .packLocked:
             // The evergreen line. A seasonal pack states its own constraint —
             // see `PaywallView.headlineText`.
-            return "The collections are waiting."
+            return "The packs are waiting."
         case .packCompletion:
             return "The rest of the pack is waiting."
         case .questLocked:

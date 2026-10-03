@@ -222,6 +222,8 @@ struct PackCard: View {
     let progress: PackProgress
     /// True when the pack's content is locked behind Premium for this player.
     let isLocked: Bool
+    /// Off under the Packs tab's "With Premium" header, which says it once.
+    var showsCrown = true
 
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @ScaledMetric(relativeTo: .title) private var iconSize = 44
@@ -277,7 +279,7 @@ struct PackCard: View {
     private var details: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
             HStack(spacing: Theme.Spacing.xs) {
-                CollectionCardLayout.title(pack.title, locked: isLocked)
+                CollectionCardLayout.title(pack.title, locked: isLocked && showsCrown)
                 if let packBadge {
                     packBadge
                 }

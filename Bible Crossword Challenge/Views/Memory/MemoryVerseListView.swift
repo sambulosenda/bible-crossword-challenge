@@ -262,22 +262,30 @@ struct MemoryVerseListView: View {
 struct MemoryVerseCard: View {
     let dueCount: Int
     let activeCount: Int
+    /// Off on Today, where the "Keep going" header above names the group.
+    var showsKicker = true
 
     var body: some View {
         NavigationLink(value: MemoryRoute()) {
             HStack(spacing: Theme.Spacing.m) {
                 Image(systemName: "brain.fill")
                     .font(.title2)
+                    // The disc is a fixed 44pt, so the glyph stops growing
+                    // where the disc does instead of spilling out of it.
+                    .dynamicTypeSize(...DynamicTypeSize.xxLarge)
                     .foregroundStyle(Theme.accent)
                     .frame(width: 44, height: 44)
                     .background(Theme.accent.opacity(0.14), in: .circle)
                 VStack(alignment: .leading, spacing: 2) {
-                    Label("MEMORY VERSES", systemImage: "text.book.closed").kicker()
+                    if showsKicker {
+                        Label("MEMORY VERSES", systemImage: "text.book.closed").kicker()
+                    }
                     Text(headline)
                         .font(.headline)
                         .foregroundStyle(.primary)
+                    // Caption, like the Journey and badge rows it sits with.
                     Text(subtitle)
-                        .font(.subheadline)
+                        .font(.caption)
                         .foregroundStyle(.secondary)
                 }
                 Spacer(minLength: 0)
@@ -297,7 +305,8 @@ struct MemoryVerseCard: View {
 
     private var headline: String {
         if dueCount > 0 { return dueCount == 1 ? "1 verse due for review" : "\(dueCount) verses due for review" }
-        if activeCount > 0 { return "Keep your verses fresh" }
+        // Without the kicker the headline has to say what the card is.
+        if activeCount > 0 { return showsKicker ? "Keep your verses fresh" : "Memory verses" }
         return "Learn a verse by heart"
     }
 
