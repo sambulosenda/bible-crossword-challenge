@@ -203,7 +203,7 @@ enum ReminderOptIn {
             await notifications.reschedule(
                 for: profile, enabled: true, minutes: minutes,
                 // Granting a reminder never turns on pack news: that is a
-                // separate, explicit opt-in in Profile.
+                // separate, explicit opt-in in Settings.
                 packNews: UserDefaults.standard.bool(forKey: "packNewsEnabled")
             )
         }
@@ -314,7 +314,7 @@ struct ReminderAskRow: View {
 
 /// The card form of the ask for a surface that is already a screen of its
 /// own (Home's streak card). Same preview, same buttons, no time picker — the
-/// stored default time is offered in the button and adjustable in Profile.
+/// stored default time is offered in the button and adjustable in Settings.
 /// The completion screen uses `ReminderAskRow` inside its scorecard instead.
 struct ReminderAskCard: View {
     let profile: PlayerProfile

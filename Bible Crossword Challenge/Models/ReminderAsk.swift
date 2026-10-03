@@ -10,8 +10,8 @@
 //
 //  Only players iOS has never asked are eligible: `.notDetermined` is the one
 //  state where a tap can still reach the real system dialog. Players who
-//  reached it and said no recover through the Profile toggle's Settings
-//  deep-link, not another prompt.
+//  reached it and said no recover through the Settings reminder toggle's
+//  deep-link to the system's notification settings, not another prompt.
 //
 
 import Foundation

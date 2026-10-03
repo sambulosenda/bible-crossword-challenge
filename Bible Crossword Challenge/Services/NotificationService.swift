@@ -6,7 +6,9 @@
 //  notifications — no server, no APNs.
 //  Two consents, not one: the reminder asks cover the daily nudge and the
 //  streak nudge, and season openings are promotional, so they ride on their own
-//  switch in Profile and are off until asked for (see `scheduleSeasonOpenings`).
+//  switch in Settings and are off until asked for (see `scheduleSeasonOpenings`).
+//  Each is scheduled on its own say-so — turning the daily reminder off leaves
+//  pack news alone.
 //  Nothing here claims Time Sensitive — win-back copy goes out Passive and
 //  silent, everything else Active.
 //  A lapse of three days, a week, or a fortnight rewrites that day's reminder
@@ -61,7 +63,7 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
     private let horizonDays = 14
 
     /// When the streak-risk nudge fires (9:00 PM) — late enough to be a last
-    /// call, early enough to leave time to solve. Not private: Profile states
+    /// call, early enough to leave time to solve. Not private: Settings states
     /// the hour in words, and a settings screen describing a time the scheduler
     /// doesn't use is worse than one that says nothing.
     static let streakRiskMinutes = 21 * 60
@@ -175,6 +177,8 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
     /// per day for the next `horizonDays` at the chosen time. Today is skipped if
     /// already solved or the time has passed; the next reminder uses streak-saver
     /// copy when a streak is on the line.
+    /// Pack news is scheduled on its own consent, whether or not the daily
+    /// reminder is on.
     /// `packs` defaults to the bundled set; `nil` rather than a default
     /// expression because a default argument is evaluated outside the actor and
     /// `PuzzleProvider.shared` is main-actor isolated. Tests pass their own.
@@ -185,12 +189,21 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
     ) async {
         let packs = packs ?? PuzzleProvider.shared.packs
         center.removeAllPendingNotificationRequests()
-        guard enabled else { return }
+        guard enabled || packNews else { return }
         await refreshStatus()
         guard canDeliver else { return }
 
         let calendar = Calendar.current
         let now = Date()
+        // Only for players who asked for it, and off until they do — see
+        // `scheduleSeasonOpenings`. Ahead of the daily reminder's guard, not
+        // behind it: until 2026-10 it sat at the end of this function, so
+        // switching the reminder off quietly took the pack notices with it.
+        if packNews {
+            await scheduleSeasonOpenings(packs: packs, calendar: calendar, now: now)
+        }
+        guard enabled else { return }
+
         let hour = minutes / 60
         let minute = minutes % 60
         let startOfToday = calendar.startOfDay(for: now)
@@ -232,11 +245,6 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
             minutes: minutes, streak: streak, completedToday: completedToday,
             freezes: freezes, calendar: calendar, now: now
         )
-        // Only for players who asked for it, and off until they do — see
-        // `scheduleSeasonOpenings`.
-        if packNews {
-            await scheduleSeasonOpenings(packs: packs, calendar: calendar, now: now)
-        }
     }
 
     /// One notice per seasonal pack that opens inside the scheduling horizon.
@@ -246,7 +254,7 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
     /// already opened is no longer an upcoming opening — so the notice can only
     /// ever be scheduled for a day the season actually begins, and only once.
     ///
-    /// Sent only to players who turned on pack news in Profile. An opening
+    /// Sent only to players who turned on pack news in Settings. An opening
     /// notice announces content and leads to a paywall, which makes it
     /// promotional however useful it is — and the HIG is explicit that
     /// promotional notifications need their own permission and their own
@@ -334,10 +342,6 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
         let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
         let request = UNNotificationRequest(identifier: "streak-risk", content: content, trigger: trigger)
         try? await center.add(request)
-    }
-
-    func cancelAll() {
-        center.removeAllPendingNotificationRequests()
     }
 
     private static let prompts = [

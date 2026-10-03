@@ -217,7 +217,7 @@ enum AnalyticsEvent {
     /// `DailyReminderPrompt` ask the same question at very different moments.
     case reminderDeclined(source: String)
     case reminderSettingChanged(enabled: Bool)
-    /// Seasonal pack news turned on or off in Profile — a separate consent from
+    /// Seasonal pack news turned on or off in Settings — a separate consent from
     /// the daily reminder, so a separate event.
     ///
     /// It has no ask surface of its own: the row is the only way to reach it,

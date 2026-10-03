@@ -29,6 +29,9 @@ struct RootView: View {
     @Environment(\.familyBoard) private var familyBoard
     @Environment(\.scenePhase) private var scenePhase
     @State private var selectedTab: RootTab = .today
+    /// Settings, presented over whichever tab is showing: Profile's gear opens
+    /// it, and so does ⌘, on a hardware keyboard.
+    @State private var showSettings = false
     /// A puzzle a challenge or family board asked for before onboarding
     /// finished — opened once the player is set up (see the onboarding-finish
     /// closure). The payload is already stored by its own service; all that's
@@ -59,7 +62,7 @@ struct RootView: View {
     /// answer. One second ask is a nudge; a recurring one is nagging.
     /// Start-of-day stamp of the last reminder ask on any surface (this sheet,
     /// completion card, streak card) — the shared one-ask-per-day budget.
-    /// Set by ProfileView when it hands the player to Settings to allow
+    /// Set by SettingsView when it hands the player to the Settings app to allow
     /// notifications; cleared here once they come back with an answer.
     @AppStorage("pendingReminderOptIn") private var pendingReminderOptIn = false
     /// The streak length lost on a launch where it broke, or 0 for none —
@@ -132,7 +135,7 @@ struct RootView: View {
             }
             reconcilePackCompletions(profile)
             // Seed the auto-check default once, here, so the game and the
-            // Profile toggle agree whichever is seen first.
+            // Settings toggle agree whichever is seen first.
             GameViewModel.seedAutoCheckIfNeeded(totalCompleted: profile.totalPuzzlesCompleted)
             context.saveLogged("launch normalise")
             WidgetBridge.publish(profile, context: context)
@@ -165,10 +168,10 @@ struct RootView: View {
             Task {
                 // Unconditionally, and before anything reads it. Notification
                 // permission is the one setting that can change while the app
-                // is in the background, and `reschedule` only refreshes after
-                // its own `enabled` guard — so a player who allowed
+                // is in the background, and `reschedule` only refreshes once
+                // something is switched on — so a player who allowed
                 // notifications in Settings came back to a cached `.denied`,
-                // and the Profile toggle sent them straight back to Settings.
+                // and the reminder toggle sent them straight back to Settings.
                 await notifications.refreshStatus()
                 completePendingReminderOptIn()
                 await notifications.reschedule(
@@ -438,21 +441,25 @@ struct RootView: View {
             }
             // The HIG's standard symbol for Account, User and Profile.
             Tab("Profile", systemImage: "person.crop.circle", value: RootTab.profile) {
-                ProfileView(profile: profile)
+                ProfileView(profile: profile) { showSettings = true }
             }
         }
         // Hardware keyboard on iPad: ⌘, is where people reach for an app's
-        // settings, and this app's live in Profile. A zero-opacity button
-        // rather than a Scene `.commands` block — the tab selection is this
-        // view's state, and lifting it into the App to register one shortcut
-        // would be the larger change. `.opacity(0)` rather than `.hidden()`,
-        // which would take the button out of the hierarchy and the shortcut
-        // with it.
+        // settings. It opens them over whatever tab is showing, the way it
+        // does in a Mac app, rather than switching to Profile first. A
+        // zero-opacity button rather than a Scene `.commands` block — the
+        // sheet is this view's state, and lifting it into the App to register
+        // one shortcut would be the larger change. `.opacity(0)` rather than
+        // `.hidden()`, which would take the button out of the hierarchy and
+        // the shortcut with it.
         .background {
-            Button("Settings") { selectedTab = .profile }
+            Button("Settings") { showSettings = true }
                 .keyboardShortcut(",", modifiers: .command)
                 .opacity(0)
                 .accessibilityHidden(true)
+        }
+        .sheet(isPresented: $showSettings) {
+            SettingsView(profile: profile)
         }
         // A verse reference tapped anywhere sets the router target and the
         // reader is presented modally over the current tab; the Read tab hosts

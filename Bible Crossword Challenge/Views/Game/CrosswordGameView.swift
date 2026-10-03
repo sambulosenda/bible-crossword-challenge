@@ -748,7 +748,7 @@ struct CrosswordGameView: View {
                 }
                 // Wanting the clock gone is a mid-solve feeling, so the
                 // switch belongs beside the clock rather than three taps
-                // away in Profile — the same `@AppStorage` as that row, so
+                // away in Settings — the same `@AppStorage` as that row, so
                 // the two never disagree. Left out during a challenge,
                 // where `clockVisible` keeps the clock on regardless and
                 // the switch would do nothing.
