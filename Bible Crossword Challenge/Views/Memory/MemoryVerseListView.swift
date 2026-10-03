@@ -24,9 +24,8 @@ struct MemoryVerseListView: View {
     @Environment(StoreService.self) private var store
     @Query private var records: [PuzzleRecord]
 
-    @State private var showPaywall = false
     /// A just-started candidate, pushed via a local destination because the
-    /// start is gated — a plain `NavigationLink` couldn't paywall first.
+    /// start is gated — a plain `NavigationLink` couldn't check the shelf first.
     @State private var startedKey: String?
 
     private var candidates: [MemoryVerseStore.Candidate] {
@@ -42,6 +41,12 @@ struct MemoryVerseListView: View {
         memoryVerses.entries.filter { !memoryVerses.isDue($0) && $0.isMastered }
     }
 
+    /// A free player holding `freeVerseLimit` unmastered verses. The cap stays;
+    /// what it opened changed. It used to open the paywall — 70 times from 10
+    /// players in the 30 days to 2026-10-03, with no taps — so now the list
+    /// says how to make room instead, before anyone taps.
+    private var shelfFull: Bool { !memoryVerses.canStartNewVerse(isPremium: store.isPremium) }
+
     var body: some View {
         Group {
             if memoryVerses.entries.isEmpty && candidates.isEmpty {
@@ -54,9 +59,6 @@ struct MemoryVerseListView: View {
         .navigationBarTitleDisplayMode(.large)
         .background(Theme.background)
         .onAppear { analytics.log(.memoryListOpened(source: source)) }
-        .sheet(isPresented: $showPaywall) {
-            PaywallView(source: .memoryVerseLimit)
-        }
         .navigationDestination(isPresented: Binding(
             get: { startedKey != nil },
             set: { if !$0 { startedKey = nil } }
@@ -86,6 +88,10 @@ struct MemoryVerseListView: View {
             }
             if !candidates.isEmpty {
                 Section {
+                    // First in the section, not the footer: the footer sits
+                    // under every candidate, and a list this long hides it
+                    // below the rows it explains.
+                    if shelfFull { shelfFullNote }
                     ForEach(candidates.sorted { canonSort($0.reference, $1.reference) }) { candidateRow($0) }
                 } header: {
                     Text("From your solved puzzles")
@@ -179,17 +185,24 @@ struct MemoryVerseListView: View {
         // Plain, or the row's .primary/.secondary hierarchy resolves against
         // the button tint and the whole row reads accent-blue.
         .buttonStyle(.plain)
+        .disabled(shelfFull)
         .accessibilityElement(children: .ignore)
         .accessibilityAddTraits(.isButton)
         .accessibilityLabel("Start memorizing \(candidate.reference). \(candidate.verseText)")
     }
 
+    private var shelfFullNote: some View {
+        Label(
+            "You can learn \(MemoryVerseStore.freeVerseLimit) verses at a time. Master one to make room for the next.",
+            systemImage: "brain"
+        )
+        .font(.subheadline)
+        .foregroundStyle(.secondary)
+        .padding(.vertical, Theme.Spacing.xs)
+    }
+
     private func startCandidate(_ candidate: MemoryVerseStore.Candidate) {
-        guard memoryVerses.canStartNewVerse(isPremium: store.isPremium) else {
-            analytics.log(.paywallOpened(source: PaywallSource.memoryVerseLimit.rawValue))
-            showPaywall = true
-            return
-        }
+        guard !shelfFull else { return }
         let entry = memoryVerses.start(reference: candidate.reference, verseText: candidate.verseText)
         analytics.log(.memoryVerseAdded(reference: candidate.reference, source: "list"))
         startedKey = entry.referenceKey

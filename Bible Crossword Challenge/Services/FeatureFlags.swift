@@ -32,12 +32,6 @@ enum FeatureFlag: String {
     /// group, so a device that has never reached PostHog behaves as released.
     case stallNudge = "stall-nudge"
 
-    /// The proactive premium ask on Today (see `PremiumAsk`). Default **off**,
-    /// which is the opposite of `stallNudge` and deliberate: this is a new
-    /// interruption rather than shipped behavior, so a device we can't measure
-    /// gets today's app, not an unproven sheet.
-    case premiumAsk = "premium-ask"
-
     /// Cuts the free daily hint pool from three to one
     /// (`PlayerProfile.reducedHintLimit`). Default **off** — three is shipped
     /// behavior, so a device we can't measure keeps the app it has.
@@ -46,7 +40,6 @@ enum FeatureFlag: String {
     var defaultValue: Bool {
         switch self {
         case .stallNudge: return true
-        case .premiumAsk: return false
         case .hintQuotaOne: return false
         }
     }
@@ -68,9 +61,9 @@ enum FeatureFlags {
     /// The distinction `isEnabled` throws away, kept for the one caller that
     /// needs it. Anything that *assigns* a player to an arm has to know the
     /// difference: a `nil` folded into `false` would enrol every player into
-    /// control on a build whose flag had not been created yet — permanently,
-    /// since assignment is once ever — and the experiment would launch already
-    /// spent. `PremiumAsk` waits instead, and asks again next sitting.
+    /// control on a build whose flag had not been created yet — and for a
+    /// once-ever assignment, the experiment would launch already spent. The
+    /// hint quota keeps the shipped pool instead, and reads again next game.
     static func value(of flag: FeatureFlag) -> Bool? {
         PostHogSDK.shared.getFeatureFlag(flag.rawValue) as? Bool
     }
@@ -87,8 +80,8 @@ enum FeatureFlags {
     ///
     /// `$feature/<key>` already carries the same fact, so this is redundant by
     /// design — and worth it: the SDK only stamps that key once flags have
-    /// loaded, and it is easy to lose in a raw SQL query. `paywall_variant` is
-    /// one column that says which arm every event in the funnel belongs to.
+    /// loaded, and it is easy to lose in a raw SQL query. `hint_quota_variant`
+    /// is one column that says which arm every event belongs to.
     static func registerVariant(_ name: String, isTreatment: Bool) {
         PostHogSDK.shared.register([name: isTreatment ? "treatment" : "control"])
     }

@@ -24,7 +24,6 @@ struct RootView: View {
     @Environment(\.gameCenter) private var gameCenter
     @Environment(\.readerRouter) private var readerRouter
     @Environment(\.memoryVerses) private var memoryVerses
-    @Environment(\.puzzleLaunch) private var puzzleLaunch
     @Environment(\.puzzleProvider) private var puzzleProvider
     @Environment(\.challengeService) private var challengeService
     @Environment(\.familyBoard) private var familyBoard
@@ -460,15 +459,6 @@ struct RootView: View {
         // the same reader for browsing.
         .fullScreenCover(item: $router.target) { target in
             ReaderModal(target: target)
-        }
-        // A puzzle chip in the reader. The reader may be this cover, so it
-        // comes down first; the grid then pushes onto Today under it.
-        .onChange(of: puzzleLaunch.pendingID) { _, id in
-            guard let id, let puzzle = puzzleProvider.puzzle(id: id) else { return }
-            puzzleLaunch.pendingID = nil
-            readerRouter.target = nil
-            selectedTab = .today
-            todayPath = NavigationPath([ReadPuzzleRoute(puzzle: puzzle)])
         }
     }
 

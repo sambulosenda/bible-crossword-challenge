@@ -1060,7 +1060,7 @@ struct CrosswordGameView: View {
     private func resolveHintQuota() {
         guard !store.isPremium, !profile.isStillLearning else { return }
         #if DEBUG
-        // Same family as -uiForcePremiumAsk. The real treatment arm needs a
+        // Same family as -uiForceTrialReoffer. The real treatment arm needs a
         // PostHog assignment, and the locked rungs it produces are otherwise
         // only reachable by spending a real pool down on a real device.
         if ProcessInfo.processInfo.arguments.contains("-uiForceHintQuotaOne") {

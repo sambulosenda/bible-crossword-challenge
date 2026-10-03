@@ -223,10 +223,6 @@ struct CompletionView: View {
                     // of 79 players whose screen included the card (2.2–2.6, 45
                     // days to 2026-09-02) 76 never touched it. See `scorecard`.
 
-                    if puzzle.isMini && !store.isPremium && pastMiniCount > 0 && !showReminderAsk {
-                        miniUpsellCard
-                    }
-
                 }
                 .padding(Theme.Spacing.l)
                 .frame(maxWidth: 520)
@@ -730,55 +726,6 @@ struct CompletionView: View {
         }
     }
 
-    // MARK: - Mini upsell
-
-    /// The minis actually behind the wall: everything except the ones a free
-    /// player can already open this week (see `PuzzleAccess`). This used to
-    /// subtract only today's, which overstated the offer the moment the archive
-    /// gate softened — and a count the reader can disprove by opening Library
-    /// costs more than it wins.
-    private var pastMiniCount: Int {
-        max(0, puzzleProvider.minis.count - PuzzleAccess.windowLength)
-    }
-
-    /// The post-win ask: shown only to free users right after a Mini solve,
-    /// when the appetite for "one more" is highest. A single quiet card — the
-    /// celebration stays the hero.
-    private var miniUpsellCard: some View {
-        Button {
-            paywallEntry = PaywallEntry(source: .miniCompletion)
-        } label: {
-            HStack(spacing: Theme.Spacing.m) {
-                Image(systemName: "bolt.circle.fill")
-                    .font(.title)
-                    .foregroundStyle(Theme.accent)
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Enjoyed that?")
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(.primary)
-                    Text("\(pastMiniCount) more Minis are waiting in Premium.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-                Spacer(minLength: 0)
-                Image(systemName: "chevron.forward")
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(.secondary)
-            }
-            .padding(Theme.Spacing.l)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            // A plain card, not an accent wash: the verse is this screen's hero
-            // and the wash is what marks it. Dressing the upsell in the same
-            // tint made the two read as siblings, with the ask borrowing the
-            // weight the payoff had earned.
-            .elevatedCard()
-        }
-        .buttonStyle(PressableCardStyle())
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel("Enjoyed that? \(pastMiniCount) more Minis are waiting in Premium.")
-        .accessibilityHint("Opens Premium upgrade options")
-    }
-
     /// The badge and the two facts of the solve: the time as the title, the
     /// puzzle's name under it. The time used to be a stat tile below a generic
     /// "Puzzle Completed!" — the headline is the result now. The mark is the
@@ -1104,8 +1051,9 @@ struct CompletionView: View {
     // sheets (`first_completion`, `streak_3`) were shown to 88 free players in
     // the 30 days to 2026-09-02 and produced one CTA tap and zero purchases,
     // while covering the celebration and pre-empting the reminder ask. The
-    // paywall is still reachable from this screen through the mini upsell
-    // card and the locked-pack row — asks the player chooses to tap.
+    // paywall is still reachable from this screen through the locked-pack
+    // row — an ask the player chooses to tap. The mini upsell card went on
+    // 2026-10-03: 15 players opened it in 30 days and none tapped through.
 
     /// Offer the daily reminder at the moment the product just proved its
     /// value — but only when this screen carries no other ask: a challenge
@@ -1118,10 +1066,8 @@ struct CompletionView: View {
         // down on every Mini solve past the first — and for a free player
         // almost every completion is a Mini, so of 78 onboarding decliners in
         // the 30 days to 2026-08-23, only 8 ever met a re-ask and 1 reached
-        // the system dialog. The upsell card can show on any other solve; the
-        // completion ask has three impressions ever, aimed at the permission
-        // grant that gates every retention loop. When this ask fires, the
-        // upsell yields for that one screen — see `miniUpsellCard`'s gate.
+        // the system dialog. The completion ask has three impressions ever,
+        // aimed at the permission grant that gates every retention loop.
         return ReminderAsk.decide(.completion, reminderAskState)
     }
 

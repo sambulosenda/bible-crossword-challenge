@@ -57,7 +57,6 @@ data class Prefs(
     val streakReminderAskShown: Boolean = false,
     val reminderAskLastDay: Long = 0,
     val didAskReminderAgain: Boolean = false,
-    val premiumAskAssigned: Boolean = false,
     val pendingReminderOptIn: Boolean = false,
     /**
      * The streak length lost at the last launch-time break, for the comeback
@@ -136,7 +135,6 @@ class AppPrefs(
         val streakReminderAskShown = booleanPreferencesKey("streakReminderAskShown")
         val reminderAskLastDay = longPreferencesKey("reminderAskLastDay")
         val didAskReminderAgain = booleanPreferencesKey("didAskReminderAgain")
-        val premiumAskAssigned = booleanPreferencesKey("premiumAskAssigned")
         val pendingReminderOptIn = booleanPreferencesKey("pendingReminderOptIn")
         val pendingStreakBreak = intPreferencesKey("pendingStreakBreak")
     }
@@ -160,7 +158,6 @@ class AppPrefs(
         streakReminderAskShown = p[Keys.streakReminderAskShown] ?: false,
         reminderAskLastDay = p[Keys.reminderAskLastDay] ?: 0,
         didAskReminderAgain = p[Keys.didAskReminderAgain] ?: false,
-        premiumAskAssigned = p[Keys.premiumAskAssigned] ?: false,
         pendingReminderOptIn = p[Keys.pendingReminderOptIn] ?: false,
         pendingStreakBreak = p[Keys.pendingStreakBreak] ?: 0,
     )

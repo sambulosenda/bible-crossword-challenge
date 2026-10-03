@@ -344,19 +344,6 @@
     },
     {
       "expect" : {
-        "name" : "premium_ask_assigned",
-        "parameterKeys" : [
-          "completed",
-          "variant"
-        ]
-      },
-      "given" : {
-        "case" : "premiumAskAssigned"
-      },
-      "name" : "premium_ask_assigned"
-    },
-    {
-      "expect" : {
         "name" : "notification_permission",
         "parameterKeys" : [
           "granted",
@@ -638,36 +625,6 @@
     },
     {
       "expect" : {
-        "name" : "read_puzzle_chips_shown",
-        "parameterKeys" : [
-          "book",
-          "chapter",
-          "count",
-          "locked_count",
-          "source"
-        ]
-      },
-      "given" : {
-        "case" : "readPuzzleChipsShown"
-      },
-      "name" : "read_puzzle_chips_shown"
-    },
-    {
-      "expect" : {
-        "name" : "read_puzzle_chip_tapped",
-        "parameterKeys" : [
-          "locked",
-          "puzzle_id",
-          "source"
-        ]
-      },
-      "given" : {
-        "case" : "readPuzzleChipTapped"
-      },
-      "name" : "read_puzzle_chip_tapped"
-    },
-    {
-      "expect" : {
         "name" : "read_search",
         "parameterKeys" : [
           "kind",
@@ -895,7 +852,7 @@
     }
   ],
   "constants" : {
-    "eventCount" : 67,
+    "eventCount" : 64,
     "paywallExits" : [
       "close",
       "free_link",

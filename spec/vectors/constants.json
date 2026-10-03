@@ -156,7 +156,6 @@
     },
     "featureFlags" : {
       "hint-quota-one" : false,
-      "premium-ask" : false,
       "stall-nudge" : true
     },
     "hints" : {
@@ -188,19 +187,11 @@
       "archive",
       "pack_locked",
       "pack_completion",
-      "mini_completion",
       "quest_locked",
       "journey",
-      "memory_verse_limit",
-      "read_chip",
       "trial_abandon",
-      "premium_ask",
       "onboarding"
     ],
-    "premiumAsk" : {
-      "minCompletions" : 5,
-      "paywallSource" : "premium_ask"
-    },
     "puzzleAccess" : {
       "packExclusivePrefix" : "pack-",
       "windowLength" : 7
@@ -272,7 +263,6 @@
   "source" : [
     "Models/Persistence.swift",
     "ViewModels/GameViewModel.swift",
-    "Models/PremiumAsk.swift",
     "Models/ReminderAsk.swift",
     "Models/ReviewAsk.swift",
     "Models/TrialReoffer.swift",

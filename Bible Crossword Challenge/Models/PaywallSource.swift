@@ -39,22 +39,13 @@ enum PaywallSource: String, CaseIterable, Hashable {
     case packLocked = "pack_locked"
     /// Finishing a puzzle inside a pack whose remainder is locked.
     case packCompletion = "pack_completion"
-    /// Finishing a Mini, with earlier Minis behind the wall.
-    case miniCompletion = "mini_completion"
     /// A premium Journey's detail screen.
     case questLocked = "quest_locked"
     /// A locked puzzle in a book on the Bible map.
     case journey
-    /// The free memory-verse cap, hit from the list or from the reader.
-    case memoryVerseLimit = "memory_verse_limit"
-    /// A locked puzzle chip under a chapter in the reader.
-    case readChip = "read_chip"
     /// The one re-offer a player gets after backing out of Apple's sheet.
     /// See `TrialReoffer`.
     case trialAbandon = "trial_abandon"
-    /// The app's one proactive ask on Today, once a player has the habit and
-    /// has never asked for Premium themselves. See `PremiumAsk`.
-    case premiumAsk = "premium_ask"
     /// Onboarding's own premium page. It never presents `PaywallView` — the
     /// page builds `PremiumOfferView` itself and picks its own promise — but
     /// it shares the label so both surfaces land in one funnel.
@@ -90,8 +81,6 @@ enum PaywallSource: String, CaseIterable, Hashable {
             return "The collections are waiting."
         case .packCompletion:
             return "The rest of the pack is waiting."
-        case .miniCompletion:
-            return "Two minutes was just the start."
         case .questLocked:
             // The Journey's own promise, in the words its locked state uses.
             return "Every Journey, a step a day."
@@ -99,29 +88,6 @@ enum PaywallSource: String, CaseIterable, Hashable {
             // A locked puzzle inside a book: the gap is the rest of the book,
             // not the shelf.
             return "Every book, all the way through."
-        case .memoryVerseLimit:
-            // Names what the cap took, not the cap. The player is mid-verse
-            // and being told to stop; "keep" is the outcome they wanted.
-            return "Keep every verse you're learning."
-        case .readChip:
-            // They were reading, and the chapter offered a puzzle they can't
-            // open. The promise is the pairing, which is the app's whole idea.
-            return "A puzzle for every chapter you read."
-        case .premiumAsk:
-            // Nothing was withheld to get here — the player has simply kept
-            // coming back — so the line names what the library holds rather
-            // than a wall they just met. Depth is the honest reason to act, and
-            // it is the one claim this player is finally in a position to care
-            // about.
-            //
-            // One line, deliberately. It opened as "You've got the habit. The
-            // shelf goes back years.", which is truer but ran to three lines on
-            // a 402pt screen and pushed the trial timeline under the pinned
-            // CTA — the page's strongest trust element, and the same fold this
-            // screen already dropped a fourth benefit row to protect. The half
-            // that was cut is the half the page states better anyway: the
-            // progress line directly underneath is this player's own tally.
-            return "The shelf goes back years."
         case .profile, .onboarding, .trialAbandon:
             // No wall behind them. A player who hasn't hit one needs telling
             // what the app is for, not what it withholds — and the re-offer

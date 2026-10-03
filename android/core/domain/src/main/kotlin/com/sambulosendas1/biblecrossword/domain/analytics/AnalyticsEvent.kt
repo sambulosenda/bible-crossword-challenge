@@ -145,10 +145,6 @@ sealed class AnalyticsEvent(val name: String, val parameters: Map<String, Any?> 
             mapOf("source" to source, "seconds_on_screen" to secondsOnScreen, "cta_tapped" to ctaTapped, "exit" to exit.rawValue),
         )
 
-    /** Fired by **both** arms — without the control half the comparison measures engagement. */
-    class PremiumAskAssigned(variant: String, completed: Int) :
-        AnalyticsEvent("premium_ask_assigned", mapOf("variant" to variant, "completed" to completed))
-
     class NotificationPermission(granted: Boolean, source: String) :
         AnalyticsEvent("notification_permission", mapOf("granted" to granted, "source" to source))
 
@@ -192,13 +188,6 @@ sealed class AnalyticsEvent(val name: String, val parameters: Map<String, Any?> 
     class VerseAction(kind: String, reference: String) :
         AnalyticsEvent("verse_action", mapOf("kind" to kind, "reference" to reference))
     class BookmarksOpened(count: Int) : AnalyticsEvent("bookmarks_opened", mapOf("count" to count))
-    class ReadPuzzleChipsShown(book: String, chapter: Int, count: Int, lockedCount: Int, source: String) :
-        AnalyticsEvent(
-            "read_puzzle_chips_shown",
-            mapOf("book" to book, "chapter" to chapter, "count" to count, "locked_count" to lockedCount, "source" to source),
-        )
-    class ReadPuzzleChipTapped(puzzleID: String, locked: Boolean, source: String) :
-        AnalyticsEvent("read_puzzle_chip_tapped", mapOf("puzzle_id" to puzzleID, "locked" to locked, "source" to source))
     class ReadSearch(kind: String, results: Int) :
         AnalyticsEvent("read_search", mapOf("kind" to kind, "results" to results))
 

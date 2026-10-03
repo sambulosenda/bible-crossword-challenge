@@ -2,7 +2,6 @@ package com.sambulosendas1.biblecrossword.domain
 
 import com.google.common.truth.Truth.assertWithMessage
 import com.sambulosendas1.biblecrossword.domain.access.PuzzleAccess
-import com.sambulosendas1.biblecrossword.domain.asks.PremiumAsk
 import com.sambulosendas1.biblecrossword.domain.asks.ReminderAsk
 import com.sambulosendas1.biblecrossword.domain.asks.ReviewAsk
 import com.sambulosendas1.biblecrossword.domain.asks.TrialReoffer
@@ -213,24 +212,6 @@ class RulesVectorsTest {
     }
 
     // MARK: - Asks
-
-    @TestFactory
-    fun `premium ask`(): List<DynamicTest> = Vectors.cases("premium_ask").map { case ->
-        val name = case["name"]!!.jsonPrimitive.content
-        DynamicTest.dynamicTest(name) {
-            val g = case["given"]!!.jsonObject
-            val state = PremiumAsk.State(
-                isPremium = g["isPremium"]!!.jsonPrimitive.boolean,
-                entitlementsKnown = g["entitlementsKnown"]!!.jsonPrimitive.boolean,
-                totalCompleted = g["totalCompleted"]!!.jsonPrimitive.int,
-                assigned = g["assigned"]!!.jsonPrimitive.boolean,
-                anyAskThisSession = g["anyAskThisSession"]!!.jsonPrimitive.boolean,
-                isInstallDay = g["isInstallDay"]!!.jsonPrimitive.boolean,
-            )
-            assertWithMessage(name).that(PremiumAsk.isEligible(state))
-                .isEqualTo(case["expect"]!!.jsonObject["eligible"]!!.jsonPrimitive.boolean)
-        }
-    }
 
     @TestFactory
     fun `reminder ask`(): List<DynamicTest> = Vectors.cases("reminder_ask").map { case ->

@@ -10,12 +10,8 @@
 //  Memorize is the point: until 2.8 the only way into memory verses was a
 //  solved puzzle, so the reader fed nothing back into the game.
 //
-//  A chapter ends with chips for the puzzles that cite it (2.9). Completion
-//  has offered "Read the passage" since 2.6; this is the way back.
-//
 
 import SwiftUI
-import SwiftData
 
 /// What a verse's touch-and-hold menu offers.
 enum VerseAction: String {
@@ -27,15 +23,6 @@ enum VerseAction: String {
 struct PlanChapter: Equatable {
     let book: String
     let chapter: Int
-}
-
-/// A puzzle offered at the foot of a chapter.
-struct PuzzleChip: Identifiable {
-    let puzzle: Puzzle
-    let solved: Bool
-    /// Outside the free window and never started — tapping opens the paywall.
-    let locked: Bool
-    var id: String { puzzle.id }
 }
 
 struct ChapterReaderView: View {
@@ -58,17 +45,6 @@ struct ChapterReaderView: View {
     @Environment(\.displayScale) private var displayScale
     @Environment(\.dismiss) private var dismiss
     @Environment(StoreService.self) private var store
-    @Environment(\.challengeService) private var challengeService
-    @Environment(\.puzzleProvider) private var puzzleProvider
-    @Environment(\.puzzleLaunch) private var puzzleLaunch
-    @Query private var records: [PuzzleRecord]
-    @State private var paywall: PaywallEntry?
-    /// The free-tier gate, built once the reader settles — it scans the
-    /// rotation windows, which isn't per-render work.
-    @State private var access: PuzzleAccess?
-    /// Chapter indices whose chips were already reported this visit, so paging
-    /// back and forth doesn't count as new impressions.
-    @State private var chipsLogged: Set<Int> = []
     @State private var shareItems: ShareItems?
     @State private var toast: String?
     @State private var openedAt = Date()
@@ -132,9 +108,6 @@ struct ChapterReaderView: View {
             await scripture.preload()
             build()
         }
-        .sheet(item: $paywall) { entry in
-            PaywallView(source: entry.source)
-        }
         .sheet(item: $shareItems) { share in
             ShareSheet(items: share.items) { completed in
                 analytics.log(.shareCompleted(kind: "share_verse", completed: completed))
@@ -157,7 +130,6 @@ struct ChapterReaderView: View {
         .sensoryFeedback(.success, trigger: toast) { _, new in new != nil }
         .onChange(of: selection) { _, i in
             persist(i)
-            logChips(at: i)
             if didSettle { pageTurns += 1 }
         }
         .onDisappear {
@@ -201,9 +173,7 @@ struct ChapterReaderView: View {
             bookmarked: bookmarked,
             memorizable: { verse in memorizeState(for: verse, in: loc) },
             showsPlanFooter: isPlanChapter,
-            chips: chips(for: loc),
             onAction: { action, verse in handle(action, verse, in: loc) },
-            onChip: handleChip,
             onMarkRead: markPlanChapterRead
         )
     }
@@ -229,8 +199,6 @@ struct ChapterReaderView: View {
         selection = idx
         persist(idx)
         recentRaw = RecentChapters.recording(book: startBook, chapter: startChapter, in: recentRaw)
-        access = PuzzleAccess(provider: puzzleProvider, challengedIDs: challengeService.pendingPuzzleIDs)
-        logChips(at: idx)
         didSettle = true
     }
 
@@ -255,12 +223,15 @@ struct ChapterReaderView: View {
         case held
         /// Too long for the memory grid — see `MemoryCloze.isEligible`.
         case ineligible
+        /// A free player's shelf is full — see `MemoryVerseStore.canStartNewVerse`.
+        case shelfFull
     }
 
     private func memorizeState(for verse: BibleVerse, in loc: ChapterLoc) -> MemorizeState {
         let reference = reference(for: verse, in: loc)
         if memoryVerses.entry(for: MemoryCloze.referenceKey(reference)) != nil { return .held }
-        return MemoryCloze.isEligible(verseText: verse.text) ? .available : .ineligible
+        guard MemoryCloze.isEligible(verseText: verse.text) else { return .ineligible }
+        return memoryVerses.canStartNewVerse(isPremium: store.isPremium) ? .available : .shelfFull
     }
 
     private func reference(for verse: BibleVerse, in loc: ChapterLoc) -> String {
@@ -272,10 +243,11 @@ struct ChapterReaderView: View {
         analytics.log(.verseAction(kind: action.rawValue, reference: reference))
         switch action {
         case .memorize:
-            // Same gate as starting a candidate from the memory list.
+            // Same gate as starting a candidate from the memory list. The menu
+            // already reads "shelf full" in this state; this covers a shelf
+            // that filled while the menu was open.
             guard memoryVerses.canStartNewVerse(isPremium: store.isPremium) else {
-                analytics.log(.paywallOpened(source: PaywallSource.memoryVerseLimit.rawValue))
-                paywall = PaywallEntry(source: .memoryVerseLimit)
+                show("Master a verse to make room")
                 return
             }
             _ = memoryVerses.start(reference: reference, verseText: verse.text)
@@ -308,54 +280,6 @@ struct ChapterReaderView: View {
         }
     }
 
-    // MARK: - Puzzle chips
-
-    /// Chips are for someone reading. Opened from the grid (the hint, a clue's
-    /// citation) the player is mid-puzzle, and an offer to start another one
-    /// is a way out, not a way in. The verse-first hint sheet passes no source
-    /// and is covered by the same rule.
-    private var chipsEnabled: Bool {
-        guard let source else { return false }
-        return source != "hint" && source != "clue"
-    }
-
-    private func chips(for loc: ChapterLoc) -> [PuzzleChip] {
-        guard chipsEnabled, let access else { return [] }
-        let ids = puzzleProvider.chapterIndex.puzzleIDs(book: loc.book, chapter: loc.chapter.number)
-        guard !ids.isEmpty else { return [] }
-        let recordsByID = Dictionary(records.map { ($0.puzzleID, $0) }, uniquingKeysWith: { a, _ in a })
-        return ids.compactMap { id in
-            guard let puzzle = puzzleProvider.puzzle(id: id) else { return nil }
-            let record = recordsByID[id]
-            let playable = access.canPlay(puzzle, isPremium: store.isPremium, hasProgress: record != nil)
-            return PuzzleChip(puzzle: puzzle, solved: record?.isCompleted ?? false, locked: !playable)
-        }
-    }
-
-    private func logChips(at i: Int) {
-        guard let source, locations.indices.contains(i), !chipsLogged.contains(i) else { return }
-        let shown = chips(for: locations[i])
-        guard !shown.isEmpty else { return }
-        chipsLogged.insert(i)
-        analytics.log(.readPuzzleChipsShown(
-            book: locations[i].book,
-            chapter: locations[i].chapter.number,
-            count: shown.count,
-            lockedCount: shown.filter(\.locked).count,
-            source: source
-        ))
-    }
-
-    private func handleChip(_ chip: PuzzleChip) {
-        analytics.log(.readPuzzleChipTapped(puzzleID: chip.puzzle.id, locked: chip.locked, source: source ?? ""))
-        if chip.locked {
-            analytics.log(.paywallOpened(source: PaywallSource.readChip.rawValue))
-            paywall = PaywallEntry(source: .readChip)
-        } else {
-            puzzleLaunch.play(id: chip.puzzle.id)
-        }
-    }
-
     // MARK: - Reading plan
 
     private func markPlanChapterRead() {
@@ -379,10 +303,7 @@ private struct ChapterPage: View {
     let memorizable: (BibleVerse) -> ChapterReaderView.MemorizeState
     /// Whether this is a reading plan's chapter for today.
     let showsPlanFooter: Bool
-    /// Puzzles that cite this chapter, best first. Empty hides the section.
-    let chips: [PuzzleChip]
     let onAction: (VerseAction, BibleVerse) -> Void
-    let onChip: (PuzzleChip) -> Void
     let onMarkRead: () -> Void
 
     /// The system's Dynamic Type multiplier, read as a metric that scales from
@@ -413,14 +334,6 @@ private struct ChapterPage: View {
 
                     ForEach(chapter.verses) { verse in
                         verseRow(verse).id(verse.number)
-                    }
-
-                    if !chips.isEmpty {
-                        chipRow
-                            .padding(.top, Theme.Spacing.l)
-                            // Clears the tab bar when nothing follows — see the
-                            // plan footer below.
-                            .padding(.bottom, showsPlanFooter ? 0 : 96)
                     }
 
                     if showsPlanFooter {
@@ -463,53 +376,6 @@ private struct ChapterPage: View {
                 scrolledPast = true
             }
         }
-    }
-
-    /// The puzzles this chapter appears in, as a scrolling row of chips.
-    private var chipRow: some View {
-        VStack(alignment: .leading, spacing: Theme.Spacing.s) {
-            Text("Puzzles from this chapter")
-                .kicker()
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: Theme.Spacing.s) {
-                    ForEach(chips) { chip in
-                        Button { onChip(chip) } label: { chipLabel(chip) }
-                            .buttonStyle(.plain)
-                            .accessibilityLabel(chipAccessibility(chip))
-                            .accessibilityHint(chip.locked ? "Opens the upgrade offer" : "Opens the puzzle")
-                    }
-                }
-            }
-            // Let the row bleed to the screen edge on the way out while its
-            // first chip stays on the text margin.
-            .scrollClipDisabled()
-        }
-    }
-
-    private func chipLabel(_ chip: PuzzleChip) -> some View {
-        HStack(spacing: Theme.Spacing.xs + 2) {
-            Image(systemName: chip.solved ? "checkmark.circle.fill" : chip.locked ? "lock.fill" : "square.grid.3x3.fill")
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(chip.solved ? Color.green : chip.locked ? Color.secondary : Theme.accent)
-            Text(chip.puzzle.title)
-                .font(.subheadline.weight(.semibold))
-                .lineLimit(1)
-            Circle()
-                .fill(chip.puzzle.difficulty.tint)
-                .frame(width: 7, height: 7)
-                .accessibilityHidden(true)
-        }
-        .padding(.horizontal, Theme.Spacing.m)
-        .padding(.vertical, Theme.Spacing.s + 2)
-        .background(Theme.surface, in: .capsule)
-        .foregroundStyle(chip.locked ? .secondary : .primary)
-    }
-
-    private func chipAccessibility(_ chip: PuzzleChip) -> String {
-        var parts = [chip.puzzle.title, chip.puzzle.difficulty.label]
-        if chip.solved { parts.append("solved") }
-        if chip.locked { parts.append("locked, Premium") }
-        return parts.joined(separator: ", ")
     }
 
     private func verseRow(_ verse: BibleVerse) -> some View {
@@ -557,6 +423,8 @@ private struct ChapterPage: View {
             }
         case .held:
             Label("In Memory Verses", systemImage: "brain.fill")
+        case .shelfFull:
+            Label("Master a verse to make room", systemImage: "brain")
         case .ineligible:
             EmptyView()
         }

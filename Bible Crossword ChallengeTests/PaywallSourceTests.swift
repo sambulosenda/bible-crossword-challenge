@@ -27,15 +27,15 @@ struct PaywallSourceTests {
     /// The entry points that put the player in front of something they can't
     /// have. Each owes them a line about that, not the standing promise.
     private static let wallSources: [PaywallSource] = [
-        .hintLimit, .archive, .packLocked, .packCompletion, .miniCompletion,
-        .questLocked, .journey, .memoryVerseLimit, .readChip,
+        .hintLimit, .archive, .packLocked, .packCompletion,
+        .questLocked, .journey,
     ]
 
     /// The entry points a player reaches without hitting anything — a card they
     /// chose to tap, or an offer being made again. These are *meant* to open
     /// with the standing promise.
     private static let browseSources: [PaywallSource] = [
-        .profile, .onboarding, .trialAbandon, .homeCard, .premiumAsk,
+        .profile, .onboarding, .trialAbandon, .homeCard,
     ]
 
     @Test("every source has a headline")
@@ -58,12 +58,9 @@ struct PaywallSourceTests {
     /// The `home_card` is the one deliberate exception in either direction: it
     /// is browsing, but the card that opens it is about the daily habit, so it
     /// keeps its own line. Pinned so the exception stays a decision.
-    /// `home_card` and `premium_ask` are the two deliberate exceptions: neither
-    /// follows a wall, but both are the app speaking first about a habit, so
-    /// each keeps a line of its own. Pinned so the exceptions stay decisions.
-    private static let browseSourcesWithTheirOwnLine: Set<PaywallSource> = [.homeCard, .premiumAsk]
+    private static let browseSourcesWithTheirOwnLine: Set<PaywallSource> = [.homeCard]
 
-    @Test("the browse surfaces open with the standing promise, bar the two that speak first")
+    @Test("the browse surfaces open with the standing promise, bar the one about the habit")
     func browseSourcesUseTheStandingPromise() {
         for source in Self.browseSources where !Self.browseSourcesWithTheirOwnLine.contains(source) {
             #expect(source.headline == PremiumCopy.promise, "\(source.rawValue) drifted off the standing promise")
@@ -92,14 +89,16 @@ struct PaywallSourceTests {
     }
 
     /// The analytics contract. These strings are years of history in PostHog;
-    /// changing one is a deliberate act, not a rename.
+    /// changing one is a deliberate act, not a rename. `mini_completion`,
+    /// `read_chip`, `premium_ask` and `memory_verse_limit` were retired on
+    /// 2026-10-03 — 30 days of opens with zero CTA taps between them — so
+    /// their series end there.
     @Test("raw values are the analytics labels and do not drift")
     func rawValuesAreStable() {
         let expected: Set<String> = [
             "hint_limit", "home_card", "profile", "archive", "pack_locked",
-            "pack_completion", "mini_completion", "quest_locked", "journey",
-            "memory_verse_limit", "read_chip", "trial_abandon", "onboarding",
-            "premium_ask",
+            "pack_completion", "quest_locked", "journey",
+            "trial_abandon", "onboarding",
         ]
         #expect(Set(PaywallSource.allCases.map(\.rawValue)) == expected)
     }

@@ -6,59 +6,12 @@ import java.time.LocalDate
 import java.time.ZoneId
 
 /*
- * The app's four "should we speak up now?" rules, ported from iOS
- * `Models/PremiumAsk.swift`, `ReminderAsk.swift`, `ReviewAsk.swift` and
- * `TrialReoffer.swift`. Each is a pure decision over plain values: the screen
- * owns presentation and persistence, these own the rule — so the cross-surface
- * guarantees stay testable without any UI.
+ * The app's three "should we speak up now?" rules, ported from iOS
+ * `Models/ReminderAsk.swift`, `ReviewAsk.swift` and `TrialReoffer.swift`. Each
+ * is a pure decision over plain values: the screen owns presentation and
+ * persistence, these own the rule — so the cross-surface guarantees stay
+ * testable without any UI.
  */
-
-/**
- * Whether to offer Premium to a player who has stuck around and never asked —
- * the app's one proactive ask outside onboarding.
- *
- * Deliberately narrow: it waits for a habit rather than a wall. Five solves is
- * past the learning window (three) with room to spare, and the install day is
- * excluded outright so this can never be a first-sitting interruption stacked
- * on top of onboarding's.
- */
-object PremiumAsk {
-    /** Solves before the app brings Premium up by itself. */
-    const val MIN_COMPLETIONS = 5
-
-    /** The paywall `source`, so its open → tap → purchase funnel reads on its own. */
-    const val PAYWALL_SOURCE = "premium_ask"
-
-    data class State(
-        val isPremium: Boolean,
-        /**
-         * Whether [isPremium] is an answer yet. An unproven `false` is not a
-         * free player, and this is the one ask that speaks first.
-         */
-        val entitlementsKnown: Boolean,
-        val totalCompleted: Int,
-        /** Already assigned an arm — the ask is once ever, in both arms. */
-        val assigned: Boolean,
-        /** Any surface asked this player for anything since launch. */
-        val anyAskThisSession: Boolean,
-        /** Today is the day the profile was created. */
-        val isInstallDay: Boolean,
-    )
-
-    /**
-     * Eligibility, not presentation. Answers "is this the moment the app would
-     * speak up?" — *both* arms are assigned at that moment, so control isn't
-     * every un-flagged player in the app (which would measure engagement
-     * rather than the ask). The flag is read after this returns true.
-     */
-    fun isEligible(s: State): Boolean {
-        if (!s.entitlementsKnown || s.isPremium) return false
-        if (s.assigned) return false
-        if (s.anyAskThisSession) return false
-        if (s.isInstallDay) return false
-        return s.totalCompleted >= MIN_COMPLETIONS
-    }
-}
 
 /**
  * Whether a reminder opt-in ask may be shown on a given surface. Only players

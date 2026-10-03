@@ -152,7 +152,7 @@ struct SpecVectorsTests {
             family: "constants",
             description: "Named constants the rules depend on. Kotlin should assert equality against each at test time.",
             source: [
-                "Models/Persistence.swift", "ViewModels/GameViewModel.swift", "Models/PremiumAsk.swift",
+                "Models/Persistence.swift", "ViewModels/GameViewModel.swift",
                 "Models/ReminderAsk.swift", "Models/ReviewAsk.swift", "Models/TrialReoffer.swift",
                 "Services/PuzzleAccess.swift", "Services/PuzzleProvider.swift", "Services/FeatureFlags.swift",
                 "Services/ChallengeService.swift", "Models/PaywallSource.swift",
@@ -197,10 +197,6 @@ struct SpecVectorsTests {
             ],
             "timer": ["maxTickDeltaSeconds": 1.5],
             "starterGift": ["letterIntervalMilliseconds": 170],
-            "premiumAsk": [
-                "minCompletions": PremiumAsk.minCompletions,
-                "paywallSource": PremiumAsk.source.rawValue,
-            ],
             "reminderAsk": [
                 "maxCompletionAsks": ReminderAsk.maxCompletionAsks,
                 "surfaces": [
@@ -237,7 +233,6 @@ struct SpecVectorsTests {
             ],
             "featureFlags": [
                 FeatureFlag.stallNudge.rawValue: FeatureFlag.stallNudge.defaultValue,
-                FeatureFlag.premiumAsk.rawValue: FeatureFlag.premiumAsk.defaultValue,
                 FeatureFlag.hintQuotaOne.rawValue: FeatureFlag.hintQuotaOne.defaultValue,
             ],
             "challengeLinks": [
@@ -311,7 +306,6 @@ struct SpecVectorsTests {
         .paywallOpened(source: "hint_limit"),
         .paywallCTATapped(plan: "yearly", source: "hint_limit", offersTrial: true),
         .paywallDismissed(source: "hint_limit", secondsOnScreen: 12, ctaTapped: false, exit: .close),
-        .premiumAskAssigned(variant: "treatment", completed: 5),
         .notificationPermission(granted: true, source: "completion"),
         .reminderAskShown(source: "completion"),
         .reminderDeclined(source: "completion"),
@@ -334,8 +328,6 @@ struct SpecVectorsTests {
         .readerClosed(source: "hint", seconds: 30, chaptersPaged: 1, scrolledPastVerse: true, expanded: false),
         .verseAction(kind: "bookmark", reference: "John 3:16"),
         .bookmarksOpened(count: 4),
-        .readPuzzleChipsShown(book: "John", chapter: 3, count: 2, lockedCount: 1, source: "read"),
-        .readPuzzleChipTapped(puzzleID: "daily-001", locked: false, source: "read"),
         .readSearch(kind: "reference", results: 1),
         .shareOpened(kind: "scorecard"),
         .shareCompleted(kind: "scorecard", completed: true),
@@ -651,36 +643,6 @@ struct SpecVectorsTests {
     }
 
     // MARK: Asks
-
-    @Test func premiumAsk() throws {
-        var file = VectorFile(
-            family: "premium_ask",
-            description: "PremiumAsk.isEligible over every combination of its six inputs at the boundary solve counts.",
-            source: ["Models/PremiumAsk.swift"]
-        )
-        for known in [false, true] {
-            for premium in [false, true] {
-                for total in [0, 4, 5, 6, 50] {
-                    for assigned in [false, true] {
-                        for asked in [false, true] {
-                            for install in [false, true] {
-                                let s = PremiumAsk.State(
-                                    isPremium: premium, entitlementsKnown: known, totalCompleted: total,
-                                    assigned: assigned, anyAskThisSession: asked, isInstallDay: install
-                                )
-                                file.cases.append(VectorCase(
-                                    name: "known \(known) · premium \(premium) · total \(total) · assigned \(assigned) · asked \(asked) · installDay \(install)",
-                                    given: ["entitlementsKnown": known, "isPremium": premium, "totalCompleted": total, "assigned": assigned, "anyAskThisSession": asked, "isInstallDay": install],
-                                    expect: ["eligible": PremiumAsk.isEligible(s)]
-                                ))
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        try emit(file)
-    }
 
     @Test func reminderAsk() throws {
         var file = VectorFile(

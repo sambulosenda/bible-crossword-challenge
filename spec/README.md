@@ -67,7 +67,6 @@ Every case must reproduce on either platform, in any time zone, on any day.
 | `achievements.json` | `newlyUnlocked` plus per-achievement `progress` / `progressText` for profile shapes |
 | `rotation.json` | `dayIndex`, `weekIndex`, which daily/mini/sunday a date serves, and the rolling windows |
 | `puzzle_access.json` | `canPlay` / `isInWindow` truth table over puzzle kind × premium × progress × challenged |
-| `premium_ask.json` | `PremiumAsk.isEligible` over all six inputs |
 | `reminder_ask.json` | `ReminderAsk.decide` per surface |
 | `review_ask.json` | `ReviewAsk.decide` trigger selection and both time floors |
 | `trial_reoffer.json` | `TrialReoffer.decide` same-sitting vs later-sitting |

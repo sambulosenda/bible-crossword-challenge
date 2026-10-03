@@ -86,6 +86,12 @@ struct PostHogAnalyticsService: AnalyticsService {
         PostHogSDK.shared.register(["build_type": "debug"])
         #endif
 
+        // The premium-ask experiment stamped its arm as a persisted super
+        // property. The ask was removed on 2026-10-03, so a device assigned
+        // before then would otherwise label every event it ever sends with an
+        // experiment that no longer exists.
+        PostHogSDK.shared.unregister("paywall_variant")
+
         // `personProfiles` stays at its `.identifiedOnly` default: the app has
         // no accounts and never calls `identify`, so every event is anonymous.
         // Funnels and retention still work off `distinct_id`, and anonymous
