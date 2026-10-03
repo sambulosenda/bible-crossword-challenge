@@ -15,6 +15,10 @@ import SwiftUI
 /// the feed has room to remind.
 struct ReadingPlanCard: View {
     var compact = false
+    /// The Read tab draws the running plan at the top and the invite at the
+    /// foot, so each placement asks for one half.
+    var showsActive = true
+    var showsInvite = true
     /// Opens today's chapter. The card can't push the reader itself: on Today
     /// and on Read it lands on different stacks.
     let onRead: () -> Void
@@ -23,12 +27,14 @@ struct ReadingPlanCard: View {
 
     var body: some View {
         if let plan = plans.activePlan, let progress = plans.progress {
-            if plans.isComplete {
-                completeCard(plan)
-            } else if let day = plans.nextDay {
-                activeCard(plan, day: day, of: progress.chapterCount)
+            if showsActive {
+                if plans.isComplete {
+                    completeCard(plan)
+                } else if let day = plans.nextDay {
+                    activeCard(plan, day: day, of: progress.chapterCount)
+                }
             }
-        } else if !compact {
+        } else if !compact && showsInvite {
             inviteCard
         }
     }

@@ -29,6 +29,11 @@ struct LibraryView: View {
     @State private var query = ""
     @State private var difficulty: PuzzleDifficulty?
     @State private var statusFilter: ArchiveStatusFilter = .all
+    /// Which length of puzzle — a 15×15, a 7×7 or a 21×21 is a different
+    /// sitting, and the free list used to run all three together.
+    @State private var kind: LibraryKind = .all
+    /// The premium section shows a taste of what's locked, not all of it.
+    @State private var showAllLocked = false
     @State private var showPaywall = false
 
     private var puzzles: [Puzzle] { puzzleProvider.puzzles }
@@ -46,29 +51,47 @@ struct LibraryView: View {
     }
 
     private var filtered: [Puzzle] {
-        puzzles.filter(matches)
+        guard kind == .all || kind == .daily else { return [] }
+        return puzzles.filter(matches)
     }
 
-    /// Minis honour the search and status filters; the difficulty filter only
-    /// narrows the full-size list (minis are all quick and easy by design).
+    /// Minis honour every filter, difficulty included — by their own
+    /// difficulty. The difficulty filter used to empty the Mini section
+    /// outright, so picking "Medium" quietly hid every 7×7 without saying so.
     private var filteredMinis: [Puzzle] {
-        guard difficulty == nil else { return [] }
-        return minis.filter { mini in
-            (query.isEmpty || mini.title.localizedCaseInsensitiveContains(query))
-                && statusMatches(mini)
-        }
+        guard kind == .all || kind == .mini else { return [] }
+        return minis.filter(matches)
     }
 
-    /// Sunday Specials honour every filter the dailies do — they carry real
-    /// difficulties, unlike the minis.
     private var filteredSundays: [Puzzle] {
-        sundays.filter(matches)
+        guard kind == .all || kind == .sunday else { return [] }
+        return sundays.filter(matches)
     }
 
+    /// Title or verse reference: in a Bible app "Psalm" or "John" should find
+    /// the puzzles built on them, not only the ones that say so in the title.
     private func matches(_ puzzle: Puzzle) -> Bool {
-        (query.isEmpty || puzzle.title.localizedCaseInsensitiveContains(query))
+        (query.isEmpty
+            || puzzle.title.localizedCaseInsensitiveContains(query)
+            || puzzle.reference.localizedCaseInsensitiveContains(query))
             && (difficulty == nil || puzzle.difficulty == difficulty)
             && statusMatches(puzzle)
+    }
+
+    /// Playable rows in the order a player wants them: started, then not yet
+    /// solved, then solved. Alphabetical put eight solved puzzles above the
+    /// first one left to play.
+    private func playOrder(_ list: [Puzzle]) -> [Puzzle] {
+        func rank(_ puzzle: Puzzle) -> Int {
+            switch status(for: puzzle) {
+            case .inProgress: 0
+            case .start: 1
+            case .completed: 2
+            }
+        }
+        return list.enumerated()
+            .sorted { (rank($0.element), $0.offset) < (rank($1.element), $1.offset) }
+            .map(\.element)
     }
 
     private func statusMatches(_ puzzle: Puzzle) -> Bool {
@@ -79,11 +102,10 @@ struct LibraryView: View {
         }
     }
 
-    /// First puzzle the player hasn't completed, honouring the difficulty filter.
+    /// First puzzle the player hasn't completed, honouring the type and
+    /// difficulty filters — a Mini when the list is showing Minis.
     private var nextUnsolved: Puzzle? {
-        puzzles.first {
-            (difficulty == nil || $0.difficulty == difficulty) && status(for: $0) != .completed
-        }
+        (filtered + filteredSundays + filteredMinis).first { status(for: $0) != .completed }
     }
 
     private var isFiltering: Bool { difficulty != nil || statusFilter != .all }
@@ -148,18 +170,22 @@ struct LibraryView: View {
 
     private var premiumList: some View {
         List {
+            kindSection
+
             if query.isEmpty, statusFilter != .completed, let next = nextUnsolved {
                 Section {
                     nextUnsolvedRow(next)
                 }
             }
 
-            Section {
-                ForEach(filtered) { puzzle in
-                    row(puzzle)
+            if !filtered.isEmpty {
+                Section {
+                    ForEach(filtered) { puzzle in
+                        row(puzzle)
+                    }
+                } header: {
+                    progressHeader
                 }
-            } header: {
-                progressHeader
             }
 
             if !filteredSundays.isEmpty {
@@ -182,14 +208,14 @@ struct LibraryView: View {
                 }
             }
         }
-        // Warm paper canvas behind the native list rows (see ProfileView).
+        // Warm paper canvas behind the native list rows (see SettingsView).
         .scrollContentBackground(.hidden)
         // Same readable column as the card screens — a row stretched across a
         // 13" iPad puts its chevron half a metre from its title.
         .frame(maxWidth: 640)
         .frame(maxWidth: .infinity)
         .background(Theme.background)
-        .searchable(text: $query, prompt: "Search puzzles")
+        .searchable(text: $query, prompt: "Search titles or verses")
         .toolbar { filterMenu }
         .overlay {
             if filtered.isEmpty && filteredSundays.isEmpty && filteredMinis.isEmpty {
@@ -309,8 +335,9 @@ struct LibraryView: View {
     /// Solved grids sit back; unsolved ones keep the accent, so scrolling the
     /// list shows at a glance how far through the collection you are.
     private func thumbnailTint(for status: PuzzleStatus) -> Color {
+        // 0.18 drew solved grids close to invisible on white.
         status == .completed
-            ? Color.primary.opacity(0.18)
+            ? Color.primary.opacity(0.30)
             : Theme.accent.opacity(0.40)
     }
 
@@ -353,23 +380,44 @@ struct LibraryView: View {
     private var freeList: some View {
         let gate = access
         let split = partitioned(gate: gate)
+        let playable = playOrder(split.free)
+        let next = playable.first { status(for: $0) != .completed }
+        let locked = (showAllLocked || !query.isEmpty) ? split.locked : Array(split.locked.prefix(Self.lockedPreview))
+        let hiddenLocked = split.locked.count - locked.count
 
         return List {
-            if !split.free.isEmpty {
+            kindSection
+
+            // The same jump premium players get. Free players had none, so
+            // the way to their next puzzle was to scroll past their solved ones.
+            if query.isEmpty, statusFilter != .completed, let next {
                 Section {
-                    ForEach(split.free) { row($0) }
+                    nextUnsolvedRow(next)
+                }
+            }
+
+            if !playable.isEmpty {
+                Section {
+                    ForEach(playable) { row($0) }
                 } header: {
-                    freeHeader(freeCount: split.free.count)
+                    freeHeader(freeCount: playable.count)
                 }
             }
 
             if !split.locked.isEmpty {
                 Section {
-                    ForEach(split.locked) { lockedRow($0) }
+                    premiumOffer(count: split.locked.count)
+                    ForEach(locked) { lockedRow($0) }
+                    if hiddenLocked > 0 {
+                        Button {
+                            withAnimation { showAllLocked = true }
+                        } label: {
+                            Text("Show all \(split.locked.count)")
+                                .font(.subheadline.weight(.semibold))
+                        }
+                    }
                 } header: {
                     Text("Premium")
-                } footer: {
-                    upgradeFooter
                 }
             }
         }
@@ -378,7 +426,7 @@ struct LibraryView: View {
         .frame(maxWidth: 640)
         .frame(maxWidth: .infinity)
         .background(Theme.background)
-        .searchable(text: $query, prompt: "Search puzzles")
+        .searchable(text: $query, prompt: "Search titles or verses")
         .toolbar { filterMenu }
         .overlay {
             if split.free.isEmpty && split.locked.isEmpty {
@@ -395,20 +443,44 @@ struct LibraryView: View {
         }
     }
 
+    /// How many locked rows the Premium section shows before "Show all". It
+    /// used to list every one — about 170 — with the only way to Premium in a
+    /// footer underneath them.
+    private static let lockedPreview = 5
+
+    /// Daily, Mini or Sunday, up front rather than inside the filter menu:
+    /// they're different lengths of sitting, and the choice is the first one
+    /// a player makes here.
+    private var kindSection: some View {
+        Section {
+            Picker("Puzzle type", selection: $kind) {
+                ForEach(LibraryKind.allCases) { kind in
+                    Text(kind.label).tag(kind)
+                }
+            }
+            .pickerStyle(.segmented)
+            .labelsHidden()
+            .listRowBackground(Color.clear)
+            .listRowInsets(EdgeInsets())
+        }
+    }
+
     /// States the allowance in the player's own terms, without claiming dates.
     ///
     /// "This week's seven" describes which puzzles are open, not when they were
     /// published — the pool rotates, so no puzzle belongs to a day (see the file
     /// note above). The count is what they can actually open right now, which
-    /// grows past seven as they start puzzles and keep them.
+    /// grows past seven as they start puzzles and keep them; the line under it
+    /// says so, where "27 to play" over "this week's seven are free" read as a
+    /// sum that didn't add up.
     private func freeHeader(freeCount: Int) -> some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
-            Text("^[\(freeCount) puzzle](inflect: true) to play")
+            Text("^[\(freeCount) puzzle](inflect: true) you can play")
                 .font(.subheadline.weight(.semibold))
-                .foregroundStyle(.primary)
-            Text("This week's seven are free, and anything you start stays yours.")
+                .foregroundStyle(Color.primary)
+            Text("Seven new each week, and anything you start stays yours.")
                 .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Color.secondary)
                 .fixedSize(horizontal: false, vertical: true)
         }
         .textCase(nil)          // section headers upper-case by default
@@ -416,25 +488,38 @@ struct LibraryView: View {
         .accessibilityElement(children: .combine)
     }
 
-    /// The upgrade path, kept where the locked rows are rather than as a screen
-    /// of its own. Same promise the paywall opens with — see `PremiumCopy`.
-    private var upgradeFooter: some View {
-        VStack(alignment: .leading, spacing: Theme.Spacing.m) {
-            // Both numbers, deliberately. The reader meets the two totals
-            // anyway, on Today and in onboarding, and a screen that says 82
-            // while everything else says 177 reads as a contradiction rather
-            // than as scoping.
-            Text("Premium opens all \(puzzleProvider.totalPuzzleCount) puzzles, including every one of the \(puzzles.count) dailies in this archive — play and replay as often as you want.")
-                .font(.footnote)
-                .foregroundStyle(.secondary)
-                .fixedSize(horizontal: false, vertical: true)
-
-            Button("Unlock Premium") { showPaywall = true }
-                .buttonStyle(.pillProminent)
-                .padding(.bottom, Theme.Spacing.s)
+    /// The upgrade path, at the top of the locked rows rather than in a footer
+    /// under all of them. Same words as every card that opens the paywall —
+    /// never "Unlock" (see `PremiumCopy.cardCTA`).
+    private func premiumOffer(count: Int) -> some View {
+        Button {
+            showPaywall = true
+        } label: {
+            VStack(alignment: .leading, spacing: Theme.Spacing.m) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Every puzzle, back to the first")
+                        .font(.headline)
+                        .foregroundStyle(Color.primary)
+                    Text("\(count) more here, play and replay as often as you like.")
+                        .font(.subheadline)
+                        .foregroundStyle(Color.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                Text(PremiumCopy.cardCTA(store))
+                    .font(.subheadline.weight(.bold))
+                    .foregroundStyle(Theme.onInk)
+                    .padding(.horizontal, Theme.Spacing.m)
+                    .padding(.vertical, Theme.Spacing.s)
+                    .background(Theme.ink, in: .capsule)
+                    // Hugs its text but may wrap — see Today's UpgradeCard.
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .padding(.vertical, Theme.Spacing.s)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .contentShape(.rect)
         }
-        .textCase(nil)
-        .padding(.top, Theme.Spacing.s)
+        .buttonStyle(.plain)
+        .accessibilityHint("Opens Premium plans")
     }
 
     /// A locked row: the same shape as a playable one so the list reads as one
@@ -469,6 +554,23 @@ struct LibraryView: View {
         .buttonStyle(.plain)
         .accessibilityLabel("\(puzzle.title), locked")
         .accessibilityHint("Opens Premium")
+    }
+}
+
+// MARK: - Puzzle kind
+
+private enum LibraryKind: String, CaseIterable, Identifiable {
+    case all, daily, mini, sunday
+
+    var id: String { rawValue }
+
+    var label: String {
+        switch self {
+        case .all: return "All"
+        case .daily: return "Daily"
+        case .mini: return "Mini"
+        case .sunday: return "Sunday"
+        }
     }
 }
 

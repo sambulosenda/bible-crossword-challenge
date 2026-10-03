@@ -68,26 +68,38 @@ struct ReadView: View {
                     // The habit and the bookmark on the left of a wide
                     // window, the shelves on the right.
                     CardColumns {
-                        // The habit first, then the bookmark, then the shelves.
-                        ReadingPlanCard(onRead: openPlanChapter)
-                        resumeCard
-                        recentRow
-                    } more: {
-                        MemoryVerseCard(
-                            dueCount: memoryVerses.dueCount,
-                            activeCount: memoryVerses.entries.count
-                        )
-                        JourneyCard(source: "read_tab")
-                        if !bookmarks.entries.isEmpty {
-                            bookmarksCard
+                        // A running plan, then the bookmark — but only a real
+                        // one. A first visit used to open on "Open Genesis 1"
+                        // in the app's one loud pill, the least likely thing
+                        // anyone came for (6 players in 30 days to
+                        // 2026-10-03); the shelves below start there anyway.
+                        ReadingPlanCard(showsInvite: false, onRead: openPlanChapter)
+                        if hasReadBefore {
+                            resumeCard
                         }
+                        recentRow
+                        // The player's own scripture — the verses their
+                        // puzzles gave them. Memory verses are the habit that
+                        // keeps people (half of early users who touch them are
+                        // back at day 7), so they lead the tab now.
+                        scriptureSection
+                    } more: {
                         browseSection
+                        // The invite closes the tab instead of opening it:
+                        // 4 players started a plan in 30 days.
+                        ReadingPlanCard(showsActive: false, onRead: openPlanChapter)
                     }
                 }
             }
             .background(Theme.background)
             .navigationTitle("Read")
-            .searchable(text: $query, prompt: "Verse, chapter or words")
+            // Always showing: the fastest way to "John 3:16" was hidden until
+            // the page was pulled down.
+            .searchable(
+                text: $query,
+                placement: .navigationBarDrawer(displayMode: .always),
+                prompt: "Verse, chapter or words"
+            )
             .onSubmit(of: .search) {
                 analytics.log(.readSearch(kind: results.kind, results: results.count))
             }
@@ -322,6 +334,28 @@ struct ReadView: View {
         }
     }
 
+    /// A chapter has been opened before, known without decoding the Bible.
+    private var hasReadBefore: Bool { !lastBook.isEmpty && lastChapter > 0 }
+
+    // MARK: - Your scripture
+
+    /// One header over the player's own verses instead of a kicker on each card.
+    private var scriptureSection: some View {
+        VStack(alignment: .leading, spacing: Theme.Spacing.s) {
+            Text("Your scripture").kicker()
+                .padding(.horizontal, Theme.Spacing.xs)
+            MemoryVerseCard(
+                dueCount: memoryVerses.dueCount,
+                activeCount: memoryVerses.entries.count,
+                showsKicker: false
+            )
+            if !bookmarks.entries.isEmpty {
+                bookmarksCard
+            }
+            JourneyCard(source: "read_tab")
+        }
+    }
+
     // MARK: - Bookmarks
 
     private var bookmarksCard: some View {
@@ -334,12 +368,13 @@ struct ReadView: View {
                     .foregroundStyle(Theme.accent)
                     .frame(width: 44, height: 44)
                     .background(Theme.accent.opacity(0.14), in: .circle)
+                // The name leads, as on every other row under the header; the
+                // latest reference moves into the line beneath it.
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("Bookmarks").kicker()
-                    Text(bookmarks.entries.first?.reference ?? "")
+                    Text("Bookmarks")
                         .font(.headline)
                         .foregroundStyle(.primary)
-                    Text("\(bookmarks.entries.count) \(bookmarks.entries.count == 1 ? "verse" : "verses") kept")
+                    Text(bookmarksSummary)
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -354,8 +389,15 @@ struct ReadView: View {
         }
         .buttonStyle(PressableCardStyle())
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("Bookmarks, \(bookmarks.entries.count) verses kept")
+        .accessibilityLabel("Bookmarks. \(bookmarksSummary)")
         .accessibilityHint("Opens your bookmarked verses")
+    }
+
+    private var bookmarksSummary: String {
+        let count = bookmarks.entries.count
+        let kept = "\(count) \(count == 1 ? "verse" : "verses") kept"
+        guard let latest = bookmarks.entries.first?.reference else { return kept }
+        return "\(kept) · latest \(latest)"
     }
 
     // MARK: - Snapshot

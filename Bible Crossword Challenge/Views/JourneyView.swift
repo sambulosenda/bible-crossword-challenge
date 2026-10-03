@@ -39,7 +39,9 @@ struct JourneyView: View {
             testamentSection(.new)
         }
         .background(Theme.background)
-        .navigationTitle("Your journey")
+        // "Books explored", not "Your journey": the Packs tab calls its paced
+        // runs Journeys, and one word for two features made both harder to find.
+        .navigationTitle("Books explored")
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             reload()
@@ -405,7 +407,7 @@ struct JourneyCard: View {
                     .font(.title)
                     .foregroundStyle(Theme.accent)
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("Your journey")
+                    Text("Books explored")
                         .font(.subheadline.weight(.semibold))
                         .foregroundStyle(.primary)
                     Text(journeySummary)
@@ -423,14 +425,14 @@ struct JourneyCard: View {
         }
         .buttonStyle(PressableCardStyle())
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("Your journey. \(journeySummary)")
+        .accessibilityLabel("Books explored. \(journeySummary)")
         .accessibilityHint("Opens the map of books you've explored")
     }
 
     private var journeySummary: String {
         let count = booksExplored
-        if count == 0 { return "See which books of the Bible you've explored" }
-        return "\(count) \(count == 1 ? "book" : "books") of the Bible explored"
+        if count == 0 { return "See which books your puzzles have covered" }
+        return "\(count) of 66 · see them on the map"
     }
 
     private var booksExplored: Int {
