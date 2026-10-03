@@ -436,7 +436,10 @@ struct RootView: View {
             Tab("Library", systemImage: "square.grid.3x3", value: RootTab.library) {
                 LibraryView(profile: profile)
             }
-            Tab("Read", systemImage: "book", value: RootTab.read) {
+            // "Verses" since 2026-10-03: the tab leads with the verses the
+            // player is memorizing and the ones their puzzles gave them; the
+            // reader sits underneath. The case keeps its old name.
+            Tab("Verses", systemImage: "text.quote", value: RootTab.read) {
                 ReadView()
             }
             // The HIG's standard symbol for Account, User and Profile.

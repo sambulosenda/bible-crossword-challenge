@@ -2,9 +2,17 @@
 //  ReadView.swift
 //  Bible Crossword Challenge
 //
-//  The Read tab: the app's scripture surfaces in one place — resume the
-//  chapter last open, memory verses, the journey map, and the whole Bible by
-//  testament and book.
+//  The Verses tab (the Read tab until 2026-10): the verses the player is
+//  making their own — memory verses due today first, then the verses their
+//  solved puzzles gave them — and below that the reader: resume, search, the
+//  book map and the whole Bible.
+//
+//  Refocused on 2026-10-03. As "Read" it was a reader's front door that about
+//  10 of 461 actives used in 30 days, while memory verses were the habit most
+//  tied to coming back (half of early users who touched them returned at day
+//  7). The reader stays — it's one tap from any verse here — but it is no
+//  longer the headline. The type and file keep the old name, and analytics
+//  sources keep `read_*`, so the history reads straight through the rename.
 //
 //  Until 2.8 none of this had a front door. The reader opened only from a
 //  verse link, memory verses sat at the foot of Today, the journey map inside
@@ -15,10 +23,15 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ReadView: View {
     @Environment(\.scripture) private var scripture
     @Environment(\.memoryVerses) private var memoryVerses
+    @Environment(\.puzzleProvider) private var puzzleProvider
+    @Environment(\.readerRouter) private var readerRouter
+    @Query(filter: #Predicate<PuzzleRecord> { $0.isCompleted })
+    private var solvedRecords: [PuzzleRecord]
     @Environment(\.bookmarks) private var bookmarks
     @Environment(\.readingPlans) private var plans
     @Environment(\.analytics) private var analytics
@@ -68,20 +81,20 @@ struct ReadView: View {
                     // The habit and the bookmark on the left of a wide
                     // window, the shelves on the right.
                     CardColumns {
-                        // A running plan, then the bookmark — but only a real
-                        // one. A first visit used to open on "Open Genesis 1"
-                        // in the app's one loud pill, the least likely thing
-                        // anyone came for (6 players in 30 days to
-                        // 2026-10-03); the shelves below start there anyway.
+                        // The player's own verses first: what's due to
+                        // practise, then what their puzzles gave them.
+                        memoryLeadCard
+                        solvedVersesSection
+                        // Then reading — a running plan, and the bookmark
+                        // only when there is one. A first visit used to open
+                        // on "Open Genesis 1" in the tab's loud pill, the
+                        // least likely thing anyone came for (6 players in
+                        // 30 days to 2026-10-03).
                         ReadingPlanCard(showsInvite: false, onRead: openPlanChapter)
                         if hasReadBefore {
                             resumeCard
                         }
                         recentRow
-                        // The player's own scripture — the verses their
-                        // puzzles gave them. Memory verses are the habit that
-                        // keeps people (half of early users who touch them are
-                        // back at day 7), so they lead the tab now.
                         scriptureSection
                     } more: {
                         browseSection
@@ -92,7 +105,7 @@ struct ReadView: View {
                 }
             }
             .background(Theme.background)
-            .navigationTitle("Read")
+            .navigationTitle("Verses")
             // Always showing: the fastest way to "John 3:16" was hidden until
             // the page was pulled down.
             .searchable(
@@ -339,20 +352,149 @@ struct ReadView: View {
 
     // MARK: - Your scripture
 
-    /// One header over the player's own verses instead of a kicker on each card.
+    /// What the player has kept and covered, under one header. Memory verses
+    /// left this group for the top of the tab.
     private var scriptureSection: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.s) {
-            Text("Your scripture").kicker()
+            Text("Your Bible").kicker()
                 .padding(.horizontal, Theme.Spacing.xs)
-            MemoryVerseCard(
-                dueCount: memoryVerses.dueCount,
-                activeCount: memoryVerses.entries.count,
-                showsKicker: false
-            )
             if !bookmarks.entries.isEmpty {
                 bookmarksCard
             }
             JourneyCard(source: "read_tab")
+        }
+    }
+
+    // MARK: - Memory verses (lead)
+
+    /// The tab's one loud action, and it is practice: review what's due, carry
+    /// on with what's in progress, or pick a first verse. Each state names the
+    /// next step rather than the feature.
+    private var memoryLeadCard: some View {
+        let entries = memoryVerses.entries
+        let due = entries.filter { memoryVerses.isDue($0) }
+        let learning = entries.filter { !$0.isMastered }.count
+        let mastered = entries.count - learning
+
+        return VStack(alignment: .leading, spacing: Theme.Spacing.m) {
+            VStack(alignment: .leading, spacing: Theme.Spacing.s) {
+                Text("Memory verses").kicker()
+                if let first = due.first {
+                    Text(due.count == 1 ? "1 verse to review" : "\(due.count) verses to review")
+                        .font(.scripture(.title2, weight: .semibold))
+                    Text(first.verseText)
+                        .font(.scripture(.body))
+                        .foregroundStyle(.secondary)
+                        .lineSpacing(3)
+                        .lineLimit(3)
+                    Text(first.reference)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.secondary)
+                } else if !entries.isEmpty {
+                    Text("Nothing due today")
+                        .font(.scripture(.title2, weight: .semibold))
+                    Text(progressLine(learning: learning, mastered: mastered))
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                } else {
+                    Text("Learn a verse by heart")
+                        .font(.scripture(.title2, weight: .semibold))
+                    Text("Start with one from a puzzle you've solved. A few blanks at a time, a little more each day.")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+
+            if let first = due.first {
+                NavigationLink(value: MemoryPracticeRoute(referenceKey: first.referenceKey, source: "verses_tab")) {
+                    Label("Review", systemImage: "brain")
+                }
+                .buttonStyle(.pillProminent)
+            } else {
+                NavigationLink(value: MemoryRoute()) {
+                    Text(entries.isEmpty ? "Choose a verse" : "See your verses")
+                }
+                .buttonStyle(entries.isEmpty ? .pillProminent : .pillTonal)
+            }
+        }
+        .padding(Theme.Spacing.l)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .elevatedCard()
+    }
+
+    private func progressLine(learning: Int, mastered: Int) -> String {
+        var parts: [String] = []
+        if learning > 0 { parts.append("\(learning) learning") }
+        if mastered > 0 { parts.append("\(mastered) mastered") }
+        return parts.joined(separator: " · ") + ". Come back tomorrow for the next round."
+    }
+
+    // MARK: - From your puzzles
+
+    /// The verses behind the puzzles most recently finished — the scripture a
+    /// player has actually met here, which is the reason this tab exists.
+    private var solvedVerses: [Puzzle] {
+        let byID = Dictionary(
+            puzzleProvider.allPuzzles.map { ($0.id, $0) },
+            uniquingKeysWith: { first, _ in first }
+        )
+        var seen: Set<String> = []
+        return solvedRecords
+            .sorted { ($0.completedDate ?? .distantPast) > ($1.completedDate ?? .distantPast) }
+            .compactMap { byID[$0.puzzleID] }
+            .filter { seen.insert($0.reference).inserted }
+            .prefix(3)
+            .map { $0 }
+    }
+
+    @ViewBuilder
+    private var solvedVersesSection: some View {
+        let verses = solvedVerses
+        if !verses.isEmpty {
+            VStack(alignment: .leading, spacing: Theme.Spacing.s) {
+                Text("From your puzzles").kicker()
+                    .padding(.horizontal, Theme.Spacing.xs)
+                VStack(spacing: 0) {
+                    ForEach(Array(verses.enumerated()), id: \.element.id) { index, puzzle in
+                        if index > 0 {
+                            Divider().padding(.leading, Theme.Spacing.l)
+                        }
+                        Button {
+                            analytics.log(.scriptureOpened(reference: puzzle.reference, source: "verses_solved"))
+                            readerRouter.open(reference: puzzle.reference, source: "verses_solved")
+                        } label: {
+                            HStack(alignment: .top, spacing: Theme.Spacing.m) {
+                                VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
+                                    Text(puzzle.reference)
+                                        .font(.headline)
+                                        .foregroundStyle(.primary)
+                                    Text(puzzle.verse)
+                                        .font(.scripture(.subheadline))
+                                        .foregroundStyle(.secondary)
+                                        .lineLimit(2)
+                                        .multilineTextAlignment(.leading)
+                                    Text(puzzle.title)
+                                        .font(.caption)
+                                        .foregroundStyle(.tertiary)
+                                }
+                                Spacer(minLength: 0)
+                                Image(systemName: "chevron.forward")
+                                    .font(.subheadline.weight(.semibold))
+                                    .foregroundStyle(.secondary)
+                            }
+                            .padding(Theme.Spacing.l)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .contentShape(.rect)
+                        }
+                        .buttonStyle(PressableCardStyle())
+                        .accessibilityElement(children: .ignore)
+                        .accessibilityLabel("\(puzzle.reference). \(puzzle.verse). From \(puzzle.title)")
+                        .accessibilityHint("Opens the passage")
+                    }
+                }
+                .elevatedCard()
+            }
         }
     }
 
@@ -482,7 +624,8 @@ struct ReadView: View {
             } label: {
                 Label(point.isFresh ? "Open \(reference)" : "Continue", systemImage: "book")
             }
-            .buttonStyle(.pillProminent)
+            // Tonal: the memory card above owns the tab's one loud action.
+            .buttonStyle(.pillTonal)
             .disabled(snapshot == nil)
         }
         .padding(Theme.Spacing.l)
