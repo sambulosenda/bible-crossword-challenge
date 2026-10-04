@@ -51,7 +51,9 @@ struct VerseHintSheet: View {
                 ChapterReaderView(
                     startBook: target.book,
                     startChapter: target.chapter,
-                    highlightVerse: target.verse
+                    highlightVerse: target.verse,
+                    // Opened from a clue: the player is mid-solve.
+                    showsPuzzleLink: false
                 )
             }
         }

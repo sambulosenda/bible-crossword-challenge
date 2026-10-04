@@ -91,16 +91,14 @@ struct ReadView: View {
                         // least likely thing anyone came for (6 players in
                         // 30 days to 2026-10-03).
                         ReadingPlanCard(showsInvite: false, onRead: openPlanChapter)
-                        if hasReadBefore {
-                            resumeCard
-                        }
                         recentRow
                         scriptureSection
                     } more: {
+                        // One group for reading, and no second loud card:
+                        // "continue", the two testaments and the plans used
+                        // to be four stacked cards, the first with a pill of
+                        // its own competing with the memory card's.
                         browseSection
-                        // The invite closes the tab instead of opening it:
-                        // 4 players started a plan in 30 days.
-                        ReadingPlanCard(showsActive: false, onRead: openPlanChapter)
                     }
                 }
             }
@@ -399,7 +397,7 @@ struct ReadView: View {
                 } else {
                     Text("Learn a verse by heart")
                         .font(.scripture(.title2, weight: .semibold))
-                    Text("Start with one from a puzzle you've solved. A few blanks at a time, a little more each day.")
+                    Text("Start with a well-loved verse or one from a puzzle you've solved. A few blanks at a time, a little more each day.")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
@@ -551,25 +549,21 @@ struct ReadView: View {
         /// True until any chapter has been read: the card says "start", not
         /// "continue", and opens the first page of the canon.
         let isFresh: Bool
-        /// The chapter's opening verse, so the card shows scripture rather
-        /// than a reference alone.
-        let preview: String?
         let oldTestament: [BibleBook]
         let newTestament: [BibleBook]
 
         /// Stands in while the decode runs, drawn redacted. Canon counts are
         /// fixed, so the browse rows can show their real numbers meanwhile.
         static let placeholder = Snapshot(
-            book: "Genesis", chapter: 1, isFresh: true, preview: nil,
+            book: "Genesis", chapter: 1, isFresh: true,
             oldTestament: [], newTestament: []
         )
 
-        init(book: String, chapter: Int, isFresh: Bool, preview: String?,
+        init(book: String, chapter: Int, isFresh: Bool,
              oldTestament: [BibleBook], newTestament: [BibleBook]) {
             self.book = book
             self.chapter = chapter
             self.isFresh = isFresh
-            self.preview = preview
             self.oldTestament = oldTestament
             self.newTestament = newTestament
         }
@@ -583,9 +577,6 @@ struct ReadView: View {
                 book: book,
                 chapter: chapter,
                 isFresh: !resumed,
-                preview: scripture.book(named: book)?
-                    .chapters.first { $0.number == chapter }?
-                    .verses.first?.text,
                 oldTestament: books.filter { $0.testament == .old },
                 newTestament: books.filter { $0.testament == .new }
             )
@@ -596,43 +587,56 @@ struct ReadView: View {
         }
     }
 
-    // MARK: - Resume
+    // MARK: - Rows
 
-    private var resumeCard: some View {
+    /// One row of the reading group: a disc icon, a headline, a caption, a
+    /// chevron — the shape of every navigation row on this tab.
+    private func groupRow(symbol: String, title: String, subtitle: String) -> some View {
+        HStack(spacing: Theme.Spacing.m) {
+            Image(systemName: symbol)
+                .font(.title2)
+                .dynamicTypeSize(...DynamicTypeSize.xxLarge)
+                .foregroundStyle(Theme.accent)
+                .frame(width: 44, height: 44)
+                .background(Theme.accent.opacity(0.14), in: .circle)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                    .font(.headline)
+                    .foregroundStyle(.primary)
+                Text(subtitle)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            Spacer(minLength: 0)
+            Image(systemName: "chevron.forward")
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(.secondary)
+        }
+        .padding(.horizontal, Theme.Spacing.l)
+        .padding(.vertical, Theme.Spacing.m)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .contentShape(.rect)
+    }
+
+    private var groupDivider: some View {
+        Divider().padding(.leading, Theme.Spacing.l + 44 + Theme.Spacing.m)
+    }
+
+    /// Where reading left off, as a row: the memory card above owns the tab's
+    /// one prominent action, and a second card with its own pill split it.
+    private var resumeRow: some View {
         let point = snapshot ?? .placeholder
         let reference = "\(point.book) \(point.chapter)"
-        return VStack(alignment: .leading, spacing: Theme.Spacing.m) {
-            VStack(alignment: .leading, spacing: Theme.Spacing.s) {
-                Text(point.isFresh ? "Start reading" : "Continue reading")
-                    .kicker()
-                Text(reference)
-                    .font(.scripture(.title2, weight: .semibold))
-                if let preview = point.preview {
-                    Text(preview)
-                        .font(.scripture(.body))
-                        .foregroundStyle(.secondary)
-                        .lineSpacing(3)
-                        .lineLimit(3)
-                }
-            }
-            Button {
-                analytics.log(.scriptureOpened(
-                    reference: reference,
-                    source: point.isFresh ? "read_start" : "read_continue"
-                ))
-                showReader = true
-            } label: {
-                Label(point.isFresh ? "Open \(reference)" : "Continue", systemImage: "book")
-            }
-            // Tonal: the memory card above owns the tab's one loud action.
-            .buttonStyle(.pillTonal)
-            .disabled(snapshot == nil)
+        return Button {
+            analytics.log(.scriptureOpened(reference: reference, source: "read_continue"))
+            showReader = true
+        } label: {
+            groupRow(symbol: "book.fill", title: reference, subtitle: "Continue reading")
         }
-        .padding(Theme.Spacing.l)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .elevatedCard()
+        .buttonStyle(PressableCardStyle())
+        .disabled(snapshot == nil)
         .redacted(reason: snapshot == nil ? .placeholder : [])
-        .accessibilityElement(children: .contain)
+        .accessibilityLabel("Continue reading \(reference)")
     }
 
     // MARK: - Browse
@@ -642,43 +646,43 @@ struct ReadView: View {
 
     private var browseSection: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.s) {
-            Text("The whole Bible")
+            Text("The Bible")
                 .kicker()
                 .padding(.horizontal, Theme.Spacing.xs)
-            ForEach(Testament.allCases, id: \.self) { testament in
-                NavigationLink {
-                    BookListView(
-                        title: testament.label,
-                        books: (snapshot ?? .placeholder).books(in: testament)
-                    )
-                } label: {
-                    HStack(spacing: Theme.Spacing.m) {
-                        Image(systemName: testament == .old ? "books.vertical.fill" : "book.closed.fill")
-                            .font(.title2)
-                            .foregroundStyle(Theme.accent)
-                            .frame(width: 44, height: 44)
-                            .background(Theme.accent.opacity(0.14), in: .circle)
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text(testament.label)
-                                .font(.headline)
-                                .foregroundStyle(.primary)
-                            Text("\(Self.bookCounts[testament, default: 0]) books")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                        }
-                        Spacer(minLength: 0)
-                        Image(systemName: "chevron.forward")
-                            .font(.subheadline.weight(.semibold))
-                            .foregroundStyle(.secondary)
+            VStack(spacing: 0) {
+                if hasReadBefore {
+                    resumeRow
+                    groupDivider
+                }
+                ForEach(Testament.allCases, id: \.self) { testament in
+                    NavigationLink {
+                        BookListView(
+                            title: testament.label,
+                            books: (snapshot ?? .placeholder).books(in: testament)
+                        )
+                    } label: {
+                        groupRow(
+                            symbol: testament == .old ? "books.vertical.fill" : "book.closed.fill",
+                            title: testament.label,
+                            subtitle: "\(Self.bookCounts[testament, default: 0]) books"
+                        )
                     }
-                    .padding(Theme.Spacing.l)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .elevatedCard()
+                    .buttonStyle(PressableCardStyle())
+                    .disabled(snapshot == nil)
+                    .accessibilityLabel("\(testament.label), \(Self.bookCounts[testament, default: 0]) books")
+                    groupDivider
+                }
+                // The plans' invite, as the group's last row. It was a card
+                // of its own closing the tab; 4 players started a plan in the
+                // 30 days to 2026-10-03.
+                NavigationLink {
+                    ReadingPlansView()
+                } label: {
+                    groupRow(symbol: "calendar.day.timeline.left", title: "Reading plans", subtitle: "A chapter a day through one book")
                 }
                 .buttonStyle(PressableCardStyle())
-                .disabled(snapshot == nil)
-                .accessibilityLabel("\(testament.label), \(Self.bookCounts[testament, default: 0]) books")
             }
+            .elevatedCard()
         }
     }
 }

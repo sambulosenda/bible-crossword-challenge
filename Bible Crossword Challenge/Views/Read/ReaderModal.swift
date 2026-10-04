@@ -26,7 +26,8 @@ struct ReaderModal: View {
                 startBook: target.book,
                 startChapter: target.chapter,
                 highlightVerse: target.verse,
-                source: target.source
+                source: target.source,
+                showsPuzzleLink: false
             )
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {

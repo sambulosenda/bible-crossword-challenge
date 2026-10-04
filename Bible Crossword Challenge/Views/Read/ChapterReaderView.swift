@@ -38,6 +38,10 @@ struct ChapterReaderView: View {
     /// with "Mark chapter as read", which calls `onPlanChapterRead` and pops.
     var planChapter: PlanChapter? = nil
     var onPlanChapterRead: (() -> Void)? = nil
+    /// Whether a chapter's end links to the puzzles drawn from its book. Off
+    /// in the modal a clue's verse opens: that player is mid-solve, and a way
+    /// into other puzzles would pull them out of the one they're in.
+    var showsPuzzleLink = true
 
     @Environment(\.analytics) private var analytics
     @Environment(\.memoryVerses) private var memoryVerses
@@ -45,6 +49,7 @@ struct ChapterReaderView: View {
     @Environment(\.displayScale) private var displayScale
     @Environment(\.dismiss) private var dismiss
     @Environment(StoreService.self) private var store
+    @Environment(\.puzzleProvider) private var puzzleProvider
     @State private var shareItems: ShareItems?
     @State private var toast: String?
     @State private var openedAt = Date()
@@ -64,6 +69,9 @@ struct ChapterReaderView: View {
     @State private var startIndex = 0
     @State private var selection = 0
     @State private var showJump = false
+    /// Puzzles in the bundle per book, for the chapter footer's link back into
+    /// the game. Counted once in `build()`, not per page.
+    @State private var puzzlesByBook: [String: Int] = [:]
 
     /// A flattened position: one entry per chapter across the whole Bible, so a
     /// swipe past the last chapter of a book lands on the next book.
@@ -89,6 +97,9 @@ struct ChapterReaderView: View {
         .background(Theme.background)
         .navigationTitle(currentTitle)
         .navigationBarTitleDisplayMode(.inline)
+        // Reading gets the screen, as play does: the tab bar sat over the
+        // last lines of every chapter. Back returns to the tab.
+        .toolbar(.hidden, for: .tabBar)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
@@ -164,9 +175,15 @@ struct ChapterReaderView: View {
         let loc = locations[i]
         let bookmarked: Set<Int> = bookmarks.bookmarkedVerses(book: loc.book, chapter: loc.chapter.number)
         let isPlanChapter: Bool = planChapter == PlanChapter(book: loc.book, chapter: loc.chapter.number)
+        let next = locations.indices.contains(i + 1) ? locations[i + 1] : nil
+        let puzzleBook = showsPuzzleLink ? BibleCanon.book(named: loc.book) : nil
         return ChapterPage(
             book: loc.book,
             chapter: loc.chapter,
+            nextTitle: next.map { "\($0.book) \($0.chapter.number)" },
+            onNext: { withAnimation { selection = i + 1 } },
+            puzzleBook: puzzleBook,
+            puzzleCount: puzzleBook.map { puzzlesByBook[$0.name] ?? 0 } ?? 0,
             fontSize: fontSize,
             highlight: i == startIndex ? highlightVerse : nil,
             scrolledPast: $scrolledPastVerse,
@@ -194,6 +211,11 @@ struct ChapterReaderView: View {
             }
         }
         locations = built
+        puzzlesByBook = Dictionary(
+            BibleJourney.progress(completedPuzzleIDs: [], puzzles: puzzleProvider.allPuzzles)
+                .map { ($0.name, $0.available) },
+            uniquingKeysWith: { first, _ in first }
+        )
         let idx = built.firstIndex { $0.book == startBook && $0.chapter.number == startChapter } ?? 0
         startIndex = idx
         selection = idx
@@ -293,6 +315,13 @@ struct ChapterReaderView: View {
 private struct ChapterPage: View {
     let book: String
     let chapter: BibleChapter
+    /// "Ruth 2" — nil on the last chapter of Revelation.
+    let nextTitle: String?
+    let onNext: () -> Void
+    /// The book's puzzles, linked from the chapter's end; nil when the host
+    /// turned the link off.
+    let puzzleBook: BibleCanon.Book?
+    let puzzleCount: Int
     let fontSize: Double
     var highlight: Int?
     /// Set once the player scrolls this page by hand after a deep-linked
@@ -327,13 +356,16 @@ private struct ChapterPage: View {
     var body: some View {
         ScrollViewReader { proxy in
             ScrollView {
-                VStack(alignment: .leading, spacing: Theme.Spacing.s) {
-                    Text("Chapter \(chapter.number)")
-                        .kicker()
-                        .padding(.bottom, Theme.Spacing.xs)
-
+                // No "Chapter N" kicker: the title above already says it.
+                // Verses sit a line-gap apart rather than a card-gap, so the
+                // chapter reads as running text, not a list of rows.
+                VStack(alignment: .leading, spacing: 0) {
                     ForEach(chapter.verses) { verse in
                         verseRow(verse).id(verse.number)
+                    }
+
+                    if !showsPlanFooter {
+                        chapterFooter
                     }
 
                     if showsPlanFooter {
@@ -342,10 +374,9 @@ private struct ChapterPage: View {
                         }
                         .buttonStyle(.pillProminent)
                         .padding(.top, Theme.Spacing.l)
-                        // The pager ignores the bottom safe area so text can
-                        // run under the tab bar; the one control down here
-                        // must clear it.
-                        .padding(.bottom, 96)
+                        // The pager ignores the bottom safe area; clear the
+                        // home indicator.
+                        .padding(.bottom, Theme.Spacing.xl)
                         .accessibilityHint("Marks today's chapter read and returns")
                     }
                 }
@@ -378,13 +409,68 @@ private struct ChapterPage: View {
         }
     }
 
+    /// Where a chapter goes when it ends. The next chapter was a sideways
+    /// swipe nothing on screen mentioned, so a finished chapter read as a
+    /// dead end; and the book's puzzles were never offered from the text
+    /// they're drawn from.
+    @ViewBuilder
+    private var chapterFooter: some View {
+        VStack(spacing: Theme.Spacing.s) {
+            if let nextTitle {
+                Button(action: onNext) {
+                    HStack {
+                        Text(nextTitle)
+                            .font(.headline)
+                        Spacer(minLength: 0)
+                        Image(systemName: "arrow.right")
+                            .font(.subheadline.weight(.semibold))
+                    }
+                    .foregroundStyle(.primary)
+                    .padding(Theme.Spacing.m)
+                    .frame(maxWidth: .infinity)
+                    .background(Theme.surface, in: .rect(cornerRadius: 14, style: .continuous))
+                }
+                .buttonStyle(PressableCardStyle())
+                .accessibilityLabel("Next chapter, \(nextTitle)")
+            }
+            if let puzzleBook, puzzleCount > 0 {
+                NavigationLink {
+                    JourneyBookView(book: puzzleBook)
+                } label: {
+                    HStack {
+                        Label(
+                            puzzleCount == 1 ? "1 puzzle from \(book)" : "\(puzzleCount) puzzles from \(book)",
+                            systemImage: "square.grid.3x3"
+                        )
+                        .font(.subheadline.weight(.semibold))
+                        Spacer(minLength: 0)
+                        Image(systemName: "chevron.forward")
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(.secondary)
+                    }
+                    .foregroundStyle(.primary)
+                    .padding(Theme.Spacing.m)
+                    .frame(maxWidth: .infinity)
+                    .background(Theme.surface, in: .rect(cornerRadius: 14, style: .continuous))
+                }
+                .buttonStyle(PressableCardStyle())
+            }
+        }
+        .padding(.top, Theme.Spacing.xl)
+        .padding(.bottom, Theme.Spacing.xl)
+    }
+
     private func verseRow(_ verse: BibleVerse) -> some View {
         // Floored at the platform's 11pt minimum: at the smallest base the
         // reader offers, a proportional number came out at 9.5pt and the
         // bookmark at 8.4.
+        // Secondary, not accent: blue means tappable across the app, and the
+        // number isn't — the verse's actions are a touch-and-hold anywhere on
+        // it. Raised a little, the way a printed Bible sets it.
         let number = Text("\(verse.number) ")
-            .font(.system(size: max(readingSize * 0.68, 11), weight: .bold))
-            .foregroundStyle(Theme.accent)
+            .font(.system(size: max(readingSize * 0.62, 11), weight: .semibold))
+            .baselineOffset(readingSize * 0.25)
+            .foregroundStyle(.secondary)
         // Serif, like every other place scripture is set (Today's verse, the
         // completion card, the share card). Until 2.9 the reader — the one
         // surface that exists for reading — was the exception.
@@ -401,7 +487,8 @@ private struct ChapterPage: View {
         return (number + body + mark)
             .lineSpacing(5)
             .fixedSize(horizontal: false, vertical: true)
-            .padding(.vertical, 3)
+            // Half the line spacing each side: verse to verse is one line-gap.
+            .padding(.vertical, 2.5)
             .padding(.horizontal, 6)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(

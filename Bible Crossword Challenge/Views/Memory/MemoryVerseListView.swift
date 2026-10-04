@@ -21,8 +21,22 @@ struct MemoryVerseListView: View {
     @Environment(\.memoryVerses) private var memoryVerses
     @Environment(\.puzzleProvider) private var puzzleProvider
     @Environment(\.analytics) private var analytics
+    @Environment(\.scripture) private var scripture
     @Environment(StoreService.self) private var store
     @Query private var records: [PuzzleRecord]
+
+    /// Well-known verses offered when the player's puzzles haven't given them
+    /// any yet. Read from the bundled Bible once it has loaded, so the text
+    /// matches the reader's word for word.
+    @State private var starters: [MemoryVerseStore.Candidate] = []
+
+    /// Short, widely memorized, and each within `MemoryCloze`'s length limit
+    /// — anything that fails it is dropped rather than shown. Not Psalm 23:1:
+    /// this translation opens it with the heading "A Psalm of David."
+    private static let starterReferences = [
+        "John 3:16", "Matthew 11:28", "Philippians 4:13", "Proverbs 3:5",
+        "Joshua 1:9", "Psalm 119:105", "Romans 8:28", "Isaiah 40:31",
+    ]
 
     /// A just-started candidate, pushed via a local destination because the
     /// start is gated — a plain `NavigationLink` couldn't check the shelf first.
@@ -49,7 +63,10 @@ struct MemoryVerseListView: View {
 
     var body: some View {
         Group {
-            if memoryVerses.entries.isEmpty && candidates.isEmpty {
+            // Empty only until the starters load: "Choose a verse" on the
+            // Verses tab used to land a player with no solved puzzles on a
+            // screen with nothing to choose.
+            if memoryVerses.entries.isEmpty && candidates.isEmpty && unheldStarters.isEmpty {
                 emptyState
             } else {
                 verseList
@@ -59,6 +76,15 @@ struct MemoryVerseListView: View {
         .navigationBarTitleDisplayMode(.large)
         .background(Theme.background)
         .onAppear { analytics.log(.memoryListOpened(source: source)) }
+        .task {
+            await scripture.preload()
+            starters = Self.starterReferences.compactMap { reference in
+                guard let ref = ScriptureRef(reference), let verse = ref.verse,
+                      let text = scripture.chapter(ref)?.chapter.verses.first(where: { $0.number == verse })?.text,
+                      MemoryCloze.isEligible(verseText: text) else { return nil }
+                return MemoryVerseStore.Candidate(reference: reference, verseText: text)
+            }
+        }
         .navigationDestination(isPresented: Binding(
             get: { startedKey != nil },
             set: { if !$0 { startedKey = nil } }
@@ -97,6 +123,18 @@ struct MemoryVerseListView: View {
                     Text("From your solved puzzles")
                 } footer: {
                     Text("Every puzzle you solve adds its verse here.")
+                }
+            }
+            // Only while the puzzles have offered nothing to start: once they
+            // have, those verses are the point of the list.
+            if candidates.isEmpty && !unheldStarters.isEmpty {
+                Section {
+                    if shelfFull { shelfFullNote }
+                    ForEach(unheldStarters) { candidateRow($0, source: "starter") }
+                } header: {
+                    Text("Verses to start with")
+                } footer: {
+                    Text("Every puzzle you solve adds its verse here too.")
                 }
             }
         }
@@ -158,9 +196,9 @@ struct MemoryVerseListView: View {
         .accessibilityLabel(entryAccessibilityLabel(entry, isDue: isDue))
     }
 
-    private func candidateRow(_ candidate: MemoryVerseStore.Candidate) -> some View {
+    private func candidateRow(_ candidate: MemoryVerseStore.Candidate, source: String = "list") -> some View {
         Button {
-            startCandidate(candidate)
+            startCandidate(candidate, source: source)
         } label: {
             HStack(spacing: Theme.Spacing.m) {
                 VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
@@ -201,10 +239,15 @@ struct MemoryVerseListView: View {
         .padding(.vertical, Theme.Spacing.xs)
     }
 
-    private func startCandidate(_ candidate: MemoryVerseStore.Candidate) {
+    /// Starters the player hasn't already begun.
+    private var unheldStarters: [MemoryVerseStore.Candidate] {
+        starters.filter { memoryVerses.entry(for: $0.id) == nil }
+    }
+
+    private func startCandidate(_ candidate: MemoryVerseStore.Candidate, source: String = "list") {
         guard !shelfFull else { return }
         let entry = memoryVerses.start(reference: candidate.reference, verseText: candidate.verseText)
-        analytics.log(.memoryVerseAdded(reference: candidate.reference, source: "list"))
+        analytics.log(.memoryVerseAdded(reference: candidate.reference, source: source))
         startedKey = entry.referenceKey
     }
 

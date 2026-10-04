@@ -434,16 +434,16 @@ struct JourneyCard: View {
         .accessibilityHint("Opens the map of books you've explored")
     }
 
+    /// Counted against the books that have puzzles, as the map's own
+    /// headline is — this row said "of 66" while the screen it opens said
+    /// "of 43", and against 66 the score could never pass two thirds.
     private var journeySummary: String {
-        let count = booksExplored
-        if count == 0 { return "See which books your puzzles have covered" }
-        return "\(count) of 66 · see them on the map"
-    }
-
-    private var booksExplored: Int {
-        BibleJourney.booksTouched(
+        let rows = BibleJourney.progress(
             completedPuzzleIDs: Set(solvedRecords.map(\.puzzleID)),
             puzzles: puzzleProvider.allPuzzles
-        ).count
+        )
+        let reachable = rows.filter { $0.available > 0 }.count
+        let explored = rows.filter { $0.solved > 0 }.count
+        return "\(explored) of \(reachable) books with puzzles"
     }
 }

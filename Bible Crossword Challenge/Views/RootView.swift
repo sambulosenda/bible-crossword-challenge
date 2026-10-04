@@ -456,9 +456,15 @@ struct RootView: View {
         // `.hidden()`, which would take the button out of the hierarchy and
         // the shortcut with it.
         .background {
+            // Zero-sized as well as transparent: `.accessibilityHidden` alone
+            // left a 63×20pt "Settings" button mid-screen in the accessibility
+            // tree on every tab, where VoiceOver could land on it.
             Button("Settings") { showSettings = true }
                 .keyboardShortcut(",", modifiers: .command)
                 .opacity(0)
+                .frame(width: 0, height: 0)
+                .clipped()
+                .allowsHitTesting(false)
                 .accessibilityHidden(true)
         }
         .sheet(isPresented: $showSettings) {
