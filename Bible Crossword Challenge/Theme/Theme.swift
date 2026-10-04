@@ -299,9 +299,13 @@ enum CellPalette {
         .tintColor.withAlphaComponent(trait.userInterfaceStyle == .dark ? 0.30 : 0.18)
     })
 
-    static func fill(isSelected: Bool, isInWord: Bool, showError: Bool, isCorrect: Bool) -> Color {
+    /// No error fill: a wrong letter keeps the cell's normal fill and is marked
+    /// by `ErrorCornerMark` instead. A pink wash was the only signal for most
+    /// players (the shape cue sat behind Differentiate Without Color), and a
+    /// whole cell of red is the loudest thing on a board that should read
+    /// blue-for-focus.
+    static func fill(isSelected: Bool, isInWord: Bool, isCorrect: Bool) -> Color {
         if isSelected { return Theme.accent.opacity(0.85) }
-        if showError { return Color.red.opacity(0.28) }
         if isCorrect { return Color.green.opacity(0.18) }
         if isInWord { return inWord }
         return empty

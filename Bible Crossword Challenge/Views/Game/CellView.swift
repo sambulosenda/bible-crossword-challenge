@@ -57,7 +57,6 @@ struct CellView: View, Equatable {
                         .fill(CellPalette.fill(
                             isSelected: isSelected,
                             isInWord: isInWord,
-                            showError: errorVisible,
                             isCorrect: correctVisible
                         ))
 
@@ -105,13 +104,24 @@ struct CellView: View, Equatable {
                             .id("\(entry)\(cell.isPencil ? "p" : "")")
                     }
 
-                    // Non-colour cue for correctness when colour can't be relied on.
-                    if differentiateWithoutColor, errorVisible || correctVisible {
-                        Image(systemName: errorVisible ? "xmark" : "checkmark")
-                            // This mark is the whole non-colour cue, so it gets
-                            // the same floor treatment as the number.
+                    // A wrong letter is marked by shape for everyone, not
+                    // only under Differentiate Without Color: the corner
+                    // triangle crossword players already read as "wrong",
+                    // opposite the number so the two never touch. Floored
+                    // like the number so it survives a 24pt cell.
+                    if errorVisible {
+                        ErrorCornerMark()
+                            .fill(Color.red)
+                            .frame(width: max(side * 0.3, 8), height: max(side * 0.3, 8))
+                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+                    }
+
+                    // Correct stays a green wash; the check is the non-colour
+                    // cue when colour can't be relied on.
+                    if differentiateWithoutColor, correctVisible {
+                        Image(systemName: "checkmark")
                             .font(.system(size: max(side * 0.24, 9), weight: .bold))
-                            .foregroundStyle(errorVisible ? Color.red : Color.green)
+                            .foregroundStyle(Color.green)
                             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
                             .padding(side * 0.06)
                     }
@@ -138,5 +148,18 @@ struct CellView: View, Equatable {
         if errorVisible { return "\(base), \(letter), incorrect" }
         if correctVisible { return "\(base), \(letter), correct" }
         return "\(base), \(letter)"
+    }
+}
+
+/// The wrong-letter mark: a right triangle filling the cell's top-trailing
+/// corner.
+struct ErrorCornerMark: Shape {
+    func path(in rect: CGRect) -> Path {
+        Path { p in
+            p.move(to: CGPoint(x: rect.minX, y: rect.minY))
+            p.addLine(to: CGPoint(x: rect.maxX, y: rect.minY))
+            p.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
+            p.closeSubpath()
+        }
     }
 }

@@ -41,14 +41,16 @@ struct ClueBarView: View {
         .padding(.horizontal, Theme.Spacing.s)
         // Room to breathe on both edges. The bar sits between a grid and a
         // keyboard with no margin of its own, so 4pt read as content jammed
-        // against both; the bottom also has to clear the progress strip.
-        // Affordable because moving the nudge onto the number line gave back
-        // a whole row — this spends part of it and the bar is still shorter
-        // than it was.
+        // against both. Affordable because moving the nudge onto the number
+        // line gave back a whole row — this spends part of it and the bar is
+        // still shorter than it was.
         .padding(.top, Theme.Spacing.s)
         .padding(.bottom, Theme.Spacing.s + Theme.Spacing.xs)
-        .background(Color(.secondarySystemBackground))
-        .overlay(alignment: .bottom) { progressStrip }
+        // On the page, not in a grey band: the clue is part of the puzzle,
+        // and the filled strip read as a toolbar bolted under the grid. One
+        // hairline keeps it off the keyboard. The old 3pt progress strip
+        // went with the band — unlabelled, it said nothing the grid didn't.
+        .overlay(alignment: .bottom) { Divider() }
     }
 
     /// The clue itself.
@@ -345,32 +347,6 @@ struct ClueBarView: View {
             }
             .accessibilityLabel("Next clue")
         }
-    }
-
-    /// Fraction of playable cells filled. Deliberately counts *filled*, not
-    /// *correct*, so the bar can't be used as a free answer checker.
-    private var progress: Double {
-        let total = vm.totalPlayableCount
-        guard total > 0 else { return 0 }
-        return Double(vm.filledPlayableCount) / Double(total)
-    }
-
-    /// Thin strip along the bar's bottom edge that fills as the grid does,
-    /// turning green at the solve.
-    private var progressStrip: some View {
-        GeometryReader { geo in
-            ZStack(alignment: .leading) {
-                Rectangle().fill(Color(.tertiarySystemFill))
-                Rectangle()
-                    .fill(vm.isComplete ? Color.green : Theme.accent)
-                    .frame(width: geo.size.width * progress)
-            }
-        }
-        .frame(height: 3)
-        .animation(.smooth(duration: 0.35), value: progress)
-        .accessibilityElement()
-        .accessibilityLabel("Puzzle progress")
-        .accessibilityValue("\(Int((progress * 100).rounded())) percent")
     }
 
     private var clueAccessibilityLabel: String {
