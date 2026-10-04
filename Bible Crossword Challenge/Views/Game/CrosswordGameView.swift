@@ -584,8 +584,8 @@ struct CrosswordGameView: View {
 
     // MARK: - The surface's pieces, arranged by `solveSurface`
 
-    /// The streak and the clock while the bars are a side rail. Both are
-    /// custom toolbar views, which the rail cannot take, so they sit in a
+    /// The title and the clock while the bars are a side rail. The clock is
+    /// a custom toolbar view, which the rail cannot take, so it sits in a
     /// slim row above the board instead of holding a horizontal bar open.
     /// The clock view drives the solve timer's ticks, so it must render in
     /// exactly one place: here when the rail has it, the toolbar otherwise.
@@ -593,8 +593,6 @@ struct CrosswordGameView: View {
     private var railStatusRow: some View {
         if barsVertical {
             HStack {
-                StreakFlameView(streak: profile.currentStreak, pulseTick: vm.wordSolveTick)
-                Spacer()
                 // The title, evicted from the top bar (see `.navigationTitle`).
                 Text(puzzle.title)
                     .font(.subheadline.weight(.semibold))
@@ -780,12 +778,14 @@ struct CrosswordGameView: View {
 
     @ToolbarContentBuilder
     private var toolbarContent: some ToolbarContent {
-        // Custom views, so a side rail can't take them; `railStatusRow`
-        // shows them on the board instead.
+        // A custom view, so a side rail can't take it; `railStatusRow`
+        // shows it on the board instead.
+        //
+        // No streak here. It sat at the same weight as Back and Hints, and
+        // mid-solve it has nothing to act on — for a new player it is a grey
+        // "0" beside a flame. The streak is shown on Today and at completion,
+        // where it is the point.
         if !barsVertical {
-            ToolbarItem(placement: .topBarLeading) {
-                StreakFlameView(streak: profile.currentStreak, pulseTick: vm.wordSolveTick)
-            }
             ToolbarItem(placement: .principal) {
                 timerSlot
             }
@@ -1367,41 +1367,6 @@ struct CrosswordGameView: View {
         rec.elapsedSeconds = vm.elapsed()
         rec.updatedAt = Date()
         context.saveLogged("puzzle progress")
-    }
-}
-
-/// Toolbar streak indicator: flame + current streak count, pulsing with a
-/// spring pop each time a word is solved (and once more at the full solve,
-/// right as the streak number ticks up).
-private struct StreakFlameView: View {
-    let streak: Int
-    let pulseTick: Int
-
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
-
-    var body: some View {
-        HStack(spacing: 3) {
-            Image(systemName: "flame.fill")
-            Text("\(streak)")
-                .font(.subheadline.weight(.bold))
-                .monospacedDigit()
-                .contentTransition(.numericText(value: Double(streak)))
-        }
-        // The toolbar lays this item out inside a circular glass background
-        // sized for its ideal width, and without this it hands the HStack a
-        // one-digit budget: every streak of 10 or more was rendering clipped to
-        // its first digit, so the players with the most to be proud of were the
-        // only ones shown the wrong number.
-        .fixedSize()
-        .foregroundStyle(streak > 0 ? Color.orange : Color.secondary)
-        .animation(.snappy, value: streak)
-        .phaseAnimator([1.0, 1.35], trigger: pulseTick) { content, scale in
-            content.scaleEffect(reduceMotion ? 1.0 : scale)
-        } animation: { _ in
-            .spring(duration: 0.25, bounce: 0.6)
-        }
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel("Current streak: \(streak) days")
     }
 }
 

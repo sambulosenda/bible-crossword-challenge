@@ -27,12 +27,17 @@ struct ClueBarView: View {
     var body: some View {
         VStack(spacing: Theme.Spacing.s) {
             if dynamicTypeSize.isAccessibilitySize {
-                inlineNudge.frame(maxWidth: .infinity)
+                HStack(spacing: Theme.Spacing.s) {
+                    inlineNudge
+                    Spacer(minLength: 0)
+                    verseButton
+                }
             }
             clueRow
         }
         .animation(.snappy, value: endgameNudge)
         .animation(.snappy, value: vm.isStallNudgeActive)
+        .animation(.snappy, value: showsVerseButton)
         .padding(.horizontal, Theme.Spacing.s)
         // Room to breathe on both edges. The bar sits between a grid and a
         // keyboard with no margin of its own, so 4pt read as content jammed
@@ -53,8 +58,15 @@ struct ClueBarView: View {
     /// case is a separate branch rather than a `nil` passed through.
     @ViewBuilder
     private func clueText(_ clue: String) -> some View {
+        // Set in the scripture serif at title3: the clue is what the player
+        // reads most, and it was the smallest text on the screen. Every clue
+        // written fits two lines at the row's 282pt (iPhone 18 Pro) from 16pt
+        // up, and 56 of 3,549 need the shrink below to get there — so it
+        // floors at 0.8 (16pt, the callout size this replaced) rather than
+        // truncating or growing the bar a line.
         let text = Text(clue)
-            .font(.callout)
+            .font(.scripture(.title3))
+            .minimumScaleFactor(0.8)
             .foregroundStyle(.primary)
         Group {
             if let clueLines {
@@ -214,6 +226,47 @@ struct ClueBarView: View {
         }
     }
 
+    /// Only on clues that have a passage: an always-present button would
+    /// advertise a hint most clues can't offer yet, and a dimmed one is a
+    /// question the player can't answer. See ClueListView. Stands down while
+    /// the stall line is offering the same verse, so one action isn't on the
+    /// line twice.
+    private var showsVerseButton: Bool {
+        guard vm.activeSlot?.reference != nil, onVerseTap != nil else { return false }
+        return !(vm.isStallNudgeActive && vm.stallNudgeKind == .readVerse)
+    }
+
+    /// The verse button's appearance, with no behaviour — rendered hidden on
+    /// the number line to reserve its width, like `nudgeBody`.
+    private var verseLabel: some View {
+        Label("Verse", systemImage: "book")
+            .font(.caption.weight(.semibold))
+            .foregroundStyle(Theme.accent)
+            .lineLimit(1)
+            .padding(.vertical, Theme.Spacing.xs)
+    }
+
+    /// The free verse hint, on the clue-number line. It used to be a 44pt
+    /// icon column in the clue row, which took the width the clue needs to
+    /// hold two lines at title3; the number line had that width spare.
+    @ViewBuilder
+    private var verseButton: some View {
+        if showsVerseButton, let onVerseTap {
+            Button {
+                onVerseTap()
+            } label: {
+                verseLabel
+                    // The label is caption-sized (~24pt tall with its
+                    // padding); the touch target isn't. 10pt each way makes 44.
+                    .contentShape(.rect.inset(by: -10))
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Read the verse")
+            .accessibilityHint("Opens the passage this clue comes from. Free, but counts as a hint.")
+            .transition(.opacity)
+        }
+    }
+
     private var clueRow: some View {
         HStack(spacing: Theme.Spacing.s) {
             Button {
@@ -248,7 +301,11 @@ struct ClueBarView: View {
                             // (see `body`), so reserving for it here was pure
                             // theft — it squeezed "19 Across" down to "19 A…".
                             if !dynamicTypeSize.isAccessibilitySize {
-                                nudgeBody.hidden()
+                                HStack(spacing: Theme.Spacing.s) {
+                                    nudgeBody
+                                    if showsVerseButton { verseLabel }
+                                }
+                                .hidden()
                             }
                         }
                         .frame(maxWidth: .infinity)
@@ -270,24 +327,12 @@ struct ClueBarView: View {
             // own focusable control, and `children: .combine` above would
             // swallow it into the clue element if it were a child.
             .overlay(alignment: .topTrailing) {
-                if !dynamicTypeSize.isAccessibilitySize { inlineNudge }
-            }
-
-            // Only on clues that have a passage: an always-present icon would
-            // advertise a hint most clues can't offer yet, and a dimmed one is
-            // a question the player can't answer. See ClueListView.
-            if vm.activeSlot?.reference != nil, let onVerseTap {
-                Button {
-                    onVerseTap()
-                } label: {
-                    Image(systemName: "book")
-                        .font(.headline)
-                        .foregroundStyle(Theme.accent)
-                        .frame(width: 44, height: 44)
-                        .contentShape(.rect)
+                if !dynamicTypeSize.isAccessibilitySize {
+                    HStack(spacing: Theme.Spacing.s) {
+                        inlineNudge
+                        verseButton
+                    }
                 }
-                .accessibilityLabel("Read the verse")
-                .accessibilityHint("Opens the passage this clue comes from. Free, but counts as a hint.")
             }
 
             Button {

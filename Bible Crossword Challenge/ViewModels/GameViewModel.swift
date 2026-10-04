@@ -132,8 +132,9 @@ final class GameViewModel {
     private var solvedSlotIDs: Set<String> = []
 
     /// Monotonic count of word-solve moments this session (including the final
-    /// solve). Observable trigger for UI that reacts to each solve, e.g. the
-    /// toolbar streak-flame pulse.
+    /// solve). Observable trigger for UI that reacts to each solve; no view
+    /// reads it since the streak flame left the game toolbar, but it is part
+    /// of the engine contract in spec/vectors/engine_traces.json.
     private(set) var wordSolveTick = 0
 
     /// Increments each time the grid transitions into "every square filled but
