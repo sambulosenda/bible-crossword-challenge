@@ -32,9 +32,13 @@ struct ReadView: View {
     @Environment(\.readerRouter) private var readerRouter
     @Query(filter: #Predicate<PuzzleRecord> { $0.isCompleted })
     private var solvedRecords: [PuzzleRecord]
+    /// Every record, for the search's puzzle rows: an unlocked-by-progress
+    /// puzzle counts as playable even unsolved.
+    @Query private var records: [PuzzleRecord]
     @Environment(\.bookmarks) private var bookmarks
     @Environment(\.readingPlans) private var plans
     @Environment(\.analytics) private var analytics
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     // Written by `ChapterReaderView` as the reader is paged, so the card below
     // resumes from the last chapter open whether it was reached from here or
@@ -55,6 +59,12 @@ struct ReadView: View {
     /// in until 2.9.
     @State private var query = ""
     @State private var results = ScriptureSearch.Results()
+    /// Puzzles whose title matches the query — the app's own content, which
+    /// search used to skip for the Bible's.
+    @State private var puzzleHits: [Puzzle] = []
+    /// The query the current results answer. "Nothing found" waits for it to
+    /// catch up with the box — it flashed for every query while the scan ran.
+    @State private var searchedQuery = ""
     @State private var searchTarget: SearchTarget?
     @State private var searchBook: BibleBook?
     @AppStorage(RecentChapters.key) private var recentRaw = ""
@@ -92,13 +102,13 @@ struct ReadView: View {
                         // 30 days to 2026-10-03).
                         ReadingPlanCard(showsInvite: false, onRead: openPlanChapter)
                         recentRow
-                        scriptureSection
                     } more: {
                         // One group for reading, and no second loud card:
                         // "continue", the two testaments and the plans used
                         // to be four stacked cards, the first with a pill of
                         // its own competing with the memory card's.
                         browseSection
+                        progressGroup
                     }
                 }
             }
@@ -119,16 +129,19 @@ struct ReadView: View {
                 // verses, which is tens of milliseconds the keyboard shouldn't
                 // wait for.
                 let trimmed = query.trimmingCharacters(in: .whitespacesAndNewlines)
-                guard !trimmed.isEmpty else { results = ScriptureSearch.Results(); return }
+                guard !trimmed.isEmpty else { results = ScriptureSearch.Results(); puzzleHits = []; searchedQuery = ""; return }
                 try? await Task.sleep(for: .milliseconds(200))
                 guard !Task.isCancelled else { return }
                 await scripture.preload()
                 let books = scripture.books
+                let featured = featuredReferences
                 let found = await Task.detached(priority: .userInitiated) {
-                    ScriptureSearch.search(trimmed, in: books)
+                    ScriptureSearch.search(trimmed, in: books, featured: featured)
                 }.value
                 guard !Task.isCancelled else { return }
                 results = found
+                puzzleHits = matchingPuzzles(trimmed)
+                searchedQuery = trimmed
             }
             .navigationDestination(item: $searchTarget) { target in
                 ChapterReaderView(
@@ -196,6 +209,16 @@ struct ReadView: View {
     private var searchResults: some View {
         let trimmed = query.trimmingCharacters(in: .whitespacesAndNewlines)
         VStack(alignment: .leading, spacing: Theme.Spacing.s) {
+            if !puzzleHits.isEmpty {
+                Text("Puzzles").sectionHeader()
+                    .padding(.horizontal, Theme.Spacing.xs)
+                let byID = Dictionary(records.map { ($0.puzzleID, $0) }, uniquingKeysWith: { a, _ in a })
+                ForEach(puzzleHits) { puzzle in
+                    // The archive's wall: search reaches the catalogue the way the
+                    // Library does, not through a book.
+                    PuzzleLinkRow(puzzle: puzzle, record: byID[puzzle.id], paywallSource: .archive)
+                }
+            }
             if let ref = results.reference {
                 searchRow(
                     title: ref.verse.map { "\(ref.book) \(ref.chapter):\($0)" } ?? "\(ref.book) \(ref.chapter)",
@@ -212,21 +235,24 @@ struct ReadView: View {
                 }
             }
             if !results.verses.isEmpty {
-                Text(results.verses.count == ScriptureSearch.maxHits
-                     ? "First \(ScriptureSearch.maxHits) verses"
+                // Ranked, so "top" is honest now; "First 50" described canon
+                // order, which is what buried Psalm 23.
+                Text(results.totalVerses > results.verses.count
+                     ? "Top \(results.verses.count) of \(results.totalVerses) verses"
                      : "\(results.verses.count) \(results.verses.count == 1 ? "verse" : "verses")")
-                    .kicker()
+                    .sectionHeader()
                     .padding(.horizontal, Theme.Spacing.xs)
-                    .padding(.top, Theme.Spacing.s)
+                    .padding(.top, puzzleHits.isEmpty ? 0 : Theme.Spacing.m)
                 ForEach(results.verses) { hit in
                     Button {
                         open(reference: ScriptureRef(book: hit.book, chapter: hit.chapter, verse: hit.verse))
                     } label: {
                         VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
+                            // Ink, not accent: the whole card is the control.
                             Text(hit.reference)
                                 .font(.subheadline.weight(.semibold))
-                                .foregroundStyle(Theme.accent)
-                            Text(hit.text)
+                                .foregroundStyle(.primary)
+                            Text(highlighted(hit.text, matching: trimmed))
                                 .font(.scripture(.body))
                                 .foregroundStyle(.primary)
                                 .lineSpacing(3)
@@ -241,13 +267,13 @@ struct ReadView: View {
                     .accessibilityLabel("\(hit.reference). \(hit.text)")
                 }
             }
-            if results.isEmpty && trimmed.count >= ScriptureSearch.minWordLength {
+            if results.isEmpty && puzzleHits.isEmpty && trimmed.count >= ScriptureSearch.minWordLength && searchedQuery == trimmed {
                 Text("Nothing found for “\(trimmed)”")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                     .frame(maxWidth: .infinity)
                     .padding(.top, Theme.Spacing.xl)
-            } else if results.isEmpty {
+            } else if results.isEmpty && puzzleHits.isEmpty && trimmed.count < ScriptureSearch.minWordLength {
                 Text("Try “John 3:16”, “Ruth”, or “small voice”")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
@@ -255,6 +281,54 @@ struct ReadView: View {
                     .padding(.top, Theme.Spacing.xl)
             }
         }
+    }
+
+    /// The verse with the searched words set in ink and the rest in
+    /// secondary, so the eye lands on why each verse matched.
+    private func highlighted(_ text: String, matching query: String) -> AttributedString {
+        // Three lines hold about 120 characters; a match past that was cut
+        // off mid-word ("pouch of his s…"). Start the excerpt a few words
+        // before it instead.
+        var shown = text
+        if let match = text.range(of: query, options: [.caseInsensitive, .diacriticInsensitive]),
+           text.distance(from: text.startIndex, to: match.lowerBound) > 90 {
+            let back = text.index(match.lowerBound, offsetBy: -50)
+            let wordStart = text[back...].firstIndex(of: " ").map { text.index(after: $0) } ?? back
+            shown = "…" + text[wordStart...]
+        }
+        var out = AttributedString(shown)
+        out.foregroundColor = .secondary
+        var searchStart = out.startIndex
+        while let range = out[searchStart...].range(of: query, options: [.caseInsensitive, .diacriticInsensitive]) {
+            out[range].foregroundColor = .primary
+            out[range].font = .scripture(.body, weight: .semibold)
+            searchStart = range.upperBound
+        }
+        return out
+    }
+
+    /// Every reference the puzzles are built on — their verses and their
+    /// clues' — which search ranks first.
+    private var featuredReferences: Set<String> {
+        var refs: Set<String> = []
+        for puzzle in puzzleProvider.allPuzzles {
+            refs.insert(puzzle.reference)
+            for clue in puzzle.clues { if let r = clue.reference { refs.insert(r) } }
+        }
+        return refs
+    }
+
+    /// Up to three puzzles whose title contains the query, one per title:
+    /// the bundle reuses a title across formats. Three, not more: five tall
+    /// cards pushed every verse below the keyboard.
+    private func matchingPuzzles(_ query: String) -> [Puzzle] {
+        guard query.count >= ScriptureSearch.minWordLength else { return [] }
+        var seen: Set<String> = []
+        return puzzleProvider.allPuzzles
+            .filter { $0.title.range(of: query, options: [.caseInsensitive, .diacriticInsensitive]) != nil }
+            .filter { seen.insert($0.title).inserted }
+            .prefix(3)
+            .map { $0 }
     }
 
     private func searchRow(title: String, detail: String, symbol: String, action: @escaping () -> Void) -> some View {
@@ -298,12 +372,14 @@ struct ReadView: View {
     @ViewBuilder
     private var recentRow: some View {
         let point = snapshot ?? .placeholder
+        // Minus the book being resumed: "Ruth 1" beside "Continue · Ruth 2"
+        // is the same reading twice. What's left is somewhere else.
         let entries = RecentChapters.entries(from: recentRaw)
-            .filter { !($0.book == point.book && $0.chapter == point.chapter) }
+            .filter { !hasReadBefore || $0.book != point.book }
         if !entries.isEmpty {
             VStack(alignment: .leading, spacing: Theme.Spacing.s) {
                 Text("Recent")
-                    .kicker()
+                    .sectionHeader()
                     .padding(.horizontal, Theme.Spacing.xs)
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: Theme.Spacing.s) {
@@ -348,19 +424,27 @@ struct ReadView: View {
     /// A chapter has been opened before, known without decoding the Bible.
     private var hasReadBefore: Bool { !lastBook.isEmpty && lastChapter > 0 }
 
-    // MARK: - Your scripture
+    // MARK: - Your progress
 
-    /// What the player has kept and covered, under one header. Memory verses
-    /// left this group for the top of the tab.
-    private var scriptureSection: some View {
-        VStack(alignment: .leading, spacing: Theme.Spacing.s) {
-            Text("Your Bible").kicker()
-                .padding(.horizontal, Theme.Spacing.xs)
+    /// What the player has kept and covered, as one card with no header: a
+    /// "Your Bible" label over a single row was a heading for nothing.
+    private var progressGroup: some View {
+        VStack(spacing: 0) {
             if !bookmarks.entries.isEmpty {
-                bookmarksCard
+                NavigationLink {
+                    BookmarksView()
+                } label: {
+                    groupRow(symbol: "bookmark.fill", title: "Bookmarks", subtitle: bookmarksSummary)
+                }
+                .buttonStyle(PressableCardStyle())
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel("Bookmarks. \(bookmarksSummary)")
+                .accessibilityHint("Opens your bookmarked verses")
+                groupDivider
             }
-            JourneyCard(source: "read_tab")
+            JourneyCard(source: "read_tab", grouped: true)
         }
+        .elevatedCard()
     }
 
     // MARK: - Memory verses (lead)
@@ -451,7 +535,7 @@ struct ReadView: View {
         let verses = solvedVerses
         if !verses.isEmpty {
             VStack(alignment: .leading, spacing: Theme.Spacing.s) {
-                Text("From your puzzles").kicker()
+                Text("From your puzzles").sectionHeader()
                     .padding(.horizontal, Theme.Spacing.xs)
                 VStack(spacing: 0) {
                     ForEach(Array(verses.enumerated()), id: \.element.id) { index, puzzle in
@@ -497,42 +581,6 @@ struct ReadView: View {
     }
 
     // MARK: - Bookmarks
-
-    private var bookmarksCard: some View {
-        NavigationLink {
-            BookmarksView()
-        } label: {
-            HStack(spacing: Theme.Spacing.m) {
-                Image(systemName: "bookmark.fill")
-                    .font(.title2)
-                    .dynamicTypeSize(...DynamicTypeSize.xxLarge)
-                    .foregroundStyle(Theme.accent)
-                    .frame(width: 44, height: 44)
-                    .background(Theme.accent.opacity(0.14), in: .circle)
-                // The name leads, as on every other row under the header; the
-                // latest reference moves into the line beneath it.
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Bookmarks")
-                        .font(.headline)
-                        .foregroundStyle(.primary)
-                    Text(bookmarksSummary)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-                Spacer(minLength: 0)
-                Image(systemName: "chevron.forward")
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(.secondary)
-            }
-            .padding(Theme.Spacing.l)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .elevatedCard()
-        }
-        .buttonStyle(PressableCardStyle())
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel("Bookmarks. \(bookmarksSummary)")
-        .accessibilityHint("Opens your bookmarked verses")
-    }
 
     private var bookmarksSummary: String {
         let count = bookmarks.entries.count
@@ -593,12 +641,16 @@ struct ReadView: View {
     /// chevron — the shape of every navigation row on this tab.
     private func groupRow(symbol: String, title: String, subtitle: String) -> some View {
         HStack(spacing: Theme.Spacing.m) {
-            Image(systemName: symbol)
-                .font(.title2)
-                .dynamicTypeSize(...DynamicTypeSize.xxLarge)
-                .foregroundStyle(Theme.accent)
-                .frame(width: 44, height: 44)
-                .background(Theme.accent.opacity(0.14), in: .circle)
+            // Decorative, so it gives way at accessibility sizes: beside it
+            // "Old Testament" broke as "Testa-ment" at AX5.
+            if !dynamicTypeSize.isAccessibilitySize {
+                Image(systemName: symbol)
+                    .font(.title2)
+                    .dynamicTypeSize(...DynamicTypeSize.xxLarge)
+                    .foregroundStyle(Theme.accent)
+                    .frame(width: 44, height: 44)
+                    .background(Theme.accent.opacity(0.14), in: .circle)
+            }
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
                     .font(.headline)
@@ -619,7 +671,7 @@ struct ReadView: View {
     }
 
     private var groupDivider: some View {
-        Divider().padding(.leading, Theme.Spacing.l + 44 + Theme.Spacing.m)
+        Divider().padding(.leading, Theme.Spacing.l + (dynamicTypeSize.isAccessibilitySize ? 0 : 44 + Theme.Spacing.m))
     }
 
     /// Where reading left off, as a row: the memory card above owns the tab's
@@ -647,7 +699,7 @@ struct ReadView: View {
     private var browseSection: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.s) {
             Text("The Bible")
-                .kicker()
+                .sectionHeader()
                 .padding(.horizontal, Theme.Spacing.xs)
             VStack(spacing: 0) {
                 if hasReadBefore {
@@ -678,7 +730,7 @@ struct ReadView: View {
                 NavigationLink {
                     ReadingPlansView()
                 } label: {
-                    groupRow(symbol: "calendar.day.timeline.left", title: "Reading plans", subtitle: "A chapter a day through one book")
+                    groupRow(symbol: "book.pages", title: "Reading plans", subtitle: "A chapter a day through one book")
                 }
                 .buttonStyle(PressableCardStyle())
             }
@@ -723,33 +775,75 @@ struct BookListView: View {
 struct ChapterPickerView: View {
     let book: BibleBook
     @Environment(\.analytics) private var analytics
+    @Environment(\.puzzleProvider) private var puzzleProvider
     @State private var openChapter: Int?
+    @AppStorage("read.lastBook") private var lastBook = ""
+    @AppStorage("read.lastChapter") private var lastChapter = 0
 
     private let columns = Array(repeating: GridItem(.flexible(), spacing: 8), count: 5)
 
+    /// Chapters a puzzle's verse or clue is drawn from — the reader's way
+    /// back into the game, marked on the grid.
+    private var puzzleChapters: Set<Int> {
+        var chapters: Set<Int> = []
+        for puzzle in puzzleProvider.allPuzzles {
+            let refs = [puzzle.reference] + puzzle.clues.compactMap(\.reference)
+            for raw in refs {
+                if let ref = ScriptureRef(raw), ref.book == book.name { chapters.insert(ref.chapter) }
+            }
+        }
+        return chapters
+    }
+
     var body: some View {
+        let marked = puzzleChapters
         ScrollView {
-            LazyVGrid(columns: columns, spacing: 8) {
-                ForEach(book.chapters) { chapter in
-                    Button {
-                        analytics.log(.scriptureOpened(
-                            reference: "\(book.name) \(chapter.number)",
-                            source: "read_browse"
-                        ))
-                        openChapter = chapter.number
-                    } label: {
-                        Text("\(chapter.number)")
-                            .font(.body.weight(.medium))
-                            .monospacedDigit()
+            VStack(alignment: .leading, spacing: Theme.Spacing.m) {
+                if !marked.isEmpty {
+                    Label("Puzzles draw on the chapters marked with a dot.", systemImage: "circle.fill")
+                        .labelStyle(DotLabelStyle())
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                        .padding(.horizontal, Theme.Spacing.xs)
+                }
+                LazyVGrid(columns: columns, spacing: 8) {
+                    ForEach(book.chapters) { chapter in
+                        let hasPuzzle = marked.contains(chapter.number)
+                        let isLast = lastBook == book.name && lastChapter == chapter.number
+                        Button {
+                            analytics.log(.scriptureOpened(
+                                reference: "\(book.name) \(chapter.number)",
+                                source: "read_browse"
+                            ))
+                            openChapter = chapter.number
+                        } label: {
+                            VStack(spacing: 3) {
+                                Text("\(chapter.number)")
+                                    .font(.body.weight(.medium))
+                                    .monospacedDigit()
+                                Circle()
+                                    .fill(Theme.accent)
+                                    .frame(width: 5, height: 5)
+                                    .opacity(hasPuzzle ? 1 : 0)
+                            }
                             .frame(maxWidth: .infinity, minHeight: 52)
                             .background(Theme.surface, in: .rect(cornerRadius: 12, style: .continuous))
+                            .overlay {
+                                // Where reading left off, by a ring — the same
+                                // mark the game uses for "you are here".
+                                if isLast {
+                                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                        .strokeBorder(Theme.accent, lineWidth: 2)
+                                }
+                            }
                             .foregroundStyle(.primary)
+                        }
+                        // The card style, not the default: fifty accent-blue
+                        // numerals read as fifty links, and the tile is the
+                        // control here.
+                        .buttonStyle(PressableCardStyle())
+                        .accessibilityLabel(accessibilityLabel(chapter.number, hasPuzzle: hasPuzzle, isLast: isLast))
                     }
-                    // The card style, not the default: fifty accent-blue
-                    // numerals read as fifty links, and the tile is the
-                    // control here.
-                    .buttonStyle(PressableCardStyle())
-                    .accessibilityLabel("Chapter \(chapter.number)")
                 }
             }
             .padding(Theme.Spacing.m)
@@ -761,6 +855,23 @@ struct ChapterPickerView: View {
         .navigationBarTitleDisplayMode(.inline)
         .navigationDestination(item: $openChapter) { chapter in
             ChapterReaderView(startBook: book.name, startChapter: chapter, source: "read_browse")
+        }
+    }
+
+    private func accessibilityLabel(_ number: Int, hasPuzzle: Bool, isLast: Bool) -> String {
+        var parts = ["Chapter \(number)"]
+        if isLast { parts.append("where you left off") }
+        if hasPuzzle { parts.append("has puzzles") }
+        return parts.joined(separator: ", ")
+    }
+}
+
+/// A 5pt accent dot in place of the label's icon, matching the grid's mark.
+private struct DotLabelStyle: LabelStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        HStack(spacing: Theme.Spacing.s) {
+            Circle().fill(Theme.accent).frame(width: 5, height: 5)
+            configuration.title
         }
     }
 }

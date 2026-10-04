@@ -300,8 +300,8 @@ struct DifficultyBadge: View {
                                   : Color(red: 0.10, green: 0.42, blue: 0.18)
         case .medium: return high ? Color(red: 0.42, green: 0.22, blue: 0.0)
                                   : Color(red: 0.55, green: 0.31, blue: 0.0)
-        case .hard:   return high ? Color(red: 0.55, green: 0.06, blue: 0.06)
-                                  : Color(red: 0.70, green: 0.12, blue: 0.12)
+        case .hard:   return high ? Color(red: 0.33, green: 0.10, blue: 0.52)
+                                  : Color(red: 0.45, green: 0.18, blue: 0.66)
         }
     }
 }

@@ -28,8 +28,11 @@ nonisolated enum ScriptureSearch {
         var book: BibleBook?
         /// A chapter (and maybe verse) the query named.
         var reference: ScriptureRef?
-        /// Verses whose text contains the query, when it named nothing.
+        /// Verses whose text contains the query, when it named nothing —
+        /// best first, capped at `maxHits`.
         var verses: [VerseHit] = []
+        /// Every verse that matched, before the cap.
+        var totalVerses = 0
 
         var isEmpty: Bool { book == nil && reference == nil && verses.isEmpty }
 
@@ -120,7 +123,11 @@ nonisolated enum ScriptureSearch {
 
     // MARK: - Search
 
-    static func search(_ query: String, in books: [BibleBook]) -> Results {
+    /// `featured` is the references the app's puzzles are built on ("Psalm
+    /// 23:1"): the verses a player here is most likely looking for. Word hits
+    /// used to come back in canon order and stop at fifty, so "shepherd"
+    /// opened on Genesis 29 and never reached Psalm 23.
+    static func search(_ query: String, in books: [BibleBook], featured: Set<String> = []) -> Results {
         let trimmed = query.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return Results() }
         if let parsed = parseReference(trimmed, books: books) {
@@ -130,16 +137,45 @@ nonisolated enum ScriptureSearch {
             return Results(book: parsed.book)
         }
         guard trimmed.count >= minWordLength else { return Results() }
-        var hits: [VerseHit] = []
+        let wholeWord = try? NSRegularExpression(
+            pattern: "\\b" + NSRegularExpression.escapedPattern(for: trimmed) + "\\b",
+            options: [.caseInsensitive]
+        )
+        // How many featured verses each chapter holds. Among equal scores the
+        // tiebreak is the *share* of the chapter that's featured, not the
+        // count: by count, 1 Samuel 17's long Goliath story outranked Psalm
+        // 23, six verses all featured, for "shepherd".
+        var chapterWeight: [String: Int] = [:]
+        for ref in featured {
+            if let colon = ref.lastIndex(of: ":") { chapterWeight[String(ref[..<colon]), default: 0] += 1 }
+        }
+        // (score, chapter weight, canon order, hit).
+        var scored: [(Int, Int, Int, VerseHit)] = []
+        var order = 0
         for book in books {
             for chapter in book.chapters {
                 for verse in chapter.verses
                 where verse.text.range(of: trimmed, options: [.caseInsensitive, .diacriticInsensitive]) != nil {
-                    hits.append(VerseHit(book: book.name, chapter: chapter.number, verse: verse.number, text: verse.text))
-                    if hits.count == maxHits { return Results(verses: hits) }
+                    let hit = VerseHit(book: book.name, chapter: chapter.number, verse: verse.number, text: verse.text)
+                    var score = 0
+                    if featured.contains(hit.reference) { score += 2 }
+                    let range = NSRange(verse.text.startIndex..., in: verse.text)
+                    if wholeWord?.firstMatch(in: verse.text, range: range) != nil { score += 1 }
+                    let featuredInChapter = chapterWeight["\(book.name) \(chapter.number)"] ?? 0
+                    let density = featuredInChapter * 1000 / max(chapter.verses.count, 1)
+                    scored.append((score, density, order, hit))
+                    order += 1
                 }
             }
         }
-        return Results(verses: hits)
+        let ranked = scored
+            .sorted {
+                if $0.0 != $1.0 { return $0.0 > $1.0 }
+                if $0.1 != $1.1 { return $0.1 > $1.1 }
+                return $0.2 < $1.2
+            }
+            .prefix(maxHits)
+            .map(\.3)
+        return Results(verses: Array(ranked), totalVerses: scored.count)
     }
 }

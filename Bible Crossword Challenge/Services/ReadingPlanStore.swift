@@ -25,11 +25,11 @@ struct ReadingPlan: Identifiable, Hashable, Sendable {
     let blurb: String
 
     static let all: [ReadingPlan] = [
-        ReadingPlan(id: "john", title: "The Gospel of John", book: "John", blurb: "Who Jesus is, in his own words. Twenty-one days."),
-        ReadingPlan(id: "mark", title: "The Gospel of Mark", book: "Mark", blurb: "The shortest gospel, and the fastest. Sixteen days."),
+        ReadingPlan(id: "john", title: "The Gospel of John", book: "John", blurb: "Who Jesus is, in his own words."),
+        ReadingPlan(id: "mark", title: "The Gospel of Mark", book: "Mark", blurb: "The shortest gospel, and the fastest."),
         ReadingPlan(id: "proverbs", title: "A Proverb a Day", book: "Proverbs", blurb: "One chapter for each day of the month."),
-        ReadingPlan(id: "genesis", title: "Beginnings", book: "Genesis", blurb: "Creation to Joseph. Fifty days."),
-        ReadingPlan(id: "psalms", title: "The Psalms", book: "Psalm", blurb: "The prayer book of the Bible. A hundred and fifty days."),
+        ReadingPlan(id: "genesis", title: "Beginnings", book: "Genesis", blurb: "Creation to Joseph."),
+        ReadingPlan(id: "psalms", title: "The Psalms", book: "Psalm", blurb: "The prayer book of the Bible."),
     ]
 
     static func named(_ id: String) -> ReadingPlan? { all.first { $0.id == id } }

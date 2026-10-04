@@ -261,6 +261,17 @@ extension View {
         modifier(ElevatedCard(fill: fill, cornerRadius: cornerRadius))
     }
 
+    /// A section's title on a feed screen — "Keep going", "Packs ›": bold,
+    /// sentence case, full ink, the way iOS 26's own shelves (App Store,
+    /// Music) title theirs. The uppercase tracked kicker is for labels inside
+    /// a card, not for naming a stretch of the page.
+    func sectionHeader() -> some View {
+        self
+            .font(.title3.weight(.bold))
+            .foregroundStyle(.primary)
+            .accessibilityAddTraits(.isHeader)
+    }
+
     /// The shared eyebrow/kicker label style used above every card heading.
     /// Muted grey by default (as on YouVersion's "VERSE OF THE DAY" label) so
     /// the scarlet stays reserved for interactive and identity moments.

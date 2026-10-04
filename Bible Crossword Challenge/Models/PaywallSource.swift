@@ -86,8 +86,9 @@ enum PaywallSource: String, CaseIterable, Hashable {
             return "Every Journey, a step a day."
         case .journey:
             // A locked puzzle inside a book: the gap is the rest of the book,
-            // not the shelf.
-            return "Every book, all the way through."
+            // not the shelf. Said as puzzles, because every benefit under it
+            // is about play — "all the way through" read as a reading offer.
+            return "Every puzzle, in every book."
         case .profile, .onboarding, .trialAbandon:
             // No wall behind them. A player who hasn't hit one needs telling
             // what the app is for, not what it withholds — and the re-offer

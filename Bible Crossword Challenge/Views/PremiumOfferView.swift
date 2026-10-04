@@ -407,8 +407,10 @@ struct PremiumOfferView: View {
                         .foregroundStyle(.secondary)
                     Spacer(minLength: 0)
                 }
+                // The chosen plan's price leads; the other is a size down so
+                // the pair reads as a choice with an answer, not two equals.
                 Text(planPrice(product))
-                    .font(.title3.weight(.semibold))
+                    .font(selected ? .title3.weight(.semibold) : .headline)
                     .fixedSize(horizontal: false, vertical: true)
                 Text(planFootnote(product))
                     .font(.footnote)
@@ -544,7 +546,10 @@ struct PremiumOfferView: View {
                 .font(.footnote.weight(.medium))
                 .foregroundStyle(.secondary)
         }
-        .frame(maxWidth: .infinity)
+        // On the page's one left edge — the benefits' and the plan cards'
+        // content column — rather than centred between them.
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, Theme.Spacing.m)
         .accessibilityElement(children: .ignore)
         // VoiceOver reads the bare glyphs as "black star" five times, which
         // turns the line into noise for exactly the reader it should reassure.

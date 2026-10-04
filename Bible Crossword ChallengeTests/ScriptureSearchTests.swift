@@ -56,7 +56,23 @@ struct ScriptureSearchTests {
 
         let shepherd = ScriptureSearch.search("shepherd", in: books)
         #expect(shepherd.verses.count == ScriptureSearch.maxHits)
+        #expect(shepherd.totalVerses > ScriptureSearch.maxHits)
+        // Whole-word matches rank above "shepherds"/"shepherdess".
         #expect(shepherd.verses.first?.book == "Genesis")
+        #expect(shepherd.verses.first.map { $0.text.range(of: #"\bshepherd\b"#, options: [.regularExpression, .caseInsensitive]) != nil } == true)
+    }
+
+    @Test func featuredVersesRankFirst() {
+        let shepherd = ScriptureSearch.search("shepherd", in: books, featured: ["Psalm 23:1"])
+        #expect(shepherd.verses.first?.reference == "Psalm 23:1")
+        // Two featured whole-word hits: the chapter more densely featured
+        // wins, even against more featured verses in a long chapter.
+        let weighted = ScriptureSearch.search(
+            "shepherd", in: books,
+            featured: ["1 Samuel 17:40", "1 Samuel 17:45", "1 Samuel 17:49", "1 Samuel 17:50",
+                       "Psalm 23:1", "Psalm 23:2", "Psalm 23:3"]
+        )
+        #expect(weighted.verses.first?.reference == "Psalm 23:1")
     }
 
     @Test func tooShortOrUnknownIsEmpty() {

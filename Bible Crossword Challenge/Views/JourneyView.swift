@@ -33,7 +33,7 @@ struct JourneyView: View {
         // the right.
         CardColumns {
             summaryCard
-            legend
+            legendNote
         } more: {
             testamentSection(.old)
             testamentSection(.new)
@@ -63,87 +63,73 @@ struct JourneyView: View {
     private var reachable: [BibleJourney.BookProgress] { rows.filter { $0.available > 0 } }
     private var touched: [BibleJourney.BookProgress] { rows.filter { $0.solved > 0 } }
 
-    /// The headline number counts books *with puzzles*, not all sixty-six.
-    /// Against 66 the score would be permanently capped at half and would fall
-    /// every time the canon didn't change — which is to say it would measure the
-    /// content backlog, not the journey.
+    /// The book a player should open next: the first in canon order with
+    /// puzzles they haven't touched, falling back to any with puzzles left.
+    private var nextBook: BibleJourney.BookProgress? {
+        reachable.first { $0.solved == 0 } ?? reachable.first { !$0.isComplete }
+    }
+
+    /// Leads with what to do, not a score. On a first visit the old headline
+    /// was a 56pt blue "0" — the loudest thing on the screen, and the least
+    /// encouraging. The count still leads once there is one to show, and is
+    /// counted against books *with puzzles*: against 66 it would be capped at
+    /// two thirds by the content backlog, not the journey.
     private var summaryCard: some View {
-        VStack(spacing: Theme.Spacing.m) {
-            Text("\(touched.count)")
-                .font(.system(size: 56, weight: .bold, design: .serif))
-                .monospacedDigit()
-                .foregroundStyle(Theme.accent)
-            Text(touched.count == 1 ? "book explored" : "books explored")
-                .kicker()
-
-            Text("of \(reachable.count) with puzzles so far")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-
-            Divider()
-
-            HStack(spacing: Theme.Spacing.l) {
-                testamentStat(.old)
-                testamentStat(.new)
+        VStack(alignment: .leading, spacing: Theme.Spacing.m) {
+            VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
+                Text(touched.isEmpty
+                     ? "Every puzzle you solve marks its book here"
+                     : "\(touched.count) of \(reachable.count) books explored")
+                    .font(.scripture(.title2, weight: .semibold))
+                    .fixedSize(horizontal: false, vertical: true)
+                if !touched.isEmpty {
+                    ProgressView(value: Double(touched.count), total: Double(max(reachable.count, 1)))
+                        .tint(Theme.accent)
+                        .padding(.vertical, Theme.Spacing.xs)
+                    HStack(spacing: Theme.Spacing.l) {
+                        testamentStat(.old)
+                        testamentStat(.new)
+                    }
+                }
+            }
+            if let next = nextBook {
+                NavigationLink {
+                    JourneyBookView(book: next.book)
+                } label: {
+                    Label(
+                        touched.isEmpty ? "Start with \(next.name)" : "Next: \(next.name)",
+                        systemImage: "arrow.right"
+                    )
+                }
+                .buttonStyle(.pillProminent)
+                .accessibilityHint("\(next.available) puzzles from \(next.name)")
             }
         }
         .padding(Theme.Spacing.l)
-        .frame(maxWidth: .infinity)
+        .frame(maxWidth: .infinity, alignment: .leading)
         .elevatedCard()
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel(summaryLabel)
-    }
-
-    private var summaryLabel: String {
-        let books = touched.count == 1 ? "book" : "books"
-        return "\(touched.count) \(books) explored, of \(reachable.count) that have puzzles so far."
     }
 
     private func testamentStat(_ testament: Testament) -> some View {
         let all = reachable.filter { $0.testament == testament }
         let done = all.filter { $0.solved > 0 }
-        return VStack(spacing: 2) {
-            Text("\(done.count)/\(all.count)")
-                .font(.title3.weight(.bold))
-                .monospacedDigit()
-            Text(testament.label)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-        }
-        .frame(maxWidth: .infinity)
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel("\(testament.label): \(done.count) of \(all.count) explored")
+        return Text("\(testament.label) \(done.count)/\(all.count)")
+            .font(.subheadline)
+            .monospacedDigit()
+            .foregroundStyle(.secondary)
+            .accessibilityLabel("\(testament.label): \(done.count) of \(all.count) explored")
     }
 
-    /// Four fills is more than a screen can carry unexplained, and "no puzzles
-    /// yet" is the one a player would otherwise read as their own omission.
-    private var legend: some View {
-        HStack(spacing: Theme.Spacing.m) {
-            legendItem(.deep, "Explored")
-            legendItem(.touched, "Visited")
-            legendItem(.untouched, "Not yet")
-            legendItem(.empty, "No puzzles")
-        }
-        .font(.caption2)
-        .foregroundStyle(.secondary)
-        .frame(maxWidth: .infinity)
-        .accessibilityHidden(true)
-    }
-
-    private func legendItem(_ state: BibleJourney.BookProgress.State, _ label: String) -> some View {
-        HStack(spacing: 5) {
-            RoundedRectangle(cornerRadius: 3, style: .continuous)
-                .fill(JourneyStyle.fill(state))
-                .frame(width: 11, height: 11)
-                .overlay {
-                    RoundedRectangle(cornerRadius: 3, style: .continuous)
-                        .strokeBorder(
-                            JourneyStyle.border(state),
-                            lineWidth: JourneyStyle.borderWidth(state)
-                        )
-                }
-            Text(label)
-        }
+    /// One line instead of a four-swatch key. Solved books carry their count
+    /// (and a check once finished) on the chip, so only the faded state needs
+    /// saying — and it's the one a player would otherwise read as their own
+    /// omission.
+    private var legendNote: some View {
+        Text("Faded books don't have puzzles yet.")
+            .font(.footnote)
+            .foregroundStyle(.secondary)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, Theme.Spacing.xs)
     }
 
     // MARK: - The map
@@ -151,7 +137,7 @@ struct JourneyView: View {
     private func testamentSection(_ testament: Testament) -> some View {
         let books = rows.filter { $0.testament == testament }
         return VStack(alignment: .leading, spacing: Theme.Spacing.s) {
-            Text(testament.label).kicker()
+            Text(testament.label).sectionHeader()
                 .padding(.horizontal, Theme.Spacing.xs)
 
             LazyVGrid(
@@ -194,7 +180,10 @@ private struct JourneyChip: View {
                 .lineLimit(2)
                 .minimumScaleFactor(0.8)
             Spacer(minLength: 0)
-            if row.solved > 0 {
+            if row.isComplete {
+                Image(systemName: "checkmark")
+                    .font(.caption2.weight(.bold))
+            } else if row.solved > 0 {
                 Text("\(row.solved)")
                     .font(.caption2.weight(.semibold))
                     .monospacedDigit()
@@ -231,7 +220,8 @@ private struct JourneyChip: View {
 enum JourneyStyle {
     static func fill(_ state: BibleJourney.BookProgress.State) -> Color {
         switch state {
-        case .empty: Color.primary.opacity(0.03)
+        // No tile at all: the book is absent from the game, not unfinished.
+        case .empty: .clear
         case .untouched: Theme.surface
         case .touched: Theme.accent.opacity(0.13)
         case .deep: Theme.accent.opacity(0.30)
@@ -244,7 +234,7 @@ enum JourneyStyle {
     /// carried by shape and not only by intensity.
     static func border(_ state: BibleJourney.BookProgress.State) -> Color {
         switch state {
-        case .empty: Color.primary.opacity(0.04)
+        case .empty: .clear
         case .untouched: Color.primary.opacity(0.10)
         case .touched: Theme.accent.opacity(0.22)
         case .deep: Theme.accent.opacity(0.85)
@@ -272,12 +262,9 @@ struct JourneyBookView: View {
     let book: BibleCanon.Book
 
     @Environment(\.puzzleProvider) private var puzzleProvider
-    @Environment(\.openURL) private var openURL
-    @Environment(\.dismiss) private var dismiss
-    @Environment(StoreService.self) private var store
-    @Environment(\.challengeService) private var challengeService
+    @Environment(\.scripture) private var scripture
     @Query private var records: [PuzzleRecord]
-    @State private var showPaywall = false
+    @State private var bibleBook: BibleBook?
 
     private var puzzles: [Puzzle] {
         puzzleProvider.allPuzzles.filter { BibleJourney.book(for: $0)?.name == book.name }
@@ -288,10 +275,14 @@ struct JourneyBookView: View {
     }
 
     var body: some View {
+        let byID = recordsByID
+        let solved = puzzles.filter { byID[$0.id]?.isCompleted == true }.count
         ScrollView {
-            VStack(spacing: Theme.Spacing.s) {
+            VStack(alignment: .leading, spacing: Theme.Spacing.s) {
+                header(solved: solved)
+                    .padding(.bottom, Theme.Spacing.s)
                 ForEach(puzzles) { puzzle in
-                    row(puzzle)
+                    PuzzleLinkRow(puzzle: puzzle, record: byID[puzzle.id], paywallSource: .journey)
                 }
             }
             .padding(Theme.Spacing.m)
@@ -301,25 +292,70 @@ struct JourneyBookView: View {
         .background(Theme.background)
         .navigationTitle(book.name)
         .navigationBarTitleDisplayMode(.inline)
-        .sheet(isPresented: $showPaywall) {
-            PaywallView(source: .journey)
+        .task {
+            await scripture.preload()
+            bibleBook = scripture.book(named: book.name)
         }
     }
 
-    @ViewBuilder
-    private func row(_ puzzle: Puzzle) -> some View {
-        let record = recordsByID[puzzle.id]
+    /// Where the player stands in the book, and the way back to its text. A
+    /// book with one puzzle was a single row on an empty page, with nothing
+    /// tying the puzzles to the scripture they come from.
+    private func header(solved: Int) -> some View {
+        VStack(alignment: .leading, spacing: Theme.Spacing.m) {
+            VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
+                Text(book.testament.label).kicker()
+                Text(progressLine(solved: solved))
+                    .font(.scripture(.title3, weight: .semibold))
+            }
+            if let bibleBook {
+                NavigationLink {
+                    ChapterPickerView(book: bibleBook)
+                } label: {
+                    Label("Read \(book.name)", systemImage: "book")
+                }
+                .buttonStyle(.pillTonal)
+            }
+        }
+        .padding(Theme.Spacing.l)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .elevatedCard()
+    }
+
+    private func progressLine(solved: Int) -> String {
+        let count = puzzles.count
+        let noun = count == 1 ? "puzzle" : "puzzles"
+        if solved == 0 { return "\(count) \(noun) drawn from \(book.name)" }
+        if solved >= count { return "All \(count) \(noun) solved" }
+        return "\(solved) of \(count) \(noun) solved"
+    }
+}
+
+// MARK: - Puzzle row
+
+/// One puzzle as a tappable row, gated the way every way into the catalogue
+/// is. Shared by a book's page and the Verses tab's search.
+struct PuzzleLinkRow: View {
+    let puzzle: Puzzle
+    let record: PuzzleRecord?
+    let paywallSource: PaywallSource
+
+    @Environment(\.puzzleProvider) private var puzzleProvider
+    @Environment(\.openURL) private var openURL
+    @Environment(StoreService.self) private var store
+    @Environment(\.challengeService) private var challengeService
+    @State private var showPaywall = false
+
+    var body: some View {
         let access = PuzzleAccess(provider: puzzleProvider, challengedIDs: challengeService.pendingPuzzleIDs)
-        // The map is a new way into the catalogue, so it answers to the same
-        // gate as every other one — a browsable list of every puzzle would
-        // otherwise be a way around the paywall.
+        // A browsable list of every puzzle would otherwise be a way around
+        // the paywall.
         let unlocked = access.canPlay(puzzle, isPremium: store.isPremium, hasProgress: record != nil)
 
         Button {
             if unlocked {
                 if let url = URL(string: "biblecrossword://puzzle?id=\(puzzle.id)") {
                     openURL(url)
-                    dismiss()
                 }
             } else {
                 showPaywall = true
@@ -333,13 +369,16 @@ struct JourneyBookView: View {
                         .multilineTextAlignment(.leading)
                     HStack(spacing: Theme.Spacing.s) {
                         DifficultyBadge(difficulty: puzzle.difficulty)
-                        Text(puzzle.reference)
+                        // The format, not the reference: a book's puzzles
+                        // often share one verse ("Ruth 1:16" four times),
+                        // and two of them share a title.
+                        Text(detail)
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
                 }
                 Spacer(minLength: 0)
-                trailing(record: record, unlocked: unlocked)
+                trailing(unlocked: unlocked)
             }
             .padding(Theme.Spacing.m)
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -347,12 +386,25 @@ struct JourneyBookView: View {
         }
         .buttonStyle(PressableCardStyle())
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(accessibilityLabel(puzzle, record: record, unlocked: unlocked))
+        .accessibilityLabel(accessibilityLabel(unlocked: unlocked))
         .accessibilityHint(unlocked ? "Opens this puzzle" : "Opens Premium upgrade options")
+        .sheet(isPresented: $showPaywall) {
+            PaywallView(source: paywallSource)
+        }
+    }
+
+    private var detail: String {
+        let format: String
+        switch puzzle.kind {
+        case .mini: format = "Mini"
+        case .sunday: format = "Sunday"
+        default: format = "Daily"
+        }
+        return "\(format) · \(puzzle.clueCount) clues"
     }
 
     @ViewBuilder
-    private func trailing(record: PuzzleRecord?, unlocked: Bool) -> some View {
+    private func trailing(unlocked: Bool) -> some View {
         if record?.isCompleted == true {
             Image(systemName: "checkmark.circle.fill")
                 .font(.title3)
@@ -368,8 +420,8 @@ struct JourneyBookView: View {
         }
     }
 
-    private func accessibilityLabel(_ puzzle: Puzzle, record: PuzzleRecord?, unlocked: Bool) -> String {
-        var parts = [puzzle.title, puzzle.difficulty.label, puzzle.reference]
+    private func accessibilityLabel(unlocked: Bool) -> String {
+        var parts = [puzzle.title, puzzle.difficulty.label, detail]
         if record?.isCompleted == true {
             parts.append("solved")
         } else if !unlocked {
@@ -393,6 +445,9 @@ struct JourneyBookView: View {
 struct JourneyCard: View {
     /// Which surface pushed it — `read_tab`, or `profile` before 2.8.
     var source: String = "read_tab"
+    /// A row inside a grouped card rather than a card of its own.
+    var grouped = false
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     @Environment(\.puzzleProvider) private var puzzleProvider
     @Query(filter: #Predicate<PuzzleRecord> { $0.isCompleted })
@@ -405,12 +460,14 @@ struct JourneyCard: View {
             // The same row shape as Memory verses and Bookmarks beside it on
             // the Read tab: a disc icon, a headline, a caption.
             HStack(spacing: Theme.Spacing.m) {
-                Image(systemName: "map.fill")
-                    .font(.title2)
-                    .dynamicTypeSize(...DynamicTypeSize.xxLarge)
-                    .foregroundStyle(Theme.accent)
-                    .frame(width: 44, height: 44)
-                    .background(Theme.accent.opacity(0.14), in: .circle)
+                if !dynamicTypeSize.isAccessibilitySize {
+                    Image(systemName: "map.fill")
+                        .font(.title2)
+                        .dynamicTypeSize(...DynamicTypeSize.xxLarge)
+                        .foregroundStyle(Theme.accent)
+                        .frame(width: 44, height: 44)
+                        .background(Theme.accent.opacity(0.14), in: .circle)
+                }
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Books explored")
                         .font(.headline)
@@ -424,9 +481,13 @@ struct JourneyCard: View {
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(.secondary)
             }
-            .padding(Theme.Spacing.l)
+            .padding(.horizontal, Theme.Spacing.l)
+            .padding(.vertical, grouped ? Theme.Spacing.m : Theme.Spacing.l)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .elevatedCard()
+            .contentShape(.rect)
+            .background {
+                if !grouped { Color.clear.elevatedCard() }
+            }
         }
         .buttonStyle(PressableCardStyle())
         .accessibilityElement(children: .ignore)

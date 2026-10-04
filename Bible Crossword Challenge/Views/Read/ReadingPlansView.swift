@@ -177,30 +177,44 @@ struct ReadingPlansView: View {
                         Text(plan.title)
                             .font(.headline)
                             .foregroundStyle(.primary)
-                        Text("\(chapterCount(plan)) chapters · one a day")
-                            .font(.caption.weight(.semibold))
-                            .foregroundStyle(Theme.accent)
                         Text(plan.blurb)
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
+                        // Secondary, not accent: it isn't tappable on its
+                        // own. "One a day" said five times is the screen's
+                        // premise, and the line above the list now says it once.
+                        Text(meta(plan))
+                            .font(.caption.weight(.semibold))
+                            // The running plan's line in ink, not accent:
+                            // emphasis, not a separate control.
+                            .foregroundStyle(plans.activePlan?.id == plan.id ? Color.primary : Color.secondary)
+                            .monospacedDigit()
                     }
                     Spacer(minLength: 0)
-                    if plans.activePlan?.id == plan.id {
-                        Image(systemName: "checkmark.circle.fill")
-                            .foregroundStyle(Theme.accent)
-                            .accessibilityLabel("Current plan")
-                    }
+                    Image(systemName: "chevron.forward")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.tertiary)
                 }
                 .padding(.vertical, 4)
                 .contentShape(.rect)
             }
             .buttonStyle(.plain)
-            .accessibilityHint("Starts this plan")
+            .accessibilityElement(children: .combine)
+            .accessibilityHint(plans.activePlan?.id == plan.id ? "Your current plan" : "Starts this plan")
         }
         .scrollContentBackground(.hidden)
         .frame(maxWidth: 640)
         .frame(maxWidth: .infinity)
         .background(Theme.background)
+        .safeAreaInset(edge: .top) {
+            Text("One chapter a day, with today's waiting on the Verses tab.")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .frame(maxWidth: 640, alignment: .leading)
+                .padding(.horizontal, Theme.Spacing.l)
+                .padding(.top, Theme.Spacing.s)
+                .frame(maxWidth: .infinity)
+        }
         .navigationTitle("Reading plans")
         .navigationBarTitleDisplayMode(.inline)
         .confirmationDialog(
@@ -217,6 +231,16 @@ struct ReadingPlansView: View {
                 Text("Your progress in \(current.title) will be lost.")
             }
         }
+    }
+
+    /// "21 days", or where the player is in the plan they're running.
+    private func meta(_ plan: ReadingPlan) -> String {
+        let total = chapterCount(plan)
+        guard plans.activePlan?.id == plan.id, let progress = plans.progress else {
+            return "\(total) days"
+        }
+        if plans.isComplete { return "Finished · \(total) days" }
+        return "Reading · day \(min(progress.readDays.count + 1, total)) of \(total)"
     }
 
     private func chapterCount(_ plan: ReadingPlan) -> Int {

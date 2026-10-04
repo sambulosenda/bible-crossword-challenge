@@ -19,7 +19,9 @@ enum PuzzleDifficulty: String, Codable, CaseIterable, Hashable {
         switch self {
         case .easy: return .green
         case .medium: return .orange
-        case .hard: return .red
+        // Not red: red means a mistake in this app (the wrong-letter
+        // mark), and the design system keeps it out of everything else.
+        case .hard: return .purple
         }
     }
 }
