@@ -600,6 +600,10 @@ final class StoreService {
         let duration: String
         /// "3-day free trial" — the phrase the UI uses on its own.
         var trialText: String { "\(length) free trial" }
+        /// When the first charge lands if the trial started now. The paywall's
+        /// timeline names this day rather than "in 7 days", so the reader
+        /// doesn't have to do the sum to know when money starts.
+        let endDate: Date
     }
 
     /// The product's free trial, or nil if it has no introductory free offer.
@@ -610,9 +614,16 @@ final class StoreService {
         // A "P1W" trial reads more naturally in days than in weeks.
         let value = period.unit == .week ? period.value * 7 : period.value
         let unit = period.unit == .week ? "day" : unitLabel(period.unit)
+        let component: Calendar.Component = switch period.unit {
+        case .day, .week: .day
+        case .month: .month
+        case .year: .year
+        @unknown default: .day
+        }
         return IntroOffer(
             length: "\(value)-\(unit)",
-            duration: "\(value) \(unit)\(value == 1 ? "" : "s")"
+            duration: "\(value) \(unit)\(value == 1 ? "" : "s")",
+            endDate: Calendar.current.date(byAdding: component, value: value, to: Date()) ?? Date()
         )
     }
 

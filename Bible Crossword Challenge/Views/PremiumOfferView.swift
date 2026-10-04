@@ -25,21 +25,19 @@ import SwiftUI
 import StoreKit
 
 private extension View {
-    /// The shared look of a thing you can pick on this page: a tinted, accented
-    /// card when it's the one, an outline on bare paper when it isn't.
+    /// The shared look of a thing you can pick on this page: a white card on
+    /// the paper, with the accent border on the one that's chosen.
     ///
-    /// Unselected plans used to be filled with `Theme.surface` — the same white
-    /// as the benefits card directly above them. Two blocks in the same material
-    /// read as two blocks of the same kind, so the monthly card looked like more
-    /// information rather than the other half of a choice. Outlining them
-    /// instead leaves exactly one white card on the page (the benefits) and
-    /// makes every bordered thing below it something you can tap.
+    /// Selection used to be said three times — a tint, a border and a check.
+    /// Two is how the system says it, and with the benefits off their card
+    /// these are the only white surfaces on the page, so "white" now means
+    /// "you can choose this" without any help.
     func planChrome(selected: Bool) -> some View {
-        background(selected ? Theme.accent.opacity(0.12) : .clear,
+        background(Theme.surface,
                    in: .rect(cornerRadius: Theme.cornerRadius, style: .continuous))
             .overlay {
                 RoundedRectangle(cornerRadius: Theme.cornerRadius, style: .continuous)
-                    .strokeBorder(selected ? Theme.accent : Color(.separator),
+                    .strokeBorder(selected ? Theme.accent : Color(.separator).opacity(0.6),
                                   lineWidth: selected ? 2 : 1)
             }
             // Without this the card only answers to taps that land on the
@@ -87,6 +85,32 @@ struct PremiumOfferView: View {
     /// first one they see.
     var highlightedPackID: String? = nil
 
+    /// The fragment drawn above the headline, in the tiles onboarding uses.
+    /// The sheet shows the welcome page's FAITH/HOPE/LOVE; onboarding shows
+    /// the word the player just solved, so the ask continues the solve
+    /// instead of interrupting it.
+    var heroTiles: [[MiniTile]] = MiniCrossword.faithHopeLove
+    /// Cells of `heroTiles` to draw with the gold rim — the solved word.
+    var heroCelebrated: Set<MiniPoint> = []
+
+    /// The line under the trial timeline saying when cancelling still avoids
+    /// the charge. Onboarding's only statement of it; the sheet already makes
+    /// it in the terms under its pinned button, so it turns this off.
+    var showsCancellationNote: Bool = true
+
+    /// Drops the decoration — the tiles and the kicker — for a screen the
+    /// whole offer doesn't fit. Each surface offers both sizes to a
+    /// `ViewThatFits` and lets layout pick: on a 667pt iPhone SE the full page
+    /// pushed the prices and the timeline behind the purchase button, and the
+    /// price is the one thing that must be on screen when the button is.
+    /// Nothing that describes the offer is ever dropped, only what decorates it.
+    var compact: Bool = false
+
+    /// Keeps a smaller hero in the compact layout. The sheet offers it as a
+    /// middle size: on a 6.3" phone the full hero missed by a few dozen points
+    /// and the compact page left that room empty above the headline.
+    var keepsSmallHero: Bool = false
+
     @Environment(StoreService.self) private var store
     @Environment(\.puzzleProvider) private var puzzleProvider
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
@@ -95,8 +119,19 @@ struct PremiumOfferView: View {
     @ScaledMetric(relativeTo: .body) private var checkSize: CGFloat = 22
 
     var body: some View {
-        VStack(spacing: Theme.Spacing.m) {
-            staggered(headlineBlock, delay: 0.05)
+        // Three groups, spaced as groups: what this is, what you get, what
+        // you pay. Tight inside each, open between them — one uniform gap
+        // made every block on the page look equally related to every other.
+        // A step tighter in the compact layout: on a 667pt iPhone SE the
+        // group gaps were the ~24pt that left the trial timeline's last line
+        // under the pinned button.
+        VStack(spacing: compact && !keepsSmallHero ? Theme.Spacing.m : Theme.Spacing.l) {
+            VStack(spacing: Theme.Spacing.m) {
+                if !compact || keepsSmallHero {
+                    staggered(hero, delay: 0)
+                }
+                staggered(headlineBlock, delay: 0.05)
+            }
             staggered(featureList, delay: 0.14)
             staggered(lockedPackStrip, delay: 0.17)
 
@@ -105,8 +140,10 @@ struct PremiumOfferView: View {
             } else if store.products.isEmpty {
                 productsPlaceholder
             } else {
-                staggered(socialProof, delay: 0.20)
-                staggered(plans, delay: 0.23)
+                VStack(spacing: Theme.Spacing.m) {
+                    staggered(socialProof, delay: 0.20)
+                    staggered(plans, delay: 0.23)
+                }
                 staggered(trialTimeline, delay: 0.29)
             }
         }
@@ -130,6 +167,34 @@ struct PremiumOfferView: View {
         }
     }
 
+    // MARK: - Hero
+
+    /// Until this view had one, the page that asks for money was the only
+    /// onboarding page with no tiles on it — five boxes of text straight after
+    /// the solved word glowing gold. Small, so it costs the page less than the
+    /// benefits card it replaced did.
+    ///
+    /// Cascades in on the sheet, which has no entrance of its own; onboarding's
+    /// stagger already carries it there, and both at once would double up.
+    private var hero: some View {
+        MiniCrossword(
+            layout: heroTiles,
+            celebrated: heroCelebrated,
+            animatesIn: entranceActive == nil,
+            tileSide: heroTileSide
+        )
+        .padding(.top, Theme.Spacing.xs)
+    }
+
+    /// One footprint whichever fragment is drawn: the three-row solve gets
+    /// bigger tiles than the four-row FAITH/HOPE/LOVE, so both stand about
+    /// 105–125pt tall and neither page gives the hero more room than the
+    /// other.
+    private var heroTileSide: CGFloat {
+        if compact && keepsSmallHero { return heroTiles.count > 3 ? 20 : 24 }
+        return heroTiles.count > 3 ? 28 : 32
+    }
+
     // MARK: - Headline
 
     private var headlineBlock: some View {
@@ -140,10 +205,18 @@ struct PremiumOfferView: View {
             // label because a bare "PREMIUM" was the one word on the page in
             // nobody's voice — onboarding's welcome kicker says "BIBLE
             // CROSSWORD", and this page continues it.
-            Text("Bible Crossword Premium")
-                .kicker()
+            if !compact {
+                Text("Bible Crossword Premium")
+                    .kicker()
+                    // Centred when it wraps, as it does at the largest sizes.
+                    .multilineTextAlignment(.center)
+            }
+            // `.title`, not `.largeTitle`: with the tiles above it the
+            // headline is no longer the only thing announcing the page, and
+            // at the larger size it ran to three heavy lines that pushed the
+            // plans toward the button.
             Text(headline)
-                .font(.scripture(.largeTitle, weight: .semibold))
+                .font(.scripture(.title, weight: .semibold))
                 .multilineTextAlignment(.center)
 
             // Only the no-trial path gets a subhead. When a trial exists the
@@ -185,31 +258,34 @@ struct PremiumOfferView: View {
 
     // MARK: - Benefits
 
-    /// The benefits, grouped into one surface rather than floating on the page.
-    /// Loose on the canvas they read as an unbroken wall of text; bounding them
-    /// makes the list a single object the eye can skip past on the way to the
-    /// price.
+    /// The benefits, on the page itself rather than in a card.
     ///
-    /// One line per row — see `PremiumBenefit`. `.top` alignment stays for the
-    /// accessibility sizes where a row does wrap, so the disc sits beside the
-    /// first line rather than floating in the middle of two.
+    /// They were boxed once because, loose on the canvas, three wrapped
+    /// two-line rows read as a wall of text. The rows are one line each now
+    /// (see `PremiumBenefit`), and the box had become one of five on the page —
+    /// so many that the two plan cards, the only things here you can choose,
+    /// no longer stood out. Inset to the plan cards' content edge, so the page
+    /// still has one left edge.
+    ///
+    /// One line per row — see `PremiumBenefit`. First-baseline alignment puts
+    /// each symbol on its text's line like an inline glyph, and keeps it with
+    /// the first line where a row wraps at larger sizes.
     private var featureList: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.s) {
             ForEach(PremiumBenefit.all(
                 puzzleCount: puzzleProvider.totalPuzzleCount
             )) { benefit in
-                HStack(alignment: .top, spacing: Theme.Spacing.m) {
-                    // Accent, not green: green means "solved" everywhere else
-                    // in the app, and it shouldn't also mean "included".
-                    // The disc scales with the label: at a fixed size the glyph
-                    // outgrew it at accessibility sizes and spilled over.
+                HStack(alignment: .firstTextBaseline, spacing: Theme.Spacing.m) {
+                    // Ink, not accent or green: blue means "you can tap this"
+                    // across the app and green means "solved", and these
+                    // are neither. A bare symbol in a fixed column, as the
+                    // system's own feature lists draw them.
                     Image(systemName: benefit.icon)
-                        .font(.footnote.weight(.bold))
-                        .foregroundStyle(Theme.accent)
-                        .frame(width: checkSize, height: checkSize)
-                        .background(Theme.accent.opacity(0.12), in: .circle)
+                        .font(.body)
+                        .foregroundStyle(.primary)
+                        .frame(width: checkSize)
                     Text(benefit.title)
-                        .font(.body.weight(.semibold))
+                        .font(.body)
                         .fixedSize(horizontal: false, vertical: true)
                     Spacer(minLength: 0)
                 }
@@ -217,8 +293,7 @@ struct PremiumOfferView: View {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(Theme.Spacing.m)
-        .elevatedCard()
+        .padding(.horizontal, Theme.Spacing.m)
     }
 
     // MARK: - Withheld collections
@@ -285,8 +360,9 @@ struct PremiumOfferView: View {
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(Theme.Spacing.m)
-            .elevatedCard()
+            // On the paper like the benefits: the plan cards are the page's
+            // only white surfaces, and this list isn't something you choose.
+            .padding(.horizontal, Theme.Spacing.m)
             .accessibilityElement(children: .ignore)
             .accessibilityLabel(lockedPacksLabel(named: named, remainder: remainder))
         }
@@ -382,6 +458,7 @@ struct PremiumOfferView: View {
         }
         // Spring the selection between plans instead of snapping.
         .animation(.snappy(duration: 0.2), value: selectedID)
+        .sensoryFeedback(.selection, trigger: selectedID)
     }
 
     /// Yearly and monthly, in that order — never lifetime, which has its own row.
@@ -404,13 +481,15 @@ struct PremiumOfferView: View {
                     selectionMark(selected)
                     Text(planTitle(product))
                         .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(.secondary)
                     Spacer(minLength: 0)
                 }
                 // The chosen plan's price leads; the other is a size down so
                 // the pair reads as a choice with an answer, not two equals.
                 Text(planPrice(product))
                     .font(selected ? .title3.weight(.semibold) : .headline)
+                    // Ink only on the chosen plan: two black prices of near
+                    // size read as two equal answers.
+                    .foregroundStyle(selected ? Color.primary : Color.secondary)
                     .fixedSize(horizontal: false, vertical: true)
                 Text(planFootnote(product))
                     .font(.footnote)
@@ -469,14 +548,20 @@ struct PremiumOfferView: View {
             .foregroundStyle(selected ? Theme.accent : Color(.separator))
     }
 
-    /// The savings pill itself.
+    /// The savings tag itself.
+    ///
+    /// A quiet tag, not a black pill: in ink it was the second-darkest thing
+    /// on the page after the purchase button, and two ink capsules read as
+    /// two calls to action. The accent tint ties it to the choice it
+    /// describes; the text stays primary so it holds full contrast on the
+    /// tint in both modes (accent-coloured text at this size would not).
     private func savingsPill(_ text: String) -> some View {
         Text(text)
-            .font(.caption2.weight(.bold))
-            .foregroundStyle(Theme.onInk)
+            .font(.caption.weight(.semibold))
+            .foregroundStyle(.primary)
             .padding(.horizontal, 8)
             .padding(.vertical, 3)
-            .background(Theme.ink, in: .capsule)
+            .background(Theme.accent.opacity(0.14), in: .capsule)
     }
 
     /// The badge's row inside the card — the pill on yearly, and the same row
@@ -503,7 +588,7 @@ struct PremiumOfferView: View {
             // taking it from the same view is what keeps the reservation
             // correct as the text size grows. Hidden also keeps the phantom
             // out of VoiceOver, which would otherwise read the badge twice.
-            savingsPill("SAVE").hidden()
+            savingsPill("Save").hidden()
         }
     }
 
@@ -541,7 +626,9 @@ struct PremiumOfferView: View {
                         .font(.caption2)
                 }
             }
-            .foregroundStyle(.yellow)
+            // The tiles' gold, not system yellow: one warm colour on the
+            // page, meaning "earned", rather than two that almost match.
+            .foregroundStyle(Theme.badgeRim)
             Text("\(Self.appStoreRating) on the App Store")
                 .font(.footnote.weight(.medium))
                 .foregroundStyle(.secondary)
@@ -582,27 +669,78 @@ struct PremiumOfferView: View {
     @ViewBuilder
     private var trialTimeline: some View {
         if let product = selectedProduct, let offer = store.introOffer(for: product) {
-            VStack(alignment: .leading, spacing: 0) {
-                timelineStep(
-                    icon: "lock.open.fill",
-                    title: "Today",
-                    // No puzzle count: the benefits list two blocks up owns
-                    // that number, and this line's one job is "you pay nothing".
-                    detail: "Full access. You pay nothing.",
-                    isLast: false
-                )
-                timelineStep(
-                    icon: "creditcard.fill",
-                    title: "In \(offer.duration)",
-                    // The price and period come from the same product the CTA
-                    // will buy, so this line cannot drift from the button.
-                    detail: "\(product.displayPrice)\(store.periodText(for: product) ?? "") begins, unless you cancel first.",
-                    isLast: true
-                )
+            let price = product.displayPrice + (store.periodText(for: product) ?? "")
+            let day = offer.endDate.formatted(.dateTime.month(.abbreviated).day())
+            Group {
+                if dynamicTypeSize.isAccessibilitySize {
+                    // Two ends of one line can't hold this much text; the
+                    // stacked steps can.
+                    VStack(alignment: .leading, spacing: 0) {
+                        timelineStep(icon: "lock.open.fill", title: "Today",
+                                     detail: "Full access. You pay nothing.", isLast: false)
+                        timelineStep(icon: "creditcard.fill", title: day,
+                                     detail: "\(price) begins, unless you cancel first.", isLast: true)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                } else {
+                    VStack(spacing: Theme.Spacing.s) {
+                        HStack(spacing: Theme.Spacing.m) {
+                            timelineEnd("Today", detail: "Free", alignment: .leading)
+                            timelineRail
+                            timelineEnd(day, detail: price, alignment: .trailing)
+                        }
+                        // Apple bills inside the last 24 hours of a trial, so
+                        // "cancel before the date" would be wrong for anyone
+                        // who cancels on the eve of it. Apple's own figure,
+                        // and short enough for one line on a 375pt phone —
+                        // the longer phrasing wrapped there and its second
+                        // line ran under the purchase button.
+                        if showsCancellationNote {
+                            Text("Cancel 24 hours before to avoid the charge.")
+                                .font(.footnote)
+                                .foregroundStyle(.secondary)
+                                .multilineTextAlignment(.center)
+                        }
+                    }
+                }
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(Theme.Spacing.m)
-            .elevatedCard()
+            .padding(.horizontal, Theme.Spacing.m)
+            .accessibilityElement(children: .ignore)
+            // "per year", not the "/year" the screen shows — VoiceOver reads
+            // the slash aloud.
+            .accessibilityLabel(
+                "Today, full access, free. On \(offer.endDate.formatted(date: .long, time: .omitted)), "
+                + "\(price.replacingOccurrences(of: "/", with: " per ")) begins unless you cancel 24 hours before."
+            )
+        }
+    }
+
+    /// One end of the horizontal timeline: when, and what it costs.
+    private func timelineEnd(_ title: String, detail: String, alignment: HorizontalAlignment) -> some View {
+        VStack(alignment: alignment, spacing: 2) {
+            Text(title)
+                .font(.subheadline.weight(.semibold))
+            Text(detail)
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+        }
+        .fixedSize()
+    }
+
+    /// Filled where the trial starts, open where the charge lands: the one
+    /// end is now, the other hasn't happened and can still be stopped.
+    private var timelineRail: some View {
+        HStack(spacing: 0) {
+            Circle()
+                .fill(Theme.accent)
+                .frame(width: 8, height: 8)
+            Capsule()
+                .fill(Theme.accent.opacity(0.3))
+                .frame(height: 2)
+                .frame(maxWidth: .infinity)
+            Circle()
+                .strokeBorder(Theme.accent, lineWidth: 2)
+                .frame(width: 8, height: 8)
         }
     }
 
@@ -735,12 +873,13 @@ struct PremiumOfferView: View {
         return perWeek.formatted(product.priceFormatStyle)
     }
 
-    /// Tinted pill on the yearly plan — the computed saving vs. paying monthly,
-    /// or a "BEST VALUE" fallback when monthly isn't available to compare against.
+    /// Tinted tag on the yearly plan — the computed saving vs. paying monthly,
+    /// or a "Best value" fallback when monthly isn't available to compare against.
     private func badgeText(_ product: Product) -> String? {
         guard product.id == StoreService.yearlyID else { return nil }
-        if let pct = yearlySavingsPercent { return "SAVE \(pct)%" }
-        return "BEST VALUE"
+        // Sentence case: shouted caps was the pill's other half of being loud.
+        if let pct = yearlySavingsPercent { return "Save \(pct)%" }
+        return "Best value"
     }
 
     private var yearlySavingsPercent: Int? {
@@ -755,3 +894,4 @@ struct PremiumOfferView: View {
         return pct > 0 ? pct : nil
     }
 }
+

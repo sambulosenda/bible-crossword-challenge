@@ -6,7 +6,9 @@
 //  real grid but with none of its machinery — no puzzle model, no view model,
 //  no persistence. Onboarding uses it twice: as the welcome hero (every letter
 //  given) and as the interactive first solve. One component, so the second page
-//  reads as the first page come alive.
+//  reads as the first page come alive. The Premium offer uses it a third time,
+//  smaller, so the page that asks for money is drawn in the same tiles as the
+//  pages that earned the ask.
 //
 
 import SwiftUI
@@ -46,22 +48,33 @@ struct MiniCrossword: View {
     /// on screen when the page arrives and would double up on the page's own
     /// entrance animation.
     var animatesIn: Bool = true
+    /// The tile's side at the default text size. 46 is onboarding's; the
+    /// Premium offer draws a smaller fragment above its headline.
+    var tileSide: CGFloat = 46
     var onTap: ((MiniPoint) -> Void)?
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     /// Tiles grow with the text-size setting so the letter never outruns its
     /// box — but only so far: five unclamped tiles run off the side of the
     /// screen at accessibility sizes. Past the cap the glyph shrinks instead.
-    @ScaledMetric(relativeTo: .title3) private var scaledSide: CGFloat = 46
-    private var side: CGFloat { min(scaledSide, 58) }
+    /// Scaled as a factor so every `tileSide` grows on the same curve; the
+    /// cap is the 46 → 58 ceiling onboarding was tuned to, as a ratio.
+    @ScaledMetric(relativeTo: .title3) private var typeScale: CGFloat = 1
+    private var side: CGFloat { tileSide * min(typeScale, 58.0 / 46.0) }
+    /// Gap and corner follow `tileSide`, so a small fragment keeps the same
+    /// proportions as the full-size one instead of looking loosely spaced.
+    /// Off the base size rather than the scaled one, which leaves onboarding's
+    /// fixed 6pt gap and 10pt corner exactly as they were.
+    private var gap: CGFloat { (tileSide * 6 / 46).rounded() }
+    private var corner: CGFloat { tileSide * 10 / 46 }
     @State private var appeared = false
 
     private var columns: Int { layout.map(\.count).max() ?? 0 }
 
     var body: some View {
-        VStack(spacing: Self.gap) {
+        VStack(spacing: gap) {
             ForEach(0..<layout.count, id: \.self) { row in
-                HStack(spacing: Self.gap) {
+                HStack(spacing: gap) {
                     ForEach(0..<columns, id: \.self) { col in
                         tile(at: MiniPoint(row: row, col: col))
                     }
@@ -73,8 +86,6 @@ struct MiniCrossword: View {
         // everything a screen reader needs.
         .accessibilityHidden(true)
     }
-
-    private static let gap: CGFloat = 6
 
     private func tileAt(_ p: MiniPoint) -> MiniTile {
         guard p.row < layout.count, p.col < layout[p.row].count else { return .block }
@@ -105,10 +116,10 @@ struct MiniCrossword: View {
         let numberSize = max(side * 0.28, 9)
         let letterSize = max(side * 0.5, 12)
 
-        return RoundedRectangle(cornerRadius: 10, style: .continuous)
+        return RoundedRectangle(cornerRadius: corner, style: .continuous)
             .fill(isFocused ? Theme.accent : Theme.surface)
             .overlay {
-                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                RoundedRectangle(cornerRadius: corner, style: .continuous)
                     .strokeBorder(
                         isCelebrated ? Theme.badgeRim : Color(.separator).opacity(0.6),
                         lineWidth: isCelebrated ? 2 : 1
@@ -200,6 +211,14 @@ extension MiniCrossword {
 
     /// The blanks of `firstSolve`, in reading order.
     static let firstSolveBlanks = [MiniPoint(row: 1, col: 2), MiniPoint(row: 2, col: 2)]
+
+    /// `firstSolve` with ARK filled in — the fragment as the player left it,
+    /// for the Premium page that follows the solve.
+    static let firstSolveSolved: [[MiniTile]] = [
+        [.given("G"), .given("R"), .given("A"), .given("C"), .given("E")],
+        [.block,      .block,      .given("R"), .block,      .block],
+        [.block,      .block,      .given("K"), .block,      .block],
+    ]
 
     /// Every cell of 1 Down, for the gold rim when it lands.
     static let firstSolveWord: Set<MiniPoint> = [

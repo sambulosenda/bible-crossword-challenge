@@ -84,20 +84,31 @@ struct PaywallView: View {
         // them. The system bar brings its own material on scroll, and drops the
         // magic 64pt top padding the overlay needed.
         NavigationStack {
-            ScrollView {
-                PremiumOfferView(
-                    headline: headlineText,
-                    progressLine: progressLine,
-                    selectedID: $selectedID,
-                    showsLockedPacks: source.showsLockedPacks,
-                    highlightedPackID: contextPackID
-                )
-                .padding(.horizontal, Theme.Spacing.l)
-                .padding(.top, Theme.Spacing.s)
-                .padding(.bottom, Theme.Spacing.l)
-                .frame(maxWidth: 520)
-                .frame(maxWidth: .infinity)
+            // The whole offer when it fits above the pinned bar; without the
+            // tiles, in a scroll view, when it doesn't. `ViewThatFits` decides
+            // on every layout pass, so there is nothing to measure, time or
+            // latch — an earlier version did, and lost a race with the sheet's
+            // own first layout (a 292pt container on a Pro Max), hiding the
+            // tiles on phones they fit on. On most phones the tiles don't fit
+            // here, and the price outranks the decoration.
+            //
+            // Both sizes sit on the bottom edge. Top-aligned, every point the
+            // page didn't need pooled between the trial timeline and the
+            // pinned button, so the plans and the button that buys them read
+            // as two separate things. The spare room goes above the headline.
+            ViewThatFits(in: .vertical) {
+                offer(compact: false)
+                    .frame(maxHeight: .infinity, alignment: .bottom)
+                offer(compact: true, keepsSmallHero: true)
+                    .frame(maxHeight: .infinity, alignment: .bottom)
+                ScrollView {
+                    offer(compact: true)
+                }
+                // Content shorter than the viewport rests on the bottom; the
+                // scroll still opens at the top when it's taller.
+                .defaultScrollAnchor(.bottom, for: .alignment)
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             .background(Theme.background)
             // Pinned, not scrolled. Every addition to this page pushed the CTA
             // further down; on a 667pt screen it had fallen below the fold,
@@ -159,6 +170,27 @@ struct PaywallView: View {
             }
         }
         .purchaseNoticeAlert(store)
+    }
+
+    /// The offer, at the size `body` chose for it.
+    private func offer(compact: Bool, keepsSmallHero: Bool = false) -> some View {
+        PremiumOfferView(
+            headline: headlineText,
+            progressLine: progressLine,
+            selectedID: $selectedID,
+            showsLockedPacks: source.showsLockedPacks,
+            highlightedPackID: contextPackID,
+            // The pinned bar's terms line already states the trial, the
+            // renewal and cancelling.
+            showsCancellationNote: false,
+            compact: compact,
+            keepsSmallHero: keepsSmallHero
+        )
+        .padding(.horizontal, Theme.Spacing.l)
+        .padding(.top, Theme.Spacing.s)
+        .padding(.bottom, Theme.Spacing.l)
+        .frame(maxWidth: 520)
+        .frame(maxWidth: .infinity)
     }
 
     // MARK: - Headline
@@ -223,6 +255,10 @@ struct PaywallView: View {
         .padding(.horizontal, Theme.Spacing.l)
         .padding(.top, Theme.Spacing.m)
         .padding(.bottom, Theme.Spacing.s)
+        // Capped like the system's own bars: uncapped, the largest sizes grew
+        // this pinned bar to half the sheet and left the offer it pays for a
+        // sliver to scroll in. The scrolling content above stays uncapped.
+        .dynamicTypeSize(...DynamicTypeSize.accessibility1)
         .modifier(LegacyBarEdge())
     }
 
@@ -258,7 +294,12 @@ struct PaywallView: View {
                     if store.purchaseInFlight {
                         ProgressView().tint(Theme.onInk)
                     } else {
+                        // Wraps rather than truncates: at accessibility sizes
+                        // the label was cut to "Start 7-day free t…" on the
+                        // one button that says what you're agreeing to.
                         Text(ctaTitle)
+                            .multilineTextAlignment(.center)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
                 }
             }
@@ -343,7 +384,11 @@ enum PremiumCopy {
     /// "More", because as a bare noun phrase the line read as a description of
     /// the app rather than of what Premium adds — and every reader already has
     /// the app.
-    static let promise = "More time in the Word, one clue at a time."
+    ///
+    /// The break is set by hand, after the comma: left to wrap at `.title`
+    /// the line broke as "…the Word, one / clue at a time." Both places
+    /// that say it are headlines, so the newline never lands mid-sentence.
+    static let promise = "More time in the Word,\none clue at a time."
 
     /// The upsell cards' button, on Today and in Profile.
     ///
@@ -450,8 +495,15 @@ struct PremiumBenefit: Identifiable {
     /// the first claim. What packs genuinely add is the calendar — Lent,
     /// Easter, Advent and Christmas carry real date windows in `packs.json` —
     /// and a thing that comes back every year is the honest argument for a
-    /// subscription over a one-off. "Each new one" stays because it rides on
-    /// the entitlement, not on a release schedule anyone has to keep.
+    /// subscription over a one-off.
+    ///
+    /// One line since 2026-10-03: "Lent, Advent, Christmas — every collection,
+    /// and each new one" was the only row that wrapped, breaking the list's
+    /// rhythm on every phone. The seasons are still named where they're
+    /// evidence — the locked-pack strip lists them by title — and "every
+    /// year" keeps the calendar argument the row exists to make. Sized for
+    /// the narrowest phone: about 31 characters fit beside the symbol on a
+    /// 375pt screen, and this is 26.
     ///
     /// Three rows, not four. "Replay any puzzle, any time" was cut on
     /// 2026-09-07: it restated the library row (a shelf you own is a shelf
@@ -468,16 +520,20 @@ struct PremiumBenefit: Identifiable {
     static func all(puzzleCount: Int) -> [PremiumBenefit] {
         [
             PremiumBenefit(
-                icon: "lightbulb.fill",
+                icon: "lightbulb",
                 title: "Hints whenever you need them"
             ),
             PremiumBenefit(
-                icon: "square.grid.3x3.fill",
+                icon: "square.grid.3x3",
                 title: "Catch up on all \(puzzleCount) puzzles"
             ),
             PremiumBenefit(
-                icon: "rectangle.stack.fill",
-                title: "Lent, Advent, Christmas — every collection, and each new one"
+                // A calendar, not a stack: the row's claim is the seasons,
+                // and the stack glyph read as a blob at this size. All three
+                // are outline symbols — `calendar` has no fill to match the
+                // others, and one weight across the list reads as a set.
+                icon: "calendar",
+                title: "Seasonal packs, every year"
             ),
         ]
     }
