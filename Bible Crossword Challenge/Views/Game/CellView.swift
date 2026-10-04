@@ -35,6 +35,16 @@ struct CellView: View, Equatable {
             && lhs.flash == rhs.flash
     }
 
+    /// Cells are tiles, the shape the app's grids take everywhere else (the
+    /// onboarding fragment, the Today thumbnail), not rows of a table: a gap
+    /// of paper between each and a continuous corner. The gap is a smaller
+    /// share of the side than the onboarding tile's (8% vs 13%) because a
+    /// 15×15 has 24pt cells and every point of gap is a point off the letter.
+    private var tileGap: CGFloat { max(side * 0.08, 1.5) }
+    private var tileShape: RoundedRectangle {
+        RoundedRectangle(cornerRadius: side * 0.18, style: .continuous)
+    }
+
     private var errorVisible: Bool {
         showError && cell.entry != nil && !cell.isCorrect
     }
@@ -53,7 +63,7 @@ struct CellView: View, Equatable {
         } else {
             Button(action: onTap) {
                 ZStack {
-                    Rectangle()
+                    tileShape
                         .fill(CellPalette.fill(
                             isSelected: isSelected,
                             isInWord: isInWord,
@@ -62,7 +72,7 @@ struct CellView: View, Equatable {
 
                     // Green pulse when this cell's word was just completed.
                     if flash {
-                        Rectangle().fill(Color.green.opacity(0.5))
+                        tileShape.fill(Color.green.opacity(0.5))
                     }
 
                     if let number = cell.number {
@@ -78,8 +88,10 @@ struct CellView: View, Equatable {
                             .font(.system(size: max(side * 0.28, 9), weight: .semibold))
                             .foregroundStyle(.secondary)
                             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-                            .padding(.leading, side * 0.07)
-                            .padding(.top, side * 0.04)
+                            // Clear of the tile's rounded corner and the
+                            // selected cell's 2pt border.
+                            .padding(.leading, max(side * 0.1, 3))
+                            .padding(.top, max(side * 0.06, 2))
                     }
 
                     if let entry = cell.entry {
@@ -126,15 +138,19 @@ struct CellView: View, Equatable {
                             .padding(side * 0.06)
                     }
                 }
-                .frame(width: side, height: side)
+                .frame(width: side - tileGap, height: side - tileGap)
+                .clipShape(tileShape)
                 .overlay(
                     // The selected cell is marked by its border; its fill is
-                    // only a step deeper than the rest of the word.
-                    Rectangle().strokeBorder(
+                    // only a step deeper than the rest of the word. The quiet
+                    // rim on the rest keeps a white tile visible on paper.
+                    tileShape.strokeBorder(
                         isSelected ? Theme.accent : CellPalette.border,
-                        lineWidth: isSelected ? 2 : 0.5
+                        lineWidth: isSelected ? 2 : 1
                     )
                 )
+                .frame(width: side, height: side)
+                .contentShape(.rect)
                 // Pops each typed letter in with a restrained spring. This fires
                 // on every keystroke (100+ a session), so the overshoot stays
                 // subtle — a big bounce here reads as motion-noise, not feedback.

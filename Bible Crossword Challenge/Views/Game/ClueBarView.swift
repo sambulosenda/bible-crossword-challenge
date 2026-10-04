@@ -38,6 +38,11 @@ struct ClueBarView: View {
         .animation(.snappy, value: endgameNudge)
         .animation(.snappy, value: vm.isStallNudgeActive)
         .animation(.snappy, value: showsVerseButton)
+        // The whole bar stops where the clue does (see `clueText`). Capped
+        // there alone, "2 Down" and Verse kept growing and at AX5 outranked
+        // the clue they label. `dynamicTypeSize` above still reads the
+        // player's real size, so the accessibility layouts keep firing.
+        .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
         .padding(.horizontal, Theme.Spacing.s)
         // Room to breathe on both edges. The bar sits between a grid and a
         // keyboard with no margin of its own, so 4pt read as content jammed

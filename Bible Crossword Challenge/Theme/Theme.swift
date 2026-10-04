@@ -291,7 +291,8 @@ private struct Kicker: ViewModifier {
 
 enum CellPalette {
     static let empty = Color(.secondarySystemGroupedBackground)
-    static let border = Color(.separator)
+    /// Tile rim, matching the onboarding fragment's `separator` at 0.6.
+    static let border = Color(.separator).opacity(0.6)
 
     /// Active-word tint. Stronger in dark mode, where an 0.18 accent wash over
     /// near-black cells is barely distinguishable from the empty fill.

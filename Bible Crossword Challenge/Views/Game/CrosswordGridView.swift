@@ -45,6 +45,9 @@ struct CrosswordGridView: View {
     /// cell holds neither a legible letter nor a hittable target, and fitting
     /// the board on screen has stopped buying anything — see `body`.
     private static let minimumFittedSide: CGFloat = 24
+    /// Cropping to the playable cells can leave a sparse mini with a lot of
+    /// room; past this a cell stops looking like a crossword square.
+    private static let maximumFittedSide: CGFloat = 60
     /// One press of the accessibility zoom action. Coarse on purpose: the
     /// whole range is fit→44pt, and a stepper you have to work a dozen times
     /// is its own kind of inaccessible.
@@ -63,11 +66,21 @@ struct CrosswordGridView: View {
             // Below `minimumFittedSide` the whole-board view is given up for
             // the same pan/zoom viewport the 21×21 uses. A grid you can reach
             // beats a grid you can see all of.
-            let fit = floor(min(geo.size.width, geo.size.height) / CGFloat(vm.size))
+            //
+            // Fit is measured against the playable cells' bounding box, not the
+            // nominal N×N: blocks are invisible, and a board whose outer rows
+            // or columns are empty was centring that empty margin — the
+            // visible cells sat off-centre, and smaller than they needed to be.
+            let box = playableBounds
+            let fit = min(
+                floor(geo.size.width / CGFloat(box.cols.count)),
+                floor(geo.size.height / CGFloat(box.rows.count)),
+                Self.maximumFittedSide
+            )
             if vm.size > Self.zoomThreshold || fit < Self.minimumFittedSide {
                 zoomableGrid(in: geo.size)
             } else {
-                fittedGrid(side: fit)
+                fittedGrid(side: fit, box: box)
             }
         }
         .sensoryFeedback(.impact(weight: .light), trigger: wordTick)
@@ -98,11 +111,9 @@ struct CrosswordGridView: View {
     /// do the centring (`aspectRatio(1, .fit)`) is gone with it: it sized the
     /// grid to the *shorter* side of the container, which is exactly how a
     /// landscape screen reduced the board to nothing.
-    private func fittedGrid(side: CGFloat) -> some View {
-        let total = side * CGFloat(vm.size)
-
-        return gridRows(side: side)
-            .frame(width: total, height: total)
+    private func fittedGrid(side: CGFloat, box: (rows: Range<Int>, cols: Range<Int>)) -> some View {
+        gridRows(side: side, rows: box.rows, cols: box.cols)
+            .frame(width: side * CGFloat(box.cols.count), height: side * CGFloat(box.rows.count))
             .modifier(ShakeEffect(animatableData: CGFloat(shakeTick)))
             .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
@@ -179,13 +190,31 @@ struct CrosswordGridView: View {
 
     // MARK: - Shared rows
 
+    /// Rows and columns holding at least one playable cell. Falls back to the
+    /// whole grid for a board with none, which no shipped puzzle is.
+    private var playableBounds: (rows: Range<Int>, cols: Range<Int>) {
+        var minR = vm.size, maxR = -1, minC = vm.size, maxC = -1
+        for r in 0..<vm.size {
+            for c in 0..<vm.size where !vm.grid[r][c].isBlock {
+                minR = min(minR, r); maxR = max(maxR, r)
+                minC = min(minC, c); maxC = max(maxC, c)
+            }
+        }
+        guard maxR >= 0 else { return (0..<vm.size, 0..<vm.size) }
+        return (minR..<(maxR + 1), minC..<(maxC + 1))
+    }
+
     private func gridRows(side: CGFloat) -> some View {
+        gridRows(side: side, rows: 0..<vm.size, cols: 0..<vm.size)
+    }
+
+    private func gridRows(side: CGFloat, rows: Range<Int>, cols: Range<Int>) -> some View {
         let activeWord = vm.activeWordPositions
 
         return VStack(spacing: 0) {
-            ForEach(0..<vm.size, id: \.self) { r in
+            ForEach(rows, id: \.self) { r in
                 HStack(spacing: 0) {
-                    ForEach(0..<vm.size, id: \.self) { c in
+                    ForEach(cols, id: \.self) { c in
                         let pos = GridPos(row: r, col: c)
                         let cell = vm.grid[r][c]
                         CellView(
