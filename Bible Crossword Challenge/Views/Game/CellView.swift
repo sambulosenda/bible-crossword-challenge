@@ -76,7 +76,7 @@ struct CellView: View, Equatable {
                         // viewport, which `CrosswordGridView` falls back to.
                         Text("\(number)")
                             .font(.system(size: max(side * 0.28, 9), weight: .semibold))
-                            .foregroundStyle(isSelected ? Color.white.opacity(0.9) : .secondary)
+                            .foregroundStyle(.secondary)
                             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                             .padding(.leading, side * 0.07)
                             .padding(.top, side * 0.04)
@@ -96,7 +96,7 @@ struct CellView: View, Equatable {
                                 weight: cell.isPencil ? .regular : .semibold,
                                 design: .rounded
                             ))
-                            .foregroundStyle(CellPalette.textColor(isSelected: isSelected, isPencil: cell.isPencil))
+                            .foregroundStyle(CellPalette.textColor(isPencil: cell.isPencil))
                             .scaleEffect(flash && !reduceMotion ? 1.18 : 1.0)
                             .transition(reduceMotion ? .opacity : .scale(scale: 0.4).combined(with: .opacity))
                             // Identity follows the letter so overtyping a filled
@@ -128,7 +128,12 @@ struct CellView: View, Equatable {
                 }
                 .frame(width: side, height: side)
                 .overlay(
-                    Rectangle().strokeBorder(CellPalette.border, lineWidth: 0.5)
+                    // The selected cell is marked by its border; its fill is
+                    // only a step deeper than the rest of the word.
+                    Rectangle().strokeBorder(
+                        isSelected ? Theme.accent : CellPalette.border,
+                        lineWidth: isSelected ? 2 : 0.5
+                    )
                 )
                 // Pops each typed letter in with a restrained spring. This fires
                 // on every keystroke (100+ a session), so the overshoot stays

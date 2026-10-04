@@ -304,15 +304,23 @@ enum CellPalette {
     /// players (the shape cue sat behind Differentiate Without Color), and a
     /// whole cell of red is the loudest thing on a board that should read
     /// blue-for-focus.
+    /// Selected-cell tint: a deeper step of the active-word wash, not a solid
+    /// block. At 0.85 the cell was the loudest thing on the screen and turned
+    /// its letter white; the 2pt border in CellView now carries the focus.
+    private static let selected = Color(uiColor: UIColor { trait in
+        .tintColor.withAlphaComponent(trait.userInterfaceStyle == .dark ? 0.55 : 0.38)
+    })
+
     static func fill(isSelected: Bool, isInWord: Bool, isCorrect: Bool) -> Color {
-        if isSelected { return Theme.accent.opacity(0.85) }
+        if isSelected { return selected }
         if isCorrect { return Color.green.opacity(0.18) }
         if isInWord { return inWord }
         return empty
     }
 
-    static func textColor(isSelected: Bool, isPencil: Bool = false) -> Color {
-        if isPencil { return isSelected ? .white.opacity(0.8) : .secondary }
-        return isSelected ? .white : .primary
+    /// Letters stay ink on every fill, the selected cell included, now that
+    /// its tint is light enough to read black on.
+    static func textColor(isPencil: Bool = false) -> Color {
+        isPencil ? .secondary : .primary
     }
 }

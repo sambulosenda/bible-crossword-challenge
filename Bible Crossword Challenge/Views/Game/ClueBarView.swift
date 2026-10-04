@@ -287,9 +287,12 @@ struct ClueBarView: View {
                 VStack(alignment: .leading, spacing: Theme.Spacing.s) {
                     if let slot = vm.activeSlot {
                         HStack(spacing: Theme.Spacing.s) {
+                            // Secondary, not accent: it is a label, and blue
+                            // is kept for what can be tapped — the chevrons
+                            // and Verse on this same row.
                             Text("\(slot.number) \(slot.direction.label)")
                                 .font(.caption.weight(.semibold))
-                                .foregroundStyle(Theme.accent)
+                                .foregroundStyle(.secondary)
                                 .layoutPriority(1)
                             // Without this the row hugs its content and the
                             // spacer collapses, parking the pill against the
