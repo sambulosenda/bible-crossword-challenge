@@ -147,9 +147,11 @@ struct VerseHintSheet: View {
     /// and quieter, there for the sense of the line rather than as more to
     /// read.
     private func verseRow(_ verse: BibleVerse, isTarget: Bool) -> some View {
+        // Secondary, as the reader sets them: blue means tappable, and a
+        // verse number isn't.
         let number = Text("\(verse.number) ")
-            .font(.caption.weight(.bold))
-            .foregroundStyle(Theme.accent)
+            .font(.caption.weight(.semibold))
+            .foregroundStyle(.secondary)
         let body = Text(verse.text)
             .font(.scripture(isTarget ? .title3 : .subheadline))
         return (number + body)

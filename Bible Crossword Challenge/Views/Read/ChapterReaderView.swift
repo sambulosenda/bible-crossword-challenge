@@ -99,7 +99,7 @@ struct ChapterReaderView: View {
         .navigationBarTitleDisplayMode(.inline)
         // Reading gets the screen, as play does: the tab bar sat over the
         // last lines of every chapter. Back returns to the tab.
-        .toolbar(.hidden, for: .tabBar)
+        .toolbarVisibility(.hidden, for: .tabBar)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {

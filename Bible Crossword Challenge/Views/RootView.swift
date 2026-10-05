@@ -464,7 +464,6 @@ struct RootView: View {
                 .opacity(0)
                 .frame(width: 0, height: 0)
                 .clipped()
-                .allowsHitTesting(false)
                 .accessibilityHidden(true)
         }
         .sheet(isPresented: $showSettings) {
