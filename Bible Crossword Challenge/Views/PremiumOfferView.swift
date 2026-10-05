@@ -234,7 +234,10 @@ struct PremiumOfferView: View {
                     .multilineTextAlignment(.center)
             }
 
-            if let progressLine {
+            // Dropped only in the tightest layout: it describes the player,
+            // not the offer, and on a 667pt iPhone SE its line was what put
+            // the trial timeline back under the pinned button.
+            if let progressLine, !(compact && !keepsSmallHero) {
                 Text(progressLine)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)

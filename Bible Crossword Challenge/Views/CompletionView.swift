@@ -706,7 +706,10 @@ struct CompletionView: View {
                         Text("\(ctx.pack.title) · \(ctx.progress.solved) of \(ctx.progress.total)")
                             .font(.subheadline.weight(.semibold))
                             .foregroundStyle(.primary)
-                        Text(locked ? "Unlock Premium to keep going" : "Next: \(next.title)")
+                        // The count, not just the wall: "3 more puzzles in
+                        // this pack" is the reason to keep going, said at the
+                        // moment the pack has proved itself.
+                        Text(locked ? lockedPackLine(ctx) : "Next: \(next.title)")
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
@@ -724,6 +727,12 @@ struct CompletionView: View {
             .accessibilityLabel("\(ctx.pack.title), \(ctx.progress.solved) of \(ctx.progress.total) solved.")
             .accessibilityHint(locked ? "Opens Premium upgrade options" : "Plays the next puzzle, \(next.title)")
         }
+    }
+
+    private func lockedPackLine(_ ctx: PackContext) -> String {
+        let left = max(ctx.progress.total - ctx.progress.solved, 0)
+        let noun = left == 1 ? "puzzle" : "puzzles"
+        return "\(left) more \(noun) in this pack · keep going with Premium"
     }
 
     /// The badge and the two facts of the solve: the time as the title, the

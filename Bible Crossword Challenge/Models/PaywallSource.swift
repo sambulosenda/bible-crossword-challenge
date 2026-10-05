@@ -31,6 +31,10 @@ enum PaywallSource: String, CaseIterable, Hashable {
     case hintLimit = "hint_limit"
     /// The upgrade card on Today.
     case homeCard = "home_card"
+    /// The same card once the player has a streak of a week or more, when it
+    /// speaks to the habit instead of the catalogue. Its own label so the
+    /// streak copy can be judged against the plain card.
+    case streakCard = "streak_card"
     /// The upsell card on the profile screen.
     case profile
     /// A locked row, or the footer button, in the archive.
@@ -73,6 +77,11 @@ enum PaywallSource: String, CaseIterable, Hashable {
             return "Never stuck for long."
         case .homeCard:
             return "Make it part of the morning."
+        case .streakCard:
+            // They already have the habit; the offer is what's beyond the
+            // daily. Nothing about the streak itself: Premium doesn't touch
+            // it, and implying it protects one would be a lie.
+            return "You've made it a habit.\nHere's the rest of it."
         case .archive:
             return PremiumCopy.archive
         case .packLocked:

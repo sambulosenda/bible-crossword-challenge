@@ -35,7 +35,7 @@ struct PaywallSourceTests {
     /// chose to tap, or an offer being made again. These are *meant* to open
     /// with the standing promise.
     private static let browseSources: [PaywallSource] = [
-        .profile, .onboarding, .trialAbandon, .homeCard,
+        .profile, .onboarding, .trialAbandon, .homeCard, .streakCard,
     ]
 
     @Test("every source has a headline")
@@ -58,7 +58,7 @@ struct PaywallSourceTests {
     /// The `home_card` is the one deliberate exception in either direction: it
     /// is browsing, but the card that opens it is about the daily habit, so it
     /// keeps its own line. Pinned so the exception stays a decision.
-    private static let browseSourcesWithTheirOwnLine: Set<PaywallSource> = [.homeCard]
+    private static let browseSourcesWithTheirOwnLine: Set<PaywallSource> = [.homeCard, .streakCard]
 
     @Test("the browse surfaces open with the standing promise, bar the one about the habit")
     func browseSourcesUseTheStandingPromise() {
@@ -96,7 +96,7 @@ struct PaywallSourceTests {
     @Test("raw values are the analytics labels and do not drift")
     func rawValuesAreStable() {
         let expected: Set<String> = [
-            "hint_limit", "home_card", "profile", "archive", "pack_locked",
+            "hint_limit", "home_card", "streak_card", "profile", "archive", "pack_locked",
             "pack_completion", "quest_locked", "journey",
             "trial_abandon", "onboarding",
         ]

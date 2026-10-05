@@ -506,7 +506,8 @@ struct HomeView: View {
         if !store.isPremium {
             UpgradeCard(
                 totalPuzzles: puzzleProvider.totalPuzzleCount,
-                solvedPuzzles: records.count { $0.isCompleted }
+                solvedPuzzles: records.count { $0.isCompleted },
+                currentStreak: profile.currentStreak
             )
         }
     }
@@ -1077,6 +1078,16 @@ private struct UpgradeCard: View {
     /// screen that has them in hand.
     let totalPuzzles: Int
     let solvedPuzzles: Int
+    /// The player's current run. At a week or more the card speaks to the
+    /// habit rather than the catalogue — the moment the daily has proved its
+    /// worth — and opens the paywall under its own label. A copy change on
+    /// the card that's already here, not a new card: the last proactive
+    /// Today offer was 75 opens and no taps.
+    var currentStreak: Int = 0
+
+    /// A week, the run length where the habit is a fact rather than a start.
+    static let streakThreshold = 7
+    private var isStreakVariant: Bool { currentStreak >= Self.streakThreshold }
 
     @ScaledMetric(relativeTo: .title) private var iconSize = 44
     /// At accessibility sizes the crown gives its width to the copy.
@@ -1091,7 +1102,15 @@ private struct UpgradeCard: View {
     ///
     /// "You've solved 0" is a discouragement rather than a nudge — the same
     /// reason the paywall hides its progress line at zero.
+    private var title: String {
+        isStreakVariant ? "\(currentStreak) days in a row" : "Unlock all \(totalPuzzles) puzzles"
+    }
+
     private var subtitle: String {
+        if isStreakVariant {
+            let left = max(totalPuzzles - solvedPuzzles, 0)
+            return "Premium opens the other \(left) puzzles, and every hint."
+        }
         guard solvedPuzzles > 0 else {
             return "Every themed pack, and hints whenever you need them."
         }
@@ -1120,18 +1139,20 @@ private struct UpgradeCard: View {
                 // reads as a disabled control rather than an invitation, which
                 // is a poor look on the one card asking for money.
                 if !typeSize.isAccessibilitySize {
-                    Image(systemName: "crown.fill")
+                    Image(systemName: isStreakVariant ? "flame.fill" : "crown.fill")
                         .font(.title3)
-                        .foregroundStyle(Theme.accent)
+                        // The streak's own orange, as the streak card above
+                        // draws its flame.
+                        .foregroundStyle(isStreakVariant ? Color.orange : Theme.accent)
                         .frame(width: iconSize, height: iconSize)
-                        .background(Theme.accent.opacity(0.14), in: .circle)
+                        .background((isStreakVariant ? Color.orange : Theme.accent).opacity(0.14), in: .circle)
                 }
                 VStack(alignment: .leading, spacing: Theme.Spacing.s) {
                     VStack(alignment: .leading, spacing: 2) {
                         // Was "Go Premium": the app's own word for its SKU, which
                         // says nothing about what the player gets. The count comes
                         // from the bundle so it can't go stale as puzzles are added.
-                        Text("Unlock all \(totalPuzzles) puzzles")
+                        Text(title)
                             .font(.headline.weight(.bold))
                             .foregroundStyle(.primary)
                         Text(subtitle)
@@ -1173,12 +1194,12 @@ private struct UpgradeCard: View {
             // That tint now belongs to the daily card.
             .elevatedCard()
             .accessibilityElement(children: .ignore)
-            .accessibilityLabel("Unlock all \(totalPuzzles) puzzles")
+            .accessibilityLabel(title)
             .accessibilityHint(subtitle)
         }
         .buttonStyle(PressableCardStyle())
         .sheet(isPresented: $showPaywall) {
-            PaywallView(source: .homeCard)
+            PaywallView(source: isStreakVariant ? .streakCard : .homeCard)
         }
     }
 }
