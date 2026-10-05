@@ -31,6 +31,10 @@ struct CrosswordGridView: View {
     /// The side the current pinch started from, so magnification composes
     /// against a stable base instead of feeding back into itself.
     @State private var pinchBase: CGFloat?
+    /// `playableBounds`, cached: blocks never change mid-puzzle, and the body
+    /// that reads it runs on every keystroke. Set on appear; until then the
+    /// first layout computes it inline.
+    @State private var cachedBounds: (puzzleID: String, bounds: PlayableBounds)?
 
     /// Grids wider than this get the zoomable treatment. Every shipped daily
     /// is 15 or under and keeps the fit-to-width feel exactly as it was.
@@ -71,7 +75,9 @@ struct CrosswordGridView: View {
             // nominal N×N: blocks are invisible, and a board whose outer rows
             // or columns are empty was centring that empty margin — the
             // visible cells sat off-centre, and smaller than they needed to be.
-            let box = playableBounds
+            // Keyed to the puzzle, so a view reused for another board can't
+            // centre on the last one's cells.
+            let box = cachedBounds.flatMap { $0.puzzleID == vm.puzzle.id ? $0.bounds : nil } ?? playableBounds
             let fit = min(
                 floor(geo.size.width / CGFloat(box.cols.count)),
                 floor(geo.size.height / CGFloat(box.rows.count)),
@@ -98,7 +104,11 @@ struct CrosswordGridView: View {
                 withAnimation(.easeOut(duration: 0.25)) { _ = flashing.remove(pos) }
             }
         }
-        .onAppear { wireFeedback() }
+        .onAppear {
+            wireFeedback()
+            cachedBounds = (vm.puzzle.id, playableBounds)
+        }
+        .onChange(of: vm.puzzle.id) { _, id in cachedBounds = (id, playableBounds) }
         .onChange(of: vm.isComplete) { _, complete in
             guard complete, !reduceMotion else { return }
             celebrationWave()
@@ -111,7 +121,7 @@ struct CrosswordGridView: View {
     /// do the centring (`aspectRatio(1, .fit)`) is gone with it: it sized the
     /// grid to the *shorter* side of the container, which is exactly how a
     /// landscape screen reduced the board to nothing.
-    private func fittedGrid(side: CGFloat, box: (rows: Range<Int>, cols: Range<Int>)) -> some View {
+    private func fittedGrid(side: CGFloat, box: PlayableBounds) -> some View {
         gridRows(side: side, rows: box.rows, cols: box.cols)
             .frame(width: side * CGFloat(box.cols.count), height: side * CGFloat(box.rows.count))
             .modifier(ShakeEffect(animatableData: CGFloat(shakeTick)))
@@ -192,7 +202,7 @@ struct CrosswordGridView: View {
 
     /// Rows and columns holding at least one playable cell. Falls back to the
     /// whole grid for a board with none, which no shipped puzzle is.
-    private var playableBounds: (rows: Range<Int>, cols: Range<Int>) {
+    private var playableBounds: PlayableBounds {
         var minR = vm.size, maxR = -1, minC = vm.size, maxC = -1
         for r in 0..<vm.size {
             for c in 0..<vm.size where !vm.grid[r][c].isBlock {
@@ -200,8 +210,8 @@ struct CrosswordGridView: View {
                 minC = min(minC, c); maxC = max(maxC, c)
             }
         }
-        guard maxR >= 0 else { return (0..<vm.size, 0..<vm.size) }
-        return (minR..<(maxR + 1), minC..<(maxC + 1))
+        guard maxR >= 0 else { return PlayableBounds(rows: 0..<vm.size, cols: 0..<vm.size) }
+        return PlayableBounds(rows: minR..<(maxR + 1), cols: minC..<(maxC + 1))
     }
 
     private func gridRows(side: CGFloat) -> some View {
@@ -323,6 +333,12 @@ struct CrosswordGridView: View {
             }
         }
     }
+}
+
+/// The rows and columns holding at least one playable cell.
+struct PlayableBounds: Equatable {
+    let rows: Range<Int>
+    let cols: Range<Int>
 }
 
 /// Horizontal shake used to signal a failed answer check. The translation is

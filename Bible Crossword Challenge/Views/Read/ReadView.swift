@@ -32,9 +32,6 @@ struct ReadView: View {
     @Environment(\.readerRouter) private var readerRouter
     @Query(filter: #Predicate<PuzzleRecord> { $0.isCompleted })
     private var solvedRecords: [PuzzleRecord]
-    /// Every record, for the search's puzzle rows: an unlocked-by-progress
-    /// puzzle counts as playable even unsolved.
-    @Query private var records: [PuzzleRecord]
     @Environment(\.bookmarks) private var bookmarks
     @Environment(\.readingPlans) private var plans
     @Environment(\.analytics) private var analytics
@@ -62,6 +59,9 @@ struct ReadView: View {
     /// Puzzles whose title matches the query — the app's own content, which
     /// search used to skip for the Bible's.
     @State private var puzzleHits: [Puzzle] = []
+    /// See `featuredReferences`. Built once on the first search: the bundle
+    /// doesn't change while the app runs.
+    @State private var featuredCache: Set<String>?
     /// The query the current results answer. "Nothing found" waits for it to
     /// catch up with the box — it flashed for every query while the scan ran.
     @State private var searchedQuery = ""
@@ -134,7 +134,8 @@ struct ReadView: View {
                 guard !Task.isCancelled else { return }
                 await scripture.preload()
                 let books = scripture.books
-                let featured = featuredReferences
+                let featured = featuredCache ?? featuredReferences
+                if featuredCache == nil { featuredCache = featured }
                 let found = await Task.detached(priority: .userInitiated) {
                     ScriptureSearch.search(trimmed, in: books, featured: featured)
                 }.value
@@ -212,12 +213,7 @@ struct ReadView: View {
             if !puzzleHits.isEmpty {
                 Text("Puzzles").sectionHeader()
                     .padding(.horizontal, Theme.Spacing.xs)
-                let byID = Dictionary(records.map { ($0.puzzleID, $0) }, uniquingKeysWith: { a, _ in a })
-                ForEach(puzzleHits) { puzzle in
-                    // The archive's wall: search reaches the catalogue the way the
-                    // Library does, not through a book.
-                    PuzzleLinkRow(puzzle: puzzle, record: byID[puzzle.id], paywallSource: .archive)
-                }
+                SearchPuzzleRows(puzzles: puzzleHits)
             }
             if let ref = results.reference {
                 searchRow(
@@ -783,8 +779,11 @@ struct ChapterPickerView: View {
     private let columns = Array(repeating: GridItem(.flexible(), spacing: 8), count: 5)
 
     /// Chapters a puzzle's verse or clue is drawn from — the reader's way
-    /// back into the game, marked on the grid.
-    private var puzzleChapters: Set<Int> {
+    /// back into the game, marked on the grid. Computed once on appear: it
+    /// parses every reference in the bundle, ~3,800 strings.
+    @State private var marked: Set<Int> = []
+
+    private func puzzleChapters() -> Set<Int> {
         var chapters: Set<Int> = []
         for puzzle in puzzleProvider.allPuzzles {
             let refs = [puzzle.reference] + puzzle.clues.compactMap(\.reference)
@@ -796,7 +795,6 @@ struct ChapterPickerView: View {
     }
 
     var body: some View {
-        let marked = puzzleChapters
         ScrollView {
             VStack(alignment: .leading, spacing: Theme.Spacing.m) {
                 if !marked.isEmpty {
@@ -856,6 +854,7 @@ struct ChapterPickerView: View {
         .navigationDestination(item: $openChapter) { chapter in
             ChapterReaderView(startBook: book.name, startChapter: chapter, source: "read_browse")
         }
+        .task(id: book.name) { marked = puzzleChapters() }
     }
 
     private func accessibilityLabel(_ number: Int, hasPuzzle: Bool, isLast: Bool) -> String {
@@ -872,6 +871,27 @@ private struct DotLabelStyle: LabelStyle {
         HStack(spacing: Theme.Spacing.s) {
             Circle().fill(Theme.accent).frame(width: 5, height: 5)
             configuration.title
+        }
+    }
+}
+
+// MARK: - Search puzzle rows
+
+/// The puzzles a search matched. Its own view so the record query lives here:
+/// on `ReadView` every saved record redrew the whole Verses tab, for rows
+/// that only exist mid-search.
+private struct SearchPuzzleRows: View {
+    let puzzles: [Puzzle]
+    /// Every record, not just solved ones: a puzzle with progress counts as
+    /// playable even unsolved.
+    @Query private var records: [PuzzleRecord]
+
+    var body: some View {
+        let byID = Dictionary(records.map { ($0.puzzleID, $0) }, uniquingKeysWith: { a, _ in a })
+        ForEach(puzzles) { puzzle in
+            // The archive's wall: search reaches the catalogue the way the
+            // Library does, not through a book.
+            PuzzleLinkRow(puzzle: puzzle, record: byID[puzzle.id], paywallSource: .archive)
         }
     }
 }
