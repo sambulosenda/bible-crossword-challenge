@@ -160,53 +160,60 @@ struct ReadingPlansView: View {
     /// A plan tapped while another is running — confirmed before it replaces it.
     @State private var pendingSwitch: ReadingPlan?
 
+    /// Plan days opened from the running plan's card.
+    @State private var readingDay: Int?
+
+    private var runningPlan: ReadingPlan? {
+        guard let plan = plans.activePlan, !plans.isComplete else { return nil }
+        return plan
+    }
+
     var body: some View {
-        List(ReadingPlan.all) { plan in
-            Button {
-                choose(plan)
-            } label: {
-                HStack(spacing: Theme.Spacing.m) {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(plan.title)
-                            .font(.headline)
-                            .foregroundStyle(.primary)
-                        Text(plan.blurb)
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                        // Secondary, not accent: it isn't tappable on its
-                        // own. "One a day" said five times is the screen's
-                        // premise, and the line above the list now says it once.
-                        Text(meta(plan))
-                            .font(.caption.weight(.semibold))
-                            // The running plan's line in ink, not accent:
-                            // emphasis, not a separate control.
-                            .foregroundStyle(plans.activePlan?.id == plan.id ? Color.primary : Color.secondary)
-                            .monospacedDigit()
-                    }
-                    Spacer(minLength: 0)
-                    Image(systemName: "chevron.forward")
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(.tertiary)
+        ScrollView {
+            VStack(alignment: .leading, spacing: Theme.Spacing.l) {
+                Text("One chapter a day, with today's waiting on the Verses tab.")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .padding(.horizontal, Theme.Spacing.xs)
+
+                if let plan = runningPlan {
+                    runningCard(plan)
                 }
-                .padding(.vertical, 4)
-                .contentShape(.rect)
+
+                let others = ReadingPlan.all.filter { $0.id != runningPlan?.id }
+                VStack(alignment: .leading, spacing: Theme.Spacing.s) {
+                    if runningPlan != nil {
+                        Text("Other plans").sectionHeader()
+                            .padding(.horizontal, Theme.Spacing.xs)
+                    }
+                    // Cards, two or three abreast on a wide screen: five plans
+                    // are a shelf to choose from, and as 640pt list rows on an
+                    // opened iPhone Duo each was a line of text with 400pt of
+                    // white before its chevron. One per line on a phone.
+                    LazyVGrid(
+                        columns: [GridItem(.adaptive(minimum: 260), spacing: Theme.Spacing.m)],
+                        alignment: .leading,
+                        spacing: Theme.Spacing.m
+                    ) {
+                        ForEach(others) { planCard($0) }
+                    }
+                }
             }
-            .buttonStyle(.plain)
-            .accessibilityElement(children: .combine)
-            .accessibilityHint(plans.activePlan?.id == plan.id ? "Your current plan" : "Starts this plan")
+            .padding(Theme.Spacing.m)
+            .frame(maxWidth: 960)
+            .frame(maxWidth: .infinity)
         }
-        .scrollContentBackground(.hidden)
-        .frame(maxWidth: 640)
-        .frame(maxWidth: .infinity)
         .background(Theme.background)
-        .safeAreaInset(edge: .top) {
-            Text("One chapter a day, with today's waiting on the Verses tab.")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-                .frame(maxWidth: 640, alignment: .leading)
-                .padding(.horizontal, Theme.Spacing.l)
-                .padding(.top, Theme.Spacing.s)
-                .frame(maxWidth: .infinity)
+        .navigationDestination(item: $readingDay) { day in
+            if let plan = plans.activePlan {
+                ChapterReaderView(
+                    startBook: plan.book,
+                    startChapter: day,
+                    source: "read_plan",
+                    planChapter: PlanChapter(book: plan.book, chapter: day),
+                    onPlanChapterRead: { markRead(plan, day: day) }
+                )
+            }
         }
         .navigationTitle("Reading plans")
         .navigationBarTitleDisplayMode(.inline)
@@ -223,6 +230,82 @@ struct ReadingPlansView: View {
             if let current = plans.activePlan {
                 Text("Your progress in \(current.title) will be lost.")
             }
+        }
+    }
+
+    /// The plan being read leads, with where the player is and the next
+    /// chapter one tap away. It sat third in the list, marked only by its
+    /// meta line turning black.
+    private func runningCard(_ plan: ReadingPlan) -> some View {
+        let total = max(chapterCount(plan), 1)
+        let done = plans.progress?.readDays.count ?? 0
+        let next = plans.nextDay ?? min(done + 1, total)
+        return VStack(alignment: .leading, spacing: Theme.Spacing.m) {
+            VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
+                Text("Reading now").kicker()
+                Text(plan.title)
+                    .font(.scripture(.title2, weight: .semibold))
+                Text(plan.blurb)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+            VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
+                ProgressView(value: Double(done), total: Double(total))
+                    .tint(Theme.accent)
+                Text("Day \(min(done + 1, total)) of \(total)")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.secondary)
+                    .monospacedDigit()
+            }
+            Button {
+                analytics.log(.scriptureOpened(reference: "\(plan.book) \(next)", source: "read_plan"))
+                readingDay = next
+            } label: {
+                Label(plans.readToday ? "Read ahead · \(plan.book) \(next)" : "Read \(plan.book) \(next)",
+                      systemImage: "book")
+            }
+            .buttonStyle(.pillProminent)
+        }
+        .padding(Theme.Spacing.l)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .elevatedCard()
+    }
+
+    private func planCard(_ plan: ReadingPlan) -> some View {
+        Button {
+            choose(plan)
+        } label: {
+            VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
+                Text(plan.title)
+                    .font(.headline)
+                    .foregroundStyle(.primary)
+                    .multilineTextAlignment(.leading)
+                Text(plan.blurb)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.leading)
+                    .fixedSize(horizontal: false, vertical: true)
+                Spacer(minLength: Theme.Spacing.s)
+                Text(meta(plan))
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.secondary)
+                    .monospacedDigit()
+            }
+            .padding(Theme.Spacing.l)
+            .frame(maxWidth: .infinity, minHeight: 120, alignment: .topLeading)
+            .elevatedCard()
+            .contentShape(.rect)
+        }
+        .buttonStyle(PressableCardStyle())
+        .accessibilityElement(children: .combine)
+        .accessibilityHint(plans.activePlan?.id == plan.id ? "Your current plan" : "Starts this plan")
+    }
+
+    private func markRead(_ plan: ReadingPlan, day: Int) {
+        guard plans.markRead(day: day) else { return }
+        analytics.log(.planChapterRead(plan: plan.id, day: day))
+        if plans.isComplete {
+            analytics.log(.planCompleted(plan: plan.id, days: day))
         }
     }
 

@@ -35,6 +35,16 @@ struct LibraryView: View {
     /// The premium section shows a taste of what's locked, not all of it.
     @State private var showAllLocked = false
     @State private var showPaywall = false
+    /// Driven by hand in the two-column layout, where each half is a button:
+    /// a List row holding two NavigationLinks treats the whole row as one
+    /// target, so a tap on the right-hand puzzle opened the left.
+    @State private var path = NavigationPath()
+    /// Width the list has to work with, measured. Wide — iPhone Duo open,
+    /// iPad landscape — the rows go two to a line across the whole width;
+    /// one 640pt column there left a third of the screen empty and sat
+    /// under a search field drawn far wider than it.
+    @State private var listWidth: CGFloat = 0
+    private var isWide: Bool { listWidth >= 820 }
 
     private var puzzles: [Puzzle] { puzzleProvider.puzzles }
     private var minis: [Puzzle] { puzzleProvider.minis }
@@ -145,7 +155,7 @@ struct LibraryView: View {
     }
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             Group {
                 if store.isPremium {
                     premiumList
@@ -153,6 +163,7 @@ struct LibraryView: View {
                     freeList
                 }
             }
+            .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { listWidth = $0 }
             .navigationTitle("Library")
             // Inline, like Today: a large title can't collapse over a list with
             // a pinned inset above it — it vanished and left a blank band.
@@ -183,9 +194,7 @@ struct LibraryView: View {
 
             if !filtered.isEmpty {
                 Section {
-                    ForEach(filtered) { puzzle in
-                        row(puzzle)
-                    }
+                    rows(filtered, row)
                 } header: {
                     progressHeader
                 }
@@ -193,9 +202,7 @@ struct LibraryView: View {
 
             if !filteredSundays.isEmpty {
                 Section {
-                    ForEach(filteredSundays) { sunday in
-                        row(sunday)
-                    }
+                    rows(filteredSundays, row)
                 } header: {
                     Text("Sunday Specials")
                 }
@@ -203,9 +210,7 @@ struct LibraryView: View {
 
             if !filteredMinis.isEmpty {
                 Section {
-                    ForEach(filteredMinis) { mini in
-                        row(mini)
-                    }
+                    rows(filteredMinis, row)
                 } header: {
                     Text("Minis")
                 }
@@ -215,7 +220,7 @@ struct LibraryView: View {
         .scrollContentBackground(.hidden)
         // Same readable column as the card screens — a row stretched across a
         // 13" iPad puts its chevron half a metre from its title.
-        .frame(maxWidth: 640)
+        .frame(maxWidth: isWide ? .infinity : 640)
         .frame(maxWidth: .infinity)
         .background(Theme.background)
         .searchable(
@@ -311,32 +316,78 @@ struct LibraryView: View {
         .accessibilityLabel("Next unsolved puzzle, \(puzzle.title)")
     }
 
+    /// One puzzle per row on a phone; two per row when wide, each half its
+    /// own button.
+    @ViewBuilder
+    private func rows<Row: View>(_ puzzles: [Puzzle], _ make: @escaping (Puzzle) -> Row) -> some View {
+        if isWide {
+            ForEach(Array(stride(from: 0, to: puzzles.count, by: 2)), id: \.self) { i in
+                HStack(alignment: .center, spacing: Theme.Spacing.l) {
+                    make(puzzles[i])
+                        .frame(maxWidth: .infinity)
+                    Divider()
+                    Group {
+                        if i + 1 < puzzles.count {
+                            make(puzzles[i + 1])
+                        } else {
+                            Color.clear
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
+                }
+                // Borderless: in a List row, only borderless buttons take
+                // their own taps; any other style hands the tap to the row.
+                .buttonStyle(.borderless)
+            }
+        } else {
+            ForEach(puzzles) { make($0) }
+        }
+    }
+
+    /// Thumbnails grow on a wide screen, where the row has the room for the
+    /// grid's shape to read.
+    private var thumbnailSide: CGFloat { isWide ? 48 : 34 }
+
     private func row(_ puzzle: Puzzle) -> some View {
         let record = recordsByID[puzzle.id]
         let status = PuzzleStatus(record: record)
 
-        return NavigationLink(value: puzzle) {
+        return rowLink(puzzle) {
             HStack(spacing: Theme.Spacing.m) {
                 // Each puzzle's own grid shape. Eighty-two rows of title-plus-
                 // badge are indistinguishable at a glance; the shape is what
                 // makes one scannable from the next, and it's real data.
                 GridThumbnail(grid: puzzle.grid, tint: thumbnailTint(for: status))
-                    .frame(width: 34, height: 34)
+                    .frame(width: thumbnailSide, height: thumbnailSide)
 
                 VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
                     Text(puzzle.title)
                         .font(.headline)
+                        .multilineTextAlignment(.leading)
+                    // Status sits in the meta line, beside the facts it goes
+                    // with. At the row's trailing edge "In progress" was ~450pt
+                    // from the title it described on a wide screen.
                     HStack(spacing: Theme.Spacing.s) {
                         DifficultyBadge(difficulty: puzzle.difficulty)
                         Text("\(puzzle.clueCount) clues")
                             .font(.caption)
                             .foregroundStyle(.secondary)
+                        statusText(for: status, record: record)
                     }
                 }
                 Spacer(minLength: 0)
-                accessory(for: status, record: record)
+                if status == .completed {
+                    Image(systemName: "checkmark.circle.fill")
+                        .foregroundStyle(.green)
+                }
+                if isWide {
+                    Image(systemName: "chevron.forward")
+                        .font(.footnote.weight(.semibold))
+                        .foregroundStyle(.tertiary)
+                }
             }
             .padding(.vertical, 2)
+            .contentShape(.rect)
         }
     }
 
@@ -349,22 +400,31 @@ struct LibraryView: View {
             : Theme.accent.opacity(0.40)
     }
 
+    /// A link on a phone; a button that pushes onto `path` when wide, where
+    /// two share a List row.
     @ViewBuilder
-    private func accessory(for status: PuzzleStatus, record: PuzzleRecord?) -> some View {
+    private func rowLink<Label: View>(_ puzzle: Puzzle, @ViewBuilder label: () -> Label) -> some View {
+        if isWide {
+            Button { path.append(puzzle) } label: { label() }
+                .foregroundStyle(.primary)
+        } else {
+            NavigationLink(value: puzzle) { label() }
+        }
+    }
+
+    /// The solve time or "In progress", for the meta line.
+    @ViewBuilder
+    private func statusText(for status: PuzzleStatus, record: PuzzleRecord?) -> some View {
         switch status {
         case .completed:
-            HStack(spacing: Theme.Spacing.xs) {
-                if let secs = record?.elapsedSeconds, secs > 0 {
-                    Text(TimeFormat.clock(secs))
-                        .font(.caption)
-                        .monospacedDigit()
-                        .foregroundStyle(.secondary)
-                }
-                Image(systemName: "checkmark.circle.fill")
-                    .foregroundStyle(.green)
+            if let secs = record?.elapsedSeconds, secs > 0 {
+                Text("· \(TimeFormat.clock(secs))")
+                    .font(.caption)
+                    .monospacedDigit()
+                    .foregroundStyle(.secondary)
             }
         case .inProgress:
-            Text("In progress")
+            Text("· In progress")
                 .font(.caption.weight(.medium))
                 .foregroundStyle(.orange)
         case .start:
@@ -404,7 +464,7 @@ struct LibraryView: View {
 
             if !playable.isEmpty {
                 Section {
-                    ForEach(playable) { row($0) }
+                    rows(playable, row)
                 } header: {
                     freeHeader(freeCount: playable.count)
                 }
@@ -413,7 +473,7 @@ struct LibraryView: View {
             if !split.locked.isEmpty {
                 Section {
                     premiumOffer(count: split.locked.count)
-                    ForEach(locked) { lockedRow($0) }
+                    rows(locked, lockedRow)
                     if hiddenLocked > 0 {
                         Button {
                             withAnimation { showAllLocked = true }
@@ -429,7 +489,7 @@ struct LibraryView: View {
         }
         .scrollContentBackground(.hidden)
         // See premiumList: keep rows at a readable width on iPad.
-        .frame(maxWidth: 640)
+        .frame(maxWidth: isWide ? .infinity : 640)
         .frame(maxWidth: .infinity)
         .background(Theme.background)
         .searchable(
@@ -473,7 +533,7 @@ struct LibraryView: View {
         .labelsHidden()
         .padding(.horizontal, Theme.Spacing.m)
         .padding(.vertical, Theme.Spacing.s)
-        .frame(maxWidth: 640)
+        .frame(maxWidth: isWide ? .infinity : 640)
         .frame(maxWidth: .infinity)
         .background(Theme.background)
     }
@@ -543,7 +603,7 @@ struct LibraryView: View {
         } label: {
             HStack(spacing: Theme.Spacing.m) {
                 GridThumbnail(grid: puzzle.grid, tint: Color.primary.opacity(0.18))
-                    .frame(width: 34, height: 34)
+                    .frame(width: thumbnailSide, height: thumbnailSide)
 
                 VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
                     Text(puzzle.title)
