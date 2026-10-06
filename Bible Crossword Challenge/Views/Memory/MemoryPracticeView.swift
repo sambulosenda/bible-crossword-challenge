@@ -138,7 +138,11 @@ struct MemoryPracticeView: View {
                         MemoryVersePanel(vm: vm, built: built)
                             .padding(Theme.Spacing.l)
                         Spacer(minLength: 0)
-                        ClueBarView(vm: vm)
+                        // Not the clue bar: its clue ("John 3:16 — word 4 of
+                        // 27") said again what the verse above already shows,
+                        // with the arrows at its two ends. Here the arrows sit
+                        // either side of the one fact the verse doesn't give.
+                        WordStepper(vm: vm)
                         LetterKeyboardView(
                             onLetter: { vm.enter($0) },
                             onDelete: { vm.delete() }
@@ -415,5 +419,42 @@ private struct MemoryVersePanel: View {
 
     private func solved(_ slot: Slot) -> Bool {
         slot.positions.allSatisfy { vm.grid[$0.row][$0.col].isCorrect }
+    }
+}
+
+// MARK: - Word stepper
+
+/// Previous / "Word 4 of 27" / next, centred — the wide layout's stand-in for
+/// the clue bar.
+private struct WordStepper: View {
+    let vm: GameViewModel
+
+    var body: some View {
+        let slots = vm.allSlots.sorted { $0.number < $1.number }
+        let index = vm.activeSlot.flatMap { active in slots.firstIndex { $0.id == active.id } }
+        HStack(spacing: Theme.Spacing.m) {
+            Button { vm.advanceClue(by: -1) } label: {
+                Image(systemName: "chevron.backward")
+                    .font(.headline)
+                    .frame(width: 44, height: 44)
+                    .contentShape(.rect)
+            }
+            .accessibilityLabel("Previous word")
+            Text(index.map { "Word \($0 + 1) of \(slots.count)" } ?? "Select a word")
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(.secondary)
+                .monospacedDigit()
+                .frame(minWidth: 120)
+            Button { vm.advanceClue(by: 1) } label: {
+                Image(systemName: "chevron.forward")
+                    .font(.headline)
+                    .frame(width: 44, height: 44)
+                    .contentShape(.rect)
+            }
+            .accessibilityLabel("Next word")
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, Theme.Spacing.s)
+        .overlay(alignment: .bottom) { Divider() }
     }
 }
