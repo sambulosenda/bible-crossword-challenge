@@ -73,6 +73,13 @@ struct CrosswordGameView: View {
     /// latest tap — `.task(id:)` cancels and re-runs on change, where a plain
     /// `.task` would keep the first hit's clock while the note is already up.
     @State private var hintLimitHits = 0
+    /// The offer card for a refused hint — raised once per puzzle, on the
+    /// first refusal; later ones fall back to the chip. See `HintUpgradeSheet`.
+    @State private var hintUpgrade: HintUpgrade?
+    @State private var didOfferHintUpgrade = false
+    /// What the card ended with, acted on once it has fully dismissed, so a
+    /// reveal or the verse sheet never races the card's own dismissal.
+    @State private var hintUpgradeOutcome: (HintType, HintUpgradeSheet.Outcome)?
     @State private var newlyUnlocked: [Achievement] = []
     /// Whether this solve crossed a streak milestone that granted a freeze.
     @State private var earnedFreeze = false
@@ -408,6 +415,15 @@ struct CrosswordGameView: View {
         }
         .sheet(isPresented: $showPaywall) {
             PaywallView(source: .hintLimit)
+        }
+        .sheet(item: $hintUpgrade, onDismiss: resolveHintUpgrade) { upgrade in
+            HintUpgradeSheet(
+                upgrade: upgrade,
+                canUseVerse: vm.activeSlot?.reference != nil
+            ) { outcome in
+                hintUpgradeOutcome = (upgrade.type, outcome)
+                hintUpgrade = nil
+            }
         }
         // Presented locally like the clue list's reader — the ReaderRouter
         // cover hangs off the tab bar and would detach this view from its
@@ -1079,6 +1095,11 @@ struct CrosswordGameView: View {
         guard profile.hintsRemaining(isPremium: store.isPremium, limit: freeHintLimit) >= type.cost else {
             analytics.log(.hintLimitReached(type: type.rawValue))
             hintLimitType = type
+            if !didOfferHintUpgrade {
+                didOfferHintUpgrade = true
+                hintUpgrade = HintUpgrade(type: type, word: activeHintWord)
+                return
+            }
             hintLimitHits += 1
             withAnimation(.snappy) { showHintLimitNote = true }
             return
@@ -1109,6 +1130,34 @@ struct CrosswordGameView: View {
         let charged = (!store.isPremium && profile.isStillLearning) ? 0 : type.cost
         analytics.log(.hintUsed(type: type.rawValue, cost: charged))
         saveProgress()
+    }
+
+    /// The word under the cursor as the hint card draws it.
+    private var activeHintWord: HintUpgrade.Word? {
+        guard let slot = vm.activeSlot else { return nil }
+        let cells = slot.positions.map { vm.grid[$0.row][$0.col] }
+        return HintUpgrade.Word(
+            label: "\(slot.number) \(slot.direction.label)",
+            solution: Array(slot.answer),
+            entries: cells.map { $0.isPencil ? nil : $0.entry },
+            focus: slot.positions.firstIndex(of: vm.selected)
+        )
+    }
+
+    /// Acts on how the hint card ended, after it has gone: a purchase applies
+    /// the hint they asked for, the verse button opens the free rung, and a
+    /// plain dismissal leaves the board as it was.
+    private func resolveHintUpgrade() {
+        guard let (type, outcome) = hintUpgradeOutcome else { return }
+        hintUpgradeOutcome = nil
+        switch outcome {
+        case .purchased:
+            if store.isPremium { useHint(type) }
+        case .verse:
+            useVerseHint()
+        case .dismissed:
+            break
+        }
     }
 
     /// The ladder's free rung: open the passage the answer comes from and let

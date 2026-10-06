@@ -29,6 +29,10 @@ enum PaywallSource: String, CaseIterable, Hashable {
     /// The daily hint quota ran out and the player tapped "Unlimited" on the
     /// inline notice.
     case hintLimit = "hint_limit"
+    /// The offer card raised the first time in a puzzle a hint is refused.
+    /// Its own label so it reads against the old chip's `hint_limit` taps.
+    /// See `HintUpgradeSheet`.
+    case hintLimitCard = "hint_limit_card"
     /// The upgrade card on Today.
     case homeCard = "home_card"
     /// The same card once the player has a streak of a week or more, when it
@@ -73,7 +77,7 @@ enum PaywallSource: String, CaseIterable, Hashable {
     /// `PaywallView.headlineText`.
     var headline: String {
         switch self {
-        case .hintLimit:
+        case .hintLimit, .hintLimitCard:
             return "Never stuck for long."
         case .homeCard:
             return "Make it part of the morning."
