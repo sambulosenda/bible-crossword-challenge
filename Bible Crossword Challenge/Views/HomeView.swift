@@ -589,6 +589,7 @@ private struct TodayHeader: View {
 
     @Environment(\.readerRouter) private var readerRouter
     @Environment(\.analytics) private var analytics
+    @Environment(\.inCardColumnSplit) private var inSplit
 
     var body: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.l) {
@@ -597,7 +598,9 @@ private struct TodayHeader: View {
             }
         }
         .padding(.horizontal, Theme.Spacing.xs)
-        .padding(.top, Theme.Spacing.s)
+        // Flush in a split, so "Verse of the day" starts level with the
+        // first card at the top of the other column.
+        .padding(.top, inSplit ? 0 : Theme.Spacing.s)
     }
 
     /// Scripture, set plainly. No rule, no box, no quote glyph: the serif is
@@ -626,8 +629,12 @@ private struct TodayHeader: View {
                     // No line limit: the verse is the top of the app by
                     // decision, and a three-line clamp cut it mid-word
                     // ("…heard his praye…"). The longest in rotation is five.
+                    // A step smaller in a split column: at title3 in half an
+                    // opened iPhone Duo the verse ran five lines and pushed
+                    // the day's puzzle halfway down. It keeps the top; it
+                    // just stops taking the whole column to say it.
                     Text(verse.verse)
-                        .font(.scripture(.title3))
+                        .font(.scripture(inSplit ? .body : .title3))
                         .lineSpacing(6)
                         .foregroundStyle(.primary)
                         .multilineTextAlignment(.leading)

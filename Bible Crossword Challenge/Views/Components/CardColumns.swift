@@ -42,11 +42,13 @@ struct CardColumns<Lead: View, More: View>: View {
                         column(width: nil) { more() }
                     }
                     .arrangementViewStyle(.split.axes(.horizontal))
+                    .environment(\.inCardColumnSplit, true)
                 } else {
                     HStack(spacing: 0) {
                         column(width: nil) { lead() }
                         column(width: nil) { more() }
                     }
+                    .environment(\.inCardColumnSplit, true)
                 }
             } else {
                 column(width: proxy.size.width) {
@@ -103,4 +105,10 @@ private struct ColumnWidth: ViewModifier {
             content.frame(maxWidth: .infinity)
         }
     }
+}
+
+extension EnvironmentValues {
+    /// True inside one of `CardColumns`' two side-by-side columns, so a card
+    /// can size itself to half a window rather than a phone.
+    @Entry var inCardColumnSplit: Bool = false
 }
