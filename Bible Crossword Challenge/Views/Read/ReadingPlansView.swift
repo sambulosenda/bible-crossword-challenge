@@ -49,11 +49,8 @@ struct ReadingPlanCard: View {
         return Button(action: onRead) {
             VStack(alignment: .leading, spacing: compact ? Theme.Spacing.xs : Theme.Spacing.m) {
                 HStack(spacing: Theme.Spacing.m) {
-                    Image(systemName: doneToday ? "checkmark.circle.fill" : "book.pages")
-                        .font(.title2)
-                        .foregroundStyle(doneToday ? .green : Theme.accent)
-                        .frame(width: 44, height: 44)
-                        .background((doneToday ? Color.green : Theme.accent).opacity(0.14), in: .circle)
+                    RowIcon(symbol: doneToday ? "checkmark" : "book.pages",
+                            tint: doneToday ? FeatureTint.solved : FeatureTint.readingPlan)
                     VStack(alignment: .leading, spacing: 2) {
                         // The count sits in the subtitle: as a kicker
                         // "TODAY'S CHAPTER · DAY 12 OF 21" wrapped on a phone.
@@ -78,7 +75,7 @@ struct ReadingPlanCard: View {
                         .tint(Theme.accent)
                 }
             }
-            .padding(Theme.Spacing.l)
+            .cardRowPadding()
             .frame(maxWidth: .infinity, alignment: .leading)
             .elevatedCard()
         }
@@ -93,11 +90,7 @@ struct ReadingPlanCard: View {
             ReadingPlansView()
         } label: {
             HStack(spacing: Theme.Spacing.m) {
-                Image(systemName: "checkmark.seal.fill")
-                    .font(.title2)
-                    .foregroundStyle(.green)
-                    .frame(width: 44, height: 44)
-                    .background(Color.green.opacity(0.14), in: .circle)
+                RowIcon(symbol: "checkmark.seal.fill", tint: FeatureTint.solved)
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Plan complete").kicker()
                     Text("You read all of \(plan.book)")
@@ -112,7 +105,7 @@ struct ReadingPlanCard: View {
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(.secondary)
             }
-            .padding(Theme.Spacing.l)
+            .cardRowPadding()
             .frame(maxWidth: .infinity, alignment: .leading)
             .elevatedCard()
         }

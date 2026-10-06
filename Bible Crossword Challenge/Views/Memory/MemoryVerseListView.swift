@@ -305,20 +305,20 @@ struct MemoryVerseListView: View {
 struct MemoryVerseCard: View {
     let dueCount: Int
     let activeCount: Int
+    /// How many of `activeCount` are mastered.
+    var masteredCount = 0
+    /// The soonest review not yet due, for the all-caught-up line.
+    var nextReview: Date? = nil
+    /// A verse on the shelf that has never been practised — playable now,
+    /// though no review is "due" on it.
+    var hasUnpracticed = false
     /// Off on Today, where the "Keep going" header above names the group.
     var showsKicker = true
 
     var body: some View {
         NavigationLink(value: MemoryRoute()) {
             HStack(spacing: Theme.Spacing.m) {
-                Image(systemName: "brain.fill")
-                    .font(.title2)
-                    // The disc is a fixed 44pt, so the glyph stops growing
-                    // where the disc does instead of spilling out of it.
-                    .dynamicTypeSize(...DynamicTypeSize.xxLarge)
-                    .foregroundStyle(Theme.accent)
-                    .frame(width: 44, height: 44)
-                    .background(Theme.accent.opacity(0.14), in: .circle)
+                RowIcon(symbol: "brain.fill", tint: FeatureTint.memory)
                 VStack(alignment: .leading, spacing: 2) {
                     if showsKicker {
                         Label("MEMORY VERSES", systemImage: "text.book.closed").kicker()
@@ -336,7 +336,7 @@ struct MemoryVerseCard: View {
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(.secondary)
             }
-            .padding(Theme.Spacing.l)
+            .cardRowPadding()
             .frame(maxWidth: .infinity, alignment: .leading)
             .elevatedCard()
         }
@@ -353,10 +353,33 @@ struct MemoryVerseCard: View {
         return "Learn a verse by heart"
     }
 
+    /// Where the player's verses stand — "2 learning · 1 mastered · next
+    /// review tomorrow" — rather than how the mode works. "Blanks grow as you
+    /// master each verse" told someone with verses on the shelf the same thing
+    /// every day; the row is a status line for a habit, like the streak.
     private var subtitle: String {
-        if activeCount > 0 {
-            return "Blanks grow as you master each verse."
+        guard activeCount > 0 else { return "Turn a verse from a solved puzzle into memory." }
+        let learning = activeCount - masteredCount
+        var parts: [String] = []
+        if learning > 0 { parts.append("\(learning) learning") }
+        if masteredCount > 0 { parts.append("\(masteredCount) mastered") }
+        if dueCount == 0 {
+            if hasUnpracticed {
+                parts.append("ready to practice")
+            } else if let nextReview {
+                parts.append("next review \(Self.relativeDay(nextReview))")
+            }
         }
-        return "Turn a verse from a solved puzzle into memory."
+        return parts.joined(separator: " · ")
+    }
+
+    static func relativeDay(_ date: Date, now: Date = Date(), calendar: Calendar = .current) -> String {
+        if calendar.isDateInToday(date) { return "later today" }
+        if calendar.isDateInTomorrow(date) { return "tomorrow" }
+        let days = calendar.dateComponents(
+            [.day], from: calendar.startOfDay(for: now), to: calendar.startOfDay(for: date)
+        ).day ?? 0
+        if days < 7 { return "on \(date.formatted(.dateTime.weekday(.wide)))" }
+        return "on \(date.formatted(.dateTime.month(.abbreviated).day()))"
     }
 }

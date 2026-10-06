@@ -37,31 +37,34 @@ struct QuestDetailView: View {
 
     @State private var showPaywall = false
 
-    private var recordsByID: [String: PuzzleRecord] {
-        Dictionary(records.map { ($0.puzzleID, $0) }, uniquingKeysWith: { a, _ in a })
-    }
-
     private var steps: [Puzzle] { puzzleProvider.puzzles(in: quest) }
-    private var progress: QuestProgress { QuestProgress(quest: quest, recordsByID: recordsByID) }
     private var isLocked: Bool { quest.isPremium && !store.isPremium }
 
     var body: some View {
+        // Built once per body pass and handed down — it was a computed
+        // property that every step row rebuilt, once per row.
+        let recordsByID = Dictionary(records.map { ($0.puzzleID, $0) }, uniquingKeysWith: { a, _ in a })
+        let progress = QuestProgress(quest: quest, recordsByID: recordsByID)
+        let steps = self.steps
+
         // The Journey on the left of a wide window, its steps on the right.
-        CardColumns(alignment: .leading) {
-            header
+        return CardColumns(alignment: .leading) {
+            header(progress: progress)
                 .onScrolledUnderBar { headerScrolledAway = $0 }
-        } more: {
-            if isLocked {
-                lockedState
-            } else {
-                stepList
+            if !isLocked, let index = progress.currentIndex, steps.indices.contains(index) {
+                playButton(steps[index], index: index, progress: progress)
             }
+        } more: {
+            stepList(steps, recordsByID: recordsByID, progress: progress)
         }
         .background(Theme.background)
+        .safeAreaInset(edge: .bottom) {
+            if isLocked { lockedOffer }
+        }
         .navigationTitle(quest.title)
         .navigationBarTitleDisplayMode(.inline)
-        // The header card names the screen; the bar takes the name over only
-        // once the header has scrolled under it.
+        // The header names the screen; the bar takes the name over only once
+        // the header has scrolled under it.
         .revealedTitle(quest.title, when: headerScrolledAway)
         .sheet(isPresented: $showPaywall) {
             PaywallView(source: .questLocked)
@@ -75,7 +78,7 @@ struct QuestDetailView: View {
 
     @State private var headerScrolledAway = false
 
-    private var header: some View {
+    private func header(progress: QuestProgress) -> some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.m) {
             HStack(spacing: Theme.Spacing.m) {
                 // Neutral while locked, like the row it was opened from:
@@ -97,55 +100,104 @@ struct QuestDetailView: View {
                 }
             }
 
-            if isLocked {
-                // Locked states size, not progress — see `PackCard` for why.
+            if isLocked || progress.solved == 0 {
+                // Locked states size, not progress — see `PackCard` for why —
+                // and so does a run not yet begun: an empty bar measures
+                // nothing.
                 Text("\(progress.total) step\(progress.total == 1 ? "" : "s"), one a day")
-                    .font(.caption)
+                    .font(.caption.weight(.medium))
                     .foregroundStyle(.secondary)
             } else if progress.isComplete {
                 Label("Journey complete", systemImage: "checkmark.seal.fill")
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(.green)
             } else {
-                ProgressView(value: progress.fraction)
-                    .tint(quest.accent)
-                Text(progressLine)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .monospacedDigit()
+                // The bar and its line as one unit; they sat a full stack gap
+                // apart and read as two separate things.
+                VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
+                    ProgressView(value: progress.fraction)
+                        .tint(quest.accent)
+                    Text(progressLine(progress))
+                        .font(.caption.weight(.medium))
+                        .foregroundStyle(.secondary)
+                        .monospacedDigit()
+                }
             }
         }
+        .padding(.horizontal, Theme.Spacing.xs)
+        .padding(.top, Theme.Spacing.s)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .accessibilityElement(children: .combine)
     }
 
     /// "Step 3 of 7" plus the soft-pacing nudge when today's step is done.
-    private var progressLine: String {
+    private func progressLine(_ progress: QuestProgress) -> String {
         let position = "Step \(min(progress.solved + 1, progress.total)) of \(progress.total)"
         return progress.steppedToday
             ? "\(position) — today's step is done, the next is ready tomorrow"
             : position
     }
 
+    // MARK: - Play
+
+    /// The page's one action: the current step. Once today's step is done the
+    /// next still opens — pacing is soft — but the button drops to the tonal
+    /// pill, so playing ahead is offered rather than urged.
+    private func playButton(_ puzzle: Puzzle, index: Int, progress: QuestProgress) -> some View {
+        Group {
+            if progress.steppedToday {
+                NavigationLink(value: puzzle) {
+                    Label("Play ahead · \(puzzle.title)", systemImage: "forward.fill")
+                }
+                .buttonStyle(.pillTonal)
+            } else {
+                NavigationLink(value: puzzle) {
+                    Label("\(index == 0 ? "Start" : "Step \(index + 1)") · \(puzzle.title)",
+                          systemImage: "play.fill")
+                }
+                .buttonStyle(.pillProminent)
+            }
+        }
+    }
+
     // MARK: - Steps
 
-    private var stepList: some View {
+    /// The path as one grouped list — steps are a sequence, and a card per
+    /// step broke it into separate things. Locked, the same list shows what
+    /// the Journey holds, each row opening the paywall, as a locked pack does.
+    private func stepList(
+        _ steps: [Puzzle], recordsByID: [String: PuzzleRecord], progress: QuestProgress
+    ) -> some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.s) {
-            Text("The Path").kicker().padding(.horizontal, Theme.Spacing.xs)
-            ForEach(Array(steps.enumerated()), id: \.element.id) { index, puzzle in
-                stepRow(index: index, puzzle: puzzle)
+            Text(isLocked ? "Included with Premium" : "The path")
+                .sectionHeader()
+                .padding(.horizontal, Theme.Spacing.xs)
+            CardGroup(dividerInset: CollectionCardLayout.dividerInset) {
+                ForEach(Array(steps.enumerated()), id: \.element.id) { index, puzzle in
+                    stepRow(index: index, puzzle: puzzle,
+                            state: stepState(index: index, recordsByID: recordsByID, progress: progress))
+                }
             }
         }
     }
 
     @ViewBuilder
-    private func stepRow(index: Int, puzzle: Puzzle) -> some View {
-        let state = stepState(index: index)
-        if state == .upcoming {
+    private func stepRow(index: Int, puzzle: Puzzle, state: StepState) -> some View {
+        if isLocked {
+            Button {
+                showPaywall = true
+            } label: {
+                row(index: index, puzzle: puzzle, state: .upcoming, dims: false)
+            }
+            .buttonStyle(PressableCardStyle())
+            .accessibilityHint("Opens Premium plans")
+        } else if state == .upcoming {
             // Not navigable: the sequence is the point. It unlocks the moment
             // the step before it is solved — no date gate, just order.
-            row(index: index, puzzle: puzzle, state: state)
+            row(index: index, puzzle: puzzle, state: state, dims: true)
         } else {
             NavigationLink(value: puzzle) {
-                row(index: index, puzzle: puzzle, state: state)
+                row(index: index, puzzle: puzzle, state: state, dims: false)
             }
             .buttonStyle(PressableCardStyle())
         }
@@ -153,61 +205,69 @@ struct QuestDetailView: View {
 
     private enum StepState { case done, current, upcoming }
 
-    private func stepState(index: Int) -> StepState {
+    private func stepState(
+        index: Int, recordsByID: [String: PuzzleRecord], progress: QuestProgress
+    ) -> StepState {
         if recordsByID[quest.puzzleIDs[index]]?.isCompleted == true { return .done }
         return index == progress.currentIndex ? .current : .upcoming
     }
 
-    private func row(index: Int, puzzle: Puzzle, state: StepState) -> some View {
+    private func row(index: Int, puzzle: Puzzle, state: StepState, dims: Bool) -> some View {
         HStack(spacing: Theme.Spacing.m) {
             stepMarker(index: index, state: state)
             VStack(alignment: .leading, spacing: 2) {
                 Text(puzzle.title)
-                    .font(.subheadline.weight(state == .current ? .semibold : .regular))
-                    .foregroundStyle(state == .upcoming ? .secondary : .primary)
+                    .font(.headline.weight(state == .current ? .semibold : .regular))
+                    .foregroundStyle(.primary)
+                    .fixedSize(horizontal: false, vertical: true)
                 Text(puzzle.reference)
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
             Spacer(minLength: 0)
-            if state != .upcoming {
+            if isLocked {
+                Image(systemName: "lock.fill")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            } else if state != .upcoming {
                 Image(systemName: "chevron.forward")
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(.secondary)
             }
         }
-        .padding(Theme.Spacing.l)
+        .cardRowPadding()
         .frame(maxWidth: .infinity, alignment: .leading)
-        .elevatedCard()
-        .opacity(state == .upcoming ? 0.55 : 1)
+        .contentShape(.rect)
+        .opacity(dims ? 0.5 : 1)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(stepAccessibilityLabel(index: index, puzzle: puzzle, state: state))
     }
 
+    /// The same rounded square as every row icon in the app: a green check
+    /// when done, the Journey's colour on the step that's up, and the step's
+    /// number on a neutral square for the rest.
+    @ViewBuilder
     private func stepMarker(index: Int, state: StepState) -> some View {
-        ZStack {
-            Circle()
-                .fill(state == .done ? Color.green.opacity(0.15) : quest.accent.opacity(state == .current ? 0.15 : 0.06))
-                .frame(width: 36, height: 36)
-            switch state {
-            case .done:
-                Image(systemName: "checkmark")
-                    .font(.subheadline.weight(.bold))
-                    .foregroundStyle(.green)
-            case .current:
-                Image(systemName: "play.fill")
-                    .font(.subheadline)
-                    .foregroundStyle(quest.accent)
-            case .upcoming:
-                Text("\(index + 1)")
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(.secondary)
-            }
+        switch state {
+        case .done:
+            RowIcon(symbol: "checkmark", tint: FeatureTint.solved)
+        case .current where !isLocked:
+            RowIcon(symbol: "play.fill", tint: quest.accent)
+        default:
+            Text("\(index + 1)")
+                .font(.headline)
+                .monospacedDigit()
+                .foregroundStyle(.secondary)
+                .dynamicTypeSize(...DynamicTypeSize.xxLarge)
+                .frame(width: 44, height: 44)
+                .background(Color.primary.opacity(0.06), in: .rect(cornerRadius: 12, style: .continuous))
+                .accessibilityHidden(true)
         }
     }
 
     private func stepAccessibilityLabel(index: Int, puzzle: Puzzle, state: StepState) -> String {
-        let position = "Step \(index + 1) of \(steps.count)"
+        let position = "Step \(index + 1) of \(quest.puzzleIDs.count)"
+        if isLocked { return "\(position), \(puzzle.title). Premium" }
         switch state {
         case .done: return "\(position), \(puzzle.title), complete"
         case .current: return "\(position), \(puzzle.title), up next"
@@ -217,38 +277,27 @@ struct QuestDetailView: View {
 
     // MARK: - Locked
 
-    /// Deliberately the same shape as `PackDetailView.lockedState`. These two
-    /// screens are one tap apart from the same list, and they used to disagree
-    /// about everything: a default-tinted crown against a yellow one, a stock
-    /// `.borderedProminent` blue button against the app's ink pill, and no
-    /// statement of how much the Journey actually contains. Two house styles
-    /// for one lock, on the two screens that ask for money.
-    private var lockedState: some View {
-        VStack(spacing: Theme.Spacing.m) {
-            ContentUnavailableView {
-                Label("Premium Journey", systemImage: "crown.fill")
-                    .foregroundStyle(.yellow)
-            } description: {
-                Text(lockedDescription)
-            } actions: {
-                Button {
-                    showPaywall = true
-                } label: {
-                    Text("Unlock Premium")
-                }
+    /// The same shape as `PackDetailView`'s locked state: the steps shown,
+    /// one offer pinned where the thumb is. This screen had drifted to a
+    /// centred crown block in system yellow over an "Unlock Premium" button —
+    /// the word the app keeps off any button that only opens the paywall (see
+    /// `PremiumCopy.cardCTA`), while the pack screen one tap away said it the
+    /// house way.
+    private var lockedOffer: some View {
+        VStack(spacing: Theme.Spacing.s) {
+            Text("\(quest.puzzleIDs.count) steps, one a day. Opens with every pack and Journey in Premium.")
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+            Button(PremiumCopy.cardCTA(store)) { showPaywall = true }
                 .buttonStyle(.pillProminent)
-                .frame(maxWidth: 280)
-            }
         }
+        .padding(.horizontal, Theme.Spacing.m)
+        .padding(.vertical, Theme.Spacing.s)
+        .frame(maxWidth: 560)
         .frame(maxWidth: .infinity)
-        .padding(.vertical, Theme.Spacing.xl)
-    }
-
-    /// States the size of the Journey, the way the pack lock states the size
-    /// of the collection — the one concrete fact the screen already knows.
-    private var lockedDescription: String {
-        "Unlock \(quest.title) and every other Journey with Premium — "
-            + "\(quest.puzzleIDs.count) steps, one a day."
+        .background(Theme.background)
     }
 }
 
@@ -279,15 +328,10 @@ struct QuestCard: View {
                     details
                 }
             } else {
-                HStack(spacing: Theme.Spacing.m) {
-                    cover
-                    details
-                    Spacer(minLength: 0)
-                    chevron
-                }
+                CollectionCardLayout.row(cover: cover, details: details, chevron: chevron)
             }
         }
-        .padding(Theme.Spacing.l)
+        .cardRowPadding()
         .frame(maxWidth: .infinity, alignment: .leading)
         .elevatedCard()
         .accessibilityElement(children: .ignore)
@@ -323,9 +367,10 @@ struct QuestCard: View {
 
     // Locked states size, not progress — same reasoning as
     // `PackCard`: premium quests overlap the daily rotation.
+    // Unstarted states its size as well, like `PackCard`.
     @ViewBuilder
     private var status: some View {
-        if isLocked {
+        if isLocked || progress.solved == 0 {
             Text("\(progress.total) steps, one a day")
                 .font(.caption2)
                 .foregroundStyle(.secondary)
@@ -352,6 +397,8 @@ struct QuestCard: View {
         if isLocked {
             parts.append("Premium")
             parts.append("\(progress.total) steps")
+        } else if progress.solved == 0 {
+            parts.append("\(progress.total) steps, one a day")
         } else {
             parts.append(progress.isComplete
                 ? "Complete"
@@ -380,18 +427,10 @@ struct QuestHomeCard: View {
     var body: some View {
         NavigationLink(value: QuestRoute(quest: quest, source: .home)) {
             HStack(spacing: Theme.Spacing.m) {
-                // The app's accent, not the Journey's own colour: on Today it
-                // sits in a column of accent icons, where one green disc read
-                // as a different kind of thing. The Packs tab keeps the
-                // per-Journey colour on its covers.
-                Image(systemName: quest.coverSymbol)
-                    .font(.title2)
-                    .foregroundStyle(Theme.accent)
-                    // The disc is a fixed 44pt, so the glyph stops growing
-                    // where the disc does instead of spilling out of it.
-                    .dynamicTypeSize(...DynamicTypeSize.xxLarge)
-                    .frame(width: 44, height: 44)
-                    .background(Theme.accent.opacity(0.14), in: .circle)
+                // The Journey feature's tint, not this Journey's own colour:
+                // on Today each row is coloured by what kind of thing it is.
+                // The Packs tab keeps the per-Journey colour on its covers.
+                RowIcon(symbol: quest.coverSymbol, tint: FeatureTint.journey)
                 // No kicker: Today's "Keep going" header names the group, and
                 // the subtitle says it's a journey.
                 VStack(alignment: .leading, spacing: 2) {
@@ -407,7 +446,7 @@ struct QuestHomeCard: View {
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(.secondary)
             }
-            .padding(Theme.Spacing.l)
+            .cardRowPadding()
             .frame(maxWidth: .infinity, alignment: .leading)
             .elevatedCard()
         }

@@ -426,7 +426,12 @@ struct RootView: View {
         @Bindable var router = readerRouter
         return TabView(selection: $selectedTab) {
             Tab("Today", systemImage: "calendar", value: RootTab.today) {
-                HomeView(profile: profile, path: $todayPath)
+                // "Packs ›" asks for the shelf, not whichever pack the tab
+                // was last left open on.
+                HomeView(profile: profile, path: $todayPath) {
+                    packsPath = NavigationPath()
+                    selectedTab = .packs
+                }
             }
             Tab("Packs", systemImage: "square.stack.3d.up", value: RootTab.packs) {
                 PacksView(profile: profile, path: $packsPath)

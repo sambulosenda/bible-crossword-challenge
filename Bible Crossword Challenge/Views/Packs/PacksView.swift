@@ -65,6 +65,9 @@ struct PacksView: View {
                 }
             }
             .navigationTitle("Packs")
+            // Large, as Today's is: a tab root names itself at the top and
+            // hands the name to the bar on scroll.
+            .navigationBarTitleDisplayMode(.large)
             .sheet(isPresented: $showPaywall) {
                 // `pack_locked` rather than a new label: the offer stands over
                 // the locked packs themselves, and a new source would move the
@@ -83,14 +86,37 @@ struct PacksView: View {
         }
     }
 
+    /// Every collection's progress, worked out once per body pass. The lead,
+    /// the sort and each row all read it — it used to be built separately by
+    /// the lead's pick and again by every row it then drew.
+    private struct ProgressBook {
+        let packs: [String: PackProgress]
+        let quests: [String: QuestProgress]
+
+        func of(_ pack: PuzzlePack) -> PackProgress { packs[pack.id]! }
+        func of(_ quest: QuestLine) -> QuestProgress { quests[quest.id]! }
+    }
+
     private func list(packs: [PuzzlePack], recordsByID: [String: PuzzleRecord]) -> some View {
-        let lead = self.lead(packs: packs, recordsByID: recordsByID)
+        let book = ProgressBook(
+            packs: Dictionary(packs.map { ($0.id, PackProgress(pack: $0, recordsByID: recordsByID)) },
+                              uniquingKeysWith: { a, _ in a }),
+            quests: Dictionary(quests.map { ($0.id, QuestProgress(quest: $0, recordsByID: recordsByID)) },
+                               uniquingKeysWith: { a, _ in a })
+        )
+        let lead = self.lead(packs: packs, book: book)
         // The promoted collection is lifted out of its section rather than
         // repeated under it — the screen has just stopped showing the same
         // collection twice, and the lead card must not put it back.
-        let shownQuests = quests.filter { $0.id != lead?.questID }
+        let shownQuests = Self.playOrder(
+            quests.filter { $0.id != lead?.questID },
+            solved: { book.of($0).solved }, isComplete: { book.of($0).isComplete }
+        )
         let seasonal = packs.filter { $0.isSeasonal && $0.id != lead?.packID }
-        let evergreen = packs.filter { !$0.isSeasonal && $0.id != lead?.packID }
+        let evergreen = Self.playOrder(
+            packs.filter { !$0.isSeasonal && $0.id != lead?.packID },
+            solved: { book.of($0).solved }, isComplete: { book.of($0).isComplete }
+        )
 
         // A free player's locked Journeys and packs gather under one offer
         // instead of a crown on every row: five of seven rows were crowned
@@ -107,19 +133,35 @@ struct PacksView: View {
         // collections on the right.
         return CardColumns {
             leadCard(lead)
-            questSection(quests: openQuests, recordsByID: recordsByID)
+            questSection(quests: openQuests, book: book)
         } more: {
             if !seasonal.isEmpty {
-                section("In Season", packs: seasonal, recordsByID: recordsByID)
+                section("In season", packs: seasonal, book: book)
             }
             section(
-                anythingAbove ? (store.isPremium ? "All Packs" : "Free") : nil,
+                anythingAbove ? (store.isPremium ? "All packs" : "Free") : nil,
                 packs: openPacks,
-                recordsByID: recordsByID
+                book: book
             )
-            premiumSection(quests: lockedQuests, packs: lockedPacks, recordsByID: recordsByID)
+            premiumSection(quests: lockedQuests, packs: lockedPacks, book: book)
         }
         .background(Theme.background)
+    }
+
+    /// Something to do first: one under way, then one not begun, and a
+    /// finished one last — the order Today's packs shelf already uses. In
+    /// authored order "First Steps · Complete" led All packs for everyone
+    /// past the tutorial. Stable within each group.
+    private static func playOrder<T>(
+        _ items: [T], solved: (T) -> Int, isComplete: (T) -> Bool
+    ) -> [T] {
+        func rank(_ item: T) -> Int {
+            if isComplete(item) { return 2 }
+            return solved(item) > 0 ? 0 : 1
+        }
+        return items.enumerated()
+            .sorted { (rank($0.element), $0.offset) < (rank($1.element), $1.offset) }
+            .map(\.element)
     }
 
     // MARK: - Lead
@@ -130,14 +172,14 @@ struct PacksView: View {
     /// step is the one in progress. A locked or finished collection is never
     /// the lead — there is nothing to start. Journeys are considered first,
     /// because a paced run is the stronger reason to come back tomorrow.
-    private func lead(packs: [PuzzlePack], recordsByID: [String: PuzzleRecord]) -> Lead? {
+    private func lead(packs: [PuzzlePack], book: ProgressBook) -> Lead? {
         let openQuests = quests
             .filter { !$0.isPremium || store.isPremium }
-            .map { ($0, QuestProgress(quest: $0, recordsByID: recordsByID)) }
+            .map { ($0, book.of($0)) }
             .filter { !$0.1.isComplete }
         let openPacks = packs
             .filter { !$0.isPremium || store.isPremium }
-            .map { ($0, PackProgress(pack: $0, recordsByID: recordsByID)) }
+            .map { ($0, book.of($0)) }
             .filter { !$0.1.isComplete }
 
         if let started = openQuests.first(where: { $0.1.solved > 0 }) {
@@ -181,7 +223,9 @@ struct PacksView: View {
                         blurb: pack.blurb,
                         symbol: pack.coverSymbol,
                         accent: pack.accent,
-                        meta: "Pack · \(progress.solved) of \(progress.total) solved",
+                        meta: progress.solved == 0
+                            ? "Pack · \(progress.total) puzzles"
+                            : "Pack · \(progress.solved) of \(progress.total) solved",
                         action: action
                     )
                 }
@@ -197,38 +241,34 @@ struct PacksView: View {
     }
 
     // MARK: - Sections
+    //
+    // Each section is one grouped card of rows rather than a card per
+    // collection — the shape Today's lists take — under a sentence-case
+    // section title.
 
     /// Everything Premium would open, under one offer. The rows keep their
     /// neutral covers but drop the crown — the header already says it.
     @ViewBuilder
     private func premiumSection(
-        quests: [QuestLine], packs: [PuzzlePack], recordsByID: [String: PuzzleRecord]
+        quests: [QuestLine], packs: [PuzzlePack], book: ProgressBook
     ) -> some View {
         if !quests.isEmpty || !packs.isEmpty {
             VStack(alignment: .leading, spacing: Theme.Spacing.s) {
-                Text("With Premium").kicker().padding(.horizontal, Theme.Spacing.xs)
+                Text("With Premium").sectionHeader().padding(.horizontal, Theme.Spacing.xs)
                 premiumOffer(count: quests.count + packs.count)
-                ForEach(quests) { quest in
-                    NavigationLink(value: QuestRoute(quest: quest, source: .packs)) {
-                        QuestCard(
-                            quest: quest,
-                            progress: QuestProgress(quest: quest, recordsByID: recordsByID),
-                            isLocked: true,
-                            showsCrown: false
-                        )
+                CardGroup(dividerInset: CollectionCardLayout.dividerInset) {
+                    ForEach(quests) { quest in
+                        NavigationLink(value: QuestRoute(quest: quest, source: .packs)) {
+                            QuestCard(quest: quest, progress: book.of(quest), isLocked: true, showsCrown: false)
+                        }
+                        .buttonStyle(PressableCardStyle())
                     }
-                    .buttonStyle(PressableCardStyle())
-                }
-                ForEach(packs) { pack in
-                    NavigationLink(value: PackRoute(pack: pack, source: .packs)) {
-                        PackCard(
-                            pack: pack,
-                            progress: PackProgress(pack: pack, recordsByID: recordsByID),
-                            isLocked: true,
-                            showsCrown: false
-                        )
+                    ForEach(packs) { pack in
+                        NavigationLink(value: PackRoute(pack: pack, source: .packs)) {
+                            PackCard(pack: pack, progress: book.of(pack), isLocked: true, showsCrown: false)
+                        }
+                        .buttonStyle(PressableCardStyle())
                     }
-                    .buttonStyle(PressableCardStyle())
                 }
             }
         }
@@ -270,19 +310,21 @@ struct PacksView: View {
     /// The Journeys sit above the packs: an ordered, paced run is the stronger
     /// daily-return pitch, and there are only a few of them.
     @ViewBuilder
-    private func questSection(quests: [QuestLine], recordsByID: [String: PuzzleRecord]) -> some View {
+    private func questSection(quests: [QuestLine], book: ProgressBook) -> some View {
         if !quests.isEmpty {
             VStack(alignment: .leading, spacing: Theme.Spacing.s) {
-                Text("Journeys").kicker().padding(.horizontal, Theme.Spacing.xs)
-                ForEach(quests) { quest in
-                    NavigationLink(value: QuestRoute(quest: quest, source: .packs)) {
-                        QuestCard(
-                            quest: quest,
-                            progress: QuestProgress(quest: quest, recordsByID: recordsByID),
-                            isLocked: quest.isPremium && !store.isPremium
-                        )
+                Text("Journeys").sectionHeader().padding(.horizontal, Theme.Spacing.xs)
+                CardGroup(dividerInset: CollectionCardLayout.dividerInset) {
+                    ForEach(quests) { quest in
+                        NavigationLink(value: QuestRoute(quest: quest, source: .packs)) {
+                            QuestCard(
+                                quest: quest,
+                                progress: book.of(quest),
+                                isLocked: quest.isPremium && !store.isPremium
+                            )
+                        }
+                        .buttonStyle(PressableCardStyle())
                     }
-                    .buttonStyle(PressableCardStyle())
                 }
             }
         }
@@ -292,22 +334,24 @@ struct PacksView: View {
     private func section(
         _ title: String?,
         packs: [PuzzlePack],
-        recordsByID: [String: PuzzleRecord]
+        book: ProgressBook
     ) -> some View {
         if !packs.isEmpty {
             VStack(alignment: .leading, spacing: Theme.Spacing.s) {
                 if let title {
-                    Text(title).kicker().padding(.horizontal, Theme.Spacing.xs)
+                    Text(title).sectionHeader().padding(.horizontal, Theme.Spacing.xs)
                 }
-                ForEach(packs) { pack in
-                    NavigationLink(value: PackRoute(pack: pack, source: .packs)) {
-                        PackCard(
-                            pack: pack,
-                            progress: PackProgress(pack: pack, recordsByID: recordsByID),
-                            isLocked: pack.isPremium && !store.isPremium
-                        )
+                CardGroup(dividerInset: CollectionCardLayout.dividerInset) {
+                    ForEach(packs) { pack in
+                        NavigationLink(value: PackRoute(pack: pack, source: .packs)) {
+                            PackCard(
+                                pack: pack,
+                                progress: book.of(pack),
+                                isLocked: pack.isPremium && !store.isPremium
+                            )
+                        }
+                        .buttonStyle(PressableCardStyle())
                     }
-                    .buttonStyle(PressableCardStyle())
                 }
             }
         }

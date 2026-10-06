@@ -27,13 +27,18 @@ struct StreakCard: View {
     var body: some View {
         VStack(spacing: Theme.Spacing.m) {
             HStack(spacing: Theme.Spacing.m) {
-                // The flame stays fire-orange (a blue flame reads as off), while
-                // the week row below carries the accent.
-                Image(systemName: "flame.fill")
-                    .font(.title2)
-                    .foregroundStyle(.orange)
-                    .frame(width: iconSize, height: iconSize)
-                    .background(.orange.opacity(0.12), in: .circle)
+                // Fire-orange, and the week row below is too: the card is one
+                // colour story about one thing. The square is the shape of
+                // every other icon on Today.
+                CollectionCover(
+                    symbol: "flame.fill",
+                    accent: FeatureTint.streak,
+                    isLocked: false,
+                    side: iconSize,
+                    font: .title2,
+                    cornerRadius: 13
+                )
+                .accessibilityHidden(true)
 
                 VStack(alignment: .leading, spacing: 0) {
                     Text("\(current)")
@@ -108,9 +113,60 @@ struct StreakCard: View {
             Image(systemName: symbol).foregroundStyle(tint)
         }
         .font(.caption.weight(.medium))
-        .frame(maxWidth: .infinity)
+        // Leading, like the count and the label above it — centred, it was
+        // the one line on the card hanging off a different edge.
+        .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.top, Theme.Spacing.xs)
     }
+}
+
+// MARK: - Row icon
+
+/// The icon at the head of a list row: the soft-tinted rounded square the pack
+/// covers already use, so every icon on Today is the same kind of object.
+/// Today used to mix three — filled SF circles on the puzzle rows, tinted
+/// discs on Keep going, squares on the packs shelf.
+///
+/// Each feature has its own tint, the way Settings and Fitness colour theirs:
+/// with every glyph in the accent, blue stopped meaning "you can tap this"
+/// and the screen read as one colour. Blue now belongs to actions and the
+/// daily puzzle.
+struct RowIcon: View {
+    let symbol: String
+    let tint: Color
+
+    var body: some View {
+        CollectionCover(
+            symbol: symbol,
+            accent: tint,
+            isLocked: false,
+            side: 44,
+            font: .title3,
+            cornerRadius: 12
+        )
+        // The square is a fixed 44pt, so the glyph stops growing where the
+        // square does instead of spilling out of it.
+        .dynamicTypeSize(...DynamicTypeSize.xxLarge)
+        .accessibilityHidden(true)
+    }
+}
+
+/// Feature tints for `RowIcon`. One place, so a feature is the same colour
+/// wherever it's listed.
+enum FeatureTint {
+    static let daily = Theme.accent
+    static let mini = Color.teal
+    static let sunday = Color.orange
+    static let journey = Color.green
+    // Indigo, not purple: the iOS 26 system purple renders near-magenta
+    // and shouted beside the muted pack covers on the shelf below.
+    static let memory = Color.indigo
+    static let badge = Theme.badgeRim
+    /// The flame, and the week row that fills under it.
+    static let streak = Color.orange
+    static let readingPlan = Color.brown
+    /// Done, as everywhere in the app.
+    static let solved = Color.green
 }
 
 // MARK: - Comeback
@@ -141,13 +197,17 @@ struct ComebackCard: View {
         VStack(spacing: Theme.Spacing.m) {
             HStack(spacing: Theme.Spacing.m) {
                 // Outline, and grey rather than fire-orange: the streak is out.
-                // A lit flame beside "paused" would contradict itself.
-                Image(systemName: "flame")
-                    .font(.title2)
-                    .foregroundStyle(.secondary)
-                    .frame(width: iconSize, height: iconSize)
-                    .background(Color.primary.opacity(0.06), in: .circle)
-                    .accessibilityHidden(true)
+                // A lit flame beside "paused" would contradict itself. The
+                // cover's locked treatment is exactly that grey square.
+                CollectionCover(
+                    symbol: "flame",
+                    accent: FeatureTint.streak,
+                    isLocked: true,
+                    side: iconSize,
+                    font: .title2,
+                    cornerRadius: 13
+                )
+                .accessibilityHidden(true)
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Streak paused")
@@ -177,8 +237,10 @@ struct ComebackCard: View {
     }
 }
 
-/// The seven-day row: a filled accent check for completed days, an outlined ring
-/// for today, and muted letter chips for the rest.
+/// The seven-day row: a filled orange check for completed days, an outlined ring
+/// for today, a muted circle for the rest, and every day's letter underneath.
+/// Orange, the streak's colour, since 2026-10-04 — in the accent it was the
+/// largest block of blue on Today, and blue is kept for actions.
 ///
 /// Shared by `StreakCard` on Today and the completion scorecard — the dot that
 /// fills is the same dot in both places, which is the point of showing it at the
@@ -210,10 +272,10 @@ struct WeekRow: View {
         let done = completedWeekdays.contains(day)
         let isToday = day == today
         return Circle()
-            .fill(done ? Theme.accent : Color.primary.opacity(0.1))
+            .fill(done ? FeatureTint.streak : Color.primary.opacity(0.1))
             .overlay {
                 if isToday && !done {
-                    Circle().strokeBorder(Theme.accent, lineWidth: 1.5)
+                    Circle().strokeBorder(FeatureTint.streak, lineWidth: 1.5)
                 }
             }
             .frame(width: 10, height: 10)
@@ -231,34 +293,42 @@ struct WeekRow: View {
         let done = completedWeekdays.contains(day)
         let isToday = day == today
 
-        ZStack {
-            if done {
-                Circle().fill(Theme.accent)
-                Image(systemName: "checkmark")
-                    .font(.caption.weight(.bold))
-                    .foregroundStyle(.white)
-            } else {
-                Circle().fill(Color.primary.opacity(0.06))
-                if isToday {
-                    Circle().strokeBorder(Theme.accent, lineWidth: 1.5)
+        VStack(spacing: Theme.Spacing.xs + 2) {
+            ZStack {
+                if done {
+                    Circle().fill(FeatureTint.streak)
+                    Image(systemName: "checkmark")
+                        .font(.caption.weight(.bold))
+                        // The circle stops at 32pt, so the check does too.
+                        .dynamicTypeSize(...DynamicTypeSize.xxLarge)
+                        .foregroundStyle(.white)
+                } else {
+                    Circle().fill(Color.primary.opacity(0.06))
+                    if isToday {
+                        Circle().strokeBorder(FeatureTint.streak, lineWidth: 1.5)
+                    }
                 }
-                Text(letter(for: day))
-                    .font(.caption.weight(isToday ? .bold : .medium))
-                    .foregroundStyle(isToday ? .primary : .secondary)
             }
+            // 32pt, fixed. A seventh of the card was ~50pt a circle, and the
+            // row of seven outweighed the streak count it sits under. Not
+            // scaled with Dynamic Type — a scaled metric once grew the row
+            // past the screen at accessibility sizes and dragged every card
+            // on Today with it; seven of these and their gaps come to 272pt,
+            // inside the narrowest card (375pt phone). Not a flexible frame
+            // either: with an aspect ratio, today's column resolved taller
+            // than the rest and its letter sat low.
+            .frame(width: 32, height: 32)
+
+            // The letter sits under the circle, not in it, so a finished day
+            // keeps its name — with the check inside, a week of checks was a
+            // row of identical dots and only the unfinished days were labelled.
+            Text(letter(for: day))
+                .font(.caption.weight(isToday ? .bold : .medium))
+                .foregroundStyle(isToday ? .primary : .secondary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
         }
-        // Seven circles divide the width they're given rather than each taking a
-        // Dynamic-Type-scaled size: at accessibility sizes a fixed metric grew
-        // the row past the screen and dragged every card on Today out with it.
-        // The glyph still scales, and shrinks to fit once the circle can't —
-        // but only to 0.8. A seventh of a card is around 50pt and the glyph is
-        // a single character, so it fits at every size the system offers; the
-        // old half-size allowance was insuring against a squeeze that cannot
-        // happen, at the price of a 6pt letter if it ever did.
         .frame(maxWidth: .infinity)
-        .aspectRatio(1, contentMode: .fit)
-        .lineLimit(1)
-        .minimumScaleFactor(0.8)
     }
 
     private func letter(for day: Int) -> String {

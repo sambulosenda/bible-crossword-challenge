@@ -177,14 +177,80 @@ private struct ElevatedCard: ViewModifier {
     var fill: Color
     var cornerRadius: CGFloat
 
+    @Environment(\.isInCardGroup) private var isInCardGroup
+
     func body(content: Content) -> some View {
-        // White card on warm paper, separated by the fill alone — the way
-        // the system's own grouped content sits flat on iOS 26, where the
-        // floating Liquid Glass bars are the one layer that lifts. A 5%
-        // shadow used to ride under every card; thirty of them side by side
-        // on a wide window read as haze.
+        // Inside a `CardGroup` the row gives its card up to the group's one,
+        // keeping a rectangle to tap across — without a fill, the empty
+        // space beside the text stops taking touches.
+        if isInCardGroup {
+            content.contentShape(.rect)
+        } else {
+            // White card on warm paper, separated by the fill alone — the way
+            // the system's own grouped content sits flat on iOS 26, where the
+            // floating Liquid Glass bars are the one layer that lifts. A 5%
+            // shadow used to ride under every card; thirty of them side by side
+            // on a wide window read as haze.
+            content
+                .background(fill, in: .rect(cornerRadius: cornerRadius, style: .continuous))
+        }
+    }
+}
+
+extension EnvironmentValues {
+    /// True for a row inside a `CardGroup`, whose `.elevatedCard()` then
+    /// draws nothing: the group draws one card around all its rows.
+    @Entry var isInCardGroup = false
+}
+
+/// The padding of an icon-title-chevron row. On its own the row is a card and
+/// keeps a card's 24pt; inside a `CardGroup` it's a list row, and 24pt above
+/// and below made each one ~96pt tall — three cards fused together rather
+/// than a list. 16pt brings a row to 76pt.
+private struct CardRowPadding: ViewModifier {
+    @Environment(\.isInCardGroup) private var isInCardGroup
+
+    func body(content: Content) -> some View {
         content
-            .background(fill, in: .rect(cornerRadius: cornerRadius, style: .continuous))
+            .padding(.horizontal, Theme.Spacing.l)
+            .padding(.vertical, isInCardGroup ? Theme.Spacing.m : Theme.Spacing.l)
+    }
+}
+
+extension View {
+    /// See `CardRowPadding`.
+    func cardRowPadding() -> some View {
+        modifier(CardRowPadding())
+    }
+}
+
+/// Rows that each draw their own card, shown as one card with dividers — the
+/// inset-grouped list shape, for things that are one list rather than
+/// separate headlines. Rows that render nothing take no divider with them.
+struct CardGroup<Content: View>: View {
+    /// Where the dividers start: under the row's text rather than its icon.
+    var dividerInset: CGFloat = Theme.Spacing.l
+    @ViewBuilder let content: Content
+
+    var body: some View {
+        // The flag goes on the content before it's split into rows. Set on
+        // each resolved row instead, it reached rows inside a button or link
+        // (whose labels resolve late) but not a plain row — a Journey's
+        // not-yet-open steps kept their standalone 24pt padding.
+        Group(subviews: content.environment(\.isInCardGroup, true)) { rows in
+            if !rows.isEmpty {
+                VStack(spacing: 0) {
+                    ForEach(Array(rows.enumerated()), id: \.element.id) { index, row in
+                        if index > 0 {
+                            Divider().padding(.leading, dividerInset)
+                        }
+                        row
+                    }
+                }
+                // Outside the flag, so the group's own card is drawn.
+                .elevatedCard()
+            }
+        }
     }
 }
 

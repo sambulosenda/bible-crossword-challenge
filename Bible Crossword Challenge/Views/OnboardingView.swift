@@ -507,13 +507,39 @@ struct OnboardingView: View {
     /// tutorial clue, and a tally of one reads as a tally of nothing.
     private var premiumPage: some View {
         let active = page == lastPage
-        return pageFrame(spacing: Theme.Spacing.l) {
-            PremiumOfferView(
-                headline: premiumHeadline,
-                selectedID: $selectedPlanID,
-                entranceActive: active
-            )
+        // The whole offer when it fits the page; without the tiles, in the
+        // usual scrolling frame, when it doesn't — a 667pt iPhone SE otherwise
+        // hid the prices and the timeline behind the purchase button.
+        // `ViewThatFits` decides per layout pass: nothing to measure or latch.
+        //
+        // Top-anchored, unlike the other pages: the offer changes height when
+        // the plan does (monthly has no timeline and a one-line headline), and
+        // centred, every tap on a plan card moved the tiles and the headline.
+        return ViewThatFits(in: .vertical) {
+            premiumOffer(compact: false, active: active)
+                .frame(maxWidth: 560)
+                .frame(maxWidth: .infinity)
+                .padding(.horizontal, Theme.Spacing.l)
+                .padding(.vertical, Theme.Spacing.l)
+            pageFrame(spacing: Theme.Spacing.l) {
+                premiumOffer(compact: true, active: active)
+            }
         }
+        .frame(maxHeight: .infinity, alignment: .top)
+    }
+
+    private func premiumOffer(compact: Bool, active: Bool) -> some View {
+        PremiumOfferView(
+            headline: premiumHeadline,
+            selectedID: $selectedPlanID,
+            entranceActive: active,
+            // The word they just solved, gold rim and all, so the offer
+            // reads as the next step of the solve. A skipper never made
+            // that word; they get the welcome page's fragment instead.
+            heroTiles: solved ? MiniCrossword.firstSolveSolved : MiniCrossword.faithHopeLove,
+            heroCelebrated: solved ? MiniCrossword.firstSolveWord : [],
+            compact: compact
+        )
     }
 
     // MARK: - Building blocks
@@ -615,7 +641,10 @@ struct OnboardingView: View {
                     if store.purchaseInFlight {
                         ProgressView().tint(Theme.onInk)
                     } else {
+                        // Wraps rather than truncates at accessibility sizes.
                         Text(premiumCTATitle)
+                            .multilineTextAlignment(.center)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
                 }
             }
@@ -629,11 +658,18 @@ struct OnboardingView: View {
             .buttonStyle(.pillProminent)
             .disabled(store.purchaseInFlight || selectedPlan == nil)
 
-            // No commitment line under the button here, unlike the sheet: on
-            // this page the trial timeline sits directly above the CTA saying
-            // the same two facts, so the caption was the third telling. The
-            // sheet keeps its copy because its timeline scrolls away while
-            // the CTA stays pinned.
+            // No commitment line under the button when there's a trial: the
+            // timeline directly above already says when money starts and what
+            // it costs, so a caption would be the third telling. Without one —
+            // monthly, or a trial already used — the timeline isn't drawn, and
+            // nothing else on the page said the plan renews. It does now.
+            if let plan = selectedPlan, store.introOffer(for: plan) == nil,
+               let terms = PremiumOfferView.commitmentText(for: plan, store: store) {
+                Text(terms)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+            }
         }
 
         // A quiet text link again — but only because the ✕ now exists. The
@@ -711,11 +747,14 @@ struct OnboardingView: View {
             // breaks after "going —" and the offer lands whole.
             let freePhrase = "free for \(offer.duration)."
                 .replacingOccurrences(of: " ", with: "\u{00a0}")
+            // Two lines, not three. "You got the idea." went on 2026-10-03:
+            // the solved word sits in gold directly above the headline now,
+            // and it says that sentence without anyone having to read it.
             return solved
-                ? "You got the idea.\nKeep it going — \(freePhrase)"
+                ? "Keep it going —\n\(freePhrase)"
                 : "Everything free for \(offer.duration)."
         }
-        return solved ? "You got the idea.\nKeep it going." : PremiumCopy.promise
+        return solved ? "Keep it going." : PremiumCopy.promise
     }
 
     /// Both shared with the sheet — see `PremiumOfferView.ctaTitle` and

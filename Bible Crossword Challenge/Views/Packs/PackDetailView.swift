@@ -49,12 +49,7 @@ struct PackDetailView: View {
 
     @State private var showPaywall = false
 
-    private var recordsByID: [String: PuzzleRecord] {
-        Dictionary(records.map { ($0.puzzleID, $0) }, uniquingKeysWith: { a, _ in a })
-    }
-
     private var puzzles: [Puzzle] { puzzleProvider.puzzles(in: pack) }
-    private var progress: PackProgress { PackProgress(pack: pack, recordsByID: recordsByID) }
     private var isLocked: Bool { pack.isPremium && !store.isPremium }
 
     /// Day and month only ("12 April") — the year is never in question for a
@@ -62,19 +57,27 @@ struct PackDetailView: View {
     private static let seasonEndFormat = Date.FormatStyle().day().month(.wide)
 
     var body: some View {
+        // The record lookup is built once per body pass and handed down. It
+        // was a computed property, and every row read it twice — rebuilding a
+        // dictionary of all the player's records for each read.
+        let recordsByID = Dictionary(records.map { ($0.puzzleID, $0) }, uniquingKeysWith: { a, _ in a })
+        let progress = PackProgress(pack: pack, recordsByID: recordsByID)
+        let puzzles = self.puzzles
+
         // The collection on the left of a wide window, its puzzles on the
         // right.
-        CardColumns(alignment: .leading) {
-            header
+        return CardColumns(alignment: .leading) {
+            header(progress: progress, books: packBooks(puzzles))
                 .onScrolledUnderBar { headerScrolledAway = $0 }
-            // Shown locked as well as unlocked: which books a collection
-            // covers is part of deciding whether to buy it.
-            booksCard
+            if !isLocked, let next = nextPuzzle(puzzles, recordsByID: recordsByID) {
+                playButton(next, recordsByID: recordsByID, progress: progress)
+            }
+            booksCard(puzzles)
         } more: {
             if isLocked {
-                lockedPuzzleList
+                lockedPuzzleList(puzzles)
             } else {
-                puzzleList
+                puzzleList(puzzles, recordsByID: recordsByID)
             }
         }
         .background(Theme.background)
@@ -83,8 +86,8 @@ struct PackDetailView: View {
         }
         .navigationTitle(pack.title)
         .navigationBarTitleDisplayMode(.inline)
-        // The header card names the screen; the bar takes the name over only
-        // once the header has scrolled under it.
+        // The header names the screen; the bar takes the name over only once
+        // the header has scrolled under it.
         .revealedTitle(pack.title, when: headerScrolledAway)
         .sheet(isPresented: $showPaywall) {
             // A seasonal pack gets its name into the promise: "the collections
@@ -105,7 +108,10 @@ struct PackDetailView: View {
 
     @State private var headerScrolledAway = false
 
-    private var header: some View {
+    /// Set on the paper, not in a card — the way the Journey screen's header
+    /// already sat, and an album's in Music: the page's title isn't a module
+    /// among modules.
+    private func header(progress: PackProgress, books: [BibleCanon.Book]) -> some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.m) {
             HStack(spacing: Theme.Spacing.m) {
                 // Neutral while locked, like the row it was opened from:
@@ -129,12 +135,13 @@ struct PackDetailView: View {
 
             seasonLine
 
-            // Locked, the header states the pack's size rather than the
-            // player's progress through it — see `PackCard` for why. This
-            // screen said it louder: "Pack complete — every puzzle solved",
-            // directly above a Premium Collection lock and an Unlock button.
-            if isLocked {
-                Text("\(progress.total) puzzle\(progress.total == 1 ? "" : "s")")
+            // What it covers and how big it is, in one line — the books card
+            // used to spend a whole card on this, for most packs one book.
+            // Locked or unstarted, that's the whole status: a locked pack
+            // states its size rather than the player's progress through it
+            // (see `PackCard`), and an empty bar measures nothing.
+            if isLocked || progress.solved == 0 {
+                Text(metaLine(books: books, total: progress.total))
                     .font(.caption.weight(.medium))
                     .foregroundStyle(.secondary)
                     .monospacedDigit()
@@ -143,19 +150,27 @@ struct PackDetailView: View {
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(.green)
             } else {
-                ProgressView(value: progress.fraction) {
+                VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
+                    ProgressView(value: progress.fraction)
+                        .tint(pack.accent)
                     Text("\(progress.solved) of \(progress.total) solved")
                         .font(.caption.weight(.medium))
                         .foregroundStyle(.secondary)
                         .monospacedDigit()
                 }
-                .tint(pack.accent)
             }
         }
-        .padding(Theme.Spacing.l)
+        .padding(.horizontal, Theme.Spacing.xs)
+        .padding(.top, Theme.Spacing.s)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .elevatedCard()
         .accessibilityElement(children: .combine)
+    }
+
+    /// "Psalms · 5 puzzles"; past three books, just the count.
+    private func metaLine(books: [BibleCanon.Book], total: Int) -> String {
+        let count = "\(total) puzzle\(total == 1 ? "" : "s")"
+        guard !books.isEmpty, books.count <= 3 else { return count }
+        return books.map(\.displayName).joined(separator: ", ") + " · " + count
     }
 
     /// How long the pack is here for. Early in a window that's a date the player
@@ -175,15 +190,36 @@ struct PackDetailView: View {
         }
     }
 
+    // MARK: - Play
+
+    /// The puzzle the button opens: one already begun, else the first not
+    /// yet solved. Nil once every puzzle is solved.
+    private func nextPuzzle(_ puzzles: [Puzzle], recordsByID: [String: PuzzleRecord]) -> Puzzle? {
+        puzzles.first { PuzzleStatus(record: recordsByID[$0.id]) == .inProgress }
+            ?? puzzles.first { recordsByID[$0.id]?.isCompleted != true }
+    }
+
+    /// The page's one action, as an album page has Play. Before it, the only
+    /// way into a pack was to choose a row — the screen asked a question
+    /// ("which one?") it already knew the answer to.
+    private func playButton(
+        _ puzzle: Puzzle, recordsByID: [String: PuzzleRecord], progress: PackProgress
+    ) -> some View {
+        let begun = progress.solved > 0 || PuzzleStatus(record: recordsByID[puzzle.id]) == .inProgress
+        return NavigationLink(value: puzzle) {
+            Label("\(begun ? "Continue" : "Start") · \(puzzle.title)", systemImage: "play.fill")
+        }
+        .buttonStyle(.pillProminent)
+    }
+
     // MARK: - Books
 
     /// The books this collection's puzzles are drawn from, in reading order.
     ///
     /// Nothing maps packs to books: every puzzle already anchors to one through
     /// its verse reference, so a pack covers whatever its puzzles cover and the
-    /// two can't fall out of step. Finishing a pack moves the journey map on its
-    /// own — this card is what makes that visible beforehand.
-    private var packBooks: [BibleCanon.Book] {
+    /// two can't fall out of step.
+    private func packBooks(_ puzzles: [Puzzle]) -> [BibleCanon.Book] {
         var seen: Set<String> = []
         let books = puzzles.compactMap { BibleJourney.book(for: $0) }
             .filter { seen.insert($0.name).inserted }
@@ -200,13 +236,17 @@ struct PackDetailView: View {
         )
     }
 
+    /// Only when finishing the pack would add books the player hasn't
+    /// explored. Otherwise the books are named in the header line, and a
+    /// card of one chip — a bordered "Psalm" that looked like a button and
+    /// wasn't — over "You've already played puzzles from all of these" said
+    /// nothing worth a card.
     @ViewBuilder
-    private var booksCard: some View {
-        let books = packBooks
-        if !books.isEmpty {
-            let explored = exploredBooks
-            let fresh = books.filter { !explored.contains($0.name) }
-
+    private func booksCard(_ puzzles: [Puzzle]) -> some View {
+        let books = packBooks(puzzles)
+        let explored = books.isEmpty ? [] : exploredBooks
+        let fresh = books.filter { !explored.contains($0.name) }
+        if !fresh.isEmpty {
             VStack(alignment: .leading, spacing: Theme.Spacing.m) {
                 Text("Books in this pack").kicker()
 
@@ -229,7 +269,7 @@ struct PackDetailView: View {
             .elevatedCard()
             .accessibilityElement(children: .ignore)
             .accessibilityLabel(
-                "Books in this pack: \(books.map(\.name).formatted(.list(type: .and))). "
+                "Books in this pack: \(books.map(\.displayName).formatted(.list(type: .and))). "
                 + journeyLine(fresh: fresh)
             )
         }
@@ -238,15 +278,14 @@ struct PackDetailView: View {
     private func journeyLine(fresh: [BibleCanon.Book]) -> String {
         // Not "your journey": the Packs tab calls its paced runs Journeys, and
         // the same word for the book map made one screen mean two things.
-        guard !fresh.isEmpty else { return "You've already played puzzles from all of these." }
-        return "Finishing this adds \(fresh.map(\.name).formatted(.list(type: .and))) to the books you've explored."
+        "Finishing this adds \(fresh.map(\.displayName).formatted(.list(type: .and))) to the books you've explored."
     }
 
     /// Explored books borrow the map's own fill, so the two screens agree about
     /// what "you've been here" looks like.
     private func bookChip(_ book: BibleCanon.Book, explored: Bool) -> some View {
         let state: BibleJourney.BookProgress.State = explored ? .touched : .untouched
-        return Text(book.name)
+        return Text(book.displayName)
             .font(.caption.weight(.medium))
             // A second line rather than 8pt type: the longest book names run
             // to "1 Thessalonians", and shrinking a 12pt caption by a third to
@@ -267,35 +306,26 @@ struct PackDetailView: View {
 
     // MARK: - Puzzle list
 
-    private var puzzleList: some View {
-        VStack(spacing: Theme.Spacing.s) {
-            ForEach(puzzles) { puzzle in
+    /// A track list: one grouped card, numbered rows, the difficulty in plain
+    /// text. Five cards each wearing a coloured difficulty capsule made the
+    /// list the loudest thing on the page.
+    private func puzzleList(_ puzzles: [Puzzle], recordsByID: [String: PuzzleRecord]) -> some View {
+        CardGroup(dividerInset: TrackRow<EmptyView>.dividerInset) {
+            ForEach(Array(puzzles.enumerated()), id: \.element.id) { index, puzzle in
+                let record = recordsByID[puzzle.id]
                 NavigationLink(value: puzzle) {
-                    row(puzzle)
+                    TrackRow(number: index + 1, title: puzzle.title, detail: Self.detail(puzzle)) {
+                        accessory(for: PuzzleStatus(record: record), record: record)
+                    }
                 }
                 .buttonStyle(PressableCardStyle())
             }
         }
     }
 
-    private func row(_ puzzle: Puzzle) -> some View {
-        let status = PuzzleStatus(record: recordsByID[puzzle.id])
-        return HStack(spacing: Theme.Spacing.m) {
-            VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
-                Text(puzzle.title).font(.headline).foregroundStyle(.primary)
-                HStack(spacing: Theme.Spacing.s) {
-                    DifficultyBadge(difficulty: puzzle.difficulty)
-                    Text("\(puzzle.clueCount) clues")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-            }
-            Spacer(minLength: 0)
-            accessory(for: status, record: recordsByID[puzzle.id])
-        }
-        .padding(Theme.Spacing.l)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .elevatedCard()
+    /// "Easy · 15 clues".
+    static func detail(_ puzzle: Puzzle) -> String {
+        "\(puzzle.difficulty.label) · \(puzzle.clueCount) clues"
     }
 
     @ViewBuilder
@@ -326,37 +356,26 @@ struct PackDetailView: View {
 
     /// The pack's puzzles, shown rather than withheld: the titles are what a
     /// player is deciding to pay for. Each row opens the paywall.
-    private var lockedPuzzleList: some View {
+    private func lockedPuzzleList(_ puzzles: [Puzzle]) -> some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.s) {
-            Text("Included with Premium").kicker()
+            Text("Included with Premium").sectionHeader()
                 .padding(.horizontal, Theme.Spacing.xs)
-            ForEach(puzzles) { puzzle in
-                Button {
-                    showPaywall = true
-                } label: {
-                    HStack(spacing: Theme.Spacing.m) {
-                        VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
-                            Text(puzzle.title).font(.headline).foregroundStyle(.primary)
-                            HStack(spacing: Theme.Spacing.s) {
-                                DifficultyBadge(difficulty: puzzle.difficulty)
-                                Text("\(puzzle.clueCount) clues")
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
-                            }
+            CardGroup(dividerInset: TrackRow<EmptyView>.dividerInset) {
+                ForEach(Array(puzzles.enumerated()), id: \.element.id) { index, puzzle in
+                    Button {
+                        showPaywall = true
+                    } label: {
+                        TrackRow(number: index + 1, title: puzzle.title, detail: Self.detail(puzzle)) {
+                            Image(systemName: "lock.fill")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                                .accessibilityHidden(true)
                         }
-                        Spacer(minLength: 0)
-                        Image(systemName: "lock.fill")
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                            .accessibilityHidden(true)
                     }
-                    .padding(Theme.Spacing.l)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .elevatedCard()
+                    .buttonStyle(PressableCardStyle())
+                    .accessibilityLabel("\(puzzle.title). \(puzzle.difficulty.label). \(puzzle.clueCount) clues. Premium")
+                    .accessibilityHint("Opens Premium plans")
                 }
-                .buttonStyle(PressableCardStyle())
-                .accessibilityLabel("\(puzzle.title). \(puzzle.difficulty.label). \(puzzle.clueCount) clues. Premium")
-                .accessibilityHint("Opens Premium plans")
             }
         }
     }
@@ -390,5 +409,44 @@ struct PackDetailView: View {
         let base = "Opens with every pack and Journey in Premium."
         guard let end = pack.seasonEnd() else { return base }
         return "Here until \(end.formatted(Self.seasonEndFormat)). " + base
+    }
+}
+
+// MARK: - Track row
+
+/// One row of a collection's puzzle list, numbered the way an album's track
+/// list is. Shared by packs and Journeys, locked and open.
+struct TrackRow<Accessory: View>: View {
+    let number: Int
+    let title: String
+    let detail: String
+    @ViewBuilder let accessory: Accessory
+
+    /// Where a list of these starts its dividers: under the title, past the
+    /// number column.
+    static var dividerInset: CGFloat { Theme.Spacing.l + 28 + Theme.Spacing.m }
+
+    var body: some View {
+        HStack(spacing: Theme.Spacing.m) {
+            Text("\(number)")
+                .font(.subheadline.weight(.semibold))
+                .monospacedDigit()
+                .foregroundStyle(.secondary)
+                .frame(width: 28)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                    .font(.headline)
+                    .foregroundStyle(.primary)
+                    .fixedSize(horizontal: false, vertical: true)
+                Text(detail)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            Spacer(minLength: 0)
+            accessory
+        }
+        .cardRowPadding()
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .contentShape(.rect)
     }
 }

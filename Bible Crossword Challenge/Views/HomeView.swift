@@ -22,6 +22,8 @@ struct HomeView: View {
     let profile: PlayerProfile
     /// Owned by RootView so a widget deep-link can push the daily puzzle here.
     @Binding var path: NavigationPath
+    /// Switches to the Packs tab — the Packs shelf header's "See all".
+    var onShowPacks: () -> Void = {}
 
     @Environment(\.puzzleProvider) private var puzzleProvider
     @Environment(StoreService.self) private var store
@@ -243,12 +245,35 @@ struct HomeView: View {
             if case .play = DailyPresentation.of(record: miniRecord, on: Date()) { return true }
             return false
         }()
-        let leadsWithMini = mini != nil && (profile.isStillLearning || (dailyIsRepeat && miniIsNew))
+        // Withheld inside the learning window — see `companionPuzzles`.
+        let sunday = profile.isStillLearning ? nil : sundaySpecial
+        let sundayRecord = sunday.flatMap { s in records.first { $0.puzzleID == s.id } }
+        let sundayState = sundayPresentation(sundayRecord)
+        let sundayIsNew: Bool = {
+            if sunday != nil, case .play = sundayState { return true }
+            return false
+        }()
+        let lead: TodayLead = {
+            if mini != nil && (profile.isStillLearning || (dailyIsRepeat && miniIsNew)) { return .mini }
+            // Past the Mini, the week's Special is the other puzzle that can be
+            // new on a repeat day. Both rotations wrapped on 2026-10-04 and the
+            // Special — unplayed — sat third on the screen under two "best
+            // time" rows. It's a bigger sitting than the habit asks for, but
+            // it is the only new thing Today has, and any finish keeps the
+            // streak. The Mini still goes first when it's new: it's the gentler
+            // way to keep the day.
+            if dailyIsRepeat && sundayIsNew { return .sunday }
+            return .daily
+        }()
+        let today = TodayPuzzles(
+            daily: daily, dailyRecord: record,
+            mini: mini, miniRecord: miniRecord,
+            sunday: sunday, sundayRecord: sundayRecord, sundayPresentation: sundayState
+        )
 
         return NavigationStack(path: $path) {
             CardColumns {
-                leadColumn(daily: daily, record: record, mini: mini,
-                           miniRecord: miniRecord, leadsWithMini: leadsWithMini)
+                leadColumn(today, lead: lead)
             } more: {
                 moreColumn
             }
@@ -265,10 +290,13 @@ struct HomeView: View {
             .sheet(isPresented: $showTrialReoffer) {
                 PaywallView(source: TrialReoffer.source, initialPlanID: trialReofferPlanID)
             }
-            // Inline, because the greeting below is the screen's real title —
-            // a large "Today" on top of it would be two headings for one page.
+            // Large, as a tab's root title is. It was inline while a greeting
+            // sat under it as the page's real title; the greeting went on
+            // 2026-07-28 and left a small centred "Today" over nothing. The
+            // large title collapses into the bar on scroll, so it costs its
+            // height only at the top of the page.
             .navigationTitle("Today")
-            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarTitleDisplayMode(.large)
             .navigationDestination(for: Puzzle.self) { puzzle in
                 CrosswordGameView(puzzle: puzzle, profile: profile, entrySource: "home")
             }
@@ -305,14 +333,12 @@ struct HomeView: View {
 
     /// Today's puzzles: the verse, the lead card and the ones under it.
     @ViewBuilder
-    private func leadColumn(
-        daily: Puzzle?, record: PuzzleRecord?, mini: Puzzle?, miniRecord: PuzzleRecord?,
-        leadsWithMini: Bool
-    ) -> some View {
-        TodayHeader(verse: verseOfTheDay(excluding: daily))
+    private func leadColumn(_ today: TodayPuzzles, lead: TodayLead) -> some View {
+        TodayHeader(verse: verseOfTheDay(excluding: today.daily))
 
         // A player still inside their first three finishes leads
-        // with the Mini; everyone else leads with the daily.
+        // with the Mini; everyone else leads with the daily — or, on a
+        // repeat day, with whichever of the day's puzzles is new.
         //
         // Finishing one puzzle on the first day is what separates a
         // player who comes back from one who doesn't — measured at
@@ -329,19 +355,12 @@ struct HomeView: View {
         // habit existed. After three finishes the screen is the one
         // everybody else has, permanently — the daily is the habit,
         // the Mini is just a gentler way in.
-        if leadsWithMini, let mini {
+        if let hero = today.puzzle(lead) {
             LeadPuzzleCard(
-                puzzle: mini,
-                billing: .mini,
-                presentation: .of(record: miniRecord, on: Date()),
-                progress: inProgressFraction(mini, record: miniRecord)
-            )
-        } else if let daily {
-            LeadPuzzleCard(
-                puzzle: daily,
-                billing: .daily,
-                presentation: .of(record: record, on: Date()),
-                progress: inProgressFraction(daily, record: record)
+                puzzle: hero.puzzle,
+                billing: hero.billing,
+                presentation: hero.presentation,
+                progress: inProgressFraction(hero.puzzle, record: today.record(lead))
             )
         } else {
             emptyDailyCard
@@ -350,58 +369,32 @@ struct HomeView: View {
         // The day's other puzzles as rows of one card, not a card each:
         // they are one idea ("also today"), and two white cards stacked
         // under the hero read as two more headlines.
-        let companions = companionPuzzles(
-            daily: daily, record: record, mini: mini, miniRecord: miniRecord,
-            leadsWithMini: leadsWithMini
-        )
+        let companions = companionPuzzles(today, lead: lead)
         if !companions.isEmpty {
             CompanionPuzzlesCard(rows: companions)
         }
     }
 
-    /// What sits under the hero: whichever daily it isn't carrying, then the
-    /// Sunday Special.
-    private func companionPuzzles(
-        daily: Puzzle?, record: PuzzleRecord?, mini: Puzzle?, miniRecord: PuzzleRecord?,
-        leadsWithMini: Bool
-    ) -> [CompanionPuzzle] {
-        var rows: [CompanionPuzzle] = []
-        if leadsWithMini, mini != nil {
-            if let daily {
-                rows.append(CompanionPuzzle(
-                    puzzle: daily, billing: .daily,
-                    presentation: .of(record: record, on: Date())
-                ))
-            }
-        } else if let mini {
-            rows.append(CompanionPuzzle(
-                puzzle: mini, billing: .mini,
-                presentation: .of(record: miniRecord, on: Date())
-            ))
-        }
-
-        // The week's peak, Sunday through Saturday. Below the two
-        // dailies: the Special is a sitting you choose, not the
-        // habit the streak depends on.
-        //
-        // Absent inside the learning window, on the same threshold
-        // that hands those players the Mini above. It was the one
-        // puzzle surface on this screen with no such gate, and it
-        // is the worst thing a first-day player can open: of 17 who
-        // started one on their install day (2.5+, 45 days to
-        // 2026-09-08) 5 finished, and 22% of those starts were
-        // abandoned under 10% fill within 15 seconds — against 3%
-        // on the Mini. A 21×21 handed to someone who has just
-        // solved a two-letter tutorial is a wall with a card around
-        // it. It comes back at three finishes, with everything else
-        // the window withholds.
-        if let sunday = sundaySpecial, !profile.isStillLearning {
-            rows.append(CompanionPuzzle(
-                puzzle: sunday, billing: .sunday,
-                presentation: sundayPresentation(records.first { $0.puzzleID == sunday.id })
-            ))
-        }
-        return rows
+    /// What sits under the hero: the day's puzzles it isn't carrying, the
+    /// dailies first and then the Sunday Special.
+    ///
+    /// The Special is the week's peak, Sunday through Saturday — below the two
+    /// dailies because it's a sitting you choose, not the habit the streak
+    /// depends on (it leads only on a repeat day, when it's the new one).
+    ///
+    /// Absent inside the learning window, on the same threshold that hands
+    /// those players the Mini above (`today.sunday` is nil there). It was the
+    /// one puzzle surface on this screen with no such gate, and it is the
+    /// worst thing a first-day player can open: of 17 who started one on
+    /// their install day (2.5+, 45 days to 2026-09-08) 5 finished, and 22% of
+    /// those starts were abandoned under 10% fill within 15 seconds — against
+    /// 3% on the Mini. A 21×21 handed to someone who has just solved a
+    /// two-letter tutorial is a wall with a card around it. It comes back at
+    /// three finishes, with everything else the window withholds.
+    private func companionPuzzles(_ today: TodayPuzzles, lead: TodayLead) -> [CompanionPuzzle] {
+        [TodayLead.daily, .mini, .sunday]
+            .filter { $0 != lead }
+            .compactMap { today.puzzle($0) }
     }
 
     /// The habit and the shelf: streak, plan, upgrade, packs, quest,
@@ -453,45 +446,57 @@ struct HomeView: View {
         // One header for the three things that carry on from day to
         // day, instead of an uppercase kicker on each card — Today had
         // seven of those, and a label per card is a label nobody reads.
+        //
+        // One card with dividers rather than a card per row: the rows are
+        // one list, and three identical white cards read as three
+        // headlines. The divider starts under the text, past the 44pt disc.
         VStack(alignment: .leading, spacing: Theme.Spacing.s) {
-            Text("Keep going").kicker()
+            Text("Keep going").sectionHeader()
                 .padding(.horizontal, Theme.Spacing.xs)
 
-            // A habit surface like the streak: only while a plan is
-            // running, one row, checked once today's chapter is read.
-            // `readingPlans` needs no Bible decode — the plan recorded
-            // its chapter count at start.
-            ReadingPlanCard(compact: true, onRead: openPlanChapter)
+            CardGroup(dividerInset: Theme.Spacing.l + 44 + Theme.Spacing.m) {
+                // A habit surface like the streak: only while a plan is
+                // running, one row, checked once today's chapter is read.
+                // `readingPlans` needs no Bible decode — the plan recorded
+                // its chapter count at start.
+                ReadingPlanCard(compact: true, onRead: openPlanChapter)
 
-            // The first unfinished Journey, hidden once they're all
-            // walked. A locked premium quest still shows — the card is
-            // a discovery surface, and its detail screen carries the
-            // paywall.
-            if let quest = activeQuest {
-                QuestHomeCard(
-                    quest: quest,
-                    progress: QuestProgress(quest: quest, recordsByID: recordsByID)
-                )
-            }
-
-            MemoryVerseCard(
-                dueCount: memoryVerses.dueCount,
-                activeCount: memoryVerses.entries.count,
-                showsKicker: false
-            )
-
-            // A row like its neighbours rather than a card of its own with an
-            // uppercase label and a progress bar: the badge is one more thing
-            // to keep going at, and a full card for it made the column a
-            // screen longer. Gone once every badge is earned.
-            if let next = Achievements.all.first(where: { !$0.isUnlocked(by: profile) }) {
-                Button {
-                    showAchievements = true
-                } label: {
-                    NextAchievementRow(achievement: next, profile: profile)
+                // The first unfinished Journey, hidden once they're all
+                // walked. A locked premium quest still shows — the card is
+                // a discovery surface, and its detail screen carries the
+                // paywall.
+                if let quest = activeQuest {
+                    QuestHomeCard(
+                        quest: quest,
+                        progress: QuestProgress(quest: quest, recordsByID: recordsByID)
+                    )
                 }
-                .buttonStyle(PressableCardStyle())
-                .accessibilityHint("Opens every achievement")
+
+                MemoryVerseCard(
+                    dueCount: memoryVerses.dueCount,
+                    activeCount: memoryVerses.entries.count,
+                    masteredCount: memoryVerses.entries.count(where: \.isMastered),
+                    nextReview: memoryVerses.entries
+                        .compactMap { memoryVerses.dueDate($0) }
+                        .filter { $0 > Date() }
+                        .min(),
+                    hasUnpracticed: memoryVerses.entries.contains { $0.lastPracticedAt == nil },
+                    showsKicker: false
+                )
+
+                // A row like its neighbours rather than a card of its own with an
+                // uppercase label and a progress bar: the badge is one more thing
+                // to keep going at, and a full card for it made the column a
+                // screen longer. Gone once every badge is earned.
+                if let next = Achievements.all.first(where: { !$0.isUnlocked(by: profile) }) {
+                    Button {
+                        showAchievements = true
+                    } label: {
+                        NextAchievementRow(achievement: next, profile: profile)
+                    }
+                    .buttonStyle(PressableCardStyle())
+                    .accessibilityHint("Opens every achievement")
+                }
             }
         }
 
@@ -499,7 +504,8 @@ struct HomeView: View {
             CollectionsCarousel(
                 packs: collectionPacks,
                 recordsByID: recordsByID,
-                isPremium: store.isPremium
+                isPremium: store.isPremium,
+                onShowAll: onShowPacks
             )
         }
 
@@ -610,8 +616,8 @@ private struct TodayHeader: View {
         } label: {
             VStack(alignment: .leading, spacing: Theme.Spacing.m) {
                 VStack(alignment: .leading, spacing: Theme.Spacing.s) {
-                    Text("Verse of the Day")
-                        .kicker()
+                    Text("Verse of the day")
+                        .sectionHeader()
                     // Three lines, then truncate. Verses run from one line to
                     // six, and an unbounded header pushed the daily card's CTA
                     // below the fold on a 667pt screen while landing it in a
@@ -666,6 +672,15 @@ private enum PuzzleBilling {
         }
     }
 
+    /// The row icon's colour — see `FeatureTint`.
+    var tint: Color {
+        switch self {
+        case .daily: FeatureTint.daily
+        case .mini: FeatureTint.mini
+        case .sunday: FeatureTint.sunday
+        }
+    }
+
     /// The noun VoiceOver leads with.
     var spoken: String {
         switch self {
@@ -695,7 +710,7 @@ private enum PuzzleBilling {
 // When solved it becomes a quiet win moment (the time you earned) rather than
 // a dead "done" tile.
 //
-// Which puzzle it carries is decided by the caller — see `leadsWithMini`.
+// Which puzzle it carries is decided by the caller — see `TodayLead`.
 
 private struct LeadPuzzleCard: View {
     let puzzle: Puzzle
@@ -743,10 +758,14 @@ private struct LeadPuzzleCard: View {
                         solvedReward(seconds)
                     case .playedBefore(let previous):
                         // Presented as playable, because it is: the meta row is
-                        // what an unsolved puzzle shows, and the old time is
-                        // stated as a target rather than a full stop.
+                        // what an unsolved puzzle shows. With a time on record
+                        // the button ("Beat 4:24") already says both that it's
+                        // a repeat and what to aim for — a line above it saying
+                        // "Played before · your best 4:24" said it twice.
                         metaRow
-                        replayPrompt(previous)
+                        if previous ?? 0 <= 0 {
+                            replayPrompt
+                        }
                     case .play:
                         metaRow
                         if let progress {
@@ -762,8 +781,13 @@ private struct LeadPuzzleCard: View {
                 // to be true — and the first thing that makes one day's card
                 // look different from the next. Dropped at accessibility sizes,
                 // where the title needs the whole width.
+                //
+                // Tone on tone and fused (no gap): at 72pt a 15×15 drawn as
+                // separate pale-blue squares read as a QR code, and in grey
+                // ink on the blue card it read as disabled. A quiet
+                // silhouette in the card's own hue keeps the shape.
                 if !typeSize.isAccessibilitySize {
-                    GridThumbnail(grid: puzzle.grid)
+                    GridThumbnail(grid: puzzle.grid, tint: Theme.accent.opacity(0.2), gap: 0)
                         .frame(width: 72, height: 72)
                 }
             }
@@ -778,10 +802,17 @@ private struct LeadPuzzleCard: View {
     /// stacked four capsule shapes — the button is the only one that should
     /// look like something to press.
     private var metaRow: some View {
-        Text("\(puzzle.difficulty.label) · \(puzzle.clueCount) clues · \(puzzle.size)×\(puzzle.size)")
+        Text(metaLine)
             .font(.subheadline)
             .foregroundStyle(.secondary)
             .fixedSize(horizontal: false, vertical: true)
+    }
+
+    /// The hero has no kicker, so the Special — the one occupant that isn't
+    /// today's puzzle but the week's — says so here.
+    private var metaLine: String {
+        let detail = "\(puzzle.difficulty.label) · \(puzzle.clueCount) clues · \(puzzle.size)×\(puzzle.size)"
+        return billing == .sunday ? "Sunday Special · \(detail)" : detail
     }
 
     // The win moment: leads with the time the user just earned, echoing the
@@ -804,25 +835,16 @@ private struct LeadPuzzleCard: View {
     }
 
     /// The rotation has come back around to a puzzle this player finished on an
-    /// earlier day. Accent, not green: green is this app's word for "done", and
-    /// today is not.
-    /// Plain text under the meta row, not an accent capsule: primary weight
-    /// carries the target, and the card keeps a single pill — the button.
-    private func replayPrompt(_ previous: Int?) -> some View {
-        Group {
-            // Concatenated rather than two views in a stack: as one `Text` it
-            // wraps as a phrase instead of breaking between "best" and the time.
-            if let previous, previous > 0 {
-                Text("Played before · your best ")
-                    + Text(TimeFormat.clock(previous)).monospacedDigit()
-            } else {
-                Text("You've played this one before")
-            }
-        }
-        .font(.subheadline.weight(.semibold))
-        .foregroundStyle(.primary)
-        .fixedSize(horizontal: false, vertical: true)
-        .frame(maxWidth: .infinity, alignment: .leading)
+    /// earlier day, with no time on record — the button can only say "Play
+    /// again", so this line says why.
+    /// Plain text under the meta row, not an accent capsule: the card keeps a
+    /// single pill — the button.
+    private var replayPrompt: some View {
+        Text("You've played this one before")
+            .font(.subheadline.weight(.semibold))
+            .foregroundStyle(.primary)
+            .fixedSize(horizontal: false, vertical: true)
+            .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     @ViewBuilder
@@ -886,13 +908,37 @@ private struct CollectionsCarousel: View {
     let packs: [PuzzlePack]
     let recordsByID: [String: PuzzleRecord]
     let isPremium: Bool
+    /// Opens the Packs tab, where the whole shelf lives.
+    let onShowAll: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.s) {
-            // "Packs", as the tab, the paywall and Settings call them.
-            Text("Packs").kicker()
-                .padding(.horizontal, Theme.Spacing.xs)
+            // "Packs", as the tab, the paywall and Settings call them. The
+            // header is the way to the rest of the shelf, App Store–style:
+            // the section title with a grey chevron after it.
+            Button(action: onShowAll) {
+                HStack(spacing: Theme.Spacing.xs) {
+                    Text("Packs").sectionHeader()
+                    Image(systemName: "chevron.forward")
+                        .font(.subheadline.weight(.bold))
+                        .foregroundStyle(.secondary)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                // Taller to the finger than to the eye.
+                .contentShape(.rect.inset(by: -10))
+            }
+            .buttonStyle(.plain)
+            .padding(.horizontal, Theme.Spacing.xs)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel("See all packs")
+            .accessibilityAddTraits([.isHeader, .isButton])
 
+            // Edge to edge: the scroll view reaches out through the column's
+            // padding to the screen's sides, and the content margin puts the
+            // first tile back in line with the cards above. Clipped at the
+            // column inset instead, the third tile was cut off by an invisible
+            // edge a few points short of the screen's. The negative padding
+            // keeps the column's measured width unchanged.
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: Theme.Spacing.m) {
                     ForEach(packs) { pack in
@@ -906,11 +952,14 @@ private struct CollectionsCarousel: View {
                         .buttonStyle(PressableCardStyle())
                     }
                 }
-                .padding(.horizontal, Theme.Spacing.xs)
-                // Give the row breathing room so the last tile's shadow/press
-                // scale isn't clipped by the ScrollView edge.
+                .scrollTargetLayout()
+                // Give the row breathing room so the press scale isn't
+                // clipped by the ScrollView edge.
                 .padding(.vertical, 2)
             }
+            .contentMargins(.horizontal, Theme.Spacing.m + Theme.Spacing.xs, for: .scrollContent)
+            .scrollTargetBehavior(.viewAligned)
+            .padding(.horizontal, -Theme.Spacing.m)
         }
     }
 }
@@ -979,7 +1028,9 @@ private struct PackTile: View {
             // the player's progress through it. This tile was missed when that
             // landed, so the carousel could still show a crowned pack as
             // "Complete" — the one surface where it sat on the home screen.
-            if isLocked {
+            // An unstarted pack states its size too: an empty bar over "0/5"
+            // is a gauge with nothing to measure.
+            if isLocked || progress.solved == 0 {
                 Text("\(progress.total) puzzle\(progress.total == 1 ? "" : "s")")
                     .font(.caption2)
                     .foregroundStyle(.secondary)
@@ -1008,7 +1059,7 @@ private struct PackTile: View {
         var parts = [pack.title]
         if isLocked { parts.append("Premium") }
         if let packBadge { parts.append(packBadge.label) }
-        parts.append(isLocked
+        parts.append(isLocked || progress.solved == 0
             ? "\(progress.total) puzzle\(progress.total == 1 ? "" : "s")"
             : (progress.isComplete ? "Complete" : "\(progress.solved) of \(progress.total) solved"))
         return parts.joined(separator: ". ")
@@ -1025,14 +1076,7 @@ private struct NextAchievementRow: View {
 
     var body: some View {
         HStack(spacing: Theme.Spacing.m) {
-            Image(systemName: achievement.symbol)
-                .font(.title2)
-                // The disc is a fixed 44pt, so the glyph stops growing
-                // where the disc does instead of spilling out of it.
-                .dynamicTypeSize(...DynamicTypeSize.xxLarge)
-                .foregroundStyle(Theme.accent)
-                .frame(width: 44, height: 44)
-                .background(Theme.accent.opacity(0.14), in: .circle)
+            RowIcon(symbol: achievement.symbol, tint: FeatureTint.badge)
             VStack(alignment: .leading, spacing: 2) {
                 Text(achievement.title)
                     .font(.headline)
@@ -1046,7 +1090,7 @@ private struct NextAchievementRow: View {
                 .font(.subheadline.weight(.semibold))
                 .foregroundStyle(.secondary)
         }
-        .padding(Theme.Spacing.l)
+        .cardRowPadding()
         .frame(maxWidth: .infinity, alignment: .leading)
         .elevatedCard()
         .accessibilityElement(children: .ignore)
@@ -1211,6 +1255,44 @@ private struct UpgradeCard: View {
 // one card rather than a card each: kept visually lighter than the hero so
 // they read as the second course, not competing headlines.
 
+/// Which of the day's puzzles takes the hero card.
+private enum TodayLead {
+    case daily, mini, sunday
+}
+
+/// The day's puzzles and their records, resolved once per body pass, so the
+/// hero and the rows under it read the same state.
+private struct TodayPuzzles {
+    let daily: Puzzle?
+    let dailyRecord: PuzzleRecord?
+    let mini: Puzzle?
+    let miniRecord: PuzzleRecord?
+    /// Nil inside the learning window.
+    let sunday: Puzzle?
+    let sundayRecord: PuzzleRecord?
+    /// Week-based rather than day-based — see `HomeView.sundayPresentation`.
+    let sundayPresentation: DailyPresentation
+
+    func record(_ slot: TodayLead) -> PuzzleRecord? {
+        switch slot {
+        case .daily: dailyRecord
+        case .mini: miniRecord
+        case .sunday: sundayRecord
+        }
+    }
+
+    func puzzle(_ slot: TodayLead) -> CompanionPuzzle? {
+        switch slot {
+        case .daily:
+            daily.map { CompanionPuzzle(puzzle: $0, billing: .daily, presentation: .of(record: dailyRecord, on: Date())) }
+        case .mini:
+            mini.map { CompanionPuzzle(puzzle: $0, billing: .mini, presentation: .of(record: miniRecord, on: Date())) }
+        case .sunday:
+            sunday.map { CompanionPuzzle(puzzle: $0, billing: .sunday, presentation: sundayPresentation) }
+        }
+    }
+}
+
 /// One row of `CompanionPuzzlesCard`.
 private struct CompanionPuzzle: Identifiable {
     let puzzle: Puzzle
@@ -1224,11 +1306,10 @@ private struct CompanionPuzzlesCard: View {
     let rows: [CompanionPuzzle]
 
     var body: some View {
-        VStack(spacing: 0) {
-            ForEach(Array(rows.enumerated()), id: \.element.id) { index, row in
-                if index > 0 {
-                    Divider().padding(.leading, Theme.Spacing.l)
-                }
+        // The same grouped list as Keep going, so the two lists on Today are
+        // one shape: same icon square, same row height, same divider inset.
+        CardGroup(dividerInset: Theme.Spacing.l + 44 + Theme.Spacing.m) {
+            ForEach(rows) { row in
                 CompactPuzzleRow(
                     puzzle: row.puzzle,
                     billing: row.billing,
@@ -1236,7 +1317,6 @@ private struct CompanionPuzzlesCard: View {
                 )
             }
         }
-        .elevatedCard()
     }
 }
 
@@ -1256,9 +1336,7 @@ private struct CompactPuzzleRow: View {
     var body: some View {
         NavigationLink(value: puzzle) {
             HStack(spacing: Theme.Spacing.m) {
-                Image(systemName: leadingSymbol)
-                    .font(.title)
-                    .foregroundStyle(isSolvedToday ? .green : Theme.accent)
+                RowIcon(symbol: leadingSymbol, tint: isSolvedToday ? FeatureTint.solved : billing.tint)
 
                 // No uppercase kicker: Today keeps those for section headers.
                 // The puzzle's name leads and its kind opens the line under it.
@@ -1279,7 +1357,7 @@ private struct CompactPuzzleRow: View {
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(.secondary)
             }
-            .padding(Theme.Spacing.l)
+            .cardRowPadding()
             .frame(maxWidth: .infinity, alignment: .leading)
             .contentShape(.rect)
         }
@@ -1294,11 +1372,11 @@ private struct CompactPuzzleRow: View {
     /// The bolt means "quick", which is the Mini's trait; the daily gets the
     /// calendar it's billed under. Both used to share the bolt.
     private var leadingSymbol: String {
-        if isSolvedToday { return "checkmark.circle.fill" }
+        if isSolvedToday { return "checkmark" }
         switch billing {
-        case .mini: return "bolt.circle.fill"
-        case .daily: return "calendar.circle.fill"
-        case .sunday: return "star.circle.fill"
+        case .mini: return "bolt.fill"
+        case .daily: return "calendar"
+        case .sunday: return "star.fill"
         }
     }
 
@@ -1312,8 +1390,10 @@ private struct CompactPuzzleRow: View {
             }
             return "Solved"
         case .playedBefore(let previous):
+            // "Your best" alone says it's a repeat; "Played before" in front
+            // of it was the third time the first screen said so.
             if let previous, previous > 0 {
-                return "Played before · your best \(TimeFormat.clock(previous))"
+                return "Your best \(TimeFormat.clock(previous))"
             }
             return "Played before · go again"
         case .play(.inProgress):

@@ -31,6 +31,11 @@ enum BibleCanon {
         let testament: Testament
         var id: String { name }
 
+        /// The name a reader expects to see. `name` is the key references
+        /// parse to ("Psalm 23:1"), so the book of Psalms is stored singular;
+        /// named on its own it reads "Psalms".
+        var displayName: String { name == "Psalm" ? "Psalms" : name }
+
         init(_ name: String, _ testament: Testament) {
             self.name = name
             self.testament = testament

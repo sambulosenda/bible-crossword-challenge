@@ -42,6 +42,27 @@ enum CollectionCardLayout {
         size > .large ? nil : 3
     }
 
+    /// The row at standard sizes: the cover top-aligned with the title, as
+    /// App Store and Podcasts lists set theirs, and the chevron centred on the
+    /// whole row. Centred, the cover floated beside the middle of a
+    /// three-line blurb, apart from the title it names.
+    static func row<Cover: View, Details: View, Chevron: View>(
+        cover: Cover, details: Details, chevron: Chevron
+    ) -> some View {
+        HStack(spacing: Theme.Spacing.m) {
+            HStack(alignment: .top, spacing: Theme.Spacing.m) {
+                cover
+                details
+            }
+            Spacer(minLength: 0)
+            chevron
+        }
+    }
+
+    /// Where a grouped list of these rows starts its dividers: under the
+    /// text, past the 44pt cover.
+    static let dividerInset = Theme.Spacing.l + 44 + Theme.Spacing.m
+
     /// A premium crown, joined to the title with a non-breaking space so it
     /// wraps as part of the last word rather than stranding itself on a line
     /// of its own.
@@ -130,6 +151,12 @@ enum CollectionLeadAction: String {
 /// cover, a title a step up the scale, and the ink pill the app reserves for
 /// its one loud action. The collection it promotes is lifted *out* of the
 /// list below, so the screen never shows it twice.
+///
+/// Compact since 2026-10-04: a cover, the title and where you are, and the
+/// pill trailing the row, App Store–style. The blurb and a full-width pill
+/// made it ~280pt for one item the player has usually already met on Today;
+/// the blurb is still in its VoiceOver label and on the detail screen. At
+/// accessibility sizes it stacks and the pill goes full width again.
 struct CollectionLeadCard: View {
     let title: String
     let blurb: String
@@ -141,36 +168,33 @@ struct CollectionLeadCard: View {
     let action: CollectionLeadAction
 
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
-    @ScaledMetric(relativeTo: .largeTitle) private var iconSize = 64
+    @ScaledMetric(relativeTo: .largeTitle) private var iconSize = 56
 
     private var isStacked: Bool { CollectionCardLayout.isStacked(dynamicTypeSize) }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: Theme.Spacing.m) {
+        Group {
             if isStacked {
                 VStack(alignment: .leading, spacing: Theme.Spacing.m) {
                     cover
                     heading
+                    pill
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 7)
+                        .background(Theme.ink, in: .capsule)
                 }
             } else {
                 HStack(spacing: Theme.Spacing.m) {
                     cover
                     heading
                     Spacer(minLength: 0)
+                    pill
+                        .padding(.horizontal, Theme.Spacing.m)
+                        .background(Theme.ink, in: .capsule)
+                        // The title wraps before the pill gives way.
+                        .layoutPriority(1)
                 }
             }
-
-            Text(blurb)
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-                .fixedSize(horizontal: false, vertical: true)
-
-            Text(meta)
-                .font(.caption.weight(.medium))
-                .foregroundStyle(.secondary)
-                .monospacedDigit()
-
-            pill
         }
         .padding(Theme.Spacing.l)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -185,7 +209,8 @@ struct CollectionLeadCard: View {
             accent: accent,
             isLocked: false,
             side: CollectionCardLayout.coverSize(iconSize),
-            font: .largeTitle
+            font: .title,
+            cornerRadius: 14
         )
     }
 
@@ -196,22 +221,23 @@ struct CollectionLeadCard: View {
                 .font(.title3.weight(.bold))
                 .foregroundStyle(.primary)
                 .fixedSize(horizontal: false, vertical: true)
+            Text(meta)
+                .font(.caption.weight(.medium))
+                .foregroundStyle(.secondary)
+                .monospacedDigit()
         }
     }
 
-    /// The `.pillProminent` treatment as a label rather than a button — the
-    /// whole card is already the navigation link, and nesting a second
-    /// tappable target inside it would give the row two hit areas that do the
-    /// same thing. Metrics match `PillButtonStyle` so the two read as one
-    /// component.
+    /// The `.pillProminent` ink as a label rather than a button — the whole
+    /// card is already the navigation link, and nesting a second tappable
+    /// target inside it would give the row two hit areas that do the same
+    /// thing. The caller sets its width and fill.
     private var pill: some View {
         Text(action.rawValue)
-            .font(.headline)
+            .font(.subheadline.weight(.bold))
             .foregroundStyle(Theme.onInk)
-            .padding(.vertical, 15)
-            .padding(.horizontal, Theme.Spacing.l)
-            .frame(maxWidth: .infinity)
-            .background(Theme.ink, in: .capsule)
+            .lineLimit(1)
+            .padding(.vertical, Theme.Spacing.s + 2)
     }
 }
 
@@ -246,15 +272,10 @@ struct PackCard: View {
                     details
                 }
             } else {
-                HStack(spacing: Theme.Spacing.m) {
-                    cover
-                    details
-                    Spacer(minLength: 0)
-                    chevron
-                }
+                CollectionCardLayout.row(cover: cover, details: details, chevron: chevron)
             }
         }
-        .padding(Theme.Spacing.l)
+        .cardRowPadding()
         .frame(maxWidth: .infinity, alignment: .leading)
         .elevatedCard()
         .accessibilityElement(children: .ignore)
@@ -308,9 +329,12 @@ struct PackCard: View {
     // locked is the strongest possible argument that Premium is charging for
     // something the player already has. Whether that overlap should exist at
     // all is ticket 14; this is the display not volunteering it either way.
+    //
+    // An unstarted pack states its size too, as Today's shelf does: an empty
+    // bar over "0 of 5 solved" is a gauge with nothing to measure.
     @ViewBuilder
     private var status: some View {
-        if isLocked {
+        if isLocked || progress.solved == 0 {
             Text(puzzleCountText)
                 .font(.caption2)
                 .foregroundStyle(.secondary)
@@ -344,7 +368,7 @@ struct PackCard: View {
         // Matches what's drawn: reading out progress the card no longer shows
         // would put the locked-and-complete contradiction back, in the one
         // place a sighted player can't see it to report it.
-        if isLocked {
+        if isLocked || progress.solved == 0 {
             parts.append(puzzleCountText)
         } else {
             parts.append(progress.isComplete
