@@ -760,6 +760,10 @@ struct BookListView: View {
             }
         }
         .scrollContentBackground(.hidden)
+        // Readable width, as every other list here: on iPhone Duo open the
+        // rows ran 950pt with the chapter count stranded at the far edge.
+        .frame(maxWidth: 640)
+        .frame(maxWidth: .infinity)
         .background(Theme.background)
         .navigationTitle(title)
         .navigationBarTitleDisplayMode(.inline)

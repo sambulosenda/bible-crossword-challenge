@@ -112,19 +112,55 @@ struct MemoryPracticeView: View {
 
     // MARK: - Session
 
+    /// The width of the verse, clue and keypad column in the wide layout —
+    /// the same keypad width the game screen gives its side column.
+    private static let sideColumnWidth: CGFloat = 400
+
     private func session(vm: GameViewModel, built: MemoryCloze.Built, entry: MemoryVerseStore.Entry) -> some View {
-        VStack(spacing: 0) {
-            header(built: built, entry: entry)
+        GeometryReader { proxy in
+            // Wide and roomy — iPhone Duo open, iPad in landscape — the grid
+            // takes the full height beside a column of verse, clue and keys.
+            // Stacked there, the keypad took the bottom third and the grid
+            // shrank to ~27pt cells in a corner of an empty page, with the
+            // clue's two arrows 900pt apart.
+            let wide = proxy.size.width > proxy.size.height
+                && proxy.size.width >= Self.sideColumnWidth * 1.75
+            if wide {
+                HStack(spacing: 0) {
+                    VStack(spacing: 0) {
+                        header(built: built, entry: entry)
+                        CrosswordGridView(vm: vm)
+                            .padding(Theme.Spacing.m)
+                            .frame(maxHeight: .infinity)
+                    }
+                    Divider()
+                    VStack(spacing: 0) {
+                        MemoryVersePanel(vm: vm, built: built)
+                            .padding(Theme.Spacing.l)
+                        Spacer(minLength: 0)
+                        ClueBarView(vm: vm)
+                        LetterKeyboardView(
+                            onLetter: { vm.enter($0) },
+                            onDelete: { vm.delete() }
+                        )
+                    }
+                    .frame(width: Self.sideColumnWidth)
+                }
+            } else {
+                VStack(spacing: 0) {
+                    header(built: built, entry: entry)
 
-            CrosswordGridView(vm: vm)
-                .padding(.horizontal, Theme.Spacing.m)
-                .frame(maxHeight: .infinity)
+                    CrosswordGridView(vm: vm)
+                        .padding(.horizontal, Theme.Spacing.m)
+                        .frame(maxHeight: .infinity)
 
-            ClueBarView(vm: vm)
-            LetterKeyboardView(
-                onLetter: { vm.enter($0) },
-                onDelete: { vm.delete() }
-            )
+                    ClueBarView(vm: vm)
+                    LetterKeyboardView(
+                        onLetter: { vm.enter($0) },
+                        onDelete: { vm.delete() }
+                    )
+                }
+            }
         }
         .focusable()
         .focusEffectDisabled()
@@ -328,4 +364,56 @@ struct MasteryDots: View {
     /// The pop is decoration on top of the dot the level-up already fills in,
     /// so Reduce Motion drops it and the dot is simply there.
     private var pops: Bool { animateTo && !reduceMotion }
+}
+
+// MARK: - Verse panel
+
+/// The verse as it's being recalled, beside the grid in the wide layout: words
+/// still hidden show as blanks, the one being typed is marked, and each fills
+/// in as it's solved. On a phone there's no room for it, and the grid alone
+/// has always carried the verse.
+private struct MemoryVersePanel: View {
+    let vm: GameViewModel
+    let built: MemoryCloze.Built
+
+    var body: some View {
+        let slots = vm.allSlots.sorted { $0.number < $1.number }
+        let shown = displayWords(count: slots.count)
+        let active = vm.activeSlot?.number
+        var text = AttributedString()
+        for (i, slot) in slots.enumerated() {
+            if i > 0 { text += AttributedString(" ") }
+            let hidden = built.blankedWordIndices.contains(i) && !solved(slot)
+            var word = AttributedString(hidden ? String(repeating: "_", count: slot.length) : shown[i])
+            if slot.number == active {
+                word.foregroundColor = Theme.accent
+                word.underlineStyle = .single
+            } else if hidden {
+                word.foregroundColor = .secondary
+            }
+            text += word
+        }
+        return VStack(alignment: .leading, spacing: Theme.Spacing.s) {
+            Text(built.puzzle.reference).kicker()
+            Text(text)
+                .font(.scripture(.title3))
+                .lineSpacing(6)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("\(built.puzzle.reference). \(built.blankedWordIndices.count) words to recall")
+    }
+
+    /// The verse's own words, punctuation and case kept, when they line up one
+    /// to one with the grid's; the grid's answers otherwise.
+    private func displayWords(count: Int) -> [String] {
+        let words = built.puzzle.verse.split(separator: " ").map(String.init)
+        if words.count == count, words.allSatisfy({ !MemoryCloze.tokenize($0).isEmpty }) { return words }
+        return vm.allSlots.sorted { $0.number < $1.number }.map { $0.answer.capitalized }
+    }
+
+    private func solved(_ slot: Slot) -> Bool {
+        slot.positions.allSatisfy { vm.grid[$0.row][$0.col].isCorrect }
+    }
 }
