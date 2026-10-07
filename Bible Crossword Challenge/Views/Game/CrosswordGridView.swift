@@ -57,6 +57,14 @@ struct CrosswordGridView: View {
     /// is its own kind of inaccessible.
     private static let zoomStep: CGFloat = 1.5
 
+    #if DEBUG
+    /// Screenshot helper: `-uiHideSelection` draws the board with no selected
+    /// cell or active word — same family as -uiFillSolved.
+    private static let hidesSelection = ProcessInfo.processInfo.arguments.contains("-uiHideSelection")
+    #else
+    private static let hidesSelection = false
+    #endif
+
     var body: some View {
         GeometryReader { geo in
             // Fit or zoom is a question about the container, not just the
@@ -230,8 +238,8 @@ struct CrosswordGridView: View {
                         CellView(
                             cell: cell,
                             side: side,
-                            isSelected: vm.selected == pos,
-                            isInWord: activeWord.contains(pos),
+                            isSelected: !Self.hidesSelection && vm.selected == pos,
+                            isInWord: !Self.hidesSelection && activeWord.contains(pos),
                             // Auto-check marks mistakes continuously; a
                             // one-shot check marks its cells until edited
                             // (that part rides on the cell itself).

@@ -125,6 +125,13 @@ struct RootView: View {
             if ProcessInfo.processInfo.arguments.contains("-uiSeedRotationRepeat") {
                 seedRotationRepeat()
             }
+            // `-uiSeedJourney beginnings 2`: the first 2 steps solved, the rest
+            // not, so the path reads in order.
+            let args = ProcessInfo.processInfo.arguments
+            if let flag = args.firstIndex(of: "-uiSeedJourney"), flag + 2 < args.count,
+               let done = Int(args[flag + 2]) {
+                seedJourney(id: args[flag + 1], done: done)
+            }
             #endif
             // A break is announced once, by the pass that causes it — see
             // `Streaks.Outcome`. A freeze save needs nothing here: the streak
@@ -537,6 +544,26 @@ struct RootView: View {
             record.updatedAt = earlier
         }
         context.saveLogged("seed rotation repeat")
+    }
+
+    private func seedJourney(id: String, done: Int) {
+        guard let quest = puzzleProvider.quests.first(where: { $0.id == id }) else { return }
+        let existing = (try? context.fetch(FetchDescriptor<PuzzleRecord>())) ?? []
+        let byID = Dictionary(existing.map { ($0.puzzleID, $0) }, uniquingKeysWith: { a, _ in a })
+        let earlier = Calendar.current.date(byAdding: .day, value: -1, to: Date()) ?? Date()
+        for (index, puzzleID) in quest.puzzleIDs.enumerated() {
+            let record = byID[puzzleID] ?? {
+                let fresh = PuzzleRecord(puzzleID: puzzleID)
+                context.insert(fresh)
+                return fresh
+            }()
+            let solved = index < done
+            record.isCompleted = solved
+            record.completedDate = solved ? earlier : nil
+            record.elapsedSeconds = solved ? 300 + index * 41 : 0
+            record.updatedAt = earlier
+        }
+        context.saveLogged("seed journey")
     }
 
     private func seedShowcase(_ p: PlayerProfile) {

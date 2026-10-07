@@ -25,6 +25,14 @@ struct CellView: View, Equatable {
     @Environment(\.accessibilityDifferentiateWithoutColor) private var differentiateWithoutColor
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
+    #if DEBUG
+    /// Screenshot helper: `-uiHideNumbers` draws tiles without clue numbers —
+    /// same family as -uiHideSelection.
+    private static let hidesNumbers = ProcessInfo.processInfo.arguments.contains("-uiHideNumbers")
+    #else
+    private static let hidesNumbers = false
+    #endif
+
     static func == (lhs: CellView, rhs: CellView) -> Bool {
         lhs.cell == rhs.cell
             && lhs.side == rhs.side
@@ -75,7 +83,7 @@ struct CellView: View, Equatable {
                         tileShape.fill(Color.green.opacity(0.5))
                     }
 
-                    if let number = cell.number {
+                    if let number = cell.number, !Self.hidesNumbers {
                         // The number is the cell's only tie to its clue, and
                         // purely proportional it was the first thing to become
                         // unreadable: 6pt on the 24pt cell a 15x15 gets in

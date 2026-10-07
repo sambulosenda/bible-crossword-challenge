@@ -562,6 +562,15 @@ struct HomeView: View {
     /// A daily inspirational verse, rotated deterministically and chosen from a
     /// puzzle other than today's so it never spoils the daily answer.
     private func verseOfTheDay(excluding daily: Puzzle?) -> Puzzle? {
+        #if DEBUG
+        // Screenshot helper: `-uiVerseID daily-091` pins the verse to that
+        // puzzle's — same family as -uiRotationDate.
+        let args = ProcessInfo.processInfo.arguments
+        if let flag = args.firstIndex(of: "-uiVerseID"), flag + 1 < args.count,
+           let pinned = puzzleProvider.puzzles.first(where: { $0.id == args[flag + 1] }) {
+            return pinned
+        }
+        #endif
         let pool = puzzleProvider.puzzles.filter { $0.id != daily?.id }
         guard !pool.isEmpty else { return nil }
         let day = Calendar.current.ordinality(of: .day, in: .era, for: Date()) ?? 0
