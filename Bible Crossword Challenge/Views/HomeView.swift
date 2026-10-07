@@ -50,16 +50,19 @@ struct HomeView: View {
     /// Decided once on appear so spending the impression can't hide the card
     /// mid-view.
     @State private var showStreakAsk = false
-    /// The trial re-offer sheet — see `TrialReoffer`. The plan is captured
-    /// with it so the sheet opens on the one the player backed out of.
-    @State private var showTrialReoffer = false
-    @State private var trialReofferPlanID: String?
-    /// Pushes the trophy list from the next-achievement card. Achievements
-    /// lost their tab in 2.8, so the card is the only way in from Today.
-    @State private var showAchievements = false
-    /// Pushes today's plan chapter. Only reachable while a plan is running —
-    /// the card doesn't render otherwise, so a non-reader's Today is unchanged.
-    @State private var showPlanReader = false
+    /// Every paywall Today opens: the trial re-offer (see `TrialReoffer`,
+    /// opening on the plan the player backed out of) and the upgrade card.
+    /// Presented here rather than by the card: a purchase removes the card,
+    /// and a sheet it owned was torn away mid-flow instead of showing the
+    /// paywall's own "you're Premium" state, as every other entry does.
+    @State private var paywall: PaywallRequest?
+
+    /// The day Today is showing. Nothing else in `body` changes at midnight,
+    /// so without it a player who left the app open overnight came back to
+    /// yesterday's puzzle marked Solved. Refreshed on the system's day change
+    /// and on every return to the foreground; equal values don't redraw.
+    @State private var currentDay = Calendar.current.startOfDay(for: .now)
+    @Environment(\.scenePhase) private var scenePhase
 
     private var dailyPuzzle: Puzzle? { puzzleProvider.dailyPuzzle() }
     private var dailyMini: Puzzle? { puzzleProvider.dailyMini() }
@@ -69,7 +72,7 @@ struct HomeView: View {
     /// card lingers Sunday through Saturday — day-based presentation would
     /// demote Sunday's win to "played before" by Monday morning.
     private func sundayPresentation(_ record: PuzzleRecord?) -> DailyPresentation {
-        let base = DailyPresentation.of(record: record, on: Date())
+        let base = DailyPresentation.of(record: record, on: currentDay)
         if case .playedBefore(let seconds) = base,
            let completed = record?.completedDate,
            puzzleProvider.weekIndex(for: completed) == puzzleProvider.weekIndex() {
@@ -86,7 +89,7 @@ struct HomeView: View {
     /// nobody sees — it takes three swipes to reach, which is exactly the
     /// discovery problem the badge exists to solve. Same reasoning that already
     /// put seasonal packs at the front.
-    private var collectionPacks: [PuzzlePack] {
+    private func collectionPacks(_ records: [String: PuzzleRecord]) -> [PuzzlePack] {
         // Same shadowing rule as the Packs tab: a collection that ships as a
         // Journey is not also a collection. Home carries a Journey card of its
         // own, so without this the carousel offered "The Life of David" a few
@@ -104,7 +107,6 @@ struct HomeView: View {
         // used to open on "First Steps — Complete" for anyone past the
         // tutorial, a dead end in the first slot with every tile after it
         // locked.
-        let records = recordsByID
         func rank(_ pack: PuzzlePack) -> Int {
             let progress = PackProgress(pack: pack, recordsByID: records)
             let locked = pack.isPremium && !store.isPremium
@@ -120,13 +122,15 @@ struct HomeView: View {
     /// The first Journey with steps left, in authored order (the free quest is
     /// authored first, so a new player's card always begins there). Nil once
     /// every quest is walked — the card earns its slot or gives it back.
-    private var activeQuest: QuestLine? {
+    private func activeQuest(_ recordsByID: [String: PuzzleRecord]) -> QuestLine? {
         puzzleProvider.quests.first {
             !QuestProgress(quest: $0, recordsByID: recordsByID).isComplete
         }
     }
 
-    /// Shared record lookup for pack-progress calculation in the carousel.
+    /// Record lookup for pack and quest progress. Built once per body pass
+    /// and handed down: as a property read in each consumer it was rebuilt
+    /// five times a pass, once per quest inside `activeQuest` alone.
     private var recordsByID: [String: PuzzleRecord] {
         Dictionary(records.map { ($0.puzzleID, $0) }, uniquingKeysWith: { a, _ in a })
     }
@@ -145,15 +149,13 @@ struct HomeView: View {
         if ProcessInfo.processInfo.arguments.contains("-uiForceTrialReoffer"),
            !TrialReofferSession.forced {
             TrialReofferSession.forced = true
-            trialReofferPlanID = StoreService.yearlyID
-            showTrialReoffer = true
+            paywall = PaywallRequest(source: TrialReoffer.source, planID: StoreService.yearlyID)
             return true
         }
         #endif
         guard let planID = store.trialReofferPlanID else { return false }
-        trialReofferPlanID = planID
         store.markTrialReofferShown()
-        showTrialReoffer = true
+        paywall = PaywallRequest(source: TrialReoffer.source, planID: planID)
         return true
     }
 
@@ -237,12 +239,18 @@ struct HomeView: View {
         // Today can say to someone who has been here three months; any finish
         // keeps the streak (`Streaks.registerCompletion`), so leading with the
         // new puzzle costs the habit nothing. The repeat stays one row down.
+        //
+        // Each presentation is worked out once and reused by the hero and
+        // the rows: it decodes the record's entries to tell played from
+        // fresh, and was being decoded six times a pass.
+        let dailyState = DailyPresentation.of(record: record, on: currentDay)
+        let miniState = DailyPresentation.of(record: miniRecord, on: currentDay)
         let dailyIsRepeat: Bool = {
-            if case .playedBefore = DailyPresentation.of(record: record, on: Date()) { return true }
+            if case .playedBefore = dailyState { return true }
             return false
         }()
         let miniIsNew: Bool = {
-            if case .play = DailyPresentation.of(record: miniRecord, on: Date()) { return true }
+            if case .play = miniState { return true }
             return false
         }()
         // Withheld inside the learning window — see `companionPuzzles`.
@@ -266,8 +274,8 @@ struct HomeView: View {
             return .daily
         }()
         let today = TodayPuzzles(
-            daily: daily, dailyRecord: record,
-            mini: mini, miniRecord: miniRecord,
+            daily: daily, dailyRecord: record, dailyPresentation: dailyState,
+            mini: mini, miniRecord: miniRecord, miniPresentation: miniState,
             sunday: sunday, sundayRecord: sundayRecord, sundayPresentation: sundayState
         )
 
@@ -275,7 +283,7 @@ struct HomeView: View {
             CardColumns {
                 leadColumn(today, lead: lead)
             } more: {
-                moreColumn
+                moreColumn(recordsByID)
             }
             .background(Theme.background)
             // One ask per sitting, in order of how much the player has already
@@ -287,8 +295,16 @@ struct HomeView: View {
             .onAppear {
                 if !maybeShowTrialReoffer() { maybeShowStreakAsk() }
             }
-            .sheet(isPresented: $showTrialReoffer) {
-                PaywallView(source: TrialReoffer.source, initialPlanID: trialReofferPlanID)
+            .sheet(item: $paywall) { request in
+                PaywallView(source: request.source, initialPlanID: request.planID)
+            }
+            .task {
+                for await _ in NotificationCenter.default.notifications(named: .NSCalendarDayChanged) {
+                    refreshDay()
+                }
+            }
+            .onChange(of: scenePhase) { _, phase in
+                if phase == .active { refreshDay() }
             }
             // Large, as a tab's root title is. It was inline while a greeting
             // sat under it as the page's real title; the greeting went on
@@ -306,19 +322,22 @@ struct HomeView: View {
             .navigationDestination(for: QuestRoute.self) { route in
                 QuestDetailView(quest: route.quest, profile: profile, source: route.source)
             }
-            .navigationDestination(isPresented: $showAchievements) {
+            // Routes on `path`, not `isPresented` flags: a deep link that
+            // replaces the path clears these too, and the plan route carries
+            // the day it was opened on. Built from the live `nextDay`, the
+            // reader re-rendered as day + 1 while it closed after marking a
+            // chapter read — and blank on a plan's last day, where it is nil.
+            .navigationDestination(for: AchievementsRoute.self) { _ in
                 AchievementsView(profile: profile, source: "home_card")
             }
-            .navigationDestination(isPresented: $showPlanReader) {
-                if let plan = readingPlans.activePlan, let day = readingPlans.nextDay {
-                    ChapterReaderView(
-                        startBook: plan.book,
-                        startChapter: day,
-                        source: "read_plan",
-                        planChapter: PlanChapter(book: plan.book, chapter: day),
-                        onPlanChapterRead: { markPlanRead(plan, day: day) }
-                    )
-                }
+            .navigationDestination(for: PlanChapterRoute.self) { route in
+                ChapterReaderView(
+                    startBook: route.book,
+                    startChapter: route.day,
+                    source: "read_plan",
+                    planChapter: PlanChapter(book: route.book, chapter: route.day),
+                    onPlanChapterRead: { markPlanRead(planID: route.planID, day: route.day) }
+                )
             }
             .navigationDestination(for: MemoryRoute.self) { _ in
                 MemoryVerseListView()
@@ -400,7 +419,7 @@ struct HomeView: View {
     /// The habit and the shelf: streak, plan, upgrade, packs, quest,
     /// achievements, memory verses.
     @ViewBuilder
-    private var moreColumn: some View {
+    private func moreColumn(_ recordsByID: [String: PuzzleRecord]) -> some View {
         // Instead of, not above: a comeback card stacked on a flame
         // card reading 0 would state the loss twice and answer it
         // once. The two are mutually exclusive by construction
@@ -465,7 +484,7 @@ struct HomeView: View {
                 // walked. A locked premium quest still shows — the card is
                 // a discovery surface, and its detail screen carries the
                 // paywall.
-                if let quest = activeQuest {
+                if let quest = activeQuest(recordsByID) {
                     QuestHomeCard(
                         quest: quest,
                         progress: QuestProgress(quest: quest, recordsByID: recordsByID)
@@ -490,7 +509,7 @@ struct HomeView: View {
                 // screen longer. Gone once every badge is earned.
                 if let next = Achievements.all.first(where: { !$0.isUnlocked(by: profile) }) {
                     Button {
-                        showAchievements = true
+                        path.append(AchievementsRoute())
                     } label: {
                         NextAchievementRow(achievement: next, profile: profile)
                     }
@@ -500,9 +519,10 @@ struct HomeView: View {
             }
         }
 
-        if !collectionPacks.isEmpty {
+        let packs = collectionPacks(recordsByID)
+        if !packs.isEmpty {
             CollectionsCarousel(
-                packs: collectionPacks,
+                packs: packs,
                 recordsByID: recordsByID,
                 isPremium: store.isPremium,
                 onShowAll: onShowPacks
@@ -513,7 +533,8 @@ struct HomeView: View {
             UpgradeCard(
                 totalPuzzles: puzzleProvider.totalPuzzleCount,
                 solvedPuzzles: records.count { $0.isCompleted },
-                currentStreak: profile.currentStreak
+                currentStreak: profile.currentStreak,
+                onOpen: { paywall = PaywallRequest(source: $0) }
             )
         }
     }
@@ -538,15 +559,21 @@ struct HomeView: View {
     private func openPlanChapter() {
         guard let plan = readingPlans.activePlan, let day = readingPlans.nextDay else { return }
         analytics.log(.scriptureOpened(reference: "\(plan.book) \(day)", source: "read_plan"))
-        showPlanReader = true
+        path.append(PlanChapterRoute(planID: plan.id, book: plan.book, day: day))
     }
 
-    private func markPlanRead(_ plan: ReadingPlan, day: Int) {
-        guard readingPlans.markRead(day: day) else { return }
+    private func markPlanRead(planID: String, day: Int) {
+        // The plan the chapter was opened under — not one started since.
+        guard let plan = readingPlans.activePlan, plan.id == planID,
+              readingPlans.markRead(day: day) else { return }
         analytics.log(.planChapterRead(plan: plan.id, day: day))
         if readingPlans.isComplete {
             analytics.log(.planCompleted(plan: plan.id, days: day))
         }
+    }
+
+    private func refreshDay() {
+        currentDay = Calendar.current.startOfDay(for: .now)
     }
 
     // MARK: - Derived state
@@ -1144,6 +1171,9 @@ private struct UpgradeCard: View {
     /// the card that's already here, not a new card: the last proactive
     /// Today offer was 75 opens and no taps.
     var currentStreak: Int = 0
+    /// Opens the paywall under this card's source. HomeView presents it, so
+    /// the sheet outlives the card a purchase removes.
+    let onOpen: (PaywallSource) -> Void
 
     /// A week, the run length where the habit is a fact rather than a start.
     static let streakThreshold = 7
@@ -1152,7 +1182,6 @@ private struct UpgradeCard: View {
     @ScaledMetric(relativeTo: .title) private var iconSize = 44
     /// At accessibility sizes the crown gives its width to the copy.
     @Environment(\.dynamicTypeSize) private var typeSize
-    @State private var showPaywall = false
     /// Read here rather than passed in: the CTA names the trial only when the
     /// product actually carries one — see `PremiumCopy.cardCTA`.
     @Environment(StoreService.self) private var store
@@ -1186,7 +1215,7 @@ private struct UpgradeCard: View {
         // button colliding with its own close button and the tab bar sitting
         // over its legal text.
         Button {
-            showPaywall = true
+            onOpen(isStreakVariant ? .streakCard : .homeCard)
         } label: {
             // Top-aligned, and the pill sits under the copy rather than on the
             // trailing edge. Beside a fixed-width pill the text column was left
@@ -1253,14 +1282,13 @@ private struct UpgradeCard: View {
             // tinted card on the screen, which made it louder than the puzzle.
             // That tint now belongs to the daily card.
             .elevatedCard()
+            // The CTA is the button's name — the only place the free trial
+            // is mentioned — so it leads; the copy above it follows.
             .accessibilityElement(children: .ignore)
-            .accessibilityLabel(title)
-            .accessibilityHint(subtitle)
+            .accessibilityLabel("\(title). \(subtitle)")
+            .accessibilityHint(PremiumCopy.cardCTA(store))
         }
         .buttonStyle(PressableCardStyle())
-        .sheet(isPresented: $showPaywall) {
-            PaywallView(source: isStreakVariant ? .streakCard : .homeCard)
-        }
     }
 }
 
@@ -1270,6 +1298,23 @@ private struct UpgradeCard: View {
 // moments) the full puzzle is too big, and the week's Sunday Special. Rows of
 // one card rather than a card each: kept visually lighter than the hero so
 // they read as the second course, not competing headlines.
+
+/// A paywall Today presents, and the plan it should open on.
+private struct PaywallRequest: Identifiable {
+    let id = UUID()
+    let source: PaywallSource
+    var planID: String?
+}
+
+/// The trophy list, pushed from the next-achievement row.
+private struct AchievementsRoute: Hashable {}
+
+/// A reading-plan chapter, with the day it was opened on.
+private struct PlanChapterRoute: Hashable {
+    let planID: String
+    let book: String
+    let day: Int
+}
 
 /// Which of the day's puzzles takes the hero card.
 private enum TodayLead {
@@ -1281,8 +1326,10 @@ private enum TodayLead {
 private struct TodayPuzzles {
     let daily: Puzzle?
     let dailyRecord: PuzzleRecord?
+    let dailyPresentation: DailyPresentation
     let mini: Puzzle?
     let miniRecord: PuzzleRecord?
+    let miniPresentation: DailyPresentation
     /// Nil inside the learning window.
     let sunday: Puzzle?
     let sundayRecord: PuzzleRecord?
@@ -1300,9 +1347,9 @@ private struct TodayPuzzles {
     func puzzle(_ slot: TodayLead) -> CompanionPuzzle? {
         switch slot {
         case .daily:
-            daily.map { CompanionPuzzle(puzzle: $0, billing: .daily, presentation: .of(record: dailyRecord, on: Date())) }
+            daily.map { CompanionPuzzle(puzzle: $0, billing: .daily, presentation: dailyPresentation) }
         case .mini:
-            mini.map { CompanionPuzzle(puzzle: $0, billing: .mini, presentation: .of(record: miniRecord, on: Date())) }
+            mini.map { CompanionPuzzle(puzzle: $0, billing: .mini, presentation: miniPresentation) }
         case .sunday:
             sunday.map { CompanionPuzzle(puzzle: $0, billing: .sunday, presentation: sundayPresentation) }
         }
@@ -1378,8 +1425,10 @@ private struct CompactPuzzleRow: View {
             .contentShape(.rect)
         }
         .buttonStyle(PressableCardStyle())
+        // Ignoring the children drops the link's button trait with them.
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(accessibilityLabel)
+        .accessibilityAddTraits(.isButton)
     }
 
     /// Solved wears the green check; unsolved leads with the billing's own
