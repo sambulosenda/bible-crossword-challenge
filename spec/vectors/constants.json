@@ -182,7 +182,10 @@
     },
     "paywallSources" : [
       "hint_limit",
+      "hint_limit_card",
+      "completion_offer",
       "home_card",
+      "streak_card",
       "profile",
       "archive",
       "pack_locked",

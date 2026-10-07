@@ -535,6 +535,16 @@ struct PremiumBenefit: Identifiable {
                 icon: "calendar",
                 title: "Seasonal packs, every year"
             ),
+            PremiumBenefit(
+                // Added 2026-10-07: memory verses are what retained players
+                // actually use, and they were nowhere on the offer, which sold
+                // puzzle counts to daily players who don't need more puzzles.
+                // Premium already lifts the 3-verse cap. "Memorize", not
+                // "Unlimited verses": every verse is already free to read.
+                // The brain matches "Try it from memory". 25 characters.
+                icon: "brain",
+                title: "Memorize unlimited verses"
+            ),
         ]
     }
 }

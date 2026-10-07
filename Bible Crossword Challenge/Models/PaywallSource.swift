@@ -33,6 +33,11 @@ enum PaywallSource: String, CaseIterable, Hashable {
     /// Its own label so it reads against the old chip's `hint_limit` taps.
     /// See `HintUpgradeSheet`.
     case hintLimitCard = "hint_limit_card"
+    /// The one-time row under the verse on the completion screen — the
+    /// second ask, after the player has finished a puzzle rather than
+    /// 30 seconds into the app. Not `completion`: that label is a pre-2.0
+    /// mis-attribution artifact and must stay filtered out of readouts.
+    case completionOffer = "completion_offer"
     /// The upgrade card on Today.
     case homeCard = "home_card"
     /// The same card once the player has a streak of a week or more, when it
@@ -79,6 +84,9 @@ enum PaywallSource: String, CaseIterable, Hashable {
         switch self {
         case .hintLimit, .hintLimitCard:
             return "Never stuck for long."
+        case .completionOffer:
+            // They just finished one; the offer is the rest of it.
+            return "There's so much more\nwhere that came from."
         case .homeCard:
             return "Make it part of the morning."
         case .streakCard:

@@ -289,8 +289,11 @@
       "expect" : {
         "name" : "purchase_cancelled",
         "parameterKeys" : [
+          "can_make_payments",
           "currency",
+          "elapsed_ms",
           "offers_trial",
+          "path",
           "plan",
           "price_minor_units",
           "source"
@@ -366,6 +369,18 @@
         "case" : "reminderAskShown"
       },
       "name" : "reminder_ask_shown"
+    },
+    {
+      "expect" : {
+        "name" : "upsell_shown",
+        "parameterKeys" : [
+          "source"
+        ]
+      },
+      "given" : {
+        "case" : "upsellShown"
+      },
+      "name" : "upsell_shown"
     },
     {
       "expect" : {
@@ -852,7 +867,7 @@
     }
   ],
   "constants" : {
-    "eventCount" : 64,
+    "eventCount" : 65,
     "paywallExits" : [
       "close",
       "free_link",

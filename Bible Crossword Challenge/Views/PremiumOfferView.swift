@@ -141,7 +141,13 @@ struct PremiumOfferView: View {
                 productsPlaceholder
             } else {
                 VStack(spacing: Theme.Spacing.m) {
-                    staggered(socialProof, delay: 0.20)
+                    // Dropped in the tightest layout since the fourth benefit
+                    // row (2026-10-07): on a 667pt iPhone SE that row put the
+                    // timeline's last line back under the pinned button, and
+                    // the timeline is the stronger trust element of the two.
+                    if !(compact && !keepsSmallHero) {
+                        staggered(socialProof, delay: 0.20)
+                    }
                     staggered(plans, delay: 0.23)
                 }
                 staggered(trialTimeline, delay: 0.29)

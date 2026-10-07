@@ -158,7 +158,20 @@ enum AnalyticsEvent {
     /// before this shipped), so it gets a row of its own, with the price the
     /// sheet showed, from the one place that sees every cancel on every
     /// surface: `StoreService.purchase`.
-    case purchaseCancelled(plan: String, source: String, offersTrial: Bool, amount: StoreService.PurchaseAmount)
+    ///
+    /// `elapsedMs` is tap → result. A human cancel takes seconds; one under a
+    /// quarter-second means Apple's sheet never appeared (3 of 15 cancellers
+    /// in Sep 2026 sat at 70–210 ms). `canMakePayments` and `path` are there
+    /// to tell those apart — a Screen Time purchase block versus a failure on
+    /// the RevenueCat package or bare-product route.
+    case purchaseCancelled(
+        plan: String, source: String, offersTrial: Bool, amount: StoreService.PurchaseAmount,
+        elapsedMs: Int, canMakePayments: Bool, path: String
+    )
+    /// An inline upsell came on screen. The denominator for its
+    /// `paywall_opened` taps — a row the player scrolls past never opens a
+    /// paywall, so without this its tap rate can't be read.
+    case upsellShown(source: String)
     case paywallOpened(source: String)
     /// The moment someone commits — the buy button, before StoreKit takes over.
     ///
@@ -378,6 +391,7 @@ enum AnalyticsEvent {
         case .subscriptionRenewed: return "subscription_renewed"
         case .purchaseFailed: return "purchase_failed"
         case .purchaseCancelled: return "purchase_cancelled"
+        case .upsellShown: return "upsell_shown"
         case .paywallOpened: return "paywall_opened"
         case .paywallCTATapped: return "paywall_cta_tapped"
         case .paywallDismissed: return "paywall_dismissed"
@@ -460,7 +474,8 @@ enum AnalyticsEvent {
             ]
         case .purchaseFailed(let plan, let source, let reason):
             return ["plan": plan, "source": source, "reason": reason]
-        case .purchaseCancelled(let plan, let source, let offersTrial, let amount):
+        case .purchaseCancelled(let plan, let source, let offersTrial, let amount,
+                                let elapsedMs, let canMakePayments, let path):
             return [
                 "plan": plan,
                 "source": source,
@@ -469,7 +484,12 @@ enum AnalyticsEvent {
                 // the price the player was looking at when they backed out.
                 "price_minor_units": amount.minorUnits,
                 "currency": amount.currencyCode,
+                "elapsed_ms": elapsedMs,
+                "can_make_payments": canMakePayments,
+                "path": path,
             ]
+        case .upsellShown(let source):
+            return ["source": source]
         case .paywallOpened(let source):
             return ["source": source]
         case .paywallCTATapped(let plan, let source, let offersTrial):

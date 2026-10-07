@@ -122,6 +122,16 @@ struct CompletionView: View {
     /// the launch-time sheet used, so players who already met it there are
     /// not asked twice across the move.
     @AppStorage("didAskReminderAgain") private var didAskReminderAgain = false
+    /// The completion offer is shown once per device, ever — see `completionOffer`.
+    @AppStorage("completionOfferShown") private var completionOfferShown = false
+    /// Latched on appear so the row stays put for this screen once the
+    /// once-only flag above has been spent.
+    @State private var showsCompletionOffer = false
+    /// The row is on screen (scrolled into view, not under a sheet) — the
+    /// impression is logged only then, so the tap rate isn't diluted by
+    /// views nobody saw.
+    @State private var completionOfferVisible = false
+    @State private var didLogCompletionOffer = false
     @State private var showReturnDaySheet = false
     /// Decided once on appear so spending an impression can't hide the card
     /// mid-view.
@@ -202,6 +212,17 @@ struct CompletionView: View {
 
                     verseCard
 
+                    if showsCompletionOffer {
+                        completionOffer
+                            .onScrollVisibilityChange(threshold: 0.6) { visible in
+                                completionOfferVisible = visible
+                                logCompletionOfferIfSeen()
+                            }
+                            // Already in view under the day-2 sheet: counts
+                            // once the sheet goes.
+                            .onChange(of: showReturnDaySheet) { logCompletionOfferIfSeen() }
+                    }
+
                     if let packContext {
                         packCard(packContext)
                     }
@@ -252,6 +273,7 @@ struct CompletionView: View {
             // card below yields to it through `ReminderAsk.decide`.
             maybeShowReturnDaySheet()
             maybeShowReminderAsk()
+            maybeShowCompletionOffer()
         }
         .sheet(isPresented: $showReturnDaySheet, onDismiss: {
             // Marked on the way out, whichever way it closed — a swipe-down
@@ -895,6 +917,66 @@ struct CompletionView: View {
     /// The verse is content, not chrome: set straight on the paper, with the
     /// reference and a text link under it. It used to be a tinted card, the
     /// third container style on one screen.
+    /// The second ask: one row under the verse, once, on a free player's
+    /// first completion after this shipped. The onboarding paywall lands 30
+    /// seconds into the app and 92% leave it; the in-app buyers bought ~20
+    /// hours in, after playing. This is the first moment they have.
+    ///
+    /// Below the verse, never above it (the verse is this screen's reward),
+    /// and a row the player taps rather than a sheet — the auto-paywall on
+    /// completion was removed 2026-09-02. It sells what retained players use
+    /// (packs, Journeys, memory verses) rather than puzzle counts; the old
+    /// `mini_completion` card that sold "more puzzles" here got 0 taps of 15.
+    private var completionOffer: some View {
+        Button {
+            paywallEntry = PaywallEntry(source: .completionOffer)
+        } label: {
+            HStack(spacing: Theme.Spacing.m) {
+                RowIcon(symbol: "brain", tint: FeatureTint.memory)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Every pack, every Journey")
+                        .font(.headline)
+                        .foregroundStyle(.primary)
+                    Text(completionOfferSubtitle)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                Spacer(minLength: 0)
+                Image(systemName: "chevron.forward")
+                    .font(.footnote.weight(.semibold))
+                    .foregroundStyle(.tertiary)
+                    .accessibilityHidden(true)
+            }
+            .padding(Theme.Spacing.m)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .elevatedCard()
+            .contentShape(.rect)
+        }
+        .buttonStyle(PressableCardStyle())
+        .accessibilityHint("Opens Premium options")
+    }
+
+    private var completionOfferSubtitle: String {
+        if let yearly = store.yearly, let offer = store.introOffer(for: yearly) {
+            return "Free for \(offer.duration) · unlimited verses"
+        }
+        return "Unlimited verses with Premium"
+    }
+
+    private func maybeShowCompletionOffer() {
+        guard !store.isPremium, !completionOfferShown else { return }
+        completionOfferShown = true
+        showsCompletionOffer = true
+    }
+
+    private func logCompletionOfferIfSeen() {
+        guard completionOfferVisible, !didLogCompletionOffer,
+              !showReturnDaySheet, paywallEntry == nil else { return }
+        didLogCompletionOffer = true
+        analytics.log(.upsellShown(source: PaywallSource.completionOffer.rawValue))
+    }
+
     private var verseCard: some View {
         VStack(spacing: Theme.Spacing.s) {
             Text("Today's Verse")

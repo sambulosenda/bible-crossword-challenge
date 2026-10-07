@@ -76,7 +76,7 @@ struct HintUpgradeSheet: View {
         case .letter: "Reveal this letter now"
         case .word: "Reveal this word now"
         case .puzzle: "Reveal the whole puzzle now"
-        case .verse: "Unlimited hints"
+        case .verse: "Read the verse now"
         }
     }
 

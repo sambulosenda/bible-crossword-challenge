@@ -37,10 +37,15 @@ enum FeatureFlag: String {
     /// behavior, so a device we can't measure keeps the app it has.
     case hintQuotaOne = "hint-quota-one"
 
+    /// Daily allowance on the free verse hint — see `VerseHintAllowance`.
+    /// New profiles only; off unless PostHog assigns treatment.
+    case verseHintLimit = "verse-hint-limit"
+
     var defaultValue: Bool {
         switch self {
         case .stallNudge: return true
         case .hintQuotaOne: return false
+        case .verseHintLimit: return false
         }
     }
 }

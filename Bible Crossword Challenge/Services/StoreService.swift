@@ -239,6 +239,10 @@ final class StoreService {
         }
     }
 
+    /// Faster than any person can read Apple's sheet and press Cancel; human
+    /// cancels sit at 3–25 s.
+    static let instantCancelMs = 400
+
     /// Start a purchase for a specific plan. `source` is the paywall the tap
     /// came from; it is remembered for the whole attempt so a grant that lands
     /// out-of-band later is still attributed to the right entry point.
@@ -247,13 +251,15 @@ final class StoreService {
         purchaseInFlight = true
         pendingSource = source
         defer { purchaseInFlight = false }
+        let startedAt = Date()
+        let package = packagesByProductID[product.id]
 
         do {
             // Through the package when the current offering has one, so the
             // sale carries offering attribution in RevenueCat; a bare product
             // (not in any offering) still purchases fine without it.
             let result: PurchaseResultData
-            if let package = packagesByProductID[product.id] {
+            if let package {
                 result = try await Purchases.shared.purchase(package: package)
             } else {
                 result = try await Purchases.shared.purchase(product: StoreProduct(sk2Product: product))
@@ -264,12 +270,29 @@ final class StoreService {
                 // sit and mislabel whatever grant happens to arrive next.
                 pendingSource = nil
                 let offersTrial = introOffer(for: product) != nil
+                let elapsedMs = Int(Date().timeIntervalSince(startedAt) * 1000)
+                let canPay = AppStore.canMakePayments
                 analytics.log(.purchaseCancelled(
                     plan: Self.planName(for: product.id),
                     source: source,
                     offersTrial: offersTrial,
-                    amount: Self.amount(for: product)
+                    amount: Self.amount(for: product),
+                    elapsedMs: elapsedMs,
+                    canMakePayments: canPay,
+                    path: package == nil ? "product" : "package"
                 ))
+                // The one instant "cancel" with a known cause: the device is
+                // barred from buying (Screen Time, a managed device). Apple
+                // shows nothing, so without this the button just resets and
+                // the player taps it again — one tried four times in three
+                // minutes. Other instant cancels are only logged until the
+                // data names their cause.
+                if !canPay && elapsedMs < Self.instantCancelMs {
+                    purchaseNotice = PurchaseNotice(
+                        title: "Purchases Are Turned Off",
+                        message: "This device isn't allowed to make purchases. You can change this in Settings › Screen Time › Content & Privacy Restrictions."
+                    )
+                }
                 if offersTrial { recordTrialAbandon(product.id, source: source) }
                 return .cancelled
             }

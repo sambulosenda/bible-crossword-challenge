@@ -124,6 +124,11 @@ struct CrosswordGameView: View {
     /// and every hint tap. Opening a puzzle is the moment the pool takes
     /// effect, which is where the exposure belongs.
     @State private var freeHintLimit = PlayerProfile.freeHintLimit
+    /// Treatment arm of `verse-hint-limit`: verse hints past the daily
+    /// allowance cost from the pool. See `VerseHintAllowance`.
+    @State private var verseHintsMetered = false
+    /// Verse hints taken in this puzzle, for the cost and the menu label.
+    @State private var verseHintsUsed = 0
     /// Keeps the screen focused so a hardware keyboard can type into the grid.
     @FocusState private var gridFocused: Bool
 
@@ -419,7 +424,8 @@ struct CrosswordGameView: View {
         .sheet(item: $hintUpgrade, onDismiss: resolveHintUpgrade) { upgrade in
             HintUpgradeSheet(
                 upgrade: upgrade,
-                canUseVerse: vm.activeSlot?.reference != nil
+                // Never offered as the way out of a refused verse hint.
+                canUseVerse: upgrade.type != .verse && vm.activeSlot?.reference != nil
             ) { outcome in
                 hintUpgradeOutcome = (upgrade.type, outcome)
                 hintUpgrade = nil
@@ -498,6 +504,7 @@ struct CrosswordGameView: View {
         .task {
             gridFocused = true
             resolveHintQuota()
+            resolveVerseHintLimit()
             GameViewModel.seedAutoCheckIfNeeded(totalCompleted: profile.totalPuzzlesCompleted)
             // Straight from defaults, not the property wrapper: @AppStorage may
             // not observe a write made earlier in this same runloop turn.
@@ -673,7 +680,7 @@ struct CrosswordGameView: View {
     }
 
     private var clueBar: some View {
-        ClueBarView(vm: vm, onStallTap: runStallAction, onVerseTap: useVerseHint)
+        ClueBarView(vm: vm, onStallTap: runStallAction, onVerseTap: { useVerseHint() })
     }
 
     private var keypad: some View {
@@ -1003,6 +1010,10 @@ struct CrosswordGameView: View {
 
     /// Whether this player's pool covers the rung. Premium and the learning
     /// window hold `Int.max`, so both are always true for them.
+    private var canAffordVerse: Bool {
+        profile.hintsRemaining(isPremium: store.isPremium, limit: freeHintLimit) >= verseHintCost
+    }
+
     private func canAfford(_ type: HintType) -> Bool {
         profile.hintsRemaining(isPremium: store.isPremium, limit: freeHintLimit) >= type.cost
     }
@@ -1035,6 +1046,11 @@ struct CrosswordGameView: View {
         // The learning window meters nothing, so the rungs must not claim a
         // price the tap won't charge.
         if !store.isPremium, profile.isStillLearning { return "Free" }
+        if type == .verse, verseHintsMetered, !store.isPremium {
+            let left = VerseHintAllowance.freeAllowance(verseClueCount: verseClueCount) - verseHintsUsed
+            if left > 0 { return "Free · \(left) left in this puzzle" }
+            return canAffordVerse ? "1 hint" : "Back tomorrow"
+        }
         if type.cost > 0, !canAfford(type) {
             // Out of reach for good, not just today. A pool this size can never
             // cover the rung however long the player waits, so a countdown
@@ -1089,19 +1105,62 @@ struct CrosswordGameView: View {
         freeHintLimit = isTreatment ? PlayerProfile.reducedHintLimit : PlayerProfile.freeHintLimit
     }
 
+    private func resolveVerseHintLimit() {
+        verseHintsUsed = VerseHintAllowance.used(puzzleID: puzzle.id)
+        #if DEBUG
+        // Treatment for any free player past the learning window, whatever
+        // the profile's age — a seeded profile predates the cohort.
+        let args = ProcessInfo.processInfo.arguments
+        if args.contains("-uiForceVerseHintLimit") {
+            verseHintsMetered = !store.isPremium && !profile.isStillLearning
+            // `-uiVerseHintsUsed 10`: start past the allowance for screenshots.
+            if let i = args.firstIndex(of: "-uiVerseHintsUsed"), i + 1 < args.count,
+               let used = Int(args[i + 1]) {
+                verseHintsUsed = used
+            }
+            return
+        }
+        #endif
+        guard VerseHintAllowance.isEligible(
+            isPremium: store.isPremium,
+            isStillLearning: profile.isStillLearning,
+            profileCreatedAt: profile.createdAt
+        ) else { return }
+        guard let isTreatment = FeatureFlags.value(of: .verseHintLimit) else { return }
+        FeatureFlags.registerVariant("verse_hint_variant", isTreatment: isTreatment)
+        verseHintsMetered = isTreatment
+    }
+
+    /// The pool cost of the next verse hint for this player: always 0 outside
+    /// the experiment's treatment arm, and for premium.
+    private var verseHintCost: Int {
+        guard verseHintsMetered, !store.isPremium else { return 0 }
+        return VerseHintAllowance.cost(used: verseHintsUsed, verseClueCount: verseClueCount)
+    }
+
+    private var verseClueCount: Int {
+        vm.allSlots.count(where: { $0.reference != nil })
+    }
+
+    /// A hint the pool can't cover: the offer card the first time in a
+    /// puzzle, the inline chip after that.
+    private func refuseHint(_ type: HintType) {
+        analytics.log(.hintLimitReached(type: type.rawValue))
+        hintLimitType = type
+        if !didOfferHintUpgrade {
+            didOfferHintUpgrade = true
+            hintUpgrade = HintUpgrade(type: type, word: activeHintWord)
+            return
+        }
+        hintLimitHits += 1
+        withAnimation(.snappy) { showHintLimitNote = true }
+    }
+
     private func useHint(_ type: HintType) {
         // `>= cost`, never subtraction: premium's remaining is Int.max.
         // A word (cost 2) with 1 left paywalls with no partial spend.
         guard profile.hintsRemaining(isPremium: store.isPremium, limit: freeHintLimit) >= type.cost else {
-            analytics.log(.hintLimitReached(type: type.rawValue))
-            hintLimitType = type
-            if !didOfferHintUpgrade {
-                didOfferHintUpgrade = true
-                hintUpgrade = HintUpgrade(type: type, word: activeHintWord)
-                return
-            }
-            hintLimitHits += 1
-            withAnimation(.snappy) { showHintLimitNote = true }
+            refuseHint(type)
             return
         }
         // Mark the puzzle as hinted *before* revealing: a reveal can complete the
@@ -1152,7 +1211,8 @@ struct CrosswordGameView: View {
         hintUpgradeOutcome = nil
         switch outcome {
         case .purchased:
-            if store.isPremium { useHint(type) }
+            guard store.isPremium else { break }
+            if type == .verse { useVerseHint() } else { useHint(type) }
         case .verse:
             useVerseHint()
         case .dismissed:
@@ -1163,10 +1223,25 @@ struct CrosswordGameView: View {
     /// The ladder's free rung: open the passage the answer comes from and let
     /// the player find the word themselves. Costs nothing from the daily
     /// quota, but still counts as a hint for no-hint achievements.
-    private func useVerseHint() {
+    /// `metered: false` for the stall nudge's offer of the verse — the app
+    /// suggested it, so it never spends the allowance or the pool.
+    private func useVerseHint(metered: Bool = true) {
         guard let slot = vm.activeSlot,
               let reference = slot.reference,
               let target = ReaderRouter.Target(reference: reference, source: "hint") else { return }
+
+        let charged = metered ? verseHintCost : 0
+        if charged > 0 {
+            guard profile.hintsRemaining(isPremium: store.isPremium, limit: freeHintLimit) >= charged else {
+                refuseHint(.verse)
+                return
+            }
+            profile.consumeHint(cost: charged)
+        }
+        if metered && verseHintsMetered && !store.isPremium {
+            VerseHintAllowance.recordUse(puzzleID: puzzle.id)
+            verseHintsUsed = VerseHintAllowance.used(puzzleID: puzzle.id)
+        }
 
         let rec = loadOrCreateRecord()
         if !rec.usedHint {
@@ -1174,7 +1249,7 @@ struct CrosswordGameView: View {
             saveProgress()
         }
         vm.noteVerseHint()
-        analytics.log(.hintUsed(type: HintType.verse.rawValue, cost: HintType.verse.cost))
+        analytics.log(.hintUsed(type: HintType.verse.rawValue, cost: charged))
         analytics.log(.scriptureOpened(reference: reference, source: "hint"))
         vm.isTimerSuppressed = true
         vm.pauseTimer()
@@ -1390,7 +1465,7 @@ struct CrosswordGameView: View {
             // learn the nudge was taken; acknowledge first so the line drops
             // and the idle clock restarts behind the sheet.
             vm.acknowledgeStallNudge()
-            useVerseHint()
+            useVerseHint(metered: false)
         case .freeLetter:
             // Free of quota, but still a reveal: `usedHint` and the session
             // hint counter stay honest so unaided achievements and the
