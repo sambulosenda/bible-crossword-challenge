@@ -1,7 +1,7 @@
-Thanks for playing Bible Crossword Challenge! This one is about the app fitting the phone in your hand:
+Thanks for playing Bible Crossword Challenge! This update makes the most of bigger screens and makes hints clearer:
 
-• Ready for iPhone Duo — open it and the verse, the puzzle and the clue list all fit on screen at once
-• A cleaner, quieter look on every screen
-• Share a finished puzzle as a spoiler-free block that shows how you solved it, not the answers
-• Close buttons sit in the same corner everywhere
-• Clearer tab icons — the Library is a grid, your Profile is you
+• iPhone Duo: practice memory verses with the verse right beside the grid, and browse the Library in two columns
+• A reading plan now leads the Library
+• Out of hints? A clearer card shows the word you're stuck on and your options
+• A clear message if purchases are turned off on your device
+• Small fixes and polish
