@@ -27,7 +27,7 @@ struct PaywallSourceTests {
     /// The entry points that put the player in front of something they can't
     /// have. Each owes them a line about that, not the standing promise.
     private static let wallSources: [PaywallSource] = [
-        .hintLimit, .archive, .packLocked, .packCompletion,
+        .hintLimit, .hintLimitCard, .archive, .packLocked, .packCompletion,
         .questLocked, .journey,
     ]
 
@@ -35,7 +35,7 @@ struct PaywallSourceTests {
     /// chose to tap, or an offer being made again. These are *meant* to open
     /// with the standing promise.
     private static let browseSources: [PaywallSource] = [
-        .profile, .onboarding, .trialAbandon, .homeCard, .streakCard,
+        .profile, .onboarding, .trialAbandon, .homeCard, .streakCard, .completionOffer,
     ]
 
     @Test("every source has a headline")
@@ -58,7 +58,7 @@ struct PaywallSourceTests {
     /// The `home_card` is the one deliberate exception in either direction: it
     /// is browsing, but the card that opens it is about the daily habit, so it
     /// keeps its own line. Pinned so the exception stays a decision.
-    private static let browseSourcesWithTheirOwnLine: Set<PaywallSource> = [.homeCard, .streakCard]
+    private static let browseSourcesWithTheirOwnLine: Set<PaywallSource> = [.homeCard, .streakCard, .completionOffer]
 
     @Test("the browse surfaces open with the standing promise, bar the one about the habit")
     func browseSourcesUseTheStandingPromise() {
@@ -99,6 +99,8 @@ struct PaywallSourceTests {
             "hint_limit", "home_card", "streak_card", "profile", "archive", "pack_locked",
             "pack_completion", "quest_locked", "journey",
             "trial_abandon", "onboarding",
+            // 2026-10-07: the hint offer card and the one-time completion row.
+            "hint_limit_card", "completion_offer",
         ]
         #expect(Set(PaywallSource.allCases.map(\.rawValue)) == expected)
     }
