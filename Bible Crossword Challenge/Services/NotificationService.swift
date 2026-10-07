@@ -78,7 +78,7 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
     /// news are different conversations, and someone who lets one pile up
     /// shouldn't have to read past it to find the other.
     private static let reminderThread = "daily-reminder"
-    private static let packNewsThread = "pack-news"
+    nonisolated private static let packNewsThread = "pack-news"
 
     private override init() {
         super.init()
@@ -90,16 +90,19 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
     /// A tapped notification. Nothing is decided here beyond handing the URL to
     /// the app's one deep-link handler — the tap needs to land on the pack the
     /// notice was about, and `RootView` already knows how to get there.
-    func userNotificationCenter(
+    ///
+    /// `nonisolated`: UserNotifications calls its delegate on its own queue,
+    /// not the main thread, and `pendingURL` is observed state RootView reads.
+    nonisolated func userNotificationCenter(
         _ center: UNUserNotificationCenter,
         didReceive response: UNNotificationResponse,
         withCompletionHandler completionHandler: @escaping () -> Void
     ) {
-        if let string = response.notification.request.content.userInfo["url"] as? String,
-           let url = URL(string: string) {
-            pendingURL = url
-        }
+        let url = (response.notification.request.content.userInfo["url"] as? String)
+            .flatMap(URL.init(string:))
         completionHandler()
+        guard let url else { return }
+        Task { @MainActor in pendingURL = url }
     }
 
     /// A notification arriving while the app is open.
@@ -113,7 +116,7 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
     /// Pack news is the exception. A season opens once, the notice is the only
     /// announcement it gets, and dropping it because the player happened to be
     /// mid-puzzle at 10 AM means they never hear about it at all.
-    func userNotificationCenter(
+    nonisolated func userNotificationCenter(
         _ center: UNUserNotificationCenter,
         willPresent notification: UNNotification,
         withCompletionHandler completionHandler:

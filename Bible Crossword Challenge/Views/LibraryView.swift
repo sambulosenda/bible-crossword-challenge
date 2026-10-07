@@ -51,9 +51,12 @@ struct LibraryView: View {
     private var sundays: [Puzzle] { puzzleProvider.sundays }
 
     /// One lookup built per body pass, reused by filtering and rows instead of
-    /// scanning `records` for every puzzle. `puzzleID` is unique, so this is safe.
+    /// scanning `records` for every puzzle. `puzzleID` is not unique: CloudKit
+    /// can land a duplicate between launch-time merges, and
+    /// `uniqueKeysWithValues` traps on one — keep the first, as every other
+    /// lookup does.
     private var recordsByID: [String: PuzzleRecord] {
-        Dictionary(uniqueKeysWithValues: records.map { ($0.puzzleID, $0) })
+        Dictionary(records.map { ($0.puzzleID, $0) }, uniquingKeysWith: { first, _ in first })
     }
 
     private func status(for puzzle: Puzzle) -> PuzzleStatus {

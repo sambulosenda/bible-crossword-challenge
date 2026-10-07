@@ -21,6 +21,10 @@ struct ClueListView: View {
     /// sheet — a full-screen cover would detach the grid from its window,
     /// which pauses the clock and logs an abandon for what is just reading.
     var embedded = false
+    /// Where the standing panel puts a tapped reference. The game view owns
+    /// and presents it: the panel is torn down when iPhone Duo folds, and a
+    /// sheet hung off it closed with it, mid-passage.
+    var standingReaderTarget: Binding<ReaderRouter.Target?>?
     @Environment(\.dismiss) private var dismiss
     @Environment(\.analytics) private var analytics
 
@@ -38,10 +42,6 @@ struct ClueListView: View {
             clueList
                 .scrollContentBackground(.hidden)
                 .background(Theme.background)
-                // Reading must not detach the grid — see `embedded` above.
-                .sheet(item: $readerTarget) { target in
-                    ReaderModal(target: target)
-                }
         } else {
             NavigationStack {
                 clueList
@@ -139,7 +139,11 @@ struct ClueListView: View {
         Button {
             guard let target = ReaderRouter.Target(reference: reference, source: "clue") else { return }
             analytics.log(.scriptureOpened(reference: reference, source: "clue"))
-            readerTarget = target
+            if let standingReaderTarget {
+                standingReaderTarget.wrappedValue = target
+            } else {
+                readerTarget = target
+            }
         } label: {
             HStack(spacing: 2) {
                 Text(reference)

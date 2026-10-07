@@ -32,6 +32,7 @@ struct QuestDetailView: View {
 
     @Environment(\.puzzleProvider) private var puzzleProvider
     @Environment(\.analytics) private var analytics
+    @State private var didLogOpen = false
     @Environment(StoreService.self) private var store
     @Query private var records: [PuzzleRecord]
 
@@ -71,7 +72,13 @@ struct QuestDetailView: View {
         }
         // questCompleted is logged in the game screen's completion hook, so it
         // fires exactly once even if this screen is never revisited.
-        .task { analytics.log(.questOpened(id: quest.id, source: source.rawValue)) }
+        // Once per visit: `.task` runs again on every pop back from a pushed
+        // puzzle, which counted one opener several times.
+        .task {
+            guard !didLogOpen else { return }
+            didLogOpen = true
+            analytics.log(.questOpened(id: quest.id, source: source.rawValue))
+        }
     }
 
     // MARK: - Header

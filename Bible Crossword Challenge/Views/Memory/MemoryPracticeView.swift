@@ -83,7 +83,12 @@ struct MemoryPracticeView: View {
         if let firstBlank = model.acrossSlots.first(where: { built.blankedWordIndices.contains($0.number - 1) }) {
             model.select(slot: firstBlank)
         }
-        model.onComplete = { _ in finishSession(model: model, entry: entry) }
+        // Weak: the model keeps this closure, so a strong capture kept every
+        // practice session's model (and grid) alive after it closed.
+        model.onComplete = { [weak model] _ in
+            guard let model else { return }
+            finishSession(model: model, entry: entry)
+        }
         self.built = built
         self.vm = model
 

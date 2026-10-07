@@ -45,6 +45,9 @@ struct CrosswordGameView: View {
 
     @State private var vm: GameViewModel
     @State private var showClues = false
+    /// A passage opened from the standing clue panel. Held here, not in the
+    /// panel, so folding iPhone Duo (which removes the panel) leaves it open.
+    @State private var clueReaderTarget: ReaderRouter.Target?
     /// The window the game actually has, read off the view itself. Size classes
     /// alone misjudge the foldable: iPhone Duo unfolded in landscape reports
     /// regular/regular — an iPad's classes — in 678×466pt, about half an iPad's
@@ -148,6 +151,16 @@ struct CrosswordGameView: View {
     }
 
     var body: some View {
+        session(layout)
+    }
+
+    /// The arrangement for the current window — and only that. Every case
+    /// is its own view identity, so a rotation, an iPad resize or iPhone Duo
+    /// folding swaps one for another. Anything that must outlive that swap
+    /// (the lifecycle, the clock probe, every sheet) lives in `session`,
+    /// above the switch: hung off the surface it tore down with it, logging
+    /// an abandon and a second start and closing whatever sheet was up.
+    private var layout: some View {
         Group {
             switch solveLayout {
             case .sideBySide:
@@ -175,7 +188,7 @@ struct CrosswordGameView: View {
                     ArrangementView {
                         solveSurface(stacked: true)
                     } secondary: {
-                        ClueListView(vm: vm, embedded: true)
+                        ClueListView(vm: vm, embedded: true, standingReaderTarget: $clueReaderTarget)
                             .splitArrangementLayoutSize(
                                 minWidth: Self.cluePanelWidth,
                                 idealWidth: Self.cluePanelWidth
@@ -186,7 +199,7 @@ struct CrosswordGameView: View {
                     HStack(spacing: 0) {
                         solveSurface()
                         Divider().ignoresSafeArea(edges: .bottom)
-                        ClueListView(vm: vm, embedded: true)
+                        ClueListView(vm: vm, embedded: true, standingReaderTarget: $clueReaderTarget)
                             .frame(width: Self.cluePanelWidth)
                     }
                 }
@@ -355,6 +368,13 @@ struct CrosswordGameView: View {
             }
         }
         .background(Theme.background)
+    }
+
+    /// The puzzle session around whichever layout is showing: the clock's
+    /// window probe, keyboard entry, the bars, every sheet and the
+    /// lifecycle. Applied once, in `body`, so a layout change can't reset it.
+    private func session(_ content: some View) -> some View {
+        content
         .background(
             // Ground truth for the solve clock. SwiftUI's lifecycle events are
             // unreliable here: hidden tab content can stay alive (and keep
@@ -417,6 +437,11 @@ struct CrosswordGameView: View {
         .toolbar { toolbarContent }
         .sheet(isPresented: $showClues) {
             ClueListView(vm: vm)
+        }
+        // Reading must not detach the grid, so a sheet rather than a cover —
+        // see `ClueListView.embedded`.
+        .sheet(item: $clueReaderTarget) { target in
+            ReaderModal(target: target)
         }
         .sheet(isPresented: $showPaywall) {
             PaywallView(source: .hintLimit)
@@ -667,7 +692,7 @@ struct CrosswordGameView: View {
     /// The clue list standing in the keypad's column. Its last row scrolls
     /// to rest a breath above the clue bar rather than flush against it.
     private var columnClueList: some View {
-        ClueListView(vm: vm, embedded: true)
+        ClueListView(vm: vm, embedded: true, standingReaderTarget: $clueReaderTarget)
             .contentMargins(.bottom, Theme.Spacing.m, for: .scrollContent)
     }
 

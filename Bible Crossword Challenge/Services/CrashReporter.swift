@@ -38,7 +38,13 @@ final class CrashReporter: NSObject, MXMetricManagerSubscriber {
         MXMetricManager.shared.add(self)
     }
 
-    func didReceive(_ payloads: [MXDiagnosticPayload]) {
+    /// `nonisolated`: MetricKit delivers on a background queue, and reporting
+    /// reads `analytics`, which `start` writes on the main actor.
+    nonisolated func didReceive(_ payloads: [MXDiagnosticPayload]) {
+        Task { @MainActor in handle(payloads) }
+    }
+
+    private func handle(_ payloads: [MXDiagnosticPayload]) {
         for payload in payloads {
             for crash in payload.crashDiagnostics ?? [] {
                 report(crash)

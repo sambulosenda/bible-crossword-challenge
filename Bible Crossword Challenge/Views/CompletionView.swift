@@ -133,6 +133,10 @@ struct CompletionView: View {
     @State private var completionOfferVisible = false
     @State private var didLogCompletionOffer = false
     @State private var showReturnDaySheet = false
+    /// The review prompt and the return-day sheet wait for the celebration to
+    /// land. Cancelled if the screen closes first, so an ask the player never
+    /// saw isn't logged as shown or spent.
+    @State private var delayedAsks: [Task<Void, Never>] = []
     /// Decided once on appear so spending an impression can't hide the card
     /// mid-view.
     @State private var showReminderAsk = false
@@ -274,6 +278,9 @@ struct CompletionView: View {
             maybeShowReturnDaySheet()
             maybeShowReminderAsk()
             maybeShowCompletionOffer()
+        }
+        .onDisappear {
+            delayedAsks.forEach { $0.cancel() }
         }
         .sheet(isPresented: $showReturnDaySheet, onDismiss: {
             // Marked on the way out, whichever way it closed — a swipe-down
@@ -1116,23 +1123,26 @@ struct CompletionView: View {
             installedAt: profile.createdAt
         )
         guard let trigger = ReviewAsk.decide(state) else { return }
-        switch trigger {
-        case .milestone(let milestone): reviewPromptMilestone = milestone
-        case .streak: streakReviewPromptShown = true
-        case .version: break
-        }
-        // Any ask spends this version's re-arm — the version trigger can't
-        // stack a second prompt onto a version that already asked.
-        reviewPromptVersion = Self.marketingVersion
-        reviewPromptLastAsk = Date().timeIntervalSinceReferenceDate
+        // Claimed now so the other asks on this screen yield to it; spent
+        // only once the prompt is actually requested.
         didRequestReview = true
-        analytics.log(.reviewPromptRequested(
-            trigger: trigger.analyticsValue, totalCompleted: totalCompleted))
-        Task {
-            // Let the celebration land before the system sheet appears.
-            try? await Task.sleep(for: .seconds(2))
+        delayedAsks.append(Task {
+            // Let the celebration land before the system sheet appears. A
+            // screen closed in the meantime cancels the sleep: nothing spent.
+            guard (try? await Task.sleep(for: .seconds(2))) != nil else { return }
+            switch trigger {
+            case .milestone(let milestone): reviewPromptMilestone = milestone
+            case .streak: streakReviewPromptShown = true
+            case .version: break
+            }
+            // Any ask spends this version's re-arm — the version trigger can't
+            // stack a second prompt onto a version that already asked.
+            reviewPromptVersion = Self.marketingVersion
+            reviewPromptLastAsk = Date().timeIntervalSinceReferenceDate
+            analytics.log(.reviewPromptRequested(
+                trigger: trigger.analyticsValue, totalCompleted: totalCompleted))
             requestReview()
-        }
+        })
     }
 
     private static let marketingVersion =
@@ -1194,13 +1204,21 @@ struct CompletionView: View {
         #endif
         guard forced || ReminderAsk.decide(.returnDaySheet, reminderAskState) else { return }
 
+        // The budget is taken now so the inline card decided next yields to
+        // the sheet, and handed back if the screen closes before it slides up.
+        let previousDay = reminderAskLastDay
+        let previousAsked = ReminderAskSession.asked
         reminderAskLastDay = Calendar.current.startOfDay(for: Date()).timeIntervalSinceReferenceDate
         ReminderAskSession.asked = true
-        analytics.log(.reminderAskShown(source: ReminderAsk.Surface.returnDaySheet.rawValue))
-        Task {
-            try? await Task.sleep(for: .seconds(1.5))
+        delayedAsks.append(Task {
+            guard (try? await Task.sleep(for: .seconds(1.5))) != nil else {
+                reminderAskLastDay = previousDay
+                ReminderAskSession.asked = previousAsked
+                return
+            }
+            analytics.log(.reminderAskShown(source: ReminderAsk.Surface.returnDaySheet.rawValue))
             showReturnDaySheet = true
-        }
+        })
     }
 
     private func maybeShowReminderAsk() {
