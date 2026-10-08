@@ -694,7 +694,7 @@ struct PremiumOfferView: View {
                 } else {
                     VStack(spacing: Theme.Spacing.s) {
                         HStack(spacing: Theme.Spacing.m) {
-                            timelineEnd("Today", detail: "Free", alignment: .leading)
+                            timelineEnd("Today", detail: todayDetail, alignment: .leading)
                             timelineRail
                             timelineEnd(day, detail: price, alignment: .trailing)
                         }
@@ -724,14 +724,24 @@ struct PremiumOfferView: View {
         }
     }
 
+    /// The timeline's "now" end. "Free" in the accent, the one coloured word
+    /// in the timeline: in footnote grey it was the faintest thing on the
+    /// page, though it is the half of the offer that costs nothing.
+    private var todayDetail: Text {
+        Text("Free").font(.footnote.weight(.semibold)).foregroundStyle(Theme.accent)
+            + Text(" · full access").font(.footnote).foregroundStyle(.secondary)
+    }
+
     /// One end of the horizontal timeline: when, and what it costs.
     private func timelineEnd(_ title: String, detail: String, alignment: HorizontalAlignment) -> some View {
+        timelineEnd(title, detail: Text(detail).font(.footnote).foregroundStyle(.secondary), alignment: alignment)
+    }
+
+    private func timelineEnd(_ title: String, detail: Text, alignment: HorizontalAlignment) -> some View {
         VStack(alignment: alignment, spacing: 2) {
             Text(title)
                 .font(.subheadline.weight(.semibold))
-            Text(detail)
-                .font(.footnote)
-                .foregroundStyle(.secondary)
+            detail
         }
         .fixedSize()
     }
@@ -834,8 +844,11 @@ struct PremiumOfferView: View {
             // Says when money starts, not just that a trial exists — the
             // question a trial-sceptic is actually asking at this point.
             // `duration`, not the trial phrase with " free trial" trimmed off
-            // it: after "Free for" the length needs its plural back.
-            return "Free for \(offer.duration), then \(product.displayPrice)\(period), renewing until cancelled. Cancel anytime."
+            // it: "7 days free" needs the plural. Every clause App Review asks
+            // for at the buy button — trial length, the price after it, that
+            // it renews — in one line on a 375pt phone; the longer
+            // "renewing until cancelled" phrasing ran to two.
+            return "\(offer.duration) free, then \(product.displayPrice)\(period). Auto-renews. Cancel anytime."
         }
         if !period.isEmpty {
             return "Auto-renews at \(product.displayPrice)\(period) until cancelled. Cancel anytime in Settings."
@@ -862,7 +875,14 @@ struct PremiumOfferView: View {
     private func planFootnote(_ product: Product) -> String {
         switch product.id {
         case StoreService.yearlyID, StoreService.monthlyID:
-            return perWeekText(product).map { "\($0)/week" } ?? ""
+            let perWeek = perWeekText(product).map { "\($0)/week" } ?? ""
+            // The saving moves down here when the trial takes the pill.
+            if product.id == StoreService.yearlyID,
+               store.introOffer(for: product) != nil,
+               let pct = yearlySavingsPercent {
+                return perWeek.isEmpty ? "Save \(pct)%" : "\(perWeek) · save \(pct)%"
+            }
+            return perWeek
         default:
             return "one-time"
         }
@@ -882,10 +902,17 @@ struct PremiumOfferView: View {
         return perWeek.formatted(product.priceFormatStyle)
     }
 
-    /// Tinted tag on the yearly plan — the computed saving vs. paying monthly,
-    /// or a "Best value" fallback when monthly isn't available to compare against.
+    /// Tinted tag on the yearly plan — the free trial when there is one, else
+    /// the computed saving vs. paying monthly, or a "Best value" fallback when
+    /// monthly isn't available to compare against.
+    ///
+    /// The trial leads because the card is where the choice is made, and the
+    /// trial was named everywhere on the page except there. The saving isn't
+    /// lost: `planFootnote` carries it. Tag-sized either way — the billed
+    /// price must stay the card's most prominent figure (App Review 3.1.2).
     private func badgeText(_ product: Product) -> String? {
         guard product.id == StoreService.yearlyID else { return nil }
+        if let offer = store.introOffer(for: product) { return "\(offer.duration) free" }
         // Sentence case: shouted caps was the pill's other half of being loud.
         if let pct = yearlySavingsPercent { return "Save \(pct)%" }
         return "Best value"
