@@ -23,6 +23,12 @@ struct ClueBarView: View {
     /// uses each): a demand the menu was hiding. Same path as the menu row,
     /// so the analytics compare directly.
     var onVerseTap: (() -> Void)? = nil
+    /// Whether the bar sets the clue text itself. Off while the clue list is
+    /// standing beside it: the list's highlighted row already is the active
+    /// clue, and repeating it here put the same words on screen twice. The
+    /// number line, nudge, Verse and chevrons stay — they are controls the
+    /// list doesn't have.
+    var showsClue: Bool = true
 
     var body: some View {
         VStack(spacing: Theme.Spacing.s) {
@@ -48,9 +54,10 @@ struct ClueBarView: View {
         // keyboard with no margin of its own, so 4pt read as content jammed
         // against both. Affordable because moving the nudge onto the number
         // line gave back a whole row — this spends part of it and the bar is
-        // still shorter than it was.
-        .padding(.top, Theme.Spacing.s)
-        .padding(.bottom, Theme.Spacing.s + Theme.Spacing.xs)
+        // still shorter than it was. Without the clue the bar is one row of
+        // 44pt controls, which is room enough; the list above gets the rest.
+        .padding(.top, showsClue ? Theme.Spacing.s : 0)
+        .padding(.bottom, showsClue ? Theme.Spacing.s + Theme.Spacing.xs : 0)
         // On the page, not in a grey band: the clue is part of the puzzle,
         // and the filled strip read as a toolbar bolted under the grid. One
         // hairline keeps it off the keyboard. The old 3pt progress strip
@@ -65,14 +72,17 @@ struct ClueBarView: View {
     /// case is a separate branch rather than a `nil` passed through.
     @ViewBuilder
     private func clueText(_ clue: String) -> some View {
-        // Set in the scripture serif at title3: the clue is what the player
-        // reads most, and it was the smallest text on the screen. Every clue
+        // Title3, the size the clue list's rows are measured against: the clue
+        // is what the player reads most, and it was the smallest text on the
+        // screen. System, not the scripture serif — the serif marks scripture,
+        // and the same clue set in the list's font beside the panel read as two
+        // different things. Every clue
         // written fits two lines at the row's 282pt (iPhone 18 Pro) from 16pt
         // up, and 56 of 3,549 need the shrink below to get there — so it
         // floors at 0.8 (16pt, the callout size this replaced) rather than
         // truncating or growing the bar a line.
         let text = Text(clue)
-            .font(.scripture(.title3))
+            .font(.title3)
             .minimumScaleFactor(0.8)
             .foregroundStyle(.primary)
         Group {
@@ -319,7 +329,9 @@ struct ClueBarView: View {
                             }
                         }
                         .frame(maxWidth: .infinity)
-                        clueText(slot.clue)
+                        if showsClue {
+                            clueText(slot.clue)
+                        }
                     } else {
                         Text("Select a cell to begin")
                             .font(.callout)

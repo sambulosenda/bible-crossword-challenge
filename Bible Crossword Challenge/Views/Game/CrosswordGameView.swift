@@ -642,8 +642,10 @@ struct CrosswordGameView: View {
         if barsVertical {
             HStack {
                 // The title, evicted from the top bar (see `.navigationTitle`).
+                // Headline, not subheadline: it is the screen's title, and at
+                // the timer's size it read as one more toolbar label.
                 Text(puzzle.title)
-                    .font(.subheadline.weight(.semibold))
+                    .font(.headline)
                     .lineLimit(1)
                 Spacer()
                 timerSlot
@@ -705,7 +707,12 @@ struct CrosswordGameView: View {
     }
 
     private var clueBar: some View {
-        ClueBarView(vm: vm, onStallTap: runStallAction, onVerseTap: { useVerseHint() })
+        ClueBarView(
+            vm: vm,
+            onStallTap: runStallAction,
+            onVerseTap: { useVerseHint() },
+            showsClue: !cluesStanding
+        )
     }
 
     private var keypad: some View {
@@ -715,7 +722,10 @@ struct CrosswordGameView: View {
             onDelete: { vm.delete() },
             onTogglePencil: { vm.isPencilMode.toggle() }
         )
-        .background(Color(.systemBackground))
+        // Into the bottom safe area only. On every edge, as `background`
+        // does by default, the slab ran on past the keypad's column under the
+        // side rail of bars on iPhone Duo open.
+        .background(Color(.systemBackground), ignoresSafeAreaEdges: .bottom)
     }
 
     // MARK: - Toolbar

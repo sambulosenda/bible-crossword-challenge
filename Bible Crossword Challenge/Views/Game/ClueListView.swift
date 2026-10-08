@@ -39,12 +39,10 @@ struct ClueListView: View {
 
     var body: some View {
         if embedded {
-            clueList
-                .scrollContentBackground(.hidden)
-                .background(Theme.background)
+            standingList
         } else {
             NavigationStack {
-                clueList
+                sheetList
                     .navigationTitle("Clues")
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar {
@@ -61,7 +59,7 @@ struct ClueListView: View {
         }
     }
 
-    private var clueList: some View {
+    private var sheetList: some View {
         ScrollViewReader { proxy in
             List {
                 section(title: "Across", slots: vm.acrossSlots)
@@ -73,15 +71,76 @@ struct ClueListView: View {
                     proxy.scrollTo(active.id, anchor: .center)
                 }
             }
-            .onChange(of: vm.activeSlot?.id) { _, id in
-                // The panel follows play: typing to a word's end or tapping the
-                // grid moves the active clue, and the side panel keeps it in
-                // view. Sheets don't need this — they open fresh each time.
-                guard embedded, let id else { return }
-                withAnimation(.easeOut(duration: 0.2)) {
-                    proxy.scrollTo(id, anchor: .center)
+        }
+    }
+
+    /// The standing panel: the same rows, as two cards in a plain scroll view.
+    ///
+    /// With the clue text gone from the clue bar beside it, this list is the
+    /// only place the active clue is written, so it has to stay in view. As a
+    /// `List` it didn't: on iPhone Duo open the panel's height settles over
+    /// several layout passes (logged 0 → 255 → 669 → 313pt), and a `scrollTo`
+    /// that ran during the 669pt pass found everything fitting, stayed at the
+    /// top, and left the active Down clue under the fold once the panel shrank.
+    /// So the follow runs again whenever the visible height changes, and the
+    /// rows are a plain stack, laid out in full, so `scrollTo` knows exactly
+    /// where every row is.
+    private var standingList: some View {
+        ScrollViewReader { proxy in
+            ScrollView {
+                VStack(alignment: .leading, spacing: Theme.Spacing.s) {
+                    standingSection(title: "Across", slots: vm.acrossSlots)
+                    standingSection(title: "Down", slots: vm.downSlots)
+                }
+                .padding(.horizontal, Theme.Spacing.m)
+                .padding(.bottom, Theme.Spacing.s)
+            }
+            .onScrollGeometryChange(for: CGFloat.self) { geometry in
+                geometry.containerSize.height
+            } action: { _, _ in
+                centreActive(proxy, animated: false)
+            }
+            // The panel follows play: typing to a word's end or tapping the
+            // grid moves the active clue, and the panel keeps it in view.
+            .onChange(of: vm.activeSlot?.id, initial: true) { _, _ in
+                centreActive(proxy, animated: true)
+            }
+        }
+        .background(Theme.background)
+    }
+
+    private func centreActive(_ proxy: ScrollViewProxy, animated: Bool) {
+        guard let id = vm.activeSlot?.id else { return }
+        if animated {
+            withAnimation(.easeOut(duration: 0.2)) {
+                proxy.scrollTo(id, anchor: .center)
+            }
+        } else {
+            proxy.scrollTo(id, anchor: .center)
+        }
+    }
+
+    private func standingSection(title: String, slots: [Slot]) -> some View {
+        VStack(alignment: .leading, spacing: Theme.Spacing.s) {
+            Text(title)
+                .font(.headline)
+                .foregroundStyle(.secondary)
+                .padding(.leading, Theme.Spacing.m)
+                .padding(.top, Theme.Spacing.m)
+                .accessibilityAddTraits(.isHeader)
+            CardGroup(dividerInset: Theme.Spacing.m + numberColumn + Theme.Spacing.s) {
+                ForEach(slots) { slot in
+                    let isActive = slot.id == vm.activeSlot?.id
+                    row(slot)
+                        .padding(.horizontal, Theme.Spacing.m)
+                        .padding(.vertical, 12)
+                        .background(isActive ? Theme.accent.opacity(0.12) : .clear)
+                        .id(slot.id)
+                        .accessibilityAddTraits(isActive ? [.isSelected] : [])
                 }
             }
+            // The active row's tint stops at the card's corners.
+            .clipShape(.rect(cornerRadius: Theme.cornerRadius, style: .continuous))
         }
     }
 
@@ -89,47 +148,52 @@ struct ClueListView: View {
         Section {
             ForEach(slots) { slot in
                 let isActive = slot.id == vm.activeSlot?.id
-                let solved = isSolved(slot)
-                // Two independent targets in one row, so they sit side by side
-                // rather than nested: the clue selects, the reference reads.
-                VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
-                    Button {
-                        vm.select(slot: slot)
-                        if !embedded { dismiss() }
-                    } label: {
-                        HStack(alignment: .firstTextBaseline, spacing: Theme.Spacing.s) {
-                            Text("\(slot.number)")
-                                .font(.subheadline.weight(.semibold))
-                                .foregroundStyle(Theme.accent)
-                                .frame(minWidth: numberColumn, alignment: .trailing)
-                            Text(slot.clue)
-                                .font(.body)
-                                .foregroundStyle(.primary)
-                            Spacer(minLength: 0)
-                            if solved {
-                                Image(systemName: "checkmark.circle.fill")
-                                    .foregroundStyle(.green)
-                                    .accessibilityLabel("Solved")
-                            }
-                        }
-                        .contentShape(.rect)
-                    }
-                    .buttonStyle(.plain)
-
-                    // Absent until solved, never dimmed. A greyed-out "1 Samuel
-                    // 10:1" would still tell you which book the answer is in,
-                    // which is a hint arriving by the back door.
-                    if solved, let reference = slot.reference {
-                        referenceLink(reference)
-                            .padding(.leading, numberColumn + Theme.Spacing.s)
-                    }
-                }
-                .id(slot.id)
-                .listRowBackground(isActive ? Theme.accent.opacity(0.12) : nil)
-                .accessibilityAddTraits(isActive ? [.isSelected] : [])
+                row(slot)
+                    .id(slot.id)
+                    .listRowBackground(isActive ? Theme.accent.opacity(0.12) : nil)
+                    .accessibilityAddTraits(isActive ? [.isSelected] : [])
             }
         } header: {
             Text(title)
+        }
+    }
+
+    /// One clue: the number, the clue, and once solved the passage it is from.
+    private func row(_ slot: Slot) -> some View {
+        let solved = isSolved(slot)
+        // Two independent targets in one row, so they sit side by side
+        // rather than nested: the clue selects, the reference reads.
+        return VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
+            Button {
+                vm.select(slot: slot)
+                if !embedded { dismiss() }
+            } label: {
+                HStack(alignment: .firstTextBaseline, spacing: Theme.Spacing.s) {
+                    Text("\(slot.number)")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(Theme.accent)
+                        .frame(minWidth: numberColumn, alignment: .trailing)
+                    Text(slot.clue)
+                        .font(.body)
+                        .foregroundStyle(.primary)
+                    Spacer(minLength: 0)
+                    if solved {
+                        Image(systemName: "checkmark.circle.fill")
+                            .foregroundStyle(.green)
+                            .accessibilityLabel("Solved")
+                    }
+                }
+                .contentShape(.rect)
+            }
+            .buttonStyle(.plain)
+
+            // Absent until solved, never dimmed. A greyed-out "1 Samuel
+            // 10:1" would still tell you which book the answer is in,
+            // which is a hint arriving by the back door.
+            if solved, let reference = slot.reference {
+                referenceLink(reference)
+                    .padding(.leading, numberColumn + Theme.Spacing.s)
+            }
         }
     }
 
