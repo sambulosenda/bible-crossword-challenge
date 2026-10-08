@@ -52,18 +52,34 @@ struct ReadingPlanCard: View {
                     RowIcon(symbol: doneToday ? "checkmark" : "book.pages",
                             tint: doneToday ? FeatureTint.solved : FeatureTint.readingPlan)
                     VStack(alignment: .leading, spacing: 2) {
-                        // The count sits in the subtitle: as a kicker
-                        // "TODAY'S CHAPTER · DAY 12 OF 21" wrapped on a phone.
-                        Label("Today's chapter", systemImage: "calendar")
-                            .kicker()
-                        Text(reference)
-                            .font(.scripture(.title3, weight: .semibold))
-                            .foregroundStyle(.primary)
-                        Text(doneToday
-                             ? "Read today · Next: \(plan.book) \(day)"
-                             : "\(plan.title) · Day \(day) of \(total)")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                        if compact {
+                            // On Today this is one row of a list, so it takes
+                            // the list's shape — headline title, one caption,
+                            // no kicker — rather than a card's. A kicker, a
+                            // second icon and a serif title made it the one
+                            // row that didn't match its siblings.
+                            Text(reference)
+                                .font(.headline)
+                                .foregroundStyle(.primary)
+                            Text(doneToday
+                                 ? "Read today · Next: \(plan.book) \(day)"
+                                 : "Today's chapter · Day \(day) of \(total)")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        } else {
+                            // The count sits in the subtitle: as a kicker
+                            // "TODAY'S CHAPTER · DAY 12 OF 21" wrapped on a phone.
+                            Label("Today's chapter", systemImage: "calendar")
+                                .kicker()
+                            Text(reference)
+                                .font(.scripture(.title3, weight: .semibold))
+                                .foregroundStyle(.primary)
+                            Text(doneToday
+                                 ? "Read today · Next: \(plan.book) \(day)"
+                                 : "\(plan.title) · Day \(day) of \(total)")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
                     }
                     Spacer(minLength: 0)
                     Image(systemName: "chevron.forward")

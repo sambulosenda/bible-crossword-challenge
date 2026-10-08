@@ -1003,6 +1003,12 @@ private struct CollectionsCarousel: View {
             .contentMargins(.horizontal, Theme.Spacing.m + Theme.Spacing.xs, for: .scrollContent)
             .scrollTargetBehavior(.viewAligned)
             .padding(.horizontal, -Theme.Spacing.m)
+            // A scroll view draws its content on into the safe area, so with
+            // the bars on a side rail (iPhone Duo closed) the third tile ran on
+            // under the rail and its title showed through the glass. Clipped
+            // at the frame, the row stops at the rail; with no rail the frame
+            // already reaches the screen's edge, so nothing changes there.
+            .clipped()
         }
     }
 }
@@ -1144,7 +1150,13 @@ private struct NextAchievementRow: View {
     /// "Next badge · 3 / 5", or for a time goal the player's best against it —
     /// a time goal is met or not, so a bar for it sat empty until the day it
     /// jumped to full.
-    private var subtitle: String { "Next badge · \(progress)" }
+    ///
+    /// Before the first step it names the goal instead: "Next badge · 0 / 5"
+    /// told a new player only that they had done nothing yet.
+    private var subtitle: String {
+        guard achievement.progress(for: profile) > 0 else { return achievement.detail }
+        return "Next badge · \(progress)"
+    }
 
     private var progress: String {
         if case .fastSolve(let max) = achievement.goal {
