@@ -10,9 +10,8 @@
    so the same component works on light or dark. Never hard-code a colour
    inside a component; set it on the band.
 
-   The self-hosted serif woff2 files under /fonts remain on disk (that path is
-   immutable) but are intentionally unreferenced — the whole site sets in the
-   system stack.
+   The site sets in the system stack. The home page alone carries the app's
+   look (warm paper, Newsreader serif from /fonts) — see src/pages/index.astro.
    ========================================================================= */
 
 :root {
@@ -241,7 +240,7 @@ h3 {
 .nav-link.primary {
   color: #fff; background: var(--blue);
   padding: 6px 16px; border-radius: var(--pill);
-  font-weight: 400;
+  font-weight: 400; white-space: nowrap;
   transition: background .15s ease;
 }
 .nav-link.primary:hover { color: #fff; background: var(--blue-hover); }
