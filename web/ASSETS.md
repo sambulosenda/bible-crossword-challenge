@@ -2,7 +2,8 @@
 
 | File                     | Where it shows                                  |
 |--------------------------|-------------------------------------------------|
-| `shot-today.webp`        | Screens section, card 1 — Today                 |
+| `shot-today.webp`        | Daily-ritual section — Today                    |
+| `shot-complete.webp`     | Screens section, card 1 — Puzzle Completed      |
 | `shot-puzzle.webp`       | Screens section, card 2 — grid mid-solve        |
 | `shot-achievements.webp` | Screens section, card 3 — Achievements          |
 | `shot-profile.webp`      | (spare) Profile — reads as an empty zero state  |
@@ -62,3 +63,8 @@ or the alt text will describe an app that no longer exists.
 
 `og-image.png` is a rendered brand card; regenerate only if the brand or
 tagline changes.
+
+`shot-complete` is cropped from the App Store marketing shot
+`fastlane/screenshots/en-US/image6.jpg` (720 wide) rather than captured raw,
+so it is not 1206×2622 like the rest; recapture it with the steps above when
+the set is next refreshed — at a new filename, since `/assets` is immutable.

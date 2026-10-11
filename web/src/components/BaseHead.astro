@@ -93,8 +93,7 @@ const entityLd = {
 <link rel="apple-touch-icon" href="/assets/icon-180.png" />
 <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
 
-<!-- The whole site sets in the system SF stack — no webfonts, so nothing to
-     preload. The old self-hosted serif files remain under /fonts (immutable
-     path) but are intentionally unreferenced. -->
+<!-- The site sets in the system SF stack. Only the home page loads a webfont
+     (Newsreader, from /fonts) and preloads it from its own head slot. -->
 
 <script type="application/ld+json" set:html={JSON.stringify(entityLd)} />
