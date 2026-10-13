@@ -56,7 +56,11 @@ enum Theme {
         darkElevated: UIColor? = nil,
         darkElevatedHighContrast: UIColor? = nil
     ) -> Color {
-        Color(uiColor: UIColor { trait in
+        // `@Sendable`, so not main-actor isolated: SwiftUI resolves colours on
+        // its async render thread too, and under Swift 6 an isolated provider
+        // trapped there (EXC_BREAKPOINT in `dispatch_assert_queue`). It only
+        // reads its captured `UIColor`s, which are Sendable.
+        Color(uiColor: UIColor { @Sendable trait in
             let high = trait.accessibilityContrast == .high
             guard trait.userInterfaceStyle == .dark else {
                 return high ? lightHighContrast : light
@@ -368,26 +372,33 @@ private struct Kicker: ViewModifier {
 
 enum CellPalette {
     static let empty = Color(.secondarySystemGroupedBackground)
-    /// Tile rim, matching the onboarding fragment's `separator` at 0.6.
-    static let border = Color(.separator).opacity(0.6)
+    /// Tile rim, at the full system separator. At 0.6 (the onboarding
+    /// fragment's) a white tile on the paper canvas all but vanished on a
+    /// bright screen, and the board's shape went with it. The system colour
+    /// still deepens under Increase Contrast and inverts for dark.
+    static let border = Color(.separator)
 
     /// Active-word tint. Stronger in dark mode, where an 0.18 accent wash over
     /// near-black cells is barely distinguishable from the empty fill.
-    private static let inWord = Color(uiColor: UIColor { trait in
+    private static let inWord = Color(uiColor: UIColor { @Sendable trait in  // nonisolated: see `Theme.adaptive`
         .tintColor.withAlphaComponent(trait.userInterfaceStyle == .dark ? 0.30 : 0.18)
     })
 
     /// No error fill: a wrong letter keeps the cell's normal fill and is marked
-    /// by `ErrorCornerMark` instead. A pink wash was the only signal for most
+    /// by its own colour and a rule under it instead (see `CellView`). A pink wash was the only signal for most
     /// players (the shape cue sat behind Differentiate Without Color), and a
     /// whole cell of red is the loudest thing on a board that should read
     /// blue-for-focus.
     /// Selected-cell tint: a deeper step of the active-word wash, not a solid
     /// block. At 0.85 the cell was the loudest thing on the screen and turned
     /// its letter white; the 2pt border in CellView now carries the focus.
-    private static let selected = Color(uiColor: UIColor { trait in
+    private static let selected = Color(uiColor: UIColor { @Sendable trait in  // nonisolated: see `Theme.adaptive`
         .tintColor.withAlphaComponent(trait.userInterfaceStyle == .dark ? 0.55 : 0.38)
     })
+
+    /// A wrong letter and its underline. The system red, which deepens under
+    /// Increase Contrast and lightens for dark.
+    static let error = Color(.systemRed)
 
     static func fill(isSelected: Bool, isInWord: Bool, isCorrect: Bool) -> Color {
         if isSelected { return selected }

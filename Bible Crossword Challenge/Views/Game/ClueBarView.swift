@@ -90,11 +90,9 @@ struct ClueBarView: View {
             .foregroundStyle(.primary)
         Group {
             if let clueLines {
-                // Reserved, not just capped: without it a one-line clue and a
-                // two-line clue give the bar different heights, so the grid
-                // reflowed on plain clue navigation too — the same bug as the
-                // nudge row, just triggered more often.
-                text.lineLimit(clueLines, reservesSpace: true)
+                // Capped only. The room for a second line is held by
+                // `clueRow`, above the clue rather than under it.
+                text.lineLimit(clueLines)
             } else {
                 text.lineLimit(nil)
             }
@@ -288,74 +286,24 @@ struct ClueBarView: View {
     }
 
     private var clueRow: some View {
-        HStack(spacing: Theme.Spacing.s) {
-            Button {
-                vm.toggleDirection()
-            } label: {
-                VStack(alignment: .leading, spacing: Theme.Spacing.s) {
-                    if let slot = vm.activeSlot {
-                        HStack(spacing: Theme.Spacing.s) {
-                            // Not accent: it is a label, and blue is kept for
-                            // what can be tapped — the chevrons and Verse on
-                            // this same row.
-                            // The answer's length rides here, not as "(6)"
-                            // after the clue: the clue's two reserved lines
-                            // are measured against the clue alone, and the
-                            // suffix would push more of them into the shrink.
-                            // The clue's name in ink, its length in grey: one
-                            // line in two weights of emphasis, so the bar has
-                            // a head without a box around it.
-                            Text("\(Text("\(slot.number) \(slot.direction.label)").foregroundStyle(.primary)) · \(slot.length) letters")
-                                .font(.caption.weight(.semibold))
-                                .foregroundStyle(.secondary)
-                                .lineLimit(1)
-                                .layoutPriority(1)
-                            // Without this the row hugs its content and the
-                            // spacer collapses, parking the pill against the
-                            // number instead of out at the column's edge.
-                            Spacer(minLength: Theme.Spacing.m)
-                            // Invisible twin of the overlaid pill: it claims
-                            // the width so the number can never collide with
-                            // it, and collapses to nothing when no nudge is
-                            // showing. Only on the line they actually share:
-                            // at accessibility sizes the nudge has its own row
-                            // (see `body`), so reserving for it here was pure
-                            // theft — it squeezed "19 Across" down to "19 A…".
-                            if !dynamicTypeSize.isAccessibilitySize {
-                                HStack(spacing: Theme.Spacing.s) {
-                                    nudgeBody
-                                    if showsVerseButton { verseLabel }
-                                }
-                                .hidden()
-                            }
-                        }
-                        .frame(maxWidth: .infinity)
-                        if showsClue {
-                            clueText(slot.clue)
-                        }
-                    } else {
-                        Text("Select a cell to begin")
-                            .font(.callout)
-                            .foregroundStyle(.secondary)
-                    }
+        // The chevrons centre on the clue's text, not the whole bar: the bar's
+        // height includes a held-open line above a one-line clue, and its
+        // middle put them level with the number line instead.
+        HStack(alignment: .clueText, spacing: Theme.Spacing.s) {
+            // Two clue lines tall whatever the clue: without a fixed height a
+            // one-line clue and a two-line clue give the bar different heights,
+            // and the grid reflowed on plain clue navigation. The room a
+            // one-line clue leaves is held by an invisible two-line twin and
+            // opened *above* the clue. Under it (`reservesSpace`) it was a dead
+            // band between the clue and the keys; above, it joins the margin
+            // round the grid and the clue sits down on the keyboard.
+            ZStack(alignment: .bottomLeading) {
+                if showsClue, clueLines != nil, vm.activeSlot != nil {
+                    clueColumn(clue: "M\nM", isTwin: true)
+                        .hidden()
+                        .accessibilityHidden(true)
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .contentShape(.rect)
-            }
-            .buttonStyle(.plain)
-            .accessibilityElement(children: .combine)
-            .accessibilityLabel(clueAccessibilityLabel)
-            .accessibilityHint("Switches between across and down")
-            // Overlaid rather than stacked into the label: it must stay its
-            // own focusable control, and `children: .combine` above would
-            // swallow it into the clue element if it were a child.
-            .overlay(alignment: .topTrailing) {
-                if !dynamicTypeSize.isAccessibilitySize {
-                    HStack(spacing: Theme.Spacing.s) {
-                        inlineNudge
-                        verseButton
-                    }
-                }
+                clueButton
             }
 
             // Both chevrons trail the clue rather than flanking it. Flanked,
@@ -383,11 +331,117 @@ struct ClueBarView: View {
                 }
                 .accessibilityLabel("Next clue")
             }
+            // Full 44pt targets, but laid out at about the clue line's height:
+            // centred on a one-line clue, the frames hung ~10pt below it and
+            // pushed the keyboard down by that much.
+            .padding(.vertical, -10)
         }
+    }
+
+    /// The clue, tappable to switch direction, with the nudge and Verse on
+    /// its number line.
+    private var clueButton: some View {
+        Button {
+            vm.toggleDirection()
+        } label: {
+            clueColumn(clue: vm.activeSlot?.clue)
+                .contentShape(.rect)
+        }
+        .buttonStyle(.plain)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(clueAccessibilityLabel)
+        .accessibilityHint("Switches between across and down")
+        // Overlaid rather than stacked into the label: it must stay its
+        // own focusable control, and `children: .combine` above would
+        // swallow it into the clue element if it were a child. On the
+        // button, not the bar, so it rides the number line down with a
+        // one-line clue.
+        .overlay(alignment: .topTrailing) {
+            if !dynamicTypeSize.isAccessibilitySize {
+                HStack(spacing: Theme.Spacing.s) {
+                    inlineNudge
+                    verseButton
+                }
+            }
+        }
+    }
+
+    /// The number line over the clue. Also drawn hidden, with a two-line
+    /// stand-in for the clue, to hold the bar's height — so the line itself
+    /// must lay out the same for both.
+    private func clueColumn(clue: String?, isTwin: Bool = false) -> some View {
+        VStack(alignment: .leading, spacing: Theme.Spacing.s) {
+            if let slot = vm.activeSlot {
+                HStack(spacing: Theme.Spacing.s) {
+                    // Not accent: it is a label, and blue is kept for what
+                    // can be tapped — the chevrons and Verse on this same row.
+                    // The answer's length rides here, not as "(6)" after the
+                    // clue: the clue's two lines are measured against the clue
+                    // alone, and the suffix would push more of them into the
+                    // shrink. The clue's name in ink, its length in grey: one
+                    // line in two weights, so the bar has a head without a box.
+                    Text("\(Text("\(slot.number) \(slot.direction.label)").foregroundStyle(.primary)) · \(slot.length) letters")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                        .layoutPriority(1)
+                    // Without this the row hugs its content and the
+                    // spacer collapses, parking the pill against the
+                    // number instead of out at the column's edge.
+                    Spacer(minLength: Theme.Spacing.m)
+                    // Invisible twin of the overlaid pill: it claims
+                    // the width so the number can never collide with
+                    // it, and collapses to nothing when no nudge is
+                    // showing. Only on the line they actually share:
+                    // at accessibility sizes the nudge has its own row
+                    // (see `body`), so reserving for it here was pure
+                    // theft — it squeezed "19 Across" down to "19 A…".
+                    if !dynamicTypeSize.isAccessibilitySize {
+                        HStack(spacing: Theme.Spacing.s) {
+                            nudgeBody
+                            if showsVerseButton { verseLabel }
+                        }
+                        .hidden()
+                    }
+                }
+                .frame(maxWidth: .infinity)
+                if showsClue, let clue {
+                    clueText(clue)
+                        // Only the visible clue marks the line the chevrons
+                        // centre on; the twin would claim it at its own height.
+                        .alignmentGuide(.clueText, isActive: !isTwin)
+                }
+            } else {
+                Text("Select a cell to begin")
+                    .font(.callout)
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private var clueAccessibilityLabel: String {
         guard let slot = vm.activeSlot else { return "Select a cell to begin" }
         return "Clue \(slot.number) \(slot.direction.label), \(slot.length) letters: \(slot.clue)"
+    }
+}
+
+private extension VerticalAlignment {
+    /// The middle of the visible clue text, which the chevrons centre on.
+    enum ClueText: AlignmentID {
+        static func defaultValue(in d: ViewDimensions) -> CGFloat { d[VerticalAlignment.center] }
+    }
+    static let clueText = VerticalAlignment(ClueText.self)
+}
+
+private extension View {
+    /// Marks this view's centre as `.clueText` when active.
+    @ViewBuilder
+    func alignmentGuide(_ guide: VerticalAlignment, isActive: Bool) -> some View {
+        if isActive {
+            alignmentGuide(guide) { $0[VerticalAlignment.center] }
+        } else {
+            self
+        }
     }
 }

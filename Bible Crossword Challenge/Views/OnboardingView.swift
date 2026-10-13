@@ -931,7 +931,10 @@ extension View {
 
 /// A single damped wobble, driven by an incrementing attempt count so repeated
 /// wrong answers each get their own shake.
-private struct Shake: GeometryEffect {
+/// `nonisolated`: SwiftUI may evaluate an effect on its async render thread,
+/// and under the target's main-actor default a Swift 6 isolation check would
+/// trap there (as `Theme.adaptive`'s colour provider did).
+nonisolated private struct Shake: GeometryEffect {
     var travel: CGFloat
     var animatableData: CGFloat {
         get { travel }

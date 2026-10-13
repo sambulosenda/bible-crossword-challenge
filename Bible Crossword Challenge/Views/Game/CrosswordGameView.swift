@@ -651,7 +651,14 @@ struct CrosswordGameView: View {
                     .font(.headline)
                     .lineLimit(1)
                 Spacer()
-                timerSlot
+                // The same status line the top bar carries: time, then words.
+                HStack(spacing: Theme.Spacing.xs) {
+                    timerSlot
+                    Text("·")
+                        .accessibilityHidden(true)
+                    progressText
+                }
+                .foregroundStyle(.secondary)
             }
             .font(.subheadline.weight(.medium))
             .padding(.horizontal, Theme.Spacing.m)
@@ -704,12 +711,12 @@ struct CrosswordGameView: View {
     /// Takes every point the arrangement can spare in both directions; the grid
     /// decides for itself whether that is enough to show the whole board.
     /// Over the clue bar (phones in portrait, the iPad column) the board
-    /// carries its progress and hands the height it can't use to the keypad;
-    /// beside the keypad, where height is what's scarce, it stays bare.
+    /// hands the height it can't use to the keypad (`keyGrowth`).
     private var gridArea: some View {
-        CrosswordGridView(vm: vm, showsProgress: gridOverClueBar)
+        CrosswordGridView(vm: vm)
             .onPreferenceChange(SpareGridHeightKey.self) { spare in
-                keyGrowth = Self.keyGrowth(spare: spare, current: keyGrowth)
+                let growth = Self.keyGrowth(spare: spare, current: keyGrowth)
+                if growth != keyGrowth { keyGrowth = growth }
             }
             .padding(Theme.Spacing.m)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -881,9 +888,18 @@ struct CrosswordGameView: View {
                         .lineLimit(1)
                         .minimumScaleFactor(0.8)
                         .accessibilityAddTraits(.isHeader)
-                    timerSlot
-                        .font(.caption.weight(.medium))
-                        .foregroundStyle(.secondary)
+                    // Time and progress share the subtitle line: both are
+                    // status, and the bar is where iOS keeps a screen's
+                    // status. Over the board, the count was a lone label on
+                    // empty paper and a row the board had to give up.
+                    HStack(spacing: Theme.Spacing.xs) {
+                        timerSlot
+                        Text("·")
+                            .accessibilityHidden(true)
+                        progressText
+                    }
+                    .font(.caption.weight(.medium))
+                    .foregroundStyle(.secondary)
                 }
             }
         }
@@ -910,6 +926,20 @@ struct CrosswordGameView: View {
                 }
             }
         }
+    }
+
+    /// "1 of 5 words". Solved words, not filled squares, like
+    /// `remainingClueCount`: a grid of wrong guesses shouldn't look nearly done.
+    private var progressText: some View {
+        let total = vm.allSlots.count
+        let solved = total - vm.remainingClueCount
+        return Text("\(solved) of \(total) words")
+            .monospacedDigit()
+            .lineLimit(1)
+            .fixedSize()
+            .contentTransition(.numericText(value: Double(solved)))
+            .animation(reduceMotion ? nil : .snappy, value: solved)
+            .accessibilityLabel("\(solved) of \(total) words solved")
     }
 
     /// Whether the clock's digits are on screen. Zen hides them — except when
@@ -944,15 +974,16 @@ struct CrosswordGameView: View {
                     // the Hints menu, or Profile.
                     .animation(.snappy(duration: 0.22), value: clockVisible)
                     // Grows a 16pt leaf into something a thumb can actually
-                    // hit. Nothing moves: the principal slot is centred, the
-                    // content is fixed-size, and the toolbar row is already
-                    // this tall — only the target grows to the 44pt floor.
-                    .padding(.horizontal, Theme.Spacing.s)
-                    .frame(minWidth: 44)
-                    // Under the title the clock is a caption line, so the 44pt
-                    // floor comes from the hit shape, not the frame — a 44pt
-                    // frame would push the title out of the bar.
-                    .contentShape(.rect.inset(by: -12))
+                    // hit, through the hit shape rather than the frame: the
+                    // clock is a caption on a line it shares with the
+                    // progress, and padding or a 44pt frame opened a gap
+                    // between the two. Tall, but only 6pt wider each side —
+                    // any wider and a tap on "1 of 5 words" hid the clock.
+                    .padding(.vertical, 12)
+                    .padding(.horizontal, 6)
+                    .contentShape(.rect)
+                    .padding(.vertical, -12)
+                    .padding(.horizontal, -6)
             }
             .buttonStyle(.plain)
             .accessibilityHint(showSolveTimer ? "Hides the timer" : "Shows the timer")
@@ -1003,8 +1034,10 @@ struct CrosswordGameView: View {
     /// What the timer slot shows in zen: a quiet leaf instead of an empty gap,
     /// so the missing clock reads as a mode, not a bug.
     private var zenMark: some View {
+        // The line's font, not its own: on the top bar's caption line a
+        // subheadline leaf stood taller than the text beside it and pushed
+        // the title into its shrink.
         Image(systemName: "leaf.fill")
-            .font(.subheadline)
             .foregroundStyle(.secondary)
             .transition(zenSwap)
             .accessibilityLabel("Zen mode, timer hidden")

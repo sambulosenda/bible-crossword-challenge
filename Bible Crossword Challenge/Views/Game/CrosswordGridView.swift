@@ -27,10 +27,6 @@ struct SpareGridHeightKey: PreferenceKey {
 
 struct CrosswordGridView: View {
     @Bindable var vm: GameViewModel
-    /// Words solved, as a labelled bar over the fitted board and exactly as
-    /// wide as it. Fit mode only: in the pan/zoom viewport the board has no
-    /// stable width to match, and no height to spare.
-    var showsProgress = false
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
@@ -103,14 +99,13 @@ struct CrosswordGridView: View {
             // Keyed to the puzzle, so a view reused for another board can't
             // centre on the last one's cells.
             let box = cachedBounds.flatMap { $0.puzzleID == vm.puzzle.id ? $0.bounds : nil } ?? playableBounds
-            let reserved = showsProgress ? Self.progressHeight + Theme.Spacing.s : 0
             let fit = min(
                 floor(geo.size.width / CGFloat(box.cols.count)),
-                floor((geo.size.height - reserved) / CGFloat(box.rows.count)),
+                floor(geo.size.height / CGFloat(box.rows.count)),
                 Self.maximumFittedSide
             )
             let zooms = vm.size > Self.zoomThreshold || fit < Self.minimumFittedSide
-            let spare = zooms ? 0 : max(0, geo.size.height - reserved - fit * CGFloat(box.rows.count))
+            let spare = zooms ? 0 : max(0, geo.size.height - fit * CGFloat(box.rows.count))
             Group {
                 if zooms {
                     zoomableGrid(in: geo.size)
@@ -153,50 +148,10 @@ struct CrosswordGridView: View {
     /// grid to the *shorter* side of the container, which is exactly how a
     /// landscape screen reduced the board to nothing.
     private func fittedGrid(side: CGFloat, box: PlayableBounds) -> some View {
-        let width = side * CGFloat(box.cols.count)
-        return VStack(spacing: Theme.Spacing.s) {
-            if showsProgress {
-                progressRow
-                    .frame(width: width, height: Self.progressHeight)
-            }
-            gridRows(side: side, rows: box.rows, cols: box.cols)
-                .frame(width: width, height: side * CGFloat(box.rows.count))
-                .modifier(ShakeEffect(animatableData: CGFloat(shakeTick)))
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-    }
-
-    private static let progressHeight: CGFloat = 22
-
-    /// "2 of 5 words" and a hairline bar. Counts solved words, not filled
-    /// squares, like `remainingClueCount`: a grid of wrong guesses shouldn't
-    /// look nearly done. Grey, not ink or accent: it supports the board, so it
-    /// mustn't be the darkest mark on it, and blue is kept for what can be tapped.
-    private var progressRow: some View {
-        let total = vm.allSlots.count
-        let solved = total - vm.remainingClueCount
-        return HStack(spacing: Theme.Spacing.s) {
-            Text("\(solved) of \(total) words")
-                .font(.caption.weight(.semibold))
-                .monospacedDigit()
-                .foregroundStyle(.secondary)
-                .lineLimit(1)
-                .fixedSize()
-            GeometryReader { geo in
-                Capsule()
-                    .fill(Color(.systemFill))
-                    .overlay(alignment: .leading) {
-                        Capsule()
-                            .fill(.secondary)
-                            .frame(width: total > 0 ? geo.size.width * CGFloat(solved) / CGFloat(total) : 0)
-                    }
-            }
-            .frame(height: 3)
-            .animation(reduceMotion ? nil : .snappy, value: solved)
-        }
-        .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel("\(solved) of \(total) words solved")
+        gridRows(side: side, rows: box.rows, cols: box.cols)
+            .frame(width: side * CGFloat(box.cols.count), height: side * CGFloat(box.rows.count))
+            .modifier(ShakeEffect(animatableData: CGFloat(shakeTick)))
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     // MARK: - Zoom mode (Sunday Specials, and any container too small to fit)
@@ -414,7 +369,10 @@ struct PlayableBounds: Equatable {
 
 /// Horizontal shake used to signal a failed answer check. The translation is
 /// interpolated as `animatableData` advances by 1, producing a few oscillations.
-private struct ShakeEffect: GeometryEffect {
+/// `nonisolated`: SwiftUI may evaluate an effect on its async render thread,
+/// and under the target's main-actor default a Swift 6 isolation check would
+/// trap there (as `Theme.adaptive`'s colour provider did).
+nonisolated private struct ShakeEffect: GeometryEffect {
     var amount: CGFloat = 5
     var shakes: CGFloat = 3
     var animatableData: CGFloat
