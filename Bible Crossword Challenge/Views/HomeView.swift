@@ -1226,7 +1226,9 @@ private struct UpgradeCard: View {
                 // is a poor look on the one card asking for money.
                 if !typeSize.isAccessibilitySize {
                     Image(systemName: isStreakVariant ? "flame.fill" : "crown.fill")
-                        .font(.title3)
+                        // Title2 fills the 44pt disc; at title3 the crown sat
+                        // small in it.
+                        .font(.title2)
                         // The streak's own orange, as the streak card above
                         // draws its flame.
                         .foregroundStyle(isStreakVariant ? Color.orange : Theme.accent)
@@ -1238,11 +1240,15 @@ private struct UpgradeCard: View {
                         // Was "Go Premium": the app's own word for its SKU, which
                         // says nothing about what the player gets. The count comes
                         // from the bundle so it can't go stale as puzzles are added.
+                        // Title3 and subheadline: at headline and caption, the
+                        // two smallest sizes in the app, the one card asking for
+                        // money was the quietest thing on Today. Size, not a
+                        // tint, so it still sits under the daily card.
                         Text(title)
-                            .font(.headline.weight(.bold))
+                            .font(.title3.weight(.bold))
                             .foregroundStyle(.primary)
                         Text(subtitle)
-                            .font(.caption.weight(.medium))
+                            .font(.subheadline)
                             .foregroundStyle(.secondary)
                     }
                     // A pill, not a chevron. The chevron is this screen's "tap to
@@ -1260,11 +1266,14 @@ private struct UpgradeCard: View {
                     // anything, and a button that overstates what it does is
                     // how a tap becomes a back-out. What it may do is name the
                     // free trial when there is one — see `PremiumCopy.cardCTA`.
+                    //
+                    // Subheadline with 12pt above and below makes a 44pt pill;
+                    // at caption it was about 30.
                     Text(PremiumCopy.cardCTA(store))
-                        .font(.caption.weight(.bold))
+                        .font(.subheadline.weight(.semibold))
                         .foregroundStyle(Theme.onInk)
-                        .padding(.horizontal, Theme.Spacing.m)
-                        .padding(.vertical, Theme.Spacing.s)
+                        .padding(.horizontal, Theme.Spacing.l - Theme.Spacing.xs)
+                        .padding(.vertical, 12)
                         .background(Theme.ink, in: .capsule)
                         // Hugs its text, but may wrap: unbreakable, at the
                         // largest type it ran wider than the screen and pulled
