@@ -1193,6 +1193,20 @@ struct CompletionView: View {
     /// puzzle is done and the habit is a fact. Yields to a challenge result
     /// and the review sheet like every other ask, and takes the day's budget
     /// so the inline card stands down. Slides up after the celebration lands.
+    /// Long enough for the celebration to land. UI tests stretch it with
+    /// `-uiAskDelay <seconds>` so closing the screen inside it is
+    /// deterministic rather than a race with the simulator's speed.
+    private static var returnDaySheetDelay: Duration {
+        #if DEBUG
+        let args = ProcessInfo.processInfo.arguments
+        if let flag = args.firstIndex(of: "-uiAskDelay"), flag + 1 < args.count,
+           let seconds = Double(args[flag + 1]) {
+            return .seconds(seconds)
+        }
+        #endif
+        return .seconds(1.5)
+    }
+
     private func maybeShowReturnDaySheet() {
         guard challenge == nil, !didRequestReview else { return }
         #if DEBUG
@@ -1211,7 +1225,7 @@ struct CompletionView: View {
         reminderAskLastDay = Calendar.current.startOfDay(for: Date()).timeIntervalSinceReferenceDate
         ReminderAskSession.asked = true
         delayedAsks.append(Task {
-            guard (try? await Task.sleep(for: .seconds(1.5))) != nil else {
+            guard (try? await Task.sleep(for: Self.returnDaySheetDelay)) != nil else {
                 reminderAskLastDay = previousDay
                 ReminderAskSession.asked = previousAsked
                 return

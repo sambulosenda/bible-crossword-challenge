@@ -39,6 +39,16 @@
                ReferencedContainer = "container:Bible Crossword Challenge.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "4F1A3C542FE8883E005B59F2"
+               BuildableName = "Bible Crossword ChallengeUITests.xctest"
+               BlueprintName = "Bible Crossword ChallengeUITests"
+               ReferencedContainer = "container:Bible Crossword Challenge.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

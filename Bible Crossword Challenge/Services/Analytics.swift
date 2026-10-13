@@ -708,6 +708,7 @@ struct ConsoleAnalyticsService: AnalyticsService {
     func log(_ event: AnalyticsEvent) {
         #if DEBUG
         print("📊 \(event.name) \(event.parameters)")
+        AnalyticsRecorder.record(event.name, source: event.parameters["source"] as? String)
         #endif
     }
 }

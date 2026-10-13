@@ -18,6 +18,17 @@ struct Bible_Crossword_ChallengeApp: App {
     private let container: ModelContainer
 
     init() {
+        #if DEBUG
+        // UI tests: every launch starts from nothing — no saved settings and
+        // an in-memory store — so one test's solve can't change the next
+        // one's Today. Launch arguments (`-hasOnboarded YES`) still apply.
+        let cleanSlate = ProcessInfo.processInfo.arguments.contains("-uiCleanSlate")
+        if cleanSlate, let domain = Bundle.main.bundleIdentifier {
+            UserDefaults.standard.removePersistentDomain(forName: domain)
+        }
+        #else
+        let cleanSlate = false
+        #endif
         FirebaseApp.configure()
         FirebaseAnalyticsService.configure()
         PostHogAnalyticsService.configure()
@@ -32,7 +43,9 @@ struct Bible_Crossword_ChallengeApp: App {
         do {
             container = try ModelContainer(
                 for: PlayerProfile.self, PuzzleRecord.self,
-                configurations: ModelConfiguration(cloudKitDatabase: .automatic)
+                configurations: cleanSlate
+                    ? ModelConfiguration(isStoredInMemoryOnly: true)
+                    : ModelConfiguration(cloudKitDatabase: .automatic)
             )
         } catch {
             // iCloud can be unavailable (signed out, entitlement missing in a
