@@ -487,6 +487,8 @@ struct RootView: View {
         .fullScreenCover(item: $router.target) { target in
             ReaderModal(target: target)
         }
+        // One day for every tab — see `TodayClock`.
+        .tracksToday()
     }
 
     private func ensureProfile() -> PlayerProfile {

@@ -57,12 +57,9 @@ struct HomeView: View {
     /// paywall's own "you're Premium" state, as every other entry does.
     @State private var paywall: PaywallRequest?
 
-    /// The day Today is showing. Nothing else in `body` changes at midnight,
-    /// so without it a player who left the app open overnight came back to
-    /// yesterday's puzzle marked Solved. Refreshed on the system's day change
-    /// and on every return to the foreground; equal values don't redraw.
-    @State private var currentDay = Calendar.current.startOfDay(for: .now)
-    @Environment(\.scenePhase) private var scenePhase
+    /// The day Today is showing — see `TodayClock`. Read here so the screen
+    /// redraws at midnight instead of holding yesterday's puzzle as Solved.
+    @Environment(\.today) private var currentDay
 
     private var dailyPuzzle: Puzzle? { puzzleProvider.dailyPuzzle() }
     private var dailyMini: Puzzle? { puzzleProvider.dailyMini() }
@@ -297,14 +294,6 @@ struct HomeView: View {
             }
             .sheet(item: $paywall) { request in
                 PaywallView(source: request.source, initialPlanID: request.planID)
-            }
-            .task {
-                for await _ in NotificationCenter.default.notifications(named: .NSCalendarDayChanged) {
-                    refreshDay()
-                }
-            }
-            .onChange(of: scenePhase) { _, phase in
-                if phase == .active { refreshDay() }
             }
             // Large, as a tab's root title is. It was inline while a greeting
             // sat under it as the page's real title; the greeting went on
@@ -570,10 +559,6 @@ struct HomeView: View {
         if readingPlans.isComplete {
             analytics.log(.planCompleted(plan: plan.id, days: day))
         }
-    }
-
-    private func refreshDay() {
-        currentDay = Calendar.current.startOfDay(for: .now)
     }
 
     // MARK: - Derived state
