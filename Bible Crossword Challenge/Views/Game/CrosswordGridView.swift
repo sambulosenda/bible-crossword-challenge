@@ -170,7 +170,8 @@ struct CrosswordGridView: View {
 
     /// "2 of 5 words" and a hairline bar. Counts solved words, not filled
     /// squares, like `remainingClueCount`: a grid of wrong guesses shouldn't
-    /// look nearly done. Ink, not accent — blue is kept for what can be tapped.
+    /// look nearly done. Grey, not ink or accent: it supports the board, so it
+    /// mustn't be the darkest mark on it, and blue is kept for what can be tapped.
     private var progressRow: some View {
         let total = vm.allSlots.count
         let solved = total - vm.remainingClueCount
@@ -186,11 +187,11 @@ struct CrosswordGridView: View {
                     .fill(Color(.systemFill))
                     .overlay(alignment: .leading) {
                         Capsule()
-                            .fill(Theme.ink)
+                            .fill(.secondary)
                             .frame(width: total > 0 ? geo.size.width * CGFloat(solved) / CGFloat(total) : 0)
                     }
             }
-            .frame(height: 4)
+            .frame(height: 3)
             .animation(reduceMotion ? nil : .snappy, value: solved)
         }
         .dynamicTypeSize(...DynamicTypeSize.xxxLarge)

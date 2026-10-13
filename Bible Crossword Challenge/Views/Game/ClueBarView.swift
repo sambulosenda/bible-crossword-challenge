@@ -49,7 +49,11 @@ struct ClueBarView: View {
         // the clue they label. `dynamicTypeSize` above still reads the
         // player's real size, so the accessibility layouts keep firing.
         .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
-        .padding(.horizontal, Theme.Spacing.s)
+        // The clue on the page margin; on the trailing side the next
+        // chevron's 44pt frame is its own margin, which puts the glyph about
+        // on the board's right edge.
+        .padding(.leading, Theme.Spacing.m)
+        .padding(.trailing, Theme.Spacing.xs)
         // Room to breathe on both edges. The bar sits between a grid and a
         // keyboard with no margin of its own, so 4pt read as content jammed
         // against both. Affordable because moving the nudge onto the number
@@ -286,24 +290,14 @@ struct ClueBarView: View {
     private var clueRow: some View {
         HStack(spacing: Theme.Spacing.s) {
             Button {
-                vm.advanceClue(by: -1)
-            } label: {
-                Image(systemName: "chevron.backward")
-                    .font(.headline)
-                    .frame(width: 44, height: 44)
-                    .contentShape(.rect)
-            }
-            .accessibilityLabel("Previous clue")
-
-            Button {
                 vm.toggleDirection()
             } label: {
                 VStack(alignment: .leading, spacing: Theme.Spacing.s) {
                     if let slot = vm.activeSlot {
                         HStack(spacing: Theme.Spacing.s) {
-                            // Secondary, not accent: it is a label, and blue
-                            // is kept for what can be tapped — the chevrons
-                            // and Verse on this same row.
+                            // Not accent: it is a label, and blue is kept for
+                            // what can be tapped — the chevrons and Verse on
+                            // this same row.
                             // The answer's length rides here, not as "(6)"
                             // after the clue: the clue's two reserved lines
                             // are measured against the clue alone, and the
@@ -364,15 +358,31 @@ struct ClueBarView: View {
                 }
             }
 
-            Button {
-                vm.advanceClue(by: 1)
-            } label: {
-                Image(systemName: "chevron.forward")
-                    .font(.headline)
-                    .frame(width: 44, height: 44)
-                    .contentShape(.rect)
+            // Both chevrons trail the clue rather than flanking it. Flanked,
+            // the back chevron's 44pt column indented the clue to an edge
+            // nothing else on the screen used; trailing, the clue starts on
+            // the page margin with the progress label and the board.
+            // A pair, touching: their 44pt frames already hold the air.
+            HStack(spacing: 0) {
+                Button {
+                    vm.advanceClue(by: -1)
+                } label: {
+                    Image(systemName: "chevron.backward")
+                        .font(.headline)
+                        .frame(width: 44, height: 44)
+                        .contentShape(.rect)
+                }
+                .accessibilityLabel("Previous clue")
+                Button {
+                    vm.advanceClue(by: 1)
+                } label: {
+                    Image(systemName: "chevron.forward")
+                        .font(.headline)
+                        .frame(width: 44, height: 44)
+                        .contentShape(.rect)
+                }
+                .accessibilityLabel("Next clue")
             }
-            .accessibilityLabel("Next clue")
         }
     }
 

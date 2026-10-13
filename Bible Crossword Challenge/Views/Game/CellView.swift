@@ -93,7 +93,7 @@ struct CellView: View, Equatable {
                         // real remedy for a board this tight is the zoom
                         // viewport, which `CrosswordGridView` falls back to.
                         Text("\(number)")
-                            .font(.system(size: max(side * 0.28, 9), weight: .semibold))
+                            .font(.system(size: max(side * 0.24, 9), weight: .semibold))
                             .foregroundStyle(.secondary)
                             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                             // Clear of the tile's rounded corner and the
@@ -117,6 +117,10 @@ struct CellView: View, Equatable {
                                 design: .rounded
                             ))
                             .foregroundStyle(CellPalette.textColor(isPencil: cell.isPencil))
+                            // Dropped a little below centre in a numbered
+                            // cell, where it ran into the number's corner —
+                            // the paper crossword's own placement.
+                            .offset(y: cell.number != nil ? side * 0.06 : 0)
                             .scaleEffect(flash && !reduceMotion ? 1.18 : 1.0)
                             .transition(reduceMotion ? .opacity : .scale(scale: 0.4).combined(with: .opacity))
                             // Identity follows the letter so overtyping a filled

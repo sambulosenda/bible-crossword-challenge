@@ -62,7 +62,9 @@ struct LetterKeyboardView: View {
                 }
             }
         }
-        .padding(.horizontal, Theme.Spacing.s)
+        // On paper the pad keeps the page's 16pt margin, so its outer keys
+        // line up with the board and the clue above them.
+        .padding(.horizontal, onPaper ? Theme.Spacing.m : Theme.Spacing.s)
         .padding(.vertical, Theme.Spacing.m)
         // On iPad the keys stop growing at a hand's width — a Q stretched to
         // an eighth of a 13" screen stops reading as a key. The outer frame
