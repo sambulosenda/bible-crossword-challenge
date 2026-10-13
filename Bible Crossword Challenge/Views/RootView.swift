@@ -14,7 +14,7 @@ import os
 /// held until 2.8 — the trophy list now lives inside Profile (and behind
 /// Today's next-achievement card), and the scripture surfaces got the tab.
 enum RootTab: Hashable {
-    case today, packs, library, read, profile
+    case today, packs, library, profile
 }
 
 struct RootView: View {
@@ -448,12 +448,9 @@ struct RootView: View {
             Tab("Library", systemImage: "square.grid.3x3", value: RootTab.library) {
                 LibraryView(profile: profile)
             }
-            // "Verses" since 2026-10-03: the tab leads with the verses the
-            // player is memorizing and the ones their puzzles gave them; the
-            // reader sits underneath. The case keeps its old name.
-            Tab("Verses", systemImage: "text.quote", value: RootTab.read) {
-                ReadView()
-            }
+            // No Verses tab since 2026-10-13: it's pushed from Today's
+            // "Bible" row (see HomeView). About 1 in 20 actives used it in a
+            // week; memory verses, its lead, were reached mostly from Today.
             // The HIG's standard symbol for Account, User and Profile.
             Tab("Profile", systemImage: "person.crop.circle", value: RootTab.profile) {
                 ProfileView(profile: profile) { showSettings = true }

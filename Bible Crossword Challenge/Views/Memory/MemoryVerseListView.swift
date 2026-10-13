@@ -12,7 +12,11 @@ import SwiftUI
 import SwiftData
 
 /// Navigation value pushing the verse list from Today.
-struct MemoryRoute: Hashable {}
+struct MemoryRoute: Hashable {
+    /// `memory_list_opened.source`. One destination serves every door now the
+    /// Verses screen is pushed on Today's stack rather than owning a tab.
+    var source: String = "home_card"
+}
 
 struct MemoryVerseListView: View {
     /// Which surface pushed it — `home_card` from Today, `read_tab` from Read.

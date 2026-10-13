@@ -2,7 +2,8 @@
 //  ReadView.swift
 //  Bible Crossword Challenge
 //
-//  The Verses tab (the Read tab until 2026-10): the verses the player is
+//  The Verses screen (the Read tab until 2026-10, a tab of its own until
+//  2026-10-13, now pushed from Today's "Bible" row): the verses the player is
 //  making their own — memory verses due today first, then the verses their
 //  solved puzzles gave them — and below that the reader: resume, search, the
 //  book map and the whole Bible.
@@ -24,6 +25,9 @@
 
 import SwiftUI
 import SwiftData
+
+/// Pushes the Verses screen from Today's "Bible" row.
+struct VersesRoute: Hashable {}
 
 struct ReadView: View {
     @Environment(\.scripture) private var scripture
@@ -77,122 +81,120 @@ struct ReadView: View {
         let verse: Int?
     }
 
+    /// Pushed on Today's stack, not a tab of its own (since 2026-10-13), so it
+    /// has no `NavigationStack`, and its memory routes use Today's
+    /// destinations — `MemoryRoute.source` keeps them logging `read_tab`.
     var body: some View {
-        NavigationStack {
-            SearchAware { searching in
-                if searching {
-                    ScrollView {
-                        searchResults
-                            .padding(Theme.Spacing.m)
-                            .frame(maxWidth: 560)
-                            .frame(maxWidth: .infinity)
-                    }
-                } else {
-                    // The habit and the bookmark on the left of a wide
-                    // window, the shelves on the right.
-                    CardColumns {
-                        // The player's own verses first: what's due to
-                        // practise, then what their puzzles gave them.
-                        memoryLeadCard
-                        solvedVersesSection
-                        // Then reading — a running plan, and the bookmark
-                        // only when there is one. A first visit used to open
-                        // on "Open Genesis 1" in the tab's loud pill, the
-                        // least likely thing anyone came for (6 players in
-                        // 30 days to 2026-10-03).
-                        ReadingPlanCard(showsInvite: false, onRead: openPlanChapter)
-                        recentRow
-                    } more: {
-                        // One group for reading, and no second loud card:
-                        // "continue", the two testaments and the plans used
-                        // to be four stacked cards, the first with a pill of
-                        // its own competing with the memory card's.
-                        browseSection
-                        progressGroup
-                    }
+        SearchAware { searching in
+            if searching {
+                ScrollView {
+                    searchResults
+                        .padding(Theme.Spacing.m)
+                        .frame(maxWidth: 560)
+                        .frame(maxWidth: .infinity)
+                }
+            } else {
+                // The habit and the bookmark on the left of a wide
+                // window, the shelves on the right.
+                CardColumns {
+                    // What their puzzles gave them first. Memory verses led
+                    // while this was a tab, but Today's own row now opens them
+                    // (5× the tab's traffic), so here the card would be the
+                    // second door to one place at the top of the page. It
+                    // stays, lower down: it carries the starter verses.
+                    solvedVersesSection
+                    // Then reading — a running plan, and the bookmark
+                    // only when there is one. A first visit used to open
+                    // on "Open Genesis 1" in the tab's loud pill, the
+                    // least likely thing anyone came for (6 players in
+                    // 30 days to 2026-10-03).
+                    ReadingPlanCard(showsInvite: false, onRead: openPlanChapter)
+                    recentRow
+                    memoryLeadCard
+                } more: {
+                    // One group for reading, and no second loud card:
+                    // "continue", the two testaments and the plans used
+                    // to be four stacked cards, the first with a pill of
+                    // its own competing with the memory card's.
+                    browseSection
+                    progressGroup
                 }
             }
-            .background(Theme.background)
-            .navigationTitle("Verses")
-            // Always showing: the fastest way to "John 3:16" was hidden until
-            // the page was pulled down.
-            .searchable(
-                text: $query,
-                placement: .navigationBarDrawer(displayMode: .always),
-                prompt: "Verse, chapter or words"
+        }
+        .background(Theme.background)
+        // "Bible", the name of the row on Today that opens it.
+        .navigationTitle("Bible")
+        // Always showing: the fastest way to "John 3:16" was hidden until
+        // the page was pulled down.
+        .searchable(
+            text: $query,
+            placement: .navigationBarDrawer(displayMode: .always),
+            prompt: "Verse, chapter or words"
+        )
+        .onSubmit(of: .search) {
+            analytics.log(.readSearch(kind: results.kind, results: results.count))
+        }
+        .task(id: query) {
+            // Debounced, then off the main thread: a word scans 31,000
+            // verses, which is tens of milliseconds the keyboard shouldn't
+            // wait for.
+            let trimmed = query.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard !trimmed.isEmpty else { results = ScriptureSearch.Results(); puzzleHits = []; searchedQuery = ""; return }
+            try? await Task.sleep(for: .milliseconds(200))
+            guard !Task.isCancelled else { return }
+            await scripture.preload()
+            let books = scripture.books
+            let featured = featuredCache ?? featuredReferences
+            if featuredCache == nil { featuredCache = featured }
+            let found = await Task.detached(priority: .userInitiated) {
+                ScriptureSearch.search(trimmed, in: books, featured: featured)
+            }.value
+            guard !Task.isCancelled else { return }
+            results = found
+            puzzleHits = matchingPuzzles(trimmed)
+            searchedQuery = trimmed
+        }
+        .navigationDestination(item: $searchTarget) { target in
+            ChapterReaderView(
+                startBook: target.book,
+                startChapter: target.chapter,
+                highlightVerse: target.verse,
+                source: "read_search"
             )
-            .onSubmit(of: .search) {
-                analytics.log(.readSearch(kind: results.kind, results: results.count))
-            }
-            .task(id: query) {
-                // Debounced, then off the main thread: a word scans 31,000
-                // verses, which is tens of milliseconds the keyboard shouldn't
-                // wait for.
-                let trimmed = query.trimmingCharacters(in: .whitespacesAndNewlines)
-                guard !trimmed.isEmpty else { results = ScriptureSearch.Results(); puzzleHits = []; searchedQuery = ""; return }
-                try? await Task.sleep(for: .milliseconds(200))
-                guard !Task.isCancelled else { return }
-                await scripture.preload()
-                let books = scripture.books
-                let featured = featuredCache ?? featuredReferences
-                if featuredCache == nil { featuredCache = featured }
-                let found = await Task.detached(priority: .userInitiated) {
-                    ScriptureSearch.search(trimmed, in: books, featured: featured)
-                }.value
-                guard !Task.isCancelled else { return }
-                results = found
-                puzzleHits = matchingPuzzles(trimmed)
-                searchedQuery = trimmed
-            }
-            .navigationDestination(item: $searchTarget) { target in
+        }
+        .navigationDestination(item: $searchBook) { book in
+            ChapterPickerView(book: book)
+        }
+        .navigationDestination(item: $recentTarget) { entry in
+            ChapterReaderView(startBook: entry.book, startChapter: entry.chapter, source: "read_recent")
+        }
+        // Re-taken whenever the reader moves the bookmark, so coming back
+        // from a chapter shows that chapter on the card.
+        .task(id: "\(lastBook)#\(lastChapter)") {
+            await scripture.preload()
+            snapshot = Snapshot(
+                scripture: scripture,
+                lastBook: lastBook,
+                lastChapter: lastChapter
+            )
+        }
+        .navigationDestination(isPresented: $showReader) {
+            let point = snapshot ?? .placeholder
+            ChapterReaderView(
+                startBook: point.book,
+                startChapter: point.chapter,
+                source: point.isFresh ? "read_start" : "read_continue"
+            )
+        }
+        .navigationDestination(isPresented: $showPlanReader) {
+            if let plan = plans.activePlan, let day = plans.nextDay {
                 ChapterReaderView(
-                    startBook: target.book,
-                    startChapter: target.chapter,
-                    highlightVerse: target.verse,
-                    source: "read_search"
+                    startBook: plan.book,
+                    startChapter: day,
+                    source: "read_plan",
+                    planChapter: PlanChapter(book: plan.book, chapter: day),
+                    onPlanChapterRead: { markPlanRead(plan, day: day) }
                 )
-            }
-            .navigationDestination(item: $searchBook) { book in
-                ChapterPickerView(book: book)
-            }
-            .navigationDestination(item: $recentTarget) { entry in
-                ChapterReaderView(startBook: entry.book, startChapter: entry.chapter, source: "read_recent")
-            }
-            // Re-taken whenever the reader moves the bookmark, so coming back
-            // from a chapter shows that chapter on the card.
-            .task(id: "\(lastBook)#\(lastChapter)") {
-                await scripture.preload()
-                snapshot = Snapshot(
-                    scripture: scripture,
-                    lastBook: lastBook,
-                    lastChapter: lastChapter
-                )
-            }
-            .navigationDestination(isPresented: $showReader) {
-                let point = snapshot ?? .placeholder
-                ChapterReaderView(
-                    startBook: point.book,
-                    startChapter: point.chapter,
-                    source: point.isFresh ? "read_start" : "read_continue"
-                )
-            }
-            .navigationDestination(isPresented: $showPlanReader) {
-                if let plan = plans.activePlan, let day = plans.nextDay {
-                    ChapterReaderView(
-                        startBook: plan.book,
-                        startChapter: day,
-                        source: "read_plan",
-                        planChapter: PlanChapter(book: plan.book, chapter: day),
-                        onPlanChapterRead: { markPlanRead(plan, day: day) }
-                    )
-                }
-            }
-            // The memory list pushes practice by value, as it does from Today.
-            .navigationDestination(for: MemoryRoute.self) { _ in
-                MemoryVerseListView(source: "read_tab")
-            }
-            .navigationDestination(for: MemoryPracticeRoute.self) { route in
-                MemoryPracticeView(referenceKey: route.referenceKey, source: route.source)
             }
         }
     }
@@ -490,7 +492,7 @@ struct ReadView: View {
                 }
                 .buttonStyle(.pillProminent)
             } else {
-                NavigationLink(value: MemoryRoute()) {
+                NavigationLink(value: MemoryRoute(source: "read_tab")) {
                     Text(entries.isEmpty ? "Choose a verse" : "See your verses")
                 }
                 .buttonStyle(entries.isEmpty ? .pillProminent : .pillTonal)
