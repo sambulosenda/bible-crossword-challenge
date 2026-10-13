@@ -24,30 +24,16 @@
 import Foundation
 import PostHog
 
-/// Every flag the app reads, with the value used when PostHog is unreachable
+/// A flag the app reads, with the value used when PostHog is unreachable
 /// (never set up, or flags not yet fetched on a first launch).
-enum FeatureFlag: String {
-    /// Holdout for the near-finish stall nudge (see `GameViewModel`). Default
-    /// on — the nudge is shipped behavior; the flag exists to carve a control
-    /// group, so a device that has never reached PostHog behaves as released.
-    case stallNudge = "stall-nudge"
-
-    /// Cuts the free daily hint pool from three to one
-    /// (`PlayerProfile.reducedHintLimit`). Default **off** — three is shipped
-    /// behavior, so a device we can't measure keeps the app it has.
-    case hintQuotaOne = "hint-quota-one"
-
-    /// Daily allowance on the free verse hint — see `VerseHintAllowance`.
-    /// New profiles only; off unless PostHog assigns treatment.
-    case verseHintLimit = "verse-hint-limit"
-
-    var defaultValue: Bool {
-        switch self {
-        case .stallNudge: return true
-        case .hintQuotaOne: return false
-        case .verseHintLimit: return false
-        }
-    }
+///
+/// None are live: `stall-nudge` and `hint-quota-one` were folded into shipped
+/// behaviour on 2026-10-13 and `verse-hint-limit` was dropped. The type and
+/// `FeatureFlags` stay as the hook for the next experiment — declare it as a
+/// `static let` here, in the same change as the code that reads it.
+struct FeatureFlag {
+    let rawValue: String
+    let defaultValue: Bool
 }
 
 enum FeatureFlags {
@@ -85,7 +71,7 @@ enum FeatureFlags {
     ///
     /// `$feature/<key>` already carries the same fact, so this is redundant by
     /// design — and worth it: the SDK only stamps that key once flags have
-    /// loaded, and it is easy to lose in a raw SQL query. `hint_quota_variant`
+    /// loaded, and it is easy to lose in a raw SQL query. `<name>_variant`
     /// is one column that says which arm every event belongs to.
     static func registerVariant(_ name: String, isTreatment: Bool) {
         PostHogSDK.shared.register([name: isTreatment ? "treatment" : "control"])

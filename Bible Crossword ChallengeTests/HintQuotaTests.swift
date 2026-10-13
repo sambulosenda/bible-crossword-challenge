@@ -27,20 +27,19 @@ struct HintQuotaTests {
         return p
     }
 
-    @Test("the shipped pool is three, the tightened one is one")
-    func poolSizes() {
-        #expect(PlayerProfile.freeHintLimit == 3)
-        #expect(PlayerProfile.reducedHintLimit == 1)
+    @Test("the shipped pool is one")
+    func poolSize() {
+        #expect(PlayerProfile.freeHintLimit == 1)
     }
 
     @Test("defaults to the shipped pool when no limit is passed")
     func defaultsToShipped() {
-        #expect(player().hintsRemaining(isPremium: false) == 3)
+        #expect(player().hintsRemaining(isPremium: false) == 1)
     }
 
     @Test("the tightened pool gives one hint a day")
     func tightenedPool() {
-        let limit = PlayerProfile.reducedHintLimit
+        let limit = PlayerProfile.freeHintLimit
         #expect(player().hintsRemaining(isPremium: false, limit: limit) == 1)
         #expect(player(usedToday: 1).hintsRemaining(isPremium: false, limit: limit) == 0)
     }
@@ -49,7 +48,7 @@ struct HintQuotaTests {
     /// two rungs above a letter, so every tap on them is a paywall.
     @Test("at one a day, Reveal Word and Reveal Puzzle are unaffordable")
     func wordAndPuzzleBecomeUnreachable() {
-        let remaining = player().hintsRemaining(isPremium: false, limit: PlayerProfile.reducedHintLimit)
+        let remaining = player().hintsRemaining(isPremium: false, limit: PlayerProfile.freeHintLimit)
         #expect(remaining >= HintType.letter.cost)
         #expect(remaining < HintType.word.cost)
         #expect(remaining < HintType.puzzle.cost)
@@ -60,7 +59,7 @@ struct HintQuotaTests {
 
     @Test("premium and the learning window ignore the pool entirely")
     func exemptionsIgnoreTheLimit() {
-        let limit = PlayerProfile.reducedHintLimit
+        let limit = PlayerProfile.freeHintLimit
         #expect(player().hintsRemaining(isPremium: true, limit: limit) == .max)
         // Still learning: fewer than three completions.
         #expect(player(completed: 2).hintsRemaining(isPremium: false, limit: limit) == .max)
@@ -70,13 +69,7 @@ struct HintQuotaTests {
     func poolResetsDaily() {
         let p = player(usedToday: 3)
         p.hintsDate = Calendar.current.date(byAdding: .day, value: -1, to: Date())
-        #expect(p.hintsRemaining(isPremium: false) == 3)
-        #expect(p.hintsRemaining(isPremium: false, limit: PlayerProfile.reducedHintLimit) == 1)
-    }
-
-    @Test("the flag ships off, so an unmeasured device keeps three")
-    func flagDefaultsOff() {
-        #expect(FeatureFlag.hintQuotaOne.defaultValue == false)
-        #expect(FeatureFlag.hintQuotaOne.rawValue == "hint-quota-one")
+        #expect(p.hintsRemaining(isPremium: false, limit: 3) == 3)
+        #expect(p.hintsRemaining(isPremium: false) == 1)
     }
 }

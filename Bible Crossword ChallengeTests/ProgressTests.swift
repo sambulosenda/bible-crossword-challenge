@@ -249,6 +249,10 @@ struct StreakTests {
 
 struct HintTests {
 
+    /// The quota arithmetic, tested at a pool of three so each step is
+    /// visible. The shipped pool (one) is pinned in `HintQuotaTests`.
+    static let pool = 3
+
     /// A profile past the learning window, where the daily quota applies.
     private func graduated() -> PlayerProfile {
         let p = PlayerProfile()
@@ -258,10 +262,10 @@ struct HintTests {
 
     @Test func freeUserGetsThreeHintsPerDay() {
         let p = graduated()
-        #expect(p.hintsRemaining(isPremium: false, now: day(2026, 7, 1), calendar: utc) == 3)
+        #expect(p.hintsRemaining(isPremium: false, limit: Self.pool, now: day(2026, 7, 1), calendar: utc) == 3)
         p.consumeHint(now: day(2026, 7, 1), calendar: utc)
         p.consumeHint(now: day(2026, 7, 1), calendar: utc)
-        #expect(p.hintsRemaining(isPremium: false, now: day(2026, 7, 1), calendar: utc) == 1)
+        #expect(p.hintsRemaining(isPremium: false, limit: Self.pool, now: day(2026, 7, 1), calendar: utc) == 1)
     }
 
     @Test func hintsResetNextDay() {
@@ -269,8 +273,8 @@ struct HintTests {
         p.consumeHint(now: day(2026, 7, 1), calendar: utc)
         p.consumeHint(now: day(2026, 7, 1), calendar: utc)
         p.consumeHint(now: day(2026, 7, 1), calendar: utc)
-        #expect(p.hintsRemaining(isPremium: false, now: day(2026, 7, 1), calendar: utc) == 0)
-        #expect(p.hintsRemaining(isPremium: false, now: day(2026, 7, 2), calendar: utc) == 3)
+        #expect(p.hintsRemaining(isPremium: false, limit: Self.pool, now: day(2026, 7, 1), calendar: utc) == 0)
+        #expect(p.hintsRemaining(isPremium: false, limit: Self.pool, now: day(2026, 7, 2), calendar: utc) == 3)
     }
 
     @Test func premiumHasUnlimitedHints() {
@@ -281,7 +285,7 @@ struct HintTests {
     @Test func wordHintCostsTwo() {
         let p = graduated()
         p.consumeHint(cost: HintType.word.cost, now: day(2026, 7, 1), calendar: utc)
-        #expect(p.hintsRemaining(isPremium: false, now: day(2026, 7, 1), calendar: utc) == 1)
+        #expect(p.hintsRemaining(isPremium: false, limit: Self.pool, now: day(2026, 7, 1), calendar: utc) == 1)
     }
 
     @Test func learningWindowIsUnmetered() {
@@ -289,7 +293,7 @@ struct HintTests {
         // against the quota, and the remaining count never gates a reveal.
         let p = PlayerProfile()
         #expect(p.isStillLearning)
-        #expect(p.hintsRemaining(isPremium: false, now: day(2026, 7, 1), calendar: utc) == Int.max)
+        #expect(p.hintsRemaining(isPremium: false, limit: Self.pool, now: day(2026, 7, 1), calendar: utc) == Int.max)
         p.consumeHint(cost: 3, now: day(2026, 7, 1), calendar: utc)
         #expect(p.hintsUsedToday == 0)
     }
@@ -301,13 +305,13 @@ struct HintTests {
         p.consumeHint(cost: 3, now: day(2026, 7, 1), calendar: utc)
         p.totalPuzzlesCompleted = 3
         #expect(!p.isStillLearning)
-        #expect(p.hintsRemaining(isPremium: false, now: day(2026, 7, 1), calendar: utc) == 3)
+        #expect(p.hintsRemaining(isPremium: false, limit: Self.pool, now: day(2026, 7, 1), calendar: utc) == 3)
     }
 
     @Test func verseHintCostsNothing() {
         let p = graduated()
         p.consumeHint(cost: HintType.verse.cost, now: day(2026, 7, 1), calendar: utc)
-        #expect(p.hintsRemaining(isPremium: false, now: day(2026, 7, 1), calendar: utc) == 3)
+        #expect(p.hintsRemaining(isPremium: false, limit: Self.pool, now: day(2026, 7, 1), calendar: utc) == 3)
         // A free hint must not stamp the date either.
         #expect(p.hintsDate == nil)
     }
@@ -316,7 +320,7 @@ struct HintTests {
         // Pins the `remaining >= cost` comparison the view uses.
         let p = graduated()
         p.consumeHint(cost: 2, now: day(2026, 7, 1), calendar: utc)
-        let remaining = p.hintsRemaining(isPremium: false, now: day(2026, 7, 1), calendar: utc)
+        let remaining = p.hintsRemaining(isPremium: false, limit: Self.pool, now: day(2026, 7, 1), calendar: utc)
         #expect(remaining >= HintType.letter.cost)
         #expect(!(remaining >= HintType.word.cost))
     }

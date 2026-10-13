@@ -71,12 +71,7 @@ struct MemoryPracticeView: View {
                 verseText: entry.verseText,
                 level: entry.playLevel
               ) else { return }
-        // Same holdout as the crossword grid: flag off means no nudge
-        // anywhere, so the control group's experience is one thing.
-        let model = GameViewModel(
-            puzzle: built.puzzle,
-            stallNudgeEnabled: FeatureFlags.isEnabled(.stallNudge)
-        )
+        let model = GameViewModel(puzzle: built.puzzle)
         model.autoCheck = autoCheckErrors
         model.restore(built.prefill)
         // Land on the first blanked word, not cell (0,0) of a revealed one.

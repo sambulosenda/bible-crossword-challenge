@@ -161,7 +161,6 @@ struct SpecVectorsTests {
         file.constants = [
             "hints": [
                 "freeHintLimit": PlayerProfile.freeHintLimit,
-                "reducedHintLimit": PlayerProfile.reducedHintLimit,
                 "learningWindowCompletions": 3,
                 "costs": [
                     HintType.verse.rawValue: HintType.verse.cost,
@@ -230,10 +229,6 @@ struct SpecVectorsTests {
                     "sunday": PuzzleProvider.shared.sundays.count,
                     "all": PuzzleProvider.shared.allPuzzles.count,
                 ],
-            ],
-            "featureFlags": [
-                FeatureFlag.stallNudge.rawValue: FeatureFlag.stallNudge.defaultValue,
-                FeatureFlag.hintQuotaOne.rawValue: FeatureFlag.hintQuotaOne.defaultValue,
             ],
             "challengeLinks": [
                 "scheme": ChallengeService.scheme,
@@ -383,7 +378,9 @@ struct SpecVectorsTests {
             return r == .max ? -1 : r
         }
 
-        for limit in [PlayerProfile.freeHintLimit, PlayerProfile.reducedHintLimit] {
+        // Both pool sizes the app has shipped, so the vectors cover the
+        // function rather than one constant.
+        for limit in [3, PlayerProfile.freeHintLimit] {
             for (completed, label) in [(2, "learning"), (3, "graduated"), (10, "veteran")] {
                 for used in [0, 1, 2, 3, 4] {
                     for daysBack in [nil, 0, 1] as [Int?] {

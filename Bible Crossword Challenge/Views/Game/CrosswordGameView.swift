@@ -33,14 +33,10 @@ struct CrosswordGameView: View {
                 .ignoresSafeArea()
                 .onAppear {
                     // Learning-window players get the shorter stall
-                    // thresholds — see `GameViewModel.isLearning`. The holdout
-                    // is read here, as the model that owns the nudge is
-                    // created, so the exposure lands on players who actually
-                    // start a puzzle.
+                    // thresholds — see `GameViewModel.isLearning`.
                     vm = GameViewModel(
                         puzzle: puzzle,
-                        learning: profile.isStillLearning,
-                        stallNudgeEnabled: FeatureFlags.isEnabled(.stallNudge)
+                        learning: profile.isStillLearning
                     )
                 }
         }
@@ -159,19 +155,8 @@ struct CrosswordGameScreen: View {
     /// The passage a verse hint opened, presented as a local sheet (see the
     /// `.sheet(item:)` note below for why not `ReaderRouter`).
     @State private var verseHintTarget: ReaderRouter.Target?
-    /// The daily hint pool this player is playing under — the shipped three, or
-    /// the tightened one under `FeatureFlag.hintQuotaOne`.
-    ///
-    /// Resolved once per puzzle rather than read at each use: every read emits
-    /// `$feature_flag_called`, and the quota is consulted on every menu open
-    /// and every hint tap. Opening a puzzle is the moment the pool takes
-    /// effect, which is where the exposure belongs.
-    @State private var freeHintLimit = PlayerProfile.freeHintLimit
-    /// Treatment arm of `verse-hint-limit`: verse hints past the daily
-    /// allowance cost from the pool. See `VerseHintAllowance`.
-    @State private var verseHintsMetered = false
-    /// Verse hints taken in this puzzle, for the cost and the menu label.
-    @State private var verseHintsUsed = 0
+    /// The daily hint pool for a free player past the learning window.
+    private let freeHintLimit = PlayerProfile.freeHintLimit
     /// Keeps the screen focused so a hardware keyboard can type into the grid.
     @FocusState private var gridFocused: Bool
 
@@ -563,8 +548,6 @@ struct CrosswordGameScreen: View {
         }
         .task {
             gridFocused = true
-            resolveHintQuota()
-            resolveVerseHintLimit()
             GameViewModel.seedAutoCheckIfNeeded(totalCompleted: profile.totalPuzzlesCompleted)
             // Straight from defaults, not the property wrapper: @AppStorage may
             // not observe a write made earlier in this same runloop turn.
@@ -1152,10 +1135,6 @@ struct CrosswordGameScreen: View {
 
     /// Whether this player's pool covers the rung. Premium and the learning
     /// window hold `Int.max`, so both are always true for them.
-    private var canAffordVerse: Bool {
-        profile.hintsRemaining(isPremium: store.isPremium, limit: freeHintLimit) >= verseHintCost
-    }
-
     private func canAfford(_ type: HintType) -> Bool {
         profile.hintsRemaining(isPremium: store.isPremium, limit: freeHintLimit) >= type.cost
     }
@@ -1163,10 +1142,8 @@ struct CrosswordGameScreen: View {
     /// Whether the rung costs more than a full day's pool — unreachable by
     /// waiting, not merely unaffordable right now.
     ///
-    /// Never true at the shipped pool of three, where Reveal Puzzle costs
-    /// exactly a full day and tomorrow really does fix it. Under
-    /// `FeatureFlag.hintQuotaOne` it is true of Reveal Word (2) and Reveal
-    /// Puzzle (3) permanently, which is the distinction the copy has to make.
+    /// At a pool of one it is true of Reveal Word (2) and Reveal Puzzle (3)
+    /// permanently, which is the distinction the copy has to make.
     private func isBeyondPool(_ type: HintType) -> Bool {
         !store.isPremium && !profile.isStillLearning && type.cost > freeHintLimit
     }
@@ -1176,7 +1153,7 @@ struct CrosswordGameScreen: View {
     /// A row reading "2 hints" to a player holding one is a row that lies: the
     /// tap can only wall them, and they did the arithmetic before tapping. The
     /// shipped three-a-day pool already produced that state near the end of a
-    /// day; `FeatureFlag.hintQuotaOne` makes it permanent, since a pool of one
+    /// day; a pool of one makes it permanent, since it
     /// can never reach Reveal Word (2) or Reveal Puzzle (3).
     ///
     /// The row stays visible rather than being hidden — unlike the verse rung,
@@ -1188,11 +1165,6 @@ struct CrosswordGameScreen: View {
         // The learning window meters nothing, so the rungs must not claim a
         // price the tap won't charge.
         if !store.isPremium, profile.isStillLearning { return "Free" }
-        if type == .verse, verseHintsMetered, !store.isPremium {
-            let left = VerseHintAllowance.freeAllowance(verseClueCount: verseClueCount) - verseHintsUsed
-            if left > 0 { return "Free · \(left) left in this puzzle" }
-            return canAffordVerse ? "1 hint" : "Back tomorrow"
-        }
         if type.cost > 0, !canAfford(type) {
             // Out of reach for good, not just today. A pool this size can never
             // cover the rung however long the player waits, so a countdown
@@ -1222,66 +1194,6 @@ struct CrosswordGameScreen: View {
     private func runCheck(_ scope: CheckScope) {
         guard let wrong = vm.check(scope) else { return }
         analytics.log(.checkUsed(scope: scope.rawValue, wrongCount: wrong))
-    }
-
-    /// Picks this player's daily pool and buckets them, once per puzzle.
-    ///
-    /// Only free players past the learning window are assigned: nobody else can
-    /// feel the change, and enrolling them would dilute the arms with players
-    /// whose experience is identical either way. `value(of:)` rather than
-    /// `isEnabled` so a device PostHog hasn't answered for keeps the shipped
-    /// three rather than being counted as control — see `FeatureFlags`.
-    private func resolveHintQuota() {
-        guard !store.isPremium, !profile.isStillLearning else { return }
-        #if DEBUG
-        // Same family as -uiForceTrialReoffer. The real treatment arm needs a
-        // PostHog assignment, and the locked rungs it produces are otherwise
-        // only reachable by spending a real pool down on a real device.
-        if ProcessInfo.processInfo.arguments.contains("-uiForceHintQuotaOne") {
-            freeHintLimit = PlayerProfile.reducedHintLimit
-            return
-        }
-        #endif
-        guard let isTreatment = FeatureFlags.value(of: .hintQuotaOne) else { return }
-        FeatureFlags.registerVariant("hint_quota_variant", isTreatment: isTreatment)
-        freeHintLimit = isTreatment ? PlayerProfile.reducedHintLimit : PlayerProfile.freeHintLimit
-    }
-
-    private func resolveVerseHintLimit() {
-        verseHintsUsed = VerseHintAllowance.used(puzzleID: puzzle.id)
-        #if DEBUG
-        // Treatment for any free player past the learning window, whatever
-        // the profile's age — a seeded profile predates the cohort.
-        let args = ProcessInfo.processInfo.arguments
-        if args.contains("-uiForceVerseHintLimit") {
-            verseHintsMetered = !store.isPremium && !profile.isStillLearning
-            // `-uiVerseHintsUsed 10`: start past the allowance for screenshots.
-            if let i = args.firstIndex(of: "-uiVerseHintsUsed"), i + 1 < args.count,
-               let used = Int(args[i + 1]) {
-                verseHintsUsed = used
-            }
-            return
-        }
-        #endif
-        guard VerseHintAllowance.isEligible(
-            isPremium: store.isPremium,
-            isStillLearning: profile.isStillLearning,
-            profileCreatedAt: profile.createdAt
-        ) else { return }
-        guard let isTreatment = FeatureFlags.value(of: .verseHintLimit) else { return }
-        FeatureFlags.registerVariant("verse_hint_variant", isTreatment: isTreatment)
-        verseHintsMetered = isTreatment
-    }
-
-    /// The pool cost of the next verse hint for this player: always 0 outside
-    /// the experiment's treatment arm, and for premium.
-    private var verseHintCost: Int {
-        guard verseHintsMetered, !store.isPremium else { return 0 }
-        return VerseHintAllowance.cost(used: verseHintsUsed, verseClueCount: verseClueCount)
-    }
-
-    private var verseClueCount: Int {
-        vm.allSlots.count(where: { $0.reference != nil })
     }
 
     /// A hint the pool can't cover: the offer card the first time in a
@@ -1365,25 +1277,10 @@ struct CrosswordGameScreen: View {
     /// The ladder's free rung: open the passage the answer comes from and let
     /// the player find the word themselves. Costs nothing from the daily
     /// quota, but still counts as a hint for no-hint achievements.
-    /// `metered: false` for the stall nudge's offer of the verse — the app
-    /// suggested it, so it never spends the allowance or the pool.
-    private func useVerseHint(metered: Bool = true) {
+    private func useVerseHint() {
         guard let slot = vm.activeSlot,
               let reference = slot.reference,
               let target = ReaderRouter.Target(reference: reference, source: "hint") else { return }
-
-        let charged = metered ? verseHintCost : 0
-        if charged > 0 {
-            guard profile.hintsRemaining(isPremium: store.isPremium, limit: freeHintLimit) >= charged else {
-                refuseHint(.verse)
-                return
-            }
-            profile.consumeHint(cost: charged)
-        }
-        if metered && verseHintsMetered && !store.isPremium {
-            VerseHintAllowance.recordUse(puzzleID: puzzle.id)
-            verseHintsUsed = VerseHintAllowance.used(puzzleID: puzzle.id)
-        }
 
         let rec = loadOrCreateRecord()
         if !rec.usedHint {
@@ -1391,7 +1288,7 @@ struct CrosswordGameScreen: View {
             saveProgress()
         }
         vm.noteVerseHint()
-        analytics.log(.hintUsed(type: HintType.verse.rawValue, cost: charged))
+        analytics.log(.hintUsed(type: HintType.verse.rawValue, cost: 0))
         analytics.log(.scriptureOpened(reference: reference, source: "hint"))
         vm.isTimerSuppressed = true
         vm.pauseTimer()
@@ -1610,7 +1507,7 @@ struct CrosswordGameScreen: View {
             // learn the nudge was taken; acknowledge first so the line drops
             // and the idle clock restarts behind the sheet.
             vm.acknowledgeStallNudge()
-            useVerseHint(metered: false)
+            useVerseHint()
         case .freeLetter:
             // Free of quota, but still a reveal: `usedHint` and the session
             // hint counter stay honest so unaided achievements and the

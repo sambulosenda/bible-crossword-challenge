@@ -211,13 +211,9 @@ final class GameViewModel {
     /// nudge has to arrive inside the patience they actually have.
     let isLearning: Bool
 
-    /// The stall-nudge holdout (`FeatureFlag.stallNudge`), resolved by the
-    /// creating view. A plain Bool so this model — and its tests — never
-    /// touches the flag SDK; a control-group device simply never nudges.
-    ///
-    /// Gates *both* tiers. The holdout's question is whether the rescue helps
-    /// at all, and a control group that still got the early free letter would
-    /// be answering a different one.
+    /// Whether the stall nudge runs at all — both tiers. Always on in the app
+    /// since the `stall-nudge` holdout was retired (2026-10-13); kept as a
+    /// parameter so tests, or a future holdout, can switch it off.
     let stallNudgeEnabled: Bool
 
     /// Mid-solve idle threshold for everyone past the learning window.
