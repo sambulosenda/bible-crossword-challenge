@@ -377,7 +377,45 @@ extension View {
 /// Each of these was written twice before, in the two places that say it, and
 /// the copies drifted — the app ended up making four different promises for one
 /// product. A player who sees two of them reads two offers.
+/// The offer's button and its terms, as every card that sells Premium draws
+/// them: a full-width accent capsule naming the trial, and the price under it.
+/// Accent, not the ink pill — ink is the app's "play" (Continue, Resume), and
+/// an offer in the same dress read as one more step in the game. A label, not
+/// a Button: each card is itself the button that opens the paywall.
+struct PremiumOfferCTA: View {
+    @Environment(StoreService.self) private var store
+
+    var body: some View {
+        VStack(spacing: Theme.Spacing.s) {
+            Text(PremiumCopy.cardCTA(store))
+                .font(.headline)
+                .foregroundStyle(.white)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 14)
+                .background(Theme.accent, in: .capsule)
+            // The price, said up front: a trial button that hides what
+            // follows it is the button people don't trust.
+            if let terms = PremiumCopy.terms(store) {
+                Text(terms)
+                    .font(.caption)
+                    .foregroundStyle(Color(uiColor: .secondaryLabel))
+                    .multilineTextAlignment(.center)
+            }
+        }
+    }
+}
+
 enum PremiumCopy {
+    /// "Then £9.99 a year. Cancel anytime." under a trial; the yearly price
+    /// alone without one; nil until the products load.
+    static func terms(_ store: StoreService) -> String? {
+        guard let yearly = store.yearly else { return nil }
+        guard store.introOffer(for: yearly) != nil else {
+            return "\(store.yearlyPriceText) a year. Cancel anytime."
+        }
+        return "Then \(store.yearlyPriceText) a year. Cancel anytime."
+    }
+
     /// The promise itself, in the app's own register: what you'd be doing with
     /// the library rather than what's in it. Said by onboarding's premium page
     /// and by the paywall wherever the entry point has nothing more specific.

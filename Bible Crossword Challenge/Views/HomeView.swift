@@ -1308,9 +1308,6 @@ private struct UpgradeCard: View {
     static let streakThreshold = 7
     private var isStreakVariant: Bool { currentStreak >= Self.streakThreshold }
 
-    @ScaledMetric(relativeTo: .title) private var iconSize = 44
-    /// At accessibility sizes the crown gives its width to the copy.
-    @Environment(\.dynamicTypeSize) private var typeSize
     /// Read here rather than passed in: the CTA names the trial only when the
     /// product actually carries one — see `PremiumCopy.cardCTA`.
     @Environment(StoreService.self) private var store
@@ -1321,112 +1318,84 @@ private struct UpgradeCard: View {
     /// "You've solved 0" is a discouragement rather than a nudge — the same
     /// reason the paywall hides its progress line at zero.
     private var title: String {
-        isStreakVariant ? "\(currentStreak) days in a row" : "Unlock all \(totalPuzzles) puzzles"
+        // What you get, with no number to parse.
+        isStreakVariant ? "\(currentStreak) days in a row" : "Every puzzle. Every pack."
     }
 
+    /// The one personal line, and the only place the count appears.
     private var subtitle: String {
+        let left = max(totalPuzzles - solvedPuzzles, 0)
         if isStreakVariant {
-            let left = max(totalPuzzles - solvedPuzzles, 0)
-            return "Premium opens the other \(left) puzzles, and every hint."
+            return "Keep it going with \(left) more puzzles and every hint."
         }
         guard solvedPuzzles > 0 else {
-            return "Every themed pack, and hints whenever you need them."
+            return "\(totalPuzzles) puzzles, and hints whenever you need them."
         }
-        // "Of them", tying the count to the headline's total: a bare "You've
-        // solved 16" sat against Profile's "47 Solved", which counts every
-        // finish including replays.
-        return "You've finished \(solvedPuzzles) of them — the rest are waiting."
+        return "You've solved \(solvedPuzzles). \(left) more are waiting."
     }
 
     var body: some View {
-        // A sheet, as every other entry point presents it. Pushed onto the
-        // Today stack instead, the paywall arrived with a navigation back
-        // button colliding with its own close button and the tab bar sitting
-        // over its legal text.
+        // Redesigned 2026-10-13 after Apple's own subscription cards (Music,
+        // iCloud+): a label, a headline about what you get, three benefits,
+        // one full-width accent button and the price under it. The ink pill
+        // it replaced was Continue's own style, so the offer read as one more
+        // step in the game. Accent here, ink for play.
+        //
+        // Still a sheet on tap, as every other entry point presents it, and
+        // never "Unlock" on the button: it opens the paywall, it doesn't buy
+        // anything (see `PremiumCopy.cardCTA`).
         Button {
             onOpen(isStreakVariant ? .streakCard : .homeCard)
         } label: {
-            // Top-aligned, and the pill sits under the copy rather than on the
-            // trailing edge. Beside a fixed-width pill the text column was left
-            // about 110pt, which broke the headline across "Unlock all" /
-            // "177 puzzles" and the subtitle across two more — four cramped
-            // lines next to a pill floating in whitespace. Below the copy, both
-            // lines fit, and the card is no taller than the wrapped version was.
-            HStack(alignment: .top, spacing: Theme.Spacing.m) {
-                // Accent, not secondary grey. A greyed-out crown on a grey disc
-                // reads as a disabled control rather than an invitation, which
-                // is a poor look on the one card asking for money.
-                if !typeSize.isAccessibilitySize {
-                    Image(systemName: isStreakVariant ? "flame.fill" : "crown.fill")
-                        // Title2 fills the 44pt disc; at title3 the crown sat
-                        // small in it.
-                        .font(.title2)
-                        // The streak's own orange, as the streak card above
-                        // draws its flame.
-                        .foregroundStyle(isStreakVariant ? Color.orange : Theme.accent)
-                        .frame(width: iconSize, height: iconSize)
-                        .background((isStreakVariant ? Color.orange : Theme.accent).opacity(0.14), in: .circle)
-                }
-                VStack(alignment: .leading, spacing: Theme.Spacing.s) {
-                    VStack(alignment: .leading, spacing: 2) {
-                        // Was "Go Premium": the app's own word for its SKU, which
-                        // says nothing about what the player gets. The count comes
-                        // from the bundle so it can't go stale as puzzles are added.
-                        // Title3 and subheadline: at headline and caption, the
-                        // two smallest sizes in the app, the one card asking for
-                        // money was the quietest thing on Today. Size, not a
-                        // tint, so it still sits under the daily card.
-                        Text(title)
-                            .font(.title3.weight(.bold))
-                            .foregroundStyle(.primary)
-                        Text(subtitle)
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                    }
-                    // A pill, not a chevron. The chevron is this screen's "tap to
-                    // see more" — shared with Collections and Next Achievement — so
-                    // the one card asking for money read as another navigation row.
-                    // A filled pill is the app's own language for an action (Start
-                    // Puzzle, the paywall CTA, Library's unlock button).
-                    //
-                    // Still hugging its text rather than a full-width pill:
-                    // this card sits under the daily puzzle and a full-width
-                    // ink capsule here would compete with that hero's own
-                    // Continue button.
-                    //
-                    // Never "Unlock": this opens the paywall, it doesn't buy
-                    // anything, and a button that overstates what it does is
-                    // how a tap becomes a back-out. What it may do is name the
-                    // free trial when there is one — see `PremiumCopy.cardCTA`.
-                    //
-                    // Subheadline with 12pt above and below makes a 44pt pill;
-                    // at caption it was about 30.
-                    Text(PremiumCopy.cardCTA(store))
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(Theme.onInk)
-                        .padding(.horizontal, Theme.Spacing.l - Theme.Spacing.xs)
-                        .padding(.vertical, 12)
-                        .background(Theme.ink, in: .capsule)
-                        // Hugs its text, but may wrap: unbreakable, at the
-                        // largest type it ran wider than the screen and pulled
-                        // every card on Today out to the left with it.
+            VStack(alignment: .leading, spacing: Theme.Spacing.m) {
+                VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
+                    Label("Premium", systemImage: "crown.fill")
+                        .font(.caption.weight(.bold))
+                        .textCase(.uppercase)
+                        .foregroundStyle(Theme.accent)
+                    Text(title)
+                        .font(.title2.weight(.bold))
+                        .foregroundStyle(Color.primary)
+                        .fixedSize(horizontal: false, vertical: true)
+                    Text(subtitle)
+                        .font(.subheadline)
+                        .foregroundStyle(Color.secondary)
                         .fixedSize(horizontal: false, vertical: true)
                 }
-                Spacer(minLength: 0)
+
+                VStack(alignment: .leading, spacing: Theme.Spacing.s) {
+                    benefit("square.grid.3x3", "Every daily, back to the first")
+                    benefit("square.stack.3d.up", "All packs and Journeys")
+                    benefit("lightbulb", "Hints whenever you need them")
+                }
+
+                PremiumOfferCTA()
             }
             .padding(Theme.Spacing.l)
             .frame(maxWidth: .infinity, alignment: .leading)
-            // Plain white like every other module: the upsell was the only
-            // tinted card on the screen, which made it louder than the puzzle.
-            // That tint now belongs to the daily card.
             .elevatedCard()
-            // The CTA is the button's name — the only place the free trial
-            // is mentioned — so it leads; the copy above it follows.
             .accessibilityElement(children: .ignore)
-            .accessibilityLabel("\(title). \(subtitle)")
+            .accessibilityLabel("Premium. \(title) \(subtitle) Every daily, all packs and Journeys, and hints whenever you need them.\(terms.map { " \($0)" } ?? "")")
             .accessibilityHint(PremiumCopy.cardCTA(store))
         }
         .buttonStyle(PressableCardStyle())
+    }
+
+    private var terms: String? { PremiumCopy.terms(store) }
+
+    /// Grey icons: blue is kept for the label and the button, the two things
+    /// on the card that say "this is the offer".
+    private func benefit(_ symbol: String, _ text: String) -> some View {
+        Label {
+            Text(text)
+                .font(.subheadline)
+                .foregroundStyle(Color.primary)
+        } icon: {
+            Image(systemName: symbol)
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(Color.secondary)
+                .frame(width: 22)
+        }
     }
 }
 

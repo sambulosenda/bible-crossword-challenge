@@ -400,8 +400,12 @@ struct PackDetailView: View {
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
-            Button(PremiumCopy.cardCTA(store)) { showPaywall = true }
-                .buttonStyle(.pillProminent)
+            // The shared offer button (accent, price under it) — the same
+            // one Today and the Packs tab draw.
+            Button { showPaywall = true } label: { PremiumOfferCTA() }
+                .buttonStyle(PressableCardStyle())
+                .accessibilityLabel(PremiumCopy.cardCTA(store))
+                .accessibilityHint(PremiumCopy.terms(store) ?? "Opens Premium plans")
         }
         .padding(.horizontal, Theme.Spacing.m)
         .padding(.top, Theme.Spacing.s)

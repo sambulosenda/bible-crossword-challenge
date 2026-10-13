@@ -324,33 +324,30 @@ struct PacksView: View {
         }
     }
 
-    /// The one offer on the tab — same words as Today's card
-    /// (see `PremiumCopy.cardCTA`).
+    /// The one offer on the tab, dressed as Today's Premium card: what you
+    /// get, then the accent button and the price (`PremiumOfferCTA`). The
+    /// whole row opens the paywall; the section header already says Premium.
     private func premiumOffer(count: Int) -> some View {
-        VStack(alignment: .leading, spacing: Theme.Spacing.m) {
-            VStack(alignment: .leading, spacing: 2) {
-                Text("Every pack and Journey")
-                    .font(.headline)
-                Text("\(count) more to play below, plus hints whenever you need them.")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .fixedSize(horizontal: false, vertical: true)
+        Button {
+            showPaywall = true
+        } label: {
+            VStack(alignment: .leading, spacing: Theme.Spacing.m) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Every pack and Journey")
+                        .font(.title3.weight(.bold))
+                        .foregroundStyle(Color.primary)
+                    Text("\(count) more to play below, plus hints whenever you need them.")
+                        .font(.subheadline)
+                        .foregroundStyle(Color(uiColor: .secondaryLabel))
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                PremiumOfferCTA()
             }
-            Button {
-                showPaywall = true
-            } label: {
-                Text(PremiumCopy.cardCTA(store))
-                    .font(.subheadline.weight(.bold))
-                    .foregroundStyle(Theme.onInk)
-                    .padding(.horizontal, Theme.Spacing.m)
-                    .padding(.vertical, Theme.Spacing.s)
-                    .background(Theme.ink, in: .capsule)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-            .buttonStyle(.borderless)
-            .accessibilityHint("Opens Premium plans")
+            .padding(.vertical, Theme.Spacing.s)
+            .contentShape(.rect)
         }
-        .padding(.vertical, Theme.Spacing.s)
+        .accessibilityElement(children: .combine)
+        .accessibilityHint("Opens Premium plans")
     }
 
     /// The Journeys sit above the packs: an ordered, paced run is the stronger

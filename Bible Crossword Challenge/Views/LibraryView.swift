@@ -558,21 +558,15 @@ struct LibraryView: View {
             VStack(alignment: .leading, spacing: Theme.Spacing.m) {
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Every puzzle, back to the first")
-                        .font(.headline)
+                        .font(.title3.weight(.bold))
                         .foregroundStyle(Color.primary)
                     Text("\(count) more here, play and replay as often as you like.")
                         .font(.subheadline)
                         .foregroundStyle(Color.secondary)
                         .fixedSize(horizontal: false, vertical: true)
                 }
-                Text(PremiumCopy.cardCTA(store))
-                    .font(.subheadline.weight(.bold))
-                    .foregroundStyle(Theme.onInk)
-                    .padding(.horizontal, Theme.Spacing.m)
-                    .padding(.vertical, Theme.Spacing.s)
-                    .background(Theme.ink, in: .capsule)
-                    // Hugs its text but may wrap — see Today's UpgradeCard.
-                    .fixedSize(horizontal: false, vertical: true)
+                // The shared offer button — see `PremiumOfferCTA`.
+                PremiumOfferCTA()
             }
             .padding(.vertical, Theme.Spacing.s)
             .frame(maxWidth: .infinity, alignment: .leading)
