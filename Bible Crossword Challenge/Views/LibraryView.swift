@@ -361,20 +361,15 @@ struct LibraryView: View {
                 GridThumbnail(grid: puzzle.grid, tint: thumbnailTint(for: status))
                     .frame(width: thumbnailSide, height: thumbnailSide)
 
-                VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
+                VStack(alignment: .leading, spacing: 2) {
                     Text(puzzle.title)
-                        .font(.headline)
+                        .font(.body)
                         .multilineTextAlignment(.leading)
-                    // Status sits in the meta line, beside the facts it goes
-                    // with. At the row's trailing edge "In progress" was ~450pt
-                    // from the title it described on a wide screen.
-                    HStack(spacing: Theme.Spacing.s) {
-                        DifficultyBadge(difficulty: puzzle.difficulty)
-                        Text("\(puzzle.clueCount) clues")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                        statusText(for: status, record: record)
-                    }
+                    // One plain line, as a system list row's subtitle: the
+                    // coloured difficulty capsule on every row made the list a
+                    // confetti of green, orange and purple. Status sits here,
+                    // beside the facts it goes with.
+                    metaLine(puzzle, status: status, record: record)
                 }
                 Spacer(minLength: 0)
                 if status == .completed {
@@ -387,7 +382,7 @@ struct LibraryView: View {
                         .foregroundStyle(.tertiary)
                 }
             }
-            .padding(.vertical, 2)
+            .padding(.vertical, Theme.Spacing.xs)
             .contentShape(.rect)
         }
     }
@@ -413,24 +408,24 @@ struct LibraryView: View {
         }
     }
 
-    /// The solve time or "In progress", for the meta line.
-    @ViewBuilder
-    private func statusText(for status: PuzzleStatus, record: PuzzleRecord?) -> some View {
+    /// "Easy · 20 clues · In progress" — one secondary line. "In progress" is
+    /// the accent, the one thing on the line that asks for a tap; a solve
+    /// time is just another fact.
+    private func metaLine(_ puzzle: Puzzle, status: PuzzleStatus, record: PuzzleRecord?) -> some View {
+        var text = Text("\(puzzle.difficulty.label) · \(puzzle.clueCount) clues")
         switch status {
         case .completed:
             if let secs = record?.elapsedSeconds, secs > 0 {
-                Text("· \(TimeFormat.clock(secs))")
-                    .font(.caption)
-                    .monospacedDigit()
-                    .foregroundStyle(.secondary)
+                text = text + Text(" · \(TimeFormat.clock(secs))").monospacedDigit()
             }
         case .inProgress:
-            Text("· In progress")
-                .font(.caption.weight(.medium))
-                .foregroundStyle(.orange)
+            text = text + Text(" · ") + Text("In progress").foregroundStyle(Theme.accent)
         case .start:
-            EmptyView()
+            break
         }
+        return text
+            .font(.subheadline)
+            .foregroundStyle(.secondary)
     }
 
     // MARK: - Free list
@@ -450,24 +445,23 @@ struct LibraryView: View {
         let gate = access
         let split = partitioned(gate: gate)
         let playable = playOrder(split.free)
-        let next = playable.first { status(for: $0) != .completed }
         let locked = (showAllLocked || !query.isEmpty) ? split.locked : Array(split.locked.prefix(Self.lockedPreview))
         let hiddenLocked = split.locked.count - locked.count
 
         return List {
-            // The same jump premium players get. Free players had none, so
-            // the way to their next puzzle was to scroll past their solved ones.
-            if query.isEmpty, statusFilter != .completed, let next {
-                Section {
-                    nextUnsolvedRow(next)
-                }
-            }
-
+            // No "Next unsolved" jump here, unlike premium: these rows are in
+            // play order, so it always named the first row below it — the
+            // same puzzle twice at the top of the list. Premium's list is in
+            // catalogue order, where the jump still saves a scroll.
             if !playable.isEmpty {
                 Section {
                     rows(playable, row)
                 } header: {
                     freeHeader(freeCount: playable.count)
+                } footer: {
+                    // The rule, under the list it explains — as a header it
+                    // made a two-line block over the first row.
+                    Text("Seven new each week, and anything you start stays yours.")
                 }
             }
 
@@ -548,18 +542,10 @@ struct LibraryView: View {
     /// says so, where "27 to play" over "this week's seven are free" read as a
     /// sum that didn't add up.
     private func freeHeader(freeCount: Int) -> some View {
-        VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
-            Text("^[\(freeCount) puzzle](inflect: true) you can play")
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(Color.primary)
-            Text("Seven new each week, and anything you start stays yours.")
-                .font(.subheadline)
-                .foregroundStyle(Color.secondary)
-                .fixedSize(horizontal: false, vertical: true)
-        }
-        .textCase(nil)          // section headers upper-case by default
-        .padding(.bottom, Theme.Spacing.xs)
-        .accessibilityElement(children: .combine)
+        Text("^[\(freeCount) puzzle](inflect: true) to play")
+            .font(.title3.weight(.semibold))
+            .foregroundStyle(Color.primary)
+            .textCase(nil)
     }
 
     /// The upgrade path, at the top of the locked rows rather than in a footer
@@ -606,16 +592,13 @@ struct LibraryView: View {
                 GridThumbnail(grid: puzzle.grid, tint: Color.primary.opacity(0.18))
                     .frame(width: thumbnailSide, height: thumbnailSide)
 
-                VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
+                VStack(alignment: .leading, spacing: 2) {
                     Text(puzzle.title)
-                        .font(.headline)
+                        .font(.body)
                         .foregroundStyle(.secondary)
-                    HStack(spacing: Theme.Spacing.s) {
-                        DifficultyBadge(difficulty: puzzle.difficulty)
-                        Text("\(puzzle.clueCount) clues")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
+                    Text("\(puzzle.difficulty.label) · \(puzzle.clueCount) clues")
+                        .font(.subheadline)
+                        .foregroundStyle(.tertiary)
                 }
                 Spacer(minLength: 0)
                 Image(systemName: "lock.fill")
