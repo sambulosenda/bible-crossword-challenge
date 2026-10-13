@@ -93,8 +93,16 @@ struct PacksView: View {
         let packs: [String: PackProgress]
         let quests: [String: QuestProgress]
 
-        func of(_ pack: PuzzlePack) -> PackProgress { packs[pack.id]! }
-        func of(_ quest: QuestLine) -> QuestProgress { quests[quest.id]! }
+        // Built from the same lists the rows come from, so a miss shouldn't
+        // happen — but a miss is a fresh progress, not a crash.
+        let recordsByID: [String: PuzzleRecord]
+
+        func of(_ pack: PuzzlePack) -> PackProgress {
+            packs[pack.id] ?? PackProgress(pack: pack, recordsByID: recordsByID)
+        }
+        func of(_ quest: QuestLine) -> QuestProgress {
+            quests[quest.id] ?? QuestProgress(quest: quest, recordsByID: recordsByID)
+        }
     }
 
     private func list(packs: [PuzzlePack], recordsByID: [String: PuzzleRecord]) -> some View {
@@ -102,7 +110,8 @@ struct PacksView: View {
             packs: Dictionary(packs.map { ($0.id, PackProgress(pack: $0, recordsByID: recordsByID)) },
                               uniquingKeysWith: { a, _ in a }),
             quests: Dictionary(quests.map { ($0.id, QuestProgress(quest: $0, recordsByID: recordsByID)) },
-                               uniquingKeysWith: { a, _ in a })
+                               uniquingKeysWith: { a, _ in a }),
+            recordsByID: recordsByID
         )
         let lead = self.lead(packs: packs, book: book)
         // The promoted collection is lifted out of its section rather than
@@ -125,16 +134,21 @@ struct PacksView: View {
         // reason to look now.
         let openQuests = shownQuests.filter { !isLocked($0.isPremium) }
         let lockedQuests = shownQuests.filter { isLocked($0.isPremium) }
-        let openPacks = evergreen.filter { !isLocked($0.isPremium) }
+        // Finished packs go to the foot of the tab under their own header.
+        // In "Free" they were the whole section for anyone past the
+        // tutorial — one finished pack, the only free thing listed.
+        let openEvergreen = evergreen.filter { !isLocked($0.isPremium) }
+        let openPacks = openEvergreen.filter { !book.of($0).isComplete }
+        let finishedPacks = openEvergreen.filter { book.of($0).isComplete }
         let lockedPacks = evergreen.filter { isLocked($0.isPremium) }
         let anythingAbove = lead != nil || !openQuests.isEmpty || !seasonal.isEmpty
 
-        // The lead and the Journeys on the left of a wide window, the
-        // collections on the right.
-        return CardColumns {
-            leadCard(lead)
+        // A native inset-grouped List since 2026-10-13: system rows, chevrons,
+        // separators and highlight, instead of hand-built cards that looked
+        // like iOS without behaving like it. The warm paper stays behind it.
+        return List {
+            leadSection(lead)
             questSection(quests: openQuests, book: book)
-        } more: {
             if !seasonal.isEmpty {
                 section("In season", packs: seasonal, book: book)
             }
@@ -144,7 +158,14 @@ struct PacksView: View {
                 book: book
             )
             premiumSection(quests: lockedQuests, packs: lockedPacks, book: book)
+            section("Finished", packs: finishedPacks, book: book)
         }
+        .listStyle(.insetGrouped)
+        .scrollContentBackground(.hidden)
+        .background(Theme.background)
+        // Rows at a readable width on iPad, as the Library's are.
+        .frame(maxWidth: 640)
+        .frame(maxWidth: .infinity)
         .background(Theme.background)
     }
 
@@ -193,47 +214,78 @@ struct PacksView: View {
         return nil
     }
 
+    /// The one thing to do here, as the first row: the collection under way
+    /// (or the first one open), with an App Store–style pill naming the step.
     @ViewBuilder
-    private func leadCard(_ lead: Lead?) -> some View {
+    private func leadSection(_ lead: Lead?) -> some View {
         switch lead {
         case let .quest(quest, progress):
             if let action = CollectionLeadAction.forRow(
                 isLocked: false, solved: progress.solved, isComplete: progress.isComplete
             ) {
-                NavigationLink(value: QuestRoute(quest: quest, source: .packs)) {
-                    CollectionLeadCard(
-                        title: quest.title,
-                        blurb: quest.blurb,
-                        symbol: quest.coverSymbol,
-                        accent: quest.accent,
-                        meta: "Journey · "
-                            + QuestProgress.stepLine(solved: progress.solved, total: progress.total),
-                        action: action
-                    )
-                }
-                .buttonStyle(PressableCardStyle())
+                leadRow(
+                    open: { path.append(QuestRoute(quest: quest, source: .packs)) },
+                    symbol: quest.coverSymbol, accent: quest.accent, title: quest.title,
+                    meta: "Journey · " + QuestProgress.stepLine(solved: progress.solved, total: progress.total),
+                    action: action
+                )
             }
         case let .pack(pack, progress):
             if let action = CollectionLeadAction.forRow(
                 isLocked: false, solved: progress.solved, isComplete: progress.isComplete
             ) {
-                NavigationLink(value: PackRoute(pack: pack, source: .packs)) {
-                    CollectionLeadCard(
-                        title: pack.title,
-                        blurb: pack.blurb,
-                        symbol: pack.coverSymbol,
-                        accent: pack.accent,
-                        meta: progress.solved == 0
-                            ? "Pack · \(progress.total) puzzles"
-                            : "Pack · \(progress.solved) of \(progress.total) solved",
-                        action: action
-                    )
-                }
-                .buttonStyle(PressableCardStyle())
+                leadRow(
+                    open: { path.append(PackRoute(pack: pack, source: .packs)) },
+                    symbol: pack.coverSymbol, accent: pack.accent, title: pack.title,
+                    meta: "Pack · \(progress.solved) of \(progress.total) solved",
+                    action: action
+                )
             }
         case nil:
             EmptyView()
         }
+    }
+
+    private func leadRow(
+        // A closure, not an AnyHashable route: NavigationPath keys its
+        // destinations by the appended type, and an AnyHashable matched none.
+        open: @escaping () -> Void, symbol: String, accent: Color, title: String,
+        meta: String, action: CollectionLeadAction
+    ) -> some View {
+        Section {
+            Button {
+                open()
+            } label: {
+                HStack(spacing: Theme.Spacing.m) {
+                    CollectionCover(symbol: symbol, accent: accent, isLocked: false,
+                                    side: 52, font: .title2, cornerRadius: 12)
+                    VStack(alignment: .leading, spacing: 2) {
+                        // Concrete colours: inside a list button the
+                        // hierarchical styles resolve against the tint.
+                        Text(title).font(.headline).foregroundStyle(Color.primary)
+                        Text(meta).font(.subheadline).foregroundStyle(Color(uiColor: .secondaryLabel))
+                    }
+                    Spacer(minLength: Theme.Spacing.s)
+                    // The App Store's GET pill: tinted fill, accent label.
+                    Text(action.rawValue)
+                        .font(.subheadline.weight(.bold))
+                        .foregroundStyle(Theme.accent)
+                        .padding(.horizontal, Theme.Spacing.m)
+                        .padding(.vertical, 6)
+                        .background(Color(.tertiarySystemFill), in: .capsule)
+                }
+                .padding(.vertical, Theme.Spacing.xs)
+                .contentShape(.rect)
+            }
+            // The list's own button style, for the system tap highlight;
+            // text is set to primary above, so nothing turns accent.
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel("Next up: \(title). \(meta)")
+            .accessibilityHint("\(action.rawValue)s it")
+        } header: {
+            Text("Next up")
+        }
+        .headerProminence(.increased)
     }
 
     private func isLocked(_ isPremiumContent: Bool) -> Bool {
@@ -242,69 +294,63 @@ struct PacksView: View {
 
     // MARK: - Sections
     //
-    // Each section is one grouped card of rows rather than a card per
-    // collection — the shape Today's lists take — under a sentence-case
-    // section title.
+    // List sections with prominent headers, as Music and the App Store set
+    // theirs. Rows are NavigationLinks, so the chevron, highlight and
+    // separators are the system's own.
 
-    /// Everything Premium would open, under one offer. The rows keep their
-    /// neutral covers but drop the crown — the header already says it.
+    /// Everything Premium would open, under one offer at the head of the
+    /// section. Locked rows carry a lock beside the chevron.
     @ViewBuilder
     private func premiumSection(
         quests: [QuestLine], packs: [PuzzlePack], book: ProgressBook
     ) -> some View {
         if !quests.isEmpty || !packs.isEmpty {
-            VStack(alignment: .leading, spacing: Theme.Spacing.s) {
-                Text("With Premium").sectionHeader().padding(.horizontal, Theme.Spacing.xs)
+            Section {
                 premiumOffer(count: quests.count + packs.count)
-                CardGroup(dividerInset: CollectionCardLayout.dividerInset) {
-                    ForEach(quests) { quest in
-                        NavigationLink(value: QuestRoute(quest: quest, source: .packs)) {
-                            QuestCard(quest: quest, progress: book.of(quest), isLocked: true, showsCrown: false)
-                        }
-                        .buttonStyle(PressableCardStyle())
-                    }
-                    ForEach(packs) { pack in
-                        NavigationLink(value: PackRoute(pack: pack, source: .packs)) {
-                            PackCard(pack: pack, progress: book.of(pack), isLocked: true, showsCrown: false)
-                        }
-                        .buttonStyle(PressableCardStyle())
+                ForEach(quests) { quest in
+                    NavigationLink(value: QuestRoute(quest: quest, source: .packs)) {
+                        CollectionRow(quest: quest, progress: book.of(quest), isLocked: true)
                     }
                 }
+                ForEach(packs) { pack in
+                    NavigationLink(value: PackRoute(pack: pack, source: .packs)) {
+                        CollectionRow(pack: pack, progress: book.of(pack), isLocked: true)
+                    }
+                }
+            } header: {
+                Text("With Premium")
             }
+            .headerProminence(.increased)
         }
     }
 
-    /// The one offer on the tab. Same pill and same words as Today's card —
-    /// one offer, said one way (see `PremiumCopy.cardCTA`).
+    /// The one offer on the tab — same words as Today's card
+    /// (see `PremiumCopy.cardCTA`).
     private func premiumOffer(count: Int) -> some View {
-        Button {
-            showPaywall = true
-        } label: {
-            VStack(alignment: .leading, spacing: Theme.Spacing.m) {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Every pack and Journey")
-                        .font(.headline)
-                        .foregroundStyle(.primary)
-                    Text("\(count) more to play below, plus hints whenever you need them.")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
+        VStack(alignment: .leading, spacing: Theme.Spacing.m) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Every pack and Journey")
+                    .font(.headline)
+                Text("\(count) more to play below, plus hints whenever you need them.")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            Button {
+                showPaywall = true
+            } label: {
                 Text(PremiumCopy.cardCTA(store))
                     .font(.subheadline.weight(.bold))
                     .foregroundStyle(Theme.onInk)
                     .padding(.horizontal, Theme.Spacing.m)
                     .padding(.vertical, Theme.Spacing.s)
                     .background(Theme.ink, in: .capsule)
-                    // Hugs its text but may wrap — see Today's UpgradeCard.
                     .fixedSize(horizontal: false, vertical: true)
             }
-            .padding(Theme.Spacing.l)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .elevatedCard()
+            .buttonStyle(.borderless)
+            .accessibilityHint("Opens Premium plans")
         }
-        .buttonStyle(PressableCardStyle())
-        .accessibilityHint("Opens Premium plans")
+        .padding(.vertical, Theme.Spacing.s)
     }
 
     /// The Journeys sit above the packs: an ordered, paced run is the stronger
@@ -312,21 +358,17 @@ struct PacksView: View {
     @ViewBuilder
     private func questSection(quests: [QuestLine], book: ProgressBook) -> some View {
         if !quests.isEmpty {
-            VStack(alignment: .leading, spacing: Theme.Spacing.s) {
-                Text("Journeys").sectionHeader().padding(.horizontal, Theme.Spacing.xs)
-                CardGroup(dividerInset: CollectionCardLayout.dividerInset) {
-                    ForEach(quests) { quest in
-                        NavigationLink(value: QuestRoute(quest: quest, source: .packs)) {
-                            QuestCard(
-                                quest: quest,
-                                progress: book.of(quest),
-                                isLocked: quest.isPremium && !store.isPremium
-                            )
-                        }
-                        .buttonStyle(PressableCardStyle())
+            Section {
+                ForEach(quests) { quest in
+                    NavigationLink(value: QuestRoute(quest: quest, source: .packs)) {
+                        CollectionRow(quest: quest, progress: book.of(quest),
+                                      isLocked: isLocked(quest.isPremium))
                     }
                 }
+            } header: {
+                Text("Journeys")
             }
+            .headerProminence(.increased)
         }
     }
 
@@ -337,23 +379,117 @@ struct PacksView: View {
         book: ProgressBook
     ) -> some View {
         if !packs.isEmpty {
-            VStack(alignment: .leading, spacing: Theme.Spacing.s) {
-                if let title {
-                    Text(title).sectionHeader().padding(.horizontal, Theme.Spacing.xs)
-                }
-                CardGroup(dividerInset: CollectionCardLayout.dividerInset) {
-                    ForEach(packs) { pack in
-                        NavigationLink(value: PackRoute(pack: pack, source: .packs)) {
-                            PackCard(
-                                pack: pack,
-                                progress: book.of(pack),
-                                isLocked: pack.isPremium && !store.isPremium
-                            )
-                        }
-                        .buttonStyle(PressableCardStyle())
+            Section {
+                ForEach(packs) { pack in
+                    NavigationLink(value: PackRoute(pack: pack, source: .packs)) {
+                        CollectionRow(pack: pack, progress: book.of(pack),
+                                      isLocked: isLocked(pack.isPremium))
                     }
                 }
+            } header: {
+                if let title { Text(title) }
+            }
+            .headerProminence(.increased)
+        }
+    }
+}
+
+// MARK: - Row
+
+/// A pack or Journey as a native list row: a 36pt cover, title, two lines of
+/// blurb and a status line — "Pack · 5 puzzles", progress, or Complete. The
+/// list supplies the chevron; a locked row adds a lock before it.
+private struct CollectionRow: View {
+    let symbol: String
+    let accent: Color
+    let title: String
+    let blurb: String
+    let isLocked: Bool
+    let badge: PackBadge?
+    let status: Status
+
+    enum Status {
+        case size(String)
+        case progress(fraction: Double, text: String)
+        case complete
+    }
+
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
+    init(pack: PuzzlePack, progress: PackProgress, isLocked: Bool) {
+        symbol = pack.coverSymbol; accent = pack.accent; title = pack.title
+        blurb = pack.blurb; self.isLocked = isLocked; badge = PackBadge.forPack(pack)
+        let size = "Pack · \(progress.total) puzzle\(progress.total == 1 ? "" : "s")"
+        // A locked pack states its size, never progress (see `PackCard.status`).
+        status = isLocked || progress.solved == 0 ? .size(size)
+            : progress.isComplete ? .complete
+            : .progress(fraction: progress.fraction, text: "\(progress.solved) of \(progress.total) solved")
+    }
+
+    init(quest: QuestLine, progress: QuestProgress, isLocked: Bool) {
+        symbol = quest.coverSymbol; accent = quest.accent; title = quest.title
+        blurb = quest.blurb; self.isLocked = isLocked; badge = nil
+        status = isLocked || progress.solved == 0 ? .size("Journey · \(progress.total) days")
+            : progress.isComplete ? .complete
+            : .progress(fraction: progress.fraction,
+                        text: QuestProgress.stepLine(solved: progress.solved, total: progress.total))
+    }
+
+    var body: some View {
+        HStack(alignment: .top, spacing: Theme.Spacing.m) {
+            CollectionCover(symbol: symbol, accent: accent, isLocked: isLocked,
+                            side: 36, font: .body, cornerRadius: 9)
+            VStack(alignment: .leading, spacing: 2) {
+                HStack(spacing: Theme.Spacing.xs) {
+                    Text(title).font(.headline)
+                    if let badge { badge }
+                }
+                Text(blurb)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(CollectionCardLayout.blurbLineLimit(dynamicTypeSize))
+                statusView
+                    .padding(.top, 2)
+            }
+            Spacer(minLength: 0)
+            if isLocked {
+                Image(systemName: "lock.fill")
+                    .font(.footnote)
+                    .foregroundStyle(.tertiary)
+                    .frame(maxHeight: .infinity)
             }
         }
+        .padding(.vertical, Theme.Spacing.xs)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(accessibilityLabel)
+    }
+
+    @ViewBuilder
+    private var statusView: some View {
+        switch status {
+        case let .size(text):
+            Text(text).font(.caption).foregroundStyle(.secondary).monospacedDigit()
+        case .complete:
+            Label("Complete", systemImage: "checkmark.seal.fill")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.green)
+        case let .progress(fraction, text):
+            VStack(alignment: .leading, spacing: 2) {
+                ProgressView(value: fraction).tint(accent)
+                Text(text).font(.caption).foregroundStyle(.secondary).monospacedDigit()
+            }
+        }
+    }
+
+    private var accessibilityLabel: String {
+        var parts = [title, blurb]
+        if isLocked { parts.append("Premium") }
+        if let badge { parts.append(badge.label) }
+        switch status {
+        case let .size(text): parts.append(text)
+        case .complete: parts.append("Complete")
+        case let .progress(_, text): parts.append(text)
+        }
+        return parts.joined(separator: ". ")
     }
 }

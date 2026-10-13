@@ -119,18 +119,21 @@ struct PackDetailView: View {
     /// already sat, and an album's in Music: the page's title isn't a module
     /// among modules.
     private func header(progress: PackProgress, books: [BibleCanon.Book]) -> some View {
-        VStack(alignment: .leading, spacing: Theme.Spacing.m) {
-            HStack(spacing: Theme.Spacing.m) {
-                // Neutral while locked, like the row it was opened from:
-                // colour on these screens means "you can open this".
-                CollectionCover(
-                    symbol: pack.coverSymbol,
-                    accent: pack.accent,
-                    isLocked: isLocked,
-                    side: 64,
-                    font: .largeTitle,
-                    cornerRadius: 16
-                )
+        // One text column beside the cover: the status line under the blurb,
+        // not under the cover, where it hung off a different left edge from
+        // the title it describes.
+        HStack(alignment: .top, spacing: Theme.Spacing.m) {
+            // Neutral while locked, like the row it was opened from:
+            // colour on these screens means "you can open this".
+            CollectionCover(
+                symbol: pack.coverSymbol,
+                accent: pack.accent,
+                isLocked: isLocked,
+                side: 64,
+                font: .largeTitle,
+                cornerRadius: 16
+            )
+            VStack(alignment: .leading, spacing: Theme.Spacing.s) {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(pack.title).font(.title2.weight(.bold))
                     Text(pack.blurb)
@@ -138,32 +141,31 @@ struct PackDetailView: View {
                         .foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
                 }
-            }
 
-            seasonLine
+                seasonLine
 
-            // What it covers and how big it is, in one line — the books card
-            // used to spend a whole card on this, for most packs one book.
-            // Locked or unstarted, that's the whole status: a locked pack
-            // states its size rather than the player's progress through it
-            // (see `PackCard`), and an empty bar measures nothing.
-            if isLocked || progress.solved == 0 {
-                Text(metaLine(books: books, total: progress.total))
-                    .font(.caption.weight(.medium))
-                    .foregroundStyle(.secondary)
-                    .monospacedDigit()
-            } else if progress.isComplete {
-                Label("Pack complete — every puzzle solved", systemImage: "checkmark.seal.fill")
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(.green)
-            } else {
-                VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
-                    ProgressView(value: progress.fraction)
-                        .tint(pack.accent)
-                    Text("\(progress.solved) of \(progress.total) solved")
+                // What it covers and how big it is, in one line. Locked or
+                // unstarted, that's the whole status: a locked pack states
+                // its size rather than the player's progress through it (see
+                // `PackCard`), and an empty bar measures nothing.
+                if isLocked || progress.solved == 0 {
+                    Text(metaLine(books: books, total: progress.total))
                         .font(.caption.weight(.medium))
                         .foregroundStyle(.secondary)
                         .monospacedDigit()
+                } else if progress.isComplete {
+                    Label("Pack complete — every puzzle solved", systemImage: "checkmark.seal.fill")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.green)
+                } else {
+                    VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
+                        ProgressView(value: progress.fraction)
+                            .tint(pack.accent)
+                        Text("\(progress.solved) of \(progress.total) solved")
+                            .font(.caption.weight(.medium))
+                            .foregroundStyle(.secondary)
+                            .monospacedDigit()
+                    }
                 }
             }
         }
