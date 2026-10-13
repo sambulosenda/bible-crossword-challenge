@@ -10,7 +10,45 @@ import SwiftUI
 import SwiftData
 import os
 
+/// The game's entry point. Builds the puzzle's model once, when the screen
+/// first appears, and hands it to `CrosswordGameScreen`.
+///
+/// Not in `init`: a navigation destination is re-initialised every time its
+/// parent redraws, and Today redraws on every saved keystroke (its `@Query`
+/// sees the record change). `State(initialValue:)` evaluated its argument on
+/// each of those inits — a full grid, slot and index build thrown away, and a
+/// stall-nudge flag read each time — although only the first was ever kept.
 struct CrosswordGameView: View {
+    let puzzle: Puzzle
+    let profile: PlayerProfile
+    let entrySource: String
+
+    @State private var vm: GameViewModel?
+
+    var body: some View {
+        if let vm {
+            CrosswordGameScreen(puzzle: puzzle, profile: profile, entrySource: entrySource, vm: vm)
+        } else {
+            Theme.background
+                .ignoresSafeArea()
+                .onAppear {
+                    // Learning-window players get the shorter stall
+                    // thresholds — see `GameViewModel.isLearning`. The holdout
+                    // is read here, as the model that owns the nudge is
+                    // created, so the exposure lands on players who actually
+                    // start a puzzle.
+                    vm = GameViewModel(
+                        puzzle: puzzle,
+                        learning: profile.isStillLearning,
+                        stallNudgeEnabled: FeatureFlags.isEnabled(.stallNudge)
+                    )
+                }
+        }
+    }
+}
+
+/// The solving screen for one puzzle, around a model `CrosswordGameView` built.
+struct CrosswordGameScreen: View {
     let puzzle: Puzzle
     let profile: PlayerProfile
     /// Which surface's navigation pushed this screen (`home` / `library` /
@@ -137,19 +175,13 @@ struct CrosswordGameView: View {
     /// Keeps the screen focused so a hardware keyboard can type into the grid.
     @FocusState private var gridFocused: Bool
 
-    init(puzzle: Puzzle, profile: PlayerProfile, entrySource: String) {
+    init(puzzle: Puzzle, profile: PlayerProfile, entrySource: String, vm: GameViewModel) {
         self.puzzle = puzzle
         self.profile = profile
         self.entrySource = entrySource
-        // Learning-window players get the shorter stall thresholds — see
-        // `GameViewModel.isLearning`. The holdout is read here, at the moment
-        // the model that owns the nudge is created, so the exposure lands on
-        // players who actually start a puzzle.
-        _vm = State(initialValue: GameViewModel(
-            puzzle: puzzle,
-            learning: profile.isStillLearning,
-            stallNudgeEnabled: FeatureFlags.isEnabled(.stallNudge)
-        ))
+        // Already built, once, by `CrosswordGameView`: cheap to pass on every
+        // init, and `State` keeps the first.
+        _vm = State(initialValue: vm)
     }
 
     var body: some View {
