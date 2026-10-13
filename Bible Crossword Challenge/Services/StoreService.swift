@@ -87,8 +87,11 @@ final class StoreService {
     /// Yearly subscription price for callers that can't import StoreKit.
     var yearlyPriceText: String { yearly?.displayPrice ?? "£9.99" }
 
-    private var updatesTask: Task<Void, Never>?
-    private var customerInfoTask: Task<Void, Never>?
+    // `nonisolated(unsafe)` so `deinit` (nonisolated) can cancel them: each
+    // is written once, on the main actor in `init`, and `Task.cancel()` is
+    // thread-safe. Ignored by observation — no view reads them.
+    @ObservationIgnored nonisolated(unsafe) private var updatesTask: Task<Void, Never>?
+    @ObservationIgnored nonisolated(unsafe) private var customerInfoTask: Task<Void, Never>?
 
     /// The current offering's package for each store product id, so a purchase
     /// initiated from a `Product` the views hold can still go through the

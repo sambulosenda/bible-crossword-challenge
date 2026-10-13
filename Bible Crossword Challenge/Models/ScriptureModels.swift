@@ -52,7 +52,9 @@ nonisolated struct BibleVerse: Codable, Hashable, Identifiable, Sendable {
 
 /// A parsed scripture reference such as "Isaiah 11:6" or "1 Corinthians 13:4-7".
 /// Used to deep-link a puzzle's verse into the reader.
-struct ScriptureRef: Hashable {
+/// `nonisolated`: a plain value, built and compared by the off-main search
+/// index (`ScriptureSearch`) as well as by views.
+nonisolated struct ScriptureRef: Hashable {
     let book: String
     let chapter: Int
     /// The starting verse, or `nil` for a whole-chapter reference. Verse ranges

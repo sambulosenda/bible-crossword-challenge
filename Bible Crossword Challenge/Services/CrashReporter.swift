@@ -41,6 +41,10 @@ final class CrashReporter: NSObject, MXMetricManagerSubscriber {
     /// `nonisolated`: MetricKit delivers on a background queue, and reporting
     /// reads `analytics`, which `start` writes on the main actor.
     nonisolated func didReceive(_ payloads: [MXDiagnosticPayload]) {
+        // MetricKit hands each batch over once and never touches it again;
+        // the payloads are read-only snapshots, so moving them is safe even
+        // though the class isn't marked Sendable.
+        nonisolated(unsafe) let payloads = payloads
         Task { @MainActor in handle(payloads) }
     }
 

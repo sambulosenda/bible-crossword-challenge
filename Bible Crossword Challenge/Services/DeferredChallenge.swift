@@ -32,12 +32,14 @@ enum DeferredChallenge {
         // UIKit exposes this with a completion handler only (no async twin in
         // the iOS 26 SDK), so it's bridged here.
         let webURL: PartialKeyPath<UIPasteboard.DetectedValues> = \UIPasteboard.DetectedValues.probableWebURL
-        let found: Set<PartialKeyPath<UIPasteboard.DetectedValues>> = await withCheckedContinuation { continuation in
+        // Reduced to a Bool inside the callback: UIKit calls it off the main
+        // actor, and the key-path set isn't Sendable.
+        return await withCheckedContinuation { continuation in
             board.detectPatterns(for: [webURL]) { result in
-                continuation.resume(returning: (try? result.get()) ?? [])
+                let found = (try? result.get()) ?? []
+                continuation.resume(returning: found.contains(webURL))
             }
         }
-        return found.contains(webURL)
     }
 
     /// Reads the clipboard through `detectValues`, which is what puts up the
@@ -49,12 +51,13 @@ enum DeferredChallenge {
     static func claimPastedLink() async -> URL? {
         let board = UIPasteboard.general
         let webURL: PartialKeyPath<UIPasteboard.DetectedValues> = \UIPasteboard.DetectedValues.probableWebURL
-        let values: UIPasteboard.DetectedValues? = await withCheckedContinuation { continuation in
+        // The string is pulled out inside the callback, for the same reason.
+        let detected: String = await withCheckedContinuation { continuation in
             board.detectValues(for: [webURL]) { result in
-                continuation.resume(returning: try? result.get())
+                continuation.resume(returning: (try? result.get())?.probableWebURL ?? "")
             }
         }
-        let raw = (values?.probableWebURL ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+        let raw = detected.trimmingCharacters(in: .whitespacesAndNewlines)
         #if DEBUG
         print("📋 DeferredChallenge: clipboard URL = \(raw.isEmpty ? "none" : raw)")
         #endif
