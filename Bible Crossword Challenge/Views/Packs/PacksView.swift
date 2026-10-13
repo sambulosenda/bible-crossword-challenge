@@ -46,7 +46,7 @@ struct PacksView: View {
         // inside each row's closure: `recordsByID` rebuilt a dictionary of
         // every record the player owns once per card, and the pack list was
         // re-filtered for seasonality three times on the way down the screen.
-        let recordsByID = Dictionary(records.map { ($0.puzzleID, $0) }, uniquingKeysWith: { a, _ in a })
+        let recordsByID = records.byPuzzleID
         // A pack a Journey already covers is dropped here, so nothing
         // downstream — the sections, the empty state, the lead — can count
         // the same collection twice.

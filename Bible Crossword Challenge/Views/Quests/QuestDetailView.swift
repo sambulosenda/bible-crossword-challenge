@@ -44,7 +44,7 @@ struct QuestDetailView: View {
     var body: some View {
         // Built once per body pass and handed down — it was a computed
         // property that every step row rebuilt, once per row.
-        let recordsByID = Dictionary(records.map { ($0.puzzleID, $0) }, uniquingKeysWith: { a, _ in a })
+        let recordsByID = records.byPuzzleID
         let progress = QuestProgress(quest: quest, recordsByID: recordsByID)
         let steps = self.steps
 

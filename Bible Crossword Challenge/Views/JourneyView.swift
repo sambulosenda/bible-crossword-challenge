@@ -271,7 +271,7 @@ struct JourneyBookView: View {
     }
 
     private var recordsByID: [String: PuzzleRecord] {
-        Dictionary(records.map { ($0.puzzleID, $0) }, uniquingKeysWith: { a, _ in a })
+        records.byPuzzleID
     }
 
     var body: some View {

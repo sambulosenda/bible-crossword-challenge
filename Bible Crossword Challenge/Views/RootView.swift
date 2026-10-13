@@ -528,7 +528,7 @@ struct RootView: View {
     private func seedRotationRepeat() {
         let earlier = Calendar.current.date(byAdding: .day, value: -60, to: Date()) ?? Date()
         let existing = (try? context.fetch(FetchDescriptor<PuzzleRecord>())) ?? []
-        let byID = Dictionary(existing.map { ($0.puzzleID, $0) }, uniquingKeysWith: { a, _ in a })
+        let byID = existing.byPuzzleID
 
         for puzzle in [puzzleProvider.dailyPuzzle(), puzzleProvider.dailyMini()].compactMap({ $0 }) {
             // Update in place when a record exists, so re-running the flag can't
@@ -549,7 +549,7 @@ struct RootView: View {
     private func seedJourney(id: String, done: Int) {
         guard let quest = puzzleProvider.quests.first(where: { $0.id == id }) else { return }
         let existing = (try? context.fetch(FetchDescriptor<PuzzleRecord>())) ?? []
-        let byID = Dictionary(existing.map { ($0.puzzleID, $0) }, uniquingKeysWith: { a, _ in a })
+        let byID = existing.byPuzzleID
         let earlier = Calendar.current.date(byAdding: .day, value: -1, to: Date()) ?? Date()
         for (index, puzzleID) in quest.puzzleIDs.enumerated() {
             let record = byID[puzzleID] ?? {

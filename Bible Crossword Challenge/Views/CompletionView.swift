@@ -629,7 +629,7 @@ struct CompletionView: View {
     private func loadPackContext() {
         guard let pack = puzzleProvider.pack(forPuzzle: puzzle.id) else { return }
         let records = (try? context.fetch(FetchDescriptor<PuzzleRecord>())) ?? []
-        let recordsByID = Dictionary(records.map { ($0.puzzleID, $0) }, uniquingKeysWith: { a, _ in a })
+        let recordsByID = records.byPuzzleID
         let next = puzzleProvider.puzzles(in: pack).first {
             $0.id != puzzle.id && recordsByID[$0.id]?.isCompleted != true
         }
@@ -653,7 +653,7 @@ struct CompletionView: View {
     private func loadQuestContext() {
         guard let quest = puzzleProvider.quests(containing: puzzle.id).first else { return }
         let records = (try? context.fetch(FetchDescriptor<PuzzleRecord>())) ?? []
-        let recordsByID = Dictionary(records.map { ($0.puzzleID, $0) }, uniquingKeysWith: { a, _ in a })
+        let recordsByID = records.byPuzzleID
         questContext = QuestContext(
             quest: quest,
             progress: QuestProgress(quest: quest, recordsByID: recordsByID)

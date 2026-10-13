@@ -61,7 +61,7 @@ struct PackDetailView: View {
         // The record lookup is built once per body pass and handed down. It
         // was a computed property, and every row read it twice — rebuilding a
         // dictionary of all the player's records for each read.
-        let recordsByID = Dictionary(records.map { ($0.puzzleID, $0) }, uniquingKeysWith: { a, _ in a })
+        let recordsByID = records.byPuzzleID
         let progress = PackProgress(pack: pack, recordsByID: recordsByID)
         let puzzles = self.puzzles
 

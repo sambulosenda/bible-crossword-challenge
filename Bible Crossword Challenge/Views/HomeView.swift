@@ -132,7 +132,7 @@ struct HomeView: View {
     /// and handed down: as a property read in each consumer it was rebuilt
     /// five times a pass, once per quest inside `activeQuest` alone.
     private var recordsByID: [String: PuzzleRecord] {
-        Dictionary(records.map { ($0.puzzleID, $0) }, uniquingKeysWith: { a, _ in a })
+        records.byPuzzleID
     }
 
     /// Offer the daily reminder once there's a streak worth protecting — the

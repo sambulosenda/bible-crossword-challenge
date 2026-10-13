@@ -891,7 +891,7 @@ private struct SearchPuzzleRows: View {
     @Query private var records: [PuzzleRecord]
 
     var body: some View {
-        let byID = Dictionary(records.map { ($0.puzzleID, $0) }, uniquingKeysWith: { a, _ in a })
+        let byID = records.byPuzzleID
         ForEach(puzzles) { puzzle in
             // The archive's wall: search reaches the catalogue the way the
             // Library does, not through a book.
