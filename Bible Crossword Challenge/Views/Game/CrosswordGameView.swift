@@ -1430,7 +1430,10 @@ struct CrosswordGameScreen: View {
         // every solve; the once-per-puzzle stats only on the first completion.
         // Minis count toward totals and the streak, but a 7×7 can't earn the
         // fast-solve or no-hint achievements meant for full puzzles.
-        if !puzzle.isMini {
+        // A zero is never a real solve — only a debug auto-solve or a grid
+        // completed before the clock's first tick — and as a minimum it
+        // would hold Profile's Best Time at 0:00 for good.
+        if !puzzle.isMini, seconds > 0 {
             profile.bestSolveSeconds = min(profile.bestSolveSeconds ?? .max, seconds)
         }
         if firstCompletion {

@@ -5,8 +5,8 @@
 //  The player: who they are, how they're doing, what they've earned. No
 //  authentication in v1 — everything is on device (and in their iCloud).
 //
-//  Built as a ScrollView of cards rather than a Form: every other tab (Today,
-//  Packs, Library) already speaks that language.
+//  A native inset-grouped List on the warm paper since 2026-10-13, like Packs:
+//  the hand-built cards looked like iOS without behaving like it.
 //
 //  Settings live behind the gear in the toolbar (`SettingsView`), not at the
 //  foot of this screen. Until 2026-10 they did: more than a screen down, under
@@ -38,26 +38,36 @@ struct ProfileView: View {
 
     var body: some View {
         NavigationStack {
-            // Who they are and how they're doing on the left of a wide window;
-            // what they've earned and who they've played on the right.
-            CardColumns {
-                identityCard
-                ProfileStatsCard(
-                    streak: profile.currentStreak,
-                    solved: profile.totalPuzzlesCompleted,
-                    bestStreak: profile.bestStreak,
-                    bestSolveSeconds: profile.bestSolveSeconds,
-                    freezes: profile.streakFreezes
-                )
-            } more: {
-                AchievementsCard(
-                    profile: profile,
-                    unlocked: unlockedCount,
-                    total: Achievements.all.count
-                )
-                leaderboardCard
+            List {
+                Section {
+                    identityRow
+                    ProfileStatsRow(
+                        solved: profile.totalPuzzlesCompleted,
+                        streak: profile.currentStreak,
+                        bestStreak: profile.bestStreak,
+                        bestSolveSeconds: profile.bestSolveSeconds
+                    )
+                }
+
+                Section {
+                    NavigationLink {
+                        AchievementsView(profile: profile, source: "profile")
+                    } label: {
+                        ProfileLinkLabel(symbol: "trophy", title: "Achievements", subtitle: achievementsSummary)
+                    }
+                    .accessibilityHint("Opens every badge and its progress")
+                    leaderboardRow
+                } header: {
+                    Text("Progress")
+                }
+                .headerProminence(.increased)
+
                 challengesSection
             }
+            .listStyle(.insetGrouped)
+            .scrollContentBackground(.hidden)
+            .frame(maxWidth: 640)
+            .frame(maxWidth: .infinity)
             .background(Theme.background)
             .navigationTitle("Profile")
             .toolbar {
@@ -83,11 +93,10 @@ struct ProfileView: View {
 
     // MARK: - Identity
 
-    /// Avatar, name, and one quiet line of context, in a row — the whole card
-    /// is the edit affordance. It was a centred hero with an "Edit name" pill
-    /// under it: a quarter of the first screen spent on a name most players
-    /// never set, shown back to them as "Friend" with an "F" in the disc.
-    private var identityCard: some View {
+    /// Avatar, name and one quiet line, as the account row at the top of
+    /// Settings. The name is body weight; with none set, "Add your name" is
+    /// the accent — an action, not a headline in the scripture serif.
+    private var identityRow: some View {
         Button {
             // Starts empty for a player who never chose one, so they type a
             // name rather than delete the placeholder first.
@@ -95,33 +104,33 @@ struct ProfileView: View {
             showRename = true
         } label: {
             HStack(spacing: Theme.Spacing.m) {
-                // Decorative, and at accessibility sizes its width is the
-                // width the name needs.
                 if !dynamicTypeSize.isAccessibilitySize {
                     Avatar(name: chosenName ?? "")
                 }
                 VStack(alignment: .leading, spacing: 2) {
-                    // Serif, as the app sets every hero title and scripture line.
                     Text(chosenName ?? "Add your name")
-                        .font(.scripture(.title2, weight: .semibold))
-                        .foregroundStyle(.primary)
+                        .font(.headline)
+                        .foregroundStyle(chosenName == nil ? Theme.accent : Color.primary)
                     Text(membershipLine)
                         .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                        // Concrete: in a list button `.secondary` takes the tint.
+                        .foregroundStyle(Color(uiColor: .secondaryLabel))
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                Image(systemName: "pencil")
-                    .font(.body.weight(.semibold))
-                    .foregroundStyle(.tertiary)
+                Spacer(minLength: 0)
             }
-            .padding(Theme.Spacing.m)
-            .elevatedCard()
+            .padding(.vertical, Theme.Spacing.xs)
+            .contentShape(.rect)
         }
-        .buttonStyle(PressableCardStyle())
+        // The list's own style, for the system tap highlight.
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(chosenName.map { "\($0). \(membershipLine)" } ?? "Add your name")
         .accessibilityHint(chosenName == nil ? "Friends see it on the challenges you send" : "Edits your name")
         .accessibilityAddTraits(.isButton)
+    }
+
+    private var achievementsSummary: String {
+        guard unlockedCount > 0 else { return "Solve puzzles to earn your first badge" }
+        return "\(unlockedCount) of \(Achievements.all.count) badges earned"
     }
 
     /// The name the player chose, or nil while it is still the placeholder
@@ -155,7 +164,7 @@ struct ProfileView: View {
     ///
     /// Hidden when the player isn't signed in to Game Center.
     @ViewBuilder
-    private var leaderboardCard: some View {
+    private var leaderboardRow: some View {
         if gameCenter.isAuthenticated {
             Button {
                 gameCenter.showWeeklyMiniLeaderboard()
@@ -166,11 +175,7 @@ struct ProfileView: View {
                     subtitle: "This week's fastest Mini times"
                 )
             }
-            .buttonStyle(PressableCardStyle())
-            .accessibilityElement(children: .ignore)
-            .accessibilityLabel("Weekly leaderboard. This week's fastest Mini times")
             .accessibilityHint("Opens Game Center")
-            .accessibilityAddTraits(.isButton)
         }
     }
 
@@ -184,199 +189,97 @@ struct ProfileView: View {
     private var challengesSection: some View {
         let recent = Array(challengeHistory.entries.prefix(3))
         if !recent.isEmpty {
-            VStack(alignment: .leading, spacing: Theme.Spacing.s) {
-                Text("Recent challenges").kicker()
-                    .padding(.horizontal, Theme.Spacing.xs)
-
+            Section {
                 // Every row leads to the same place — the full list is where
                 // replay and rematch live.
-                ChallengeHistoryList(entries: recent) { _ in
+                ForEach(recent) { entry in
+                    Button {
+                        showChallengeHistory = true
+                    } label: {
+                        ChallengeHistoryRow(entry: entry)
+                    }
+                    .buttonStyle(.plain)
+                    // The row carries a card's 16pt padding of its own; the
+                    // list already insets it, so it gives the margin back.
+                    .listRowInsets(EdgeInsets(top: 0, leading: Theme.Spacing.xs, bottom: 0, trailing: Theme.Spacing.xs))
+                }
+                Button(challengeHistory.entries.count > recent.count
+                       ? "See all \(challengeHistory.entries.count)"
+                       : "See all") {
                     showChallengeHistory = true
                 }
-
-                Button {
-                    showChallengeHistory = true
-                } label: {
-                    Text(challengeHistory.entries.count > recent.count
-                         ? "See all \(challengeHistory.entries.count)"
-                         : "See all")
-                        .font(.caption.weight(.semibold))
-                        // Bare caption text alone is a ~16pt target; the frame
-                        // brings the hit region to the 44pt HIG minimum.
-                        .frame(minHeight: 44, alignment: .leading)
-                        .contentShape(.rect)
-                }
-                .padding(.horizontal, Theme.Spacing.xs)
+            } header: {
+                Text("Challenges")
             }
+            .headerProminence(.increased)
         }
     }
 }
 
 // MARK: - Stats
 
-/// One card, two rows. The three headline numbers lead at title size; the two
-/// supporting ones sit below a divider at a smaller scale. Previously three were
-/// hero stats and the other two were buried as list rows in a separate section,
-/// which split one idea across two places. A third supporting stat, badges,
-/// went in 2026-10: the Achievements card right below already says it.
-///
-/// Its own type, taking plain values, rather than a computed property on
-/// `ProfileView` — the tiles are the densest thing on the screen, and as a
-/// computed property they shared the parent's invalidation boundary and rebuilt
-/// every time an unrelated bit of profile state changed (opening a sheet,
-/// typing in the rename alert). With only value inputs and no property wrappers
-/// SwiftUI can compare the whole view and skip its body outright. `HomeView`'s
-/// cards are built the same way and say so.
-private struct ProfileStatsCard: View {
-    let streak: Int
+/// Four numbers of one size in one row — ink values, grey labels, no icons.
+/// It was five stats in two sizes with five tints; the day streak also lives in
+/// Today's bar and freezes in its streak sheet, so the row keeps the records.
+/// Plain values only, so SwiftUI can skip it when unrelated state changes.
+private struct ProfileStatsRow: View {
     let solved: Int
+    let streak: Int
     let bestStreak: Int
     let bestSolveSeconds: Int?
-    let freezes: Int
 
     var body: some View {
-        // Three across until a label can't hold its line, then one per line.
-        // Columns that merely wrap broke "3:34" over three lines and "Solved"
-        // mid-word at the largest text size. `ViewThatFits` measures rather
-        // than switching on the type size, so a wide window keeps the columns
-        // for as long as they truly fit — and the card stays free of property
-        // wrappers (see above).
+        // Four across until a label can't hold its line, then two by two.
         ViewThatFits(in: .horizontal) {
-            columns
-            stacked
-        }
-        .padding(Theme.Spacing.l)
-        .elevatedCard()
-    }
-
-    private var columns: some View {
-        VStack(spacing: Theme.Spacing.m) {
-            HStack(spacing: 0) {
-                heroStat(value: "\(streak)", label: "Day Streak", symbol: "flame.fill", tint: .orange)
-                heroStat(value: "\(solved)", label: "Solved", symbol: "checkmark.circle.fill", tint: .green)
-                heroStat(value: "\(bestStreak)", label: "Best Streak", symbol: "trophy.fill", tint: .yellow)
-            }
-
-            Divider()
-
-            HStack(spacing: 0) {
-                minorStat(value: bestTimeValue, label: "Best Time", symbol: "stopwatch.fill", tint: Theme.accent)
-                minorStat(value: "\(freezes)", label: "Freezes", symbol: "snowflake", tint: .cyan)
+            HStack(spacing: 0) { stats }
+            Grid(alignment: .leading, horizontalSpacing: Theme.Spacing.m, verticalSpacing: Theme.Spacing.m) {
+                GridRow {
+                    stat("\(solved)", "Solved")
+                    stat("\(streak)", "Streak")
+                }
+                GridRow {
+                    stat("\(bestStreak)", "Best streak")
+                    stat(bestTimeValue, "Best time")
+                }
             }
         }
+        .padding(.vertical, Theme.Spacing.s)
     }
 
-    private var stacked: some View {
-        VStack(alignment: .leading, spacing: Theme.Spacing.m) {
-            stackedStat(value: "\(streak)", label: "Day Streak", symbol: "flame.fill", tint: .orange)
-            stackedStat(value: "\(solved)", label: "Solved", symbol: "checkmark.circle.fill", tint: .green)
-            stackedStat(value: "\(bestStreak)", label: "Best Streak", symbol: "trophy.fill", tint: .yellow)
-            stackedStat(value: bestTimeValue, label: "Best Time", symbol: "stopwatch.fill", tint: Theme.accent)
-            stackedStat(value: "\(freezes)", label: "Freezes", symbol: "snowflake", tint: .cyan)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
+    @ViewBuilder
+    private var stats: some View {
+        stat("\(solved)", "Solved")
+        stat("\(streak)", "Streak")
+        stat("\(bestStreak)", "Best streak")
+        stat(bestTimeValue, "Best time")
     }
 
-    /// An em dash until the first solve — "0:00" would read as a real record.
+    /// An em dash until a real time — "0:00" would read as a record.
     private var bestTimeValue: String {
-        guard let bestSolveSeconds else { return "—" }
+        guard let bestSolveSeconds, bestSolveSeconds > 0 else { return "—" }
         return TimeFormat.clock(bestSolveSeconds)
     }
 
-    private func heroStat(value: String, label: String, symbol: String, tint: Color) -> some View {
-        VStack(spacing: Theme.Spacing.xs) {
-            Image(systemName: symbol)
-                .font(.title3)
-                .foregroundStyle(tint)
+    private func stat(_ value: String, _ label: String) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
             Text(value)
-                .font(.title.weight(.bold))
+                .font(.title2.weight(.semibold))
                 .monospacedDigit()
                 .contentTransition(.numericText())
             Text(label)
                 .font(.caption)
                 .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
+                .lineLimit(1)
         }
-        .frame(maxWidth: .infinity)
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel(label)
-        .accessibilityValue(value)
-    }
-
-    private func minorStat(value: String, label: String, symbol: String, tint: Color) -> some View {
-        VStack(spacing: Theme.Spacing.xs) {
-            Label {
-                Text(value)
-                    .font(.subheadline.weight(.bold))
-                    .monospacedDigit()
-            } icon: {
-                Image(systemName: symbol)
-                    .font(.caption)
-                    .foregroundStyle(tint)
-            }
-            .labelStyle(.titleAndIcon)
-            Text(label)
-                .font(.caption2)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
-        }
-        .frame(maxWidth: .infinity)
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel(label)
-        .accessibilityValue(value)
-    }
-
-    private func stackedStat(value: String, label: String, symbol: String, tint: Color) -> some View {
-        VStack(alignment: .leading, spacing: 2) {
-            Label {
-                Text(value)
-                    .font(.title2.weight(.bold))
-                    .monospacedDigit()
-            } icon: {
-                Image(systemName: symbol)
-                    .foregroundStyle(tint)
-            }
-            Text(label)
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-        }
+        .frame(maxWidth: .infinity, alignment: .leading)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(label)
         .accessibilityValue(value)
     }
 }
 
-// MARK: - Achievements
-
-/// The way into the trophy list, in the row the journey card held until 2.8
-/// (the map moved to the Read tab). Plain values only, for the same
-/// invalidation reason as `ProfileStatsCard`.
-private struct AchievementsCard: View {
-    let profile: PlayerProfile
-    let unlocked: Int
-    let total: Int
-
-    var body: some View {
-        NavigationLink {
-            AchievementsView(profile: profile, source: "profile")
-        } label: {
-            ProfileLinkLabel(symbol: "trophy.fill", title: "Achievements", subtitle: summary)
-        }
-        .buttonStyle(PressableCardStyle())
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel("Achievements. \(summary)")
-        .accessibilityHint("Opens every badge and its progress")
-    }
-
-    private var summary: String {
-        guard unlocked > 0 else { return "Solve puzzles to earn your first badge" }
-        return "\(unlocked) of \(total) badges earned"
-    }
-}
-
-/// The face of a card that goes somewhere: glyph, title, one line of
-/// context, chevron. Achievements and the leaderboard share it so the two
-/// doors read as a pair.
+/// A row that goes somewhere: grey glyph, title, one line of context. The
+/// list draws the chevron for links; the leaderboard (a button) gets none.
 private struct ProfileLinkLabel: View {
     let symbol: String
     let title: LocalizedStringKey
@@ -386,29 +289,22 @@ private struct ProfileLinkLabel: View {
 
     var body: some View {
         HStack(spacing: Theme.Spacing.m) {
-            // Decorative, and at accessibility sizes the width it takes is the
-            // width the title needs — "Achievements" hyphenated at the largest.
             if !dynamicTypeSize.isAccessibilitySize {
                 Image(systemName: symbol)
-                    .font(.title)
-                    .foregroundStyle(Theme.accent)
+                    .font(.body)
+                    .foregroundStyle(Color(uiColor: .secondaryLabel))
+                    .frame(width: 28)
             }
             VStack(alignment: .leading, spacing: 2) {
-                Text(title)
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(.primary)
+                Text(title).font(.body).foregroundStyle(Color.primary)
                 Text(subtitle)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .font(.subheadline)
+                    .foregroundStyle(Color(uiColor: .secondaryLabel))
             }
             Spacer(minLength: 0)
-            Image(systemName: "chevron.forward")
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(.secondary)
         }
-        .padding(Theme.Spacing.l)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .elevatedCard()
+        .contentShape(.rect)
+        .accessibilityElement(children: .combine)
     }
 }
 
@@ -420,7 +316,7 @@ private struct ProfileLinkLabel: View {
 private struct Avatar: View {
     let name: String
 
-    @ScaledMetric(relativeTo: .title) private var size: CGFloat = 56
+    @ScaledMetric(relativeTo: .title) private var size: CGFloat = 52
 
     private var initial: String? {
         name.trimmingCharacters(in: .whitespacesAndNewlines)
