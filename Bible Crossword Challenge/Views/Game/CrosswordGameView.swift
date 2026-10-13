@@ -53,6 +53,8 @@ struct CrosswordGameView: View {
     /// regular/regular — an iPad's classes — in 678×466pt, about half an iPad's
     /// height, so the layout decisions below check the size too.
     @State private var containerSize: CGSize = .zero
+    /// See `keyGrowth(spare:current:)`.
+    @State private var keyGrowth: CGFloat = 0
     /// Whether the system has put this screen's bars on a side rail (iPhone
     /// Duo closed, or open in landscape). A custom toolbar view is never
     /// presented vertically — it would hold a second, horizontal bar open
@@ -427,11 +429,12 @@ struct CrosswordGameView: View {
             vm.toggleDirection()
             return .handled
         }
-        // With the bars on a side rail the title is the only thing left in
-        // the top bar, and it holds a 44pt strip open across the whole width
-        // for it. The title moves to the status row instead and the bar
-        // gets nothing, so the board starts at the top.
-        .navigationTitle(barsVertical ? "" : puzzle.title)
+        // No system title in either arrangement. With the bars on a side rail
+        // it held a 44pt strip open across the whole width, so the title moved
+        // to the status row. In the top bar the principal slot draws it over
+        // the clock, and a system title there was a second, invisible copy
+        // that VoiceOver read alongside the visible one.
+        .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar(.hidden, for: .tabBar)
         .toolbar { toolbarContent }
@@ -700,8 +703,14 @@ struct CrosswordGameView: View {
 
     /// Takes every point the arrangement can spare in both directions; the grid
     /// decides for itself whether that is enough to show the whole board.
+    /// Over the clue bar (phones in portrait, the iPad column) the board
+    /// carries its progress and hands the height it can't use to the keypad;
+    /// beside the keypad, where height is what's scarce, it stays bare.
     private var gridArea: some View {
-        CrosswordGridView(vm: vm)
+        CrosswordGridView(vm: vm, showsProgress: gridOverClueBar)
+            .onPreferenceChange(SpareGridHeightKey.self) { spare in
+                keyGrowth = Self.keyGrowth(spare: spare, current: keyGrowth)
+            }
             .padding(Theme.Spacing.m)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
@@ -715,17 +724,34 @@ struct CrosswordGameView: View {
         )
     }
 
+    private var gridOverClueBar: Bool {
+        solveLayout == .stacked || solveLayout == .withCluePanel
+    }
+
+    /// Height added to each key from the board's spare room. A mini on a
+    /// tall phone is capped by the screen's width and left ~90pt of empty
+    /// paper over itself; half of it goes into the keys, which are hit a
+    /// hundred times a solve, and half stays as margin around the board.
+    /// Computed against the spare *plus* what the keys already took, so
+    /// growing the keys (which shrinks the spare) can't feed back into them.
+    private static func keyGrowth(spare: CGFloat, current: CGFloat) -> CGFloat {
+        let rows = CGFloat(LetterKeyboardView.rowCount)
+        let total = spare + current * rows
+        return min(max(0, floor(total / 2 / rows)), LetterKeyboardView.maxKeyHeight - LetterKeyboardView.baseKeyHeight)
+    }
+
     private var keypad: some View {
         LetterKeyboardView(
             isPencilMode: vm.isPencilMode,
             onLetter: { vm.enter($0) },
             onDelete: { vm.delete() },
-            onTogglePencil: { vm.isPencilMode.toggle() }
+            onTogglePencil: { vm.isPencilMode.toggle() },
+            extraKeyHeight: gridOverClueBar ? keyGrowth : 0,
+            onPaper: true
         )
-        // Into the bottom safe area only. On every edge, as `background`
-        // does by default, the slab ran on past the keypad's column under the
-        // side rail of bars on iPhone Duo open.
-        .background(Color(.systemBackground), ignoresSafeAreaEdges: .bottom)
+        // On the paper itself, not a white slab: the slab cut the screen in
+        // two, a page above and a system keyboard below. White keys on paper
+        // are the grid's own tiles, so the pad reads as part of the puzzle.
     }
 
     // MARK: - Toolbar
@@ -845,7 +871,20 @@ struct CrosswordGameView: View {
         // where it is the point.
         if !barsVertical {
             ToolbarItem(placement: .principal) {
-                timerSlot
+                // The title over the clock. The clock alone held the centre of
+                // the bar, so the screen never said which puzzle this was and
+                // the time was the loudest thing on it — a race, in an app
+                // meant to be calm. The title leads; the time sits under it.
+                VStack(spacing: 0) {
+                    Text(puzzle.title)
+                        .font(.subheadline.weight(.semibold))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
+                        .accessibilityAddTraits(.isHeader)
+                    timerSlot
+                        .font(.caption.weight(.medium))
+                        .foregroundStyle(.secondary)
+                }
             }
         }
         // Kept in the bar longest when the rail runs out of room: it is
@@ -909,8 +948,11 @@ struct CrosswordGameView: View {
                     // content is fixed-size, and the toolbar row is already
                     // this tall — only the target grows to the 44pt floor.
                     .padding(.horizontal, Theme.Spacing.s)
-                    .frame(minWidth: 44, minHeight: 44)
-                    .contentShape(Rectangle())
+                    .frame(minWidth: 44)
+                    // Under the title the clock is a caption line, so the 44pt
+                    // floor comes from the hit shape, not the frame — a 44pt
+                    // frame would push the title out of the bar.
+                    .contentShape(.rect.inset(by: -12))
             }
             .buttonStyle(.plain)
             .accessibilityHint(showSolveTimer ? "Hides the timer" : "Shows the timer")

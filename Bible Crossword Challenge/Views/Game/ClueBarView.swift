@@ -59,10 +59,9 @@ struct ClueBarView: View {
         .padding(.top, showsClue ? Theme.Spacing.s : 0)
         .padding(.bottom, showsClue ? Theme.Spacing.s + Theme.Spacing.xs : 0)
         // On the page, not in a grey band: the clue is part of the puzzle,
-        // and the filled strip read as a toolbar bolted under the grid. One
-        // hairline keeps it off the keyboard. The old 3pt progress strip
-        // went with the band — unlabelled, it said nothing the grid didn't.
-        .overlay(alignment: .bottom) { Divider() }
+        // and the filled strip read as a toolbar bolted under the grid. No
+        // hairline under it either, now the keypad sits on the same paper —
+        // a rule between two halves of one surface read as a seam.
     }
 
     /// The clue itself.
@@ -305,9 +304,17 @@ struct ClueBarView: View {
                             // Secondary, not accent: it is a label, and blue
                             // is kept for what can be tapped — the chevrons
                             // and Verse on this same row.
-                            Text("\(slot.number) \(slot.direction.label)")
+                            // The answer's length rides here, not as "(6)"
+                            // after the clue: the clue's two reserved lines
+                            // are measured against the clue alone, and the
+                            // suffix would push more of them into the shrink.
+                            // The clue's name in ink, its length in grey: one
+                            // line in two weights of emphasis, so the bar has
+                            // a head without a box around it.
+                            Text("\(Text("\(slot.number) \(slot.direction.label)").foregroundStyle(.primary)) · \(slot.length) letters")
                                 .font(.caption.weight(.semibold))
                                 .foregroundStyle(.secondary)
+                                .lineLimit(1)
                                 .layoutPriority(1)
                             // Without this the row hugs its content and the
                             // spacer collapses, parking the pill against the
@@ -371,6 +378,6 @@ struct ClueBarView: View {
 
     private var clueAccessibilityLabel: String {
         guard let slot = vm.activeSlot else { return "Select a cell to begin" }
-        return "Clue \(slot.number) \(slot.direction.label): \(slot.clue)"
+        return "Clue \(slot.number) \(slot.direction.label), \(slot.length) letters: \(slot.clue)"
     }
 }

@@ -12,8 +12,25 @@
 
 import SwiftUI
 
+/// Height the fitted board can't use, published so the screen can spend it
+/// elsewhere. A mini's cells are capped by the screen's width, so on a tall
+/// phone the board leaves a band of empty paper it has no way to fill. Zero in
+/// zoom mode, which fills whatever it's given. A preference rather than a
+/// callback property: a closure can't be compared, so it would mark the grid
+/// changed on every redraw of the screen around it.
+struct SpareGridHeightKey: PreferenceKey {
+    static let defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = max(value, nextValue())
+    }
+}
+
 struct CrosswordGridView: View {
     @Bindable var vm: GameViewModel
+    /// Words solved, as a labelled bar over the fitted board and exactly as
+    /// wide as it. Fit mode only: in the pan/zoom viewport the board has no
+    /// stable width to match, and no height to spare.
+    var showsProgress = false
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
@@ -86,16 +103,22 @@ struct CrosswordGridView: View {
             // Keyed to the puzzle, so a view reused for another board can't
             // centre on the last one's cells.
             let box = cachedBounds.flatMap { $0.puzzleID == vm.puzzle.id ? $0.bounds : nil } ?? playableBounds
+            let reserved = showsProgress ? Self.progressHeight + Theme.Spacing.s : 0
             let fit = min(
                 floor(geo.size.width / CGFloat(box.cols.count)),
-                floor(geo.size.height / CGFloat(box.rows.count)),
+                floor((geo.size.height - reserved) / CGFloat(box.rows.count)),
                 Self.maximumFittedSide
             )
-            if vm.size > Self.zoomThreshold || fit < Self.minimumFittedSide {
-                zoomableGrid(in: geo.size)
-            } else {
-                fittedGrid(side: fit, box: box)
+            let zooms = vm.size > Self.zoomThreshold || fit < Self.minimumFittedSide
+            let spare = zooms ? 0 : max(0, geo.size.height - reserved - fit * CGFloat(box.rows.count))
+            Group {
+                if zooms {
+                    zoomableGrid(in: geo.size)
+                } else {
+                    fittedGrid(side: fit, box: box)
+                }
             }
+            .preference(key: SpareGridHeightKey.self, value: spare)
         }
         .sensoryFeedback(.impact(weight: .light), trigger: wordTick)
         .sensoryFeedback(.error, trigger: shakeTick)
@@ -130,10 +153,49 @@ struct CrosswordGridView: View {
     /// grid to the *shorter* side of the container, which is exactly how a
     /// landscape screen reduced the board to nothing.
     private func fittedGrid(side: CGFloat, box: PlayableBounds) -> some View {
-        gridRows(side: side, rows: box.rows, cols: box.cols)
-            .frame(width: side * CGFloat(box.cols.count), height: side * CGFloat(box.rows.count))
-            .modifier(ShakeEffect(animatableData: CGFloat(shakeTick)))
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+        let width = side * CGFloat(box.cols.count)
+        return VStack(spacing: Theme.Spacing.s) {
+            if showsProgress {
+                progressRow
+                    .frame(width: width, height: Self.progressHeight)
+            }
+            gridRows(side: side, rows: box.rows, cols: box.cols)
+                .frame(width: width, height: side * CGFloat(box.rows.count))
+                .modifier(ShakeEffect(animatableData: CGFloat(shakeTick)))
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    private static let progressHeight: CGFloat = 22
+
+    /// "2 of 5 words" and a hairline bar. Counts solved words, not filled
+    /// squares, like `remainingClueCount`: a grid of wrong guesses shouldn't
+    /// look nearly done. Ink, not accent — blue is kept for what can be tapped.
+    private var progressRow: some View {
+        let total = vm.allSlots.count
+        let solved = total - vm.remainingClueCount
+        return HStack(spacing: Theme.Spacing.s) {
+            Text("\(solved) of \(total) words")
+                .font(.caption.weight(.semibold))
+                .monospacedDigit()
+                .foregroundStyle(.secondary)
+                .lineLimit(1)
+                .fixedSize()
+            GeometryReader { geo in
+                Capsule()
+                    .fill(Color(.systemFill))
+                    .overlay(alignment: .leading) {
+                        Capsule()
+                            .fill(Theme.ink)
+                            .frame(width: total > 0 ? geo.size.width * CGFloat(solved) / CGFloat(total) : 0)
+                    }
+            }
+            .frame(height: 4)
+            .animation(reduceMotion ? nil : .snappy, value: solved)
+        }
+        .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("\(solved) of \(total) words solved")
     }
 
     // MARK: - Zoom mode (Sunday Specials, and any container too small to fit)

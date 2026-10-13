@@ -16,12 +16,18 @@ struct LetterKeyboardView: View {
     /// Present only where pencil entry exists (the game); the onboarding
     /// first-solve keeps the plain pad.
     var onTogglePencil: (() -> Void)? = nil
+    /// Height added to every key, from room the screen has spare (see
+    /// `CrosswordGameView.keyGrowth`). Still under the 60pt ceiling below.
+    var extraKeyHeight: CGFloat = 0
+    /// White keys for a pad laid straight on the paper canvas, the same
+    /// tiles the grid uses, instead of grey keys on a white slab.
+    var onPaper = false
 
     @State private var lastKeyTick = 0
 
     /// Key height grows with the user's text-size setting so large Dynamic Type
     /// glyphs aren't clipped.
-    @ScaledMetric(relativeTo: .title3) private var keyHeight: CGFloat = 46
+    @ScaledMetric(relativeTo: .title3) private var keyHeight: CGFloat = Self.baseKeyHeight
 
     /// The same ceiling the `dynamicTypeSize` cap in `body` puts on the glyphs,
     /// applied by hand because that modifier can't reach this property:
@@ -29,7 +35,12 @@ struct LetterKeyboardView: View {
     /// and the cap only governs the environment it *passes down*. Left uncapped
     /// the keys went on growing under capped letters, and three rows of them
     /// pushed the grid off the bottom of the screen.
-    private var cappedKeyHeight: CGFloat { min(keyHeight, 60) }
+    private var cappedKeyHeight: CGFloat { min(keyHeight + extraKeyHeight, Self.maxKeyHeight) }
+
+    /// Key height at the default text size, before any spare room is added.
+    static let baseKeyHeight: CGFloat = 46
+    static let maxKeyHeight: CGFloat = 60
+    static let rowCount = 3
 
     private let rows = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"]
 
@@ -76,7 +87,7 @@ struct LetterKeyboardView: View {
                 .font(.system(.title3, design: .rounded).weight(.semibold))
                 .frame(maxWidth: .infinity, minHeight: cappedKeyHeight)
         }
-        .buttonStyle(KeyButtonStyle())
+        .buttonStyle(KeyButtonStyle(onPaper: onPaper))
         .accessibilityLabel(String(letter))
     }
 
@@ -92,7 +103,7 @@ struct LetterKeyboardView: View {
                 .frame(maxWidth: .infinity, minHeight: cappedKeyHeight)
                 .foregroundStyle(isPencilMode ? Theme.accent : .primary)
         }
-        .buttonStyle(KeyButtonStyle())
+        .buttonStyle(KeyButtonStyle(onPaper: onPaper))
         .accessibilityLabel("Pencil mode")
         .accessibilityValue(isPencilMode ? "on" : "off")
         .accessibilityAddTraits(.isToggle)
@@ -108,7 +119,7 @@ struct LetterKeyboardView: View {
                 .font(.title3)
                 .frame(maxWidth: .infinity, minHeight: cappedKeyHeight)
         }
-        .buttonStyle(KeyButtonStyle())
+        .buttonStyle(KeyButtonStyle(onPaper: onPaper))
         .accessibilityLabel("Delete")
     }
 }
@@ -119,11 +130,15 @@ struct LetterKeyboardView: View {
 /// only the haptic fired. `isPressed` flips on touch-down, so the darken + slight
 /// depress now land on the same event as the finger, in harmony with the haptic.
 private struct KeyButtonStyle: ButtonStyle {
+    var onPaper = false
+
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .foregroundStyle(.primary)
             .background(
-                configuration.isPressed ? Color(.systemGray3) : Color(.secondarySystemBackground),
+                configuration.isPressed
+                    ? Color(.systemGray3)
+                    : onPaper ? Theme.surface : Color(.secondarySystemBackground),
                 in: .rect(cornerRadius: 8)
             )
             .scaleEffect(configuration.isPressed ? 0.96 : 1.0)
