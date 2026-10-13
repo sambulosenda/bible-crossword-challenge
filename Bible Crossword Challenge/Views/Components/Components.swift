@@ -20,6 +20,9 @@ struct StreakCard: View {
     /// `Calendar` weekday numbers (1 = Sunday) with a completed puzzle this
     /// week, driving the week row.
     var completedWeekdays: Set<Int> = []
+    /// The run that just broke, while its comeback is pending. Said here, in
+    /// the sheet the bar's flame opens, instead of on a card of its own.
+    var endedRun: Int? = nil
 
     @ScaledMetric(relativeTo: .largeTitle) private var iconSize = 48
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -73,7 +76,10 @@ struct StreakCard: View {
             // the new player hasn't met: say what to do today instead. When a
             // freeze is mentioned, say what it does — this line is its first
             // appearance for most players.
-            if savedRecently {
+            if let endedRun {
+                footnote("Your \(endedRun)-day run ended. One puzzle starts the next.",
+                         symbol: "flame", tint: .secondary)
+            } else if savedRecently {
                 footnote("A freeze saved your streak", symbol: "snowflake", tint: .cyan)
             } else if current == 0 {
                 footnote("Solve today to start your streak", symbol: "flame", tint: .orange)
@@ -94,7 +100,9 @@ struct StreakCard: View {
         if !completedWeekdays.isEmpty {
             label += ". \(completedWeekdays.count) \(completedWeekdays.count == 1 ? "day" : "days") completed this week"
         }
-        if savedRecently {
+        if let endedRun {
+            label += ". Your \(endedRun)-day run ended. One puzzle starts the next"
+        } else if savedRecently {
             label += ". A freeze saved your streak"
         } else if current == 0 {
             label += ". Solve today to start your streak"
@@ -131,14 +139,22 @@ struct StreakCard: View {
 /// with every glyph in the accent, blue stopped meaning "you can tap this"
 /// and the screen read as one colour. Blue now belongs to actions and the
 /// daily puzzle.
+extension EnvironmentValues {
+    /// Draws `RowIcon`s in ink instead of their feature tint — for a list
+    /// whose rows don't need colour to be told apart (Today's Keep going).
+    @Entry var rowIconsNeutral = false
+}
+
 struct RowIcon: View {
     let symbol: String
     let tint: Color
 
+    @Environment(\.rowIconsNeutral) private var neutral
+
     var body: some View {
         CollectionCover(
             symbol: symbol,
-            accent: tint,
+            accent: neutral ? Color.primary : tint,
             isLocked: false,
             side: 44,
             font: .title3,
@@ -165,6 +181,8 @@ enum FeatureTint {
     /// The flame, and the week row that fills under it.
     static let streak = Color.orange
     static let readingPlan = Color.brown
+    /// The Bible row on Today: the reading family, so it matches its plans.
+    static let bible = readingPlan
     /// Done, as everywhere in the app.
     static let solved = Color.green
 }

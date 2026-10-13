@@ -50,6 +50,11 @@ struct HomeView: View {
     /// Decided once on appear so spending the impression can't hide the card
     /// mid-view.
     @State private var showStreakAsk = false
+    /// The streak's detail — week row, best, freezes — opened from the flame
+    /// in the bar. See `streakButton`.
+    @State private var showStreak = false
+    /// The streak sheet's height, measured from its card.
+    @State private var streakSheetHeight: CGFloat = 320
     /// Every paywall Today opens: the trial re-offer (see `TrialReoffer`,
     /// opening on the plan the player backed out of) and the upgrade card.
     /// Presented here rather than by the card: a purchase removes the card,
@@ -196,6 +201,13 @@ struct HomeView: View {
         dailyMini != nil ? "Play today's Mini" : "Play today's puzzle"
     }
 
+    /// The comeback card's play action, or nil when the hero card already
+    /// plays the same puzzle.
+    private func comebackAction(heroPuzzleID: String?) -> (() -> Void)? {
+        guard let puzzle = comebackPuzzle, puzzle.id != heroPuzzleID else { return nil }
+        return { startComeback() }
+    }
+
     /// Opens the comeback puzzle and marks where the attempt came from. The card
     /// stays until something is actually solved — clearing it on the tap would
     /// lose the offer for anyone who opens the puzzle and backs out.
@@ -203,6 +215,39 @@ struct HomeView: View {
         guard let puzzle = comebackPuzzle else { return }
         comebackSource = "home_card"
         path.append(puzzle)
+    }
+
+    private var streakCard: some View {
+        StreakCard(
+            current: profile.currentStreak,
+            best: profile.bestStreak,
+            freezes: profile.streakFreezes,
+            savedRecently: freezeSavedToday,
+            completedWeekdays: completedWeekdaysThisWeek,
+            endedRun: pendingStreakBreak > 0 ? pendingStreakBreak : nil
+        )
+    }
+
+    /// Flame and day count beside the title — where streak apps keep it.
+    /// Outline and grey while a broken streak waits for its comeback, the
+    /// same treatment as `ComebackCard`'s icon.
+    private var streakButton: some View {
+        let paused = pendingStreakBreak > 0
+        return Button {
+            showStreak = true
+        } label: {
+            // An HStack, not a Label: the bar draws a toolbar Label icon-only,
+            // which dropped the count — the one thing this is for.
+            HStack(spacing: Theme.Spacing.xs) {
+                Image(systemName: paused ? "flame" : "flame.fill")
+                Text("\(profile.currentStreak)")
+            }
+                .font(.headline)
+                .monospacedDigit()
+                .foregroundStyle(paused ? Color.secondary : FeatureTint.streak)
+        }
+        .accessibilityLabel(paused ? "Streak paused" : "\(profile.currentStreak) day streak")
+        .accessibilityHint("Shows this week and your best streak")
     }
 
     /// True when a streak freeze was spent today, so the streak card can show a
@@ -280,7 +325,7 @@ struct HomeView: View {
             CardColumns {
                 leadColumn(today, lead: lead)
             } more: {
-                moreColumn(recordsByID)
+                moreColumn(recordsByID, heroPuzzleID: today.puzzle(lead)?.puzzle.id)
             }
             .background(Theme.background)
             // One ask per sitting, in order of how much the player has already
@@ -302,6 +347,28 @@ struct HomeView: View {
             // height only at the top of the page.
             .navigationTitle("Today")
             .navigationBarTitleDisplayMode(.large)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) { streakButton }
+            }
+            .sheet(isPresented: $showStreak) {
+                // Sized to the card: at `.medium` half the sheet was empty
+                // paper under it.
+                streakCard
+                    .padding(Theme.Spacing.m)
+                    .padding(.top, Theme.Spacing.m)
+                    // Plus the bottom safe area: a height detent counts the
+                    // home-indicator strip, and without it the card's last
+                    // line sat under the edge of the sheet.
+                    .onGeometryChange(for: CGFloat.self) {
+                        $0.size.height + $0.safeAreaInsets.bottom
+                    } action: {
+                        streakSheetHeight = $0
+                    }
+                    .frame(maxHeight: .infinity, alignment: .top)
+                    .background(Theme.background)
+                    .presentationDetents([.height(streakSheetHeight)])
+                    .presentationDragIndicator(.visible)
+            }
             .navigationDestination(for: Puzzle.self) { puzzle in
                 CrosswordGameView(puzzle: puzzle, profile: profile, entrySource: "home")
             }
@@ -328,8 +395,11 @@ struct HomeView: View {
                     onPlanChapterRead: { markPlanRead(planID: route.planID, day: route.day) }
                 )
             }
-            .navigationDestination(for: MemoryRoute.self) { _ in
-                MemoryVerseListView()
+            .navigationDestination(for: MemoryRoute.self) { route in
+                MemoryVerseListView(source: route.source)
+            }
+            .navigationDestination(for: VersesRoute.self) { _ in
+                ReadView()
             }
             .navigationDestination(for: MemoryPracticeRoute.self) { route in
                 MemoryPracticeView(referenceKey: route.referenceKey, source: route.source)
@@ -408,30 +478,38 @@ struct HomeView: View {
     /// The habit and the shelf: streak, plan, upgrade, packs, quest,
     /// achievements, memory verses.
     @ViewBuilder
-    private func moreColumn(_ recordsByID: [String: PuzzleRecord]) -> some View {
+    private func moreColumn(_ recordsByID: [String: PuzzleRecord], heroPuzzleID: String?) -> some View {
         // Instead of, not above: a comeback card stacked on a flame
         // card reading 0 would state the loss twice and answer it
         // once. The two are mutually exclusive by construction
         // anyway — a freeze save means the streak survived, so it
         // can't also have broken.
         if pendingStreakBreak > 0 {
-            ComebackCard(
-                previousStreak: pendingStreakBreak,
-                playLabel: comebackPlayLabel,
-                onPlay: startComeback,
-                onDismiss: { pendingStreakBreak = 0 }
-            )
+            // Only when it offers a quicker puzzle than the hero's. Otherwise
+            // the grey flame in the bar already says the streak is paused,
+            // and its sheet says the rest (`StreakCard.endedRun`).
+            if let play = comebackAction(heroPuzzleID: heroPuzzleID) {
+                ComebackCard(
+                    previousStreak: pendingStreakBreak,
+                    playLabel: comebackPlayLabel,
+                    // Its button started 12 of ~100 comebacks in the 30 days
+                    // to 2026-10-13 — worth a card when it's a quicker puzzle.
+                    onPlay: play,
+                    onDismiss: { pendingStreakBreak = 0 }
+                )
+            }
         } else {
-            StreakCard(
-                current: profile.currentStreak,
-                best: profile.bestStreak,
-                freezes: profile.streakFreezes,
-                savedRecently: freezeSavedToday,
-                completedWeekdays: completedWeekdaysThisWeek
-            )
+            // The streak is status, so it lives in the bar (`streakButton`)
+            // rather than as a card mid-page, where it pushed Keep going
+            // below the fold on every visit. Inline only on the day a
+            // freeze saved it: that reassurance is one-time, and a sheet
+            // nobody opens would swallow it.
+            if freezeSavedToday {
+                streakCard
+            }
 
-            // Right under the streak it protects. Once ever, and
-            // never on a day any other surface already asked.
+            // Where the streak card stood. Once ever, and never on a day
+            // any other surface already asked.
             if showStreakAsk {
                 ReminderAskCard(
                     profile: profile,
@@ -492,6 +570,19 @@ struct HomeView: View {
                     showsKicker: false
                 )
 
+                // The Bible: search, reading, plans and the books map, which
+                // had a tab of their own until 2026-10-13. In the week to then
+                // about 1 in 20 actives did anything there, while memory
+                // verses were opened 5× more from this group than from the
+                // tab. The screen stays whole; only its door moved.
+                Button {
+                    path.append(VersesRoute())
+                } label: {
+                    BibleRow()
+                }
+                .buttonStyle(PressableCardStyle())
+                .accessibilityHint("Opens search, reading and reading plans")
+
                 // A row like its neighbours rather than a card of its own with an
                 // uppercase label and a progress bar: the badge is one more thing
                 // to keep going at, and a full card for it made the column a
@@ -507,9 +598,18 @@ struct HomeView: View {
                 }
             }
         }
+        // Neutral icons in this list: the section and the titles already
+        // tell the rows apart, and six feature tints on one column read as
+        // decoration. Colour stays where it means something — the three
+        // puzzle types above, and the flame.
+        .environment(\.rowIconsNeutral, true)
 
-        let packs = collectionPacks(recordsByID)
-        if !packs.isEmpty {
+        // Only packs the player can open. For a free player every tile here
+        // used to be locked behind a crown, a second pitch right above the
+        // Premium card; locked packs keep their offer on the Packs tab. A
+        // shelf of nothing but finished packs is a dead end, so it goes too.
+        let packs = collectionPacks(recordsByID).filter { !$0.isPremium || store.isPremium }
+        if packs.contains(where: { !PackProgress(pack: $0, recordsByID: recordsByID).isComplete }) {
             CollectionsCarousel(
                 packs: packs,
                 recordsByID: recordsByID,
@@ -640,8 +740,11 @@ private struct TodayHeader: View {
         } label: {
             VStack(alignment: .leading, spacing: Theme.Spacing.m) {
                 VStack(alignment: .leading, spacing: Theme.Spacing.s) {
+                    // A small label, not a section header: the verse and the
+                    // puzzle title under it were two big serif headlines
+                    // back to back, and the page had no one place to land.
                     Text("Verse of the day")
-                        .sectionHeader()
+                        .kicker()
                     // Three lines, then truncate. Verses run from one line to
                     // six, and an unbounded header pushed the daily card's CTA
                     // below the fold on a 667pt screen while landing it in a
@@ -655,7 +758,9 @@ private struct TodayHeader: View {
                     // the day's puzzle halfway down. It keeps the top; it
                     // just stops taking the whole column to say it.
                     Text(verse.verse)
-                        .font(.scripture(inSplit ? .body : .title3))
+                        // Body, not title3: it keeps the top of the page but
+                        // no longer outranks the day's puzzle beneath it.
+                        .font(.scripture(.body))
                         .lineSpacing(6)
                         .foregroundStyle(.primary)
                         .multilineTextAlignment(.leading)
@@ -1104,6 +1209,33 @@ private struct PackTile: View {
 
 /// The next badge, in the same row shape as the Journey and memory verses
 /// above it.
+/// Today's door to the Verses screen. Built like `NextAchievementRow`.
+private struct BibleRow: View {
+    var body: some View {
+        HStack(spacing: Theme.Spacing.m) {
+            RowIcon(symbol: "book.closed", tint: FeatureTint.bible)
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Bible")
+                    .font(.headline)
+                    .foregroundStyle(.primary)
+                Text("Search, read and reading plans")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            Spacer(minLength: 0)
+            Image(systemName: "chevron.forward")
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(.secondary)
+        }
+        .cardRowPadding()
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .elevatedCard()
+        .accessibilityElement(children: .ignore)
+        .accessibilityAddTraits(.isButton)
+        .accessibilityLabel("Bible. Search, read and reading plans")
+    }
+}
+
 private struct NextAchievementRow: View {
     let achievement: Achievement
     let profile: PlayerProfile
