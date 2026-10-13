@@ -658,12 +658,11 @@ struct OnboardingView: View {
             .buttonStyle(.pillProminent)
             .disabled(store.purchaseInFlight || selectedPlan == nil)
 
-            // No commitment line under the button when there's a trial: the
-            // timeline directly above already says when money starts and what
-            // it costs, so a caption would be the third telling. Without one —
-            // monthly, or a trial already used — the timeline isn't drawn, and
-            // nothing else on the page said the plan renews. It does now.
-            if let plan = selectedPlan, store.introOffer(for: plan) == nil,
+            // The commitment line, always: trial length, the price after it,
+            // and that it renews. The trial timeline used to carry this when
+            // there was a trial; it was removed 2026-10-13, so the line is now
+            // the page's only statement of it — and App Review's requirement.
+            if let plan = selectedPlan,
                let terms = PremiumOfferView.commitmentText(for: plan, store: store) {
                 Text(terms)
                     .font(.footnote)

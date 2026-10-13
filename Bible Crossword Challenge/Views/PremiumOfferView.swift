@@ -93,10 +93,6 @@ struct PremiumOfferView: View {
     /// Cells of `heroTiles` to draw with the gold rim — the solved word.
     var heroCelebrated: Set<MiniPoint> = []
 
-    /// The line under the trial timeline saying when cancelling still avoids
-    /// the charge. Onboarding's only statement of it; the sheet already makes
-    /// it in the terms under its pinned button, so it turns this off.
-    var showsCancellationNote: Bool = true
 
     /// Drops the decoration — the tiles and the kicker — for a screen the
     /// whole offer doesn't fit. Each surface offers both sizes to a
@@ -150,7 +146,9 @@ struct PremiumOfferView: View {
                     }
                     staggered(plans, delay: 0.23)
                 }
-                staggered(trialTimeline, delay: 0.29)
+                // No trial timeline (Today → charge date) since 2026-10-13:
+                // the fine print under the button already says when and what
+                // it renews at, and the date graphic read as a countdown.
             }
         }
     }
@@ -654,146 +652,6 @@ struct PremiumOfferView: View {
 
     /// The live average, one decimal, as the store page itself shows it.
     private static let appStoreRating = "4.9"
-
-    // MARK: - Trial timeline
-
-    /// What actually happens if they tap the button: access today, money on a
-    /// named day. The trial is stated four times on this page already, but only
-    /// ever as an adjective — "3-day free trial" says how long it lasts, not
-    /// what arrives at the end of it, and the unanswered version of that
-    /// question is the one that stops a purchase.
-    ///
-    /// Two steps, not the three this pattern usually has. The middle step is
-    /// normally "we'll remind you before it ends", and this app cannot honestly
-    /// make that promise: `NotificationService` schedules the daily reminder,
-    /// season openings and the streak nudge, and nothing for a trial — and
-    /// notification permission is optional here, so even once something is
-    /// scheduled the claim would be false for everyone who declined. Add the
-    /// step when there is a real reminder behind it, and only for players who
-    /// granted notifications.
-    ///
-    /// Keyed to the *selected* plan rather than to yearly: monthly carries no
-    /// introductory offer, so leaving a trial timeline on screen while monthly
-    /// is selected would describe an offer the CTA isn't making.
-    @ViewBuilder
-    private var trialTimeline: some View {
-        if let product = selectedProduct, let offer = store.introOffer(for: product) {
-            let price = product.displayPrice + (store.periodText(for: product) ?? "")
-            let day = offer.endDate.formatted(.dateTime.month(.abbreviated).day())
-            Group {
-                if dynamicTypeSize.isAccessibilitySize {
-                    // Two ends of one line can't hold this much text; the
-                    // stacked steps can.
-                    VStack(alignment: .leading, spacing: 0) {
-                        timelineStep(icon: "lock.open.fill", title: "Today",
-                                     detail: "Full access. You pay nothing.", isLast: false)
-                        timelineStep(icon: "creditcard.fill", title: day,
-                                     detail: "\(price) begins, unless you cancel first.", isLast: true)
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                } else {
-                    VStack(spacing: Theme.Spacing.s) {
-                        HStack(spacing: Theme.Spacing.m) {
-                            timelineEnd("Today", detail: todayDetail, alignment: .leading)
-                            timelineRail
-                            timelineEnd(day, detail: price, alignment: .trailing)
-                        }
-                        // Apple bills inside the last 24 hours of a trial, so
-                        // "cancel before the date" would be wrong for anyone
-                        // who cancels on the eve of it. Apple's own figure,
-                        // and short enough for one line on a 375pt phone —
-                        // the longer phrasing wrapped there and its second
-                        // line ran under the purchase button.
-                        if showsCancellationNote {
-                            Text("Cancel 24 hours before to avoid the charge.")
-                                .font(.footnote)
-                                .foregroundStyle(.secondary)
-                                .multilineTextAlignment(.center)
-                        }
-                    }
-                }
-            }
-            .padding(.horizontal, Theme.Spacing.m)
-            .accessibilityElement(children: .ignore)
-            // "per year", not the "/year" the screen shows — VoiceOver reads
-            // the slash aloud.
-            .accessibilityLabel(
-                "Today, full access, free. On \(offer.endDate.formatted(date: .long, time: .omitted)), "
-                + "\(price.replacingOccurrences(of: "/", with: " per ")) begins unless you cancel 24 hours before."
-            )
-        }
-    }
-
-    /// The timeline's "now" end. "Free" in the accent, the one coloured word
-    /// in the timeline: in footnote grey it was the faintest thing on the
-    /// page, though it is the half of the offer that costs nothing.
-    private var todayDetail: Text {
-        Text("Free").font(.footnote.weight(.semibold)).foregroundStyle(Theme.accent)
-            + Text(" · full access").font(.footnote).foregroundStyle(.secondary)
-    }
-
-    /// One end of the horizontal timeline: when, and what it costs.
-    private func timelineEnd(_ title: String, detail: String, alignment: HorizontalAlignment) -> some View {
-        timelineEnd(title, detail: Text(detail).font(.footnote).foregroundStyle(.secondary), alignment: alignment)
-    }
-
-    private func timelineEnd(_ title: String, detail: Text, alignment: HorizontalAlignment) -> some View {
-        VStack(alignment: alignment, spacing: 2) {
-            Text(title)
-                .font(.subheadline.weight(.semibold))
-            detail
-        }
-        .fixedSize()
-    }
-
-    /// Filled where the trial starts, open where the charge lands: the one
-    /// end is now, the other hasn't happened and can still be stopped.
-    private var timelineRail: some View {
-        HStack(spacing: 0) {
-            Circle()
-                .fill(Theme.accent)
-                .frame(width: 8, height: 8)
-            Capsule()
-                .fill(Theme.accent.opacity(0.3))
-                .frame(height: 2)
-                .frame(maxWidth: .infinity)
-            Circle()
-                .strokeBorder(Theme.accent, lineWidth: 2)
-                .frame(width: 8, height: 8)
-        }
-    }
-
-    private func timelineStep(icon: String, title: String, detail: String, isLast: Bool) -> some View {
-        HStack(alignment: .top, spacing: Theme.Spacing.m) {
-            // The rail is drawn by the step above it, filling whatever height
-            // the text beside it turns out to need — so it still joins the two
-            // discs when a detail line wraps at large text sizes.
-            VStack(spacing: 4) {
-                Image(systemName: icon)
-                    .font(.footnote.weight(.bold))
-                    .foregroundStyle(Theme.accent)
-                    .frame(width: checkSize, height: checkSize)
-                    .background(Theme.accent.opacity(0.12), in: .circle)
-                if !isLast {
-                    Rectangle()
-                        .fill(Theme.accent.opacity(0.2))
-                        .frame(width: 2)
-                        .frame(maxHeight: .infinity)
-                }
-            }
-            VStack(alignment: .leading, spacing: 2) {
-                Text(title)
-                    .font(.subheadline.weight(.semibold))
-                Text(detail)
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-            .padding(.bottom, isLast ? 0 : Theme.Spacing.m)
-            Spacer(minLength: 0)
-        }
-        .accessibilityElement(children: .combine)
-    }
 
     // MARK: - Plan copy
 

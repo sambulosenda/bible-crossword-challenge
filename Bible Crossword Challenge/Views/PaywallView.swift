@@ -182,7 +182,6 @@ struct PaywallView: View {
             highlightedPackID: contextPackID,
             // The pinned bar's terms line already states the trial, the
             // renewal and cancelling.
-            showsCancellationNote: false,
             compact: compact,
             keepsSmallHero: keepsSmallHero
         )
