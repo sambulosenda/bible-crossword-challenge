@@ -154,10 +154,6 @@
       "webHost" : "biblecrosswordchallenge.com",
       "webPath" : "/challenge/"
     },
-    "featureFlags" : {
-      "hint-quota-one" : false,
-      "stall-nudge" : true
-    },
     "hints" : {
       "checkScopes" : [
         "letter",
@@ -170,9 +166,8 @@
         "verse" : 0,
         "word" : 2
       },
-      "freeHintLimit" : 3,
+      "freeHintLimit" : 1,
       "learningWindowCompletions" : 3,
-      "reducedHintLimit" : 1,
       "titles" : {
         "letter" : "Reveal Letter",
         "puzzle" : "Reveal Puzzle",
