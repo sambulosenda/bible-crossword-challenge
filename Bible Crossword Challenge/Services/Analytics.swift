@@ -111,6 +111,13 @@ enum AnalyticsEvent {
     /// resolved to (`daily` / `mini` / `today`) — the widget picks the most
     /// useful next action, and this is the read on whether players take it.
     case widgetOpened(destination: String)
+    /// A local notification was tapped. `kind` is `daily`, `winback` (the
+    /// passive daily copy after a lapse), `streak_risk` or `pack_news`;
+    /// `dayOffset` is which day of the 14-day horizon a daily one was scheduled
+    /// for. Until 2026-10 a reminder tap left no trace — the app just opened —
+    /// so "do reminders bring people back?" had no answer. Read it against
+    /// `notification_permission` grants and next-day return.
+    case notificationTapped(kind: String, dayOffset: Int?)
     case streakUpdated(streak: Int)
     // The two halves of a lost streak. `streakBroken` fires once, on the launch
     // that resets it (see `Streaks.Outcome`), carrying what was lost — the
@@ -383,6 +390,7 @@ enum AnalyticsEvent {
         case .stallNudgeTapped: return "stall_nudge_tapped"
         case .starterWordGifted: return "starter_word_gifted"
         case .widgetOpened: return "widget_opened"
+        case .notificationTapped: return "notification_tapped"
         case .streakUpdated: return "streak_updated"
         case .streakBroken: return "streak_broken"
         case .streakComebackStarted: return "streak_comeback_started"
@@ -548,6 +556,10 @@ enum AnalyticsEvent {
             return ["puzzle_id": puzzleID, "answer_length": answerLength]
         case .widgetOpened(let destination):
             return ["destination": destination]
+        case .notificationTapped(let kind, let dayOffset):
+            var params: [String: Any] = ["kind": kind]
+            if let dayOffset { params["day_offset"] = dayOffset }
+            return params
         case .streakUpdated(let streak):
             return ["streak": streak]
         case .streakBroken(let previousLength):

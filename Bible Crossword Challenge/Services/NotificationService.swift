@@ -57,6 +57,10 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
     /// never drift into two different definitions of the same destination.
     var pendingURL: URL?
 
+    /// Where `notification_tapped` goes. Injectable for tests; production is
+    /// the same fan-out every other event uses.
+    var analytics: any AnalyticsService = MultiAnalyticsService.production
+
     private let center = UNUserNotificationCenter.current()
 
     /// How many days ahead we keep scheduled. Well under iOS's 64-pending cap.
@@ -98,11 +102,34 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
         didReceive response: UNNotificationResponse,
         withCompletionHandler completionHandler: @escaping () -> Void
     ) {
-        let url = (response.notification.request.content.userInfo["url"] as? String)
+        let request = response.notification.request
+        let url = (request.content.userInfo["url"] as? String)
             .flatMap(URL.init(string:))
+        let tap = Self.tapKind(
+            identifier: request.identifier,
+            passive: request.content.interruptionLevel == .passive
+        )
         completionHandler()
-        guard let url else { return }
-        Task { @MainActor in pendingURL = url }
+        Task { @MainActor in
+            // Before the URL guard: reminders carry no URL — they just open
+            // the app — and they are the taps this event exists to count.
+            analytics.log(.notificationTapped(kind: tap.kind, dayOffset: tap.dayOffset))
+            if let url { pendingURL = url }
+        }
+    }
+
+    /// Names a tapped notification from the identifier it was scheduled
+    /// under (`daily-N`, `streak-risk`, `pack-open-<id>`). A passive daily is
+    /// the win-back copy — see `reminderCopy`.
+    nonisolated static func tapKind(
+        identifier: String, passive: Bool
+    ) -> (kind: String, dayOffset: Int?) {
+        if identifier.hasPrefix("daily-") {
+            return (passive ? "winback" : "daily", Int(identifier.dropFirst("daily-".count)))
+        }
+        if identifier == "streak-risk" { return ("streak_risk", nil) }
+        if identifier.hasPrefix("pack-open-") { return ("pack_news", nil) }
+        return ("other", nil)
     }
 
     /// A notification arriving while the app is open.

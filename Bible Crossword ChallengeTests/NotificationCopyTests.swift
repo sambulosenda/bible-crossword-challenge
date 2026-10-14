@@ -189,3 +189,31 @@ struct ReminderTimeSuggestionTests {
         #expect(ReminderTime.suggestedMinutes(now: at(21, 0), calendar: utc) == 21 * 60)
     }
 }
+
+/// `notification_tapped.kind` is read off the identifier each request was
+/// scheduled under, so a renamed identifier would silently file every tap as
+/// `other`. These pin the identifiers `reschedule` actually uses.
+struct NotificationTapKindTests {
+
+    @Test func dailyCarriesItsDayOffset() {
+        let tap = NotificationService.tapKind(identifier: "daily-3", passive: false)
+        #expect(tap.kind == "daily")
+        #expect(tap.dayOffset == 3)
+    }
+
+    @Test func passiveDailyIsWinBack() {
+        let tap = NotificationService.tapKind(identifier: "daily-7", passive: true)
+        #expect(tap.kind == "winback")
+        #expect(tap.dayOffset == 7)
+    }
+
+    @Test func streakRiskAndPackNews() {
+        #expect(NotificationService.tapKind(identifier: "streak-risk", passive: false).kind == "streak_risk")
+        #expect(NotificationService.tapKind(identifier: "pack-open-easter", passive: true).kind == "pack_news")
+        #expect(NotificationService.tapKind(identifier: "pack-open-easter", passive: true).dayOffset == nil)
+    }
+
+    @Test func unknownIsOther() {
+        #expect(NotificationService.tapKind(identifier: "something-new", passive: false).kind == "other")
+    }
+}
