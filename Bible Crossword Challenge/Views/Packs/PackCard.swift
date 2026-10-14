@@ -29,10 +29,6 @@ enum CollectionCardLayout {
         // copy filled a screen, and the pack page carries the full blurb.
         size > .large ? nil : 2
     }
-
-    /// Where a grouped list of these rows starts its dividers: under the
-    /// text, past the 44pt cover.
-    static let dividerInset = Theme.Spacing.l + 44 + Theme.Spacing.m
 }
 
 // MARK: - Cover chip

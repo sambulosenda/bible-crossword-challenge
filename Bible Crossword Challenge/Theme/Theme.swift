@@ -215,9 +215,12 @@ private struct CardRowPadding: ViewModifier {
     @Environment(\.isInCardGroup) private var isInCardGroup
 
     func body(content: Content) -> some View {
+        // Inside a group, the system list's measure: a 16pt margin and 12pt
+        // above and below, so a 36pt icon row lands near 60pt. It was 24 and
+        // 16 — rows ran ~80pt and read as stacked cards, not a list.
         content
-            .padding(.horizontal, Theme.Spacing.l)
-            .padding(.vertical, isInCardGroup ? Theme.Spacing.m : Theme.Spacing.l)
+            .padding(.horizontal, isInCardGroup ? Theme.Spacing.m : Theme.Spacing.l)
+            .padding(.vertical, isInCardGroup ? 12 : Theme.Spacing.l)
     }
 }
 
@@ -232,6 +235,10 @@ extension View {
 /// inset-grouped list shape, for things that are one list rather than
 /// separate headlines. Rows that render nothing take no divider with them.
 struct CardGroup<Content: View>: View {
+    /// The inset for rows led by a `RowIcon`: past the margin, the icon and
+    /// the gap, so dividers start under the text as a system list's do.
+    static var iconRowInset: CGFloat { Theme.Spacing.m + RowIcon.side + Theme.Spacing.m }
+
     /// Where the dividers start: under the row's text rather than its icon.
     var dividerInset: CGFloat = Theme.Spacing.l
     @ViewBuilder let content: Content

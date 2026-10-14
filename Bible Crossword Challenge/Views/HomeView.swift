@@ -540,7 +540,7 @@ struct HomeView: View {
             Text("Keep going").sectionHeader()
                 .padding(.horizontal, Theme.Spacing.xs)
 
-            CardGroup(dividerInset: Theme.Spacing.l + 44 + Theme.Spacing.m) {
+            CardGroup(dividerInset: CardGroup<EmptyView>.iconRowInset) {
                 // A habit surface like the streak: only while a plan is
                 // running, one row, checked once today's chapter is read.
                 // `readingPlans` needs no Bible decode — the plan recorded
@@ -1224,8 +1224,8 @@ private struct BibleRow: View {
             }
             Spacer(minLength: 0)
             Image(systemName: "chevron.forward")
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(.secondary)
+                .font(.footnote.weight(.semibold))
+                .foregroundStyle(.tertiary)
         }
         .cardRowPadding()
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -1253,8 +1253,8 @@ private struct NextAchievementRow: View {
             }
             Spacer(minLength: 0)
             Image(systemName: "chevron.forward")
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(.secondary)
+                .font(.footnote.weight(.semibold))
+                .foregroundStyle(.tertiary)
         }
         .cardRowPadding()
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -1478,7 +1478,7 @@ private struct CompanionPuzzlesCard: View {
     var body: some View {
         // The same grouped list as Keep going, so the two lists on Today are
         // one shape: same icon square, same row height, same divider inset.
-        CardGroup(dividerInset: Theme.Spacing.l + 44 + Theme.Spacing.m) {
+        CardGroup(dividerInset: CardGroup<EmptyView>.iconRowInset) {
             ForEach(rows) { row in
                 CompactPuzzleRow(
                     puzzle: row.puzzle,
@@ -1524,8 +1524,8 @@ private struct CompactPuzzleRow: View {
 
                 Spacer(minLength: 0)
                 Image(systemName: "chevron.forward")
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(.secondary)
+                    .font(.footnote.weight(.semibold))
+                    .foregroundStyle(.tertiary)
             }
             .cardRowPadding()
             .frame(maxWidth: .infinity, alignment: .leading)

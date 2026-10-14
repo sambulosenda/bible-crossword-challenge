@@ -415,8 +415,8 @@ struct PuzzleLinkRow: View {
                 .foregroundStyle(.yellow)
         } else {
             Image(systemName: "chevron.forward")
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(.secondary)
+                .font(.footnote.weight(.semibold))
+                .foregroundStyle(.tertiary)
         }
     }
 
@@ -462,10 +462,10 @@ struct JourneyCard: View {
             HStack(spacing: Theme.Spacing.m) {
                 if !dynamicTypeSize.isAccessibilitySize {
                     Image(systemName: "map.fill")
-                        .font(.title2)
+                        .font(grouped ? .body : .title2)
                         .dynamicTypeSize(...DynamicTypeSize.xxLarge)
                         .foregroundStyle(Theme.accent)
-                        .frame(width: 44, height: 44)
+                        .frame(width: grouped ? RowIcon.side : 44, height: grouped ? RowIcon.side : 44)
                         .background(Theme.accent.opacity(0.14), in: .circle)
                 }
                 VStack(alignment: .leading, spacing: 2) {
@@ -478,11 +478,11 @@ struct JourneyCard: View {
                 }
                 Spacer(minLength: 0)
                 Image(systemName: "chevron.forward")
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(.secondary)
+                    .font(.footnote.weight(.semibold))
+                    .foregroundStyle(.tertiary)
             }
-            .padding(.horizontal, Theme.Spacing.l)
-            .padding(.vertical, grouped ? Theme.Spacing.m : Theme.Spacing.l)
+            .padding(.horizontal, grouped ? Theme.Spacing.m : Theme.Spacing.l)
+            .padding(.vertical, grouped ? 12 : Theme.Spacing.l)
             .frame(maxWidth: .infinity, alignment: .leading)
             .contentShape(.rect)
             .background {

@@ -356,8 +356,8 @@ struct PackDetailView: View {
                 .foregroundStyle(.orange)
         case .start:
             Image(systemName: "chevron.forward")
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(.secondary)
+                .font(.footnote.weight(.semibold))
+                .foregroundStyle(.tertiary)
         }
     }
 
@@ -437,7 +437,7 @@ struct TrackRow<Accessory: View>: View {
 
     /// Where a list of these starts its dividers: under the title, past the
     /// number column.
-    static var dividerInset: CGFloat { Theme.Spacing.l + 28 + Theme.Spacing.m }
+    static var dividerInset: CGFloat { Theme.Spacing.m + 28 + Theme.Spacing.m }
 
     var body: some View {
         HStack(spacing: Theme.Spacing.m) {

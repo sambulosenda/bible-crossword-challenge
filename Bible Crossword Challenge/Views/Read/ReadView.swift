@@ -347,8 +347,8 @@ struct ReadView: View {
                 }
                 Spacer(minLength: 0)
                 Image(systemName: "chevron.forward")
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(.secondary)
+                    .font(.footnote.weight(.semibold))
+                    .foregroundStyle(.tertiary)
             }
             .padding(Theme.Spacing.m)
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -560,8 +560,8 @@ struct ReadView: View {
                                 }
                                 Spacer(minLength: 0)
                                 Image(systemName: "chevron.forward")
-                                    .font(.subheadline.weight(.semibold))
-                                    .foregroundStyle(.secondary)
+                                    .font(.footnote.weight(.semibold))
+                                    .foregroundStyle(.tertiary)
                             }
                             .padding(Theme.Spacing.l)
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -643,10 +643,10 @@ struct ReadView: View {
             // "Old Testament" broke as "Testa-ment" at AX5.
             if !dynamicTypeSize.isAccessibilitySize {
                 Image(systemName: symbol)
-                    .font(.title2)
+                    .font(.body)
                     .dynamicTypeSize(...DynamicTypeSize.xxLarge)
                     .foregroundStyle(Theme.accent)
-                    .frame(width: 44, height: 44)
+                    .frame(width: RowIcon.side, height: RowIcon.side)
                     .background(Theme.accent.opacity(0.14), in: .circle)
             }
             VStack(alignment: .leading, spacing: 2) {
@@ -659,17 +659,19 @@ struct ReadView: View {
             }
             Spacer(minLength: 0)
             Image(systemName: "chevron.forward")
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(.secondary)
+                .font(.footnote.weight(.semibold))
+                .foregroundStyle(.tertiary)
         }
-        .padding(.horizontal, Theme.Spacing.l)
-        .padding(.vertical, Theme.Spacing.m)
+        // The grouped-row measure (`cardRowPadding` inside a CardGroup):
+        // `groupDivider` assumes it.
+        .padding(.horizontal, Theme.Spacing.m)
+        .padding(.vertical, 12)
         .frame(maxWidth: .infinity, alignment: .leading)
         .contentShape(.rect)
     }
 
     private var groupDivider: some View {
-        Divider().padding(.leading, Theme.Spacing.l + (dynamicTypeSize.isAccessibilitySize ? 0 : 44 + Theme.Spacing.m))
+        Divider().padding(.leading, Theme.Spacing.m + (dynamicTypeSize.isAccessibilitySize ? 0 : RowIcon.side + Theme.Spacing.m))
     }
 
     /// Where reading left off, as a row: the memory card above owns the tab's

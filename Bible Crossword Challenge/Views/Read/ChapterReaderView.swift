@@ -445,8 +445,8 @@ private struct ChapterPage: View {
                         .font(.subheadline.weight(.semibold))
                         Spacer(minLength: 0)
                         Image(systemName: "chevron.forward")
-                            .font(.subheadline.weight(.semibold))
-                            .foregroundStyle(.secondary)
+                            .font(.footnote.weight(.semibold))
+                            .foregroundStyle(.tertiary)
                     }
                     .foregroundStyle(.primary)
                     .padding(Theme.Spacing.m)

@@ -179,7 +179,7 @@ struct QuestDetailView: View {
             Text(isLocked ? "Included with Premium" : "The path")
                 .sectionHeader()
                 .padding(.horizontal, Theme.Spacing.xs)
-            CardGroup(dividerInset: CollectionCardLayout.dividerInset) {
+            CardGroup(dividerInset: CardGroup<EmptyView>.iconRowInset) {
                 ForEach(Array(steps.enumerated()), id: \.element.id) { index, puzzle in
                     stepRow(index: index, puzzle: puzzle,
                             state: stepState(index: index, recordsByID: recordsByID, progress: progress))
@@ -238,8 +238,8 @@ struct QuestDetailView: View {
                     .foregroundStyle(.secondary)
             } else if state != .upcoming {
                 Image(systemName: "chevron.forward")
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(.secondary)
+                    .font(.footnote.weight(.semibold))
+                    .foregroundStyle(.tertiary)
             }
         }
         .cardRowPadding()
@@ -266,8 +266,10 @@ struct QuestDetailView: View {
                 .monospacedDigit()
                 .foregroundStyle(.secondary)
                 .dynamicTypeSize(...DynamicTypeSize.xxLarge)
-                .frame(width: 44, height: 44)
-                .background(Color.primary.opacity(0.06), in: .rect(cornerRadius: 12, style: .continuous))
+                // The RowIcon square beside it in the same list, so every
+                // step's title starts on one line.
+                .frame(width: RowIcon.side, height: RowIcon.side)
+                .background(Color.primary.opacity(0.06), in: .rect(cornerRadius: 9, style: .continuous))
                 .accessibilityHidden(true)
         }
     }
@@ -347,8 +349,8 @@ struct QuestHomeCard: View {
                 }
                 Spacer(minLength: 0)
                 Image(systemName: "chevron.forward")
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(.secondary)
+                    .font(.footnote.weight(.semibold))
+                    .foregroundStyle(.tertiary)
             }
             .cardRowPadding()
             .frame(maxWidth: .infinity, alignment: .leading)

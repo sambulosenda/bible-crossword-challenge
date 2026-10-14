@@ -744,8 +744,8 @@ struct CompletionView: View {
                     }
                     Spacer(minLength: 0)
                     Image(systemName: "chevron.forward")
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(.secondary)
+                        .font(.footnote.weight(.semibold))
+                        .foregroundStyle(.tertiary)
                 }
                 .padding(Theme.Spacing.l)
                 .frame(maxWidth: .infinity, alignment: .leading)

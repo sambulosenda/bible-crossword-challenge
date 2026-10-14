@@ -47,7 +47,6 @@ struct SettingsView: View {
     /// recorded — challenges and records need honest seconds.
     @AppStorage("showSolveTimer") private var showSolveTimer = true
     @State private var showPaywall = false
-    @State private var showManageSubscriptions = false
 
     private var reminderTime: Binding<Date> {
         Binding(
@@ -85,7 +84,6 @@ struct SettingsView: View {
             .sheet(isPresented: $showPaywall) {
                 PaywallView(source: .profile)
             }
-            .manageSubscriptionsSheet(isPresented: $showManageSubscriptions)
             .purchaseNoticeAlert(store)
             .task { await notifications.refreshStatus() }
         }
@@ -102,15 +100,11 @@ struct SettingsView: View {
     /// the data before the move.
     @ViewBuilder
     private var premiumSection: some View {
-        Section("Premium") {
-            if store.isPremium {
-                // One row. There used to be a "Premium unlocked ✓" row above
-                // it, and a row in a list reads as something to tap — that one
-                // did nothing.
-                SettingsLinkRow(title: "Manage subscription") {
-                    showManageSubscriptions = true
-                }
-            } else {
+        // Free players only. Premium players got a "Manage subscription"
+        // row until 2026-10-13; iOS Settings › Apple ID › Subscriptions is
+        // where that lives, and a row they rarely need isn't worth a section.
+        if !store.isPremium {
+            Section("Premium") {
                 Button {
                     showPaywall = true
                 } label: {

@@ -151,16 +151,22 @@ struct RowIcon: View {
 
     @Environment(\.rowIconsNeutral) private var neutral
 
+    /// 36pt, the icon column of a native subtitle row. It was 44, which made
+    /// every list row on Today ~80pt tall.
+    static let side: CGFloat = 36
+
     var body: some View {
         CollectionCover(
             symbol: symbol,
-            accent: neutral ? Color.primary : tint,
+            // Neutral is a grey glyph on a light square: in ink on a darker
+            // square the rows read as disabled buttons.
+            accent: neutral ? Color.secondary : tint,
             isLocked: false,
-            side: 44,
-            font: .title3,
-            cornerRadius: 12
+            side: Self.side,
+            font: .body,
+            cornerRadius: 9
         )
-        // The square is a fixed 44pt, so the glyph stops growing where the
+        // The square is a fixed `side`, so the glyph stops growing where the
         // square does instead of spilling out of it.
         .dynamicTypeSize(...DynamicTypeSize.xxLarge)
         .accessibilityHidden(true)
