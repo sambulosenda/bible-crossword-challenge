@@ -50,9 +50,12 @@ struct PostHogAnalyticsService: AnalyticsService {
         // Screen views do stay off: one grid, one paywall and a few sheets
         // produce noise that restates what the explicit events already say.
         config.captureScreenViews = false
-        // Off deliberately: replay burns event quota fast and tells us little
-        // about a crossword grid. Revisit only for a specific stuck-user question.
+        // Off at launch: replay burns quota and tells us little about a
+        // practised solver. It is started by hand for exactly one stuck-user
+        // question — see `startFirstPuzzleReplay`. SwiftUI only records in
+        // screenshot mode; text inputs and images stay masked (SDK defaults).
         config.sessionReplay = false
+        config.sessionReplayConfig.screenshotMode = true
         // On by default, and wrong for this app: it flags 3 taps landing within
         // 30pt and 1s of each other as `$rageclick`. On a grid whose cells are
         // smaller than that threshold, filling three neighbouring squares at a
@@ -96,6 +99,22 @@ struct PostHogAnalyticsService: AnalyticsService {
         // no accounts and never calls `identify`, so every event is anonymous.
         // Funnels and retention still work off `distinct_id`, and anonymous
         // events bill at the cheaper rate.
+    }
+
+    /// Records a player's grid until they have finished one puzzle. About half
+    /// of day-0 abandoners leave within ~10 seconds without touching a cell
+    /// (2026-09-10 readout) and no event can say what they saw or tried, so
+    /// this is the one place replay earns its quota: ~12 installs a day, and
+    /// only the screens before their first solve. Idempotent — the SDK
+    /// ignores a start while already recording.
+    static func startFirstPuzzleReplay() {
+        guard isEnabled else { return }
+        PostHogSDK.shared.startSessionRecording()
+    }
+
+    static func stopReplay() {
+        guard isEnabled else { return }
+        PostHogSDK.shared.stopSessionRecording()
     }
 
     func log(_ event: AnalyticsEvent) {

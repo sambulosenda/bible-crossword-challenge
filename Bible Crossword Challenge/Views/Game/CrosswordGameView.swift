@@ -406,6 +406,7 @@ struct CrosswordGameScreen: View {
                     vm.pauseTimer()
                     saveProgress()
                     logAbandonIfNeeded()
+                    PostHogAnalyticsService.stopReplay()
                 }
             }
         )
@@ -548,6 +549,10 @@ struct CrosswordGameScreen: View {
         }
         .task {
             gridFocused = true
+            // Before the first solve only — see `startFirstPuzzleReplay`.
+            if profile.totalPuzzlesCompleted == 0 {
+                PostHogAnalyticsService.startFirstPuzzleReplay()
+            }
             GameViewModel.seedAutoCheckIfNeeded(totalCompleted: profile.totalPuzzlesCompleted)
             // Straight from defaults, not the property wrapper: @AppStorage may
             // not observe a write made earlier in this same runloop turn.
@@ -645,6 +650,7 @@ struct CrosswordGameScreen: View {
             vm.pauseTimer()
             saveProgress()
             logAbandonIfNeeded()
+            PostHogAnalyticsService.stopReplay()
         }
     }
 
