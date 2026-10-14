@@ -428,7 +428,8 @@ struct ClueBarView: View {
 
 private extension VerticalAlignment {
     /// The middle of the visible clue text, which the chevrons centre on.
-    enum ClueText: AlignmentID {
+    /// `nonisolated`: called from layout, like `SpareGridHeightKey`.
+    nonisolated enum ClueText: AlignmentID {
         static func defaultValue(in d: ViewDimensions) -> CGFloat { d[VerticalAlignment.center] }
     }
     static let clueText = VerticalAlignment(ClueText.self)

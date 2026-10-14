@@ -402,7 +402,12 @@ private struct ChapterPage: View {
             // A threshold, not any change: a settled page still reports tiny
             // offsets, and only a real drag should flip the flag — which then
             // stays flipped, so this writes state at most once.
-            .onScrollGeometryChange(for: CGFloat.self) { $0.contentOffset.y } action: { old, new in
+            // `@Sendable`: the transform isn't, in the SDK, so it would
+            // inherit main-actor isolation and trap if SwiftUI measured
+            // off the main thread (see `Theme.adaptive`).
+            .onScrollGeometryChange(for: CGFloat.self) { @Sendable geometry in
+                geometry.contentOffset.y
+            } action: { old, new in
                 guard settled, !scrolledPast, abs(new - old) > 24 else { return }
                 scrolledPast = true
             }

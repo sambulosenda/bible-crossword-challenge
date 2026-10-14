@@ -18,7 +18,9 @@ import SwiftUI
 /// zoom mode, which fills whatever it's given. A preference rather than a
 /// callback property: a closure can't be compared, so it would mark the grid
 /// changed on every redraw of the screen around it.
-struct SpareGridHeightKey: PreferenceKey {
+// `nonisolated`: SwiftUI reduces preferences inside its graph update, and a
+// main-actor conformance (the target default) traps if that runs off main.
+nonisolated struct SpareGridHeightKey: PreferenceKey {
     static let defaultValue: CGFloat = 0
     static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
         value = max(value, nextValue())

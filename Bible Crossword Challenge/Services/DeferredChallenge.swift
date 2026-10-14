@@ -33,11 +33,14 @@ enum DeferredChallenge {
         // the iOS 26 SDK), so it's bridged here.
         let webURL: PartialKeyPath<UIPasteboard.DetectedValues> = \UIPasteboard.DetectedValues.probableWebURL
         // Reduced to a Bool inside the callback: UIKit calls it off the main
-        // actor, and the key-path set isn't Sendable.
+        // actor, and the key-path set isn't Sendable. `@Sendable` keeps the
+        // callback nonisolated — in Swift 6 a closure formed in this
+        // main-actor function would otherwise inherit main-actor isolation
+        // and trap when UIKit runs it on its own queue (see `Theme.adaptive`).
         return await withCheckedContinuation { continuation in
-            board.detectPatterns(for: [webURL]) { result in
+            board.detectPatterns(for: [webURL]) { @Sendable result in
                 let found = (try? result.get()) ?? []
-                continuation.resume(returning: found.contains(webURL))
+                continuation.resume(returning: found.contains(\UIPasteboard.DetectedValues.probableWebURL))
             }
         }
     }
@@ -53,7 +56,7 @@ enum DeferredChallenge {
         let webURL: PartialKeyPath<UIPasteboard.DetectedValues> = \UIPasteboard.DetectedValues.probableWebURL
         // The string is pulled out inside the callback, for the same reason.
         let detected: String = await withCheckedContinuation { continuation in
-            board.detectValues(for: [webURL]) { result in
+            board.detectValues(for: [webURL]) { @Sendable result in
                 continuation.resume(returning: (try? result.get())?.probableWebURL ?? "")
             }
         }

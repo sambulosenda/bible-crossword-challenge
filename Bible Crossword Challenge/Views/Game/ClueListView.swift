@@ -95,7 +95,8 @@ struct ClueListView: View {
                 .padding(.horizontal, Theme.Spacing.m)
                 .padding(.bottom, Theme.Spacing.s)
             }
-            .onScrollGeometryChange(for: CGFloat.self) { geometry in
+            // `@Sendable`: see `ChapterReaderView`'s scroll transform.
+            .onScrollGeometryChange(for: CGFloat.self) { @Sendable geometry in
                 geometry.containerSize.height
             } action: { _, _ in
                 centreActive(proxy, animated: false)
