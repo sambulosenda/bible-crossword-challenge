@@ -155,13 +155,15 @@ struct OnboardingView: View {
         .purchaseNoticeAlert(store)
     }
 
-    /// Paper, lit from the top by a wash of the page's own colour — accent for
-    /// the four setup pages, gold as the premium page arrives.
+    /// Plain paper on the setup pages; a warm gold wash only as the offer
+    /// arrives. The setup pages used a 10% accent wash too, and cool blue over
+    /// warm paper read as a grey smudge at the top of every screen rather than
+    /// as light.
     private var canvas: some View {
         ZStack(alignment: .top) {
             Theme.background
             RadialGradient(
-                colors: [(page == lastPage ? Theme.badgeRim : Theme.accent).opacity(0.10), .clear],
+                colors: [page == lastPage ? Theme.badgeRim.opacity(0.10) : .clear, .clear],
                 center: .top,
                 startRadius: 0,
                 endRadius: 380
@@ -171,8 +173,11 @@ struct OnboardingView: View {
         .ignoresSafeArea()
     }
 
-    /// Three ink segments instead of dots: it reads as progress rather than
-    /// decoration, and it tells the player up front how short this is.
+    /// Three hairline segments instead of dots: it reads as progress rather
+    /// than decoration, and it tells the player up front how short this is.
+    /// Hairline and hierarchical grey, not 4pt ink: solid black bars were the
+    /// heaviest thing at the top of every page, above the headline they sit
+    /// over.
     ///
     /// Three, not five — neither the celebration nor the premium page is a
     /// step. The celebration asks nothing (it's the payoff, and it arrives
@@ -188,8 +193,12 @@ struct OnboardingView: View {
         return HStack(spacing: 5) {
             ForEach(0..<stepCount, id: \.self) { i in
                 Capsule()
-                    .fill(onOffer ? Theme.badgeRim : (i <= page ? Theme.ink : Color.primary.opacity(0.10)))
-                    .frame(height: 4)
+                    .fill(
+                        onOffer ? AnyShapeStyle(Theme.badgeRim)
+                            : i <= page ? AnyShapeStyle(HierarchicalShapeStyle.secondary)
+                            : AnyShapeStyle(HierarchicalShapeStyle.quaternary)
+                    )
+                    .frame(height: 2)
             }
             // The offer page gets the universal paywall escape the moment it
             // arrives. Every paywall in the app opens with an ✕; this one — the
@@ -275,6 +284,7 @@ struct OnboardingView: View {
                 layout: MiniCrossword.firstSolve,
                 entries: entries,
                 focus: solved ? nil : focus,
+                activeWord: solved ? [] : MiniCrossword.firstSolveWord,
                 celebrated: solved ? MiniCrossword.firstSolveWord : [],
                 numbers: [MiniPoint(row: 0, col: 2): 1],
                 // Already assembled by the time the page slides in — the page's
@@ -472,24 +482,29 @@ struct OnboardingView: View {
     /// daily puzzle, so seconds later Today and Profile both said 0 — the
     /// first number the app gave a player was one it then took back. The
     /// solve is already celebrated by the badge and the headline above.
+    ///
+    /// Set as type on the paper, split by a hairline, not boxed: two white
+    /// cards were chrome around two numbers, and made the page read as a
+    /// template under the badge.
     private var celebrationTiles: some View {
-        HStack(spacing: Theme.Spacing.s) {
+        HStack(spacing: Theme.Spacing.m) {
             statTile(value: "\(puzzleProvider.packs.count)", label: "Themed packs")
+            Divider()
             statTile(value: "\(puzzleProvider.totalPuzzleCount)", label: "Puzzles waiting")
         }
+        // The divider takes the height of the two columns, not the page's.
+        .fixedSize(horizontal: false, vertical: true)
     }
 
     private func statTile(value: String, label: String) -> some View {
-        VStack(spacing: 4) {
+        VStack(spacing: Theme.Spacing.xs) {
             Text(value)
                 .font(.scripture(.title, weight: .semibold))
             Text(label)
-                .font(.caption)
+                .font(.footnote)
                 .foregroundStyle(.secondary)
         }
         .frame(maxWidth: .infinity)
-        .padding(Theme.Spacing.m)
-        .elevatedCard()
         .accessibilityElement(children: .combine)
     }
 
@@ -519,14 +534,24 @@ struct OnboardingView: View {
                 .frame(maxWidth: .infinity)
                 .padding(.horizontal, Theme.Spacing.l)
                 .padding(.vertical, Theme.Spacing.l)
-            pageFrame(spacing: Theme.Spacing.l) {
+            // The sheet's middle size: smaller tiles and the rating kept. On a
+            // 6.1" phone the full page missed by a few dozen points and the
+            // compact one left a band of empty paper above the buy button.
+            premiumOffer(compact: true, keepsSmallHero: true, active: active)
+                .frame(maxWidth: 560)
+                .frame(maxWidth: .infinity)
+                .padding(.horizontal, Theme.Spacing.l)
+                .padding(.vertical, Theme.Spacing.l)
+            // Top-anchored like the full layout above: centred, the compact
+            // offer left an empty band over the headline on a 6.1" phone.
+            pageFrame(spacing: Theme.Spacing.l, alignment: .top) {
                 premiumOffer(compact: true, active: active)
             }
         }
         .frame(maxHeight: .infinity, alignment: .top)
     }
 
-    private func premiumOffer(compact: Bool, active: Bool) -> some View {
+    private func premiumOffer(compact: Bool, keepsSmallHero: Bool = false, active: Bool) -> some View {
         PremiumOfferView(
             headline: premiumHeadline,
             selectedID: $selectedPlanID,
@@ -537,6 +562,7 @@ struct OnboardingView: View {
             heroTiles: solved ? MiniCrossword.firstSolveSolved : MiniCrossword.faithHopeLove,
             heroCelebrated: solved ? MiniCrossword.firstSolveWord : [],
             compact: compact,
+            keepsSmallHero: keepsSmallHero,
             firstRun: true
         )
     }
@@ -547,6 +573,7 @@ struct OnboardingView: View {
     /// size can never clip), centred, with the same gutters.
     private func pageFrame<Content: View>(
         spacing: CGFloat,
+        alignment: Alignment = .center,
         @ViewBuilder content: () -> Content
     ) -> some View {
         // Centred when it fits, scrollable when it doesn't — which is what
@@ -563,7 +590,7 @@ struct OnboardingView: View {
                     .frame(maxWidth: .infinity)
                     .padding(.horizontal, Theme.Spacing.l)
                     .padding(.vertical, Theme.Spacing.l)
-                    .frame(minHeight: geo.size.height)
+                    .frame(minHeight: geo.size.height, alignment: alignment)
             }
             .scrollBounceBehavior(.basedOnSize)
             .scrollIndicators(.hidden)

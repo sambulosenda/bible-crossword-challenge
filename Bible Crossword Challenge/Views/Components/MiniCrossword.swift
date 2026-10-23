@@ -38,8 +38,11 @@ struct MiniCrossword: View {
     let layout: [[MiniTile]]
     /// Letters the player has typed, keyed by cell.
     var entries: [MiniPoint: Character] = [:]
-    /// The cell awaiting input, drawn in the accent fill.
+    /// The cell awaiting input, drawn as the game draws its selected cell: a
+    /// deeper step of the word tint with a 2pt accent border.
     var focus: MiniPoint?
+    /// The word being answered, tinted as the game tints its active word.
+    var activeWord: Set<MiniPoint> = []
     /// Cells to crown with the gold rim once their word lands.
     var celebrated: Set<MiniPoint> = []
     /// Small number drawn in the corner of a cell, as on a real grid.
@@ -116,28 +119,37 @@ struct MiniCrossword: View {
         let numberSize = max(side * 0.28, 9)
         let letterSize = max(side * 0.5, 12)
 
+        // The game's own palette (`CellPalette`, `CellView`): the first cell a
+        // player ever touches looks like every cell after it. It used to be a
+        // solid accent block with a white letter — the treatment the game
+        // retired in 3f0fff2 as the loudest thing on the screen.
+        let isInWord = activeWord.contains(p)
+        let fill = isFocused || isInWord
+            ? CellPalette.fill(isSelected: isFocused, isInWord: isInWord, isCorrect: false)
+            : Theme.surface
+        let rim: Color = isFocused ? Theme.accent
+            : isCelebrated ? Theme.badgeRim
+            : Color(.separator).opacity(0.6)
+
         return RoundedRectangle(cornerRadius: corner, style: .continuous)
-            .fill(isFocused ? Theme.accent : Theme.surface)
+            .fill(fill)
             .overlay {
                 RoundedRectangle(cornerRadius: corner, style: .continuous)
-                    .strokeBorder(
-                        isCelebrated ? Theme.badgeRim : Color(.separator).opacity(0.6),
-                        lineWidth: isCelebrated ? 2 : 1
-                    )
+                    .strokeBorder(rim, lineWidth: isFocused || isCelebrated ? 2 : 1)
             }
             .overlay(alignment: .topLeading) {
                 if let n = numbers[p] {
                     Text("\(n)")
                         .font(.system(size: numberSize, weight: .semibold))
-                        .foregroundStyle(isFocused ? Theme.onInk.opacity(0.9) : .secondary)
+                        .foregroundStyle(.secondary)
                         .padding(3)
                 }
             }
             .overlay {
                 if let letter {
                     // Givens and typed letters look identical, as they do on a
-                    // real grid — the accent fill marks where you are, not
-                    // which letters are yours.
+                    // real grid — the border marks where you are, not which
+                    // letters are yours.
                     // Sized off the cell, like the real grid's, rather than a
                     // text style shrunk to half to survive a large setting —
                     // a letter has one cell to live in either way, and
@@ -145,7 +157,7 @@ struct MiniCrossword: View {
                     Text(String(letter))
                         .font(.system(size: letterSize, weight: .semibold, design: .rounded))
                         .lineLimit(1)
-                        .foregroundStyle(isFocused ? Theme.onInk : .primary)
+                        .foregroundStyle(.primary)
                         .transition(.scale(scale: 0.6).combined(with: .opacity))
                 }
             }
