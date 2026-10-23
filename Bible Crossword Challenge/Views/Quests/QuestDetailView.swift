@@ -332,29 +332,18 @@ struct QuestHomeCard: View {
 
     var body: some View {
         NavigationLink(value: QuestRoute(quest: quest, source: .home)) {
-            HStack(spacing: Theme.Spacing.m) {
-                // The Journey feature's tint, not this Journey's own colour:
-                // on Today each row is coloured by what kind of thing it is.
-                // The Packs tab keeps the per-Journey colour on its covers.
-                RowIcon(symbol: quest.coverSymbol, tint: FeatureTint.journey)
-                // No kicker: Today's "Keep going" header names the group, and
-                // the subtitle says it's a journey.
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(headline)
-                        .font(.headline)
-                        .foregroundStyle(.primary)
-                    Text(subtitle)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-                Spacer(minLength: 0)
-                Image(systemName: "chevron.forward")
-                    .font(.footnote.weight(.semibold))
-                    .foregroundStyle(.tertiary)
-            }
-            .cardRowPadding()
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .elevatedCard()
+            // The Journey feature's tint, not this Journey's own colour: on
+            // Today each row is coloured by what kind of thing it is. The
+            // Packs tab keeps the per-Journey colour on its covers. The bar
+            // shows once a step is walked — an empty one is a gauge with
+            // nothing to measure.
+            CoverRow(
+                symbol: quest.coverSymbol,
+                tint: FeatureTint.journey,
+                title: headline,
+                subtitle: subtitle,
+                progress: progress.solved > 0 ? progress.fraction : nil
+            )
         }
         .buttonStyle(PressableCardStyle())
         .accessibilityElement(children: .ignore)
@@ -368,10 +357,12 @@ struct QuestHomeCard: View {
     // phone, and the blurb under it truncated too.
     private var headline: String { quest.title }
 
+    /// "Journey" leads the line only before the first step; after that the
+    /// cover and the bar say what kind of thing this is.
     private var subtitle: String {
         if progress.solved == 0 { return "Journey · \(progress.total) steps, one a day" }
         if progress.steppedToday { return "Step \(progress.solved) of \(progress.total) done · next one tomorrow" }
         // "Step", as the Packs tab and the journey itself count it.
-        return "Journey · \(QuestProgress.stepLine(solved: progress.solved, total: progress.total)) is ready"
+        return "\(QuestProgress.stepLine(solved: progress.solved, total: progress.total)) is ready"
     }
 }

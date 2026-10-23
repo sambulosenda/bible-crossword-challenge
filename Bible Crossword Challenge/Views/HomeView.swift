@@ -540,20 +540,22 @@ struct HomeView: View {
         // the column. `source: "home_card"` is unchanged on purpose,
         // so the move reads as a change on the same event.
         //
-        // One header for the three things that carry on from day to
-        // day, instead of an uppercase kicker on each card — Today had
-        // seven of those, and a label per card is a label nobody reads.
+        // One header for the things that carry on from day to day, instead
+        // of an uppercase kicker on each card — Today had seven of those,
+        // and a label per card is a label nobody reads.
         //
-        // One card with dividers rather than a card per row: the rows are
-        // one list, and three identical white cards read as three
-        // headlines. The divider starts under the text, past the 44pt disc.
-        VStack(alignment: .leading, spacing: Theme.Spacing.s) {
-            // On the cards' inner edge, as a grouped list's header sits:
-            // the same 32pt the row icons below start on.
+        // Cover rows on the paper, as YouVersion lists plans (2026-10-24):
+        // each thing in its own colour with where the player stands, and
+        // space between rows rather than a card, dividers and chevrons. As
+        // a grouped list it read as the Settings app — a Journey halfway
+        // done looked like a menu item. The colour is per feature, which
+        // reverses the neutral icons of 2026-10-13: at 52pt a cover is
+        // artwork, where a 36pt tinted square in a list was decoration.
+        VStack(alignment: .leading, spacing: Theme.Spacing.m) {
+            // On the page's one content edge, with the covers below it.
             Text("Keep going").sectionHeader()
-                .padding(.horizontal, Theme.Spacing.m)
 
-            CardGroup(dividerInset: CardGroup<EmptyView>.iconRowInset) {
+            VStack(alignment: .leading, spacing: Theme.Spacing.m) {
                 // A habit surface like the streak: only while a plan is
                 // running, one row, checked once today's chapter is read.
                 // `readingPlans` needs no Bible decode — the plan recorded
@@ -597,32 +599,28 @@ struct HomeView: View {
                     .accessibilityHint("Opens every achievement")
                 }
             }
-        }
-        // Neutral icons in this list: the section and the titles already
-        // tell the rows apart, and six feature tints on one column read as
-        // decoration. Colour stays where it means something — the three
-        // puzzle types above, and the flame.
-        .environment(\.rowIconsNeutral, true)
 
-        // The Bible: search, reading, plans and the books map, which had a
-        // tab of their own until 2026-10-13. In the week to then about 1 in
-        // 20 actives did anything there. The screen stays whole; only its
-        // door moved here. Its own group, not a row of Keep going
-        // (2026-10-24): that list is progress — a Journey step, verses due,
-        // the next badge — and a place to go read broke what it means.
-        // A one-row group rather than a bare card, so its padding and icon
-        // edge are the list's — standing alone the row took the standalone
-        // card padding and its icon sat 8pt in from every icon above it.
-        CardGroup(dividerInset: CardGroup<EmptyView>.iconRowInset) {
+            // The Bible: search, reading, plans and the books map, which had
+            // a tab of their own until 2026-10-13 — about 1 in 20 actives did
+            // anything there. A link under the list, not a row of it: Keep
+            // going is progress, and a place to read isn't. A one-row card of
+            // its own (tried 2026-10-24) read as stranded.
             Button {
                 path.append(VersesRoute())
             } label: {
-                BibleRow()
+                Label("Open your Bible", systemImage: "book")
+                    .font(.headline)
+                    .foregroundStyle(Theme.accent)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.vertical, Theme.Spacing.s)
+                    .contentShape(.rect)
             }
-            .buttonStyle(PressableCardStyle())
+            .buttonStyle(.plain)
             .accessibilityHint("Opens search, reading and reading plans")
         }
-        .environment(\.rowIconsNeutral, true)
+        // The covers start on the page's one content edge — 32pt, where the
+        // verse, the hero's title and the headers start.
+        .padding(.horizontal, Theme.Spacing.m)
 
         // Only packs the player can open. For a free player every tile here
         // used to be locked behind a crown, a second pitch right above the
@@ -1249,56 +1247,25 @@ private struct PackTile: View {
 
 /// The next badge, in the same row shape as the Journey and memory verses
 /// above it.
-/// Today's door to the Verses screen. Built like `NextAchievementRow`.
-private struct BibleRow: View {
-    var body: some View {
-        HStack(spacing: Theme.Spacing.m) {
-            RowIcon(symbol: "book.closed", tint: FeatureTint.bible)
-            VStack(alignment: .leading, spacing: 2) {
-                Text("Bible")
-                    .font(.headline)
-                    .foregroundStyle(.primary)
-                Text("Search, read and reading plans")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-            Spacer(minLength: 0)
-            Image(systemName: "chevron.forward")
-                .font(.footnote.weight(.semibold))
-                .foregroundStyle(.tertiary)
-        }
-        .cardRowPadding()
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .elevatedCard()
-        .accessibilityElement(children: .ignore)
-        .accessibilityAddTraits(.isButton)
-        .accessibilityLabel("Bible. Search, read and reading plans")
-    }
-}
-
 private struct NextAchievementRow: View {
     let achievement: Achievement
     let profile: PlayerProfile
 
     var body: some View {
-        HStack(spacing: Theme.Spacing.m) {
-            RowIcon(symbol: achievement.symbol, tint: FeatureTint.badge)
-            VStack(alignment: .leading, spacing: 2) {
-                Text(achievement.title)
-                    .font(.headline)
-                    .foregroundStyle(.primary)
-                Text(subtitle)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-            Spacer(minLength: 0)
-            Image(systemName: "chevron.forward")
-                .font(.footnote.weight(.semibold))
-                .foregroundStyle(.tertiary)
-        }
-        .cardRowPadding()
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .elevatedCard()
+        // A time goal is met or not, so it gets no bar — an empty one would
+        // sit there until the day it jumped to full.
+        let fraction = achievement.progress(for: profile)
+        let isTimeGoal: Bool = {
+            if case .fastSolve = achievement.goal { return true }
+            return false
+        }()
+        CoverRow(
+            symbol: achievement.symbol,
+            tint: FeatureTint.badge,
+            title: achievement.title,
+            subtitle: subtitle,
+            progress: isTimeGoal || fraction <= 0 ? nil : fraction
+        )
         .accessibilityElement(children: .ignore)
         .accessibilityAddTraits(.isButton)
         .accessibilityLabel("Next badge: \(achievement.title). \(achievement.detail). \(progress)")
@@ -1515,10 +1482,18 @@ private struct CompanionPuzzle: Identifiable {
 private struct CompanionPuzzlesCard: View {
     let rows: [CompanionPuzzle]
 
+    @Environment(\.dynamicTypeSize) private var typeSize
+
     var body: some View {
-        // The same grouped list as Keep going, so the two lists on Today are
-        // one shape: same icon square, same row height, same divider inset.
-        CardGroup(dividerInset: CardGroup<EmptyView>.iconRowInset) {
+        // Side by side, each led by a band in its own colour — the shape the
+        // pack tiles below already have, and how YouVersion sets out the
+        // day's pieces. As settings-style rows under the hero they read as
+        // a menu. Stacked at accessibility sizes, where half the width can't
+        // hold a title. AnyLayout keeps each card's identity across the swap.
+        let layout = typeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(spacing: Theme.Spacing.s))
+            : AnyLayout(HStackLayout(alignment: .top, spacing: Theme.Spacing.s))
+        layout {
             ForEach(rows) { row in
                 CompactPuzzleRow(
                     puzzle: row.puzzle,
@@ -1527,6 +1502,8 @@ private struct CompanionPuzzlesCard: View {
                 )
             }
         }
+        // The pair shares a bottom edge however their titles wrap.
+        .fixedSize(horizontal: false, vertical: true)
     }
 }
 
@@ -1543,32 +1520,47 @@ private struct CompactPuzzleRow: View {
         return false
     }
 
+    private var tint: Color { isSolvedToday ? FeatureTint.solved : billing.tint }
+
     var body: some View {
         NavigationLink(value: puzzle) {
-            HStack(spacing: Theme.Spacing.m) {
-                RowIcon(symbol: leadingSymbol, tint: isSolvedToday ? FeatureTint.solved : billing.tint)
+            VStack(alignment: .leading, spacing: 0) {
+                // The billing's mark on a band of its colour, with the fill
+                // `CollectionCover` uses, so a puzzle type is one colour
+                // wherever it appears.
+                Image(systemName: leadingSymbol)
+                    .font(.title2)
+                    .foregroundStyle(tint)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 64)
+                    .background(tint.opacity(0.14))
 
                 // No uppercase kicker: Today keeps those for section headers.
-                // The puzzle's name leads and its kind opens the line under it.
+                // The kind, then the title, then where the player stands.
                 VStack(alignment: .leading, spacing: 2) {
+                    Text(billing.name)
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
                     // Wraps rather than truncates: at large type a one-line
                     // limit cut "Queens and Kinsmen" to "Queen…".
                     Text(puzzle.title)
                         .font(.headline)
                         .foregroundStyle(.primary)
                         .fixedSize(horizontal: false, vertical: true)
-                    Text(subtitle)
-                        .font(.caption)
+                    Text(state)
+                        .font(.footnote)
                         .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
+                .padding(Theme.Spacing.m)
 
                 Spacer(minLength: 0)
-                Image(systemName: "chevron.forward")
-                    .font(.footnote.weight(.semibold))
-                    .foregroundStyle(.tertiary)
             }
-            .cardRowPadding()
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+            .elevatedCard()
+            // The band runs to the card's edge, so the card clips it to its
+            // own rounded shape.
+            .clipShape(.rect(cornerRadius: Theme.cornerRadius, style: .continuous))
             .contentShape(.rect)
         }
         .buttonStyle(PressableCardStyle())
@@ -1591,8 +1583,6 @@ private struct CompactPuzzleRow: View {
         case .sunday: return "star.fill"
         }
     }
-
-    private var subtitle: String { "\(billing.name) · \(state)" }
 
     private var state: String {
         switch presentation {

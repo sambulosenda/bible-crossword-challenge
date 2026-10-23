@@ -47,53 +47,21 @@ struct ReadingPlanCard: View {
         let shownDay = doneToday ? max(1, day - 1) : day
         let reference = "\(plan.book) \(shownDay)"
         return Button(action: onRead) {
-            VStack(alignment: .leading, spacing: compact ? Theme.Spacing.xs : Theme.Spacing.m) {
-                HStack(spacing: Theme.Spacing.m) {
-                    RowIcon(symbol: doneToday ? "checkmark" : "book.pages",
-                            tint: doneToday ? FeatureTint.solved : FeatureTint.readingPlan)
-                    VStack(alignment: .leading, spacing: 2) {
-                        if compact {
-                            // On Today this is one row of a list, so it takes
-                            // the list's shape — headline title, one caption,
-                            // no kicker — rather than a card's. A kicker, a
-                            // second icon and a serif title made it the one
-                            // row that didn't match its siblings.
-                            Text(reference)
-                                .font(.headline)
-                                .foregroundStyle(.primary)
-                            Text(doneToday
-                                 ? "Read today · Next: \(plan.book) \(day)"
-                                 : "Today's chapter · Day \(day) of \(total)")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                        } else {
-                            // The count sits in the subtitle: as a kicker
-                            // "TODAY'S CHAPTER · DAY 12 OF 21" wrapped on a phone.
-                            Label("Today's chapter", systemImage: "calendar")
-                                .kicker()
-                            Text(reference)
-                                .font(.scripture(.title3, weight: .semibold))
-                                .foregroundStyle(.primary)
-                            Text(doneToday
-                                 ? "Read today · Next: \(plan.book) \(day)"
-                                 : "\(plan.title) · Day \(day) of \(total)")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                        }
-                    }
-                    Spacer(minLength: 0)
-                    Image(systemName: "chevron.forward")
-                        .font(.footnote.weight(.semibold))
-                        .foregroundStyle(.tertiary)
-                }
-                if !compact {
-                    ProgressView(value: Double(day - 1), total: Double(total))
-                        .tint(Theme.accent)
-                }
+            if compact {
+                // Today's version is a cover row like the rest of "Keep
+                // going", its bar the share of the book read.
+                CoverRow(
+                    symbol: doneToday ? "checkmark" : "book.pages",
+                    tint: doneToday ? FeatureTint.solved : FeatureTint.readingPlan,
+                    title: reference,
+                    subtitle: doneToday
+                        ? "Read today · Next: \(plan.book) \(day)"
+                        : "Today's chapter · Day \(day) of \(total)",
+                    progress: Double(day - 1) / Double(max(total, 1))
+                )
+            } else {
+                fullActiveLabel(plan, day: day, total: total, doneToday: doneToday, reference: reference)
             }
-            .cardRowPadding()
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .elevatedCard()
         }
         .buttonStyle(PressableCardStyle())
         .accessibilityElement(children: .ignore)
@@ -101,10 +69,52 @@ struct ReadingPlanCard: View {
         .accessibilityHint("Opens the chapter")
     }
 
+    /// The Read tab's version: a card with a kicker, a serif title and the
+    /// plan's progress bar.
+    private func fullActiveLabel(_ plan: ReadingPlan, day: Int, total: Int, doneToday: Bool, reference: String) -> some View {
+        VStack(alignment: .leading, spacing: Theme.Spacing.m) {
+            HStack(spacing: Theme.Spacing.m) {
+                RowIcon(symbol: doneToday ? "checkmark" : "book.pages",
+                        tint: doneToday ? FeatureTint.solved : FeatureTint.readingPlan)
+                VStack(alignment: .leading, spacing: 2) {
+                    // The count sits in the subtitle: as a kicker
+                    // "TODAY'S CHAPTER · DAY 12 OF 21" wrapped on a phone.
+                    Label("Today's chapter", systemImage: "calendar")
+                        .kicker()
+                    Text(reference)
+                        .font(.scripture(.title3, weight: .semibold))
+                        .foregroundStyle(.primary)
+                    Text(doneToday
+                         ? "Read today · Next: \(plan.book) \(day)"
+                         : "\(plan.title) · Day \(day) of \(total)")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                Spacer(minLength: 0)
+                Image(systemName: "chevron.forward")
+                    .font(.footnote.weight(.semibold))
+                    .foregroundStyle(.tertiary)
+            }
+            ProgressView(value: Double(day - 1), total: Double(total))
+                .tint(Theme.accent)
+        }
+        .cardRowPadding()
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .elevatedCard()
+    }
+
     private func completeCard(_ plan: ReadingPlan) -> some View {
         NavigationLink {
             ReadingPlansView()
         } label: {
+            if compact {
+                CoverRow(
+                    symbol: "checkmark.seal.fill",
+                    tint: FeatureTint.solved,
+                    title: "You read all of \(plan.book)",
+                    subtitle: "Choose another book to read through"
+                )
+            } else {
             HStack(spacing: Theme.Spacing.m) {
                 RowIcon(symbol: "checkmark.seal.fill", tint: FeatureTint.solved)
                 VStack(alignment: .leading, spacing: 2) {
@@ -124,6 +134,7 @@ struct ReadingPlanCard: View {
             .cardRowPadding()
             .frame(maxWidth: .infinity, alignment: .leading)
             .elevatedCard()
+            }
         }
         .buttonStyle(PressableCardStyle())
         .accessibilityElement(children: .ignore)

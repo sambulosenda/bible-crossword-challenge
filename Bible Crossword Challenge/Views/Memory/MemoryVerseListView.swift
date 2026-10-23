@@ -321,28 +321,15 @@ struct MemoryVerseCard: View {
 
     var body: some View {
         NavigationLink(value: MemoryRoute()) {
-            HStack(spacing: Theme.Spacing.m) {
-                RowIcon(symbol: "brain.fill", tint: FeatureTint.memory)
-                VStack(alignment: .leading, spacing: 2) {
-                    if showsKicker {
-                        Label("MEMORY VERSES", systemImage: "text.book.closed").kicker()
-                    }
-                    Text(headline)
-                        .font(.headline)
-                        .foregroundStyle(.primary)
-                    // Caption, like the Journey and badge rows it sits with.
-                    Text(subtitle)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-                Spacer(minLength: 0)
-                Image(systemName: "chevron.forward")
-                    .font(.footnote.weight(.semibold))
-                    .foregroundStyle(.tertiary)
-            }
-            .cardRowPadding()
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .elevatedCard()
+            // A cover row like the Journey and badge rows it sits with. The
+            // bar is the share mastered, once there are verses to master.
+            CoverRow(
+                symbol: "brain.fill",
+                tint: FeatureTint.memory,
+                title: headline,
+                subtitle: subtitle,
+                progress: activeCount > 0 ? Double(masteredCount) / Double(activeCount) : nil
+            )
         }
         .buttonStyle(PressableCardStyle())
         .accessibilityElement(children: .ignore)
@@ -362,7 +349,7 @@ struct MemoryVerseCard: View {
     /// master each verse" told someone with verses on the shelf the same thing
     /// every day; the row is a status line for a habit, like the streak.
     private var subtitle: String {
-        guard activeCount > 0 else { return "Turn a verse from a solved puzzle into memory." }
+        guard activeCount > 0 else { return "Pick one from a puzzle you solved" }
         let learning = activeCount - masteredCount
         var parts: [String] = []
         if learning > 0 { parts.append("\(learning) learning") }
