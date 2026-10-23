@@ -241,7 +241,7 @@ struct OnboardingView: View {
 
     private var welcomePage: some View {
         let active = page == 0
-        return pageFrame(spacing: Theme.Spacing.xl) {
+        return pageFrame(spacing: Theme.Spacing.xl, alignment: .upperThird) {
             MiniCrossword(layout: MiniCrossword.faithHopeLove)
                 .padding(.bottom, Theme.Spacing.s)
 
@@ -266,8 +266,11 @@ struct OnboardingView: View {
     private var firstSolvePage: some View {
         let active = page == 1
         return pageFrame(spacing: Theme.Spacing.l) {
-            // Paired with the spacer below the grid: the clue and grid settle
-            // into the space above the keypad instead of hugging the top edge.
+            // Two spacers to the one below the grid: the clue and grid sit in
+            // the lower part of the space above the keypad, near the thumb
+            // and the keys they answer to, instead of floating mid-screen
+            // with a dead band under them.
+            Spacer(minLength: 0)
             Spacer(minLength: 0)
 
             VStack(spacing: Theme.Spacing.xs) {
@@ -384,19 +387,16 @@ struct OnboardingView: View {
 
     private var namePage: some View {
         let active = page == 2
-        return pageFrame(spacing: Theme.Spacing.l) {
-            VStack(spacing: Theme.Spacing.m) {
-                // No praise for a clue they skipped — the celebration page
-                // already applies this razor, and the two pages reading the
-                // same player differently would be the tell.
-                Text(solved ? "Nice solve" : "Before you play")
-                    .kicker()
-                    .entrance(active: active, delay: 0.05, reduceMotion: reduceMotion)
-                Text("What should we\ncall you?")
-                    .font(.scripture(.largeTitle, weight: .semibold))
-                    .multilineTextAlignment(.center)
-                    .entrance(active: active, delay: 0.10, reduceMotion: reduceMotion)
-            }
+        return pageFrame(spacing: Theme.Spacing.l, alignment: .upperThird) {
+            // No kicker. A grey caps label over a serif headline on every
+            // page made five pages read as one form; it stays only where it
+            // carries information — the brand on the welcome, the clue
+            // label on the solve. "Nice solve" here also pre-empted the
+            // celebration two pages on.
+            Text("What should we\ncall you?")
+                .font(.scripture(.largeTitle, weight: .semibold))
+                .multilineTextAlignment(.center)
+                .entrance(active: active, delay: 0.05, reduceMotion: reduceMotion)
 
             VStack(spacing: Theme.Spacing.s) {
                 TextField("Your name", text: $name)
@@ -413,6 +413,9 @@ struct OnboardingView: View {
                     .font(.footnote)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
+                    // Truncated to one line once the page took the
+                    // upper-third anchor with the keyboard up.
+                    .fixedSize(horizontal: false, vertical: true)
             }
             .onSubmit { nameFocused = false }
             .entrance(active: active, delay: 0.18, reduceMotion: reduceMotion)
@@ -432,31 +435,31 @@ struct OnboardingView: View {
     /// clue they didn't solve, and library tiles instead of a solve time.
     private var celebrationPage: some View {
         let active = page == 3
-        return pageFrame(spacing: Theme.Spacing.xl) {
+        return pageFrame(spacing: Theme.Spacing.xl, alignment: .upperThird) {
             // The mark is the grid the player just filled (see CelebrationBadge:
             // a tick says "succeeded", the grid says what). Skippers get the
             // tick — there is nothing of theirs to show. No gold rim here: gold
             // is the offer bar's signal on the next page.
+            //
+            // Ink, not the accent: a saturated system-blue disc was the
+            // loudest object in the flow, on a page of warm paper and serif.
+            // Ink is the colour of the one button on every page, so the badge
+            // reads as part of the same object family rather than a stock icon.
             Group {
                 if solved {
-                    CelebrationBadge(grid: ["GRACE", "..R..", "..K.."], confetti: "puzzle_complete", size: 96, showsRim: false)
+                    CelebrationBadge(grid: ["GRACE", "..R..", "..K.."], confetti: "puzzle_complete", tint: Theme.ink, markTint: Theme.onInk, size: 96, showsRim: false)
                 } else {
-                    CelebrationBadge(systemImage: "checkmark", size: 96, showsRim: false)
+                    CelebrationBadge(systemImage: "checkmark", tint: Theme.ink, markTint: Theme.onInk, size: 96, showsRim: false)
                 }
             }
             .entrance(active: active, delay: 0.05, reduceMotion: reduceMotion)
 
-            VStack(spacing: Theme.Spacing.m) {
-                // A solver did something; "setup" undersells it. A skipper
-                // did set the app up, and gets the honest word.
-                Text(solved ? "First solve" : "Setup complete")
-                    .kicker()
-                    .entrance(active: active, delay: 0.14, reduceMotion: reduceMotion)
-                Text(celebrationHeadline)
-                    .font(.scripture(.largeTitle, weight: .semibold))
-                    .multilineTextAlignment(.center)
-                    .entrance(active: active, delay: 0.20, reduceMotion: reduceMotion)
-            }
+            // No kicker: "First solve" over "Well done" said the same thing
+            // twice, under a badge that already says it a third time.
+            Text(celebrationHeadline)
+                .font(.scripture(.largeTitle, weight: .semibold))
+                .multilineTextAlignment(.center)
+                .entrance(active: active, delay: 0.14, reduceMotion: reduceMotion)
 
             celebrationTiles
                 .entrance(active: active, delay: 0.30, reduceMotion: reduceMotion)
@@ -921,6 +924,24 @@ struct OnboardingView: View {
         analytics.log(.onboardingCompleted(solvedFirstClue: solved))
         onFinish()
     }
+}
+
+// MARK: - Upper-third anchor
+
+extension VerticalAlignment {
+    /// A third of the way down a view. Aligning a page's content to the
+    /// page's upper third leaves one part of the spare height above it and two
+    /// below: the composition statement screens use, where dead-centre
+    /// content floats with an equal band of empty paper either side.
+    /// `nonisolated`: called from layout, like `ClueBarView`'s `ClueText`.
+    nonisolated enum UpperThird: AlignmentID {
+        static func defaultValue(in d: ViewDimensions) -> CGFloat { d.height / 3 }
+    }
+    static let upperThird = VerticalAlignment(UpperThird.self)
+}
+
+extension Alignment {
+    static let upperThird = Alignment(horizontal: .center, vertical: .upperThird)
 }
 
 // MARK: - Staggered entrance

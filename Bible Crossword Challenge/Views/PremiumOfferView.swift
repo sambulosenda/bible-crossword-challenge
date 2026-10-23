@@ -742,11 +742,13 @@ struct PremiumOfferView: View {
         switch product.id {
         case StoreService.yearlyID, StoreService.monthlyID:
             let perWeek = perWeekText(product).map { "\($0)/week" } ?? ""
-            // The saving moves down here when the trial takes the pill.
+            // The saving moves down here when the trial takes the pill. Its
+            // own line on purpose: joined with a "·" it broke after the dot on
+            // every 6.1" phone, which read as a wrap, not a layout.
             if product.id == StoreService.yearlyID,
                store.introOffer(for: product) != nil,
                let pct = yearlySavingsPercent {
-                return perWeek.isEmpty ? "Save \(pct)%" : "\(perWeek) · save \(pct)%"
+                return perWeek.isEmpty ? "Save \(pct)%" : "\(perWeek)\nSave \(pct)%"
             }
             return perWeek
         default:

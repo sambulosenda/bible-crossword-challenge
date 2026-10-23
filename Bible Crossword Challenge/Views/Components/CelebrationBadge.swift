@@ -35,26 +35,30 @@ struct CelebrationBadge: View {
     var confetti: String?
     /// Disc tint. Defaults to the app accent; freeze overrides it for cyan.
     var tint: Color = Theme.accent
+    /// The mark's colour. White on the accent; onboarding draws an ink disc
+    /// and needs the mark to flip with it in dark mode (`Theme.onInk`).
+    var markTint: Color = .white
     /// Diameter of the disc. Confetti overflows it and is not clipped.
     var size: CGFloat = 120
     /// The gold rim. Off where the badge sits among the app's own blue-on-paper
     /// palette (the completion screen), where the one gold ring read as a one-off.
     var showsRim: Bool = true
 
-    init(mark: Mark, confetti: String? = nil, tint: Color = Theme.accent, size: CGFloat = 120, showsRim: Bool = true) {
+    init(mark: Mark, confetti: String? = nil, tint: Color = Theme.accent, markTint: Color = .white, size: CGFloat = 120, showsRim: Bool = true) {
         self.mark = mark
         self.confetti = confetti
         self.tint = tint
+        self.markTint = markTint
         self.size = size
         self.showsRim = showsRim
     }
 
-    init(systemImage: String, confetti: String? = nil, tint: Color = Theme.accent, size: CGFloat = 120, showsRim: Bool = true) {
-        self.init(mark: .symbol(systemImage), confetti: confetti, tint: tint, size: size, showsRim: showsRim)
+    init(systemImage: String, confetti: String? = nil, tint: Color = Theme.accent, markTint: Color = .white, size: CGFloat = 120, showsRim: Bool = true) {
+        self.init(mark: .symbol(systemImage), confetti: confetti, tint: tint, markTint: markTint, size: size, showsRim: showsRim)
     }
 
-    init(grid: [String], confetti: String? = nil, tint: Color = Theme.accent, size: CGFloat = 120, showsRim: Bool = true) {
-        self.init(mark: .grid(grid), confetti: confetti, tint: tint, size: size, showsRim: showsRim)
+    init(grid: [String], confetti: String? = nil, tint: Color = Theme.accent, markTint: Color = .white, size: CGFloat = 120, showsRim: Bool = true) {
+        self.init(mark: .grid(grid), confetti: confetti, tint: tint, markTint: markTint, size: size, showsRim: showsRim)
     }
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -105,12 +109,12 @@ struct CelebrationBadge: View {
         case .symbol(let name):
             Image(systemName: name)
                 .font(.system(size: glyphSize, weight: .bold))
-                .foregroundStyle(.white)
+                .foregroundStyle(markTint)
         case .grid(let rows):
             // Solid white dots on the accent disc, the inverse of the muted
             // thumbnails on Today and Library — this is the one that celebrates.
             //
-            GridThumbnail(grid: rows, tint: .white, gap: 0.5, cropsToContent: true)
+            GridThumbnail(grid: rows, tint: markTint, gap: 0.5, cropsToContent: true)
                 .frame(width: glyphSize, height: glyphSize)
         }
     }
