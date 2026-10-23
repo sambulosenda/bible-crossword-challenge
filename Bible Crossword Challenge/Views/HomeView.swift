@@ -65,6 +65,7 @@ struct HomeView: View {
     /// The day Today is showing — see `TodayClock`. Read here so the screen
     /// redraws at midnight instead of holding yesterday's puzzle as Solved.
     @Environment(\.today) private var currentDay
+    @Environment(\.calendar) private var calendar
 
     private var dailyPuzzle: Puzzle? { puzzleProvider.dailyPuzzle() }
     private var dailyMini: Puzzle? { puzzleProvider.dailyMini() }
@@ -237,7 +238,10 @@ struct HomeView: View {
             showStreak = true
         } label: {
             // An HStack, not a Label: the bar draws a toolbar Label icon-only,
-            // which dropped the count — the one thing this is for.
+            // which dropped the count — the one thing this is for. Tried
+            // again 2026-10-23 with `.labelStyle(.titleAndIcon)`: the bar
+            // still drew the flame alone, and in ink rather than orange. The
+            // cost is iPhone Duo's vertical bar, which only takes Labels.
             HStack(spacing: Theme.Spacing.xs) {
                 Image(systemName: paused ? "flame" : "flame.fill")
                 Text("\(profile.currentStreak)")
@@ -254,14 +258,14 @@ struct HomeView: View {
     /// one-time reassurance instead of the idle freeze count.
     private var freezeSavedToday: Bool {
         guard let used = profile.lastFreezeUsedDate else { return false }
-        return Calendar.current.isDateInToday(used)
+        return calendar.isDate(used, inSameDayAs: currentDay)
     }
 
     /// Weekdays with a completed puzzle in the current week, for the streak
-    /// card's week row.
+    /// card's week row. Off `currentDay`, not `Date()`, so the row turns over
+    /// with the rest of Today at midnight.
     private var completedWeekdaysThisWeek: Set<Int> {
-        let calendar = Calendar.current
-        guard let week = calendar.dateInterval(of: .weekOfYear, for: Date()) else { return [] }
+        guard let week = calendar.dateInterval(of: .weekOfYear, for: currentDay) else { return [] }
         return Set(records.compactMap { record in
             guard record.isCompleted, let date = record.completedDate, week.contains(date) else { return nil }
             return calendar.component(.weekday, from: date)
@@ -271,10 +275,13 @@ struct HomeView: View {
     var body: some View {
         // Resolve the daily puzzle + its record once per body pass; the verse
         // card derives from the puzzle so it never spoils today's answer.
+        // One index for every lookup in the pass (`byPuzzleID`, the project's
+        // duplicate-safe lookup), instead of a linear scan per puzzle.
+        let byID = recordsByID
         let daily = dailyPuzzle
-        let record = daily.flatMap { d in records.first { $0.puzzleID == d.id } }
+        let record = daily.flatMap { byID[$0.id] }
         let mini = dailyMini
-        let miniRecord = mini.flatMap { m in records.first { $0.puzzleID == m.id } }
+        let miniRecord = mini.flatMap { byID[$0.id] }
         // The Mini also leads on a repeat day — the daily rotation has come
         // round to a puzzle this player already finished, and today's Mini is
         // one they haven't. A repeat in the hero is the weakest first thing
@@ -297,7 +304,7 @@ struct HomeView: View {
         }()
         // Withheld inside the learning window — see `companionPuzzles`.
         let sunday = profile.isStillLearning ? nil : sundaySpecial
-        let sundayRecord = sunday.flatMap { s in records.first { $0.puzzleID == s.id } }
+        let sundayRecord = sunday.flatMap { byID[$0.id] }
         let sundayState = sundayPresentation(sundayRecord)
         let sundayIsNew: Bool = {
             if sunday != nil, case .play = sundayState { return true }
@@ -325,7 +332,7 @@ struct HomeView: View {
             CardColumns {
                 leadColumn(today, lead: lead)
             } more: {
-                moreColumn(recordsByID, heroPuzzleID: today.puzzle(lead)?.puzzle.id)
+                moreColumn(byID, heroPuzzleID: today.puzzle(lead)?.puzzle.id)
             }
             .background(Theme.background)
             // One ask per sitting, in order of how much the player has already
@@ -685,7 +692,13 @@ struct HomeView: View {
         #endif
         let pool = puzzleProvider.puzzles.filter { $0.id != daily?.id }
         guard !pool.isEmpty else { return nil }
-        let day = Calendar.current.ordinality(of: .day, in: .era, for: Date()) ?? 0
+        // Counted from noon, not from `currentDay` itself: at local midnight
+        // in BST `ordinality(of: .day, in: .era)` still returns the previous
+        // day's number, so midnight would shift the whole rotation back a
+        // day. Noon is inside the right day in every time zone, and matches
+        // what `Date()` gave for most of the day before this moved off it.
+        let noon = calendar.date(byAdding: .hour, value: 12, to: currentDay) ?? currentDay
+        let day = calendar.ordinality(of: .day, in: .era, for: noon) ?? 0
         return pool[((day % pool.count) + pool.count) % pool.count]
     }
 }
@@ -1171,17 +1184,17 @@ private struct PackTile: View {
             // is a gauge with nothing to measure.
             if isLocked || progress.solved == 0 {
                 Text("\(progress.total) puzzle\(progress.total == 1 ? "" : "s")")
-                    .font(.caption2)
+                    .font(.caption)
                     .foregroundStyle(.secondary)
                     .monospacedDigit()
             } else if progress.isComplete {
                 Label("Complete", systemImage: "checkmark.seal.fill")
-                    .font(.caption2.weight(.semibold))
+                    .font(.caption.weight(.semibold))
                     .foregroundStyle(.green)
             } else {
                 ProgressView(value: progress.fraction).tint(pack.accent)
                 Text("\(progress.solved)/\(progress.total)")
-                    .font(.caption2)
+                    .font(.caption)
                     .foregroundStyle(.secondary)
                     .monospacedDigit()
             }
