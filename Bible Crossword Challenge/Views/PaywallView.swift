@@ -554,12 +554,18 @@ struct PremiumBenefit: Identifiable {
     /// free players have no ads either, which makes it an argument for the
     /// product rather than for paying. Add the row back only alongside a real
     /// ad integration.
-    static func all(puzzleCount: Int) -> [PremiumBenefit] {
-        [
-            PremiumBenefit(
-                icon: "lightbulb",
-                title: "Hints whenever you need them"
-            ),
+    ///
+    /// `firstRun` drops the hints row, for onboarding. Hints lead on the sheet
+    /// because players arrive there from a refused hint; a player on their
+    /// first run has never been refused one (hints are free until their third
+    /// solve), so the row sold a limit they hadn't met and pushed the content
+    /// rows down the five seconds the page gets.
+    static func all(puzzleCount: Int, firstRun: Bool = false) -> [PremiumBenefit] {
+        let hints = PremiumBenefit(
+            icon: "lightbulb",
+            title: "Hints whenever you need them"
+        )
+        return (firstRun ? [] : [hints]) + [
             PremiumBenefit(
                 icon: "square.grid.3x3",
                 title: "Catch up on all \(puzzleCount) puzzles"

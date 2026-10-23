@@ -72,6 +72,15 @@ final class StoreService {
     /// True when the last product load ended with nothing to show — drives the
     /// paywall's "couldn't load plans / retry" state instead of a blank screen.
     private(set) var productsLoadFailed = false
+    /// Whether this Apple ID can still take an introductory offer in the
+    /// Premium subscription group. Nil until checked.
+    ///
+    /// Eligibility is per group, not per product, and Apple — not the app —
+    /// decides it: anyone who has had a trial here before (a reinstall, or a
+    /// monthly trial taken earlier) gets the full price on Apple's sheet. The
+    /// paywall used to promise "free for 7 days" to them anyway, so the first
+    /// they heard of the charge was the sheet, and they backed out.
+    private(set) var introEligible: Bool?
     /// Set whenever a purchase or restore ends in a way the player would
     /// otherwise only discover by nothing happening. Views present it as an
     /// alert and clear it back to nil.
@@ -230,7 +239,20 @@ final class StoreService {
             // Keep a stable display order: yearly, monthly. (Lifetime is off
             // sale and has no package, so it never appears — matching what
             // production StoreKit returns for a removed-from-sale product.)
-            products = Self.allProductIDs.compactMap { id in loaded.first { $0.id == id } }
+            let ordered = Self.allProductIDs.compactMap { id in loaded.first { $0.id == id } }
+            // Before the products land, so no frame ever renders a trial this
+            // Apple ID can't have.
+            if let subscription = ordered.lazy.compactMap(\.subscription).first {
+                introEligible = await subscription.isEligibleForIntroOffer
+            }
+            #if DEBUG
+            // The ineligible path can't be reached on a fresh simulator, where
+            // every Apple ID is eligible.
+            if ProcessInfo.processInfo.arguments.contains("-uiIntroIneligible") {
+                introEligible = false
+            }
+            #endif
+            products = ordered
             productsLoadFailed = products.isEmpty
         } catch {
             // Keep any previously loaded products; only flag failure when the
@@ -632,9 +654,12 @@ final class StoreService {
         let endDate: Date
     }
 
-    /// The product's free trial, or nil if it has no introductory free offer.
+    /// The product's free trial, or nil if it has no introductory free offer or
+    /// this Apple ID has already used its trial (`introEligible`). Every
+    /// surface that names a trial reads it from here.
     func introOffer(for product: Product) -> IntroOffer? {
-        guard let offer = product.subscription?.introductoryOffer,
+        guard introEligible != false,
+              let offer = product.subscription?.introductoryOffer,
               offer.paymentMode == .freeTrial else { return nil }
         let period = offer.period
         // A "P1W" trial reads more naturally in days than in weeks.

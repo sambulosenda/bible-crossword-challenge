@@ -107,6 +107,13 @@ struct PremiumOfferView: View {
     /// and the compact page left that room empty above the headline.
     var keepsSmallHero: Bool = false
 
+    /// Onboarding's version of the offer: no kicker and no hints row. The
+    /// solved word in gold already names the page, and a first-run player has
+    /// never been refused a hint — see `PremiumBenefit.all`. Median time on
+    /// that page is five seconds, so each cut block is one the headline and
+    /// the plans no longer compete with.
+    var firstRun: Bool = false
+
     @Environment(StoreService.self) private var store
     @Environment(\.puzzleProvider) private var puzzleProvider
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
@@ -209,7 +216,7 @@ struct PremiumOfferView: View {
             // label because a bare "PREMIUM" was the one word on the page in
             // nobody's voice — onboarding's welcome kicker says "BIBLE
             // CROSSWORD", and this page continues it.
-            if !compact {
+            if !compact && !firstRun {
                 Text("Bible Crossword Premium")
                     .kicker()
                     // Centred when it wraps, as it does at the largest sizes.
@@ -280,7 +287,8 @@ struct PremiumOfferView: View {
     private var featureList: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.s) {
             ForEach(PremiumBenefit.all(
-                puzzleCount: puzzleProvider.totalPuzzleCount
+                puzzleCount: puzzleProvider.totalPuzzleCount,
+                firstRun: firstRun
             )) { benefit in
                 HStack(alignment: .firstTextBaseline, spacing: Theme.Spacing.m) {
                     // Ink, not accent or green: blue means "you can tap this"

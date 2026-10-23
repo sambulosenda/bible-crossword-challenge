@@ -466,17 +466,15 @@ struct OnboardingView: View {
 
     /// Two tiles, Duolingo's stats-moment pattern in this app's own units.
     /// The counts come from the bundle, so neither can go stale.
+    ///
+    /// The same pair for solvers and skippers. Solvers used to get "Day 1 ·
+    /// Your streak" on the left, but the streak only starts with the first
+    /// daily puzzle, so seconds later Today and Profile both said 0 — the
+    /// first number the app gave a player was one it then took back. The
+    /// solve is already celebrated by the badge and the headline above.
     private var celebrationTiles: some View {
         HStack(spacing: Theme.Spacing.s) {
-            // "1s · First clue" was the old left tile: three letters typed in
-            // a second reads as a timer bug, and at a minute it is still not
-            // a number worth a tile. Day one is true for everyone and points
-            // at the habit the next screens ask about.
-            if solved {
-                statTile(value: "Day 1", label: "Your streak")
-            } else {
-                statTile(value: "\(puzzleProvider.packs.count)", label: "Themed packs")
-            }
+            statTile(value: "\(puzzleProvider.packs.count)", label: "Themed packs")
             statTile(value: "\(puzzleProvider.totalPuzzleCount)", label: "Puzzles waiting")
         }
     }
@@ -538,7 +536,8 @@ struct OnboardingView: View {
             // that word; they get the welcome page's fragment instead.
             heroTiles: solved ? MiniCrossword.firstSolveSolved : MiniCrossword.faithHopeLove,
             heroCelebrated: solved ? MiniCrossword.firstSolveWord : [],
-            compact: compact
+            compact: compact,
+            firstRun: true
         )
     }
 
