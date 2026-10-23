@@ -234,6 +234,10 @@ struct HomeView: View {
     /// same treatment as `ComebackCard`'s icon.
     private var streakButton: some View {
         let paused = pendingStreakBreak > 0
+        // Orange means there is a streak. At 0 there isn't one, so the flame
+        // takes the paused treatment — outline and grey, as Fitness draws an
+        // empty ring — rather than celebrating nothing.
+        let idle = paused || profile.currentStreak == 0
         return Button {
             showStreak = true
         } label: {
@@ -243,12 +247,12 @@ struct HomeView: View {
             // still drew the flame alone, and in ink rather than orange. The
             // cost is iPhone Duo's vertical bar, which only takes Labels.
             HStack(spacing: Theme.Spacing.xs) {
-                Image(systemName: paused ? "flame" : "flame.fill")
+                Image(systemName: idle ? "flame" : "flame.fill")
                 Text("\(profile.currentStreak)")
             }
                 .font(.headline)
                 .monospacedDigit()
-                .foregroundStyle(paused ? Color.secondary : FeatureTint.streak)
+                .foregroundStyle(idle ? Color.secondary : FeatureTint.streak)
         }
         .accessibilityLabel(paused ? "Streak paused" : "\(profile.currentStreak) day streak")
         .accessibilityHint("Shows this week and your best streak")
@@ -544,8 +548,10 @@ struct HomeView: View {
         // one list, and three identical white cards read as three
         // headlines. The divider starts under the text, past the 44pt disc.
         VStack(alignment: .leading, spacing: Theme.Spacing.s) {
+            // On the cards' inner edge, as a grouped list's header sits:
+            // the same 32pt the row icons below start on.
             Text("Keep going").sectionHeader()
-                .padding(.horizontal, Theme.Spacing.xs)
+                .padding(.horizontal, Theme.Spacing.m)
 
             CardGroup(dividerInset: CardGroup<EmptyView>.iconRowInset) {
                 // A habit surface like the streak: only while a plan is
@@ -577,19 +583,6 @@ struct HomeView: View {
                     showsKicker: false
                 )
 
-                // The Bible: search, reading, plans and the books map, which
-                // had a tab of their own until 2026-10-13. In the week to then
-                // about 1 in 20 actives did anything there, while memory
-                // verses were opened 5× more from this group than from the
-                // tab. The screen stays whole; only its door moved.
-                Button {
-                    path.append(VersesRoute())
-                } label: {
-                    BibleRow()
-                }
-                .buttonStyle(PressableCardStyle())
-                .accessibilityHint("Opens search, reading and reading plans")
-
                 // A row like its neighbours rather than a card of its own with an
                 // uppercase label and a progress bar: the badge is one more thing
                 // to keep going at, and a full card for it made the column a
@@ -609,6 +602,26 @@ struct HomeView: View {
         // tell the rows apart, and six feature tints on one column read as
         // decoration. Colour stays where it means something — the three
         // puzzle types above, and the flame.
+        .environment(\.rowIconsNeutral, true)
+
+        // The Bible: search, reading, plans and the books map, which had a
+        // tab of their own until 2026-10-13. In the week to then about 1 in
+        // 20 actives did anything there. The screen stays whole; only its
+        // door moved here. Its own group, not a row of Keep going
+        // (2026-10-24): that list is progress — a Journey step, verses due,
+        // the next badge — and a place to go read broke what it means.
+        // A one-row group rather than a bare card, so its padding and icon
+        // edge are the list's — standing alone the row took the standalone
+        // card padding and its icon sat 8pt in from every icon above it.
+        CardGroup(dividerInset: CardGroup<EmptyView>.iconRowInset) {
+            Button {
+                path.append(VersesRoute())
+            } label: {
+                BibleRow()
+            }
+            .buttonStyle(PressableCardStyle())
+            .accessibilityHint("Opens search, reading and reading plans")
+        }
         .environment(\.rowIconsNeutral, true)
 
         // Only packs the player can open. For a free player every tile here
@@ -731,7 +744,9 @@ private struct TodayHeader: View {
                 scripture(verse)
             }
         }
-        .padding(.horizontal, Theme.Spacing.xs)
+        // The page's one content edge — the cards' inner edge — so the verse
+        // starts where the headers and the hero's title do.
+        .padding(.horizontal, Theme.Spacing.m)
         // Flush in a split, so "Verse of the day" starts level with the
         // first card at the top of the other column.
         .padding(.top, inSplit ? 0 : Theme.Spacing.s)
@@ -865,7 +880,6 @@ private struct LeadPuzzleCard: View {
     var progress: Double? = nil
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @Environment(\.dynamicTypeSize) private var typeSize
     @State private var celebrate = false
 
     var body: some View {
@@ -873,7 +887,14 @@ private struct LeadPuzzleCard: View {
             info
             actionButton
         }
-        .padding(Theme.Spacing.xl)
+        // 16 across, 24 down. Across, the title starts on the page's one
+        // content edge — the same 32pt the section headers, the verse and
+        // the row icons below start on; at 32 it sat on an edge of its own.
+        // Down, 24 rather than 32: with the thumbnail gone the title sits on
+        // one line, and 32 all round made a 250pt card for a title, a line
+        // and a button.
+        .padding(.horizontal, Theme.Spacing.m)
+        .padding(.vertical, Theme.Spacing.l)
         .frame(maxWidth: .infinity, alignment: .leading)
         .elevatedCard(fill: Theme.accent.opacity(0.10))
         .onAppear {
@@ -893,48 +914,33 @@ private struct LeadPuzzleCard: View {
             // other one. Seven uppercase labels on Today was two too many.
             // The difficulty rides in the meta row: alone on a row of its own
             // above the title it cost ~30pt of empty card.
-            HStack(alignment: .top, spacing: Theme.Spacing.m) {
-                VStack(alignment: .leading, spacing: Theme.Spacing.m) {
-                    Text(puzzle.title)
-                        .font(.scripture(.title, weight: .bold))
-                        .fixedSize(horizontal: false, vertical: true)
+            // No grid thumbnail. At 20% it read as a watermark rather than as
+            // today's grid, and the 72pt it held on the right wrapped most
+            // titles onto two lines — the card's height was spent on an
+            // ornament nobody could read. The title has the full width now.
+            Text(puzzle.title)
+                .font(.scripture(.title, weight: .bold))
+                .fixedSize(horizontal: false, vertical: true)
+                .frame(maxWidth: .infinity, alignment: .leading)
 
-                    switch presentation {
-                    case .solvedToday(let seconds):
-                        solvedReward(seconds)
-                    case .playedBefore(let previous):
-                        // Presented as playable, because it is: the meta row is
-                        // what an unsolved puzzle shows. With a time on record
-                        // the button ("Beat 4:24") already says both that it's
-                        // a repeat and what to aim for — a line above it saying
-                        // "Played before · your best 4:24" said it twice.
-                        metaRow
-                        if previous ?? 0 <= 0 {
-                            replayPrompt
-                        }
-                    case .play:
-                        metaRow
-                        if let progress {
-                            ProgressView(value: progress)
-                                .tint(Theme.accent)
-                        }
-                    }
+            switch presentation {
+            case .solvedToday(let seconds):
+                solvedReward(seconds)
+            case .playedBefore(let previous):
+                // Presented as playable, because it is: the meta row is
+                // what an unsolved puzzle shows. With a time on record
+                // the button ("Beat 4:24") already says both that it's
+                // a repeat and what to aim for — a line above it saying
+                // "Played before · your best 4:24" said it twice.
+                metaRow
+                if previous ?? 0 <= 0 {
+                    replayPrompt
                 }
-
-                Spacer(minLength: 0)
-
-                // Today's actual grid shape, in miniature. Ornament that happens
-                // to be true — and the first thing that makes one day's card
-                // look different from the next. Dropped at accessibility sizes,
-                // where the title needs the whole width.
-                //
-                // Tone on tone and fused (no gap): at 72pt a 15×15 drawn as
-                // separate pale-blue squares read as a QR code, and in grey
-                // ink on the blue card it read as disabled. A quiet
-                // silhouette in the card's own hue keeps the shape.
-                if !typeSize.isAccessibilitySize {
-                    GridThumbnail(grid: puzzle.grid, tint: Theme.accent.opacity(0.2), gap: 0)
-                        .frame(width: 72, height: 72)
+            case .play:
+                metaRow
+                if let progress {
+                    ProgressView(value: progress)
+                        .tint(Theme.accent)
                 }
             }
         }
@@ -1074,7 +1080,7 @@ private struct CollectionsCarousel: View {
                 .contentShape(.rect.inset(by: -10))
             }
             .buttonStyle(.plain)
-            .padding(.horizontal, Theme.Spacing.xs)
+            .padding(.horizontal, Theme.Spacing.m)
             .accessibilityElement(children: .ignore)
             .accessibilityLabel("See all packs")
             .accessibilityAddTraits([.isHeader, .isButton])
@@ -1103,7 +1109,9 @@ private struct CollectionsCarousel: View {
                 // clipped by the ScrollView edge.
                 .padding(.vertical, 2)
             }
-            .contentMargins(.horizontal, Theme.Spacing.m + Theme.Spacing.xs, for: .scrollContent)
+            // The column's own 16pt, so the first tile's edge sits on the cards'
+            // edge above it. It was 20, four points in from every card.
+            .contentMargins(.horizontal, Theme.Spacing.m, for: .scrollContent)
             .scrollTargetBehavior(.viewAligned)
             .padding(.horizontal, -Theme.Spacing.m)
             // A scroll view draws its content on into the safe area, so with
@@ -1122,14 +1130,18 @@ private struct PackTile: View {
     let progress: PackProgress
     let isLocked: Bool
 
-    @ScaledMetric(relativeTo: .title) private var coverSize = 44
+    /// The cover band across the top of the tile. Scaled with the text so a
+    /// larger size doesn't squeeze the title beneath it.
+    @ScaledMetric(relativeTo: .subheadline) private var coverHeight = 72
 
     /// The tile is a fixed size so the carousel's rows line up, which means the
-    /// tallest combination has to fit: a two-line title *and* a badge under it.
-    /// At 150 that combination overflowed the card — "Women of the Bible" with a
-    /// New badge pushed its puzzle count out past the bottom edge. Scaled rather
-    /// than a larger constant, because the text inside it scales.
-    @ScaledMetric(relativeTo: .subheadline) private var tileHeight = 176
+    /// tallest combination has to fit: the cover and a two-line title over the
+    /// count. The badge rides on the cover, so it no longer adds a line — at
+    /// 150, with the badge under the title, "Women of the Bible" pushed its
+    /// puzzle count out past the bottom edge, and the height reserved for that
+    /// line left every badgeless tile with a gap under its title. Scaled
+    /// rather than a constant, because the text inside it scales.
+    @ScaledMetric(relativeTo: .subheadline) private var tileHeight = 172
     @Environment(\.dynamicTypeSize) private var typeSize
 
     /// 160 holds a two-line title at standard sizes. At accessibility sizes the
@@ -1138,73 +1150,88 @@ private struct PackTile: View {
     /// carousel, so a wider tile costs a swipe, not the layout.
     private var tileWidth: CGFloat { typeSize.isAccessibilitySize ? 280 : 160 }
 
-    /// The one badge this tile shows, if any. The tile's own `Spacer` absorbs
-    /// the extra line, so the carousel's fixed height still holds.
+    /// The one badge this tile shows, if any, on the cover band.
     private var packBadge: PackBadge? { PackBadge.forPack(pack) }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: Theme.Spacing.s) {
-            HStack {
-                // Neutral while locked — colour means "you can open this" on
-                // every surface that lists a collection, not just the Packs tab.
-                CollectionCover(
-                    symbol: pack.coverSymbol,
-                    accent: pack.accent,
-                    isLocked: isLocked,
-                    side: coverSize,
-                    font: .title3,
-                    cornerRadius: 12
-                )
+        // Cover-led, as the App Store's and Books' shelves are: the pack's own
+        // symbol and tint across the top, then the title and where you are.
+        // It was a small chip above the title with about 60pt of empty card
+        // under it — the tile's height was spent on nothing.
+        VStack(alignment: .leading, spacing: 0) {
+            cover
+
+            VStack(alignment: .leading, spacing: Theme.Spacing.s) {
+                Text(pack.title)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(.primary)
+                    .lineLimit(2)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+
                 Spacer(minLength: 0)
+
+                // Same rule as `PackCard`: a locked collection states its size, not
+                // the player's progress through it. This tile was missed when that
+                // landed, so the carousel could still show a crowned pack as
+                // "Complete" — the one surface where it sat on the home screen.
+                // An unstarted pack states its size too: an empty bar over "0/5"
+                // is a gauge with nothing to measure.
+                if isLocked || progress.solved == 0 {
+                    Text("\(progress.total) puzzle\(progress.total == 1 ? "" : "s")")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .monospacedDigit()
+                } else if progress.isComplete {
+                    Label("Complete", systemImage: "checkmark.seal.fill")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(.green)
+                } else {
+                    ProgressView(value: progress.fraction).tint(pack.accent)
+                    Text("\(progress.solved)/\(progress.total)")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .monospacedDigit()
+                }
+            }
+            .padding(Theme.Spacing.m)
+        }
+        .frame(width: tileWidth, height: tileHeight, alignment: .topLeading)
+        .elevatedCard()
+        // The band runs to the tile's edge, so the tile clips it to its own
+        // rounded shape rather than letting square corners show.
+        .clipShape(.rect(cornerRadius: Theme.cornerRadius, style: .continuous))
+        .accessibilityElement(children: .ignore)
+        .accessibilityAddTraits(.isButton)
+        .accessibilityLabel(accessibilityLabel)
+    }
+
+    /// The pack's symbol on a band of its own tint. Neutral while locked —
+    /// colour means "you can open this" on every surface that lists a
+    /// collection — with the crown in the corner. The fills match
+    /// `CollectionCover`'s, so a pack is the same colour everywhere.
+    private var cover: some View {
+        Image(systemName: pack.coverSymbol)
+            .font(.title)
+            .foregroundStyle(isLocked ? AnyShapeStyle(.secondary) : AnyShapeStyle(pack.accent))
+            .frame(maxWidth: .infinity)
+            .frame(height: coverHeight)
+            .background(isLocked ? Color.primary.opacity(0.06) : pack.accent.opacity(0.14))
+            .overlay(alignment: .topTrailing) {
                 if isLocked {
                     Image(systemName: "crown.fill")
                         .font(.caption)
                         .foregroundStyle(.yellow)
+                        .padding(Theme.Spacing.s)
                 }
             }
-
-            Text(pack.title)
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(.primary)
-                .lineLimit(2)
-                .fixedSize(horizontal: false, vertical: true)
-                .frame(maxWidth: .infinity, alignment: .leading)
-
-            if let packBadge {
-                packBadge
+            // "New" or "Closing soon" in the corner opposite the crown.
+            .overlay(alignment: .topLeading) {
+                if let packBadge {
+                    packBadge
+                        .padding(Theme.Spacing.s)
+                }
             }
-
-            Spacer(minLength: 0)
-
-            // Same rule as `PackCard`: a locked collection states its size, not
-            // the player's progress through it. This tile was missed when that
-            // landed, so the carousel could still show a crowned pack as
-            // "Complete" — the one surface where it sat on the home screen.
-            // An unstarted pack states its size too: an empty bar over "0/5"
-            // is a gauge with nothing to measure.
-            if isLocked || progress.solved == 0 {
-                Text("\(progress.total) puzzle\(progress.total == 1 ? "" : "s")")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .monospacedDigit()
-            } else if progress.isComplete {
-                Label("Complete", systemImage: "checkmark.seal.fill")
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(.green)
-            } else {
-                ProgressView(value: progress.fraction).tint(pack.accent)
-                Text("\(progress.solved)/\(progress.total)")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .monospacedDigit()
-            }
-        }
-        .padding(Theme.Spacing.m)
-        .frame(width: tileWidth, height: tileHeight, alignment: .topLeading)
-        .elevatedCard()
-        .accessibilityElement(children: .ignore)
-        .accessibilityAddTraits(.isButton)
-        .accessibilityLabel(accessibilityLabel)
     }
 
     private var accessibilityLabel: String {
