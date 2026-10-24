@@ -6,10 +6,14 @@
 //  premium pack shows its contents but gates play behind the paywall (the free
 //  starter pack is always playable). Seasonal packs surface only in-window.
 //
-//  The screen reads in three levels: one lead card for the thing to do now,
-//  then the Journeys, then the collections. Everything below the lead is a
-//  browse row of equal weight — the promotion is what carries the hierarchy,
-//  so no row has to shout.
+//  A bookshelf since 2026-10-24: one feature card for the collection to play
+//  next, then shelves of tall typographic covers — the Journeys, anything in
+//  season, and the packs by Testament, the way the Bible itself is shelved.
+//  It was an inset-grouped list of symbol rows (2026-10-13): native, but every
+//  collection looked the same at a glance, and the covers carried nothing of
+//  the book a pack draws from. Locked collections keep their colour now, with
+//  a lock on the cover, rather than greying out — a shelf of grey was a shelf
+//  of nothing to want.
 //
 
 import SwiftUI
@@ -43,12 +47,10 @@ struct PacksView: View {
 
     var body: some View {
         // Built once per body pass and handed down, rather than recomputed
-        // inside each row's closure: `recordsByID` rebuilt a dictionary of
-        // every record the player owns once per card, and the pack list was
-        // re-filtered for seasonality three times on the way down the screen.
+        // inside each tile's closure.
         let recordsByID = records.byPuzzleID
         // A pack a Journey already covers is dropped here, so nothing
-        // downstream — the sections, the empty state, the lead — can count
+        // downstream — the shelves, the empty state, the lead — can count
         // the same collection twice.
         let packs = PuzzlePack.notShadowedByQuests(puzzleProvider.availablePacks(), quests: quests)
 
@@ -61,9 +63,10 @@ struct PacksView: View {
                         description: Text("Themed puzzle packs will appear here.")
                     )
                 } else {
-                    list(packs: packs, recordsByID: recordsByID)
+                    shelves(packs: packs, recordsByID: recordsByID)
                 }
             }
+            .background(Theme.background)
             .navigationTitle("Packs")
             // Large, as Today's is: a tab root names itself at the top and
             // hands the name to the bar on scroll.
@@ -87,13 +90,12 @@ struct PacksView: View {
     }
 
     /// Every collection's progress, worked out once per body pass. The lead,
-    /// the sort and each row all read it — it used to be built separately by
-    /// the lead's pick and again by every row it then drew.
+    /// the sort and each tile all read it.
     private struct ProgressBook {
         let packs: [String: PackProgress]
         let quests: [String: QuestProgress]
 
-        // Built from the same lists the rows come from, so a miss shouldn't
+        // Built from the same lists the tiles come from, so a miss shouldn't
         // happen — but a miss is a fresh progress, not a crash.
         let recordsByID: [String: PuzzleRecord]
 
@@ -105,7 +107,7 @@ struct PacksView: View {
         }
     }
 
-    private func list(packs: [PuzzlePack], recordsByID: [String: PuzzleRecord]) -> some View {
+    private func shelves(packs: [PuzzlePack], recordsByID: [String: PuzzleRecord]) -> some View {
         let book = ProgressBook(
             packs: Dictionary(packs.map { ($0.id, PackProgress(pack: $0, recordsByID: recordsByID)) },
                               uniquingKeysWith: { a, _ in a }),
@@ -113,66 +115,66 @@ struct PacksView: View {
                                uniquingKeysWith: { a, _ in a }),
             recordsByID: recordsByID
         )
+        let packLabels = Dictionary(
+            packs.map { ($0.id, PackCoverLabel(puzzles: puzzleProvider.puzzles(in: $0))) },
+            uniquingKeysWith: { a, _ in a }
+        )
         let lead = self.lead(packs: packs, book: book)
-        // The promoted collection is lifted out of its section rather than
-        // repeated under it — the screen has just stopped showing the same
-        // collection twice, and the lead card must not put it back.
-        let shownQuests = Self.playOrder(
+
+        // The promoted collection is lifted out of its shelf rather than
+        // repeated on it. On each shelf: something to do first, locked after
+        // what's open, finished last.
+        let shownQuests = openFirst(Self.playOrder(
             quests.filter { $0.id != lead?.questID },
             solved: { book.of($0).solved }, isComplete: { book.of($0).isComplete }
-        )
+        ), isPremium: \.isPremium)
         let seasonal = packs.filter { $0.isSeasonal && $0.id != lead?.packID }
-        let evergreen = Self.playOrder(
+        let evergreen = openFirst(Self.playOrder(
             packs.filter { !$0.isSeasonal && $0.id != lead?.packID },
             solved: { book.of($0).solved }, isComplete: { book.of($0).isComplete }
-        )
+        ), isPremium: \.isPremium)
+        let oldTestament = evergreen.filter { packLabels[$0.id]?.testament != .new }
+        let newTestament = evergreen.filter { packLabels[$0.id]?.testament == .new }
 
-        // A free player's locked Journeys and packs gather under one offer
-        // instead of a crown on every row: five of seven rows were crowned
-        // and nothing on the tab said, once, what would open them. Seasonal
-        // packs stay in their own section either way — the season is the
-        // reason to look now.
-        let openQuests = shownQuests.filter { !isLocked($0.isPremium) }
-        let lockedQuests = shownQuests.filter { isLocked($0.isPremium) }
-        // Finished packs go to the foot of the tab under their own header.
-        // In "Free" they were the whole section for anyone past the
-        // tutorial — one finished pack, the only free thing listed.
-        let openEvergreen = evergreen.filter { !isLocked($0.isPremium) }
-        let openPacks = openEvergreen.filter { !book.of($0).isComplete }
-        let finishedPacks = openEvergreen.filter { book.of($0).isComplete }
-        let lockedPacks = evergreen.filter { isLocked($0.isPremium) }
-        let anythingAbove = lead != nil || !openQuests.isEmpty || !seasonal.isEmpty
+        let lockedCount = quests.filter { isLocked($0.isPremium) }.count
+            + packs.filter { isLocked($0.isPremium) }.count
 
-        // A native inset-grouped List since 2026-10-13: system rows, chevrons,
-        // separators and highlight, instead of hand-built cards that looked
-        // like iOS without behaving like it. The warm paper stays behind it.
-        return List {
-            leadSection(lead)
-            questSection(quests: openQuests, book: book)
-            if !seasonal.isEmpty {
-                section("In season", packs: seasonal, book: book)
+        return ScrollView {
+            LazyVStack(alignment: .leading, spacing: Theme.Spacing.xl) {
+                leadCard(lead, packLabels: packLabels)
+
+                if !shownQuests.isEmpty {
+                    PackShelf(title: "Journeys") {
+                        ForEach(shownQuests) { quest in
+                            NavigationLink(value: QuestRoute(quest: quest, source: .packs)) {
+                                questTile(quest, progress: book.of(quest))
+                            }
+                            .buttonStyle(PressableCardStyle())
+                        }
+                    }
+                }
+                packShelf("In season", packs: seasonal, book: book, labels: packLabels)
+                packShelf("Old Testament", packs: oldTestament, book: book, labels: packLabels)
+                packShelf("New Testament", packs: newTestament, book: book, labels: packLabels)
+
+                // A free player's one offer for everything locked above,
+                // at the foot of the tab rather than a lock on its own.
+                if lockedCount > 0 {
+                    premiumOffer(count: lockedCount)
+                }
             }
-            section(
-                anythingAbove ? (store.isPremium ? "All packs" : "Free") : nil,
-                packs: openPacks,
-                book: book
-            )
-            premiumSection(quests: lockedQuests, packs: lockedPacks, book: book)
-            section("Finished", packs: finishedPacks, book: book)
+            .padding(.horizontal, Theme.Spacing.l - 4)
+            .padding(.top, Theme.Spacing.s)
+            .padding(.bottom, Theme.Spacing.l)
+            // A readable width on iPad, as the Library's is.
+            .frame(maxWidth: 900)
+            .frame(maxWidth: .infinity)
         }
-        .listStyle(.insetGrouped)
-        .scrollContentBackground(.hidden)
-        .background(Theme.background)
-        // Rows at a readable width on iPad, as the Library's are.
-        .frame(maxWidth: 640)
-        .frame(maxWidth: .infinity)
-        .background(Theme.background)
     }
 
     /// Something to do first: one under way, then one not begun, and a
-    /// finished one last — the order Today's packs shelf already uses. In
-    /// authored order "First Steps · Complete" led All packs for everyone
-    /// past the tutorial. Stable within each group.
+    /// finished one last — the order Today's packs shelf already uses.
+    /// Stable within each group.
     private static func playOrder<T>(
         _ items: [T], solved: (T) -> Int, isComplete: (T) -> Bool
     ) -> [T] {
@@ -183,6 +185,17 @@ struct PacksView: View {
         return items.enumerated()
             .sorted { (rank($0.element), $0.offset) < (rank($1.element), $1.offset) }
             .map(\.element)
+    }
+
+    /// What this player can open, ahead of what Premium would open; stable
+    /// within each group.
+    private func openFirst<T>(_ items: [T], isPremium: KeyPath<T, Bool>) -> [T] {
+        items.filter { !isLocked($0[keyPath: isPremium]) }
+            + items.filter { isLocked($0[keyPath: isPremium]) }
+    }
+
+    private func isLocked(_ isPremiumContent: Bool) -> Bool {
+        isPremiumContent && !store.isPremium
     }
 
     // MARK: - Lead
@@ -214,31 +227,34 @@ struct PacksView: View {
         return nil
     }
 
-    /// The one thing to do here, as the first row: the collection under way
-    /// (or the first one open), with an App Store–style pill naming the step.
     @ViewBuilder
-    private func leadSection(_ lead: Lead?) -> some View {
+    private func leadCard(_ lead: Lead?, packLabels: [String: PackCoverLabel]) -> some View {
         switch lead {
         case let .quest(quest, progress):
             if let action = CollectionLeadAction.forRow(
                 isLocked: false, solved: progress.solved, isComplete: progress.isComplete
             ) {
-                leadRow(
-                    open: { path.append(QuestRoute(quest: quest, source: .packs)) },
-                    symbol: quest.coverSymbol, accent: quest.accent, title: quest.title,
-                    meta: "Journey · " + QuestProgress.stepLine(solved: progress.solved, total: progress.total),
-                    action: action
+                LeadFeatureCard(
+                    kicker: "Journey · " + QuestProgress.stepLine(solved: progress.solved, total: progress.total),
+                    title: quest.title,
+                    mark: PackCoverLabel(puzzles: puzzleProvider.puzzles(in: quest)).mark,
+                    fill: quest.coverFill,
+                    steps: (progress.solved, progress.total),
+                    actionTitle: Self.actionTitle(action),
+                    open: { path.append(QuestRoute(quest: quest, source: .packs)) }
                 )
             }
         case let .pack(pack, progress):
             if let action = CollectionLeadAction.forRow(
                 isLocked: false, solved: progress.solved, isComplete: progress.isComplete
             ) {
-                leadRow(
-                    open: { path.append(PackRoute(pack: pack, source: .packs)) },
-                    symbol: pack.coverSymbol, accent: pack.accent, title: pack.title,
-                    meta: "Pack · \(progress.solved) of \(progress.total) solved",
-                    action: action
+                LeadFeatureCard(
+                    kicker: "Pack · \(progress.solved) of \(progress.total) solved",
+                    title: pack.title,
+                    mark: packLabels[pack.id]?.mark ?? "",
+                    fill: pack.coverFill,
+                    actionTitle: Self.actionTitle(action),
+                    open: { path.append(PackRoute(pack: pack, source: .packs)) }
                 )
             }
         case nil:
@@ -246,247 +262,98 @@ struct PacksView: View {
         }
     }
 
-    private func leadRow(
-        // A closure, not an AnyHashable route: NavigationPath keys its
-        // destinations by the appended type, and an AnyHashable matched none.
-        open: @escaping () -> Void, symbol: String, accent: Color, title: String,
-        meta: String, action: CollectionLeadAction
-    ) -> some View {
-        Section {
-            Button {
-                open()
-            } label: {
-                HStack(spacing: Theme.Spacing.m) {
-                    CollectionCover(symbol: symbol, accent: accent, isLocked: false,
-                                    side: 52, font: .title2, cornerRadius: 12)
-                    VStack(alignment: .leading, spacing: 2) {
-                        // Concrete colours: inside a list button the
-                        // hierarchical styles resolve against the tint.
-                        Text(title).font(.headline).foregroundStyle(Color.primary)
-                        Text(meta).font(.subheadline).foregroundStyle(Color(uiColor: .secondaryLabel))
-                    }
-                    Spacer(minLength: Theme.Spacing.s)
-                    // The App Store's GET pill: tinted fill, accent label.
-                    Text(action.rawValue)
-                        .font(.subheadline.weight(.bold))
-                        .foregroundStyle(Theme.accent)
-                        .padding(.horizontal, Theme.Spacing.m)
-                        .padding(.vertical, 6)
-                        .background(Color(.tertiarySystemFill), in: .capsule)
-                }
-                .padding(.vertical, Theme.Spacing.xs)
-                .contentShape(.rect)
-            }
-            // The list's own button style, for the system tap highlight;
-            // text is set to primary above, so nothing turns accent.
-            .accessibilityElement(children: .combine)
-            .accessibilityLabel("Next up: \(title). \(meta)")
-            .accessibilityHint("\(action.rawValue)s it")
-        } header: {
-            Text("Next up")
-        }
-        .headerProminence(.increased)
+    /// "Continue", not "Resume", on the card's pill: it reads as the next
+    /// step of something under way rather than a paused video.
+    private static func actionTitle(_ action: CollectionLeadAction) -> String {
+        action == .resume ? "Continue" : "Start"
     }
 
-    private func isLocked(_ isPremiumContent: Bool) -> Bool {
-        isPremiumContent && !store.isPremium
-    }
+    // MARK: - Shelves
 
-    // MARK: - Sections
-    //
-    // List sections with prominent headers, as Music and the App Store set
-    // theirs. Rows are NavigationLinks, so the chevron, highlight and
-    // separators are the system's own.
-
-    /// Everything Premium would open, under one offer at the head of the
-    /// section. Locked rows carry a lock beside the chevron.
     @ViewBuilder
-    private func premiumSection(
-        quests: [QuestLine], packs: [PuzzlePack], book: ProgressBook
+    private func packShelf(
+        _ title: String, packs: [PuzzlePack], book: ProgressBook, labels: [String: PackCoverLabel]
     ) -> some View {
-        if !quests.isEmpty || !packs.isEmpty {
-            Section {
-                premiumOffer(count: quests.count + packs.count)
-                ForEach(quests) { quest in
-                    NavigationLink(value: QuestRoute(quest: quest, source: .packs)) {
-                        CollectionRow(quest: quest, progress: book.of(quest), isLocked: true)
-                    }
-                }
+        if !packs.isEmpty {
+            PackShelf(title: title) {
                 ForEach(packs) { pack in
                     NavigationLink(value: PackRoute(pack: pack, source: .packs)) {
-                        CollectionRow(pack: pack, progress: book.of(pack), isLocked: true)
+                        packTile(pack, progress: book.of(pack), label: labels[pack.id])
                     }
+                    .buttonStyle(PressableCardStyle())
                 }
-            } header: {
-                Text("With Premium")
             }
-            .headerProminence(.increased)
         }
     }
 
-    /// The one offer on the tab, dressed as Today's Premium card: what you
-    /// get, then the accent button and the price (`PremiumOfferCTA`). The
-    /// whole row opens the paywall; the section header already says Premium.
+    private func packTile(_ pack: PuzzlePack, progress: PackProgress, label: PackCoverLabel?) -> some View {
+        let locked = isLocked(pack.isPremium)
+        let size = "\(progress.total) puzzle\(progress.total == 1 ? "" : "s")"
+        // A locked pack states its size, never progress.
+        let meta = locked ? "\(size) · Premium"
+            : progress.isComplete ? "Complete"
+            : progress.solved > 0 ? "\(progress.solved) of \(progress.total) solved"
+            : size
+        return ShelfTile(
+            title: pack.title,
+            meta: meta,
+            label: label ?? PackCoverLabel(puzzles: []),
+            fill: pack.coverFill,
+            fallbackSymbol: pack.coverSymbol,
+            isLocked: locked,
+            progress: !locked && progress.solved > 0 && !progress.isComplete ? progress.fraction : nil,
+            badge: PackBadge.forPack(pack)
+        )
+    }
+
+    private func questTile(_ quest: QuestLine, progress: QuestProgress) -> some View {
+        let locked = isLocked(quest.isPremium)
+        let meta = locked ? "\(progress.total) days · Premium"
+            : progress.isComplete ? "Complete"
+            : progress.solved > 0 ? QuestProgress.stepLine(solved: progress.solved, total: progress.total)
+            : "\(progress.total) steps, one a day"
+        return ShelfTile(
+            title: quest.title,
+            meta: meta,
+            label: PackCoverLabel(puzzles: puzzleProvider.puzzles(in: quest)),
+            fill: quest.coverFill,
+            fallbackSymbol: quest.coverSymbol,
+            isLocked: locked,
+            progress: !locked && progress.solved > 0 && !progress.isComplete ? progress.fraction : nil
+        )
+    }
+
+    // MARK: - Offer
+
+    /// The one offer on the tab, dressed as Today's Premium card: the chip,
+    /// what you get, then the accent button and the price
+    /// (`PremiumOfferCTA`). The whole card opens the paywall.
     private func premiumOffer(count: Int) -> some View {
         Button {
             showPaywall = true
         } label: {
             VStack(alignment: .leading, spacing: Theme.Spacing.m) {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Every pack and Journey")
-                        .font(.title3.weight(.bold))
-                        .foregroundStyle(Color.primary)
-                    Text("\(count) more to play below, plus hints whenever you need them.")
-                        .font(.subheadline)
-                        .foregroundStyle(Color(uiColor: .secondaryLabel))
-                        .fixedSize(horizontal: false, vertical: true)
+                VStack(alignment: .leading, spacing: Theme.Spacing.s) {
+                    PremiumChip()
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Every pack and Journey")
+                            .font(.title3.weight(.bold))
+                            .foregroundStyle(Color.primary)
+                        Text("\(count) more to play above, plus hints whenever you need them.")
+                            .font(.subheadline)
+                            .foregroundStyle(Color(uiColor: .secondaryLabel))
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
                 }
                 PremiumOfferCTA()
             }
-            .padding(.vertical, Theme.Spacing.s)
+            .padding(20)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .elevatedCard()
             .contentShape(.rect)
         }
+        .buttonStyle(PressableCardStyle())
         .accessibilityElement(children: .combine)
         .accessibilityHint("Opens Premium plans")
-    }
-
-    /// The Journeys sit above the packs: an ordered, paced run is the stronger
-    /// daily-return pitch, and there are only a few of them.
-    @ViewBuilder
-    private func questSection(quests: [QuestLine], book: ProgressBook) -> some View {
-        if !quests.isEmpty {
-            Section {
-                ForEach(quests) { quest in
-                    NavigationLink(value: QuestRoute(quest: quest, source: .packs)) {
-                        CollectionRow(quest: quest, progress: book.of(quest),
-                                      isLocked: isLocked(quest.isPremium))
-                    }
-                }
-            } header: {
-                Text("Journeys")
-            }
-            .headerProminence(.increased)
-        }
-    }
-
-    @ViewBuilder
-    private func section(
-        _ title: String?,
-        packs: [PuzzlePack],
-        book: ProgressBook
-    ) -> some View {
-        if !packs.isEmpty {
-            Section {
-                ForEach(packs) { pack in
-                    NavigationLink(value: PackRoute(pack: pack, source: .packs)) {
-                        CollectionRow(pack: pack, progress: book.of(pack),
-                                      isLocked: isLocked(pack.isPremium))
-                    }
-                }
-            } header: {
-                if let title { Text(title) }
-            }
-            .headerProminence(.increased)
-        }
-    }
-}
-
-// MARK: - Row
-
-/// A pack or Journey as a native list row: a 36pt cover, title, two lines of
-/// blurb and a status line — "Pack · 5 puzzles", progress, or Complete. The
-/// list supplies the chevron; a locked row adds a lock before it.
-private struct CollectionRow: View {
-    let symbol: String
-    let accent: Color
-    let title: String
-    let blurb: String
-    let isLocked: Bool
-    let badge: PackBadge?
-    let status: Status
-
-    enum Status {
-        case size(String)
-        case progress(fraction: Double, text: String)
-        case complete
-    }
-
-    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
-
-    init(pack: PuzzlePack, progress: PackProgress, isLocked: Bool) {
-        symbol = pack.coverSymbol; accent = pack.accent; title = pack.title
-        blurb = pack.blurb; self.isLocked = isLocked; badge = PackBadge.forPack(pack)
-        let size = "Pack · \(progress.total) puzzle\(progress.total == 1 ? "" : "s")"
-        // A locked pack states its size, never progress (see `PackCard.status`).
-        status = isLocked || progress.solved == 0 ? .size(size)
-            : progress.isComplete ? .complete
-            : .progress(fraction: progress.fraction, text: "\(progress.solved) of \(progress.total) solved")
-    }
-
-    init(quest: QuestLine, progress: QuestProgress, isLocked: Bool) {
-        symbol = quest.coverSymbol; accent = quest.accent; title = quest.title
-        blurb = quest.blurb; self.isLocked = isLocked; badge = nil
-        status = isLocked || progress.solved == 0 ? .size("Journey · \(progress.total) days")
-            : progress.isComplete ? .complete
-            : .progress(fraction: progress.fraction,
-                        text: QuestProgress.stepLine(solved: progress.solved, total: progress.total))
-    }
-
-    var body: some View {
-        HStack(alignment: .top, spacing: Theme.Spacing.m) {
-            CollectionCover(symbol: symbol, accent: accent, isLocked: isLocked,
-                            side: 36, font: .body, cornerRadius: 9)
-            VStack(alignment: .leading, spacing: 2) {
-                HStack(spacing: Theme.Spacing.xs) {
-                    Text(title).font(.headline)
-                    if let badge { badge }
-                }
-                Text(blurb)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(CollectionCardLayout.blurbLineLimit(dynamicTypeSize))
-                statusView
-                    .padding(.top, 2)
-            }
-            Spacer(minLength: 0)
-            if isLocked {
-                Image(systemName: "lock.fill")
-                    .font(.footnote)
-                    .foregroundStyle(.tertiary)
-                    .frame(maxHeight: .infinity)
-            }
-        }
-        .padding(.vertical, Theme.Spacing.xs)
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel(accessibilityLabel)
-    }
-
-    @ViewBuilder
-    private var statusView: some View {
-        switch status {
-        case let .size(text):
-            Text(text).font(.caption).foregroundStyle(.secondary).monospacedDigit()
-        case .complete:
-            Label("Complete", systemImage: "checkmark.seal.fill")
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(.green)
-        case let .progress(fraction, text):
-            VStack(alignment: .leading, spacing: 2) {
-                ProgressView(value: fraction).tint(accent)
-                Text(text).font(.caption).foregroundStyle(.secondary).monospacedDigit()
-            }
-        }
-    }
-
-    private var accessibilityLabel: String {
-        var parts = [title, blurb]
-        if isLocked { parts.append("Premium") }
-        if let badge { parts.append(badge.label) }
-        switch status {
-        case let .size(text): parts.append(text)
-        case .complete: parts.append("Complete")
-        case let .progress(_, text): parts.append(text)
-        }
-        return parts.joined(separator: ". ")
     }
 }

@@ -1378,10 +1378,10 @@ private struct UpgradeCard: View {
         } label: {
             VStack(alignment: .leading, spacing: Theme.Spacing.m) {
                 VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
-                    Label("Premium", systemImage: "crown.fill")
-                        .font(.caption.weight(.bold))
-                        .textCase(.uppercase)
-                        .foregroundStyle(Theme.accent)
+                    // The gold chip Premium wears everywhere (2026-10-24),
+                    // not a blue caps label: blue on Today means the daily.
+                    PremiumChip()
+                        .padding(.bottom, Theme.Spacing.xs)
                     Text(title)
                         .font(.title2.weight(.bold))
                         .foregroundStyle(Color.primary)
@@ -1412,7 +1412,7 @@ private struct UpgradeCard: View {
 
     private var terms: String? { PremiumCopy.terms(store) }
 
-    /// Grey icons: blue is kept for the label and the button, the two things
+    /// Grey icons: colour is kept for the chip and the button, the two things
     /// on the card that say "this is the offer".
     private func benefit(_ symbol: String, _ text: String) -> some View {
         Label {

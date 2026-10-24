@@ -222,15 +222,7 @@ struct PremiumOfferView: View {
             // caps said "label"; the chip says "this is the paid thing" before
             // a word is read. VoiceOver still hears the app's name.
             if !compact && !firstRun {
-                Label("Premium", systemImage: "crown.fill")
-                    .font(.footnote.weight(.bold))
-                    // Fixed near-black: the chip is gold in both appearances.
-                    .foregroundStyle(Color(white: 0.1))
-                    .padding(.vertical, 5)
-                    .padding(.horizontal, 12)
-                    .background(Theme.badgeRim, in: .capsule)
-                    .accessibilityElement(children: .ignore)
-                    .accessibilityLabel("Bible Crossword Premium")
+                PremiumChip()
             }
             // `.title`, not `.largeTitle`: with the tiles above it the
             // headline is no longer the only thing announcing the page, and

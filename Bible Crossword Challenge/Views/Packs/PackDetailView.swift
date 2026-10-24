@@ -68,8 +68,14 @@ struct PackDetailView: View {
         // The collection on the left of a wide window, its puzzles on the
         // right.
         return CardColumns(alignment: .leading) {
-            header(progress: progress, books: packBooks(puzzles))
-                .onScrolledUnderBar { headerScrolledAway = $0 }
+            Group {
+                if isLocked {
+                    lockedHero(label: PackCoverLabel(puzzles: puzzles), total: progress.total)
+                } else {
+                    header(progress: progress, books: packBooks(puzzles))
+                }
+            }
+            .onScrolledUnderBar { headerScrolledAway = $0 }
             if !isLocked, let next = nextPuzzle(puzzles, recordsByID: recordsByID) {
                 playButton(next, recordsByID: recordsByID, progress: progress)
             }
@@ -173,6 +179,54 @@ struct PackDetailView: View {
         .padding(.top, Theme.Spacing.s)
         .frame(maxWidth: .infinity, alignment: .leading)
         .accessibilityElement(children: .combine)
+    }
+
+    /// A locked pack as the thing being sold: a feature card in the pack's
+    /// own colour with the gold Premium chip, the title in serif, and the
+    /// book's mark set large behind it. It was the open header with a grey
+    /// cover (2026-10-24): the page that converts best (3 purchases from 14
+    /// openers in 60 days) looked like a disabled version of a free one.
+    /// The blurb sits under the card on the paper, where it reads as prose.
+    private func lockedHero(label: PackCoverLabel, total: Int) -> some View {
+        VStack(alignment: .leading, spacing: Theme.Spacing.m) {
+            VStack(alignment: .leading, spacing: 10) {
+                PremiumChip()
+                Text(pack.title)
+                    .font(.scripture(.largeTitle, weight: .semibold))
+                    .foregroundStyle(.white)
+                    .fixedSize(horizontal: false, vertical: true)
+                Text(label.caption.isEmpty ? Self.puzzleCount(total) : "\(label.caption) · \(Self.puzzleCount(total))")
+                    .font(.subheadline)
+                    .foregroundStyle(.white.opacity(0.9))
+            }
+            .frame(maxWidth: .infinity, minHeight: 200, alignment: .bottomLeading)
+            .padding(20)
+            .background(alignment: .topTrailing) {
+                Text(label.mark)
+                    .font(.system(size: 132, weight: .semibold, design: .serif))
+                    .tracking(-4)
+                    .foregroundStyle(.white.opacity(0.10))
+                    .lineLimit(1)
+                    .fixedSize()
+                    .offset(x: 8, y: -20)
+                    .accessibilityHidden(true)
+            }
+            .background(pack.coverFill)
+            .clipShape(.rect(cornerRadius: Theme.featureCornerRadius, style: .continuous))
+
+            Text(pack.blurb)
+                .font(.body)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.horizontal, Theme.Spacing.xs)
+        }
+        .padding(.top, Theme.Spacing.s)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .accessibilityElement(children: .combine)
+    }
+
+    private static func puzzleCount(_ total: Int) -> String {
+        "\(total) puzzle\(total == 1 ? "" : "s")"
     }
 
     /// "Psalms · 5 puzzles"; past three books, just the count.
@@ -364,10 +418,12 @@ struct PackDetailView: View {
     // MARK: - Locked state
 
     /// The pack's puzzles, shown rather than withheld: the titles are what a
-    /// player is deciding to pay for. Each row opens the paywall.
+    /// player is deciding to pay for. Each row opens the paywall. No lock on
+    /// each row since 2026-10-24 — the chip on the card above already says
+    /// Premium once, and five locks made a contents page read as a wall.
     private func lockedPuzzleList(_ puzzles: [Puzzle]) -> some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.s) {
-            Text("Included with Premium").sectionHeader()
+            Text("In this pack").sectionHeader()
                 .padding(.horizontal, Theme.Spacing.xs)
             CardGroup(dividerInset: TrackRow<EmptyView>.dividerInset) {
                 ForEach(Array(puzzles.enumerated()), id: \.element.id) { index, puzzle in
@@ -375,10 +431,7 @@ struct PackDetailView: View {
                         showPaywall = true
                     } label: {
                         TrackRow(number: index + 1, title: puzzle.title, detail: Self.detail(puzzle)) {
-                            Image(systemName: "lock.fill")
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
-                                .accessibilityHidden(true)
+                            EmptyView()
                         }
                     }
                     .buttonStyle(PressableCardStyle())

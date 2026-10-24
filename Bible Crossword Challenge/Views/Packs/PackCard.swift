@@ -2,34 +2,12 @@
 //  PackCard.swift
 //  Bible Crossword Challenge
 //
-//  The pieces packs and Journeys share: the cover chip, the lead action and
-//  the rules their rows follow as type grows. The rows themselves are
-//  `CollectionRow` in PacksView, a native list row since 2026-10-13.
+//  The pieces packs and Journeys share: the cover chip and the lead action.
+//  The Packs tab's own tiles are `ShelfTile` (PackShelf.swift) since
+//  2026-10-24.
 //
 
 import SwiftUI
-
-// MARK: - Shared row layout
-
-/// The rules collection rows share as type grows (see `CollectionRow` in
-/// PacksView and the Journey step list).
-enum CollectionCardLayout {
-    /// How many lines the blurb may take.
-    ///
-    /// It was a flat two. That clipped The Shepherd's Psalm at the default
-    /// size, and at xxxLarge — the largest *non*-accessibility size, an
-    /// ordinary setting rather than an assistive one — it clipped every blurb
-    /// on the screen at once. The blurb is the only description of what is
-    /// inside a collection, on the screen where someone decides whether to
-    /// pay for it, so above the default size it gets whatever it needs; three
-    /// is kept as a guard at the default so one long line of authored copy
-    /// can't stretch a row unnoticed.
-    static func blurbLineLimit(_ size: DynamicTypeSize) -> Int? {
-        // Two at the default size, not three: five locked rows of three-line
-        // copy filled a screen, and the pack page carries the full blurb.
-        size > .large ? nil : 2
-    }
-}
 
 // MARK: - Cover chip
 

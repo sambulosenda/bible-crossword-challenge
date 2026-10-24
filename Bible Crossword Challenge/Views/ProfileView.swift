@@ -28,6 +28,15 @@ struct ProfileView: View {
     @Environment(\.gameCenter) private var gameCenter
     @Environment(\.challengeHistory) private var challengeHistory
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.memoryVerses) private var memoryVerses
+    @Environment(\.puzzleProvider) private var puzzleProvider
+    @Environment(\.modelContext) private var modelContext
+    /// Books reached through a solved puzzle, counted when the tab appears.
+    /// A one-off fetch rather than a standing `@Query`: the number only moves
+    /// when a puzzle is solved elsewhere, and a live query over every record
+    /// on a tab that's built at launch was one more observer on the synced
+    /// store for nothing.
+    @State private var booksExplored = 0
     @State private var showRename = false
     @State private var draftName = ""
     @State private var showChallengeHistory = false
@@ -42,12 +51,22 @@ struct ProfileView: View {
                 Section {
                     identityRow
                     ProfileStatsRow(
+                        booksExplored: booksExplored,
+                        versesLearned: memoryVerses.entries.count(where: \.isMastered),
                         solved: profile.totalPuzzlesCompleted,
-                        streak: profile.currentStreak,
-                        bestStreak: profile.bestStreak,
-                        bestSolveSeconds: profile.bestSolveSeconds
+                        bestStreak: profile.bestStreak
                     )
                 }
+
+                // The verse the player is carrying, ahead of the game's
+                // records (2026-10-24): what this tab says about someone
+                // should be the Scripture they're learning, not their times.
+                Section {
+                    learningNowRow
+                } header: {
+                    Text("Memory verse")
+                }
+                .headerProminence(.increased)
 
                 Section {
                     NavigationLink {
@@ -70,6 +89,7 @@ struct ProfileView: View {
             .frame(maxWidth: .infinity)
             .background(Theme.background)
             .navigationTitle("Profile")
+            .onAppear(perform: countBooksExplored)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Settings", systemImage: "gearshape", action: openSettings)
@@ -77,6 +97,12 @@ struct ProfileView: View {
             }
             .navigationDestination(isPresented: $showChallengeHistory) {
                 ChallengeHistoryView(profile: profile)
+            }
+            .navigationDestination(for: MemoryRoute.self) { route in
+                MemoryVerseListView(source: route.source)
+            }
+            .navigationDestination(for: MemoryPracticeRoute.self) { route in
+                MemoryPracticeView(referenceKey: route.referenceKey, source: route.source)
             }
             .alert(chosenName == nil ? "Add your name" : "Your name", isPresented: $showRename) {
                 TextField("Your name", text: $draftName)
@@ -126,6 +152,71 @@ struct ProfileView: View {
         .accessibilityLabel(chosenName.map { "\($0). \(membershipLine)" } ?? "Add your name")
         .accessibilityHint(chosenName == nil ? "Friends see it on the challenges you send" : "Edits your name")
         .accessibilityAddTraits(.isButton)
+    }
+
+    // MARK: - Memory verse
+
+    /// The verse to practise: one that's due first, else the one practised
+    /// most recently, among those not yet mastered.
+    private var learningNow: MemoryVerseStore.Entry? {
+        memoryVerses.entries
+            .filter { !$0.isMastered }
+            .max { lhs, rhs in
+                let lhsDue = memoryVerses.isDue(lhs), rhsDue = memoryVerses.isDue(rhs)
+                if lhsDue != rhsDue { return !lhsDue }
+                return (lhs.lastPracticedAt ?? lhs.startedAt) < (rhs.lastPracticedAt ?? rhs.startedAt)
+            }
+    }
+
+    /// The verse in serif with its reference and the way to practise it — or,
+    /// with nothing being learned, the invitation to choose one.
+    @ViewBuilder
+    private var learningNowRow: some View {
+        if let entry = learningNow {
+            NavigationLink(value: MemoryPracticeRoute(referenceKey: entry.referenceKey, source: "profile")) {
+                VStack(alignment: .leading, spacing: Theme.Spacing.s) {
+                    Text(entry.verseText)
+                        .font(.scripture(.title3))
+                        .foregroundStyle(Color.primary)
+                        .lineLimit(dynamicTypeSize.isAccessibilitySize ? nil : 4)
+                        .fixedSize(horizontal: false, vertical: true)
+                    HStack {
+                        Text(entry.reference)
+                            .font(.subheadline)
+                            .foregroundStyle(Color(uiColor: .secondaryLabel))
+                        Spacer(minLength: Theme.Spacing.s)
+                        Text(memoryVerses.isDue(entry) ? "Practice now" : "Practice")
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(Theme.accent)
+                    }
+                }
+                .padding(.vertical, Theme.Spacing.xs)
+            }
+            .accessibilityElement(children: .combine)
+            .accessibilityHint("Practises this verse")
+        } else {
+            NavigationLink(value: MemoryRoute(source: "profile")) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Choose a verse to carry with you")
+                        .font(.scripture(.title3))
+                        .foregroundStyle(Color.primary)
+                    Text("Pick one from any puzzle you've solved.")
+                        .font(.subheadline)
+                        .foregroundStyle(Color(uiColor: .secondaryLabel))
+                }
+                .padding(.vertical, Theme.Spacing.xs)
+            }
+            .accessibilityElement(children: .combine)
+        }
+    }
+
+    /// Books of the Bible the player has reached through a solved puzzle.
+    private func countBooksExplored() {
+        let records = (try? modelContext.fetch(FetchDescriptor<PuzzleRecord>())) ?? []
+        let solved = Set(records.filter(\.isCompleted).map(\.puzzleID))
+        booksExplored = BibleJourney.booksTouched(
+            completedPuzzleIDs: solved, puzzles: puzzleProvider.allPuzzles
+        ).count
     }
 
     private var achievementsSummary: String {
@@ -219,14 +310,15 @@ struct ProfileView: View {
 // MARK: - Stats
 
 /// Four numbers of one size in one row — ink values, grey labels, no icons.
-/// It was five stats in two sizes with five tints; the day streak also lives in
-/// Today's bar and freezes in its streak sheet, so the row keeps the records.
-/// Plain values only, so SwiftUI can skip it when unrelated state changes.
+/// Scripture first since 2026-10-24: books explored and verses learned lead,
+/// then the two records that matter most. The day streak lives in Today's bar
+/// and best times on the completion screen. Plain values only, so SwiftUI can
+/// skip it when unrelated state changes.
 private struct ProfileStatsRow: View {
+    let booksExplored: Int
+    let versesLearned: Int
     let solved: Int
-    let streak: Int
     let bestStreak: Int
-    let bestSolveSeconds: Int?
 
     var body: some View {
         // Four across until a label can't hold its line, then two by two.
@@ -234,12 +326,12 @@ private struct ProfileStatsRow: View {
             HStack(spacing: 0) { stats }
             Grid(alignment: .leading, horizontalSpacing: Theme.Spacing.m, verticalSpacing: Theme.Spacing.m) {
                 GridRow {
-                    stat("\(solved)", "Solved")
-                    stat("\(streak)", "Streak")
+                    stat("\(booksExplored)", "Books")
+                    stat("\(versesLearned)", "Verses")
                 }
                 GridRow {
+                    stat("\(solved)", "Solved")
                     stat("\(bestStreak)", "Best streak")
-                    stat(bestTimeValue, "Best time")
                 }
             }
         }
@@ -248,16 +340,10 @@ private struct ProfileStatsRow: View {
 
     @ViewBuilder
     private var stats: some View {
+        stat("\(booksExplored)", "Books")
+        stat("\(versesLearned)", "Verses")
         stat("\(solved)", "Solved")
-        stat("\(streak)", "Streak")
         stat("\(bestStreak)", "Best streak")
-        stat(bestTimeValue, "Best time")
-    }
-
-    /// An em dash until a real time — "0:00" would read as a record.
-    private var bestTimeValue: String {
-        guard let bestSolveSeconds, bestSolveSeconds > 0 else { return "—" }
-        return TimeFormat.clock(bestSolveSeconds)
     }
 
     private func stat(_ value: String, _ label: String) -> some View {
