@@ -531,11 +531,16 @@ enum CellPalette {
         .tintColor.withAlphaComponent(trait.userInterfaceStyle == .dark ? 0.30 : 0.18)
     })
 
-    /// No error fill: a wrong letter keeps the cell's normal fill and is marked
-    /// by its own colour and a rule under it instead (see `CellView`). A pink wash was the only signal for most
-    /// players (the shape cue sat behind Differentiate Without Color), and a
-    /// whole cell of red is the loudest thing on a board that should read
-    /// blue-for-focus.
+    /// A wrong square's wash, over its normal fill, with the letter in
+    /// `error` (2026-10-24). On tiles the square is the unit, so the square
+    /// carries the state, as blue carries the word; the red rule under each
+    /// letter it replaced read as form-field errors across the board. Light
+    /// enough not to be a red block: an earlier pink fill, on the flat printed
+    /// board and as the only cue, was dropped as the loudest thing on screen.
+    static let errorWash = Color(uiColor: UIColor { @Sendable trait in  // nonisolated: see `Theme.adaptive`
+        .systemRed.withAlphaComponent(trait.userInterfaceStyle == .dark ? 0.24 : 0.12)
+    })
+
     /// Selected-cell tint: a deeper step of the active-word wash, not a solid
     /// block. At 0.85 the cell was the loudest thing on the screen and turned
     /// its letter white; the 2pt border in CellView now carries the focus.

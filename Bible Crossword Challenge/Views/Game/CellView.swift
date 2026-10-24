@@ -121,6 +121,9 @@ struct CellView: View, Equatable {
                         isInWord: isInWord,
                         isCorrect: correctVisible
                     )
+                    if errorVisible {
+                        CellPalette.errorWash
+                    }
 
                     // Green pulse when this cell's word was just completed.
                     if flash {
@@ -182,18 +185,17 @@ struct CellView: View, Equatable {
                             .id("\(entry)\(cell.isPencil ? "p" : "")")
                     }
 
-                    // And a short rule under it, so the mark is a shape for
-                    // everyone, not only under Differentiate Without Color.
-                    // It replaced a red corner tab: clipped by the tile's
-                    // round corner it read as a dog-ear or a badge, and the
-                    // black letter beside it never looked wrong. Floored like
-                    // the number so it survives a 24pt cell.
-                    if errorVisible {
-                        Capsule()
-                            .fill(CellPalette.error)
-                            .frame(width: side * 0.34, height: max(side * 0.045, 2))
-                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
-                            .padding(.bottom, max(side * 0.1, 3))
+                    // The non-colour cue, when colour can't be relied on: a
+                    // diagonal across the square, the crossword's own mark
+                    // for a wrong one. Everyone else reads the wash and the
+                    // red letter, which also differs from black in lightness.
+                    // It replaced a red rule under every wrong letter
+                    // (2026-10-24), which on tiles read as form-field errors.
+                    if differentiateWithoutColor, errorVisible {
+                        WrongSquareMark()
+                            .stroke(CellPalette.error, style: StrokeStyle(lineWidth: max(side * 0.04, 1.5), lineCap: .round))
+                            .padding(side * 0.16)
+                            .accessibilityHidden(true)
                     }
 
                     // Correct stays a green wash; the check is the non-colour
@@ -242,5 +244,15 @@ struct CellView: View, Equatable {
         if errorVisible { return "\(letter), incorrect" }
         if correctVisible { return "\(letter), correct" }
         return letter
+    }
+}
+
+/// The diagonal across a wrong square, top trailing to bottom leading.
+private nonisolated struct WrongSquareMark: Shape {
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        path.move(to: CGPoint(x: rect.maxX, y: rect.minY))
+        path.addLine(to: CGPoint(x: rect.minX, y: rect.maxY))
+        return path
     }
 }
