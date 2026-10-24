@@ -570,6 +570,9 @@ struct RootView: View {
         let calendar = Calendar.current
         let now = Date()
 
+        // Joined well before the 21-day best streak, so day-one surfaces
+        // (Profile's "Joined today", Today's badge gate) read as a regular's.
+        p.createdAt = calendar.date(byAdding: .day, value: -40, to: now) ?? now
         p.currentStreak = 12
         p.bestStreak = 21
         p.totalPuzzlesCompleted = 47

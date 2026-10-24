@@ -192,6 +192,19 @@ struct HomeView: View {
         analytics.log(.reminderAskShown(source: ReminderAsk.Surface.streakCard.rawValue))
     }
 
+    /// The badge Today names, when one is close: a counted goal two or
+    /// fewer short, nearest first. Never on the day the player joined, and
+    /// never a time goal, which is met or not and so is never "close".
+    private var badgeWithinReach: Achievement? {
+        guard !Calendar.current.isDate(profile.createdAt, inSameDayAs: currentDay) else { return nil }
+        return Achievements.all
+            .filter { !$0.isUnlocked(by: profile) }
+            .compactMap { badge in badge.remaining(for: profile).map { (badge, $0) } }
+            .filter { $0.1 <= 2 }
+            .min { $0.1 < $1.1 }?
+            .0
+    }
+
     // MARK: - Comeback
 
     /// The mini restarts a streak as well as the daily does and asks far less of
@@ -597,15 +610,17 @@ struct HomeView: View {
                 // A row like its neighbours rather than a card of its own with an
                 // uppercase label and a progress bar: the badge is one more thing
                 // to keep going at, and a full card for it made the column a
-                // screen longer. Gone once every badge is earned.
-                if let next = Achievements.all.first(where: { !$0.isUnlocked(by: profile) }) {
+                // screen longer. Only when one is in reach (2026-10-24): as a
+                // standing row it asked a new player for five puzzles before
+                // their first. Badges stays a tap away in Profile.
+                if let next = badgeWithinReach {
                     Button {
                         path.append(AchievementsRoute())
                     } label: {
                         NextAchievementRow(achievement: next, profile: profile)
                     }
                     .buttonStyle(PressableCardStyle())
-                    .accessibilityHint("Opens every achievement")
+                    .accessibilityHint("Opens your badges")
                 }
             }
 
@@ -1308,6 +1323,9 @@ private struct NextAchievementRow: View {
     /// Before the first step it names the goal instead: "Next badge · 0 / 5"
     /// told a new player only that they had done nothing yet.
     private var subtitle: String {
+        if let left = achievement.remaining(for: profile) {
+            return "Next badge · \(left) to go"
+        }
         guard achievement.progress(for: profile) > 0 else { return achievement.detail }
         return "Next badge · \(progress)"
     }
