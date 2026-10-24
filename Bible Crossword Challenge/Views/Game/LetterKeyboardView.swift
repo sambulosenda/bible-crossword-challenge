@@ -16,10 +16,7 @@ struct LetterKeyboardView: View {
     /// Present only where pencil entry exists (the game); the onboarding
     /// first-solve keeps the plain pad.
     var onTogglePencil: (() -> Void)? = nil
-    /// Height added to every key, from room the screen has spare (see
-    /// `CrosswordGameView.keyGrowth`). Still under the 60pt ceiling below.
-    var extraKeyHeight: CGFloat = 0
-    /// The game's keys: white (grey in dark) on the warm keyboard bed the
+    /// The game's keys: white (grey in dark) on the system-grey keyboard bed the
     /// call site lays under the clue strip and the pad, with grey function
     /// keys, as the system keyboard sets them. Off, the pad keeps grey keys
     /// on whatever surface it sits on (onboarding, memory practice).
@@ -30,6 +27,8 @@ struct LetterKeyboardView: View {
     /// Key height grows with the user's text-size setting so large Dynamic Type
     /// glyphs aren't clipped.
     @ScaledMetric(relativeTo: .title3) private var keyHeight: CGFloat = Self.baseKeyHeight
+    /// On the bed, the system keyboard's own key height (2026-10-25).
+    @ScaledMetric(relativeTo: .title3) private var bedKeyHeight: CGFloat = 43
 
     /// The same ceiling the `dynamicTypeSize` cap in `body` puts on the glyphs,
     /// applied by hand because that modifier can't reach this property:
@@ -37,9 +36,9 @@ struct LetterKeyboardView: View {
     /// and the cap only governs the environment it *passes down*. Left uncapped
     /// the keys went on growing under capped letters, and three rows of them
     /// pushed the grid off the bottom of the screen.
-    private var cappedKeyHeight: CGFloat { min(keyHeight + extraKeyHeight, Self.maxKeyHeight) }
+    private var cappedKeyHeight: CGFloat { min(onBed ? bedKeyHeight : keyHeight, Self.maxKeyHeight) }
 
-    /// Key height at the default text size, before any spare room is added.
+    /// Key height at the default text size, off the bed.
     static let baseKeyHeight: CGFloat = 46
     static let maxKeyHeight: CGFloat = 60
     static let rowCount = 3
@@ -47,7 +46,10 @@ struct LetterKeyboardView: View {
     private let rows = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"]
 
     var body: some View {
-        VStack(spacing: Theme.Spacing.s) {
+        // 11pt between rows on the bed, the system keyboard's own spacing:
+        // at 8 the rows read as stacked, and a reach for the row above
+        // landed on it more often.
+        VStack(spacing: onBed ? 11 : Theme.Spacing.s) {
             ForEach(rows, id: \.self) { row in
                 HStack(spacing: 6) {
                     if row.count < 10 { Spacer(minLength: 0) }
@@ -68,7 +70,9 @@ struct LetterKeyboardView: View {
         // keyboard's do; the bed is the margin.
         .padding(.horizontal, onBed ? 3 : Theme.Spacing.s)
         .padding(.top, onBed ? Theme.Spacing.s + 2 : Theme.Spacing.m)
-        .padding(.bottom, Theme.Spacing.m)
+        // On the bed the home indicator's safe area under the keys is margin
+        // enough; 16pt more over it read as an empty band of bed (2026-10-24).
+        .padding(.bottom, onBed ? Theme.Spacing.xs : Theme.Spacing.m)
         // On iPad the keys stop growing at a hand's width — a Q stretched to
         // an eighth of a 13" screen stops reading as a key. The outer frame
         // keeps the view full-width so a call site's background still spans.
@@ -88,8 +92,10 @@ struct LetterKeyboardView: View {
             lastKeyTick &+= 1
             onLetter(letter)
         } label: {
+            // Plain SF at regular weight on the bed, as the system keyboard
+            // sets its keys; rounded semibold read as a toy keypad.
             Text(String(letter))
-                .font(.system(.title3, design: .rounded).weight(.semibold))
+                .font(onBed ? .title2 : .system(.title3, design: .rounded).weight(.semibold))
                 .frame(maxWidth: .infinity, minHeight: cappedKeyHeight)
         }
         .buttonStyle(KeyButtonStyle(onBed: onBed))
@@ -149,11 +155,11 @@ private struct KeyButtonStyle: ButtonStyle {
             .foregroundStyle(.primary)
             .background(
                 fill(isPressed: configuration.isPressed),
-                in: .rect(cornerRadius: onBed ? 6 : 8)
+                in: .rect(cornerRadius: 8)
             )
             // The system key's lower edge: a hairline of shade that lifts the
             // key off the bed. On a slab there is no bed to lift off.
-            .shadow(color: .black.opacity(onBed ? 0.28 : 0), radius: 0, y: 1)
+            .shadow(color: .black.opacity(onBed ? 0.3 : 0), radius: 0, y: 1)
             .scaleEffect(configuration.isPressed ? 0.96 : 1.0)
             // Asymmetric: the depress lands instantly (nil animation on press-in —
             // the frame the user is watching most), the release settles over a

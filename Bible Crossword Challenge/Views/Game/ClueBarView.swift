@@ -29,6 +29,10 @@ struct ClueBarView: View {
     /// number line, nudge, Verse and chevrons stay — they are controls the
     /// list doesn't have.
     var showsClue: Bool = true
+    /// On the game's keyboard bed the strip is part of the keyboard, as the
+    /// system keyboard's suggestion bar is: no fill of its own. Memory
+    /// practice has no bed, so it keeps the white strip.
+    var onBed: Bool = false
 
     var body: some View {
         VStack(spacing: Theme.Spacing.s) {
@@ -55,13 +59,16 @@ struct ClueBarView: View {
         .padding(.horizontal, Theme.Spacing.xs)
         // Room to breathe on both edges. Without the clue the bar is one row
         // of 44pt controls, which is room enough; the list above gets the rest.
-        .padding(.top, showsClue ? Theme.Spacing.s : 0)
-        .padding(.bottom, showsClue ? Theme.Spacing.s + Theme.Spacing.xs : 0)
-        // A white strip on the keyboard bed (2026-10 design), as the system
-        // keyboard carries its suggestion bar: the clue is what the keys type
-        // into, so it sits with them. A hairline marks the strip's top edge,
-        // where it meets the page.
-        .background(Theme.surface)
+        // Tighter on the bed (2026-10-25): there the strip is the keyboard's
+        // own bar, and 8 over and 12 under left it twice the height of the
+        // system keyboard's.
+        .padding(.top, showsClue ? (onBed ? Theme.Spacing.xs : Theme.Spacing.s) : 0)
+        .padding(.bottom, showsClue ? (onBed ? Theme.Spacing.xs + 2 : Theme.Spacing.s + Theme.Spacing.xs) : 0)
+        // The clue is what the keys type into, so it sits with them. On the
+        // bed it shares the keyboard's grey, as the system keyboard's
+        // suggestion bar does; elsewhere a white strip. A hairline marks the
+        // top edge, where it meets the page.
+        .background(onBed ? Color.clear : Theme.surface)
         .overlay(alignment: .top) {
             Rectangle()
                 .fill(Color(.separator))
@@ -373,7 +380,8 @@ struct ClueBarView: View {
     /// stand-in for the clue, to hold the bar's height — so the line itself
     /// must lay out the same for both.
     private func clueColumn(clue: String?, isTwin: Bool = false) -> some View {
-        VStack(alignment: .leading, spacing: Theme.Spacing.s) {
+        // The number line sits close over its clue: it is the clue's label.
+        VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
             if let slot = vm.activeSlot {
                 HStack(spacing: Theme.Spacing.s) {
                     // Not accent: it is a label, and blue is kept for what
@@ -431,7 +439,7 @@ struct ClueBarView: View {
 
 private extension VerticalAlignment {
     /// The middle of the visible clue text, which the chevrons centre on.
-    /// `nonisolated`: called from layout, like `SpareGridHeightKey`.
+    /// `nonisolated`: called from layout, off the main actor.
     nonisolated enum ClueText: AlignmentID {
         static func defaultValue(in d: ViewDimensions) -> CGFloat { d[VerticalAlignment.center] }
     }

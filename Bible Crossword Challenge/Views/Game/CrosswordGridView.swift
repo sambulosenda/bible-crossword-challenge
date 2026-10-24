@@ -12,21 +12,6 @@
 
 import SwiftUI
 
-/// Height the fitted board can't use, published so the screen can spend it
-/// elsewhere. A mini's cells are capped by the screen's width, so on a tall
-/// phone the board leaves a band of empty paper it has no way to fill. Zero in
-/// zoom mode, which fills whatever it's given. A preference rather than a
-/// callback property: a closure can't be compared, so it would mark the grid
-/// changed on every redraw of the screen around it.
-// `nonisolated`: SwiftUI reduces preferences inside its graph update, and a
-// main-actor conformance (the target default) traps if that runs off main.
-nonisolated struct SpareGridHeightKey: PreferenceKey {
-    static let defaultValue: CGFloat = 0
-    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
-        value = max(value, nextValue())
-    }
-}
-
 struct CrosswordGridView: View {
     @Bindable var vm: GameViewModel
 
@@ -117,7 +102,6 @@ struct CrosswordGridView: View {
                 Self.maximumFittedSide
             )
             let zooms = vm.size > Self.zoomThreshold || fit < Self.minimumFittedSide
-            let spare = zooms ? 0 : max(0, geo.size.height - fit * CGFloat(box.rows.count))
             Group {
                 if zooms {
                     zoomableGrid(in: geo.size)
@@ -125,7 +109,6 @@ struct CrosswordGridView: View {
                     fittedGrid(side: fit, box: box)
                 }
             }
-            .preference(key: SpareGridHeightKey.self, value: spare)
         }
         .sensoryFeedback(.impact(weight: .light), trigger: wordTick)
         .sensoryFeedback(.error, trigger: shakeTick)

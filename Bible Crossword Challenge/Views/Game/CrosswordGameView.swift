@@ -87,8 +87,6 @@ struct CrosswordGameScreen: View {
     /// regular/regular — an iPad's classes — in 678×466pt, about half an iPad's
     /// height, so the layout decisions below check the size too.
     @State private var containerSize: CGSize = .zero
-    /// See `keyGrowth(spare:current:)`.
-    @State private var keyGrowth: CGFloat = 0
     /// Whether the system has put this screen's bars on a side rail (iPhone
     /// Duo closed, or open in landscape). A custom toolbar view is never
     /// presented vertically — it would hold a second, horizontal bar open
@@ -732,15 +730,12 @@ struct CrosswordGameScreen: View {
     }
 
     /// Takes every point the arrangement can spare in both directions; the grid
-    /// decides for itself whether that is enough to show the whole board.
-    /// Over the clue bar (phones in portrait, the iPad column) the board
-    /// hands the height it can't use to the keypad (`keyGrowth`).
+    /// decides for itself whether that is enough to show the whole board. A
+    /// Mini capped by the screen's width keeps the rest as margin around it:
+    /// handing it to the keys (until 2026-10-25) grew them to about 58pt
+    /// against the system keyboard's 43, and the pad stopped reading as one.
     private var gridArea: some View {
         CrosswordGridView(vm: vm)
-            .onPreferenceChange(SpareGridHeightKey.self) { spare in
-                let growth = Self.keyGrowth(spare: spare, current: keyGrowth)
-                if growth != keyGrowth { keyGrowth = growth }
-            }
             .padding(Theme.Spacing.m)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
@@ -750,24 +745,9 @@ struct CrosswordGameScreen: View {
             vm: vm,
             onStallTap: runStallAction,
             onVerseTap: { useVerseHint() },
-            showsClue: !cluesStanding
+            showsClue: !cluesStanding,
+            onBed: true
         )
-    }
-
-    private var gridOverClueBar: Bool {
-        solveLayout == .stacked || solveLayout == .withCluePanel
-    }
-
-    /// Height added to each key from the board's spare room. A mini on a
-    /// tall phone is capped by the screen's width and left ~90pt of empty
-    /// paper over itself; half of it goes into the keys, which are hit a
-    /// hundred times a solve, and half stays as margin around the board.
-    /// Computed against the spare *plus* what the keys already took, so
-    /// growing the keys (which shrinks the spare) can't feed back into them.
-    private static func keyGrowth(spare: CGFloat, current: CGFloat) -> CGFloat {
-        let rows = CGFloat(LetterKeyboardView.rowCount)
-        let total = spare + current * rows
-        return min(max(0, floor(total / 2 / rows)), LetterKeyboardView.maxKeyHeight - LetterKeyboardView.baseKeyHeight)
     }
 
     private var keypad: some View {
@@ -776,7 +756,6 @@ struct CrosswordGameScreen: View {
             onLetter: { vm.enter($0) },
             onDelete: { vm.delete() },
             onTogglePencil: { vm.isPencilMode.toggle() },
-            extraKeyHeight: gridOverClueBar ? keyGrowth : 0,
             onBed: true
         )
     }
