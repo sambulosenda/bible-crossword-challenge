@@ -157,7 +157,7 @@ struct LeadFeatureCard: View {
 
 /// A Journey's steps as a path: done steps filled, the next one ringed and a
 /// size larger, the rest outlined, joined by a line that fills behind them.
-private struct StepPath: View {
+struct StepPath: View {
     let done: Int
     let total: Int
 

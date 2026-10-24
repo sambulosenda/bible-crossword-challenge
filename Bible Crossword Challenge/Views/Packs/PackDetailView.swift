@@ -75,7 +75,7 @@ struct PackDetailView: View {
         return packPage(puzzles: puzzles, recordsByID: recordsByID, progress: progress)
         .background(Theme.background)
         .safeAreaInset(edge: .bottom) {
-            if isLocked { lockedOffer }
+            if isLocked { CollectionLockedOffer { showPaywall = true } }
         }
         // White bar items over the cover; the system's own once it has
         // scrolled away and the bar sits on the paper.
@@ -130,7 +130,7 @@ struct PackDetailView: View {
                 )
                 .onScrolledUnderBar { headerScrolledAway = $0 }
                 VStack(alignment: .leading, spacing: 28) {
-                    opening(puzzles.first)
+                    CollectionOpening(first: puzzles.first, blurb: pack.blurb)
                     if isLocked {
                         lockedPuzzleList(puzzles)
                     } else {
@@ -147,26 +147,20 @@ struct PackDetailView: View {
         }
     }
 
-    /// The cover: the pack's colour edge to edge, the rising steps in the
-    /// corner, the serif title and where in Scripture it sits. Locked, the
-    /// gold chip says what it costs; open, the player's progress and the
-    /// pill that plays the next puzzle take its place.
+    /// The cover — see `CollectionPageCover` — with the rising steps in the
+    /// corner. Locked, the gold chip says what it costs; open, the player's
+    /// progress and the pill that plays the next puzzle take its place.
     private func cover(
         label: PackCoverLabel, progress: PackProgress, next: Puzzle?, recordsByID: [String: PuzzleRecord]
     ) -> some View {
-        VStack(alignment: .leading, spacing: Theme.Spacing.s + Theme.Spacing.xs) {
-            if isLocked {
-                PremiumChip()
-            }
-            Text(pack.title)
-                .font(.system(.largeTitle, design: .serif, weight: .semibold))
-                .tracking(-0.6)
-                .fixedSize(horizontal: false, vertical: true)
-                .accessibilityAddTraits(.isHeader)
-            Text(coverCaption(label: label, total: progress.total))
-                .font(.body)
-                .foregroundStyle(.white.opacity(0.82))
-                .fixedSize(horizontal: false, vertical: true)
+        CollectionPageCover(
+            title: pack.title,
+            caption: coverCaption(label: label, total: progress.total),
+            fill: pack.coverFill,
+            isLocked: isLocked
+        ) {
+            RisingSteps()
+        } footer: {
             if !isLocked {
                 coverProgress(progress)
                 if let next {
@@ -175,26 +169,6 @@ struct PackDetailView: View {
                 }
             }
         }
-        .foregroundStyle(.white)
-        .frame(maxWidth: 560, alignment: .leading)
-        .padding(.horizontal, Theme.Spacing.m + Theme.Spacing.xs)
-        .padding(.top, Theme.Spacing.xl)
-        .padding(.bottom, 28)
-        // 290 under the bar, about 388 with it — the canvas's cover.
-        .frame(maxWidth: .infinity, minHeight: 290, alignment: .bottom)
-        .background(alignment: .bottomTrailing) {
-            RisingSteps()
-                .padding(.trailing, Theme.Spacing.m + Theme.Spacing.xs)
-        }
-        // The colour runs on up under the bar and the status bar, so the cover
-        // is the page's top edge; the scroll view still insets its content
-        // for the bar, which is where the type wants to start anyway.
-        .background {
-            pack.coverFill
-                .padding(.top, -400)
-                .ignoresSafeArea(edges: .top)
-        }
-        .accessibilityElement(children: .contain)
     }
 
     /// Where the player stands, on the cover in white: nothing before the
@@ -229,32 +203,6 @@ struct PackDetailView: View {
 
     private static func puzzleCount(_ total: Int) -> String {
         "\(total) puzzle\(total == 1 ? "" : "s")"
-    }
-
-    /// The verse the pack opens on, in serif, with where it's from and what
-    /// the pack is. A pack whose first puzzle has no verse falls back to its
-    /// blurb alone.
-    @ViewBuilder
-    private func opening(_ first: Puzzle?) -> some View {
-        if let first, !first.verse.isEmpty {
-            VStack(alignment: .leading, spacing: 10) {
-                Text(first.verse)
-                    .font(.scripture(.title2))
-                    .tracking(-0.2)
-                    .lineSpacing(4)
-                    .fixedSize(horizontal: false, vertical: true)
-                Text("\(first.reference) · \(pack.blurb)")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-            .accessibilityElement(children: .combine)
-        } else {
-            Text(pack.blurb)
-                .font(.body)
-                .foregroundStyle(.secondary)
-                .fixedSize(horizontal: false, vertical: true)
-        }
     }
 
     // MARK: - Play
@@ -415,45 +363,6 @@ struct PackDetailView: View {
         }
     }
 
-    /// One offer, pinned where the thumb is: the ink pill, as the Premium
-    /// page's own button, over a fade into the paper so the list scrolls away
-    /// under it rather than ending at a hard edge (design canvas, 2026-10-24).
-    /// The words are every Premium card's — never "Unlock", which overstates
-    /// a tap that only opens the paywall (see `PremiumCopy.cardCTA`).
-    private var lockedOffer: some View {
-        VStack(spacing: 10) {
-            Button(PremiumCopy.cardCTA(store)) { showPaywall = true }
-                .buttonStyle(.pillProminent)
-                .accessibilityHint("Opens Premium plans")
-            Text(offerTerms)
-                .font(.footnote)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
-                .fixedSize(horizontal: false, vertical: true)
-        }
-        .padding(.horizontal, Theme.Spacing.m + Theme.Spacing.xs)
-        .padding(.top, Theme.Spacing.xl)
-        .padding(.bottom, Theme.Spacing.s)
-        .frame(maxWidth: 560)
-        .frame(maxWidth: .infinity)
-        .background {
-            LinearGradient(
-                stops: [.init(color: Theme.background.opacity(0), location: 0),
-                        .init(color: Theme.background, location: 0.3)],
-                startPoint: .top, endPoint: .bottom
-            )
-            .ignoresSafeArea()
-        }
-    }
-
-    /// "Then $9.99 a year · every pack included" — the price behind the
-    /// button, and that it's the whole shelf, not this pack.
-    private var offerTerms: String {
-        guard let yearly = store.yearly else { return "Every pack included" }
-        let price = "\(store.yearlyPriceText) a year"
-        let lead = store.introOffer(for: yearly) != nil ? "Then \(price)" : price
-        return "\(lead) · every pack included"
-    }
 }
 
 // MARK: - Track row
