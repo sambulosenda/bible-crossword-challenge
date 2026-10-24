@@ -22,6 +22,11 @@ enum Theme {
 
     static let cornerRadius: CGFloat = 20
 
+    /// Feature cards — the one solid-colour card a screen leads with (Today's
+    /// puzzle, a Journey, memory practice). Rounder than list cards so the two
+    /// kinds read as different objects, not one card at two sizes.
+    static let featureCornerRadius: CGFloat = 28
+
     /// The system accent (blue) — kept as the brand colour; the YouVersion
     /// influence lives in the components (paper canvas, ink pills, serif
     /// scripture, streak week row), not the hue.
@@ -136,6 +141,57 @@ enum Theme {
         dark: UIColor(white: 0.07, alpha: 1),
         darkHighContrast: .black
     )
+
+    // MARK: Feature-card fills
+    //
+    // Solid fills that carry white text: the puzzle leading Today, in its
+    // billing's colour. Each is a darker cut of its `FeatureTint` so 15pt
+    // white clears 4.5:1 — the system colours don't (blue 4.0:1, teal 2.6:1,
+    // orange 2.2:1), and the hero's meta line is 15pt. Increased contrast
+    // darkens them further. Light and dark match closely: the card is a lit
+    // object on either paper, not a surface that should sink into the dark.
+
+    /// The daily puzzle's hero — the brand blue, deepened.
+    static let heroDaily = adaptive(
+        light: rgb(0x0A6CD6),
+        lightHighContrast: rgb(0x0757B0),
+        dark: rgb(0x1C5FBF),
+        darkHighContrast: rgb(0x154C99)
+    )
+
+    /// The Mini's hero — teal, deepened.
+    static let heroMini = adaptive(
+        light: rgb(0x1E7F90),
+        lightHighContrast: rgb(0x166674),
+        dark: rgb(0x1A6E7D),
+        darkHighContrast: rgb(0x145863)
+    )
+
+    /// The Sunday Special's hero — orange, deepened to a rust.
+    static let heroSunday = adaptive(
+        light: rgb(0xB5560E),
+        lightHighContrast: rgb(0x964609),
+        dark: rgb(0xA24C0C),
+        darkHighContrast: rgb(0x873F0A)
+    )
+
+    /// The completion screen's hero — a deeper blue than the daily's, so the
+    /// solve reads as the same family as Today's card without repeating it.
+    static let heroSolved = adaptive(
+        light: rgb(0x0A4FA8),
+        lightHighContrast: rgb(0x083E86),
+        dark: rgb(0x0B3F86),
+        darkHighContrast: rgb(0x08306A)
+    )
+
+    private static func rgb(_ hex: UInt32) -> UIColor {
+        UIColor(
+            red: CGFloat((hex >> 16) & 0xFF) / 255,
+            green: CGFloat((hex >> 8) & 0xFF) / 255,
+            blue: CGFloat(hex & 0xFF) / 255,
+            alpha: 1
+        )
+    }
 }
 
 // MARK: - Scripture type
@@ -294,9 +350,11 @@ private struct PressableCardBody: View {
 
 /// YouVersion-style capsule CTA. `.primary` is the single loud action on a
 /// screen (solid ink fill); `.tonal` is its quiet sibling for replay/secondary
-/// actions. Same press behaviour as `PressableCardStyle`.
+/// actions. The `onColor` pair is the same two weights for a feature card's
+/// solid fill, where ink would sink into the colour: a white pill, and a
+/// translucent white one. Same press behaviour as `PressableCardStyle`.
 struct PillButtonStyle: ButtonStyle {
-    enum Emphasis { case primary, tonal }
+    enum Emphasis { case primary, tonal, onColor, onColorTonal }
     var emphasis: Emphasis = .primary
 
     func makeBody(configuration: Configuration) -> some View {
@@ -312,7 +370,7 @@ private struct PillButtonBody: View {
     var body: some View {
         configuration.label
             .font(.headline)
-            .foregroundStyle(emphasis == .primary ? Theme.onInk : .primary)
+            .foregroundStyle(foreground)
             .padding(.vertical, 15)
             .padding(.horizontal, Theme.Spacing.l)
             .frame(maxWidth: .infinity)
@@ -322,14 +380,34 @@ private struct PillButtonBody: View {
             .animation(configuration.isPressed ? nil : .spring(duration: 0.2, bounce: 0), value: configuration.isPressed)
     }
 
+    private var foreground: Color {
+        switch emphasis {
+        case .primary: Theme.onInk
+        case .tonal: .primary
+        // Fixed near-black, not `ink`: the pill is white in both appearances,
+        // so its label must not flip to white in dark mode.
+        case .onColor: Color(white: 0.07)
+        case .onColorTonal: .white
+        }
+    }
+
     private var fill: Color {
-        emphasis == .primary ? Theme.ink : Color.primary.opacity(0.08)
+        switch emphasis {
+        case .primary: Theme.ink
+        case .tonal: Color.primary.opacity(0.08)
+        case .onColor: .white
+        case .onColorTonal: .white.opacity(0.2)
+        }
     }
 }
 
 extension ButtonStyle where Self == PillButtonStyle {
     static var pillProminent: PillButtonStyle { PillButtonStyle(emphasis: .primary) }
     static var pillTonal: PillButtonStyle { PillButtonStyle(emphasis: .tonal) }
+    /// The loud action on a feature card's solid fill.
+    static var pillOnColor: PillButtonStyle { PillButtonStyle(emphasis: .onColor) }
+    /// The quiet action on a feature card's solid fill.
+    static var pillOnColorTonal: PillButtonStyle { PillButtonStyle(emphasis: .onColorTonal) }
 }
 
 extension View {

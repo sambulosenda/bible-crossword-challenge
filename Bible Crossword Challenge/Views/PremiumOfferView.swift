@@ -216,11 +216,21 @@ struct PremiumOfferView: View {
             // label because a bare "PREMIUM" was the one word on the page in
             // nobody's voice — onboarding's welcome kicker says "BIBLE
             // CROSSWORD", and this page continues it.
+            //
+            // A gold chip since 2026-10-24, the mark Premium wears wherever it
+            // appears (the locked pack's cover carries the same one). Grey
+            // caps said "label"; the chip says "this is the paid thing" before
+            // a word is read. VoiceOver still hears the app's name.
             if !compact && !firstRun {
-                Text("Bible Crossword Premium")
-                    .kicker()
-                    // Centred when it wraps, as it does at the largest sizes.
-                    .multilineTextAlignment(.center)
+                Label("Premium", systemImage: "crown.fill")
+                    .font(.footnote.weight(.bold))
+                    // Fixed near-black: the chip is gold in both appearances.
+                    .foregroundStyle(Color(white: 0.1))
+                    .padding(.vertical, 5)
+                    .padding(.horizontal, 12)
+                    .background(Theme.badgeRim, in: .capsule)
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityLabel("Bible Crossword Premium")
             }
             // `.title`, not `.largeTitle`: with the tiles above it the
             // headline is no longer the only thing announcing the page, and

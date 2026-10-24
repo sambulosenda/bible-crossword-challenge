@@ -9,6 +9,7 @@
 import SwiftUI
 import SwiftData
 import StoreKit
+import Lottie
 
 struct CompletionView: View {
     let puzzle: Puzzle
@@ -180,6 +181,11 @@ struct CompletionView: View {
     /// so they become Labels there. See `barLabel`.
     @State private var barsVertical = false
 
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    /// The solve time is the hero's headline; it scales with Dynamic Type from
+    /// a display size, and shrinks to fit rather than wrap.
+    @ScaledMetric(relativeTo: .largeTitle) private var heroTimeSize: CGFloat = 88
+
     var body: some View {
         // A navigation stack for its bars alone. The close button and the
         // action bar are toolbar items, so the system owns where they go —
@@ -188,71 +194,77 @@ struct CompletionView: View {
         NavigationStack {
             content
                 .navigationBarTitleDisplayMode(.inline)
+                // The top bar sits on the blue hero: light status text and a
+                // close button drawn for a dark background.
+                .toolbarColorScheme(.dark, for: .navigationBar)
                 .toolbar { toolbarContent }
                 .observeVerticalBars($barsVertical)
         }
     }
 
     private var content: some View {
-        // Short content (the common case now: header, scorecard, verse)
-        // centres between the top and the bottom bar instead of leaving
-        // the bottom third empty; taller content scrolls as before.
+        // The hero runs edge to edge from under the top bar; everything after
+        // it sits in the readable column on the paper. Short content leaves
+        // paper under the verse rather than centring — the hero is the top
+        // of the page and has to stay there.
         GeometryReader { viewport in
             ScrollView {
-                VStack(spacing: Theme.Spacing.l) {
-                    header
+                VStack(spacing: 0) {
+                    hero
 
-                    scorecard
+                    VStack(spacing: Theme.Spacing.l) {
+                        scorecard
 
-                    if let challenge {
-                        resultCard(challenge)
+                        if let challenge {
+                            resultCard(challenge)
+                        }
+
+                        // A board the player is already part of is why they're on this
+                        // screen, so it sits above the verse with the other payoffs.
+                        if let board {
+                            familyBoardCard(board)
+                        }
+
+                        verseCard
+
+                        if showsCompletionOffer {
+                            completionOffer
+                                .onScrollVisibilityChange(threshold: 0.6) { visible in
+                                    completionOfferVisible = visible
+                                    logCompletionOfferIfSeen()
+                                }
+                                // Already in view under the day-2 sheet: counts
+                                // once the sheet goes.
+                                .onChange(of: showReturnDaySheet) { logCompletionOfferIfSeen() }
+                        }
+
+                        if let packContext {
+                            packCard(packContext)
+                        }
+
+                        if let questContext {
+                            questCard(questContext)
+                        }
+
+                        if earnedFreeze || bonusFreezeEarned {
+                            freezeCard
+                        }
+
+                        if !newAchievements.isEmpty {
+                            achievementsCard
+                        }
+
+                        // The completion reminder ask lives in the scorecard now, not
+                        // here: this slot sat two to four screens below the fold, and
+                        // of 79 players whose screen included the card (2.2–2.6, 45
+                        // days to 2026-09-02) 76 never touched it. See `scorecard`.
+
                     }
-
-                    // A board the player is already part of is why they're on this
-                    // screen, so it sits above the verse with the other payoffs.
-                    if let board {
-                        familyBoardCard(board)
-                    }
-
-                    verseCard
-
-                    if showsCompletionOffer {
-                        completionOffer
-                            .onScrollVisibilityChange(threshold: 0.6) { visible in
-                                completionOfferVisible = visible
-                                logCompletionOfferIfSeen()
-                            }
-                            // Already in view under the day-2 sheet: counts
-                            // once the sheet goes.
-                            .onChange(of: showReturnDaySheet) { logCompletionOfferIfSeen() }
-                    }
-
-                    if let packContext {
-                        packCard(packContext)
-                    }
-
-                    if let questContext {
-                        questCard(questContext)
-                    }
-
-                    if earnedFreeze || bonusFreezeEarned {
-                        freezeCard
-                    }
-
-                    if !newAchievements.isEmpty {
-                        achievementsCard
-                    }
-
-                    // The completion reminder ask lives in the scorecard now, not
-                    // here: this slot sat two to four screens below the fold, and
-                    // of 79 players whose screen included the card (2.2–2.6, 45
-                    // days to 2026-09-02) 76 never touched it. See `scorecard`.
-
+                    .padding(Theme.Spacing.l)
+                    .frame(maxWidth: 520)
+                    .frame(maxWidth: .infinity)
                 }
-                .padding(Theme.Spacing.l)
-                .frame(maxWidth: 520)
-                .frame(maxWidth: .infinity)
-                .frame(minHeight: viewport.size.height)
+                .frame(minHeight: viewport.size.height, alignment: .top)
             }
         }
         .background(Theme.background)
@@ -764,27 +776,64 @@ struct CompletionView: View {
         return "\(left) more \(noun) in this pack · keep going with Premium"
     }
 
-    /// The badge and the two facts of the solve: the time as the title, the
-    /// puzzle's name under it. The time used to be a stat tile below a generic
-    /// "Puzzle Completed!" — the headline is the result now. The mark is the
-    /// grid the player just filled, not a checkmark (see `CelebrationBadge`).
-    private var header: some View {
-        VStack(spacing: Theme.Spacing.m) {
-            CelebrationBadge(grid: puzzle.grid, confetti: "puzzle_complete", size: 88, showsRim: false)
+    /// The keepsake: the time as a display numeral on a full-bleed blue field,
+    /// with the grid the player just filled set faintly behind it — a picture
+    /// of what they did, different every day. It replaced an 88pt badge over
+    /// "Solved in 4:12" (2026-10-24): the badge and the line said "done" twice,
+    /// and the time — the one thing the player earned — was body-weight text.
+    /// The confetti that used to burst behind the badge bursts over the hero.
+    private var hero: some View {
+        VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
+            Label("Solved", systemImage: "checkmark")
+                .font(.footnote.weight(.bold))
+                .padding(.vertical, 5)
+                .padding(.horizontal, 12)
+                .background(.white.opacity(0.18), in: .capsule)
+                .padding(.bottom, Theme.Spacing.s)
 
-            VStack(spacing: Theme.Spacing.xs) {
-                Text("Solved in \(TimeFormat.clock(seconds))")
-                    .font(.title.bold())
-                    .monospacedDigit()
-                Text(puzzle.title)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-            }
-            .multilineTextAlignment(.center)
-            // One stop: "Solved in 4:12, The New Jerusalem".
-            .accessibilityElement(children: .combine)
+            Text(TimeFormat.clock(seconds))
+                .font(.system(size: heroTimeSize, weight: .bold, design: .rounded))
+                .monospacedDigit()
+                .lineLimit(1)
+                .minimumScaleFactor(0.5)
+
+            Text(puzzle.title)
+                .font(.body)
+                .foregroundStyle(.white.opacity(0.88))
+                .fixedSize(horizontal: false, vertical: true)
         }
-        .padding(.top, Theme.Spacing.s)
+        .foregroundStyle(.white)
+        // One stop: "Solved, 4:12, The New Jerusalem".
+        .accessibilityElement(children: .combine)
+        .accessibilityAddTraits(.isHeader)
+        .frame(maxWidth: 520, alignment: .leading)
+        .padding(.horizontal, Theme.Spacing.l)
+        .padding(.top, 72)
+        .padding(.bottom, 28)
+        .frame(maxWidth: .infinity)
+        .background(alignment: .bottomTrailing) {
+            // About 20pt a square whatever the size, so a 7×7 Mini reads as
+            // the same faint texture as a 15×15 rather than as big blocks.
+            let side = min(300, CGFloat(puzzle.size) * 20)
+            GridThumbnail(grid: puzzle.grid, tint: .white.opacity(0.10), gap: 3, cropsToContent: true)
+                .frame(width: side, height: side)
+                .offset(x: 24, y: -20)
+        }
+        .overlay {
+            if !reduceMotion {
+                LottieView(animation: .named("puzzle_complete"))
+                    .configure { $0.contentMode = .scaleAspectFit }
+                    .playing(loopMode: .playOnce)
+                    .allowsHitTesting(false)
+                    .accessibilityHidden(true)
+            }
+        }
+        // Taller than the hero and pinned to its bottom edge, so the blue
+        // also fills the space under the top bar and the pull-down bounce.
+        .background(alignment: .bottom) {
+            Theme.heroSolved
+                .frame(height: 1600)
+        }
     }
 
     /// The solve's own numbers, given the weight a results screen owes them.

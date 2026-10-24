@@ -302,6 +302,10 @@ struct HomeView: View {
             if case .playedBefore = dailyState { return true }
             return false
         }()
+        let dailySolvedToday: Bool = {
+            if case .solvedToday = dailyState { return true }
+            return false
+        }()
         let miniIsNew: Bool = {
             if case .play = miniState { return true }
             return false
@@ -316,6 +320,13 @@ struct HomeView: View {
         }()
         let lead: TodayLead = {
             if mini != nil && (profile.isStillLearning || (dailyIsRepeat && miniIsNew)) { return .mini }
+            // Once today's daily is solved, the hero hands the day on to the
+            // Mini if it's still waiting. A solved daily in the hero made the
+            // loudest card on the screen a "Play again" — a dead end at the
+            // top of the page — while the one new puzzle sat in a half-width
+            // card under it. The solved daily drops into that card instead,
+            // with its time.
+            if dailySolvedToday && miniIsNew { return .mini }
             // Past the Mini, the week's Special is the other puzzle that can be
             // new on a repeat day. Both rotations wrapped on 2026-10-04 and the
             // Special — unplayed — sat third on the screen under two "best
@@ -822,7 +833,7 @@ private struct TodayHeader: View {
 private enum PuzzleBilling {
     case daily, mini, sunday
 
-    /// The kind of puzzle, as the companion rows name it in their subtitle.
+    /// The kind of puzzle, as the hero's label names it.
     var name: String {
         switch self {
         case .daily: "Daily Puzzle"
@@ -831,12 +842,23 @@ private enum PuzzleBilling {
         }
     }
 
-    /// The row icon's colour — see `FeatureTint`.
-    var tint: Color {
+    /// The kind in a half-width card's title, where "Daily" on both would
+    /// say nothing.
+    var shortName: String {
         switch self {
-        case .daily: FeatureTint.daily
-        case .mini: FeatureTint.mini
-        case .sunday: FeatureTint.sunday
+        case .daily: "Daily"
+        case .mini: "Mini"
+        case .sunday: "Sunday"
+        }
+    }
+
+    /// The solid fill when this puzzle leads Today, and its icon square in the
+    /// row under the hero — see `Theme.heroDaily`.
+    var heroFill: Color {
+        switch self {
+        case .daily: Theme.heroDaily
+        case .mini: Theme.heroMini
+        case .sunday: Theme.heroSunday
         }
     }
 
@@ -862,10 +884,12 @@ private enum PuzzleBilling {
 
 // MARK: - Lead puzzle card
 //
-// The hero of the screen. It is the only tinted card on Today — every other
-// module is white — so the eye lands here first without any of them shouting.
-// A larger serif title and roomier padding carry the rest; the accent wash is
-// the same device the completion screen uses to mark its one important card.
+// The hero of the screen: a solid feature card in its puzzle's colour — blue
+// for the daily, teal for the Mini, rust for the Special — with white type, a
+// white pill and a faint crossword in the corner. Every other module is white,
+// so the eye lands here first. It was a 10% accent wash until 2026-10-24: the
+// palest card on the page carried the most important thing on it, while
+// Journeys and memory practice elsewhere had already gone solid.
 // When solved it becomes a quiet win moment (the time you earned) rather than
 // a dead "done" tile.
 //
@@ -881,20 +905,20 @@ private struct LeadPuzzleCard: View {
     @State private var celebrate = false
 
     var body: some View {
-        VStack(alignment: .leading, spacing: Theme.Spacing.l) {
+        VStack(alignment: .leading, spacing: Theme.Spacing.m) {
             info
             actionButton
         }
-        // 16 across, 24 down. Across, the title starts on the page's one
-        // content edge — the same 32pt the section headers, the verse and
-        // the row icons below start on; at 32 it sat on an edge of its own.
-        // Down, 24 rather than 32: with the thumbnail gone the title sits on
-        // one line, and 32 all round made a 250pt card for a title, a line
-        // and a button.
-        .padding(.horizontal, Theme.Spacing.m)
-        .padding(.vertical, Theme.Spacing.l)
+        // 20 all round, the feature-card padding. The title keeps clear of
+        // the motif in the corner (see `info`).
+        .padding(20)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .elevatedCard(fill: Theme.accent.opacity(0.10))
+        .foregroundStyle(.white)
+        .background(alignment: .topTrailing) {
+            CrosswordMotif()
+                .padding(20)
+        }
+        .elevatedCard(fill: billing.heroFill, cornerRadius: Theme.featureCornerRadius)
         .onAppear {
             // Only a puzzle finished *today* is worth celebrating. The rotation
             // repeat is also `isCompleted`, and bouncing a seal at it is exactly
@@ -907,19 +931,21 @@ private struct LeadPuzzleCard: View {
     // button stays a separate focusable control below.
     private var info: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.m) {
-            // No kicker: the card is the hero, its title names the puzzle and
-            // the meta row says the size; the compact card below names the
-            // other one. Seven uppercase labels on Today was two too many.
-            // The difficulty rides in the meta row: alone on a row of its own
-            // above the title it cost ~30pt of empty card.
-            // No grid thumbnail. At 20% it read as a watermark rather than as
-            // today's grid, and the 72pt it held on the right wrapped most
-            // titles onto two lines — the card's height was spent on an
-            // ornament nobody could read. The title has the full width now.
-            Text(puzzle.title)
-                .font(.scripture(.title, weight: .bold))
-                .fixedSize(horizontal: false, vertical: true)
-                .frame(maxWidth: .infinity, alignment: .leading)
+            // The kind, in sentence case — not an uppercase kicker, which
+            // Today keeps for nothing. Now the hero changes colour by
+            // occupant, it says which colour means what. The difficulty rides
+            // in the meta row.
+            VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
+                Text(billing.name)
+                    .font(.footnote.weight(.semibold))
+                    .foregroundStyle(.white.opacity(0.9))
+                Text(puzzle.title)
+                    .font(.title2.bold())
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            // Clear of the motif in the corner: its five squares plus a gap.
+            .padding(.trailing, 76)
+            .frame(maxWidth: .infinity, alignment: .leading)
 
             switch presentation {
             case .solvedToday(let seconds):
@@ -938,7 +964,7 @@ private struct LeadPuzzleCard: View {
                 metaRow
                 if let progress {
                     ProgressView(value: progress)
-                        .tint(Theme.accent)
+                        .tint(.white)
                 }
             }
         }
@@ -954,29 +980,26 @@ private struct LeadPuzzleCard: View {
     private var metaRow: some View {
         Text(metaLine)
             .font(.subheadline)
-            .foregroundStyle(.secondary)
+            // Explicit, not `.secondary`: the hierarchical style dims white
+            // too far on the fill, under 4.5:1 at this size.
+            .foregroundStyle(.white.opacity(0.9))
             .fixedSize(horizontal: false, vertical: true)
     }
 
-    /// The hero has no kicker, so the Special — the one occupant that isn't
-    /// today's puzzle but the week's — says so here.
     private var metaLine: String {
-        let detail = "\(puzzle.difficulty.label) · \(puzzle.clueCount) clues · \(puzzle.size)×\(puzzle.size)"
-        return billing == .sunday ? "Sunday Special · \(detail)" : detail
+        "\(puzzle.difficulty.label) · \(puzzle.clueCount) clues · \(puzzle.size)×\(puzzle.size)"
     }
 
     // The win moment: leads with the time the user just earned, echoing the
-    // CompletionView language (green seal + monospaced clock).
-    // A compact success pill that hugs its content (not a full-width bar).
+    // CompletionView language (seal + monospaced clock). White on the fill:
+    // green on blue or teal failed contrast and fought the card's colour.
     private func solvedReward(_ seconds: Int?) -> some View {
         HStack(spacing: Theme.Spacing.xs) {
             Image(systemName: "checkmark.seal.fill")
-                .foregroundStyle(.green)
                 .symbolEffect(.bounce, value: celebrate)
-            Text("Solved").foregroundStyle(.green)
+            Text("Solved")
             if let secs = seconds, secs > 0 {
                 Text("in \(TimeFormat.clock(secs))")
-                    .foregroundStyle(.primary)
                     .monospacedDigit()
             }
         }
@@ -992,7 +1015,6 @@ private struct LeadPuzzleCard: View {
     private var replayPrompt: some View {
         Text("You've played this one before")
             .font(.subheadline.weight(.semibold))
-            .foregroundStyle(.primary)
             .fixedSize(horizontal: false, vertical: true)
             .frame(maxWidth: .infinity, alignment: .leading)
     }
@@ -1006,7 +1028,7 @@ private struct LeadPuzzleCard: View {
             NavigationLink(value: puzzle) {
                 Label("Play again", systemImage: "arrow.clockwise")
             }
-            .buttonStyle(.pillTonal)
+            .buttonStyle(.pillOnColorTonal)
         case .playedBefore(let previous):
             // Prominent, unlike the solved-today replay: this *is* the day's
             // action, and the streak depends on it being taken. It names the
@@ -1018,12 +1040,12 @@ private struct LeadPuzzleCard: View {
                     Label("Play again", systemImage: "arrow.clockwise")
                 }
             }
-            .buttonStyle(.pillProminent)
+            .buttonStyle(.pillOnColor)
         case .play(let status):
             NavigationLink(value: puzzle) {
                 Label(status.actionTitle, systemImage: status.actionSymbol)
             }
-            .buttonStyle(.pillProminent)
+            .buttonStyle(.pillOnColor)
         }
     }
 
@@ -1520,47 +1542,39 @@ private struct CompactPuzzleRow: View {
         return false
     }
 
-    private var tint: Color { isSolvedToday ? FeatureTint.solved : billing.tint }
+    @ScaledMetric(relativeTo: .headline) private var iconSize: CGFloat = 36
 
     var body: some View {
         NavigationLink(value: puzzle) {
-            VStack(alignment: .leading, spacing: 0) {
-                // The billing's mark on a band of its colour, with the fill
-                // `CollectionCover` uses, so a puzzle type is one colour
-                // wherever it appears.
+            // The billing's mark in a square of its hero colour — the colour
+            // the card above wears when this puzzle leads — beside the kind
+            // and where the player stands. It was a 64pt band over the text
+            // until 2026-10-24: two cards each nearly as tall as the hero.
+            // The title is in the VoiceOver label; on the card the kind says
+            // enough to choose by.
+            HStack(spacing: Theme.Spacing.s + 4) {
                 Image(systemName: leadingSymbol)
-                    .font(.title2)
-                    .foregroundStyle(tint)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 64)
-                    .background(tint.opacity(0.14))
+                    .font(.body.weight(.semibold))
+                    .foregroundStyle(.white)
+                    .frame(width: iconSize, height: iconSize)
+                    .background(billing.heroFill, in: .rect(cornerRadius: iconSize * 0.28, style: .continuous))
 
-                // No uppercase kicker: Today keeps those for section headers.
-                // The kind, then the title, then where the player stands.
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(billing.name)
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
-                    // Wraps rather than truncates: at large type a one-line
-                    // limit cut "Queens and Kinsmen" to "Queen…".
-                    Text(puzzle.title)
+                VStack(alignment: .leading, spacing: 0) {
+                    Text(billing.shortName)
                         .font(.headline)
                         .foregroundStyle(.primary)
-                        .fixedSize(horizontal: false, vertical: true)
+                    // Wraps rather than truncates at large type.
                     Text(state)
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
                 }
-                .padding(Theme.Spacing.m)
 
                 Spacer(minLength: 0)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+            .padding(14)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
             .elevatedCard()
-            // The band runs to the card's edge, so the card clips it to its
-            // own rounded shape.
-            .clipShape(.rect(cornerRadius: Theme.cornerRadius, style: .continuous))
             .contentShape(.rect)
         }
         .buttonStyle(PressableCardStyle())
