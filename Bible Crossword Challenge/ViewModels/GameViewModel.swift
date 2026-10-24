@@ -126,6 +126,9 @@ final class GameViewModel {
     var onCheckResult: (([GridPos], Int) -> Void)?
 
     private var slotIndex: [ClueDirection: [GridPos: Int]] = [.across: [:], .down: [:]]
+    /// `clueContext(at:)` for every square, built once: the words never
+    /// change in a puzzle, and the grid redraws on every keystroke.
+    @ObservationIgnored private var clueContexts: [GridPos: String] = [:]
 
     /// Slot ids whose cells are all filled correctly. Tracks the transition into
     /// "solved" so the word-complete flash fires once, not on every keystroke.
@@ -345,6 +348,14 @@ final class GameViewModel {
         var downIdx: [GridPos: Int] = [:]
         for (i, slot) in down.enumerated() { for p in slot.positions { downIdx[p] = i } }
         self.slotIndex = [.across: acrossIdx, .down: downIdx]
+        var contexts: [GridPos: String] = [:]
+        for slot in across + down {
+            for (index, pos) in slot.positions.enumerated() {
+                let part = "\(slot.number) \(slot.direction.label), letter \(index + 1) of \(slot.length)"
+                contexts[pos] = contexts[pos].map { "\($0); \(part)" } ?? part
+            }
+        }
+        self.clueContexts = contexts
 
         // Initial selection: the shortest answer in the grid, not 1 Across.
         // The empty grid is where a third of abandons happen (200 of 496 in
@@ -385,6 +396,14 @@ final class GameViewModel {
     private func slot(at pos: GridPos, direction: ClueDirection) -> Slot? {
         guard let idx = slotIndex[direction]?[pos] else { return nil }
         return direction == .across ? acrossSlots[idx] : downSlots[idx]
+    }
+
+    /// "14 Across, letter 2 of 7; 11 Down, letter 4 of 4" — where a square
+    /// sits in its words, for VoiceOver. A sighted player reads that off the
+    /// board's numbers; "Row 4, Column 5" told a VoiceOver player nothing
+    /// about which clue they were in.
+    func clueContext(at pos: GridPos) -> String {
+        clueContexts[pos] ?? ""
     }
 
     func isSelectable(_ pos: GridPos) -> Bool {

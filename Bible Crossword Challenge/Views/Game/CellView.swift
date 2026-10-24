@@ -20,6 +20,9 @@ struct CellView: View, Equatable {
     let showCorrect: Bool
     /// Transient green pulse shown when the cell's word was just completed.
     let flash: Bool
+    /// Where the square sits in its words — VoiceOver's label for it. See
+    /// `GameViewModel.clueContext(at:)`.
+    var clueContext = ""
     let onTap: () -> Void
 
     @Environment(\.accessibilityDifferentiateWithoutColor) private var differentiateWithoutColor
@@ -41,6 +44,7 @@ struct CellView: View, Equatable {
             && lhs.showError == rhs.showError
             && lhs.showCorrect == rhs.showCorrect
             && lhs.flash == rhs.flash
+            && lhs.clueContext == rhs.clueContext
     }
 
     /// Squares of a printed crossword: each sits a hairline apart on the
@@ -55,6 +59,27 @@ struct CellView: View, Equatable {
 
     private var correctVisible: Bool {
         showCorrect && cell.entry != nil && cell.isCorrect
+    }
+
+    /// The clue number's size, floored so it stays readable on a 15×15.
+    private var numberSize: CGFloat { max(side * 0.24, 9) }
+    private var numberTop: CGFloat { max(side * 0.06, 2) }
+    /// The strip a clue number takes across the top of its square. The
+    /// letter is laid out in what's left, rather than nudged down by a fixed
+    /// share of the square — at about 26pt the number's 9pt floor took half
+    /// the square, and the nudged letter sat on top of it ("11" through "C",
+    /// 2026-10-24).
+    private var numberBand: CGFloat { numberTop + numberSize * 0.9 }
+
+    /// The letter's size: half the square, floored for small boards, and in
+    /// a numbered square no taller than the room under the number allows.
+    private var letterSize: CGFloat {
+        let base = max(side * (cell.isPencil ? 0.42 : 0.5), cell.isPencil ? 10 : 12)
+        guard cell.number != nil else { return base }
+        // A capital's height is about 0.72 of its point size; the rest is
+        // breathing room above and below it.
+        let room = side - Self.ruleWidth - numberBand - max(side * 0.04, 1)
+        return min(base, room / 0.78)
     }
 
     var body: some View {
@@ -89,13 +114,20 @@ struct CellView: View, Equatable {
                         // inside a 24pt cell without crowding the letter; the
                         // real remedy for a board this tight is the zoom
                         // viewport, which `CrosswordGridView` falls back to.
+                        // Ink at 70% on a tinted square: secondary grey on the
+                        // selected square's blue measured 2.7:1 — the faintest
+                        // number on the board was the one being looked at
+                        // (2026-10-24). About 5.4:1 now; white squares keep
+                        // the quieter grey.
                         Text("\(number)")
-                            .font(.system(size: max(side * 0.24, 9), weight: .semibold))
-                            .foregroundStyle(.secondary)
+                            .font(.system(size: numberSize, weight: .semibold))
+                            .foregroundStyle(isSelected || isInWord || correctVisible
+                                             ? AnyShapeStyle(Color.primary.opacity(0.7))
+                                             : AnyShapeStyle(.secondary))
                             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                             // Clear of the selected cell's 2pt border.
                             .padding(.leading, max(side * 0.1, 3))
-                            .padding(.top, max(side * 0.06, 2))
+                            .padding(.top, numberTop)
                     }
 
                     if let entry = cell.entry {
@@ -107,8 +139,8 @@ struct CellView: View, Equatable {
                                 // Floored so a pencilled letter stays readable
                                 // on a small cell, while keeping enough of a
                                 // gap from the pen letter above it to read as
-                                // provisional.
-                                size: max(side * (cell.isPencil ? 0.42 : 0.5), cell.isPencil ? 10 : 12),
+                                // provisional — see `letterSize`.
+                                size: letterSize,
                                 // Plain SF, as print sets a crossword's
                                 // letters; the rounded face read as a toy.
                                 weight: cell.isPencil ? .regular : .medium
@@ -116,11 +148,12 @@ struct CellView: View, Equatable {
                             // A wrong letter is itself the signal: red, where
                             // the eye already is, rather than a badge beside it.
                             .foregroundStyle(errorVisible ? CellPalette.error : CellPalette.textColor(isPencil: cell.isPencil))
-                            // Dropped a little below centre in a numbered
-                            // cell, where it ran into the number's corner —
-                            // the paper crossword's own placement.
-                            .offset(y: cell.number != nil ? side * 0.06 : 0)
                             .scaleEffect(flash && !reduceMotion ? 1.18 : 1.0)
+                            // Centred under the number in a numbered square —
+                            // the paper crossword's own placement — and in the
+                            // whole square otherwise.
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .padding(.top, cell.number != nil ? numberBand : 0)
                             .transition(reduceMotion ? .opacity : .scale(scale: 0.4).combined(with: .opacity))
                             // Identity follows the letter so overtyping a filled
                             // cell re-pops instead of swapping text in place.
@@ -168,17 +201,24 @@ struct CellView: View, Equatable {
                 .animation(reduceMotion ? nil : .spring(duration: 0.22, bounce: 0.2), value: cell.entry)
             }
             .buttonStyle(.plain)
+            // The label says where the square is, by its clues; the value
+            // says what's in it, so VoiceOver reads a change of letter as a
+            // change of value rather than a new element.
             .accessibilityLabel(accessibilityLabel)
+            .accessibilityValue(accessibilityValue)
             .accessibilityAddTraits(isSelected ? [.isSelected] : [])
         }
     }
 
     private var accessibilityLabel: String {
-        let base = "Row \(cell.pos.row + 1), Column \(cell.pos.col + 1)"
-        guard let entry = cell.entry else { return "\(base), empty" }
+        clueContext.isEmpty ? "Row \(cell.pos.row + 1), Column \(cell.pos.col + 1)" : clueContext
+    }
+
+    private var accessibilityValue: String {
+        guard let entry = cell.entry else { return "Empty" }
         let letter = cell.isPencil ? "\(String(entry)), pencilled in" : String(entry)
-        if errorVisible { return "\(base), \(letter), incorrect" }
-        if correctVisible { return "\(base), \(letter), correct" }
-        return "\(base), \(letter)"
+        if errorVisible { return "\(letter), incorrect" }
+        if correctVisible { return "\(letter), correct" }
+        return letter
     }
 }

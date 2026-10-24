@@ -31,6 +31,8 @@ struct CrosswordGridView: View {
     @Bindable var vm: GameViewModel
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    /// Ties the Across and Down rotors' entries to the squares they land on.
+    @Namespace private var clueRotor
 
     /// Cells currently showing the word-complete green pulse.
     @State private var flashing: Set<GridPos> = []
@@ -267,9 +269,11 @@ struct CrosswordGridView: View {
                             showError: vm.autoCheck || cell.isCheckedWrong,
                             showCorrect: showCorrectOverlay,
                             flash: flashing.contains(pos),
+                            clueContext: cell.isBlock ? "" : vm.clueContext(at: pos),
                             onTap: { vm.tapCell(pos) }
                         )
                         .equatable()
+                        .accessibilityRotorEntry(id: pos, in: clueRotor)
                         .id(pos)
                     }
                 }
@@ -280,6 +284,22 @@ struct CrosswordGridView: View {
         .background(Theme.gridRule)
         .clipShape(board)
         .overlay(board.strokeBorder(Theme.gridRule, lineWidth: 1))
+        // Clue by clue, as a crossword is read: the rotor lands on each
+        // word's first square and reads the clue. Swiping square by square
+        // was the only way across the board for a VoiceOver player.
+        .accessibilityRotor("Across") { clueRotorEntries(vm.acrossSlots) }
+        .accessibilityRotor("Down") { clueRotorEntries(vm.downSlots) }
+    }
+
+    @AccessibilityRotorContentBuilder
+    private func clueRotorEntries(_ slots: [Slot]) -> some AccessibilityRotorContent {
+        ForEach(slots) { slot in
+            AccessibilityRotorEntry(
+                "\(slot.number) \(slot.direction.label), \(slot.length) letters: \(slot.clue)",
+                id: slot.positions[0],
+                in: clueRotor
+            )
+        }
     }
 
     /// Screenshot helpers paint correct cells green; live play never does —
