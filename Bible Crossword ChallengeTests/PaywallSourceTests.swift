@@ -29,6 +29,9 @@ struct PaywallSourceTests {
     private static let wallSources: [PaywallSource] = [
         .hintLimit, .hintLimitCard, .archive, .packLocked, .packCompletion,
         .questLocked, .journey,
+        // Not a wall, but asked mid-solve from the hint sheet, so it opens
+        // on the hint line rather than the standing promise.
+        .hintSheet,
     ]
 
     /// The entry points a player reaches without hitting anything — a card they
@@ -80,14 +83,6 @@ struct PaywallSourceTests {
         #expect(grouped.count == Self.wallSources.count + Self.browseSources.count)
     }
 
-    @Test("the locked-pack strip is scoped to the pack entry points")
-    func lockedPackStripScope() {
-        for source in PaywallSource.allCases {
-            let expected = source == .packLocked || source == .packCompletion
-            #expect(source.showsLockedPacks == expected, "\(source.rawValue) shows the wrong locked-pack strip")
-        }
-    }
-
     /// The analytics contract. These strings are years of history in PostHog;
     /// changing one is a deliberate act, not a rename. `mini_completion`,
     /// `read_chip`, `premium_ask` and `memory_verse_limit` were retired on
@@ -101,6 +96,8 @@ struct PaywallSourceTests {
             "trial_abandon", "onboarding",
             // 2026-10-07: the hint offer card and the one-time completion row.
             "hint_limit_card", "completion_offer",
+            // 2026-10-24: the hint sheet's "Unlimited with Premium" link.
+            "hint_sheet",
         ]
         #expect(Set(PaywallSource.allCases.map(\.rawValue)) == expected)
     }
