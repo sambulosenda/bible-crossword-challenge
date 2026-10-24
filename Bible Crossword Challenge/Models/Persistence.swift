@@ -482,6 +482,22 @@ struct Achievement: Identifiable, Hashable {
         }
     }
 
+    /// What's left to the goal, in the goal's own count — nil for a time
+    /// goal, which is met or not.
+    func remaining(for p: PlayerProfile) -> Int? {
+        let current: Int, target: Int
+        switch goal {
+        case .puzzles(let t): (current, target) = (p.totalPuzzlesCompleted, t)
+        case .streak(let t): (current, target) = (max(p.bestStreak, p.currentStreak), t)
+        case .fastSolve: return nil
+        case .noHints(let t): (current, target) = (p.noHintSolves, t)
+        case .difficulty(let diff, let t): (current, target) = (count(of: diff, in: p), t)
+        case .packsCompleted(let t): (current, target) = (p.completedPackIDs.count, t)
+        case .questsCompleted(let t): (current, target) = (p.completedQuestIDs.count, t)
+        }
+        return max(0, target - current)
+    }
+
     /// Completion count for a difficulty. Only hard is tracked today.
     private func count(of difficulty: PuzzleDifficulty, in p: PlayerProfile) -> Int {
         difficulty == .hard ? p.hardCompleted : 0

@@ -89,6 +89,16 @@ enum Theme {
         darkHighContrast: UIColor(red: 1.0, green: 0.867, blue: 0.451, alpha: 1)
     )
 
+    /// Gold for type and glyphs on a gold wash — an earned badge's symbol, the
+    /// "to go" count on the next one. The rim's gold is too light for that on
+    /// paper (2.4:1); this clears 4.5:1 on `premiumWash`.
+    static let badgeInk = adaptive(
+        light: UIColor(red: 0.478, green: 0.353, blue: 0.055, alpha: 1),          // #7A5A0E
+        lightHighContrast: UIColor(red: 0.380, green: 0.278, blue: 0.039, alpha: 1),
+        dark: UIColor(red: 0.976, green: 0.800, blue: 0.298, alpha: 1),           // #F9CC4C
+        darkHighContrast: UIColor(red: 1.0, green: 0.867, blue: 0.451, alpha: 1)
+    )
+
     /// The warm wash at the top of the Premium page, fading into the paper —
     /// the chip's gold, let down far enough to sit behind type.
     static let premiumWash = adaptive(
