@@ -312,15 +312,14 @@ struct ReminderAskRow: View {
 
 // MARK: - Inline ask card
 
-/// The card form of the ask for a surface that is already a screen of its
-/// own (Home's streak card). Same preview, same buttons, no time picker — the
-/// stored default time is offered in the button and adjustable in Settings.
-/// The completion screen uses `ReminderAskRow` inside its scorecard instead.
+/// Today's form of the ask, where the streak card used to stand: one row on
+/// its own card — a bell, the time, why, Turn on and a close. It was a card
+/// with a kicker, a headline, a mock notification and a full-width pill
+/// (2026-10-24): the tallest thing on Today for one yes/no question. The
+/// completion screen uses `ReminderAskRow` inside its scorecard instead.
 struct ReminderAskCard: View {
     let profile: PlayerProfile
     let surface: ReminderAsk.Surface
-    let kicker: String
-    let headline: String
     /// Called once the ask is answered either way, so the owner can remove the
     /// card. Impressions are recorded by the owner when it decides to show.
     let onFinish: () -> Void
@@ -336,23 +335,28 @@ struct ReminderAskCard: View {
             .formatted(date: .omitted, time: .shortened)
     }
 
-    var body: some View {
-        VStack(spacing: Theme.Spacing.m) {
-            VStack(spacing: Theme.Spacing.xs) {
-                // Natural case; `kicker()` uppercases for display, so VoiceOver
-                // reads a sentence rather than an acronym-like shout.
-                Text(kicker)
-                    .kicker()
-                Text(headline)
-                    .font(.headline)
-                    .multilineTextAlignment(.center)
-            }
-            .frame(maxWidth: .infinity)
-            // One VoiceOver stop for the header pair, like the benefit rows on
-            // the onboarding premium page.
-            .accessibilityElement(children: .combine)
+    /// The reason, in the player's own numbers when there are any. Short
+    /// enough to stay on one line beside the button on a 17e.
+    private var why: String {
+        let streak = profile.currentStreak
+        // A non-breaking hyphen, so a wrap never leaves "12-" on its own.
+        return streak >= 2 ? "For your \(streak)\u{2011}day streak" : "Before the day runs out"
+    }
 
-            NotificationPreviewCard()
+    var body: some View {
+        HStack(spacing: Theme.Spacing.s) {
+            RowIcon(symbol: "bell.fill", tint: FeatureTint.streak)
+
+            VStack(alignment: .leading, spacing: 1) {
+                Text("Remind me at \(reminderTimeText)")
+                    .font(.subheadline.weight(.semibold))
+                Text(why)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            }
+            .fixedSize(horizontal: false, vertical: true)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .accessibilityElement(children: .combine)
 
             Button {
                 enable()
@@ -361,28 +365,41 @@ struct ReminderAskCard: View {
                     if working {
                         ProgressView().tint(Theme.onInk)
                     } else {
-                        Text("Remind me at \(reminderTimeText)")
+                        Text("Turn on")
                     }
                 }
-                .frame(maxWidth: .infinity)
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(Theme.onInk)
+                .padding(.horizontal, Theme.Spacing.s + 4)
+                .padding(.vertical, 7)
+                .background(Theme.ink, in: .capsule)
             }
-            .buttonStyle(.pillProminent)
+            .buttonStyle(.plain)
             .disabled(working)
+            .accessibilityLabel("Remind me at \(reminderTimeText)")
+            .accessibilityHint("Asks for notification permission")
 
-            // Quiet, same weight as the other asks' declines — see the day-2
-            // sheet's note on hard-to-refuse buttons.
-            Button("Not now") {
+            // The decline, as the other asks' "Not now" — logged the same.
+            Button {
                 analytics.log(.reminderDeclined(source: surface.rawValue))
                 onFinish()
+            } label: {
+                Image(systemName: "xmark")
+                    .font(.footnote.weight(.semibold))
+                    .foregroundStyle(.secondary)
+                    .frame(width: 24, height: 44)
+                    .contentShape(.rect)
             }
-            .font(.subheadline.weight(.semibold))
-            .tint(.secondary)
+            .buttonStyle(.plain)
             .disabled(working)
+            .accessibilityLabel("Not now")
         }
-        .padding(Theme.Spacing.m)
+        .padding(.leading, Theme.Spacing.m)
+        .padding(.trailing, Theme.Spacing.s)
+        .padding(.vertical, Theme.Spacing.s)
         .elevatedCard()
-        // The card shows mid-play (completion, Home), so "now" is the play
-        // hour the button should offer — see `seedSuggestionIfUnset`.
+        // The card shows mid-play, so "now" is the play hour the button
+        // should offer — see `seedSuggestionIfUnset`.
         .onAppear { ReminderTime.seedSuggestionIfUnset() }
     }
 

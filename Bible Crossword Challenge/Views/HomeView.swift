@@ -536,8 +536,6 @@ struct HomeView: View {
                 ReminderAskCard(
                     profile: profile,
                     surface: .streakCard,
-                    kicker: "Protect your streak",
-                    headline: "A daily nudge keeps it alive.",
                     onFinish: { withAnimation { showStreakAsk = false } }
                 )
             }
@@ -886,8 +884,8 @@ private enum PuzzleBilling {
     func blurb(_ puzzle: Puzzle) -> String {
         switch self {
         case .daily: "\(puzzle.size)×\(puzzle.size) · \(puzzle.clueCount) clues"
-        case .mini: "\(puzzle.size)×\(puzzle.size) · two minutes"
-        case .sunday: "\(puzzle.size)×\(puzzle.size) · this week's big grid"
+        case .mini: "About 2 min"
+        case .sunday: "Every Sunday"
         }
     }
 }
@@ -1505,7 +1503,8 @@ private struct CompactPuzzleRow: View {
                     .font(.body.weight(.semibold))
                     .foregroundStyle(.white)
                     .frame(width: iconSize, height: iconSize)
-                    .background(billing.heroFill, in: .rect(cornerRadius: iconSize * 0.28, style: .continuous))
+                    .background(isSolvedToday ? FeatureTint.solved : billing.heroFill,
+                                in: .rect(cornerRadius: iconSize * 0.28, style: .continuous))
 
                 VStack(alignment: .leading, spacing: 0) {
                     Text(billing.shortName)
