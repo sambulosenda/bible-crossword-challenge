@@ -142,6 +142,57 @@ enum Theme {
         darkHighContrast: .black
     )
 
+    // MARK: Crossword grid
+
+    /// The rule between squares, and the board's rim: a warm grey that reads
+    /// as print on the paper canvas. Increased contrast deepens it so the
+    /// squares stay distinct.
+    static let gridRule = adaptive(
+        light: rgb(0xCFC9C1),
+        lightHighContrast: rgb(0x8E877E),
+        dark: rgb(0x3A3734),
+        darkHighContrast: rgb(0x6A6560)
+    )
+
+    /// A block: the black square of a printed crossword. Near-black, warm in
+    /// light so it sits with the paper; deeper than the cell fill in dark so
+    /// the board's shape survives.
+    static let gridBlock = adaptive(
+        light: rgb(0x1C1B1A),
+        lightHighContrast: .black,
+        dark: rgb(0x050505),
+        darkHighContrast: .black
+    )
+
+    // MARK: Game keyboard
+
+    /// The bed the game's clue strip and keys sit on: a warm grey under the
+    /// paper, so the entry area reads as the device's keyboard and the board
+    /// above it as the page.
+    static let keyboardBed = adaptive(
+        light: rgb(0xDCD8D2),
+        lightHighContrast: rgb(0xC9C4BC),
+        dark: rgb(0x1A1918),
+        darkHighContrast: rgb(0x121110)
+    )
+
+    /// A letter key on the bed.
+    static let keyFace = adaptive(
+        light: .white,
+        lightHighContrast: .white,
+        dark: rgb(0x3A3836),
+        darkHighContrast: rgb(0x4A4845)
+    )
+
+    /// The pencil and delete keys: a step off the letters, as the system
+    /// keyboard sets its function keys.
+    static let keyFaceAlt = adaptive(
+        light: rgb(0xB8B2AA),
+        lightHighContrast: rgb(0xA39C93),
+        dark: rgb(0x2A2826),
+        darkHighContrast: rgb(0x34322F)
+    )
+
     // MARK: Feature-card fills
     //
     // Solid fills that carry white text: the puzzle leading Today, in its
@@ -456,12 +507,15 @@ private struct Kicker: ViewModifier {
 }
 
 enum CellPalette {
-    static let empty = Color(.secondarySystemGroupedBackground)
-    /// Tile rim, at the full system separator. At 0.6 (the onboarding
-    /// fragment's) a white tile on the paper canvas all but vanished on a
-    /// bright screen, and the board's shape went with it. The system colour
-    /// still deepens under Increase Contrast and inverts for dark.
-    static let border = Color(.separator)
+    /// An empty square. One step up in dark (the tertiary grouped grey):
+    /// on the secondary grey, a square beside a near-black block was too
+    /// close in value for the board's shape to read.
+    static let empty = Color(uiColor: UIColor { @Sendable trait in  // nonisolated: see `Theme.adaptive`
+        (trait.userInterfaceStyle == .dark
+            ? UIColor.tertiarySystemGroupedBackground
+            : UIColor.secondarySystemGroupedBackground
+        ).resolvedColor(with: trait)
+    })
 
     /// Active-word tint. Stronger in dark mode, where an 0.18 accent wash over
     /// near-black cells is barely distinguishable from the empty fill.

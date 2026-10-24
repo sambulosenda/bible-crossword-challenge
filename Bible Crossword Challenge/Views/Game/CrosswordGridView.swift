@@ -95,9 +95,9 @@ struct CrosswordGridView: View {
             // beats a grid you can see all of.
             //
             // Fit is measured against the playable cells' bounding box, not the
-            // nominal N×N: blocks are invisible, and a board whose outer rows
-            // or columns are empty was centring that empty margin — the
-            // visible cells sat off-centre, and smaller than they needed to be.
+            // nominal N×N: a board whose outer rows or columns are all blocks
+            // would spend the screen on a border of black squares, and the
+            // playable cells would be smaller than they need to be.
             // Keyed to the puzzle, so a view reused for another board can't
             // centre on the last one's cells.
             let box = cachedBounds.flatMap { $0.puzzleID == vm.puzzle.id ? $0.bounds : nil } ?? playableBounds
@@ -248,6 +248,7 @@ struct CrosswordGridView: View {
 
     private func gridRows(side: CGFloat, rows: Range<Int>, cols: Range<Int>) -> some View {
         let activeWord = vm.activeWordPositions
+        let board = RoundedRectangle(cornerRadius: 8, style: .continuous)
 
         return VStack(spacing: 0) {
             ForEach(rows, id: \.self) { r in
@@ -274,6 +275,11 @@ struct CrosswordGridView: View {
                 }
             }
         }
+        // The rule colour shows through the hairline between squares as the
+        // grid's lines; the stroke gives the outer squares the same rim.
+        .background(Theme.gridRule)
+        .clipShape(board)
+        .overlay(board.strokeBorder(Theme.gridRule, lineWidth: 1))
     }
 
     /// Screenshot helpers paint correct cells green; live play never does —

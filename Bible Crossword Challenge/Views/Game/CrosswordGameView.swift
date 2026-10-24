@@ -315,8 +315,7 @@ struct CrosswordGameScreen: View {
                     railStatusRow
                     solveNotes
                     gridArea
-                    clueBar
-                    keypad
+                    entryDock
                 }
             } else if #available(iOS 27.1, *) {
                 // The system's own two-pane container. It picks the axis
@@ -342,8 +341,7 @@ struct CrosswordGameScreen: View {
                         } else {
                             Spacer(minLength: 0)
                         }
-                        clueBar
-                        keypad
+                        entryDock
                     }
                     // Left to itself the split sizes this pane by ratio;
                     // hold it to the same keypad width the fallback
@@ -371,8 +369,7 @@ struct CrosswordGameScreen: View {
                         } else {
                             Spacer(minLength: 0)
                         }
-                        clueBar
-                        keypad
+                        entryDock
                     }
                     .frame(width: Self.landscapeKeypadWidth)
                 }
@@ -381,8 +378,7 @@ struct CrosswordGameScreen: View {
                     railStatusRow
                     solveNotes
                     gridArea
-                    clueBar
-                    keypad
+                    entryDock
                 }
             }
         }
@@ -775,11 +771,21 @@ struct CrosswordGameScreen: View {
             onDelete: { vm.delete() },
             onTogglePencil: { vm.isPencilMode.toggle() },
             extraKeyHeight: gridOverClueBar ? keyGrowth : 0,
-            onPaper: true
+            onBed: true
         )
-        // On the paper itself, not a white slab: the slab cut the screen in
-        // two, a page above and a system keyboard below. White keys on paper
-        // are the grid's own tiles, so the pad reads as part of the puzzle.
+    }
+
+    /// The clue strip and the keys, on the keyboard bed (2026-10 design):
+    /// the board is the page, and everything you type with sits on one
+    /// surface under it, down to the screen's bottom edge. Replaced the pad
+    /// laid straight on the paper, where the clue floated between the board
+    /// and the keys and belonged to neither.
+    private var entryDock: some View {
+        VStack(spacing: 0) {
+            clueBar
+            keypad
+        }
+        .background(Theme.keyboardBed)
     }
 
     // MARK: - Toolbar
@@ -880,12 +886,32 @@ struct CrosswordGameScreen: View {
                 // not a Label — the toolbar restyles a Label back to its icon.
                 HStack(spacing: 3) {
                     Image(systemName: "lightbulb")
+                        .overlay(alignment: .topTrailing) {
+                            if let freeHintBadge {
+                                HintCountBadge(count: freeHintBadge)
+                                    .offset(x: 9, y: -8)
+                            }
+                        }
+                        // Room for the badge, which hangs off the bulb's
+                        // corner, so it clears the "H".
+                        .padding(.trailing, freeHintBadge == nil ? 0 : 9)
                     Text("Hints")
                 }
                 .font(.subheadline.weight(.medium))
             }
         }
         .accessibilityLabel("Hints and check answers")
+        .accessibilityValue(freeHintBadge.map { $0 == 1 ? "1 hint left" : "\($0) hints left" } ?? "")
+    }
+
+    /// The free hints left today, for the badge on the Hints button — only
+    /// for a free player past the learning window who has some left. Premium
+    /// and the learning window are unlimited, and a "0" badge would only be
+    /// a reminder of the wall.
+    private var freeHintBadge: Int? {
+        guard !store.isPremium, !profile.isStillLearning else { return nil }
+        let left = profile.hintsRemaining(isPremium: false, limit: freeHintLimit)
+        return left > 0 ? left : nil
     }
 
     @ToolbarContentBuilder
@@ -899,28 +925,21 @@ struct CrosswordGameScreen: View {
         // where it is the point.
         if !barsVertical {
             ToolbarItem(placement: .principal) {
-                // The title over the clock. The clock alone held the centre of
-                // the bar, so the screen never said which puzzle this was and
-                // the time was the loudest thing on it — a race, in an app
-                // meant to be calm. The title leads; the time sits under it.
+                // The clock over the title, as the design has it (2026-10):
+                // the time is the one thing on the bar that changes, so it
+                // takes the bar's title weight, and the puzzle's name sits
+                // under it as the subtitle. The words count left the bar with
+                // this; the clue bar's endgame line still says when one or
+                // two clues are left.
                 VStack(spacing: 0) {
+                    timerSlot
+                        .font(.headline)
                     Text(puzzle.title)
-                        .font(.subheadline.weight(.semibold))
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
                         .lineLimit(1)
                         .minimumScaleFactor(0.8)
                         .accessibilityAddTraits(.isHeader)
-                    // Time and progress share the subtitle line: both are
-                    // status, and the bar is where iOS keeps a screen's
-                    // status. Over the board, the count was a lone label on
-                    // empty paper and a row the board had to give up.
-                    HStack(spacing: Theme.Spacing.xs) {
-                        timerSlot
-                        Text("·")
-                            .accessibilityHidden(true)
-                        progressText
-                    }
-                    .font(.caption.weight(.medium))
-                    .foregroundStyle(.secondary)
                 }
             }
         }

@@ -38,6 +38,8 @@ struct ClueBarView: View {
                     Spacer(minLength: 0)
                     verseButton
                 }
+                // On the clue's edge, past the previous chevron.
+                .padding(.horizontal, 44)
             }
             clueRow
         }
@@ -49,23 +51,23 @@ struct ClueBarView: View {
         // the clue they label. `dynamicTypeSize` above still reads the
         // player's real size, so the accessibility layouts keep firing.
         .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
-        // The clue on the page margin; on the trailing side the next
-        // chevron's 44pt frame is its own margin, which puts the glyph about
-        // on the board's right edge.
-        .padding(.leading, Theme.Spacing.m)
-        .padding(.trailing, Theme.Spacing.xs)
-        // Room to breathe on both edges. The bar sits between a grid and a
-        // keyboard with no margin of its own, so 4pt read as content jammed
-        // against both. Affordable because moving the nudge onto the number
-        // line gave back a whole row — this spends part of it and the bar is
-        // still shorter than it was. Without the clue the bar is one row of
-        // 44pt controls, which is room enough; the list above gets the rest.
+        // The chevrons' 44pt frames are the strip's margin on both sides.
+        .padding(.horizontal, Theme.Spacing.xs)
+        // Room to breathe on both edges. Without the clue the bar is one row
+        // of 44pt controls, which is room enough; the list above gets the rest.
         .padding(.top, showsClue ? Theme.Spacing.s : 0)
         .padding(.bottom, showsClue ? Theme.Spacing.s + Theme.Spacing.xs : 0)
-        // On the page, not in a grey band: the clue is part of the puzzle,
-        // and the filled strip read as a toolbar bolted under the grid. No
-        // hairline under it either, now the keypad sits on the same paper —
-        // a rule between two halves of one surface read as a seam.
+        // A white strip on the keyboard bed (2026-10 design), as the system
+        // keyboard carries its suggestion bar: the clue is what the keys type
+        // into, so it sits with them. A hairline marks the strip's top edge,
+        // where it meets the page.
+        .background(Theme.surface)
+        .overlay(alignment: .top) {
+            Rectangle()
+                .fill(Color(.separator))
+                .frame(height: 0.5)
+                .accessibilityHidden(true)
+        }
     }
 
     /// The clue itself.
@@ -289,7 +291,12 @@ struct ClueBarView: View {
         // The chevrons centre on the clue's text, not the whole bar: the bar's
         // height includes a held-open line above a one-line clue, and its
         // middle put them level with the number line instead.
-        HStack(alignment: .clueText, spacing: Theme.Spacing.s) {
+        //
+        // The chevrons flank the clue, previous before it and next after, as
+        // the design sets them: on the strip the clue's edge is the strip's,
+        // not the page margin the board uses.
+        HStack(alignment: .clueText, spacing: 0) {
+            chevron("chevron.backward", label: "Previous clue", step: -1)
             // Two clue lines tall whatever the clue: without a fixed height a
             // one-line clue and a two-line clue give the bar different heights,
             // and the grid reflowed on plain clue navigation. The room a
@@ -306,36 +313,25 @@ struct ClueBarView: View {
                 clueButton
             }
 
-            // Both chevrons trail the clue rather than flanking it. Flanked,
-            // the back chevron's 44pt column indented the clue to an edge
-            // nothing else on the screen used; trailing, the clue starts on
-            // the page margin with the progress label and the board.
-            // A pair, touching: their 44pt frames already hold the air.
-            HStack(spacing: 0) {
-                Button {
-                    vm.advanceClue(by: -1)
-                } label: {
-                    Image(systemName: "chevron.backward")
-                        .font(.headline)
-                        .frame(width: 44, height: 44)
-                        .contentShape(.rect)
-                }
-                .accessibilityLabel("Previous clue")
-                Button {
-                    vm.advanceClue(by: 1)
-                } label: {
-                    Image(systemName: "chevron.forward")
-                        .font(.headline)
-                        .frame(width: 44, height: 44)
-                        .contentShape(.rect)
-                }
-                .accessibilityLabel("Next clue")
-            }
-            // Full 44pt targets, but laid out at about the clue line's height:
-            // centred on a one-line clue, the frames hung ~10pt below it and
-            // pushed the keyboard down by that much.
-            .padding(.vertical, -10)
+            chevron("chevron.forward", label: "Next clue", step: 1)
         }
+    }
+
+    /// A clue chevron: a full 44pt target, laid out at about the clue line's
+    /// height. Centred on a one-line clue, the frame hung ~10pt below it and
+    /// pushed the keyboard down by that much.
+    private func chevron(_ symbol: String, label: String, step: Int) -> some View {
+        Button {
+            vm.advanceClue(by: step)
+        } label: {
+            Image(systemName: symbol)
+                .font(.headline)
+                .frame(width: 44, height: 44)
+                .contentShape(.rect)
+        }
+        .foregroundStyle(.primary)
+        .accessibilityLabel(label)
+        .padding(.vertical, -10)
     }
 
     /// The clue, tappable to switch direction, with the nudge and Verse on

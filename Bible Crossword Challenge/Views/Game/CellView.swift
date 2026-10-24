@@ -43,17 +43,13 @@ struct CellView: View, Equatable {
             && lhs.flash == rhs.flash
     }
 
-    /// Cells are tiles, the shape the app's grids take everywhere else (the
-    /// onboarding fragment, the Today thumbnail), not rows of a table: a gap
-    /// of paper between each and a continuous corner. The gap is a smaller
-    /// share of the side than the onboarding tile's (8% vs 13%) because a
-    /// 15×15 has 24pt cells and every point of gap is a point off the letter.
-    private var tileGap: CGFloat { max(side * 0.08, 1.5) }
-    private var tileShape: RoundedRectangle {
-        RoundedRectangle(cornerRadius: side * 0.18, style: .continuous)
-    }
+    /// Squares of a printed crossword: each sits a hairline apart on the
+    /// board's rule colour, which shows through as the grid lines, and blocks
+    /// are black squares. Replaced floating rounded tiles (2026-10), which
+    /// made the board read as a word game rather than a crossword.
+    private static let ruleWidth: CGFloat = 1
 
-    private var errorVisible: Bool {
+        private var errorVisible: Bool {
         showError && cell.entry != nil && !cell.isCorrect
     }
 
@@ -63,24 +59,25 @@ struct CellView: View, Equatable {
 
     var body: some View {
         if cell.isBlock {
-            // Blocks are invisible: on these sparse criss-cross grids the word
-            // slots float on the background instead of sitting in a black slab.
-            Color.clear
+            Theme.gridBlock
+                .frame(width: side - Self.ruleWidth, height: side - Self.ruleWidth)
                 .frame(width: side, height: side)
                 .accessibilityHidden(true)
         } else {
             Button(action: onTap) {
                 ZStack {
-                    tileShape
-                        .fill(CellPalette.fill(
-                            isSelected: isSelected,
-                            isInWord: isInWord,
-                            isCorrect: correctVisible
-                        ))
+                    // The tints are washes, so they sit on the empty fill
+                    // rather than on the board's rule colour behind the cell.
+                    CellPalette.empty
+                    CellPalette.fill(
+                        isSelected: isSelected,
+                        isInWord: isInWord,
+                        isCorrect: correctVisible
+                    )
 
                     // Green pulse when this cell's word was just completed.
                     if flash {
-                        tileShape.fill(Color.green.opacity(0.5))
+                        Color.green.opacity(0.5)
                     }
 
                     if let number = cell.number, !Self.hidesNumbers {
@@ -96,8 +93,7 @@ struct CellView: View, Equatable {
                             .font(.system(size: max(side * 0.24, 9), weight: .semibold))
                             .foregroundStyle(.secondary)
                             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-                            // Clear of the tile's rounded corner and the
-                            // selected cell's 2pt border.
+                            // Clear of the selected cell's 2pt border.
                             .padding(.leading, max(side * 0.1, 3))
                             .padding(.top, max(side * 0.06, 2))
                     }
@@ -113,8 +109,9 @@ struct CellView: View, Equatable {
                                 // gap from the pen letter above it to read as
                                 // provisional.
                                 size: max(side * (cell.isPencil ? 0.42 : 0.5), cell.isPencil ? 10 : 12),
-                                weight: cell.isPencil ? .regular : .semibold,
-                                design: .rounded
+                                // Plain SF, as print sets a crossword's
+                                // letters; the rounded face read as a toy.
+                                weight: cell.isPencil ? .regular : .medium
                             ))
                             // A wrong letter is itself the signal: red, where
                             // the eye already is, rather than a badge beside it.
@@ -154,17 +151,15 @@ struct CellView: View, Equatable {
                             .padding(side * 0.06)
                     }
                 }
-                .frame(width: side - tileGap, height: side - tileGap)
-                .clipShape(tileShape)
-                .overlay(
+                .frame(width: side - Self.ruleWidth, height: side - Self.ruleWidth)
+                .clipped()
+                .overlay {
                     // The selected cell is marked by its border; its fill is
-                    // only a step deeper than the rest of the word. The quiet
-                    // rim on the rest keeps a white tile visible on paper.
-                    tileShape.strokeBorder(
-                        isSelected ? Theme.accent : CellPalette.border,
-                        lineWidth: isSelected ? 2 : 1
-                    )
-                )
+                    // only a step deeper than the rest of the word.
+                    if isSelected {
+                        Rectangle().strokeBorder(Theme.accent, lineWidth: 2)
+                    }
+                }
                 .frame(width: side, height: side)
                 .contentShape(.rect)
                 // Pops each typed letter in with a restrained spring. This fires
