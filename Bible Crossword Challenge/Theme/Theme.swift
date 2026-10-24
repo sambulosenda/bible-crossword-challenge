@@ -153,53 +153,52 @@ enum Theme {
 
     // MARK: Crossword grid
 
-    /// The rule between squares, and the board's rim: a warm grey that reads
-    /// as print on the paper canvas. Increased contrast deepens it so the
-    /// squares stay distinct.
-    static let gridRule = adaptive(
-        light: rgb(0xCFC9C1),
-        lightHighContrast: rgb(0x8E877E),
-        dark: rgb(0x3A3734),
-        darkHighContrast: rgb(0x6A6560)
-    )
+    /// The game screen's ground: the system's grouped grey, not the warm
+    /// paper the rest of the app sits on. On paper, with beige rules and black
+    /// blocks, the board read as a newspaper page rather than an app
+    /// (2026-10-24); on the system grey the white squares read as tiles.
+    static let gameCanvas = Color(.systemGroupedBackground)
 
-    /// A block: the black square of a printed crossword. Near-black, warm in
-    /// light so it sits with the paper; deeper than the cell fill in dark so
-    /// the board's shape survives.
+    /// A block: a soft grey tile among the white ones (2026-10-24 design),
+    /// where a printed crossword prints black. The board's shape still reads
+    /// — a block is a tile of its own, a step down from the squares — without
+    /// half the board being solid black. Increased contrast deepens it; in
+    /// dark it sinks below the squares toward the black ground.
     static let gridBlock = adaptive(
-        light: rgb(0x1C1B1A),
-        lightHighContrast: .black,
-        dark: rgb(0x050505),
+        light: rgb(0xE1E1E6),
+        lightHighContrast: rgb(0xAEAEB2),
+        dark: rgb(0x141416),
         darkHighContrast: .black
     )
 
     // MARK: Game keyboard
 
-    /// The bed the game's clue strip and keys sit on: a warm grey under the
-    /// paper, so the entry area reads as the device's keyboard and the board
-    /// above it as the page.
+    /// The bed the game's clue strip and keys sit on: the system keyboard's
+    /// own grey (2026-10-24), so the entry area reads as the iPhone keyboard
+    /// every player knows. It was a warm grey under the paper, which read as
+    /// print.
     static let keyboardBed = adaptive(
-        light: rgb(0xDCD8D2),
-        lightHighContrast: rgb(0xC9C4BC),
-        dark: rgb(0x1A1918),
-        darkHighContrast: rgb(0x121110)
+        light: rgb(0xD1D3D9),
+        lightHighContrast: rgb(0xC2C5CC),
+        dark: rgb(0x2C2C2E),
+        darkHighContrast: rgb(0x1C1C1E)
     )
 
     /// A letter key on the bed.
     static let keyFace = adaptive(
         light: .white,
         lightHighContrast: .white,
-        dark: rgb(0x3A3836),
-        darkHighContrast: rgb(0x4A4845)
+        dark: rgb(0x6C6C70),
+        darkHighContrast: rgb(0x7C7C80)
     )
 
     /// The pencil and delete keys: a step off the letters, as the system
     /// keyboard sets its function keys.
     static let keyFaceAlt = adaptive(
-        light: rgb(0xB8B2AA),
-        lightHighContrast: rgb(0xA39C93),
-        dark: rgb(0x2A2826),
-        darkHighContrast: rgb(0x34322F)
+        light: rgb(0xABB0BA),
+        lightHighContrast: rgb(0x9AA0AB),
+        dark: rgb(0x48484A),
+        darkHighContrast: rgb(0x545458)
     )
 
     // MARK: Feature-card fills

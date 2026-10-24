@@ -250,7 +250,6 @@ struct CrosswordGridView: View {
 
     private func gridRows(side: CGFloat, rows: Range<Int>, cols: Range<Int>) -> some View {
         let activeWord = vm.activeWordPositions
-        let board = RoundedRectangle(cornerRadius: 8, style: .continuous)
 
         return VStack(spacing: 0) {
             ForEach(rows, id: \.self) { r in
@@ -279,11 +278,8 @@ struct CrosswordGridView: View {
                 }
             }
         }
-        // The rule colour shows through the hairline between squares as the
-        // grid's lines; the stroke gives the outer squares the same rim.
-        .background(Theme.gridRule)
-        .clipShape(board)
-        .overlay(board.strokeBorder(Theme.gridRule, lineWidth: 1))
+        // No rule colour or rim: each square is its own tile (`CellView`),
+        // and the game's ground shows between them.
         // Clue by clue, as a crossword is read: the rotor lands on each
         // word's first square and reads the clue. Swiping square by square
         // was the only way across the board for a VoiceOver player.

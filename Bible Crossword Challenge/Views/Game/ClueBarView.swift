@@ -29,6 +29,10 @@ struct ClueBarView: View {
     /// number line, nudge, Verse and chevrons stay — they are controls the
     /// list doesn't have.
     var showsClue: Bool = true
+    /// On the game's keyboard bed the strip is part of the keyboard, as the
+    /// system keyboard's suggestion bar is: no fill of its own. Memory
+    /// practice has no bed, so it keeps the white strip.
+    var onBed: Bool = false
 
     var body: some View {
         VStack(spacing: Theme.Spacing.s) {
@@ -57,11 +61,10 @@ struct ClueBarView: View {
         // of 44pt controls, which is room enough; the list above gets the rest.
         .padding(.top, showsClue ? Theme.Spacing.s : 0)
         .padding(.bottom, showsClue ? Theme.Spacing.s + Theme.Spacing.xs : 0)
-        // A white strip on the keyboard bed (2026-10 design), as the system
-        // keyboard carries its suggestion bar: the clue is what the keys type
-        // into, so it sits with them. A hairline marks the strip's top edge,
-        // where it meets the page.
-        .background(Theme.surface)
+        // The clue is what the keys type into, so it sits with them. On the
+        // bed it shares the keyboard's grey (2026-10-24); elsewhere a white
+        // strip. A hairline marks the top edge, where it meets the page.
+        .background(onBed ? Color.clear : Theme.surface)
         .overlay(alignment: .top) {
             Rectangle()
                 .fill(Color(.separator))

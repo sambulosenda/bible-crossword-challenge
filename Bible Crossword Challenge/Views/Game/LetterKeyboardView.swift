@@ -19,7 +19,7 @@ struct LetterKeyboardView: View {
     /// Height added to every key, from room the screen has spare (see
     /// `CrosswordGameView.keyGrowth`). Still under the 60pt ceiling below.
     var extraKeyHeight: CGFloat = 0
-    /// The game's keys: white (grey in dark) on the warm keyboard bed the
+    /// The game's keys: white (grey in dark) on the system-grey keyboard bed the
     /// call site lays under the clue strip and the pad, with grey function
     /// keys, as the system keyboard sets them. Off, the pad keeps grey keys
     /// on whatever surface it sits on (onboarding, memory practice).
@@ -145,11 +145,11 @@ private struct KeyButtonStyle: ButtonStyle {
             .foregroundStyle(.primary)
             .background(
                 fill(isPressed: configuration.isPressed),
-                in: .rect(cornerRadius: onBed ? 6 : 8)
+                in: .rect(cornerRadius: 8)
             )
             // The system key's lower edge: a hairline of shade that lifts the
             // key off the bed. On a slab there is no bed to lift off.
-            .shadow(color: .black.opacity(onBed ? 0.28 : 0), radius: 0, y: 1)
+            .shadow(color: .black.opacity(onBed ? 0.3 : 0), radius: 0, y: 1)
             .scaleEffect(configuration.isPressed ? 0.96 : 1.0)
             // Asymmetric: the depress lands instantly (nil animation on press-in —
             // the frame the user is watching most), the release settles over a

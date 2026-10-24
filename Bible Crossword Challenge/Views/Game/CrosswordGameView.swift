@@ -29,7 +29,7 @@ struct CrosswordGameView: View {
         if let vm {
             CrosswordGameScreen(puzzle: puzzle, profile: profile, entrySource: entrySource, vm: vm)
         } else {
-            Theme.background
+            Theme.gameCanvas
                 .ignoresSafeArea()
                 .onAppear {
                     // Learning-window players get the shorter stall
@@ -234,7 +234,7 @@ struct CrosswordGameScreen: View {
                 solveSurface()
             }
         }
-        .background(Theme.background)
+        .background(Theme.gameCanvas)
         .onGeometryChange(for: CGSize.self) { proxy in
             proxy.size
         } action: { size in
@@ -390,7 +390,7 @@ struct CrosswordGameScreen: View {
                 }
             }
         }
-        .background(Theme.background)
+        .background(Theme.gameCanvas)
     }
 
     /// The puzzle session around whichever layout is showing: the clock's
@@ -766,7 +766,8 @@ struct CrosswordGameScreen: View {
             vm: vm,
             onStallTap: runStallAction,
             onVerseTap: { useVerseHint() },
-            showsClue: !cluesStanding
+            showsClue: !cluesStanding,
+            onBed: true
         )
     }
 

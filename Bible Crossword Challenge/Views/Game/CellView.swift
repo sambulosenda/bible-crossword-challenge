@@ -47,11 +47,14 @@ struct CellView: View, Equatable {
             && lhs.clueContext == rhs.clueContext
     }
 
-    /// Squares of a printed crossword: each sits a hairline apart on the
-    /// board's rule colour, which shows through as the grid lines, and blocks
-    /// are black squares. Replaced floating rounded tiles (2026-10), which
-    /// made the board read as a word game rather than a crossword.
-    private static let ruleWidth: CGFloat = 1
+    /// Rounded tiles a few points apart on the game's grey ground, blocks
+    /// included as soft grey tiles (2026-10-24 design). The printed board it
+    /// replaced — squares a hairline apart on a beige rule, black blocks —
+    /// read as a newspaper page. Blocks stay tiles, not gaps, so a 15×15
+    /// still shows where each word ends.
+    private var gap: CGFloat { max(2, (side * 0.08).rounded()) }
+    private var tileRadius: CGFloat { min(9, max(3, side * 0.18)) }
+    private var tile: RoundedRectangle { RoundedRectangle(cornerRadius: tileRadius, style: .continuous) }
 
         private var errorVisible: Bool {
         showError && cell.entry != nil && !cell.isCorrect
@@ -71,21 +74,40 @@ struct CellView: View, Equatable {
     /// 2026-10-24).
     private var numberBand: CGFloat { numberTop + numberSize * 0.9 }
 
+    private var baseLetterSize: CGFloat {
+        max(side * (cell.isPencil ? 0.42 : 0.5), cell.isPencil ? 10 : 12)
+    }
+
+    /// Whether a numbered square's letter has to drop under the number. On a
+    /// Mini's big tiles a centred letter clears the digits, and dropping it
+    /// anyway left the numbered squares' letters lower than their neighbours'
+    /// (2026-10-24). On a 15×15 the number's floor takes too much of the
+    /// square for that.
+    private var dropsLetterUnderNumber: Bool {
+        guard cell.number != nil else { return false }
+        // A capital's height is about 0.72 of its point size, a digit's
+        // bottom about 0.8 of the number's below its top padding.
+        let capTop = (side - gap) / 2 - baseLetterSize * 0.36
+        let digitBottom = numberTop + numberSize * 0.8
+        return capTop < digitBottom + 1
+    }
+
     /// The letter's size: half the square, floored for small boards, and in
-    /// a numbered square no taller than the room under the number allows.
+    /// a numbered square it drops in, no taller than the room under the
+    /// number allows.
     private var letterSize: CGFloat {
-        let base = max(side * (cell.isPencil ? 0.42 : 0.5), cell.isPencil ? 10 : 12)
-        guard cell.number != nil else { return base }
+        let base = baseLetterSize
+        guard dropsLetterUnderNumber else { return base }
         // A capital's height is about 0.72 of its point size; the rest is
         // breathing room above and below it.
-        let room = side - Self.ruleWidth - numberBand - max(side * 0.04, 1)
+        let room = side - gap - numberBand - max(side * 0.04, 1)
         return min(base, room / 0.78)
     }
 
     var body: some View {
         if cell.isBlock {
-            Theme.gridBlock
-                .frame(width: side - Self.ruleWidth, height: side - Self.ruleWidth)
+            tile.fill(Theme.gridBlock)
+                .frame(width: side - gap, height: side - gap)
                 .frame(width: side, height: side)
                 .accessibilityHidden(true)
         } else {
@@ -149,11 +171,11 @@ struct CellView: View, Equatable {
                             // the eye already is, rather than a badge beside it.
                             .foregroundStyle(errorVisible ? CellPalette.error : CellPalette.textColor(isPencil: cell.isPencil))
                             .scaleEffect(flash && !reduceMotion ? 1.18 : 1.0)
-                            // Centred under the number in a numbered square —
-                            // the paper crossword's own placement — and in the
-                            // whole square otherwise.
+                            // Under the number when the square is too small to
+                            // centre it clear of the digits (see
+                            // `dropsLetterUnderNumber`), centred otherwise.
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            .padding(.top, cell.number != nil ? numberBand : 0)
+                            .padding(.top, dropsLetterUnderNumber ? numberBand : 0)
                             .transition(reduceMotion ? .opacity : .scale(scale: 0.4).combined(with: .opacity))
                             // Identity follows the letter so overtyping a filled
                             // cell re-pops instead of swapping text in place.
@@ -184,13 +206,13 @@ struct CellView: View, Equatable {
                             .padding(side * 0.06)
                     }
                 }
-                .frame(width: side - Self.ruleWidth, height: side - Self.ruleWidth)
-                .clipped()
+                .frame(width: side - gap, height: side - gap)
+                .clipShape(tile)
                 .overlay {
                     // The selected cell is marked by its border; its fill is
                     // only a step deeper than the rest of the word.
                     if isSelected {
-                        Rectangle().strokeBorder(Theme.accent, lineWidth: 2)
+                        tile.strokeBorder(Theme.accent, lineWidth: 2)
                     }
                 }
                 .frame(width: side, height: side)
