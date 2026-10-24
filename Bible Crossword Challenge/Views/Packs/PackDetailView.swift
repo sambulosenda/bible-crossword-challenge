@@ -6,10 +6,12 @@
 //  Premium packs show their contents but route play through the paywall (the
 //  free starter pack plays straight through). Celebrates a fully-solved pack.
 //
-//  Locked, it lists the puzzles with a lock on each and pins one offer to the
-//  bottom. Until 2026-10 a locked pack hid its list behind a centred crown
-//  block — the page sold a pack without showing what was in it, from the
-//  entry point that converts best (3 purchases from 14 openers in 60 days).
+//  Locked, it is its own page (design canvas, 2026-10-24): a full-bleed cover
+//  in the pack's colour, the verse the pack opens on, the puzzles it holds,
+//  and one offer pinned to the bottom. Until 2026-10 a locked pack hid its
+//  list behind a centred crown block — the page sold a pack without showing
+//  what was in it, from the entry point that converts best (3 purchases from
+//  14 openers in 60 days).
 //
 
 import SwiftUI
@@ -65,32 +67,34 @@ struct PackDetailView: View {
         let progress = PackProgress(pack: pack, recordsByID: recordsByID)
         let puzzles = self.puzzles
 
-        // The collection on the left of a wide window, its puzzles on the
-        // right.
-        return CardColumns(alignment: .leading) {
-            Group {
-                if isLocked {
-                    lockedHero(label: PackCoverLabel(puzzles: puzzles), total: progress.total)
-                } else {
-                    header(progress: progress, books: packBooks(puzzles))
-                }
-            }
-            .onScrolledUnderBar { headerScrolledAway = $0 }
-            if !isLocked, let next = nextPuzzle(puzzles, recordsByID: recordsByID) {
-                playButton(next, recordsByID: recordsByID, progress: progress)
-            }
-            booksCard(puzzles)
-        } more: {
+        // A ZStack, not a Group: a Group hands its modifiers to each branch,
+        // and the paywall sheet below would be torn down with the locked
+        // branch the moment a purchase opens the pack.
+        return ZStack {
             if isLocked {
-                lockedPuzzleList(puzzles)
+                lockedPage(puzzles: puzzles, total: progress.total)
             } else {
-                puzzleList(puzzles, recordsByID: recordsByID)
+                // The collection on the left of a wide window, its puzzles on
+                // the right.
+                CardColumns(alignment: .leading) {
+                    header(progress: progress, books: packBooks(puzzles))
+                        .onScrolledUnderBar { headerScrolledAway = $0 }
+                    if let next = nextPuzzle(puzzles, recordsByID: recordsByID) {
+                        playButton(next, recordsByID: recordsByID, progress: progress)
+                    }
+                    booksCard(puzzles)
+                } more: {
+                    puzzleList(puzzles, recordsByID: recordsByID)
+                }
             }
         }
         .background(Theme.background)
         .safeAreaInset(edge: .bottom) {
             if isLocked { lockedOffer }
         }
+        // White bar items over the cover; the system's own once it has
+        // scrolled away and the bar sits on the paper.
+        .toolbarColorScheme(isLocked && !headerScrolledAway ? .dark : nil, for: .navigationBar)
         .navigationTitle(pack.title)
         .navigationBarTitleDisplayMode(.inline)
         // The header names the screen; the bar takes the name over only once
@@ -181,48 +185,102 @@ struct PackDetailView: View {
         .accessibilityElement(children: .combine)
     }
 
-    /// A locked pack as the thing being sold: a feature card in the pack's
-    /// own colour with the gold Premium chip, the title in serif, and the
-    /// book's mark set large behind it. It was the open header with a grey
-    /// cover (2026-10-24): the page that converts best (3 purchases from 14
-    /// openers in 60 days) looked like a disabled version of a free one.
-    /// The blurb sits under the card on the paper, where it reads as prose.
-    private func lockedHero(label: PackCoverLabel, total: Int) -> some View {
-        VStack(alignment: .leading, spacing: Theme.Spacing.m) {
-            VStack(alignment: .leading, spacing: 10) {
-                PremiumChip()
-                Text(pack.title)
-                    .font(.scripture(.largeTitle, weight: .semibold))
-                    .foregroundStyle(.white)
-                    .fixedSize(horizontal: false, vertical: true)
-                Text(label.caption.isEmpty ? Self.puzzleCount(total) : "\(label.caption) · \(Self.puzzleCount(total))")
-                    .font(.subheadline)
-                    .foregroundStyle(.white.opacity(0.9))
+    /// A locked pack as an editorial page (design canvas, 2026-10-24): its
+    /// cover full-bleed under the bar, then the verse it opens on, then what's
+    /// in it. One column at every width — the cover is the page's top edge,
+    /// which a split into columns would cut in half.
+    ///
+    /// It was a feature card inside the margins with the book's mark behind
+    /// the title — the same card the Packs tab leads with, so the page that
+    /// sells the pack looked like the tab that listed it.
+    private func lockedPage(puzzles: [Puzzle], total: Int) -> some View {
+        ScrollView {
+            VStack(spacing: 0) {
+                lockedCover(label: PackCoverLabel(puzzles: puzzles), total: total)
+                    .onScrolledUnderBar { headerScrolledAway = $0 }
+                VStack(alignment: .leading, spacing: 28) {
+                    lockedOpening(puzzles.first)
+                    lockedPuzzleList(puzzles)
+                }
+                .padding(.horizontal, Theme.Spacing.m + Theme.Spacing.xs)
+                .padding(.top, 28)
+                .padding(.bottom, Theme.Spacing.l)
+                .frame(maxWidth: 560, alignment: .leading)
             }
-            .frame(maxWidth: .infinity, minHeight: 200, alignment: .bottomLeading)
-            .padding(20)
-            .background(alignment: .topTrailing) {
-                Text(label.mark)
-                    .font(.system(size: 132, weight: .semibold, design: .serif))
-                    .tracking(-4)
-                    .foregroundStyle(.white.opacity(0.10))
-                    .lineLimit(1)
-                    .fixedSize()
-                    .offset(x: 8, y: -20)
-                    .accessibilityHidden(true)
-            }
-            .background(pack.coverFill)
-            .clipShape(.rect(cornerRadius: Theme.featureCornerRadius, style: .continuous))
+            .frame(maxWidth: .infinity)
+        }
+    }
 
+    /// The cover: the pack's colour edge to edge, the rising steps in the
+    /// corner, and the chip, the serif title and where in Scripture it sits.
+    private func lockedCover(label: PackCoverLabel, total: Int) -> some View {
+        VStack(alignment: .leading, spacing: Theme.Spacing.s + Theme.Spacing.xs) {
+            PremiumChip()
+            Text(pack.title)
+                .font(.system(.largeTitle, design: .serif, weight: .semibold))
+                .tracking(-0.6)
+                .fixedSize(horizontal: false, vertical: true)
+                .accessibilityAddTraits(.isHeader)
+            Text(coverCaption(label: label, total: total))
+                .font(.body)
+                .foregroundStyle(.white.opacity(0.82))
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .foregroundStyle(.white)
+        .frame(maxWidth: 560, alignment: .leading)
+        .padding(.horizontal, Theme.Spacing.m + Theme.Spacing.xs)
+        .padding(.top, Theme.Spacing.xl)
+        .padding(.bottom, 28)
+        // 290 under the bar, about 388 with it — the canvas's cover.
+        .frame(maxWidth: .infinity, minHeight: 290, alignment: .bottom)
+        .background(alignment: .bottomTrailing) {
+            RisingSteps()
+                .padding(.trailing, Theme.Spacing.m + Theme.Spacing.xs)
+        }
+        // The colour runs on up under the bar and the status bar, so the cover
+        // is the page's top edge; the scroll view still insets its content
+        // for the bar, which is where the type wants to start anyway.
+        .background {
+            pack.coverFill
+                .padding(.top, -400)
+                .ignoresSafeArea(edges: .top)
+        }
+        .accessibilityElement(children: .combine)
+    }
+
+    /// "Psalms 120–134 · 5 puzzles", and for a seasonal pack when it goes —
+    /// the honest reason to decide now, and a fact the app already knows.
+    private func coverCaption(label: PackCoverLabel, total: Int) -> String {
+        var parts = [Self.puzzleCount(total)]
+        if !label.caption.isEmpty { parts.insert(label.caption, at: 0) }
+        if let end = pack.seasonEnd() { parts.append("here until \(end.formatted(Self.seasonEndFormat))") }
+        return parts.joined(separator: " · ")
+    }
+
+    /// The verse the pack opens on, in serif, with where it's from and what
+    /// the pack is. A pack whose first puzzle has no verse falls back to its
+    /// blurb alone.
+    @ViewBuilder
+    private func lockedOpening(_ first: Puzzle?) -> some View {
+        if let first, !first.verse.isEmpty {
+            VStack(alignment: .leading, spacing: 10) {
+                Text(first.verse)
+                    .font(.scripture(.title2))
+                    .tracking(-0.2)
+                    .lineSpacing(4)
+                    .fixedSize(horizontal: false, vertical: true)
+                Text("\(first.reference) · \(pack.blurb)")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .accessibilityElement(children: .combine)
+        } else {
             Text(pack.blurb)
                 .font(.body)
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
-                .padding(.horizontal, Theme.Spacing.xs)
         }
-        .padding(.top, Theme.Spacing.s)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .accessibilityElement(children: .combine)
     }
 
     private static func puzzleCount(_ total: Int) -> String {
@@ -419,18 +477,24 @@ struct PackDetailView: View {
 
     /// The pack's puzzles, shown rather than withheld: the titles are what a
     /// player is deciding to pay for. Each row opens the paywall. No lock on
-    /// each row since 2026-10-24 — the chip on the card above already says
+    /// each row since 2026-10-24 — the chip on the cover already says
     /// Premium once, and five locks made a contents page read as a wall.
+    /// Serif numerals in the pack's colour and the passage each comes from,
+    /// as a book's contents page sets them.
     private func lockedPuzzleList(_ puzzles: [Puzzle]) -> some View {
-        VStack(alignment: .leading, spacing: Theme.Spacing.s) {
+        VStack(alignment: .leading, spacing: Theme.Spacing.s + Theme.Spacing.xs) {
             Text("In this pack").sectionHeader()
-                .padding(.horizontal, Theme.Spacing.xs)
             CardGroup(dividerInset: TrackRow<EmptyView>.dividerInset) {
                 ForEach(Array(puzzles.enumerated()), id: \.element.id) { index, puzzle in
                     Button {
                         showPaywall = true
                     } label: {
-                        TrackRow(number: index + 1, title: puzzle.title, detail: Self.detail(puzzle)) {
+                        TrackRow(
+                            number: index + 1,
+                            title: puzzle.title,
+                            detail: "\(puzzle.reference) · \(puzzle.difficulty.label)",
+                            numeralTint: pack.accent
+                        ) {
                             EmptyView()
                         }
                     }
@@ -442,39 +506,44 @@ struct PackDetailView: View {
         }
     }
 
-    /// One offer, pinned where the thumb is. Same words as every other card
-    /// that opens the paywall — never "Unlock", which overstates a tap that
-    /// only opens it (see `PremiumCopy.cardCTA`). It replaced a "Premium
-    /// Collection" headline in system yellow: 1.39:1 on the paper canvas.
+    /// One offer, pinned where the thumb is: the ink pill, as the Premium
+    /// page's own button, over a fade into the paper so the list scrolls away
+    /// under it rather than ending at a hard edge (design canvas, 2026-10-24).
+    /// The words are every Premium card's — never "Unlock", which overstates
+    /// a tap that only opens the paywall (see `PremiumCopy.cardCTA`).
     private var lockedOffer: some View {
-        VStack(spacing: Theme.Spacing.s) {
-            Text(lockedNote)
+        VStack(spacing: 10) {
+            Button(PremiumCopy.cardCTA(store)) { showPaywall = true }
+                .buttonStyle(.pillProminent)
+                .accessibilityHint("Opens Premium plans")
+            Text(offerTerms)
                 .font(.footnote)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
-            // The shared offer button (accent, price under it) — the same
-            // one Today and the Packs tab draw.
-            Button { showPaywall = true } label: { PremiumOfferCTA() }
-                .buttonStyle(PressableCardStyle())
-                .accessibilityLabel(PremiumCopy.cardCTA(store))
-                .accessibilityHint(PremiumCopy.terms(store) ?? "Opens Premium plans")
         }
-        .padding(.horizontal, Theme.Spacing.m)
-        .padding(.top, Theme.Spacing.s)
+        .padding(.horizontal, Theme.Spacing.m + Theme.Spacing.xs)
+        .padding(.top, Theme.Spacing.xl)
         .padding(.bottom, Theme.Spacing.s)
         .frame(maxWidth: 560)
         .frame(maxWidth: .infinity)
-        .background(Theme.background)
+        .background {
+            LinearGradient(
+                stops: [.init(color: Theme.background.opacity(0), location: 0),
+                        .init(color: Theme.background, location: 0.3)],
+                startPoint: .top, endPoint: .bottom
+            )
+            .ignoresSafeArea()
+        }
     }
 
-    /// For a seasonal pack, the date it goes away — the honest reason to decide
-    /// now, and a fact the app already knows, so it belongs here rather than in
-    /// urgency copy.
-    private var lockedNote: String {
-        let base = "Opens with every pack and Journey in Premium."
-        guard let end = pack.seasonEnd() else { return base }
-        return "Here until \(end.formatted(Self.seasonEndFormat)). " + base
+    /// "Then $9.99 a year · every pack included" — the price behind the
+    /// button, and that it's the whole shelf, not this pack.
+    private var offerTerms: String {
+        guard let yearly = store.yearly else { return "Every pack included" }
+        let price = "\(store.yearlyPriceText) a year"
+        let lead = store.introOffer(for: yearly) != nil ? "Then \(price)" : price
+        return "\(lead) · every pack included"
     }
 }
 
@@ -486,6 +555,9 @@ struct TrackRow<Accessory: View>: View {
     let number: Int
     let title: String
     let detail: String
+    /// Sets the number in serif, in this colour — a locked pack's contents
+    /// page. Nil keeps the plain grey track number.
+    var numeralTint: Color? = nil
     @ViewBuilder let accessory: Accessory
 
     /// Where a list of these starts its dividers: under the title, past the
@@ -494,11 +566,19 @@ struct TrackRow<Accessory: View>: View {
 
     var body: some View {
         HStack(spacing: Theme.Spacing.m) {
-            Text("\(number)")
-                .font(.subheadline.weight(.semibold))
-                .monospacedDigit()
-                .foregroundStyle(.secondary)
-                .frame(width: 28)
+            Group {
+                if let numeralTint {
+                    Text("\(number)")
+                        .font(.system(.title2, design: .serif, weight: .semibold))
+                        .foregroundStyle(numeralTint)
+                } else {
+                    Text("\(number)")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.secondary)
+                }
+            }
+            .monospacedDigit()
+            .frame(width: 28)
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
                     .font(.headline)
