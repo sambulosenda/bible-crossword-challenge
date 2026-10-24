@@ -140,8 +140,6 @@ struct CrosswordGameScreen: View {
     /// `HomeView.startComeback`.
     @AppStorage("pendingStreakBreak") private var pendingStreakBreak = 0
     @AppStorage("comebackSource") private var comebackSource = ""
-    /// The "first word's on us" line shown after the gift, auto-dismissed.
-    @State private var showStarterGiftNote = false
     /// Wall-clock mark of when this screen appeared, for `puzzle_abandoned`'s
     /// `wall_seconds` — the active clock ticks at ~1s cadence, so a fast
     /// bounce can round to 0 and read the same as a prewarm-and-detach.
@@ -605,15 +603,16 @@ struct CrosswordGameScreen: View {
             // Paced, not instant: the letters land one at a time so the player
             // watches a letter arrive in a square. A word that is simply there
             // when the screen opens taught nothing — see
-            // `GameViewModel.giftStarterWordPaced`. The banner follows the
-            // reveal rather than racing it, so the demonstration lands first
-            // and the caption only names what was just shown.
+            // `GameViewModel.giftStarterWordPaced`. No caption since
+            // 2026-10-24: the banner above the board pushed the grid down and
+            // back up, and on a zoomed 15×15 named a word scrolled out of
+            // view. The word pulses where it landed instead, and the zoomed
+            // grid holds it in view for the pulse (`CrosswordGridView`).
             if profile.isStillLearning,
                !rec.isCompleted, !isResume,
                let gifted = await vm.giftStarterWordPaced(
                    letterInterval: reduceMotion ? .zero : .milliseconds(170)
                ) {
-                withAnimation(.snappy) { showStarterGiftNote = true }
                 analytics.log(.starterWordGifted(
                     puzzleID: puzzle.id,
                     answerLength: gifted.answer.count
@@ -705,8 +704,8 @@ struct CrosswordGameScreen: View {
         }
     }
 
-    /// Transient banners: the challenge target, the hint-limit note, the
-    /// starter-word gift. Each retires itself on a timer.
+    /// Transient banners: the challenge target and the hint-limit note. Each
+    /// retires itself on a timer.
     @ViewBuilder
     private var solveNotes: some View {
         if let challenge = incomingChallenge {
@@ -721,21 +720,6 @@ struct CrosswordGameScreen: View {
                 .task(id: hintLimitHits) {
                     try? await Task.sleep(for: .seconds(10))
                     withAnimation(.snappy) { showHintLimitNote = false }
-                }
-        }
-
-        if showStarterGiftNote {
-            Label("Your first word is filled in — you take it from here!", systemImage: "gift.fill")
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(Theme.accent)
-                .padding(.horizontal, Theme.Spacing.m)
-                .padding(.vertical, Theme.Spacing.xs)
-                .background(Theme.accent.opacity(0.12), in: .capsule)
-                .padding(.top, Theme.Spacing.xs)
-                .transition(.move(edge: .top).combined(with: .opacity))
-                .task {
-                    try? await Task.sleep(for: .seconds(8))
-                    withAnimation(.snappy) { showStarterGiftNote = false }
                 }
         }
     }

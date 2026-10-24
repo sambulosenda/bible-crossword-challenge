@@ -40,6 +40,14 @@ struct CrosswordGridView: View {
     @State private var wordTick = 0
     /// Bumped per failed check — drives the shake transform and error haptic.
     @State private var shakeTick = 0
+    /// The middle of the starter word just gifted, for the zoomed grid to
+    /// frame while it pulses; and until when the cursor's own scroll waits.
+    /// The gift's commit moves the cursor on to the next word in the same
+    /// beat, and on a zoomed 15×15 following it straight away scrolled the
+    /// gifted word out of view before its pulse had played (2026-10-24).
+    @State private var giftFocus: GridPos?
+    @State private var holdCursorScrollUntil: Date?
+    private static let giftHold: TimeInterval = 0.9
 
     /// Current cell side in zoom mode; nil until the first layout pass picks
     /// a default. Never smaller than fit (whole grid visible), never larger
@@ -190,6 +198,20 @@ struct CrosswordGridView: View {
                 zoomSide = clamped(base * factor, fit: fit)
             }
             .onChange(of: vm.selected) { _, pos in
+                guard let until = holdCursorScrollUntil, until > .now else {
+                    scrollTo(pos, proxy: proxy)
+                    return
+                }
+                // Catch up once the gift's pulse has played, to wherever the
+                // cursor is by then.
+                Task { @MainActor in
+                    try? await Task.sleep(for: .seconds(until.timeIntervalSinceNow))
+                    holdCursorScrollUntil = nil
+                    scrollTo(vm.selected, proxy: proxy)
+                }
+            }
+            .onChange(of: giftFocus) { _, pos in
+                guard let pos else { return }
                 scrollTo(pos, proxy: proxy)
             }
             .onAppear {
@@ -336,6 +358,12 @@ struct CrosswordGridView: View {
         }
         vm.onWordCompleted = { slot in
             let positions = slot.positions
+            // The starter gift lands as a completed word: frame it for its
+            // pulse before the cursor's move takes the view elsewhere.
+            if positions.allSatisfy({ vm.grid[$0.row][$0.col].isGift }) {
+                holdCursorScrollUntil = .now.addingTimeInterval(Self.giftHold)
+                giftFocus = positions[positions.count / 2]
+            }
             wordTick &+= 1
             // Confirm the solve to VoiceOver — a no-op when VoiceOver is off.
             AccessibilityNotification.Announcement("\(slot.answer.capitalized) complete").post()
