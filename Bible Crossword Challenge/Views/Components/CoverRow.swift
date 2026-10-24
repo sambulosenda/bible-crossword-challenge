@@ -22,6 +22,10 @@ struct CoverRow: View {
     let subtitle: String
     /// 0...1 when the row has a count to fill; nil draws no bar.
     var progress: Double? = nil
+    /// A solid cover in `tint` with a near-black glyph — the Premium mark, as
+    /// the gold chip wears it. The pale tinted cover is for things in
+    /// progress, and a pale gold crown read as one more badge beside them.
+    var solid = false
 
     /// The cover's side. Fixed, with the glyph capped like `RowIcon`'s, so a
     /// large text size grows the text column rather than the artwork.
@@ -29,14 +33,26 @@ struct CoverRow: View {
 
     var body: some View {
         HStack(spacing: Theme.Spacing.m) {
-            CollectionCover(
-                symbol: symbol,
-                accent: tint,
-                isLocked: false,
-                side: Self.coverSide,
-                font: .title3,
-                cornerRadius: 12
-            )
+            Group {
+                if solid {
+                    Image(systemName: symbol)
+                        .font(.title3)
+                        // Fixed near-black, as on the chip: gold in both
+                        // appearances.
+                        .foregroundStyle(Color(white: 0.1))
+                        .frame(width: Self.coverSide, height: Self.coverSide)
+                        .background(tint, in: .rect(cornerRadius: 12, style: .continuous))
+                } else {
+                    CollectionCover(
+                        symbol: symbol,
+                        accent: tint,
+                        isLocked: false,
+                        side: Self.coverSide,
+                        font: .title3,
+                        cornerRadius: 12
+                    )
+                }
+            }
             .dynamicTypeSize(...DynamicTypeSize.xxLarge)
             .accessibilityHidden(true)
 
@@ -67,7 +83,7 @@ struct CoverRow: View {
     VStack(spacing: Theme.Spacing.m) {
         CoverRow(symbol: "leaf", tint: .green, title: "Beginnings",
                  subtitle: "Step 3 of 5 is ready", progress: 0.4)
-        CoverRow(symbol: "brain.fill", tint: .indigo, title: "Learn a verse by heart",
+        CoverRow(symbol: "brain.fill", tint: .indigo, title: "Memory verses",
                  subtitle: "Pick one from a puzzle you solved")
     }
     .padding()

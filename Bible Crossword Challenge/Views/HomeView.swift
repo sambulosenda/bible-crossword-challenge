@@ -6,8 +6,8 @@
 //  day's verse set in serif on the bare paper, and only then the daily puzzle
 //  — the one card that carries a tint and the one pill, so the hero is
 //  unmistakable among the white cards below it: the day's other puzzles, the
-//  streak, "Keep going" (plan, Journey, memory verses, next badge), the packs
-//  shelf, and the upgrade card last. Uppercase labels are section headers
+//  streak, "Keep going" (plan, Journey, memory verses, next badge), the
+//  Bible link, the Premium row, then the packs shelf when there's a shelf. Uppercase labels are section headers
 //  only; cards name themselves.
 //
 //  Each card is its own `View` type with narrow VALUE inputs so SwiftUI can
@@ -628,31 +628,41 @@ struct HomeView: View {
             }
             .buttonStyle(.plain)
             .accessibilityHint("Opens search, reading and reading plans")
+
+            // The offer as one row, last on the page (2026-10-24). It was a
+            // card of its own under the shelf — chip, headline, three benefits
+            // and a blue button, the biggest thing on Today after the daily,
+            // opened by 22 players in the 30 days to 2026-10-03. Not in Keep
+            // going: that list is the player's own progress, and an offer
+            // inside it read as one more badge. Set apart by space, and by the
+            // solid gold the Premium mark wears everywhere.
+            if !store.isPremium {
+                UpgradeRow(
+                    currentStreak: profile.currentStreak,
+                    onOpen: { paywall = PaywallRequest(source: $0) }
+                )
+                .padding(.top, Theme.Spacing.s)
+            }
         }
         // The covers start on the page's one content edge — 32pt, where the
         // verse, the hero's title and the headers start.
         .padding(.horizontal, Theme.Spacing.m)
 
         // Only packs the player can open. For a free player every tile here
-        // used to be locked behind a crown, a second pitch right above the
-        // Premium card; locked packs keep their offer on the Packs tab. A
-        // shelf of nothing but finished packs is a dead end, so it goes too.
+        // used to be locked behind a crown, a second pitch beside the
+        // Premium offer; locked packs keep their offer on the Packs tab. A
+        // shelf of nothing but finished packs is a dead end, so it goes too —
+        // and so does a shelf of one (2026-10-24): a free player's only open
+        // pack sat alone in a two-column row, half a row of empty paper,
+        // showing how little was free rather than what the shelf holds.
         let packs = collectionPacks(recordsByID).filter { !$0.isPremium || store.isPremium }
-        if packs.contains(where: { !PackProgress(pack: $0, recordsByID: recordsByID).isComplete }) {
+        if packs.count > 1,
+           packs.contains(where: { !PackProgress(pack: $0, recordsByID: recordsByID).isComplete }) {
             CollectionsCarousel(
                 packs: packs,
                 recordsByID: recordsByID,
                 isPremium: store.isPremium,
                 onShowAll: onShowPacks
-            )
-        }
-
-        if !store.isPremium {
-            UpgradeCard(
-                totalPuzzles: puzzleProvider.totalPuzzleCount,
-                solvedPuzzles: records.count { $0.isCompleted },
-                currentStreak: profile.currentStreak,
-                onOpen: { paywall = PaywallRequest(source: $0) }
             )
         }
     }
@@ -1314,117 +1324,55 @@ private struct NextAchievementRow: View {
     }
 }
 
-// MARK: - Upgrade card
+// MARK: - Upgrade row
 
-private struct UpgradeCard: View {
-    /// How many puzzles exist, and how many this player has finished. Both are
-    /// passed in rather than queried here: the counts already sit in HomeView,
-    /// and a second `@Query` for a number would re-fetch every record on a
-    /// screen that has them in hand.
-    let totalPuzzles: Int
-    let solvedPuzzles: Int
-    /// The player's current run. At a week or more the card speaks to the
-    /// habit rather than the catalogue — the moment the daily has proved its
-    /// worth — and opens the paywall under its own label. A copy change on
-    /// the card that's already here, not a new card: the last proactive
-    /// Today offer was 75 opens and no taps.
-    var currentStreak: Int = 0
-    /// Opens the paywall under this card's source. HomeView presents it, so
-    /// the sheet outlives the card a purchase removes.
+/// Premium, as one row at the foot of Today: the solid gold crown, what it
+/// is, and the trial. It was a card of its own — see `moreColumn`.
+private struct UpgradeRow: View {
+    /// The player's current run. At a week or more the row speaks to the
+    /// habit rather than the catalogue, and opens the paywall under its own
+    /// label (`streak_card`), so the two series carry on from the card.
+    let currentStreak: Int
+    /// Opens the paywall under this row's source. HomeView presents it, so
+    /// the sheet outlives the row a purchase removes.
     let onOpen: (PaywallSource) -> Void
 
     /// A week, the run length where the habit is a fact rather than a start.
     static let streakThreshold = 7
     private var isStreakVariant: Bool { currentStreak >= Self.streakThreshold }
 
-    /// Read here rather than passed in: the CTA names the trial only when the
-    /// product actually carries one — see `PremiumCopy.cardCTA`.
+    /// Read here rather than passed in: the row names the trial only when
+    /// the product actually carries one — see `PremiumCopy.cardCTA`.
     @Environment(StoreService.self) private var store
 
-    /// The player's own progress when they have some, and what's behind the
-    /// wall when they don't.
-    ///
-    /// "You've solved 0" is a discouragement rather than a nudge — the same
-    /// reason the paywall hides its progress line at zero.
-    private var title: String {
-        // What you get, with no number to parse.
-        isStreakVariant ? "\(currentStreak) days in a row" : "Every puzzle. Every pack."
+    private var hasTrial: Bool {
+        store.yearly.map { store.introOffer(for: $0) != nil } ?? false
     }
 
-    /// The one personal line, and the only place the count appears.
+    private var title: String {
+        isStreakVariant ? "\(currentStreak) days in a row" : "Premium"
+    }
+
+    /// The trial when there is one, never "Unlock": the row opens the
+    /// paywall, it doesn't buy anything.
     private var subtitle: String {
-        let left = max(totalPuzzles - solvedPuzzles, 0)
-        if isStreakVariant {
-            return "Keep it going with \(left) more puzzles and every hint."
-        }
-        guard solvedPuzzles > 0 else {
-            return "\(totalPuzzles) puzzles, and hints whenever you need them."
-        }
-        return "You've solved \(solvedPuzzles). \(left) more are waiting."
+        let offer = hasTrial ? PremiumCopy.cardCTA(store) : "See plans"
+        return isStreakVariant
+            ? "Go further with Premium · \(offer.lowercased())"
+            : "\(offer) · every pack and Journey"
     }
 
     var body: some View {
-        // Redesigned 2026-10-13 after Apple's own subscription cards (Music,
-        // iCloud+): a label, a headline about what you get, three benefits,
-        // one full-width accent button and the price under it. The ink pill
-        // it replaced was Continue's own style, so the offer read as one more
-        // step in the game. Accent here, ink for play.
-        //
-        // Still a sheet on tap, as every other entry point presents it, and
-        // never "Unlock" on the button: it opens the paywall, it doesn't buy
-        // anything (see `PremiumCopy.cardCTA`).
         Button {
             onOpen(isStreakVariant ? .streakCard : .homeCard)
         } label: {
-            VStack(alignment: .leading, spacing: Theme.Spacing.m) {
-                VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
-                    // The gold chip Premium wears everywhere (2026-10-24),
-                    // not a blue caps label: blue on Today means the daily.
-                    PremiumChip()
-                        .padding(.bottom, Theme.Spacing.xs)
-                    Text(title)
-                        .font(.title2.weight(.bold))
-                        .foregroundStyle(Color.primary)
-                        .fixedSize(horizontal: false, vertical: true)
-                    Text(subtitle)
-                        .font(.subheadline)
-                        .foregroundStyle(Color.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-
-                VStack(alignment: .leading, spacing: Theme.Spacing.s) {
-                    benefit("square.grid.3x3", "Every daily, back to the first")
-                    benefit("square.stack.3d.up", "All packs and Journeys")
-                    benefit("lightbulb", "Hints whenever you need them")
-                }
-
-                PremiumOfferCTA()
-            }
-            .padding(Theme.Spacing.l)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .elevatedCard()
-            .accessibilityElement(children: .ignore)
-            .accessibilityLabel("Premium. \(title) \(subtitle) Every daily, all packs and Journeys, and hints whenever you need them.\(terms.map { " \($0)" } ?? "")")
-            .accessibilityHint(PremiumCopy.cardCTA(store))
+            CoverRow(symbol: "crown.fill", tint: Theme.badgeRim, title: title, subtitle: subtitle, solid: true)
         }
         .buttonStyle(PressableCardStyle())
-    }
-
-    private var terms: String? { PremiumCopy.terms(store) }
-
-    /// Grey icons: colour is kept for the chip and the button, the two things
-    /// on the card that say "this is the offer".
-    private func benefit(_ symbol: String, _ text: String) -> some View {
-        Label {
-            Text(text)
-                .font(.subheadline)
-                .foregroundStyle(Color.primary)
-        } icon: {
-            Image(systemName: symbol)
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(Color.secondary)
-                .frame(width: 22)
-        }
+        .accessibilityElement(children: .ignore)
+        .accessibilityAddTraits(.isButton)
+        .accessibilityLabel("\(title). \(subtitle)")
+        .accessibilityHint("Opens Premium plans")
     }
 }
 

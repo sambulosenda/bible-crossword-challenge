@@ -339,9 +339,11 @@ struct MemoryVerseCard: View {
 
     private var headline: String {
         if dueCount > 0 { return dueCount == 1 ? "1 verse due for review" : "\(dueCount) verses due for review" }
-        // Without the kicker the headline has to say what the card is.
+        // Without the kicker the headline has to say what the card is — a
+        // name, like its neighbours on Today ("Beginnings", "Bible
+        // Beginner"), not an instruction; the subtitle says what to do.
         if activeCount > 0 { return showsKicker ? "Keep your verses fresh" : "Memory verses" }
-        return "Learn a verse by heart"
+        return showsKicker ? "Learn a verse by heart" : "Memory verses"
     }
 
     /// Where the player's verses stand — "2 learning · 1 mastered · next
