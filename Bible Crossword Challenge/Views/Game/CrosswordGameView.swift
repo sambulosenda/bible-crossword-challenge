@@ -766,8 +766,7 @@ struct CrosswordGameScreen: View {
             vm: vm,
             onStallTap: runStallAction,
             onVerseTap: { useVerseHint() },
-            showsClue: !cluesStanding,
-            onBed: true
+            showsClue: !cluesStanding
         )
     }
 

@@ -173,32 +173,32 @@ enum Theme {
 
     // MARK: Game keyboard
 
-    /// The bed the game's clue strip and keys sit on: the system keyboard's
-    /// own grey (2026-10-24), so the entry area reads as the iPhone keyboard
-    /// every player knows. It was a warm grey under the paper, which read as
-    /// print.
+    /// The bed the game's clue strip and keys sit on: a warm grey, so the
+    /// entry area reads as the device's keyboard and the board above it as
+    /// the page. Tried as the system keyboard's grey on 2026-10-24 and put
+    /// back the same day at Sambulo's request.
     static let keyboardBed = adaptive(
-        light: rgb(0xD1D3D9),
-        lightHighContrast: rgb(0xC2C5CC),
-        dark: rgb(0x2C2C2E),
-        darkHighContrast: rgb(0x1C1C1E)
+        light: rgb(0xDCD8D2),
+        lightHighContrast: rgb(0xC9C4BC),
+        dark: rgb(0x1A1918),
+        darkHighContrast: rgb(0x121110)
     )
 
     /// A letter key on the bed.
     static let keyFace = adaptive(
         light: .white,
         lightHighContrast: .white,
-        dark: rgb(0x6C6C70),
-        darkHighContrast: rgb(0x7C7C80)
+        dark: rgb(0x3A3836),
+        darkHighContrast: rgb(0x4A4845)
     )
 
     /// The pencil and delete keys: a step off the letters, as the system
     /// keyboard sets its function keys.
     static let keyFaceAlt = adaptive(
-        light: rgb(0xABB0BA),
-        lightHighContrast: rgb(0x9AA0AB),
-        dark: rgb(0x48484A),
-        darkHighContrast: rgb(0x545458)
+        light: rgb(0xB8B2AA),
+        lightHighContrast: rgb(0xA39C93),
+        dark: rgb(0x2A2826),
+        darkHighContrast: rgb(0x34322F)
     )
 
     // MARK: Feature-card fills
