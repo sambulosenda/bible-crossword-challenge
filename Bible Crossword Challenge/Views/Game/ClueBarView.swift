@@ -13,7 +13,7 @@ struct ClueBarView: View {
     /// line without running into it, so it falls back to its own row there.
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     /// Runs the stall nudge's action when the line is tapped — a whole-puzzle
-    /// check, the verse, or a free letter per `vm.stallNudgeKind`. Owned by the
+    /// check or the verse per `vm.stallNudgeKind`. Owned by the
     /// game view so the analytics and check/hint plumbing stay in one place.
     var onStallTap: (() -> Void)? = nil
     /// Opens the passage the active clue is drawn from — the free verse hint,
@@ -44,7 +44,7 @@ struct ClueBarView: View {
             clueRow
         }
         .animation(.snappy, value: endgameNudge)
-        .animation(.snappy, value: vm.isStallNudgeActive)
+        .animation(.snappy, value: showsStallLine)
         .animation(.snappy, value: showsVerseButton)
         // The whole bar stops where the clue does (see `clueText`). Capped
         // there alone, "2 Down" and Verse kept growing and at AX5 outranked
@@ -93,7 +93,7 @@ struct ClueBarView: View {
         Group {
             if let clueLines {
                 // Capped only. The room for a second line is held by
-                // `clueRow`, above the clue rather than under it.
+                // `clueRow`, centred round the clue rather than under it.
                 text.lineLimit(clueLines)
             } else {
                 text.lineLimit(nil)
@@ -155,7 +155,7 @@ struct ClueBarView: View {
     /// larger text the pill simply sat on top of "10 Down".
     @ViewBuilder
     private var nudgeBody: some View {
-        if vm.isStallNudgeActive {
+        if showsStallLine {
             Label(stallNudgeText, systemImage: stallNudgeIcon)
                 .font(.caption2.weight(.semibold))
                 .foregroundStyle(Theme.accent)
@@ -181,7 +181,7 @@ struct ClueBarView: View {
     /// line is encouragement, with nothing to act on.
     @ViewBuilder
     private var inlineNudge: some View {
-        if vm.isStallNudgeActive {
+        if showsStallLine {
             Button {
                 onStallTap?()
             } label: {
@@ -199,10 +199,16 @@ struct ClueBarView: View {
         }
     }
 
-    /// The stall line's copy, matched to the action the tap performs. The
-    /// early tier promises a letter, not a check — under 40% fill there is
-    /// nothing worth checking, and a vague "stuck?" with no offer is exactly
-    /// the line a quitting player ignores.
+    /// Whether the stall nudge is a line here. The `.hints` nudge is the
+    /// hints button's bounce, up in the bar where the help is: as a "Free
+    /// letter" pill on this line it appeared with nothing to say where it
+    /// came from.
+    private var showsStallLine: Bool {
+        vm.isStallNudgeActive && vm.stallNudgeKind != .hints
+    }
+
+    /// The stall line's copy, matched to the action the tap performs. A vague
+    /// "stuck?" with no offer is exactly the line a quitting player ignores.
     /// Short by necessity: sharing the number line leaves roughly 150pt on a
     /// 402pt screen, and the old full sentences ran to ~178pt — they fit only
     /// by pressing right up against "10 Down", which is what made the bar feel
@@ -213,7 +219,8 @@ struct ClueBarView: View {
         switch vm.stallNudgeKind {
         case .checkAnswers: "Check answers"
         case .readVerse: "Read the verse"
-        case .freeLetter: "Free letter"
+        // Never drawn — see `showsStallLine`.
+        case .hints: "Hints"
         }
     }
 
@@ -221,7 +228,7 @@ struct ClueBarView: View {
         switch vm.stallNudgeKind {
         case .checkAnswers: "checkmark.circle"
         case .readVerse: "book"
-        case .freeLetter: "a.square"
+        case .hints: "lightbulb"
         }
     }
 
@@ -229,7 +236,7 @@ struct ClueBarView: View {
         switch vm.stallNudgeKind {
         case .checkAnswers: "Checks the whole puzzle for mistakes"
         case .readVerse: "Opens the passage this clue comes from, without using a hint"
-        case .freeLetter: "Reveals one letter without using a hint"
+        case .hints: "Opens hints"
         }
     }
 
@@ -289,8 +296,8 @@ struct ClueBarView: View {
 
     private var clueRow: some View {
         // The chevrons centre on the clue's text, not the whole bar: the bar's
-        // height includes a held-open line above a one-line clue, and its
-        // middle put them level with the number line instead.
+        // height includes the held-open room round a one-line clue, so the
+        // clue's own line is what they sit level with.
         //
         // The chevrons flank the clue, previous before it and next after, as
         // the design sets them: on the strip the clue's edge is the strip's,
@@ -300,11 +307,11 @@ struct ClueBarView: View {
             // Two clue lines tall whatever the clue: without a fixed height a
             // one-line clue and a two-line clue give the bar different heights,
             // and the grid reflowed on plain clue navigation. The room a
-            // one-line clue leaves is held by an invisible two-line twin and
-            // opened *above* the clue. Under it (`reservesSpace`) it was a dead
-            // band between the clue and the keys; above, it joins the margin
-            // round the grid and the clue sits down on the keyboard.
-            ZStack(alignment: .bottomLeading) {
+            // one-line clue leaves is held by an invisible two-line twin, and
+            // the clue is centred in it. Under the clue (`reservesSpace`) it
+            // was a dead band above the keys; all above it, it was a white
+            // hole on the strip (2026-10-24). Split, it reads as padding.
+            ZStack(alignment: .leading) {
                 if showsClue, clueLines != nil, vm.activeSlot != nil {
                     clueColumn(clue: "M\nM", isTwin: true)
                         .hidden()

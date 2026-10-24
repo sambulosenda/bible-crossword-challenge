@@ -101,6 +101,8 @@ struct CrosswordGameScreen: View {
     /// Who opened `showPaywall`: the wall's chip or the hint sheet's link.
     @State private var paywallSource = PaywallSource.hintLimit
     @State private var showHintSheet = false
+    /// Bumped to bounce the hints button: the `.hints` stall nudge.
+    @State private var hintBounce = 0
     /// The row tapped in the hint sheet, acted on once it has dismissed —
     /// the same order as `hintUpgradeOutcome`, for the same reason.
     @State private var hintSheetChoice: HintSheet.Choice?
@@ -537,6 +539,9 @@ struct CrosswordGameScreen: View {
             showFullMissAlert = true
         }
         .onChange(of: vm.stallNudgeTick) { _, _ in
+            // Logged under Reduce Motion too: the nudge stands, and a bulb
+            // tap still counts as taking it — only the bounce is skipped.
+            if vm.stallNudgeKind == .hints, !reduceMotion { hintBounce += 1 }
             analytics.log(.stallNudgeShown(
                 puzzleID: puzzle.id,
                 fillPercent: fillPercent,
@@ -811,18 +816,31 @@ struct CrosswordGameScreen: View {
     /// give-up moved to `moreMenu`.
     private var hintsButton: some View {
         Button {
+            // Opened while it was bouncing for a stalled player: that's the
+            // nudge taken, and it stands down like any other.
+            if vm.isStallNudgeActive, vm.stallNudgeKind == .hints {
+                analytics.log(.stallNudgeTapped(
+                    puzzleID: puzzle.id,
+                    fillPercent: fillPercent,
+                    idleSeconds: vm.secondsSinceLastInput,
+                    kind: vm.stallNudgeKind.rawValue
+                ))
+                vm.acknowledgeStallNudge()
+            }
             showHintSheet = true
         } label: {
             if barsVertical {
                 // A side rail draws an item's icon and keeps its title for
                 // the overflow menu, and only a Label can go vertical at all.
                 Label("Hints", systemImage: "lightbulb")
+                    .symbolEffect(.bounce, value: hintBounce)
             } else {
                 // The bulb alone, as the design canvas has it (2026-10-24):
                 // beside "…" in one glass group, a word on one item and none
                 // on the other read as uneven. The badge carries the count.
                 // An Image, not a Label: the toolbar would restyle a Label.
                 Image(systemName: "lightbulb")
+                    .symbolEffect(.bounce, value: hintBounce)
                     .overlay(alignment: .topTrailing) {
                         if let freeHintBadge {
                             HintCountBadge(count: freeHintBadge)
@@ -1558,11 +1576,10 @@ struct CrosswordGameScreen: View {
         return Int((Double(vm.filledPlayableCount) / Double(total) * 100).rounded())
     }
 
-    /// The stall nudge's tap: log it, then run the tier's action. The check
-    /// tier runs the same whole-puzzle check the hint menu offers; the early
-    /// tier reveals one letter free of the daily quota — a foothold for the
-    /// player who has nothing worth checking yet. Both actions call back into
-    /// the vm, which clears the nudge line.
+    /// The stall line's tap: log it, then run the tier's action. The check
+    /// tier runs the same whole-puzzle check the More menu offers; the verse
+    /// opens the free passage. The `.hints` nudge has no line — its tap is
+    /// the hints button, logged there.
     private func runStallAction() {
         analytics.log(.stallNudgeTapped(
             puzzleID: puzzle.id,
@@ -1579,19 +1596,9 @@ struct CrosswordGameScreen: View {
             // and the idle clock restarts behind the sheet.
             vm.acknowledgeStallNudge()
             useVerseHint()
-        case .freeLetter:
-            // Free of quota, but still a reveal: `usedHint` and the session
-            // hint counter stay honest so unaided achievements and the
-            // weekly Mini leaderboard can't be bought with a stall.
-            let rec = loadOrCreateRecord()
-            let priorUsedHint = rec.usedHint
-            rec.usedHint = true
-            guard vm.revealLetter() else {
-                rec.usedHint = priorUsedHint
-                return
-            }
-            analytics.log(.hintUsed(type: HintType.letter.rawValue, cost: 0))
-            saveProgress()
+        case .hints:
+            vm.acknowledgeStallNudge()
+            showHintSheet = true
         }
     }
 

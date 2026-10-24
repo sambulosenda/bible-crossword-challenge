@@ -491,7 +491,7 @@ struct EngineTests {
     }
 
     /// Both tiers sit inside the holdout. A control group that still got the
-    /// early free letter would be answering a different question from the one
+    /// early hints nudge would be answering a different question from the one
     /// the flag asks.
     @Test func stallNudgeHoldoutSuppressesTheEarlyTier() {
         let vm = GameViewModel(puzzle: makePuzzle(), stallNudgeEnabled: false)
@@ -559,10 +559,10 @@ struct EngineTests {
         #expect(vm.midSolveRescueKind == .readVerse)
     }
 
-    @Test func midSolveOfferIsAFreeLetterWithNothingWrongAndNoVerse() {
+    @Test func midSolveOfferIsTheHintsWithNothingWrongAndNoVerse() {
         let vm = GameViewModel(puzzle: makePuzzle())
         vm.enter("C"); vm.enter("A")
-        #expect(vm.midSolveRescueKind == .freeLetter)
+        #expect(vm.midSolveRescueKind == .hints)
     }
 
     @Test func alreadyMarkedWrongLettersDoNotEarnACheckOffer() {
@@ -573,16 +573,16 @@ struct EngineTests {
         vm.select(GridPos(row: 1, col: 0)); vm.enter("X")
         vm.check(.puzzle)                                   // marks the X
         #expect(vm.unmarkedWrongEntryCount == 0)
-        #expect(vm.midSolveRescueKind == .freeLetter)
+        #expect(vm.midSolveRescueKind == .hints)
     }
 
-    @Test func lowFillIdleFiresTheFreeLetterTier() {
+    @Test func lowFillIdleFiresTheHintsTier() {
         let vm = GameViewModel(puzzle: makePuzzle())
         vm.isAttachedToWindow = true
         vm.enter("C")                                       // 1 of 5 = 20%
         idle(vm, seconds: vm.earlyNudgeSeconds + 1)
         #expect(vm.stallNudgeTick == 1)
-        #expect(vm.stallNudgeKind == .freeLetter)
+        #expect(vm.stallNudgeKind == .hints)
         #expect(vm.isStallNudgeActive)
 
         // Once per session for this tier too.
@@ -598,7 +598,7 @@ struct EngineTests {
         #expect(vm.stallNudgeTick == 0)
         idle(vm, seconds: 6, from: 1000)
         #expect(vm.stallNudgeTick == 1)
-        #expect(vm.stallNudgeKind == .freeLetter)
+        #expect(vm.stallNudgeKind == .hints)
     }
 
     @Test func learningWindowShortensBothTiers() {
@@ -625,7 +625,7 @@ struct EngineTests {
         #expect(vm.stallNudgeTick == 0)
         idle(vm, seconds: 2, from: 1000)
         #expect(vm.stallNudgeTick == 1)
-        #expect(vm.stallNudgeKind == .freeLetter)
+        #expect(vm.stallNudgeKind == .hints)
     }
 
     @Test func learningWindowMidTierFiresInsideTwentySeconds() {
@@ -661,8 +661,8 @@ struct EngineTests {
         idle(vm, seconds: vm.stallNudgeSeconds + 5)
         #expect(vm.stallNudgeTick == 1)
         // Both letters are right and the fixture's clues carry no passage, so
-        // the mid tier's offer falls through to the free letter.
-        #expect(vm.stallNudgeKind == .freeLetter)
+        // the mid tier's offer falls through to the hints.
+        #expect(vm.stallNudgeKind == .hints)
     }
 
     @Test func inputResetsTheStallClock() {

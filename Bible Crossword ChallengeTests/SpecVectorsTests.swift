@@ -191,7 +191,7 @@ struct SpecVectorsTests {
                 "kinds": [
                     GameViewModel.StallNudgeKind.checkAnswers.rawValue,
                     GameViewModel.StallNudgeKind.readVerse.rawValue,
-                    GameViewModel.StallNudgeKind.freeLetter.rawValue,
+                    GameViewModel.StallNudgeKind.hints.rawValue,
                 ],
             ],
             "timer": ["maxTickDeltaSeconds": 1.5],

@@ -164,19 +164,23 @@ final class GameViewModel {
     ///   stuck player does not ask, so the offer has to come sooner and again.
     ///   The 75% gate this shipped with missed most of the stuck players
     ///   (see 2026-08-23 histogram in git history), hence 40%.
-    /// - `.freeLetter` (< 40% fill, `earlyNudgeSeconds` idle, once): the early
+    /// - `.hints` (< 40% fill, `earlyNudgeSeconds` idle, once): the early
     ///   stall. 43% of abandons in the 30 days to 2026-08-28 happened under
-    ///   10% fill, and no help could fire there: the check nudge needs fill,
-    ///   the hint menu is an unlabeled glyph. Nothing to check yet — the
-    ///   useful action is a foothold, so the tap buys a letter free of quota.
+    ///   10% fill, where the check nudge has nothing to judge. It was a "Free
+    ///   letter" pill on the clue bar, revealing a letter free of quota; that
+    ///   pill appeared with nothing to say where it came from (2026-10-24), so
+    ///   the hints button itself bounces instead, pointing at the help.
     ///
-    /// The view reacts with a quiet action line and logs the impression.
+    /// The view reacts — a quiet action line, or the bulb's bounce for
+    /// `.hints` — and logs the impression.
     private(set) var stallNudgeTick = 0
     /// Which action the nudge line offers — drives its copy and tap action.
     enum StallNudgeKind: String {
         case checkAnswers = "check"
         case readVerse = "verse"
-        case freeLetter = "free_letter"
+        /// Not a line: the hints button bounces. `free_letter` before
+        /// 2026-10-24, when this tier revealed a letter free of quota.
+        case hints
     }
     private(set) var stallNudgeKind: StallNudgeKind = .checkAnswers
     /// True from the stall moment until the next input clears it — drives the
@@ -194,7 +198,7 @@ final class GameViewModel {
     /// also be ≥ 40% filled — the same fill convention `puzzle_abandoned`
     /// reports.
     let stallNudgeSeconds: Int
-    /// Idle threshold for the early (< 40% fill) free-letter nudge. Shorter
+    /// Idle threshold for the early (< 40% fill) hints nudge. Shorter
     /// than the check tier: the quick-close cohort it exists for is mostly
     /// gone by a minute. Never longer than `stallNudgeSeconds`, so the DEBUG
     /// `-uiStallNudgeSeconds` override shortens both tiers together.
@@ -941,8 +945,8 @@ final class GameViewModel {
     /// guesses is still a player who stopped. At or above 40% the offer is
     /// chosen from the grid (`midSolveRescueKind`) and re-arms after each
     /// input, up to the cap; below it there's nothing worth judging, so after
-    /// a shorter idle the answer is a free letter — a foothold for the player
-    /// the mid tier could never reach — once per sitting.
+    /// a shorter idle the hints button bounces — for the player the mid tier
+    /// could never reach — once per sitting.
     private func maybeNudgeStall() {
         // While a line is up there is nothing to add; input takes it down and
         // restarts the idle clock, which is what re-arms the mid tier.
@@ -957,7 +961,7 @@ final class GameViewModel {
         } else {
             guard !earlyNudged, idle >= earlyNudgeSeconds else { return }
             earlyNudged = true
-            stallNudgeKind = .freeLetter
+            stallNudgeKind = .hints
         }
         isStallNudgeActive = true
         stallNudgeTick += 1
@@ -966,13 +970,13 @@ final class GameViewModel {
     /// The mid-solve offer, read off the grid. Wrong letters the player can't
     /// see yet → a check, because judging what's there is the fastest unstick.
     /// Nothing wrong (they're stuck on a clue, not a mistake) → the passage
-    /// the answer comes from, free, when the clue has one; else a free letter.
+    /// the answer comes from, free, when the clue has one; else the hints.
     /// Cells already marked wrong (a prior check, or auto-check) don't count:
     /// telling a player to check what's already red is the empty nudge.
     var midSolveRescueKind: StallNudgeKind {
         if unmarkedWrongEntryCount > 0 { return .checkAnswers }
         if activeSlot?.reference != nil { return .readVerse }
-        return .freeLetter
+        return .hints
     }
 
     /// Filled cells that are wrong and not yet marked as such.

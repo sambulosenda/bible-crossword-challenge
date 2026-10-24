@@ -91,8 +91,10 @@ enum AnalyticsEvent {
     case checkUsed(scope: String, wrongCount: Int)
     /// The mid-solve rescue line, shown after `idleSeconds` of active-clock
     /// silence. `kind` is the tier (see `GameViewModel.StallNudgeKind`):
-    /// `check` ("Stuck? Check your answers") at ≥ 40% fill, `free_letter`
-    /// ("Stuck? Tap for a free letter") under 40% after a shorter idle.
+    /// `check` or `verse` at ≥ 40% fill, `hints` (the hints button bounces)
+    /// under 40% after a shorter idle, or mid-solve with nothing else to
+    /// offer. `hints` was `free_letter` before 2026-10-24 — a free reveal.
+    /// A `hints` tap is the bulb tapped while that nudge stands.
     /// Shown/tapped pair so each fill bucket of the abandon histogram can be
     /// read against whether its nudge is being seen, taken, and followed by a
     /// completion.
