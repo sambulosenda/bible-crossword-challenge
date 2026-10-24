@@ -173,46 +173,26 @@ struct OnboardingView: View {
     /// on the offer framed paying as the way to finish setting the app up,
     /// which is both untrue (the free daily is the whole product for most
     /// players) and the kind of bait-and-switch that earns a one-star review.
-    /// The bar goes gold on the offer to mark what follows as a bonus — the
-    /// same gold the canvas wash already turns on that page, so the two read
-    /// as one signal.
+    /// On the offer the segments give way to `offerBar`.
     private var progressBar: some View {
         let onOffer = page == lastPage
-        return HStack(spacing: 5) {
-            ForEach(0..<stepCount, id: \.self) { i in
-                Capsule()
-                    .fill(
-                        onOffer ? AnyShapeStyle(Theme.badgeRim)
-                            : i <= page ? AnyShapeStyle(HierarchicalShapeStyle.secondary)
-                            : AnyShapeStyle(HierarchicalShapeStyle.quaternary)
-                    )
-                    .frame(height: 2)
-            }
-            // The offer page gets the universal paywall escape the moment it
-            // arrives. Every paywall in the app opens with an ✕; this one — the
-            // busiest — made players scroll their eyes to the quiet decline at
-            // the bottom instead, and after the 2026-08-11 price increase a
-            // third of everyone who reached it quit the app on the spot rather
-            // than find it (34% of reachers left without ever playing, up from
-            // 6% at the old price). The ✕ is the affordance they were scanning
-            // for; it exits to the free daily exactly like the button below.
+        return Group {
             if onOffer {
-                Button {
-                    finish(exit: .close)
-                } label: {
-                    Image(systemName: "xmark")
-                        .font(.system(size: 15, weight: .bold))
-                        .frame(width: 36, height: 36)
-                        .contentShape(.rect)
+                offerBar
+                    .transition(.opacity)
+            } else {
+                HStack(spacing: 5) {
+                    ForEach(0..<stepCount, id: \.self) { i in
+                        Capsule()
+                            .fill(i <= page ? AnyShapeStyle(HierarchicalShapeStyle.secondary)
+                                            : AnyShapeStyle(HierarchicalShapeStyle.quaternary))
+                            .frame(height: 2)
+                    }
                 }
-                // Same quiet gray as PaywallView's close button — the default
-                // accent tint read as a blue action on the gold offer page.
-                .tint(.secondary)
-                .accessibilityLabel("Close and continue with the free puzzle")
                 .transition(.opacity)
             }
         }
-        .padding(.horizontal, Theme.Spacing.l)
+        .padding(.horizontal, onOffer ? Theme.Spacing.m : Theme.Spacing.l)
         .padding(.top, Theme.Spacing.s)
         .animation(.spring(duration: 0.35), value: page)
         .accessibilityElement(children: onOffer ? .contain : .ignore)
@@ -223,6 +203,47 @@ struct OnboardingView: View {
                     ? "Setup complete."
                     : "Step \(page + 1) of \(stepCount)"
         )
+    }
+
+    /// The offer page's bar, as the paywall sheet's (design canvas,
+    /// 2026-10-24): ✕ on the leading edge, Restore on the trailing one, each
+    /// in glass. No progress segments here — setup is over by this page, and
+    /// they went gold on it to say so, which the canvas doesn't need to.
+    ///
+    /// The ✕ is the paywall escape every player scans for. After the
+    /// 2026-08-11 price increase, with no visible one, a third of everyone
+    /// who reached this page quit the app on the spot (34% of reachers left
+    /// without ever playing, up from 6%). It exits to the free daily exactly
+    /// like the link under the button. Restore moved up from that link's
+    /// row, where it read as legal small print.
+    private var offerBar: some View {
+        HStack {
+            Button {
+                finish(exit: .close)
+            } label: {
+                Image(systemName: "xmark")
+                    .font(.system(size: 17, weight: .semibold))
+                    .frame(width: 44, height: 44)
+                    .offerBarGlass(in: .circle)
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Close and continue with the free puzzle")
+
+            Spacer(minLength: 0)
+
+            Button {
+                Task { await store.restore() }
+            } label: {
+                Text("Restore")
+                    .font(.body)
+                    .padding(.horizontal, Theme.Spacing.m)
+                    .frame(height: 44)
+                    .offerBarGlass(in: .capsule)
+            }
+            .buttonStyle(.plain)
+            .disabled(store.purchaseInFlight)
+        }
+        .foregroundStyle(.primary)
     }
 
     // MARK: - Pages
@@ -487,19 +508,25 @@ struct OnboardingView: View {
         // the plan does (monthly has no timeline and a one-line headline), and
         // centred, every tap on a plan card moved the tiles and the headline.
         return ViewThatFits(in: .vertical) {
+            // 20pt sides, the app's edge and the sheet's: at 24 the headline
+            // beside the fan broke into three lines and the page fell back to
+            // the layout without it (2026-10-24).
             premiumOffer(compact: false, active: active)
                 .frame(maxWidth: 560)
                 .frame(maxWidth: .infinity)
-                .padding(.horizontal, Theme.Spacing.l)
+                .padding(.horizontal, Theme.Spacing.m + Theme.Spacing.xs)
                 .padding(.vertical, Theme.Spacing.l)
-            // The sheet's middle size: smaller tiles and the rating kept. On a
+            // The sheet's middle size: the chip and a smaller fan kept. On a
             // 6.1" phone the full page missed by a few dozen points and the
             // compact one left a band of empty paper above the buy button.
             premiumOffer(compact: true, keepsSmallHero: true, active: active)
                 .frame(maxWidth: 560)
                 .frame(maxWidth: .infinity)
-                .padding(.horizontal, Theme.Spacing.l)
-                .padding(.vertical, Theme.Spacing.l)
+                .padding(.horizontal, Theme.Spacing.m + Theme.Spacing.xs)
+                // The bar above and the controls below already space it: on
+                // a 17e this layout measured 1.7pt over with 12pt here.
+                .padding(.top, Theme.Spacing.s)
+                .padding(.bottom, Theme.Spacing.xs)
             // Top-anchored like the full layout above: centred, the compact
             // offer left an empty band over the headline on a 6.1" phone.
             pageFrame(spacing: Theme.Spacing.l, alignment: .top) {
@@ -514,14 +541,8 @@ struct OnboardingView: View {
             headline: premiumHeadline,
             selectedID: $selectedPlanID,
             entranceActive: active,
-            // The word they just solved, gold rim and all, so the offer
-            // reads as the next step of the solve. A skipper never made
-            // that word; they get the welcome page's fragment instead.
-            heroTiles: solved ? MiniCrossword.firstSolveSolved : MiniCrossword.faithHopeLove,
-            heroCelebrated: solved ? MiniCrossword.firstSolveWord : [],
             compact: compact,
-            keepsSmallHero: keepsSmallHero,
-            firstRun: true
+            keepsSmallHero: keepsSmallHero
         )
     }
 
@@ -664,6 +685,9 @@ struct OnboardingView: View {
         // quit-on-page climbs back toward that figure after release, the ✕
         // wasn't carrying the load — re-promote this, don't remove the ✕.
         //
+        // "Not now" first, so it reads as declining the offer rather than as
+        // a second way forward (2026-10-24).
+        //
         // "today's free puzzle", not "the free daily puzzle": this button
         // lands in the Mini, and the Daily Puzzle is a different, named thing
         // one row below it on Today. Naming the wrong one would be the first
@@ -671,15 +695,15 @@ struct OnboardingView: View {
         // The vertical padding is the tap target: bare subheadline text is
         // ~20pt tall, and this is an exit — the one control that must never
         // take two tries. Same treatment as "Skip for now".
-        Button("Continue with today's free puzzle") { finish(exit: .freeLink) }
+        Button("Not now, play today's free puzzle") { finish(exit: .freeLink) }
             .font(.subheadline.weight(.semibold))
             .tint(.secondary)
             .padding(.vertical, Theme.Spacing.s)
 
         // Restore and the legal links are App Store review requirements
-        // wherever a purchase can start — including here.
+        // wherever a purchase can start — including here. Restore is in the
+        // bar above (`offerBar`), as on the sheet.
         HStack(spacing: Theme.Spacing.m) {
-            Button("Restore") { Task { await store.restore() } }
             Link("Terms", destination: LegalLinks.terms)
             Link("Privacy", destination: LegalLinks.privacy)
         }
@@ -701,14 +725,16 @@ struct OnboardingView: View {
         return store.introOfferText(for: plan)
     }
 
-    /// The promise, aware of what the player just did — and leading with the
-    /// trial when there is one.
+    /// The line under the page's fixed headline, aware of what the player
+    /// just did — and leading with the trial when there is one.
     ///
     /// Dismissal telemetry put the median time on this page at four seconds:
     /// most players skip before reading anything below the headline, and the
     /// first "free" used to sit in the timeline, half below the fold. The one
     /// fact that changes a four-second reader's mind is that today costs
-    /// nothing, so when a trial exists it gets the largest text on the screen.
+    /// nothing, so when a trial exists it's the first line under the
+    /// headline. (It was the headline itself until 2026-10-24, when the page
+    /// took the canvas's fixed one.)
     ///
     /// Keyed to the *selected* plan, like the subhead, the CTA and the
     /// timeline: monthly carries no introductory offer, and a headline
@@ -724,20 +750,18 @@ struct OnboardingView: View {
     /// tally of one reads as a tally of nothing.
     private var premiumHeadline: String {
         if let plan = selectedPlan, let offer = store.introOffer(for: plan) {
-            // Non-breaking spaces keep the offer in one piece: left to itself
-            // the headline wrapped as "free / for 3 days", splitting the only
-            // phrase the four-second reader is here to catch. Glued, the line
-            // breaks after "going —" and the offer lands whole.
+            // Non-breaking spaces keep the offer in one piece if the line
+            // wraps: "free / for 3 days" split the only phrase the
+            // four-second reader is here to catch.
             let freePhrase = "free for \(offer.duration)."
                 .replacingOccurrences(of: " ", with: "\u{00a0}")
-            // Two lines, not three. "You got the idea." went on 2026-10-03:
-            // the solved word sits in gold directly above the headline now,
-            // and it says that sentence without anyone having to read it.
             return solved
                 ? "Keep it going —\n\(freePhrase)"
                 : "Everything free for \(offer.duration)."
         }
-        return solved ? "Keep it going." : PremiumCopy.promise
+        // Without a trial there's no offer to lead with: the standing line
+        // about what Premium is for (see `PremiumOfferView.subhead`).
+        return PremiumCopy.promise
     }
 
     /// Both shared with the sheet — see `PremiumOfferView.ctaTitle` and
@@ -945,5 +969,18 @@ nonisolated private struct Shake: GeometryEffect {
         ProjectionTransform(
             CGAffineTransform(translationX: 9 * sin(travel * .pi * 3), y: 0)
         )
+    }
+}
+
+private extension View {
+    /// The bar buttons' glass on iOS 26, as the sheet's toolbar draws them;
+    /// a material before it.
+    @ViewBuilder
+    func offerBarGlass<S: Shape>(in shape: S) -> some View {
+        if #available(iOS 26.0, *) {
+            glassEffect(.regular.interactive(), in: shape)
+        } else {
+            background(.ultraThinMaterial, in: shape)
+        }
     }
 }

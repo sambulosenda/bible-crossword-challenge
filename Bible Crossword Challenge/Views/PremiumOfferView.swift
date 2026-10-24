@@ -51,7 +51,8 @@ private extension View {
 }
 
 struct PremiumOfferView: View {
-    /// The promise, chosen by the surface presenting it.
+    /// The promise, chosen by the surface presenting it, said as the line
+    /// under the fixed headline — see `offerHeader`.
     let headline: String
 
     /// Which plan is selected.
@@ -74,15 +75,7 @@ struct PremiumOfferView: View {
     /// copy that pushed the page past the screen.
     var highlightedPackID: String? = nil
 
-    /// Onboarding's hero, in its own tiles: the word the player just solved,
-    /// so the ask continues the solve instead of interrupting it. The sheet
-    /// draws `PremiumCoverFan` instead — see `offerHeader`.
-    var heroTiles: [[MiniTile]] = MiniCrossword.faithHopeLove
-    /// Cells of `heroTiles` to draw with the gold rim — the solved word.
-    var heroCelebrated: Set<MiniPoint> = []
-
-
-    /// Drops the decoration — the tiles and the kicker — for a screen the
+    /// Drops the decoration — the chip and the cover fan — for a screen the
     /// whole offer doesn't fit. Each surface offers both sizes to a
     /// `ViewThatFits` and lets layout pick: on a 667pt iPhone SE the full page
     /// pushed the prices and the timeline behind the purchase button, and the
@@ -90,17 +83,11 @@ struct PremiumOfferView: View {
     /// Nothing that describes the offer is ever dropped, only what decorates it.
     var compact: Bool = false
 
-    /// Keeps a smaller hero in the compact layout. The sheet offers it as a
-    /// middle size: on a 6.3" phone the full hero missed by a few dozen points
-    /// and the compact page left that room empty above the headline.
+    /// Keeps the chip and a smaller fan in the compact layout. Both surfaces
+    /// offer it as a middle size: on a 6.3" phone the full header missed by a
+    /// few dozen points and the compact page left that room empty above the
+    /// headline.
     var keepsSmallHero: Bool = false
-
-    /// Onboarding's version of the offer: no kicker and no hints row. The
-    /// solved word in gold already names the page, and a first-run player has
-    /// never been refused a hint — see `PremiumBenefit.all`. Median time on
-    /// that page is five seconds, so each cut block is one the headline and
-    /// the plans no longer compete with.
-    var firstRun: Bool = false
 
     @Environment(StoreService.self) private var store
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
@@ -111,21 +98,12 @@ struct PremiumOfferView: View {
         // Three groups, spaced as groups: what this is, what you get, what
         // you pay. Tight inside each, open between them — one uniform gap
         // made every block on the page look equally related to every other.
-        // A step tighter in the compact layout: on a 667pt iPhone SE the
+        // A step tighter in both compact layouts: on a 667pt iPhone SE the
         // group gaps were the ~24pt that left the trial timeline's last line
-        // under the pinned button.
-        VStack(alignment: .leading, spacing: compact && !keepsSmallHero ? Theme.Spacing.l : Theme.Spacing.xl) {
-            if firstRun {
-                VStack(spacing: Theme.Spacing.m) {
-                    if !compact || keepsSmallHero {
-                        staggered(hero, delay: 0)
-                    }
-                    staggered(headlineBlock, delay: 0.05)
-                }
-                .frame(maxWidth: .infinity)
-            } else {
-                staggered(offerHeader, delay: 0)
-            }
+        // under the pinned button, and on a 17e sheet they were part of what
+        // kept the chip and the fan off the page.
+        VStack(alignment: .leading, spacing: compact ? Theme.Spacing.l : Theme.Spacing.xl) {
+            staggered(offerHeader, delay: 0)
             staggered(featureList, delay: 0.14)
 
             if store.isPremium {
@@ -159,53 +137,30 @@ struct PremiumOfferView: View {
         }
     }
 
-    // MARK: - Hero
-
-    /// Until this view had one, the page that asks for money was the only
-    /// onboarding page with no tiles on it — five boxes of text straight after
-    /// the solved word glowing gold. Small, so it costs the page less than the
-    /// benefits card it replaced did.
-    ///
-    /// Cascades in on the sheet, which has no entrance of its own; onboarding's
-    /// stagger already carries it there, and both at once would double up.
-    private var hero: some View {
-        MiniCrossword(
-            layout: heroTiles,
-            celebrated: heroCelebrated,
-            animatesIn: entranceActive == nil,
-            tileSide: heroTileSide
-        )
-        .padding(.top, Theme.Spacing.xs)
-    }
-
-    /// One footprint whichever fragment is drawn: the three-row solve gets
-    /// bigger tiles than the four-row FAITH/HOPE/LOVE, so both stand about
-    /// 105–125pt tall and neither page gives the hero more room than the
-    /// other.
-    private var heroTileSide: CGFloat {
-        if compact && keepsSmallHero { return heroTiles.count > 3 ? 20 : 24 }
-        return heroTiles.count > 3 ? 28 : 32
-    }
-
     // MARK: - Header
 
-    /// The sheet's header, as the design canvas draws it (2026-10-24): the
+    /// The header, as the design canvas draws it (2026-10-24): the
     /// gold chip over a large serif promise on the left, a fan of locked pack
     /// covers on the right, one line under both. Left-aligned on the page's
     /// one edge, like every other screen; the centred stack it replaced was
     /// the only centred page in the app.
     ///
     /// The fan is what Premium opens, where the FAITH/HOPE/LOVE tiles were
-    /// decoration. It goes in the tightest layout and at accessibility sizes,
+    /// decoration — onboarding drew those, and the solved word, until
+    /// 2026-10-24; the canvas sends its "Keep going" to this same page. It goes in the tightest layout and at accessibility sizes,
     /// where the promise needs the width.
     private var offerHeader: some View {
-        VStack(alignment: .leading, spacing: Theme.Spacing.s + Theme.Spacing.xs) {
+        // 8pt rather than 12 between the chip, the headline and the line
+        // under them when the page is short — the last few points the chip
+        // needed on a 17e sheet.
+        let gap = compact ? Theme.Spacing.s : Theme.Spacing.s + Theme.Spacing.xs
+        return VStack(alignment: .leading, spacing: gap) {
             HStack(alignment: .bottom, spacing: Theme.Spacing.s) {
-                VStack(alignment: .leading, spacing: Theme.Spacing.s + Theme.Spacing.xs) {
+                VStack(alignment: .leading, spacing: gap) {
                     if !compact || keepsSmallHero {
                         PremiumChip()
                     }
-                    Text(headline)
+                    Text(PremiumCopy.sheetHeadline)
                         .font(.scripture(.largeTitle, weight: .semibold))
                         .tracking(-0.4)
                         .fixedSize(horizontal: false, vertical: true)
@@ -216,42 +171,24 @@ struct PremiumOfferView: View {
                     PremiumCoverFan(leadingPackID: highlightedPackID, scale: compact ? 0.8 : 1)
                 }
             }
-            // The same line with or without a trial: it says what Premium is
-            // for, and "after today's puzzle" already tells a player the daily
-            // stays free.
-            Text(PremiumCopy.subhead)
+            // Where the player came from is said here, under the fixed
+            // headline, rather than as it: the per-entry lines ran to three
+            // and four lines beside the fan, and the page fell back to the
+            // layout without the chip and the fan on a 17e (2026-10-24).
+            Text(subhead)
                 .font(.body)
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
         }
     }
 
-    /// Onboarding's headline: centred under the solved word.
-    private var headlineBlock: some View {
-        VStack(spacing: Theme.Spacing.s) {
-            // `.title`, not `.largeTitle`: with the tiles above it the
-            // headline is no longer the only thing announcing the page, and
-            // at the larger size it ran to three heavy lines that pushed the
-            // plans toward the button.
-            Text(headline)
-                .font(.scripture(.title, weight: .semibold))
-                .multilineTextAlignment(.center)
-
-            // Only the no-trial path gets a subhead. When a trial exists the
-            // page already states it three times — the timeline, the CTA and
-            // the commitment line — and the fourth copy up here was the
-            // weakest of them: an adjective ("3-day free trial") where the
-            // timeline below answers the actual question, which is when money
-            // starts. A player with no trial left still needs something above
-            // the fold about what costs nothing, so the free tier keeps its
-            // line.
-            if trialText == nil {
-                Text(PremiumCopy.freeDailyReassurance)
-                    .font(.subheadline.weight(.medium))
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
-            }
-        }
+    /// The entry point's own line, unbroken — its hand-set breaks are for a
+    /// headline. The standing promise has nothing specific to say, so those
+    /// entry points keep the line about what Premium is for.
+    private var subhead: String {
+        headline == PremiumCopy.promise
+            ? PremiumCopy.subhead
+            : headline.replacingOccurrences(of: "\n", with: " ")
     }
 
     /// The introductory offer on the *selected* plan, when there is one and the
@@ -283,8 +220,10 @@ struct PremiumOfferView: View {
     /// an uneven column. Neutral, not tinted: blue means "you can tap this"
     /// and these are not.
     private var featureList: some View {
-        VStack(alignment: .leading, spacing: Theme.Spacing.m) {
-            ForEach(PremiumBenefit.all(firstRun: firstRun)) { benefit in
+        // Tighter when the page is short: on a 17e sheet these gaps were part
+        // of what the chip and the fan needed (2026-10-24, measured 5pt short).
+        VStack(alignment: .leading, spacing: compact ? Theme.Spacing.s + 2 : Theme.Spacing.m) {
+            ForEach(PremiumBenefit.all) { benefit in
                 HStack(spacing: Theme.Spacing.m) {
                     RowIcon(symbol: benefit.icon, tint: Theme.accent)
                     Text(benefit.title)
@@ -475,17 +414,15 @@ struct PremiumOfferView: View {
     static func commitmentText(for product: Product?, store: StoreService) -> String? {
         guard let product else { return nil }
         let period = store.periodText(for: product) ?? ""
-        if store.introOffer(for: product) != nil {
-            // "Nothing charged today" leads (design canvas, 2026-10-24): it is
-            // the question a trial-sceptic is asking at the button. Only ever
-            // on this path — a player whose trial is spent is charged today.
-            // The rest keeps what App Review asks for at the buy button: the
-            // price after the trial, that it renews, and how to stop it. The
-            // trial's length is on the button and the selected plan's row.
-            return "Nothing charged today. Then \(product.displayPrice)\(period) until you cancel in Settings."
+        // What App Review asks for at the buy button: when the charge starts,
+        // the price, and that it renews. Nothing about cancelling (2026-10-24):
+        // a line ending "until you cancel" read as an invitation to, and the
+        // app sends no trial-ending reminder for the same reason.
+        if let offer = store.introOffer(for: product) {
+            return "Free for \(offer.duration), then \(product.displayPrice)\(period). Renews automatically."
         }
         if !period.isEmpty {
-            return "Auto-renews at \(product.displayPrice)\(period) until cancelled. Cancel anytime in Settings."
+            return "\(product.displayPrice)\(period). Renews automatically."
         }
         return "One-time purchase — yours forever."
     }

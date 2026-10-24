@@ -224,14 +224,6 @@ extension MiniCrossword {
     /// The blanks of `firstSolve`, in reading order.
     static let firstSolveBlanks = [MiniPoint(row: 1, col: 2), MiniPoint(row: 2, col: 2)]
 
-    /// `firstSolve` with ARK filled in — the fragment as the player left it,
-    /// for the Premium page that follows the solve.
-    static let firstSolveSolved: [[MiniTile]] = [
-        [.given("G"), .given("R"), .given("A"), .given("C"), .given("E")],
-        [.block,      .block,      .given("R"), .block,      .block],
-        [.block,      .block,      .given("K"), .block,      .block],
-    ]
-
     /// Every cell of 1 Down, for the gold rim when it lands.
     static let firstSolveWord: Set<MiniPoint> = [
         MiniPoint(row: 0, col: 2), MiniPoint(row: 1, col: 2), MiniPoint(row: 2, col: 2),

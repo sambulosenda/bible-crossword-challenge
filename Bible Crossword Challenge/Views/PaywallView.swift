@@ -194,8 +194,10 @@ struct PaywallView: View {
         )
         // 20pt, the app's screen edge.
         .padding(.horizontal, Theme.Spacing.m + Theme.Spacing.xs)
-        .padding(.top, Theme.Spacing.m + Theme.Spacing.xs)
-        .padding(.bottom, Theme.Spacing.l)
+        // The bar above and the pinned bar below bring their own room, so a
+        // short page gives these gaps back first.
+        .padding(.top, compact ? Theme.Spacing.s + 4 : Theme.Spacing.m + Theme.Spacing.xs)
+        .padding(.bottom, compact ? Theme.Spacing.s + 4 : Theme.Spacing.l)
         .frame(maxWidth: 520)
         .frame(maxWidth: .infinity)
     }
@@ -445,16 +447,16 @@ enum PremiumCopy {
     /// headline on each made a single journey look like two pitches.
     static let archive = "Every puzzle, back to the first."
 
-    /// The line under the sheet's promise, whatever the entry point: what
+    /// The sheet's headline, beside the cover fan, whatever the entry point:
+    /// two short lines, as the design canvas sets it, so the header is one
+    /// height everywhere. The entry point's own line goes under it.
+    static let sheetHeadline = "Every puzzle.\nEvery pack."
+
+    /// The line under the sheet's headline for an entry point with nothing
+    /// more specific to say (Profile, the trial re-offer's fallback): what
     /// Premium is for, in the app's own terms. "After today's puzzle" also
     /// says the daily stays free (design canvas, 2026-10-24).
     static let subhead = "Keep solving after today's puzzle, with Scripture open beside you."
-
-    /// Said under the headline when there is no introductory offer — because
-    /// the player has already used theirs, or none is configured. Without it
-    /// the no-trial path has nothing above the fold about what costs nothing,
-    /// and the free tier is the reason the ask can stay soft.
-    static let freeDailyReassurance = "The daily puzzle stays free either way."
 }
 
 /// A premium benefit: one line, one claim.
@@ -488,21 +490,18 @@ struct PremiumBenefit: Identifiable {
     /// fourth because retained players use them. Each row fits one line on a
     /// 375pt phone; check any rewrite on screen.
     ///
-    /// `firstRun` drops the hints row, for onboarding: hints are free until the
-    /// third solve, so a first-run player has never been refused one.
+    /// Onboarding shows all four, as the design does; it dropped the hints row
+    /// until 2026-10-24, since a first-run player has never been refused one.
     ///
     /// "No ads" stays out: the app serves none, free players included.
-    static func all(firstRun: Bool = false) -> [PremiumBenefit] {
-        let hints = PremiumBenefit(icon: "lightbulb", title: "Unlimited hints")
-        return [PremiumBenefit(icon: "square.grid.2x2", title: "Every pack and Journey")]
-            + (firstRun ? [] : [hints])
-            + [
-                PremiumBenefit(icon: "calendar", title: "Every past daily and Sunday Special"),
-                // Premium lifts the 3-verse cap. "Memorize", not "Unlimited
-                // verses": every verse is already free to read.
-                PremiumBenefit(icon: "brain", title: "Memorize unlimited verses"),
-            ]
-    }
+    static let all: [PremiumBenefit] = [
+        PremiumBenefit(icon: "square.grid.2x2", title: "Every pack and Journey"),
+        PremiumBenefit(icon: "lightbulb", title: "Unlimited hints"),
+        PremiumBenefit(icon: "calendar", title: "Every past daily and Sunday Special"),
+        // Premium lifts the 3-verse cap. "Memorize", not "Unlimited verses":
+        // every verse is already free to read.
+        PremiumBenefit(icon: "brain", title: "Memorize unlimited verses"),
+    ]
 }
 
 /// External legal links shown on the paywall. Terms uses Apple's standard EULA.
