@@ -23,6 +23,7 @@ import SwiftData
 enum QuestOpenSource: String, Hashable {
     case home
     case packs
+    case profile
 }
 
 /// A quest push, tagged with the surface that made it.
