@@ -2,20 +2,25 @@
 //  OnboardingView.swift
 //  Bible Crossword Challenge
 //
-//  First-run experience. Five pages — intro, one ask, a payoff, the offer:
+//  First-run experience. Four pages — intro, the first solve, a payoff, the
+//  offer:
 //
 //    0  Welcome     the brand, in the app's own vocabulary (a crossword)
 //    1  First solve two letters, then a verse — the whole product in ten seconds
-//    2  Name        asked once the player has something to be named for
-//    3  Celebration the payoff, by name and with their own numbers — the
-//                   emotional peak the offer used to arrive without
-//    4  Premium     the upsell, dismissible; the daily puzzle is always free
+//    2  Celebration the payoff, with their own numbers — the emotional peak
+//                   the offer used to arrive without
+//    3  Premium     the upsell, dismissible; the daily puzzle is always free
 //
-//  The celebration sits directly before the offer, not directly after the
-//  solve: the name page's typing would have spent the peak, and a greeting by
-//  name needs the name to exist. It is the pattern the top-converting
-//  onboardings share (a stats moment between the demonstrated value and the
-//  sell), sized honestly for a two-letter solve.
+//  There is no name page any more (removed 2026-10-24). In the 60 days before,
+//  13 of ~650 new players ever sent a challenge — the one feature a name is
+//  for — while the page itself lost about 2% of the players who reached it.
+//  The name is asked at first challenge instead (`CompletionView`'s name
+//  prompt), the moment a player has a reason to give it; until then the
+//  profile keeps the placeholder "Friend".
+//
+//  The celebration sits directly before the offer: the pattern the
+//  top-converting onboardings share (a stats moment between the demonstrated
+//  value and the sell), sized honestly for a two-letter solve.
 //
 //  There is deliberately no reminders page any more. It asked before the app
 //  had proved anything: of 102 players who answered it in the 30 days to
@@ -60,17 +65,11 @@ struct OnboardingView: View {
     // leave that way stay visible only as an absent `onboarding_completed`.
     @State private var premiumArrivedAt: Date?
     @State private var didTapPremiumCTA = false
-    @FocusState private var nameFocused: Bool
 
     /// Which plan the premium page has selected. Lives here rather than in
     /// `PremiumOfferView` because the CTA that buys it is down in `controls`,
     /// outside the TabView the offer is a page of.
     @State private var selectedPlanID = StoreService.yearlyID
-
-    /// Typed separately from `profile.username` so the field can start empty:
-    /// a new profile is created with the placeholder name "Friend", and showing
-    /// that as prefilled text makes the player delete it before they can type.
-    @State private var name = ""
 
     // First-solve state.
     @State private var entries: [MiniPoint: Character] = [:]
@@ -85,15 +84,17 @@ struct OnboardingView: View {
     @State private var solveStartedAt: Date?
     @State private var solveSeconds: Int?
 
-    private let lastPage = 4
+    private let lastPage = 3
 
     /// How many of the pages are setup steps. The celebration and the offer
     /// both sit past the end of the bar — one is payoff, the other a bonus,
     /// and neither asks the player for anything.
-    private let stepCount = 3
+    private let stepCount = 2
 
-    /// Analytics labels for the five pages, indexed by page number.
-    private let stepNames = ["welcome", "first_solve", "name", "celebration", "premium"]
+    /// Analytics labels for the four pages, indexed by page number. Labels are
+    /// stable across the name page's removal; `step_index` for celebration and
+    /// premium dropped by one on 2026-10-24, so funnels should key on the name.
+    private let stepNames = ["welcome", "first_solve", "celebration", "premium"]
 
     var body: some View {
         VStack(spacing: 0) {
@@ -102,9 +103,8 @@ struct OnboardingView: View {
             TabView(selection: $page) {
                 welcomePage.tag(0)
                 firstSolvePage.tag(1)
-                namePage.tag(2)
-                celebrationPage.tag(3)
-                premiumPage.tag(4)
+                celebrationPage.tag(2)
+                premiumPage.tag(3)
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
             .animation(.easeInOut, value: page)
@@ -115,8 +115,6 @@ struct OnboardingView: View {
         .sensoryFeedback(.selection, trigger: page)
         .sensoryFeedback(.success, trigger: solved)
         .sensoryFeedback(.error, trigger: wrongAttempts)
-        // Swiping off the name page shouldn't leave the keyboard floating over
-        // the next page — dismiss it whenever we leave.
         .onChange(of: page) { oldPage, newPage in
             // Logged on the way out of the solve page, not on solving, so a
             // skip is recorded too — the two outcomes are the comparison.
@@ -127,15 +125,6 @@ struct OnboardingView: View {
                 analytics.log(.onboardingFirstSolve(solved: solved, attempts: wrongAttempts))
             }
             logStep(newPage)
-            if newPage != 2 { nameFocused = false }
-            // Raising the keyboard mid-transition fights the page animation, so
-            // wait for the slide to settle before taking focus.
-            if newPage == 2 {
-                Task {
-                    try? await Task.sleep(for: .milliseconds(450))
-                    if page == 2 { nameFocused = true }
-                }
-            }
             // The premium page is a paywall view like any other — count it so
             // onboarding conversion can be compared against in-app sources.
             if newPage == lastPage && !didLogPaywallOpen {
@@ -143,13 +132,12 @@ struct OnboardingView: View {
                 analytics.log(.paywallOpened(source: PaywallSource.onboarding.rawValue))
             }
             // First arrival only, like the open above: swiping back to the
-            // name page and returning shouldn't reset the clock.
+            // celebration and returning shouldn't reset the clock.
             if newPage == lastPage && premiumArrivedAt == nil {
                 premiumArrivedAt = Date()
             }
         }
         .onAppear {
-            if profile.username != "Friend" { name = profile.username }
             logStep(page)
         }
         .purchaseNoticeAlert(store)
@@ -173,13 +161,13 @@ struct OnboardingView: View {
         .ignoresSafeArea()
     }
 
-    /// Three hairline segments instead of dots: it reads as progress rather
+    /// Two hairline segments instead of dots: it reads as progress rather
     /// than decoration, and it tells the player up front how short this is.
     /// Hairline and hierarchical grey, not 4pt ink: solid black bars were the
     /// heaviest thing at the top of every page, above the headline they sit
     /// over.
     ///
-    /// Three, not five — neither the celebration nor the premium page is a
+    /// Two, not four — neither the celebration nor the premium page is a
     /// step. The celebration asks nothing (it's the payoff, and it arrives
     /// with the bar already full, which is the point). Filling a final segment
     /// on the offer framed paying as the way to finish setting the app up,
@@ -385,45 +373,7 @@ struct OnboardingView: View {
         .accessibilityElement(children: .combine)
     }
 
-    private var namePage: some View {
-        let active = page == 2
-        return pageFrame(spacing: Theme.Spacing.l, alignment: .upperThird) {
-            // No kicker. A grey caps label over a serif headline on every
-            // page made five pages read as one form; it stays only where it
-            // carries information — the brand on the welcome, the clue
-            // label on the solve. "Nice solve" here also pre-empted the
-            // celebration two pages on.
-            Text("What should we\ncall you?")
-                .font(.scripture(.largeTitle, weight: .semibold))
-                .multilineTextAlignment(.center)
-                .entrance(active: active, delay: 0.05, reduceMotion: reduceMotion)
-
-            VStack(spacing: Theme.Spacing.s) {
-                TextField("Your name", text: $name)
-                    .font(.title3)
-                    .multilineTextAlignment(.center)
-                    .textInputAutocapitalization(.words)
-                    .autocorrectionDisabled()
-                    .submitLabel(.done)
-                    .focused($nameFocused)
-                    .padding(Theme.Spacing.m)
-                    .elevatedCard()
-
-                Text("Used to greet you and to sign the puzzles you share. Change it any time in your profile.")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
-                    // Truncated to one line once the page took the
-                    // upper-third anchor with the keyboard up.
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-            .onSubmit { nameFocused = false }
-            .entrance(active: active, delay: 0.18, reduceMotion: reduceMotion)
-        }
-    }
-
-    /// The peak before the ask: the player greeted by the name they just gave,
-    /// over their own numbers.
+    /// The peak before the ask: the player's own solve, over their numbers.
     ///
     /// The solve page's inline verse card is the *product's* payoff (the verse
     /// behind the answer); this page is the *player's* (what they did, what's
@@ -434,7 +384,7 @@ struct OnboardingView: View {
     /// A skipper gets the same page with honest content: no "well done" for a
     /// clue they didn't solve, and library tiles instead of a solve time.
     private var celebrationPage: some View {
-        let active = page == 3
+        let active = page == 2
         return pageFrame(spacing: Theme.Spacing.xl, alignment: .upperThird) {
             // The mark is the grid the player just filled (see CelebrationBadge:
             // a tick says "succeeded", the grid says what). Skippers get the
@@ -466,12 +416,12 @@ struct OnboardingView: View {
         }
     }
 
-    /// Greets by name when there is one to use — the field the player just
-    /// filled is the freshest thing in the app, and top onboarding flows cash
-    /// personalisation in immediately rather than saving it for the profile.
+    /// Greets by name only when one already exists — a player re-running
+    /// onboarding after naming themselves. New players are still "Friend",
+    /// and "Well done, Friend." reads as a form letter, so they get no suffix.
     private var celebrationHeadline: String {
-        let trimmed = name.trimmingCharacters(in: .whitespaces)
-        let suffix = trimmed.isEmpty ? "" : ", \(trimmed)"
+        let trimmed = profile.username.trimmingCharacters(in: .whitespaces)
+        let suffix = trimmed.isEmpty || trimmed == ChallengeService.placeholderName ? "" : ", \(trimmed)"
         return solved
             ? "Well done\(suffix)."
             : "You're all set\(suffix)."
@@ -625,7 +575,7 @@ struct OnboardingView: View {
             case lastPage:
                 premiumControls
 
-            case 3:
+            case 2:
                 // Momentum, not procedure: "Continue" reads as one more form
                 // step, and this is the one page whose only job is momentum.
                 Button("Keep going") { advance() }
@@ -905,7 +855,6 @@ struct OnboardingView: View {
     /// the offer page was reached, but every caller passes one so the label
     /// can't be forgotten when a new exit is added.
     private func finish(exit: PaywallExit) {
-        nameFocused = false
         // Only when the offer page was actually reached — `finish()` is also
         // how a player who never got there would leave, if that ever happens.
         if let premiumArrivedAt {
@@ -917,8 +866,8 @@ struct OnboardingView: View {
             ))
             self.premiumArrivedAt = nil
         }
-        let trimmed = name.trimmingCharacters(in: .whitespaces)
-        profile.username = trimmed.isEmpty ? "Friend" : trimmed
+        // The username is left alone: a new profile is already "Friend", and
+        // the first challenge asks for a real name when one is needed.
         // Carries the solve outcome so completion can be split by it without
         // joining two events downstream.
         analytics.log(.onboardingCompleted(solvedFirstClue: solved))
