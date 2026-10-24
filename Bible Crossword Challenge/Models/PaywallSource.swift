@@ -33,6 +33,9 @@ enum PaywallSource: String, CaseIterable, Hashable {
     /// Its own label so it reads against the old chip's `hint_limit` taps.
     /// See `HintUpgradeSheet`.
     case hintLimitCard = "hint_limit_card"
+    /// The "Unlimited with Premium" link under the hint sheet — asked before
+    /// any wall, so its own label rather than either of the two above.
+    case hintSheet = "hint_sheet"
     /// The one-time row under the verse on the completion screen — the
     /// second ask, after the player has finished a puzzle rather than
     /// 30 seconds into the app. Not `completion`: that label is a pre-2.0
@@ -82,7 +85,7 @@ enum PaywallSource: String, CaseIterable, Hashable {
     /// `PaywallView.headlineText`.
     var headline: String {
         switch self {
-        case .hintLimit, .hintLimitCard:
+        case .hintLimit, .hintLimitCard, .hintSheet:
             return "Never stuck for long."
         case .completionOffer:
             // They just finished one; the offer is the rest of it.

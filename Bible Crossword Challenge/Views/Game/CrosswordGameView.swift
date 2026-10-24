@@ -93,11 +93,17 @@ struct CrosswordGameScreen: View {
     /// Duo closed, or open in landscape). A custom toolbar view is never
     /// presented vertically — it would hold a second, horizontal bar open
     /// above the rail — so the clock and streak leave the toolbar for the
-    /// solve surface when this is set, and the Hints menu becomes a Label
+    /// solve surface when this is set, and the Hints button becomes a Label
     /// the rail can draw as an icon.
     @State private var barsVertical = false
     @State private var showCompletion = false
     @State private var showPaywall = false
+    /// Who opened `showPaywall`: the wall's chip or the hint sheet's link.
+    @State private var paywallSource = PaywallSource.hintLimit
+    @State private var showHintSheet = false
+    /// The row tapped in the hint sheet, acted on once it has dismissed —
+    /// the same order as `hintUpgradeOutcome`, for the same reason.
+    @State private var hintSheetChoice: HintSheet.Choice?
     /// The hint wall, inline. Tapping a paid hint with no quota left used to
     /// open the full paywall as a sheet over the grid: 317 opens by 82 free
     /// players in the 30 days to 2026-09-02, median 2 seconds on screen, four
@@ -191,7 +197,7 @@ struct CrosswordGameScreen: View {
                 // panel on purpose: a large phone in landscape is regular
                 // width, and grid + keypad + a standing clue list is three
                 // columns in 950pt, which leaves the grid narrower than the
-                // keyboard. The clue list stays a toolbar sheet here.
+                // keyboard. The clue list stays a sheet from the "…" menu here.
                 solveSurface()
             case .withCluePanel:
                 // iPad: the clue list stops being a sheet and becomes a
@@ -461,7 +467,18 @@ struct CrosswordGameScreen: View {
             ReaderModal(target: target)
         }
         .sheet(isPresented: $showPaywall) {
-            PaywallView(source: .hintLimit)
+            PaywallView(source: paywallSource)
+        }
+        .sheet(isPresented: $showHintSheet, onDismiss: resolveHintSheet) {
+            HintSheet(
+                clue: hintSheetClue,
+                price: hintPrice,
+                quota: hintQuotaText,
+                offersPremium: !store.isPremium && !profile.isStillLearning
+            ) { choice in
+                hintSheetChoice = choice
+                showHintSheet = false
+            }
         }
         .sheet(item: $hintUpgrade, onDismiss: resolveHintUpgrade) { upgrade in
             HintUpgradeSheet(
@@ -790,51 +807,47 @@ struct CrosswordGameScreen: View {
 
     // MARK: - Toolbar
 
-    /// Every hint and check, behind one button.
-    private var hintsMenu: some View {
+    /// The hints, in their own sheet — see `HintSheet`. Checks and the
+    /// give-up moved to `moreMenu`.
+    private var hintsButton: some View {
+        Button {
+            showHintSheet = true
+        } label: {
+            if barsVertical {
+                // A side rail draws an item's icon and keeps its title for
+                // the overflow menu, and only a Label can go vertical at all.
+                Label("Hints", systemImage: "lightbulb")
+            } else {
+                // The bulb alone, as the design canvas has it (2026-10-24):
+                // beside "…" in one glass group, a word on one item and none
+                // on the other read as uneven. The badge carries the count.
+                // An Image, not a Label: the toolbar would restyle a Label.
+                Image(systemName: "lightbulb")
+                    .overlay(alignment: .topTrailing) {
+                        if let freeHintBadge {
+                            HintCountBadge(count: freeHintBadge)
+                                .offset(x: 8, y: -7)
+                        }
+                    }
+            }
+        }
+        .accessibilityLabel("Hints")
+        .accessibilityValue(freeHintBadge.map { $0 == 1 ? "1 hint left" : "\($0) hints left" } ?? "")
+    }
+
+    /// The clue list, checks, the solve's two switches and the give-up,
+    /// behind "…".
+    private var moreMenu: some View {
         Menu {
-            Section("Hints left: \(hintsRemainingText)") {
-                // The hint ladder, gentlest rung first. Two Texts in a
-                // Button label render as title + cost subtitle in a Menu.
-                // Absent (not disabled) when the clue has no reference —
-                // a dimmed row would advertise a hint most clues can't
-                // offer yet. See ClueListView for the same discipline.
-                if vm.activeSlot?.reference != nil {
-                    Button {
-                        useVerseHint()
-                    } label: {
-                        Text(HintType.verse.title)
-                        Text(costLabel(.verse))
-                        Image(systemName: "book")
-                    }
-                }
+            // The whole list is an occasional look — the clue bar already
+            // shows the current clue with ‹ › — so it lives here rather than
+            // as a third item in the bar. Absent with the list standing as a
+            // side panel, where it would be a second copy of what's on screen.
+            if !cluesStanding {
                 Button {
-                    useHint(.letter)
+                    showClues = true
                 } label: {
-                    Text(HintType.letter.title)
-                    Text(costLabel(.letter))
-                    Image(systemName: "a.square")
-                }
-                Button {
-                    useHint(.word)
-                } label: {
-                    Text(HintType.word.title)
-                    Text(costLabel(.word))
-                    Image(systemName: canAfford(.word) ? "text.word.spacing" : "lock.fill")
-                }
-                Button(role: .destructive) {
-                    // Straight to the wall when it can't be paid for.
-                    // Confirming a spend the next line refuses is the one
-                    // order these two steps must never run in.
-                    if canAfford(.puzzle) {
-                        showRevealPuzzleConfirm = true
-                    } else {
-                        useHint(.puzzle)
-                    }
-                } label: {
-                    Text(HintType.puzzle.title)
-                    Text(costLabel(.puzzle))
-                    Image(systemName: canAfford(.puzzle) ? "square.grid.3x3.fill" : "lock.fill")
+                    Label("All Clues", systemImage: "list.bullet")
                 }
             }
             // Checks are free: they judge what's on the grid without giving
@@ -874,34 +887,29 @@ struct CrosswordGameScreen: View {
                     }
                 }
             }
-        } label: {
-            if barsVertical {
-                // A side rail draws an item's icon and keeps its title for
-                // the overflow menu, and only a Label can go vertical at all.
-                Label("Hints", systemImage: "lightbulb")
-            } else {
-                // Titled, not a bare glyph: every hint and check lives behind
-                // this one button, and the unlabeled lightbulb was invisible
-                // to exactly the stuck new player it exists for. An HStack,
-                // not a Label — the toolbar restyles a Label back to its icon.
-                HStack(spacing: 3) {
-                    Image(systemName: "lightbulb")
-                        .overlay(alignment: .topTrailing) {
-                            if let freeHintBadge {
-                                HintCountBadge(count: freeHintBadge)
-                                    .offset(x: 9, y: -8)
-                            }
-                        }
-                        // Room for the badge, which hangs off the bulb's
-                        // corner, so it clears the "H".
-                        .padding(.trailing, freeHintBadge == nil ? 0 : 9)
-                    Text("Hints")
+            // The give-up, last and on its own: not on the hint sheet, where
+            // it sat one row from the letter a stuck player wanted.
+            Section {
+                Button(role: .destructive) {
+                    // Straight to the wall when it can't be paid for.
+                    // Confirming a spend the next line refuses is the one
+                    // order these two steps must never run in.
+                    if canAfford(.puzzle) {
+                        showRevealPuzzleConfirm = true
+                    } else {
+                        useHint(.puzzle)
+                    }
+                } label: {
+                    // Two Texts in a Button label render as title + cost
+                    // subtitle in a Menu.
+                    Text(HintType.puzzle.title)
+                    Text(costLabel(.puzzle))
+                    Image(systemName: canAfford(.puzzle) ? "square.grid.3x3.fill" : "lock.fill")
                 }
-                .font(.subheadline.weight(.medium))
             }
+        } label: {
+            Label("More", systemImage: "ellipsis")
         }
-        .accessibilityLabel("Hints and check answers")
-        .accessibilityValue(freeHintBadge.map { $0 == 1 ? "1 hint left" : "\($0) hints left" } ?? "")
     }
 
     /// The free hints left today, for the badge on the Hints button — only
@@ -947,24 +955,17 @@ struct CrosswordGameScreen: View {
         // the one control a stuck player needs.
         if #available(iOS 27.0, *) {
             ToolbarItem(placement: .topBarTrailing) {
-                hintsMenu
+                hintsButton
             }
             .visibilityPriority(.high)
         } else {
             ToolbarItem(placement: .topBarTrailing) {
-                hintsMenu
+                hintsButton
             }
         }
-        // With the clue list standing as a side panel, a button that opens it
-        // as a sheet would be a second copy of what's on screen.
-        if !cluesStanding {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    showClues = true
-                } label: {
-                    Label("Clue list", systemImage: "list.bullet")
-                }
-            }
+        // Last, where "…" sits on every iOS bar.
+        ToolbarItem(placement: .topBarTrailing) {
+            moreMenu
         }
     }
 
@@ -990,7 +991,7 @@ struct CrosswordGameScreen: View {
 
     /// The clock, tappable to put it away — and the leaf tappable to bring it
     /// back. Wanting the timer gone is a mid-solve feeling, and a tap on the
-    /// thing itself is the shortest route to acting on it. The Hints menu
+    /// thing itself is the shortest route to acting on it. The More menu
     /// keeps its labelled "Show Timer" row all the same: a bare tap target
     /// announces itself to nobody, and the menu is where someone looks when
     /// they wonder whether the option exists at all.
@@ -1011,7 +1012,7 @@ struct CrosswordGameScreen: View {
                 timerView
                     // Animated here rather than at the tap, so the swap looks
                     // the same however the setting was changed — this button,
-                    // the Hints menu, or Profile.
+                    // the More menu, or Profile.
                     .animation(.snappy(duration: 0.22), value: clockVisible)
                     // Grows a 16pt leaf into something a thumb can actually
                     // hit, through the hit shape rather than the frame: the
@@ -1114,6 +1115,7 @@ struct CrosswordGameScreen: View {
             Spacer(minLength: 0)
             Button {
                 withAnimation(.snappy) { showHintLimitNote = false }
+                paywallSource = .hintLimit
                 showPaywall = true
             } label: {
                 // Explicit: the container's accent foreground otherwise
@@ -1152,10 +1154,39 @@ struct CrosswordGameScreen: View {
         return "\(type.title) costs \(type.cost) hints"
     }
 
-    private var hintsRemainingText: String {
-        if store.isPremium { return "Unlimited" }
-        if profile.isStillLearning { return "Free while you learn" }
-        return "\(profile.hintsRemaining(isPremium: false, limit: freeHintLimit))"
+    /// The hint sheet's footer line — the pool, said once. Nil for Premium,
+    /// which has none.
+    private var hintQuotaText: String? {
+        if store.isPremium { return nil }
+        if profile.isStillLearning { return "Hints are free while you learn" }
+        switch profile.hintsRemaining(isPremium: false, limit: freeHintLimit) {
+        case 0: return "No free hints left today"
+        case 1: return "1 free hint today"
+        case let left: return "\(left) free hints today"
+        }
+    }
+
+    /// The clue the hint sheet acts on.
+    private var hintSheetClue: HintSheet.Clue? {
+        guard let slot = vm.activeSlot else { return nil }
+        return HintSheet.Clue(
+            label: "\(slot.number) \(slot.direction.label)",
+            text: slot.clue,
+            length: slot.length,
+            reference: slot.reference
+        )
+    }
+
+    /// A rung's price on the hint sheet — what `costLabel` says in the More
+    /// menu, as a tag. Every row stays tappable whatever it says: a refused
+    /// tap is what raises the upgrade card for the word they're stuck on.
+    private func hintPrice(_ type: HintType) -> HintPrice {
+        if store.isPremium { return .included }
+        // The learning window meters nothing.
+        if profile.isStillLearning || type.cost == 0 { return .free }
+        if isBeyondPool(type) { return .premium }
+        guard canAfford(type) else { return .backTomorrow }
+        return type.cost == 1 ? .freeHint : .hints(type.cost)
     }
 
     /// Whether this player's pool covers the rung. Premium and the learning
@@ -1200,8 +1231,8 @@ struct CrosswordGameScreen: View {
             if isBeyondPool(type) { return "Premium hint" }
             // The remedy, not the arithmetic. "0 left — needs 2" made the
             // reader do the subtraction and still didn't answer the question
-            // they actually have, which is when it comes back — and the section
-            // header above already states the count once.
+            // they actually have, which is when it comes back — and the hint
+            // sheet's footer already states the count once.
             return "Back tomorrow"
         }
         switch type.cost {
@@ -1285,6 +1316,21 @@ struct CrosswordGameScreen: View {
     /// Acts on how the hint card ended, after it has gone: a purchase applies
     /// the hint they asked for, the verse button opens the free rung, and a
     /// plain dismissal leaves the board as it was.
+    /// Acts on the hint sheet's row once the sheet has gone. A swipe or the
+    /// close button leaves no choice and does nothing.
+    private func resolveHintSheet() {
+        guard let choice = hintSheetChoice else { return }
+        hintSheetChoice = nil
+        switch choice {
+        case .letter: useHint(.letter)
+        case .word: useHint(.word)
+        case .verse: useVerseHint()
+        case .premium:
+            paywallSource = .hintSheet
+            showPaywall = true
+        }
+    }
+
     private func resolveHintUpgrade() {
         guard let (type, outcome) = hintUpgradeOutcome else { return }
         hintUpgradeOutcome = nil
