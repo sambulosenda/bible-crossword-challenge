@@ -120,17 +120,4 @@ enum PaywallSource: String, CaseIterable, Hashable {
             return PremiumCopy.promise
         }
     }
-
-    /// Whether the paywall names the collections this player can't open yet.
-    ///
-    /// Only where they just bounced off a pack, where the strip is evidence
-    /// about the very thing they asked for. Everywhere else it was a second
-    /// icon-row list under the benefits — eight rows of prose between the
-    /// promise and the price, about content the player never asked about.
-    var showsLockedPacks: Bool {
-        switch self {
-        case .packLocked, .packCompletion: return true
-        default: return false
-        }
-    }
 }

@@ -2,22 +2,21 @@
 //  PaywallView.swift
 //  Bible Crossword Challenge
 //
-//  Premium upgrade screen, in the app's native language: paper canvas, serif
-//  hero, surface cards, the accent for selection and an ink CTA.
+//  Premium upgrade screen, as the design canvas draws it (2026-10-24): a warm
+//  wash over the paper, the gold chip and a serif promise beside a fan of
+//  locked pack covers, benefits in icon squares, the plans as a radio group,
+//  and one ink CTA.
 //
-//  Order: promise, the player's own progress, benefits, and — from pack entry
-//  points only — the named packs they can't open yet, showing the content
-//  withheld rather than only the content on offer. Then stacked plan cards
-//  (yearly with any free trial + savings badge, monthly, and a one-time
-//  lifetime unlock), then the CTA and its subtext. Purchase/restore go
-//  through StoreService (StoreKit 2).
+//  Order: promise, benefits, then the plans (yearly with any free trial, monthly,
+//  and a one-time lifetime line), then the CTA and its terms. Close and
+//  Restore sit in the top bar. Purchase/restore go through StoreService
+//  (StoreKit 2).
 //
 //  Always presented as a sheet. Pushed onto a navigation stack it collides
 //  with the back button and the tab bar.
 //
 
 import SwiftUI
-import SwiftData
 import StoreKit
 
 struct PaywallView: View {
@@ -36,12 +35,12 @@ struct PaywallView: View {
     var subject: String? = nil
 
     /// The pack the player just ran into, when they came from one. Only used to
-    /// sort that collection to the front of the locked-pack strip.
+    /// put that collection's cover on top of the header's fan.
     ///
     /// Separate from `subject`, which is deliberately nil for evergreen packs —
     /// it exists to write a headline about a season running out, and an
-    /// evergreen pack has no season to run out. The strip wants the pack in
-    /// every case, so it needs its own parameter rather than a title to match on.
+    /// evergreen pack has no season to run out. The fan wants the pack in every
+    /// case, so it needs its own parameter rather than a title to match on.
     var contextPackID: String? = nil
 
     /// The plan to open on, when the entry point knows which one the player
@@ -53,11 +52,6 @@ struct PaywallView: View {
     @Environment(\.analytics) private var analytics
     @Environment(\.puzzleProvider) private var puzzleProvider
     @Environment(\.dismiss) private var dismiss
-    /// Filtered in the fetch rather than in Swift: the progress line only needs
-    /// completions, and an unscoped query would materialise every record the
-    /// player has ever touched to count a subset of them.
-    @Query(filter: #Predicate<PuzzleRecord> { $0.isCompleted })
-    private var completedRecords: [PuzzleRecord]
 
     @State private var selectedID = StoreService.yearlyID
     @State private var didLogOpen = false
@@ -109,29 +103,44 @@ struct PaywallView: View {
                 .defaultScrollAnchor(.bottom, for: .alignment)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-            .background(Theme.background)
+            .background {
+                // The chip's gold, let down to a wash and faded into the paper
+                // over the top of the page. Under the bars too: it's the page's
+                // colour, not content.
+                ZStack(alignment: .top) {
+                    Theme.background
+                    LinearGradient(colors: [Theme.premiumWash, Theme.background],
+                                   startPoint: .top, endPoint: .bottom)
+                        .frame(height: 380)
+                }
+                .ignoresSafeArea()
+            }
             // Pinned, not scrolled. Every addition to this page pushed the CTA
             // further down; on a 667pt screen it had fallen below the fold,
             // which means scrolling to find the primary action. Anchoring it
             // also means the page above can grow later without re-checking.
             .modifier(PinnedBar { pinnedPurchaseBar })
             .toolbar {
-                // Trailing, like every other ✕ in the app. Leading is where a
-                // sheet's Cancel lives; this is a dismiss, not a cancel.
-                ToolbarItem(placement: .topBarTrailing) {
+                // ✕ leading and Restore trailing, as the design draws them
+                // (2026-10-24): the two ways out of the decision — leave, or
+                // you already paid — each on its own edge, in glass. Restore
+                // moved up from the footer's link row, where it read as legal
+                // small print. Up here it never scrolls away either, so the
+                // player who paid and sees a retry card still finds it.
+                ToolbarItem(placement: .topBarLeading) {
                     Button {
                         exitReason = .close
                         dismiss()
                     } label: {
                         Label("Close", systemImage: "xmark")
-                            .font(.system(size: 15, weight: .bold))
                     }
-                    .tint(.secondary)
+                    .tint(.primary)
                 }
-                // No Restore up here any more: it lives in the pinned footer
-                // with the other housekeeping links, which never scrolls away,
-                // so a second copy was only competing with the close button for
-                // the top of the screen.
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Restore") { Task { await store.restore() } }
+                        .disabled(store.purchaseInFlight)
+                        .tint(.primary)
+                }
             }
             .modifier(LegacyOpaqueNavigationBar())
         }
@@ -176,17 +185,16 @@ struct PaywallView: View {
     private func offer(compact: Bool, keepsSmallHero: Bool = false) -> some View {
         PremiumOfferView(
             headline: headlineText,
-            progressLine: progressLine,
             selectedID: $selectedID,
-            showsLockedPacks: source.showsLockedPacks,
             highlightedPackID: contextPackID,
             // The pinned bar's terms line already states the trial, the
             // renewal and cancelling.
             compact: compact,
             keepsSmallHero: keepsSmallHero
         )
-        .padding(.horizontal, Theme.Spacing.l)
-        .padding(.top, Theme.Spacing.s)
+        // 20pt, the app's screen edge.
+        .padding(.horizontal, Theme.Spacing.m + Theme.Spacing.xs)
+        .padding(.top, Theme.Spacing.m + Theme.Spacing.xs)
         .padding(.bottom, Theme.Spacing.l)
         .frame(maxWidth: 520)
         .frame(maxWidth: .infinity)
@@ -222,28 +230,13 @@ struct PaywallView: View {
         }
     }
 
-    /// The player's own gap, stated as a fact and nothing more. A personal
-    /// number is a stronger reason to act now than a generic claim, and unlike
-    /// social proof it's something the app can honestly know.
-    ///
-    /// Hidden at zero: "You've solved 0" is a discouragement, not a nudge.
-    private var progressLine: String? {
-        let solved = completedRecords.count
-        guard solved > 0 else { return nil }
-        return "You've solved \(solved) of \(puzzleProvider.totalPuzzleCount)."
-    }
-
     // MARK: - Purchase
 
     /// The purchase bar as it sits in the bottom safe area: the CTA, the terms
     /// it commits you to, and the housekeeping links, in that order.
     ///
-    /// The legal row is deliberately *outside* the "is there anything to buy"
-    /// check. It carries Restore, and the state where that matters most is the
-    /// one where products failed to load — a player who has already paid, on a
-    /// bad connection, looking at a retry card. Gating it on a successful
-    /// product fetch would take Restore away from exactly the person who needs
-    /// it, and it is the only copy now that the toolbar button is gone.
+    /// The legal row sits outside the "is there anything to buy" check: the
+    /// terms apply whether or not the plans loaded.
     private var pinnedPurchaseBar: some View {
         VStack(spacing: Theme.Spacing.s) {
             if !store.isPremium && !store.products.isEmpty {
@@ -251,7 +244,7 @@ struct PaywallView: View {
             }
             legal
         }
-        .padding(.horizontal, Theme.Spacing.l)
+        .padding(.horizontal, Theme.Spacing.m + Theme.Spacing.xs)
         .padding(.top, Theme.Spacing.m)
         .padding(.bottom, Theme.Spacing.s)
         // Capped like the system's own bars: uncapped, the largest sizes grew
@@ -337,18 +330,15 @@ struct PaywallView: View {
     /// Links only. The auto-renewal disclosure lives in `ctaSubtext`, right at
     /// the commit point where it carries the actual price — repeating it here
     /// as a vaguer sentence just made the footer say the same thing twice.
+    /// In grey, not the accent: they're housekeeping, and blue beside the
+    /// ink button read as a second call to action.
     private var legal: some View {
-        HStack(spacing: Theme.Spacing.m) {
-            Link("Terms of Use", destination: LegalLinks.terms)
-            Link("Privacy Policy", destination: LegalLinks.privacy)
-            // The only Restore on the screen since the toolbar copy went. A
-            // player who can't find it reads the app as having charged them
-            // twice, so it stays pinned rather than living in scrolled content.
-            Button("Restore") { Task { await store.restore() } }
-                .disabled(store.purchaseInFlight)
+        HStack(spacing: Theme.Spacing.m + Theme.Spacing.xs) {
+            Link("Terms", destination: LegalLinks.terms)
+            Link("Privacy", destination: LegalLinks.privacy)
         }
-        .font(.caption)
-        .foregroundStyle(Theme.accent)
+        .font(.footnote)
+        .tint(.secondary)
     }
 }
 
@@ -455,15 +445,10 @@ enum PremiumCopy {
     /// headline on each made a single journey look like two pitches.
     static let archive = "Every puzzle, back to the first."
 
-    /// The trial CTA, e.g. "Start 3-day free trial" — never a bare "Start Free
-    /// Trial". The length is the most persuasive part of the offer and the
-    /// store already hands it over, so spending the button on a generic phrase
-    /// throws away the one number that closes.
-    ///
-    /// Pass `StoreService.introOfferText(for:)` straight in; the duration comes
-    /// from StoreKit rather than any string written here, so a change to the
-    /// configured offer can't leave the copy claiming the old length.
-    static func trialCTA(_ trial: String) -> String { "Start \(trial)" }
+    /// The line under the sheet's promise, whatever the entry point: what
+    /// Premium is for, in the app's own terms. "After today's puzzle" also
+    /// says the daily stays free (design canvas, 2026-10-24).
+    static let subhead = "Keep solving after today's puzzle, with Scripture open beside you."
 
     /// Said under the headline when there is no introductory offer — because
     /// the player has already used theirs, or none is configured. Without it
@@ -494,101 +479,29 @@ struct PremiumBenefit: Identifiable {
     let title: String
     var id: String { title }
 
-    /// The promise, written once for both places that make it.
+    /// The promise, written once for both places that make it — the sheet and
+    /// onboarding's premium page are the same offer at two moments, and while
+    /// each kept its own copy they drifted.
     ///
-    /// Onboarding's premium page and the paywall are the same offer at two
-    /// moments, and while each kept its own copy they drifted: the paywall was
-    /// rewritten to three outcome-led rows while onboarding still advertised
-    /// four, including a "No ads, ever" the app can't really honour. A player
-    /// who saw both was reading two different products.
+    /// The canvas's three rows in its words (2026-10-24), packs and Journeys
+    /// first as the covers above them show, plus memory verses, kept as a
+    /// fourth because retained players use them. Each row fits one line on a
+    /// 375pt phone; check any rewrite on screen.
     ///
-    /// Hints lead. They are the most-hit paywall trigger in the app, so most
-    /// readers arrive here mid-frustration with a hint they were refused —
-    /// and the list used to open on shelf inventory instead, making them read
-    /// past their own reason for coming. The row says what the lifted limit
-    /// means rather than naming the limit: "No hint limits" was a negation
-    /// aimed at someone already annoyed.
+    /// `firstRun` drops the hints row, for onboarding: hints are free until the
+    /// third solve, so a first-run player has never been refused one.
     ///
-    /// The library row carries the only number on the page. The count comes
-    /// from the bundle rather than a written "100+", so it can't go stale, and
-    /// it earns its place by being large and checkable. What changed is the
-    /// job it does: "the whole library" described a shelf, and a shelf is not
-    /// a reason to pay — today's puzzle is already free. "Catch up" names what
-    /// the archive actually buys. (An earlier "not just today's" said the same
-    /// thing by negation and spent the opening words on what free lacks; this
-    /// stays affirmative.)
-    ///
-    /// Every row here is costed in lines, not words. The column takes about
-    /// 28 characters, and a first draft of this row ran to two — which with
-    /// the packs row below it grew the card by 50pt and put the trial
-    /// timeline under the fold, the very thing the fourth benefit was cut to
-    /// prevent. Any rewrite here has to be checked on screen against the
-    /// timeline, not just read.
-    ///
-    /// The packs row names seasons instead of counting packs. Counting was
-    /// the real weakness: all 59 pack puzzles are inside the library count
-    /// above, so "All 9 packs" advertised the same content a second time at a
-    /// smaller number, and a smaller number next to 241 reads as a discount on
-    /// the first claim. What packs genuinely add is the calendar — Lent,
-    /// Easter, Advent and Christmas carry real date windows in `packs.json` —
-    /// and a thing that comes back every year is the honest argument for a
-    /// subscription over a one-off.
-    ///
-    /// One line since 2026-10-03: "Lent, Advent, Christmas — every collection,
-    /// and each new one" was the only row that wrapped, breaking the list's
-    /// rhythm on every phone. The seasons are still named where they're
-    /// evidence — the locked-pack strip lists them by title — and "every
-    /// year" keeps the calendar argument the row exists to make. Sized for
-    /// the narrowest phone: about 31 characters fit beside the symbol on a
-    /// 375pt screen, and this is 26.
-    ///
-    /// Three rows, not four. "Replay any puzzle, any time" was cut on
-    /// 2026-09-07: it restated the library row (a shelf you own is a shelf
-    /// you can reopen), and the ~30pt it cost was what pushed the trial
-    /// timeline below the fold once the App Store rating moved above the
-    /// plan cards. The timeline is the page's strongest trust element; a
-    /// fourth benefit is not worth hiding it.
-    ///
-    /// "No ads" is gone entirely, and so is the ad scaffold behind it: the app
-    /// serves no advertising, so there is nothing for Premium to remove — and
-    /// free players have no ads either, which makes it an argument for the
-    /// product rather than for paying. Add the row back only alongside a real
-    /// ad integration.
-    ///
-    /// `firstRun` drops the hints row, for onboarding. Hints lead on the sheet
-    /// because players arrive there from a refused hint; a player on their
-    /// first run has never been refused one (hints are free until their third
-    /// solve), so the row sold a limit they hadn't met and pushed the content
-    /// rows down the five seconds the page gets.
-    static func all(puzzleCount: Int, firstRun: Bool = false) -> [PremiumBenefit] {
-        let hints = PremiumBenefit(
-            icon: "lightbulb",
-            title: "Hints whenever you need them"
-        )
-        return (firstRun ? [] : [hints]) + [
-            PremiumBenefit(
-                icon: "square.grid.3x3",
-                title: "Catch up on all \(puzzleCount) puzzles"
-            ),
-            PremiumBenefit(
-                // A calendar, not a stack: the row's claim is the seasons,
-                // and the stack glyph read as a blob at this size. All three
-                // are outline symbols — `calendar` has no fill to match the
-                // others, and one weight across the list reads as a set.
-                icon: "calendar",
-                title: "Seasonal packs, every year"
-            ),
-            PremiumBenefit(
-                // Added 2026-10-07: memory verses are what retained players
-                // actually use, and they were nowhere on the offer, which sold
-                // puzzle counts to daily players who don't need more puzzles.
-                // Premium already lifts the 3-verse cap. "Memorize", not
-                // "Unlimited verses": every verse is already free to read.
-                // The brain matches "Try it from memory". 25 characters.
-                icon: "brain",
-                title: "Memorize unlimited verses"
-            ),
-        ]
+    /// "No ads" stays out: the app serves none, free players included.
+    static func all(firstRun: Bool = false) -> [PremiumBenefit] {
+        let hints = PremiumBenefit(icon: "lightbulb", title: "Unlimited hints")
+        return [PremiumBenefit(icon: "square.grid.2x2", title: "Every pack and Journey")]
+            + (firstRun ? [] : [hints])
+            + [
+                PremiumBenefit(icon: "calendar", title: "Every past daily and Sunday Special"),
+                // Premium lifts the 3-verse cap. "Memorize", not "Unlimited
+                // verses": every verse is already free to read.
+                PremiumBenefit(icon: "brain", title: "Memorize unlimited verses"),
+            ]
     }
 }
 

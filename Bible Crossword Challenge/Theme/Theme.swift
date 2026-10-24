@@ -89,6 +89,15 @@ enum Theme {
         darkHighContrast: UIColor(red: 1.0, green: 0.867, blue: 0.451, alpha: 1)
     )
 
+    /// The warm wash at the top of the Premium page, fading into the paper —
+    /// the chip's gold, let down far enough to sit behind type.
+    static let premiumWash = adaptive(
+        light: UIColor(red: 0.953, green: 0.906, blue: 0.784, alpha: 1),          // #F3E7C8
+        lightHighContrast: UIColor(red: 0.953, green: 0.906, blue: 0.784, alpha: 1),
+        dark: UIColor(red: 0.169, green: 0.141, blue: 0.078, alpha: 1),           // #2B2414
+        darkHighContrast: UIColor(red: 0.169, green: 0.141, blue: 0.078, alpha: 1)
+    )
+
     // MARK: - Surfaces
 
     /// Warm paper canvas instead of the cool system grey.
