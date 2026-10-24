@@ -212,7 +212,7 @@ struct CompletionView: View {
                 VStack(spacing: 0) {
                     hero
 
-                    VStack(spacing: Theme.Spacing.l) {
+                    VStack(spacing: 28) {
                         scorecard
 
                         if let challenge {
@@ -260,7 +260,8 @@ struct CompletionView: View {
                         // days to 2026-09-02) 76 never touched it. See `scorecard`.
 
                     }
-                    .padding(Theme.Spacing.l)
+                    .padding(.horizontal, Theme.Spacing.m + Theme.Spacing.xs)
+                    .padding(.vertical, Theme.Spacing.l)
                     .frame(maxWidth: 520)
                     .frame(maxWidth: .infinity)
                 }
@@ -797,13 +798,13 @@ struct CompletionView: View {
                 .lineLimit(1)
                 .minimumScaleFactor(0.5)
 
-            Text(puzzle.title)
+            Text(heroSubtitle)
                 .font(.body)
                 .foregroundStyle(.white.opacity(0.88))
                 .fixedSize(horizontal: false, vertical: true)
         }
         .foregroundStyle(.white)
-        // One stop: "Solved, 4:12, The New Jerusalem".
+        // One stop: "Solved, 4:12, The New Jerusalem · Daily · Friday, October 24".
         .accessibilityElement(children: .combine)
         .accessibilityAddTraits(.isHeader)
         .frame(maxWidth: 520, alignment: .leading)
@@ -834,6 +835,22 @@ struct CompletionView: View {
             Theme.heroSolved
                 .frame(height: 1600)
         }
+    }
+
+    /// "The Shepherd King · Daily · Friday, October 24" — what was solved,
+    /// which of the day's puzzles it was, and when. The kind is named only
+    /// for the day's own puzzles; a pack's puzzle is its title alone.
+    private var heroSubtitle: String {
+        var parts = [puzzle.title]
+        if puzzle.isMini {
+            parts.append("Mini")
+        } else if puzzle.isSunday {
+            parts.append("Sunday Special")
+        } else if puzzle.id == puzzleProvider.dailyPuzzle()?.id {
+            parts.append("Daily")
+        }
+        parts.append(Date().formatted(.dateTime.weekday(.wide).month(.wide).day()))
+        return parts.joined(separator: " · ")
     }
 
     /// The solve's own numbers, given the weight a results screen owes them.
@@ -868,26 +885,42 @@ struct CompletionView: View {
                 .transition(.opacity)
             }
         }
-        .padding(Theme.Spacing.l)
+        .padding(20)
         .frame(maxWidth: .infinity)
-        .elevatedCard()
+        .elevatedCard(cornerRadius: Theme.featureCornerRadius)
     }
 
-    /// One line for the streak and a row of dots for the week. The old
-    /// icon–number–label tiles and lettered 42pt circles were the loudest
-    /// things on the screen for two facts.
+    /// The streak on one line — flame, run, and on its right a note when the
+    /// run is the longest yet — over the week, each day lettered and checked
+    /// once solved, today ringed (design canvas, 2026-10-24). The bare row of
+    /// unlabelled dots it replaced said a week had gone by without saying
+    /// which days.
     private var scorecardStats: some View {
-        VStack(spacing: Theme.Spacing.s) {
-            HStack(spacing: Theme.Spacing.xs) {
+        VStack(alignment: .leading, spacing: Theme.Spacing.m) {
+            HStack(alignment: .firstTextBaseline, spacing: Theme.Spacing.s) {
                 Image(systemName: "flame.fill")
-                    .foregroundStyle(.orange)
+                    .foregroundStyle(FeatureTint.streak)
                 Text(streakLine)
+                    .font(.headline)
+                Spacer(minLength: Theme.Spacing.s)
+                if let streakNote {
+                    Text(streakNote)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
             }
-            .font(.headline)
 
-            WeekRow(completedWeekdays: completedWeekdays, style: .dots)
+            WeekRow(completedWeekdays: completedWeekdays, style: .circles)
+                .frame(maxWidth: .infinity)
         }
-        .frame(maxWidth: .infinity)
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    /// "Your longest yet" when today's run matches the best — the one thing
+    /// about a streak worth saying out loud at the moment it grows.
+    private var streakNote: String? {
+        guard streak > 1, !isComeback, streak >= profile.bestStreak else { return nil }
+        return "Your longest yet"
     }
 
     /// "1-day streak" is a true but bleak thing to show someone who just lost
@@ -987,37 +1020,31 @@ struct CompletionView: View {
         Button {
             paywallEntry = PaywallEntry(source: .completionOffer)
         } label: {
-            HStack(spacing: Theme.Spacing.m) {
-                RowIcon(symbol: "brain", tint: FeatureTint.memory)
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Every pack, every Journey")
-                        .font(.headline)
-                        .foregroundStyle(.primary)
-                    Text(completionOfferSubtitle)
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-                Spacer(minLength: 0)
-                Image(systemName: "chevron.forward")
-                    .font(.footnote.weight(.semibold))
-                    .foregroundStyle(.tertiary)
-                    .accessibilityHidden(true)
+            // One quiet line since 2026-10-24 (design canvas): the gold crown
+            // Premium wears everywhere, and the offer in secondary text. It
+            // was a card with a chevron, the screen's second pitch for
+            // attention after the bar.
+            Label {
+                Text(completionOfferLine)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            } icon: {
+                Image(systemName: "crown.fill")
+                    .foregroundStyle(Theme.badgeRim)
             }
-            .padding(Theme.Spacing.m)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .elevatedCard()
             .contentShape(.rect)
         }
-        .buttonStyle(PressableCardStyle())
+        .buttonStyle(.plain)
         .accessibilityHint("Opens Premium options")
     }
 
-    private var completionOfferSubtitle: String {
+    private var completionOfferLine: String {
         if let yearly = store.yearly, let offer = store.introOffer(for: yearly) {
-            return "Free for \(offer.duration) · unlimited verses"
+            return "Every pack and Journey, free for \(offer.duration)"
         }
-        return "Unlimited verses with Premium"
+        return "Every pack and Journey with Premium"
     }
 
     private func maybeShowCompletionOffer() {
@@ -1033,42 +1060,46 @@ struct CompletionView: View {
         analytics.log(.upsellShown(source: PaywallSource.completionOffer.rawValue))
     }
 
+    /// The verse on the paper, left-aligned as the rest of the app sets
+    /// Scripture (design canvas, 2026-10-24): serif, the reference under it on
+    /// the left and "Read the passage" on the right, then the memory door as
+    /// one quiet link. It was centred under a "Today's Verse" label with the
+    /// memory door as a full-width grey pill — the biggest control on the
+    /// screen after the bar.
     private var verseCard: some View {
-        VStack(spacing: Theme.Spacing.s) {
-            Text("Today's Verse")
-                .kicker()
-            Text("“\(puzzle.verse)”")
-                .font(.scripture(.title3))
+        VStack(alignment: .leading, spacing: Theme.Spacing.s) {
+            Text(puzzle.verse)
+                .font(.scripture(.title2))
+                .tracking(-0.2)
                 .lineSpacing(4)
-                .multilineTextAlignment(.center)
-            Text(puzzle.reference)
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(.secondary)
-
-            memorizeButton
-
-            Button {
-                analytics.log(.scriptureOpened(reference: puzzle.reference, source: "puzzle_completion"))
-                readerRouter.open(reference: puzzle.reference, source: "puzzle_completion")
-                onHome()
-            } label: {
-                Label("Read the passage", systemImage: "book")
-                    .font(.subheadline.weight(.semibold))
+                .fixedSize(horizontal: false, vertical: true)
+            HStack(alignment: .firstTextBaseline, spacing: Theme.Spacing.m) {
+                Text(puzzle.reference)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                Spacer(minLength: Theme.Spacing.s)
+                Button {
+                    analytics.log(.scriptureOpened(reference: puzzle.reference, source: "puzzle_completion"))
+                    readerRouter.open(reference: puzzle.reference, source: "puzzle_completion")
+                    onHome()
+                } label: {
+                    Text("Read the passage")
+                        .font(.body)
+                }
+                .buttonStyle(.borderless)
+                .tint(Theme.accent)
+                .accessibilityHint("Closes this screen and opens the passage in the reader")
             }
-            .buttonStyle(.borderless)
-            .tint(Theme.accent)
-            .padding(.top, Theme.Spacing.xs)
-            .accessibilityHint("Closes this screen and opens the passage in the reader")
+            memorizeButton
         }
-        .padding(.horizontal, Theme.Spacing.m)
-        .padding(.vertical, Theme.Spacing.s)
-        .frame(maxWidth: .infinity)
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     /// "Try it from memory": the verse they just filled in, as the level-1
-    /// cloze grid, one tap away. A pill, not a link — this screen has already
-    /// run that comparison: the chain pill is tapped by 111 of 203 solvers a
-    /// month, the "Read the passage" link under this verse by 2. Absent when
+    /// cloze grid, one tap away. A quiet link since 2026-10-24 (design
+    /// canvas). It was a pill on the evidence that the chain pill is tapped by
+    /// 111 of 203 solvers a month and the "Read the passage" link by 2 —
+    /// watch `memory_verse_added` with source "completion" for the cost. Absent when
     /// the free shelf is full rather than shown to bounce off the paywall
     /// (38 opens, 0 buys in the 30 days to 2026-09-10). A verse already on
     /// the shelf offers practice instead of a second add.
@@ -1098,9 +1129,12 @@ struct CompletionView: View {
                     }
                 } label: {
                     Label(held ? "Practice it from memory" : "Try it from memory", systemImage: "brain")
+                        .font(.body)
                 }
-                .buttonStyle(.pillTonal)
-                .padding(.top, Theme.Spacing.xs)
+                // A link since 2026-10-24, beside the passage link it
+                // belongs with, not a pill competing with the bar's action.
+                .buttonStyle(.borderless)
+                .tint(Theme.accent)
                 .accessibilityHint("Closes this screen and opens the verse as a memory grid")
             }
         }
@@ -1311,16 +1345,13 @@ struct CompletionView: View {
     /// carry an item it can name — an icon on a side rail, icon and title in
     /// the overflow — and never a custom view.
     ///
-    /// The exit is trailing, matching every other ✕ in the app and the
-    /// platform: a lone ✕ leading reads as Cancel or Back, which is what the
-    /// top-left corner means in a two-button sheet. This does cost something —
-    /// the game's own back button sits at the leading spot this cover opens
-    /// over, so the exit no longer lands under a hand that just used it.
-    /// Consistency won: the player meets this screen far more often from the
-    /// Today card than mid-game.
+    /// The exit is leading since 2026-10-24, as the design draws it and as
+    /// the Premium page sets its ✕: the cover opens over the game, whose back
+    /// button sits at that spot, so the exit lands under the hand that just
+    /// used it. "…" moved down to the action bar beside Share.
     @ToolbarContentBuilder
     private var toolbarContent: some ToolbarContent {
-        ToolbarItem(placement: .topBarTrailing) {
+        ToolbarItem(placement: .topBarLeading) {
             Button {
                 onHome()
             } label: {
@@ -1341,6 +1372,7 @@ struct CompletionView: View {
                     barLabel("Play Today's Full Puzzle", systemImage: "play.fill")
                 }
                 .buttonStyle(.borderedProminent)
+                .tint(Theme.ink)
                 .accessibilityHint("Closes this screen and opens today's full-size puzzle")
             }
         } else if challenge == nil {
@@ -1358,17 +1390,11 @@ struct CompletionView: View {
             }
         }
         if hasOverflowActions {
-            if #available(iOS 27.0, *) {
-                ToolbarOverflowMenu {
+            ToolbarItem(placement: .bottomBar) {
+                Menu {
                     overflowActions
-                }
-            } else {
-                ToolbarItem(placement: .bottomBar) {
-                    Menu {
-                        overflowActions
-                    } label: {
-                        Label("More", systemImage: "ellipsis")
-                    }
+                } label: {
+                    Label("More", systemImage: "ellipsis")
                 }
             }
         }
@@ -1381,23 +1407,26 @@ struct CompletionView: View {
         } label: {
             barLabel(challengeTitle, systemImage: "flag.checkered")
         }
+        // Ink, the app's one loud action colour, as the design draws it; the
+        // accent blue beside the blue hero made two blues the screen's loudest.
         .buttonStyle(.borderedProminent)
+        .tint(Theme.ink)
         .accessibilityHint("Shares this puzzle and your time with a friend")
     }
 
-    /// A bar primary's label: icon and words on a phone, where a bottom bar
-    /// would reduce a Label to its glyph; a Label on a side rail, which draws
-    /// the icon and can't take a custom view at all.
+    /// A bar primary's label: the words alone on a phone, where a bottom bar
+    /// would reduce a Label to its glyph and the design sets the pill as text;
+    /// a Label on a side rail, which draws the icon and can't take a custom
+    /// view at all.
     @ViewBuilder
     private func barLabel(_ title: String, systemImage: String) -> some View {
         if barsVertical {
             Label(title, systemImage: systemImage)
         } else {
-            HStack(spacing: 6) {
-                Image(systemName: systemImage)
-                Text(title)
-            }
-            .font(.body.weight(.semibold))
+            Text(title)
+                .font(.body.weight(.semibold))
+                .foregroundStyle(Theme.onInk)
+                .padding(.horizontal, Theme.Spacing.s)
         }
     }
 
@@ -1459,6 +1488,7 @@ struct CompletionView: View {
                 barLabel("Share", systemImage: "square.and.arrow.up")
             }
             .buttonStyle(.borderedProminent)
+            .tint(Theme.ink)
         } else {
             Button {
                 openShareCard()
