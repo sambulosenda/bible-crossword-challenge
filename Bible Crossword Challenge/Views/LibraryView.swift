@@ -345,9 +345,8 @@ struct LibraryView: View {
         }
     }
 
-    /// Thumbnails grow on a wide screen, where the row has the room for the
-    /// grid's shape to read.
-    private var thumbnailSide: CGFloat { isWide ? 48 : 34 }
+    /// Covers grow a little on a wide screen, where the row has the room.
+    private var coverSide: CGFloat { isWide ? 52 : 44 }
 
     private func row(_ puzzle: Puzzle) -> some View {
         let record = recordsByID[puzzle.id]
@@ -355,11 +354,12 @@ struct LibraryView: View {
 
         return rowLink(puzzle) {
             HStack(spacing: Theme.Spacing.m) {
-                // Each puzzle's own grid shape. Eighty-two rows of title-plus-
-                // badge are indistinguishable at a glance; the shape is what
-                // makes one scannable from the next, and it's real data.
-                GridThumbnail(grid: puzzle.grid, tint: thumbnailTint(for: status))
-                    .frame(width: thumbnailSide, height: thumbnailSide)
+                // The book the puzzle's verse comes from, on its kind's colour
+                // (2026-10-24). Eighty-two rows of title-plus-badge are
+                // indistinguishable at a glance; the cover is what makes one
+                // scannable from the next. It replaced the grid's shape in
+                // pale dots, which was too faint at this size to tell apart.
+                PuzzleCover(puzzle: puzzle, side: coverSide)
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(puzzle.title)
@@ -376,50 +376,34 @@ struct LibraryView: View {
                     Image(systemName: "checkmark.circle.fill")
                         .foregroundStyle(.green)
                 }
-                if isWide {
-                    Image(systemName: "chevron.forward")
-                        .font(.footnote.weight(.semibold))
-                        .foregroundStyle(.tertiary)
-                }
             }
             .padding(.vertical, Theme.Spacing.xs)
             .contentShape(.rect)
         }
     }
 
-    /// Solved grids sit back; unsolved ones keep the accent, so scrolling the
-    /// list shows at a glance how far through the collection you are.
-    private func thumbnailTint(for status: PuzzleStatus) -> Color {
-        // 0.18 drew solved grids close to invisible on white.
-        status == .completed
-            ? Color.primary.opacity(0.30)
-            : Theme.accent.opacity(0.40)
-    }
-
-    /// A link on a phone; a button that pushes onto `path` when wide, where
-    /// two share a List row.
-    @ViewBuilder
+    /// A button that pushes onto `path`, at every width. A NavigationLink in a
+    /// List draws a chevron on every row, and the rest of the app's rows
+    /// dropped theirs (2026-10-24): the whole row is the tap target.
     private func rowLink<Label: View>(_ puzzle: Puzzle, @ViewBuilder label: () -> Label) -> some View {
-        if isWide {
-            Button { path.append(puzzle) } label: { label() }
-                .foregroundStyle(.primary)
-        } else {
-            NavigationLink(value: puzzle) { label() }
-        }
+        Button { path.append(puzzle) } label: { label() }
+            .foregroundStyle(.primary)
     }
 
-    /// "Easy · 20 clues · In progress" — one secondary line. "In progress" is
-    /// the accent, the one thing on the line that asks for a tap; a solve
-    /// time is just another fact.
+    /// "Luke 15:11 · Easy · In progress" — one secondary line. The passage
+    /// leads (2026-10-24): "Easy · 20 clues" on nearly every row said the
+    /// same thing two hundred times. "In progress" is orange, as on the pack
+    /// list — blue means "tap here" across the app; a solve time is just
+    /// another fact.
     private func metaLine(_ puzzle: Puzzle, status: PuzzleStatus, record: PuzzleRecord?) -> some View {
-        var text = Text("\(puzzle.difficulty.label) · \(puzzle.clueCount) clues")
+        var text = Text("\(puzzle.reference) · \(puzzle.difficulty.label)")
         switch status {
         case .completed:
             if let secs = record?.elapsedSeconds, secs > 0 {
                 text = text + Text(" · \(TimeFormat.clock(secs))").monospacedDigit()
             }
         case .inProgress:
-            text = text + Text(" · ") + Text("In progress").foregroundStyle(Theme.accent)
+            text = text + Text(" · ") + Text("In progress").foregroundStyle(.orange)
         case .start:
             break
         }
@@ -583,14 +567,13 @@ struct LibraryView: View {
             showPaywall = true
         } label: {
             HStack(spacing: Theme.Spacing.m) {
-                GridThumbnail(grid: puzzle.grid, tint: Color.primary.opacity(0.18))
-                    .frame(width: thumbnailSide, height: thumbnailSide)
+                PuzzleCover(puzzle: puzzle, isLocked: true, side: coverSide)
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(puzzle.title)
                         .font(.body)
                         .foregroundStyle(.secondary)
-                    Text("\(puzzle.difficulty.label) · \(puzzle.clueCount) clues")
+                    Text("\(puzzle.reference) · \(puzzle.difficulty.label)")
                         .font(.subheadline)
                         .foregroundStyle(.tertiary)
                 }
