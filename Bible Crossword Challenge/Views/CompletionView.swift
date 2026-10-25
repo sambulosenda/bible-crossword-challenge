@@ -1309,6 +1309,10 @@ struct CompletionView: View {
             reviewPromptLastAsk = Date().timeIntervalSinceReferenceDate
             analytics.log(.reviewPromptRequested(
                 trigger: trigger.analyticsValue, totalCompleted: totalCompleted))
+            #if DEBUG
+            // Screenshot helper: the system sheet would sit over the shot.
+            if ProcessInfo.processInfo.arguments.contains("-uiNoReview") { return }
+            #endif
             requestReview()
         })
     }

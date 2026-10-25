@@ -665,6 +665,14 @@ struct CrosswordGameScreen: View {
                 // `-uiFillAllBut 3`: everything in but three answers.
                 vm.fillAllBut(count)
             }
+            // The selected clue's verse, open as the screen settles — for a
+            // device whose taps can't be driven (iPhone Duo).
+            if args.contains("-uiOpenVerse") {
+                Task {
+                    try? await Task.sleep(for: .seconds(1))
+                    useVerseHint()
+                }
+            }
             #endif
         }
         .onChange(of: scenePhase) { _, phase in
