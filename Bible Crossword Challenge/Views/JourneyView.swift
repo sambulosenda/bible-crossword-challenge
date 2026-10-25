@@ -84,7 +84,7 @@ struct JourneyView: View {
                     .fixedSize(horizontal: false, vertical: true)
                 if !touched.isEmpty {
                     ProgressView(value: Double(touched.count), total: Double(max(reachable.count, 1)))
-                        .tint(Theme.accent)
+                        .tint(Theme.progressBar)
                         .padding(.vertical, Theme.Spacing.xs)
                     HStack(spacing: Theme.Spacing.l) {
                         testamentStat(.old)

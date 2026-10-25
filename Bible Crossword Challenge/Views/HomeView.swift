@@ -1221,7 +1221,7 @@ private struct PackTile: View {
                         .font(.caption.weight(.semibold))
                         .foregroundStyle(.green)
                 } else {
-                    ProgressView(value: progress.fraction).tint(pack.accent)
+                    ProgressView(value: progress.fraction).tint(Theme.progressBar)
                     Text("\(progress.solved)/\(progress.total)")
                         .font(.caption)
                         .foregroundStyle(.secondary)
@@ -1373,7 +1373,7 @@ private struct UpgradeRow: View {
         Button {
             onOpen(isStreakVariant ? .streakCard : .homeCard)
         } label: {
-            CoverRow(symbol: "crown.fill", tint: Theme.badgeRim, title: title, subtitle: subtitle, solid: true)
+            CoverRow(symbol: "crown.fill", tint: Theme.badgeRim, title: title, subtitle: subtitle)
         }
         .buttonStyle(PressableCardStyle())
         .accessibilityElement(children: .ignore)
@@ -1507,13 +1507,17 @@ private struct CompactPuzzleRow: View {
             // until 2026-10-24: two cards each nearly as tall as the hero.
             // The title is in the VoiceOver label; on the card the kind says
             // enough to choose by.
+            // A pale square like every other row's since 2026-10-25, not a
+            // solid block of the hero's colour.
             HStack(spacing: Theme.Spacing.s + 4) {
-                Image(systemName: leadingSymbol)
-                    .font(.body.weight(.semibold))
-                    .foregroundStyle(.white)
-                    .frame(width: iconSize, height: iconSize)
-                    .background(isSolvedToday ? FeatureTint.solved : billing.heroFill,
-                                in: .rect(cornerRadius: iconSize * 0.28, style: .continuous))
+                CollectionCover(
+                    symbol: leadingSymbol,
+                    accent: isSolvedToday ? FeatureTint.solved : billing.heroFill,
+                    isLocked: false,
+                    side: iconSize,
+                    font: .body.weight(.semibold),
+                    cornerRadius: iconSize * 0.28
+                )
 
                 VStack(alignment: .leading, spacing: 0) {
                     Text(billing.shortName)

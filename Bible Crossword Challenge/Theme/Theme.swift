@@ -142,6 +142,13 @@ enum Theme {
         darkElevatedHighContrast: UIColor(red: 0.200, green: 0.196, blue: 0.192, alpha: 1)
     )
 
+    /// Every progress bar off a cover, in one colour (2026-10-25). Bars took
+    /// their row's colour — green, gold, the pack's, the accent blue — and a
+    /// screen of them read as a chart legend. The icon beside a bar already
+    /// says what it measures; the bar only says how far. Bars on a coloured
+    /// cover stay white.
+    static var progressBar: Color { ink }
+
     /// "Ink" — the solid fill behind the one loud pill CTA per screen
     /// (black-on-light, white-on-dark, YouVersion's primary-button move).
     /// Increased contrast takes it the rest of the way to black and white.

@@ -96,7 +96,7 @@ struct ReadingPlanCard: View {
                     .foregroundStyle(.tertiary)
             }
             ProgressView(value: Double(day - 1), total: Double(total))
-                .tint(Theme.accent)
+                .tint(Theme.progressBar)
         }
         .cardRowPadding()
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -278,7 +278,7 @@ struct ReadingPlansView: View {
             }
             VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
                 ProgressView(value: Double(done), total: Double(total))
-                    .tint(Theme.accent)
+                    .tint(Theme.progressBar)
                 Text("Day \(min(done + 1, total)) of \(total)")
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(.secondary)

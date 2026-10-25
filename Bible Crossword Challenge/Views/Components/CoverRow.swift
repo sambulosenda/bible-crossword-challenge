@@ -22,10 +22,6 @@ struct CoverRow: View {
     let subtitle: String
     /// 0...1 when the row has a count to fill; nil draws no bar.
     var progress: Double? = nil
-    /// A solid cover in `tint` with a near-black glyph — the Premium mark, as
-    /// the gold chip wears it. The pale tinted cover is for things in
-    /// progress, and a pale gold crown read as one more badge beside them.
-    var solid = false
 
     /// The cover's side. Fixed, with the glyph capped like `RowIcon`'s, so a
     /// large text size grows the text column rather than the artwork.
@@ -33,26 +29,18 @@ struct CoverRow: View {
 
     var body: some View {
         HStack(spacing: Theme.Spacing.m) {
-            Group {
-                if solid {
-                    Image(systemName: symbol)
-                        .font(.title3)
-                        // Fixed near-black, as on the chip: gold in both
-                        // appearances.
-                        .foregroundStyle(Color(white: 0.1))
-                        .frame(width: Self.coverSide, height: Self.coverSide)
-                        .background(tint, in: .rect(cornerRadius: 12, style: .continuous))
-                } else {
-                    CollectionCover(
-                        symbol: symbol,
-                        accent: tint,
-                        isLocked: false,
-                        side: Self.coverSide,
-                        font: .title3,
-                        cornerRadius: 12
-                    )
-                }
-            }
+            // Pale, every row alike, Premium's crown included (2026-10-25):
+            // its solid gold block was the loudest thing on Today. The
+            // feature's colour lives on the glyph and its wash, nowhere else
+            // in the row.
+            CollectionCover(
+                symbol: symbol,
+                accent: tint,
+                isLocked: false,
+                side: Self.coverSide,
+                font: .title3,
+                cornerRadius: 12
+            )
             .dynamicTypeSize(...DynamicTypeSize.xxLarge)
             .accessibilityHidden(true)
 
@@ -67,7 +55,7 @@ struct CoverRow: View {
                     .fixedSize(horizontal: false, vertical: true)
                 if let progress {
                     ProgressView(value: progress)
-                        .tint(tint)
+                        .tint(Theme.progressBar)
                         .padding(.top, 2)
                 }
             }

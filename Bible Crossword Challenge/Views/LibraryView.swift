@@ -264,7 +264,7 @@ struct LibraryView: View {
                 }
             }
             ProgressView(value: Double(completedCount), total: Double(max(puzzles.count, 1)))
-                .tint(Theme.accent)
+                .tint(Theme.progressBar)
         }
         .textCase(nil)          // section headers upper-case by default
         .padding(.bottom, Theme.Spacing.xs)

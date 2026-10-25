@@ -129,7 +129,7 @@ struct AchievementsView: View {
                     // time goal, which is met or not.
                     if fraction > 0, badge.remaining(for: profile) != nil {
                         ProgressView(value: fraction)
-                            .tint(Theme.badgeRim)
+                            .tint(Theme.progressBar)
                             .padding(.top, Theme.Spacing.s + 2)
                     }
                 }
