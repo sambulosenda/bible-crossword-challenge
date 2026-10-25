@@ -242,9 +242,9 @@ struct HomeView: View {
     /// same treatment as `ComebackCard`'s icon.
     private var streakButton: some View {
         let paused = pendingStreakBreak > 0
-        // Orange means there is a streak. At 0 there isn't one, so the flame
-        // takes the paused treatment — outline and grey, as Fitness draws an
-        // empty ring — rather than celebrating nothing.
+        // Orange means there is a streak. A paused one at 0 takes the grey
+        // outline, as Fitness draws an empty ring, rather than celebrating
+        // nothing.
         let idle = paused || profile.currentStreak == 0
         return Button {
             showStreak = true
@@ -378,7 +378,12 @@ struct HomeView: View {
             .navigationTitle("Today")
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) { streakButton }
+                // From day two, when there is a run to lose; a 1 said
+                // nothing and took the bar's one slot (2026-10-25). A
+                // broken run keeps it, greyed, while its comeback waits.
+                if profile.currentStreak >= 2 || pendingStreakBreak > 0 {
+                    ToolbarItem(placement: .topBarTrailing) { streakButton }
+                }
             }
             .sheet(isPresented: $showStreak) {
                 // Sized to the card: at `.medium` half the sheet was empty
