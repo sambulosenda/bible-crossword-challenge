@@ -30,7 +30,17 @@ enum WidgetBridge {
         static let flagsDay = "widget.flagsDay"
         static let dailyCompletedToday = "widget.dailyCompletedToday"
         static let miniCompletedToday = "widget.miniCompletedToday"
+        /// The verse of the day for today and the next few days, as
+        /// `[["day": startOfDay interval, "text": …, "reference": …]]` — the
+        /// same verse Today's header shows, so the widget and the app agree.
+        /// Several days ahead because the widget's timeline runs past
+        /// midnight without the app.
+        static let verses = "widget.verses"
     }
+
+    /// Days of verses published ahead: today plus the widget timeline's
+    /// two midnights, and one spare.
+    static let verseDays = 4
 
     /// Mirrors the profile into shared defaults and asks WidgetKit to redraw.
     /// Call after any change to streak/completion state has been saved. The
@@ -63,7 +73,20 @@ enum WidgetBridge {
             completedToday(provider.dailyMini()?.id, context: context, on: today, calendar: calendar),
             forKey: Key.miniCompletedToday
         )
+        defaults.set(verses(from: today, provider: provider, calendar: calendar), forKey: Key.verses)
         WidgetCenter.shared.reloadAllTimelines()
+    }
+
+    private static func verses(from today: Date, provider: PuzzleProvider, calendar: Calendar) -> [[String: Any]] {
+        (0..<verseDays).compactMap { offset in
+            guard let day = calendar.date(byAdding: .day, value: offset, to: today),
+                  let verse = provider.verseOfTheDay(
+                      on: day, excluding: provider.dailyPuzzle(for: day, calendar: calendar)?.id, calendar: calendar
+                  ),
+                  !verse.verse.isEmpty
+            else { return nil }
+            return ["day": day.timeIntervalSinceReferenceDate, "text": verse.verse, "reference": verse.reference]
+        }
     }
 
     /// Whether `puzzleID`'s record was completed on `day`. Completed on an

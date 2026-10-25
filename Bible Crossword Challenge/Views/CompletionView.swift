@@ -133,6 +133,11 @@ struct CompletionView: View {
     /// views nobody saw.
     @State private var completionOfferVisible = false
     @State private var didLogCompletionOffer = false
+    /// The widget line, once ever, from the third solve — see `widgetOffer`.
+    @AppStorage("widgetOfferShown") private var widgetOfferShown = false
+    @State private var showsWidgetOffer = false
+    @State private var didLogWidgetOffer = false
+    @State private var showWidgetHow = false
     @State private var showReturnDaySheet = false
     /// The review prompt and the return-day sheet wait for the celebration to
     /// land. Cancelled if the screen closes first, so an ask the player never
@@ -227,6 +232,15 @@ struct CompletionView: View {
 
                         verseCard
 
+                        if showsWidgetOffer {
+                            widgetOffer
+                                .onScrollVisibilityChange(threshold: 0.6) { visible in
+                                    guard visible, !didLogWidgetOffer else { return }
+                                    didLogWidgetOffer = true
+                                    analytics.log(.widgetOfferShown)
+                                }
+                        }
+
                         if showsCompletionOffer {
                             completionOffer
                                 .onScrollVisibilityChange(threshold: 0.6) { visible in
@@ -291,6 +305,7 @@ struct CompletionView: View {
             maybeShowReturnDaySheet()
             maybeShowReminderAsk()
             maybeShowCompletionOffer()
+            maybeShowWidgetOffer()
         }
         .onDisappear {
             delayedAsks.forEach { $0.cancel() }
@@ -303,6 +318,9 @@ struct CompletionView: View {
             DailyReminderPrompt(profile: profile) {
                 showReturnDaySheet = false
             }
+        }
+        .sheet(isPresented: $showWidgetHow) {
+            WidgetHowToSheet()
         }
         .sheet(item: $paywallEntry) { entry in
             PaywallView(source: entry.source)
@@ -1089,6 +1107,37 @@ struct CompletionView: View {
         showsCompletionOffer = true
     }
 
+    /// The Verse of the Day widget, offered once, from the third solve: by
+    /// then the player has a habit for it to serve. One quiet line like the
+    /// offer's, and never on the same screen as the offer — one ask under the
+    /// verse at a time.
+    private var widgetOffer: some View {
+        Button {
+            analytics.log(.widgetOfferTapped)
+            showWidgetHow = true
+        } label: {
+            Label {
+                Text("Put the verse of the day on your Home Screen")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            } icon: {
+                Image(systemName: "square.text.square")
+                    .foregroundStyle(Theme.accent)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .contentShape(.rect)
+        }
+        .buttonStyle(.plain)
+        .accessibilityHint("Shows how to add the widget")
+    }
+
+    private func maybeShowWidgetOffer() {
+        guard !widgetOfferShown, !showsCompletionOffer, profile.totalPuzzlesCompleted >= 3 else { return }
+        widgetOfferShown = true
+        showsWidgetOffer = true
+    }
+
     private func logCompletionOfferIfSeen() {
         guard completionOfferVisible, !didLogCompletionOffer,
               !showReturnDaySheet, paywallEntry == nil else { return }
@@ -1577,4 +1626,51 @@ struct CompletionView: View {
 struct PaywallEntry: Identifiable {
     let source: PaywallSource
     var id: String { source.rawValue }
+}
+
+/// How to add the Verse of the Day widget. iOS has no call that adds one for
+/// the player, so the three steps are the whole of it.
+private struct WidgetHowToSheet: View {
+    @Environment(\.dismiss) private var dismiss
+
+    private let steps = [
+        "Touch and hold an empty spot on your Home Screen.",
+        "Tap Edit, then Add Widget.",
+        "Search for Bible Crossword and choose Verse of the Day.",
+    ]
+
+    var body: some View {
+        NavigationStack {
+            VStack(alignment: .leading, spacing: Theme.Spacing.l) {
+                Text("Today's verse, every time you unlock your phone, with your streak beside it.")
+                    .font(.body)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+                VStack(alignment: .leading, spacing: Theme.Spacing.m) {
+                    ForEach(Array(steps.enumerated()), id: \.offset) { index, step in
+                        HStack(alignment: .firstTextBaseline, spacing: Theme.Spacing.m) {
+                            Text("\(index + 1)")
+                                .font(.headline)
+                                .monospacedDigit()
+                                .foregroundStyle(Theme.accent)
+                            Text(step)
+                                .font(.body)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                        .accessibilityElement(children: .combine)
+                    }
+                }
+                Spacer(minLength: 0)
+            }
+            .padding(Theme.Spacing.m + Theme.Spacing.xs)
+            .navigationTitle("Add the verse widget")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done") { dismiss() }
+                }
+            }
+        }
+        .presentationDetents([.medium])
+    }
 }

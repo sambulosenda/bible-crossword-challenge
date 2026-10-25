@@ -113,6 +113,12 @@ enum AnalyticsEvent {
     /// resolved to (`daily` / `mini` / `today`) — the widget picks the most
     /// useful next action, and this is the read on whether players take it.
     case widgetOpened(destination: String)
+    /// The completion screen's once-ever line offering the Verse of the Day
+    /// widget came into view (after a third solve), and was tapped for the
+    /// how-to. Read against `widget_opened`, which was 0 in the 30 days to
+    /// 2026-10-14: nobody added a widget nobody had told them about.
+    case widgetOfferShown
+    case widgetOfferTapped
     /// A local notification was tapped. `kind` is `daily`, `winback` (the
     /// passive daily copy after a lapse), `streak_risk` or `pack_news`;
     /// `dayOffset` is which day of the 14-day horizon a daily one was scheduled
@@ -392,6 +398,8 @@ enum AnalyticsEvent {
         case .stallNudgeTapped: return "stall_nudge_tapped"
         case .starterWordGifted: return "starter_word_gifted"
         case .widgetOpened: return "widget_opened"
+        case .widgetOfferShown: return "widget_offer_shown"
+        case .widgetOfferTapped: return "widget_offer_tapped"
         case .notificationTapped: return "notification_tapped"
         case .streakUpdated: return "streak_updated"
         case .streakBroken: return "streak_broken"
@@ -450,7 +458,7 @@ enum AnalyticsEvent {
 
     var parameters: [String: Any] {
         switch self {
-        case .appOpen:
+        case .appOpen, .widgetOfferShown, .widgetOfferTapped:
             return [:]
         case .onboardingStep(let index, let name):
             return ["step_index": index, "step_name": name]

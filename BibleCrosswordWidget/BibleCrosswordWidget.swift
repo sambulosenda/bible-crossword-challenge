@@ -28,6 +28,8 @@ struct StreakSnapshot {
     var flagsDay: Date?
     var dailyCompletedToday: Bool = false
     var miniCompletedToday: Bool = false
+    /// The verse of the day by start-of-day — see `WidgetBridge.Key.verses`.
+    var verses: [(day: Date, text: String, reference: String)] = []
 
     static func load() -> StreakSnapshot {
         guard let d = UserDefaults(suiteName: appGroupID) else { return StreakSnapshot() }
@@ -42,6 +44,13 @@ struct StreakSnapshot {
         s.flagsDay = flagsInterval > 0 ? Date(timeIntervalSinceReferenceDate: flagsInterval) : nil
         s.dailyCompletedToday = d.bool(forKey: "widget.dailyCompletedToday")
         s.miniCompletedToday = d.bool(forKey: "widget.miniCompletedToday")
+        let rawVerses = d.array(forKey: "widget.verses") as? [[String: Any]] ?? []
+        s.verses = rawVerses.compactMap { item in
+            guard let day = item["day"] as? Double,
+                  let text = item["text"] as? String,
+                  let reference = item["reference"] as? String else { return nil }
+            return (Date(timeIntervalSinceReferenceDate: day), text, reference)
+        }
         return s
     }
 
@@ -79,11 +88,22 @@ struct StreakEntry: TimelineEntry {
     let streak: Int
     let state: State
     var target: Target = .daily
+    /// The day's verse, when the app has published one for this day.
+    var verse: (text: String, reference: String)? = nil
 
     /// Mirrors the app's Streaks rules: solved today keeps the flame lit;
     /// solved yesterday means the streak is alive but at stake; exactly one
     /// missed day with a freeze in hand still counts as alive.
     static func make(from snapshot: StreakSnapshot, at date: Date, calendar: Calendar = .current) -> StreakEntry {
+        var entry = makeStreak(from: snapshot, at: date, calendar: calendar)
+        let today = calendar.startOfDay(for: date)
+        entry.verse = snapshot.verses
+            .first { calendar.isDate($0.day, inSameDayAs: today) }
+            .map { ($0.text, $0.reference) }
+        return entry
+    }
+
+    private static func makeStreak(from snapshot: StreakSnapshot, at date: Date, calendar: Calendar) -> StreakEntry {
         let today = calendar.startOfDay(for: date)
         let flags = snapshot.flags(on: today, calendar: calendar)
         let target: Target = !flags.daily ? .daily : (!flags.mini ? .mini : .home)
@@ -116,7 +136,10 @@ struct StreakProvider: TimelineProvider {
 
     func getSnapshot(in context: Context, completion: @escaping (StreakEntry) -> Void) {
         if context.isPreview {
-            completion(StreakEntry(date: Date(), streak: 7, state: .streakAtStake))
+            completion(StreakEntry(
+                date: Date(), streak: 7, state: .streakAtStake,
+                verse: ("I can do all things through Christ who gives me strength.", "Philippians 4:13")
+            ))
         } else {
             completion(StreakEntry.make(from: StreakSnapshot.load(), at: Date()))
         }
@@ -365,9 +388,101 @@ struct BibleCrosswordStreakWidget: Widget {
     }
 }
 
+// MARK: - Verse of the Day
+
+/// The day's verse in serif, with the streak in a corner: a reason to look
+/// at the Home Screen that isn't a chore (2026-10-25). The streak widget asks
+/// for a solve; this one gives something first, and a tap still lands on
+/// today's open puzzle. The verse is never the day's daily puzzle's own, so
+/// it can't spoil the answers.
+struct VerseView: View {
+    @Environment(\.widgetFamily) private var family
+    let entry: StreakEntry
+
+    var body: some View {
+        switch family {
+        case .accessoryRectangular: rectangular
+        case .systemSmall: small
+        default: medium
+        }
+    }
+
+    private var verseText: String { entry.verse.map { "“\($0.text)”" } ?? "A fresh Bible crossword is waiting." }
+    private var reference: String { entry.verse?.reference ?? "Bible Crossword" }
+
+    private var medium: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text("VERSE OF THE DAY")
+                .font(.caption2.weight(.semibold))
+                .tracking(0.6)
+                .foregroundStyle(.secondary)
+            Text(verseText)
+                .font(.system(.body, design: .serif))
+                .lineLimit(4)
+                .minimumScaleFactor(0.85)
+            Spacer(minLength: 0)
+            HStack {
+                Text(reference)
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.secondary)
+                Spacer(minLength: 0)
+                if entry.streak > 0 {
+                    Label("\(entry.streak)", systemImage: entry.state == .solvedToday ? "flame.fill" : "flame")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(entry.flameColor)
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+    }
+
+    private var small: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(verseText)
+                .font(.system(.footnote, design: .serif))
+                .lineLimit(6)
+                .minimumScaleFactor(0.8)
+            Spacer(minLength: 0)
+            Text(reference)
+                .font(.caption2.weight(.semibold))
+                .foregroundStyle(.secondary)
+                .lineLimit(1)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+    }
+
+    private var rectangular: some View {
+        VStack(alignment: .leading, spacing: 1) {
+            Text(verseText)
+                .font(.caption)
+                .lineLimit(2)
+            Text(reference)
+                .font(.caption2.weight(.semibold))
+                .foregroundStyle(.secondary)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+}
+
+struct BibleCrosswordVerseWidget: Widget {
+    let kind = "BibleCrosswordVerseWidget"
+
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: kind, provider: StreakProvider()) { entry in
+            VerseView(entry: entry)
+                .containerBackground(.fill.tertiary, for: .widget)
+                .widgetURL(entry.deepLinkURL)
+        }
+        .configurationDisplayName("Verse of the Day")
+        .description("Today's verse, with your streak. Tap to play today's puzzle.")
+        .supportedFamilies([.systemSmall, .systemMedium, .accessoryRectangular])
+    }
+}
+
 @main
 struct BibleCrosswordWidgetBundle: WidgetBundle {
     var body: some Widget {
+        BibleCrosswordVerseWidget()
         BibleCrosswordStreakWidget()
     }
 }
@@ -380,6 +495,12 @@ struct BibleCrosswordWidgetBundle: WidgetBundle {
     StreakEntry(date: .now, streak: 7, state: .streakAtStake)
     StreakEntry(date: .now, streak: 8, state: .solvedToday)
     StreakEntry(date: .now, streak: 0, state: .fresh)
+}
+
+#Preview("Verse · medium", as: .systemMedium) {
+    BibleCrosswordVerseWidget()
+} timeline: {
+    StreakEntry(date: .now, streak: 12, state: .streakAtStake, verse: ("I can do all things through Christ who gives me strength.", "Philippians 4:13"))
 }
 
 #Preview("Medium", as: .systemMedium) {
