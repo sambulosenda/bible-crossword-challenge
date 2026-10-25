@@ -59,79 +59,53 @@ struct HintSheet: View {
     let onChoose: (Choice) -> Void
 
     @Environment(\.dismiss) private var dismiss
-    /// The content's natural height, so the sheet hugs it.
-    @State private var contentHeight: CGFloat = 0
 
+    /// The system's own sheet (2026-10-25): a navigation bar with the system
+    /// close button, an inset-grouped list, the clue as the section's header
+    /// and the pool as its footer, on the sheet's own background — Liquid
+    /// Glass on iOS 26. It was hand-dressed on the app's paper with its own
+    /// header and ✕, which turned the glass off and made a system sheet look
+    /// like a custom one.
     var body: some View {
-        ScrollView {
-            content
-                .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { contentHeight = $0 }
+        NavigationStack {
+            List {
+                Section {
+                    row(.letter, symbol: "character", title: "Reveal a letter",
+                        detail: "Fills the selected square")
+                    row(.word, symbol: "textformat.abc", title: "Reveal the word",
+                        detail: clue.map { "Fills all \($0.length) squares" } ?? "Fills the whole word")
+                    if let reference = clue?.reference {
+                        row(.verse, symbol: "book", title: "Read the verse", detail: reference)
+                    }
+                } header: {
+                    if let clue {
+                        Text("\(clue.label) · \(clue.text)")
+                            .textCase(nil)
+                    }
+                } footer: {
+                    footer
+                }
+            }
+            .listStyle(.insetGrouped)
+            .navigationTitle("Hint")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    closeButton
+                }
+            }
         }
-        .scrollBounceBehavior(.basedOnSize)
-        .presentationBackground(Theme.background)
-        // Fitted to the rows; the scroll view takes over at accessibility sizes.
-        .presentationDetents([.height(max(contentHeight, 200))])
+        .presentationDetents([.medium, .large])
         .presentationDragIndicator(.visible)
     }
 
-    private var content: some View {
-        VStack(alignment: .leading, spacing: Theme.Spacing.m) {
-            header
-
-            CardGroup(dividerInset: CardGroup<EmptyView>.iconRowInset) {
-                row(.letter, symbol: "character", title: "Reveal a letter",
-                    detail: "Fills the selected square")
-                row(.word, symbol: "textformat.abc", title: "Reveal the word",
-                    detail: clue.map { "Fills all \($0.length) squares" } ?? "Fills the whole word")
-                if let reference = clue?.reference {
-                    row(.verse, symbol: "book", title: "Read the verse", detail: reference)
-                }
-            }
-            // The rows are told apart by their words; colour would only
-            // compete with the one accented price.
-            .environment(\.rowIconsNeutral, true)
-
-            footer
+    @ViewBuilder
+    private var closeButton: some View {
+        if #available(iOS 26.0, *) {
+            Button(role: .close) { dismiss() }
+        } else {
+            Button("Close") { dismiss() }
         }
-        .padding(.horizontal, Theme.Spacing.m)
-        .padding(.top, Theme.Spacing.l)
-        .padding(.bottom, Theme.Spacing.m)
-        .frame(maxWidth: 520)
-        .frame(maxWidth: .infinity)
-    }
-
-    private var header: some View {
-        HStack(alignment: .top, spacing: Theme.Spacing.m) {
-            VStack(alignment: .leading, spacing: 2) {
-                Text("Hint")
-                    .font(.title2.weight(.bold))
-                    .accessibilityAddTraits(.isHeader)
-                if let clue {
-                    Text("\(clue.label) · \(clue.text)")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-            }
-            Spacer(minLength: 0)
-            Button {
-                dismiss()
-            } label: {
-                Image(systemName: "xmark")
-                    .font(.footnote.weight(.bold))
-                    .foregroundStyle(.secondary)
-                    .frame(width: 30, height: 30)
-                    .background(.fill.tertiary, in: .circle)
-                    // A 44pt target around the 30pt disc.
-                    .frame(width: 44, height: 44)
-                    .contentShape(.rect)
-            }
-            .buttonStyle(.plain)
-            .padding(.top, -7)
-            .padding(.trailing, -7)
-            .accessibilityLabel("Close")
-        }
-        .padding(.horizontal, Theme.Spacing.xs)
     }
 
     private func row(_ choice: Choice, symbol: String, title: String, detail: String) -> some View {
@@ -139,24 +113,27 @@ struct HintSheet: View {
             onChoose(choice)
         } label: {
             HStack(spacing: Theme.Spacing.m) {
-                RowIcon(symbol: symbol, tint: Theme.accent)
+                // Absolute colours: inside a list's button, `.primary` and
+                // `.secondary` resolve against the button's tint, and every
+                // row read blue.
+                Image(systemName: symbol)
+                    .font(.body)
+                    .foregroundStyle(Color.secondary)
+                    .frame(width: 28)
+                    .accessibilityHidden(true)
                 VStack(alignment: .leading, spacing: 2) {
                     Text(title)
-                        .font(.headline)
-                        .foregroundStyle(.primary)
+                        .foregroundStyle(Color.primary)
                     Text(detail)
                         .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Color.secondary)
                 }
                 .fixedSize(horizontal: false, vertical: true)
                 Spacer(minLength: Theme.Spacing.s)
                 priceTag(price(choice.hintType))
             }
-            .cardRowPadding()
-            .frame(maxWidth: .infinity, alignment: .leading)
             .contentShape(.rect)
         }
-        .buttonStyle(PressableCardStyle())
     }
 
     @ViewBuilder
@@ -185,29 +162,19 @@ struct HintSheet: View {
     private func quietTag(_ text: Text) -> some View {
         text
             .font(.footnote.weight(.semibold))
-            .foregroundStyle(.secondary)
+            .foregroundStyle(Color.secondary)
             .lineLimit(1)
             .fixedSize()
     }
 
-    /// The pool, said once, and the way past it. Stacks when the two won't
-    /// share a line.
+    /// The pool, said once, and the way past it, as the section's footer.
     @ViewBuilder
     private var footer: some View {
         if quota != nil || offersPremium {
-            ViewThatFits(in: .horizontal) {
-                HStack(spacing: Theme.Spacing.s) {
-                    quotaLine
-                    Spacer(minLength: Theme.Spacing.s)
-                    premiumLink
-                }
-                VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
-                    quotaLine
-                    premiumLink
-                }
+            VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
+                quotaLine
+                premiumLink
             }
-            .font(.subheadline)
-            .padding(.horizontal, Theme.Spacing.xs)
         }
     }
 
@@ -225,7 +192,6 @@ struct HintSheet: View {
             Button("Unlimited with Premium") {
                 onChoose(.premium)
             }
-            .fontWeight(.semibold)
             .buttonStyle(.borderless)
             .tint(Theme.accent)
             .accessibilityHint("Opens Premium upgrade options")
