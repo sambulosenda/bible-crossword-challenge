@@ -33,6 +33,12 @@ enum ReminderAsk {
         /// player has just demonstrated. Raw value kept as `prompt` so the
         /// two placements compare directly in analytics.
         case returnDaySheet = "prompt"
+        /// Onboarding's own page, right after the first solve's celebration
+        /// (2026-10-25). The page was cut on 2026-08-24 for asking before the
+        /// app had proved anything (10.8% of answers granted); the grants it
+        /// still brought outnumbered every later surface's, and opt-ins fell
+        /// from ~25% of installs to ~3%. It comes back after the solve.
+        case onboarding
     }
 
     /// The completion ask retries across the first few solves until answered;
@@ -79,6 +85,10 @@ enum ReminderAsk {
             return s.currentStreak >= 2 && !s.streakAskShown
         case .returnDaySheet:
             return s.totalCompleted >= 1 && !s.returnDaySheetShown && !s.isInstallDay
+        case .onboarding:
+            // The guards above are the whole rule: a fresh install has asked
+            // nowhere yet, and a reinstall that already granted skips it.
+            return true
         }
     }
 }

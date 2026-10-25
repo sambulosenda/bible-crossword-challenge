@@ -22,12 +22,13 @@
 //  top-converting onboardings share (a stats moment between the demonstrated
 //  value and the sell), sized honestly for a two-letter solve.
 //
-//  There is deliberately no reminders page any more. It asked before the app
-//  had proved anything: of 102 players who answered it in the 30 days to
-//  2026-08-24, 86 tapped "Not now" — 10.8% granted. Killed 2026-08-24; the
-//  first ask is now the completion-screen card (`ReminderAsk`, `.completion`),
-//  which lands on a player who just finished a real puzzle. Decliners keep the
-//  day-2 sheet and streak-card paths, unchanged.
+//  The reminder page sits between the celebration and the offer (2026-10-25).
+//  An earlier one asked before the app had proved anything — of 102 players
+//  who answered it in the 30 days to 2026-08-24, 86 tapped "Not now" — and was
+//  cut that day. Without it opt-ins fell from ~25% of installs to ~3%: the
+//  later asks (`ReminderAsk`) reach far fewer players. It's back after the
+//  first solve, the warmest moment the flow has. Decliners keep the later
+//  paths.
 //
 //  Everything sits on the app's paper canvas with serif hero titles, so the
 //  first screen a player sees is the same app as the hundredth.
@@ -58,6 +59,17 @@ struct OnboardingView: View {
     @State private var didLogPaywallOpen = false
     @State private var didLogFirstSolve = false
 
+    @Environment(\.notifications) private var notifications
+    @AppStorage("remindersEnabled") private var remindersEnabled = false
+    @AppStorage("reminderMinutes") private var reminderMinutes = ReminderTime.defaultMinutes
+    @AppStorage("reminderAskLastDay") private var reminderAskLastDay = 0.0
+    /// Whether this run shows the reminder page: only where iOS has never
+    /// asked and reminders are off — a reinstall that already granted skips
+    /// it. Decided once, on appear, so the pages can't change under a swipe.
+    @State private var asksReminder = false
+    @State private var didLogReminderAsk = false
+    @State private var reminderWorking = false
+
     // Dismissal telemetry for the offer page, mirroring `PaywallView`'s. Every
     // exit from onboarding goes through `finish()`, so that is where the event
     // fires; what's tracked here is when the page arrived and whether the buy
@@ -84,7 +96,8 @@ struct OnboardingView: View {
     @State private var solveStartedAt: Date?
     @State private var solveSeconds: Int?
 
-    private let lastPage = 3
+    private let reminderPage = 3
+    private let lastPage = 4
 
     /// How many of the pages are setup steps. The celebration and the offer
     /// both sit past the end of the bar — one is payoff, the other a bonus,
@@ -93,8 +106,9 @@ struct OnboardingView: View {
 
     /// Analytics labels for the four pages, indexed by page number. Labels are
     /// stable across the name page's removal; `step_index` for celebration and
-    /// premium dropped by one on 2026-10-24, so funnels should key on the name.
-    private let stepNames = ["welcome", "first_solve", "celebration", "premium"]
+    /// premium dropped by one on 2026-10-24 and premium's rose by one again
+    /// with the reminder page on 2026-10-25, so funnels should key on the name.
+    private let stepNames = ["welcome", "first_solve", "celebration", "reminder", "premium"]
 
     var body: some View {
         VStack(spacing: 0) {
@@ -104,7 +118,10 @@ struct OnboardingView: View {
                 welcomePage.tag(0)
                 firstSolvePage.tag(1)
                 celebrationPage.tag(2)
-                premiumPage.tag(3)
+                if asksReminder {
+                    reminderAskPage.tag(reminderPage)
+                }
+                premiumPage.tag(lastPage)
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
             .animation(.easeInOut, value: page)
@@ -125,6 +142,14 @@ struct OnboardingView: View {
                 analytics.log(.onboardingFirstSolve(solved: solved, attempts: wrongAttempts))
             }
             logStep(newPage)
+            if newPage == reminderPage && !didLogReminderAsk {
+                didLogReminderAsk = true
+                // Spends the day's ask, so the first puzzle's completion row
+                // doesn't ask again in the same sitting.
+                reminderAskLastDay = Calendar.current.startOfDay(for: Date()).timeIntervalSinceReferenceDate
+                ReminderAskSession.asked = true
+                analytics.log(.reminderAskShown(source: ReminderAsk.Surface.onboarding.rawValue))
+            }
             // The premium page is a paywall view like any other — count it so
             // onboarding conversion can be compared against in-app sources.
             if newPage == lastPage && !didLogPaywallOpen {
@@ -139,6 +164,19 @@ struct OnboardingView: View {
         }
         .onAppear {
             logStep(page)
+        }
+        .task {
+            await notifications.refreshStatus()
+            asksReminder = ReminderAsk.decide(.onboarding, ReminderAsk.State(
+                remindersEnabled: remindersEnabled,
+                permissionUndetermined: notifications.authorizationStatus == .notDetermined,
+                totalCompleted: profile.totalPuzzlesCompleted,
+                currentStreak: profile.currentStreak,
+                completionAsksShown: 0,
+                streakAskShown: false,
+                lastAskDay: reminderAskLastDay == 0 ? nil : Date(timeIntervalSinceReferenceDate: reminderAskLastDay),
+                askedThisSession: ReminderAskSession.asked
+            ))
         }
         .purchaseNoticeAlert(store)
     }
@@ -497,6 +535,47 @@ struct OnboardingView: View {
     ///
     /// No progress line: the most the player can have solved by now is the
     /// tutorial clue, and a tally of one reads as a tally of nothing.
+    /// The reminder ask, between the celebration and the offer. A bell where
+    /// the celebration had the solved word, then the notification itself, so
+    /// the player agrees to a thing they've seen rather than to
+    /// "notifications". The system prompt only follows "Remind me"; "Not now"
+    /// and a swipe both go on to the offer.
+    private var reminderAskPage: some View {
+        let active = page == reminderPage
+        return pageFrame(spacing: Theme.Spacing.xl, alignment: .upperThird) {
+            CelebrationBadge(systemImage: "bell.fill", tint: Theme.ink, markTint: Theme.onInk, size: 96, showsRim: false)
+                .entrance(active: active, delay: 0.05, reduceMotion: reduceMotion)
+
+            VStack(spacing: Theme.Spacing.s + 2) {
+                // Wraps rather than truncating: on a 17e it measured one
+                // word wider than the column.
+                Text("Same time tomorrow?")
+                    .font(.scripture(.largeTitle, weight: .semibold))
+                    .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityAddTraits(.isHeader)
+                Text("One nudge a day, when tomorrow's puzzle is ready. Change the time or turn it off in Settings.")
+                    .font(.body)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .multilineTextAlignment(.center)
+            .entrance(active: active, delay: 0.14, reduceMotion: reduceMotion)
+
+            NotificationPreviewCard()
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("Example reminder: Today's puzzle is ready.")
+                .entrance(active: active, delay: 0.24, reduceMotion: reduceMotion)
+        }
+        // A first sitting, so "now" is the hour this player plays — see
+        // `seedSuggestionIfUnset`.
+        .onAppear { ReminderTime.seedSuggestionIfUnset() }
+    }
+
+    private var reminderTimeText: String {
+        ReminderTime.date(fromMinutes: reminderMinutes)
+            .formatted(date: .omitted, time: .shortened)
+    }
+
     private var premiumPage: some View {
         let active = page == lastPage
         // The whole offer when it fits the page; without the tiles, in the
@@ -606,6 +685,32 @@ struct OnboardingView: View {
                 // step, and this is the one page whose only job is momentum.
                 Button("Keep going") { advance() }
                     .buttonStyle(.pillProminent)
+
+            case reminderPage:
+                Button {
+                    enableReminder()
+                } label: {
+                    Group {
+                        if reminderWorking {
+                            ProgressView().tint(Theme.onInk)
+                        } else {
+                            Text("Remind me at \(reminderTimeText)")
+                        }
+                    }
+                }
+                .buttonStyle(.pillProminent)
+                .disabled(reminderWorking)
+                .accessibilityHint("Asks for notification permission")
+                // As quiet as "Skip for now": declining costs nothing, and the
+                // offer is the next page either way.
+                Button("Not now") {
+                    analytics.log(.reminderDeclined(source: ReminderAsk.Surface.onboarding.rawValue))
+                    advance()
+                }
+                .font(.subheadline.weight(.semibold))
+                .tint(.secondary)
+                .padding(.vertical, Theme.Spacing.s)
+                .disabled(reminderWorking)
 
             default:
                 Button("Continue") { advance() }
@@ -837,7 +942,23 @@ struct OnboardingView: View {
     // MARK: - Flow
 
     private func advance() {
-        withAnimation { page += 1 }
+        // Past the reminder page's tag when this run doesn't show it.
+        let next = page + 1 == reminderPage && !asksReminder ? lastPage : page + 1
+        withAnimation { page = next }
+    }
+
+    private func enableReminder() {
+        reminderWorking = true
+        Task {
+            let granted = await ReminderOptIn.enable(
+                source: ReminderAsk.Surface.onboarding.rawValue, profile: profile,
+                notifications: notifications, analytics: analytics,
+                minutes: reminderMinutes
+            )
+            if granted { remindersEnabled = true }
+            reminderWorking = false
+            advance()
+        }
     }
 
     private func buySelectedPlan() {
