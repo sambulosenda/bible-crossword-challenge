@@ -660,6 +660,10 @@ struct CrosswordGameScreen: View {
                 let fraction = args.firstIndex(of: "-uiFillPartial")
                     .flatMap { $0 + 1 < args.count ? Double(args[$0 + 1]) : nil } ?? 0.5
                 vm.fillPartial(fraction: fraction)
+            } else if let flag = args.firstIndex(of: "-uiFillAllBut"), flag + 1 < args.count,
+                      let count = Int(args[flag + 1]) {
+                // `-uiFillAllBut 3`: everything in but three answers.
+                vm.fillAllBut(count)
             }
             #endif
         }

@@ -66,7 +66,7 @@ final class StoreService {
     /// RevenueCat public SDK key — safe to embed, scoped to client operations.
     private static let revenueCatAPIKey = "appl_iWdaXgiKMfmIiTcqlsaDKkIdJxQ"
 
-    private(set) var isPremium = false
+    private(set) var isPremium = StoreService.forcesPremium
     private(set) var products: [Product] = []
     private(set) var purchaseInFlight = false
     /// True when the last product load ended with nothing to show — drives the
@@ -440,7 +440,7 @@ final class StoreService {
 
     /// The one place `CustomerInfo` becomes app state.
     private func apply(_ info: CustomerInfo) {
-        isPremium = info.entitlements[Self.entitlementID]?.isActive == true
+        isPremium = info.entitlements[Self.entitlementID]?.isActive == true || Self.forcesPremium
         // A grant from anywhere — this sheet, a restore, another device —
         // answers the re-offer's question. Never ask it of a subscriber.
         if isPremium { clearTrialAbandon() }
@@ -704,6 +704,14 @@ final class StoreService {
         @unknown default: return "day"
         }
     }
+
+    #if DEBUG
+    /// Screenshot helper: `-uiPremium` launches as a subscriber, so no trial
+    /// line or Premium row shows. Held through every entitlement refresh.
+    static let forcesPremium = ProcessInfo.processInfo.arguments.contains("-uiPremium")
+    #else
+    static let forcesPremium = false
+    #endif
 
     #if DEBUG
     /// Force the premium entitlement on for development, so premium-gated screens

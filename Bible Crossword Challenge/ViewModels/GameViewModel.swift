@@ -1092,6 +1092,33 @@ final class GameViewModel {
         }
         onEntryChanged?()
     }
+
+    /// Development-only: the whole grid filled in except `count` across
+    /// answers, spread down the board — the nearly-finished state a store
+    /// screenshot wants. Unlike `fillPartial`, no cell is left bare that
+    /// belongs only to a down answer, and there is no green overlay: a grid
+    /// mid-solve shows plain letters.
+    func fillAllBut(_ count: Int) {
+        for r in 0..<size {
+            for c in 0..<size where !grid[r][c].isBlock {
+                grid[r][c].entry = grid[r][c].solution
+            }
+        }
+        let slots = acrossSlots
+        let left = min(max(count, 1), slots.count)
+        // Evenly spaced through the across list, so the gaps sit at the
+        // top, middle and foot of the board rather than in one clump.
+        let picks = (1...left).map { slots[$0 * slots.count / (left + 1)] }
+        for slot in picks {
+            for pos in slot.positions { grid[pos.row][pos.col].entry = nil }
+        }
+        seedSolvedSlots()
+        if let first = picks.first {
+            direction = .across
+            selected = first.positions[0]
+        }
+        onEntryChanged?()
+    }
     #endif
 
     // MARK: - Resume snapshot
