@@ -289,8 +289,9 @@ struct PacksView: View {
     private func packTile(_ pack: PuzzlePack, progress: PackProgress, label: PackCoverLabel?) -> some View {
         let locked = isLocked(pack.isPremium)
         let size = "\(progress.total) puzzle\(progress.total == 1 ? "" : "s")"
-        // A locked pack states its size, never progress.
-        let meta = locked ? "\(size) · Premium"
+        // A locked pack states its size, never progress. Not "· Premium":
+        // the cover's lock already says it (2026-10-25).
+        let meta = locked ? size
             : progress.isComplete ? "Complete"
             : progress.solved > 0 ? "\(progress.solved) of \(progress.total) solved"
             : size
@@ -308,7 +309,7 @@ struct PacksView: View {
 
     private func questTile(_ quest: QuestLine, progress: QuestProgress) -> some View {
         let locked = isLocked(quest.isPremium)
-        let meta = locked ? "\(progress.total) days · Premium"
+        let meta = locked ? "\(progress.total) days"
             : progress.isComplete ? "Complete"
             : progress.solved > 0 ? QuestProgress.stepLine(solved: progress.solved, total: progress.total)
             : "\(progress.total) steps, one a day"

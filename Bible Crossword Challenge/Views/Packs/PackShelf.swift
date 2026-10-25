@@ -85,6 +85,9 @@ struct ShelfTile: View {
         if !label.caption.isEmpty { parts.append(label.caption) }
         if let badge { parts.append(badge.label) }
         parts.append(meta)
+        // The cover's lock is the only sign of it on screen; the caption
+        // no longer repeats it.
+        if isLocked { parts.append("Premium") }
         return parts.joined(separator: ". ")
     }
 }
@@ -118,6 +121,10 @@ struct LeadFeatureCard: View {
                 // steps they'd run together.
                 if let steps, steps.total > 1, steps.total <= 14 {
                     StepPath(done: steps.done, total: steps.total)
+                        // A phone card's width. Across open iPhone Duo's
+                        // ~830pt card five steps sat 190pt apart and the
+                        // path read as a rule (2026-10-25).
+                        .frame(maxWidth: 400, alignment: .leading)
                 }
 
                 HStack {
