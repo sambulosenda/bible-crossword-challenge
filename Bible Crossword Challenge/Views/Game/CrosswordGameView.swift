@@ -770,7 +770,12 @@ struct CrosswordGameScreen: View {
             clueBar
             keypad
         }
-        .background(Theme.keyboardBed)
+        // With the bars on a side rail, the bed stops where the rail's
+        // column starts: drawn under it, the keys sat to one side of a bed
+        // running on to the edge, about 85pt bare beside them on open iPhone
+        // Duo (2026-10-25). The keys stay out of that column — it is held
+        // for the rail down the whole edge.
+        .background(Theme.keyboardBed, ignoresSafeAreaEdges: barsVertical ? .bottom : .all)
     }
 
     // MARK: - Toolbar
