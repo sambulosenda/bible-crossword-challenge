@@ -9,9 +9,14 @@
 //  was one more tap between a new player and the puzzle.
 //
 //    1  First solve two letters, then a verse — the whole product in ten seconds
-//    2  Celebration the payoff, with their own numbers — the emotional peak
-//                   the offer used to arrive without
-//    3  Premium     the upsell, dismissible; the daily puzzle is always free
+//    3  Reminder    one nudge a day, asked while the solve is warm
+//    4  Premium     the upsell, dismissible; the daily puzzle is always free
+//
+//  Page 2 was a celebration — "Well done." over two library counts — removed
+//  2026-10-25: the solve page already celebrates (gold word, confetti, the
+//  verse), it played the same confetti twice, and the counts were the
+//  library's, not the player's. The tags keep their numbers so `step_index`
+//  stays comparable across the change.
 //
 //  There is no name page any more (removed 2026-10-24). In the 60 days before,
 //  13 of ~650 new players ever sent a challenge — the one feature a name is
@@ -20,11 +25,7 @@
 //  prompt), the moment a player has a reason to give it; until then the
 //  profile keeps the placeholder "Friend".
 //
-//  The celebration sits directly before the offer: the pattern the
-//  top-converting onboardings share (a stats moment between the demonstrated
-//  value and the sell), sized honestly for a two-letter solve.
-//
-//  The reminder page sits between the celebration and the offer (2026-10-25).
+//  The reminder page sits between the solve and the offer (2026-10-25).
 //  An earlier one asked before the app had proved anything — of 102 players
 //  who answered it in the 30 days to 2026-08-24, 86 tapped "Not now" — and was
 //  cut that day. Without it opt-ins fell from ~25% of installs to ~3%: the
@@ -93,13 +94,6 @@ struct OnboardingView: View {
     @State private var solved = false
     @State private var wrongAttempts = 0
 
-    // Solve timing, for the celebration page's tile. Started on the first
-    // letter typed rather than on page arrival, so reading the clue doesn't
-    // count against the player — the number exists to flatter an eight-second
-    // solve, not to audit it.
-    @State private var solveStartedAt: Date?
-    @State private var solveSeconds: Int?
-
     private let reminderPage = 3
     private let lastPage = 4
 
@@ -108,6 +102,7 @@ struct OnboardingView: View {
     /// across the name page's removal; `step_index` for celebration and
     /// premium dropped by one on 2026-10-24 and premium's rose by one again
     /// with the reminder page on 2026-10-25, so funnels should key on the name.
+    /// "celebration" is no longer logged (page removed 2026-10-25).
     private let stepNames = ["welcome", "first_solve", "celebration", "reminder", "premium"]
 
     var body: some View {
@@ -116,13 +111,6 @@ struct OnboardingView: View {
 
             TabView(selection: $page) {
                 firstSolvePage.tag(1)
-                // Solvers only (2026-10-25): a skipper's version — a tick,
-                // "You're all set." and two library counts — celebrated
-                // nothing, and was one more tap between a hesitant player and
-                // the app. Out of the pager too, so a swipe can't reach it.
-                if solved {
-                    celebrationPage.tag(2)
-                }
                 if asksReminder {
                     reminderAskPage.tag(reminderPage)
                 }
@@ -161,8 +149,8 @@ struct OnboardingView: View {
                 didLogPaywallOpen = true
                 analytics.log(.paywallOpened(source: PaywallSource.onboarding.rawValue))
             }
-            // First arrival only, like the open above: swiping back to the
-            // celebration and returning shouldn't reset the clock.
+            // First arrival only, like the open above: swiping back a page
+            // and returning shouldn't reset the clock.
             if newPage == lastPage && premiumArrivedAt == nil {
                 premiumArrivedAt = Date()
             }
@@ -431,84 +419,6 @@ struct OnboardingView: View {
         .accessibilityElement(children: .combine)
     }
 
-    /// The peak before the ask: the player's own solve, over their numbers.
-    ///
-    /// The solve page's inline verse card is the *product's* payoff (the verse
-    /// behind the answer); this page is the *player's* (what they did, what's
-    /// waiting). Splitting them keeps each small enough to land — and puts a
-    /// high point directly under the offer, which used to arrive off the back
-    /// of a keyboard.
-    ///
-    /// Solvers only — a skipper goes straight on (see the pager in `body`).
-    private var celebrationPage: some View {
-        let active = page == 2
-        return pageFrame(spacing: Theme.Spacing.xl, alignment: .upperThird) {
-            // The mark is the grid the player just filled (see CelebrationBadge:
-            // a tick says "succeeded", the grid says what). No gold rim here:
-            // gold is the offer bar's signal on the next page.
-            //
-            // Ink, not the accent: a saturated system-blue disc was the
-            // loudest object in the flow, on a page of warm paper and serif.
-            // Ink is the colour of the one button on every page, so the badge
-            // reads as part of the same object family rather than a stock icon.
-            CelebrationBadge(grid: ["GRACE", "..R..", "..K.."], confetti: "puzzle_complete", tint: Theme.ink, markTint: Theme.onInk, size: 96, showsRim: false)
-            .entrance(active: active, delay: 0.05, reduceMotion: reduceMotion)
-
-            // No kicker: "First solve" over "Well done" said the same thing
-            // twice, under a badge that already says it a third time.
-            Text(celebrationHeadline)
-                .font(.scripture(.largeTitle, weight: .semibold))
-                .multilineTextAlignment(.center)
-                .entrance(active: active, delay: 0.14, reduceMotion: reduceMotion)
-
-            celebrationTiles
-                .entrance(active: active, delay: 0.30, reduceMotion: reduceMotion)
-        }
-    }
-
-    /// Greets by name only when one already exists — a player re-running
-    /// onboarding after naming themselves. New players are still "Friend",
-    /// and "Well done, Friend." reads as a form letter, so they get no suffix.
-    private var celebrationHeadline: String {
-        let trimmed = profile.username.trimmingCharacters(in: .whitespaces)
-        let suffix = trimmed.isEmpty || trimmed == ChallengeService.placeholderName ? "" : ", \(trimmed)"
-        return "Well done\(suffix)."
-    }
-
-    /// Two tiles, Duolingo's stats-moment pattern in this app's own units.
-    /// The counts come from the bundle, so neither can go stale.
-    ///
-    /// The same pair for solvers and skippers. Solvers used to get "Day 1 ·
-    /// Your streak" on the left, but the streak only starts with the first
-    /// daily puzzle, so seconds later Today and Profile both said 0 — the
-    /// first number the app gave a player was one it then took back. The
-    /// solve is already celebrated by the badge and the headline above.
-    ///
-    /// Set as type on the paper, split by a hairline, not boxed: two white
-    /// cards were chrome around two numbers, and made the page read as a
-    /// template under the badge.
-    private var celebrationTiles: some View {
-        HStack(spacing: Theme.Spacing.m) {
-            statTile(value: "\(puzzleProvider.packs.count)", label: "Themed packs")
-            Divider()
-            statTile(value: "\(puzzleProvider.totalPuzzleCount)", label: "Puzzles waiting")
-        }
-        // The divider takes the height of the two columns, not the page's.
-        .fixedSize(horizontal: false, vertical: true)
-    }
-
-    private func statTile(value: String, label: String) -> some View {
-        VStack(spacing: Theme.Spacing.xs) {
-            Text(value)
-                .font(.scripture(.title, weight: .semibold))
-            Text(label)
-                .font(.footnote)
-                .foregroundStyle(.secondary)
-        }
-        .frame(maxWidth: .infinity)
-        .accessibilityElement(children: .combine)
-    }
-
     /// The same offer the sheet makes, in a page instead of a sheet.
     ///
     /// Everything below the promise — the trial line, the benefits, the plans —
@@ -519,8 +429,8 @@ struct OnboardingView: View {
     ///
     /// No progress line: the most the player can have solved by now is the
     /// tutorial clue, and a tally of one reads as a tally of nothing.
-    /// The reminder ask, between the celebration and the offer. A bell where
-    /// the celebration had the solved word, then the notification itself, so
+    /// The reminder ask, between the solve and the offer. A bell, then the
+    /// notification itself, so
     /// the player agrees to a thing they've seen rather than to
     /// "notifications". The system prompt only follows "Remind me"; "Not now"
     /// and a swipe both go on to the offer.
@@ -670,12 +580,6 @@ struct OnboardingView: View {
 
             case lastPage:
                 premiumControls
-
-            case 2:
-                // Momentum, not procedure: "Continue" reads as one more form
-                // step, and this is the one page whose only job is momentum.
-                Button("Keep going") { advance() }
-                    .buttonStyle(.pillProminent)
 
             case reminderPage:
                 Button {
@@ -875,7 +779,6 @@ struct OnboardingView: View {
 
     private func type(_ letter: Character) {
         guard let target = focus ?? nextBlank() else { return }
-        if solveStartedAt == nil { solveStartedAt = Date() }
         entries[target] = letter
         focus = nextBlank(after: target)
         check()
@@ -916,11 +819,6 @@ struct OnboardingView: View {
         if correct {
             solved = true
             focus = nil
-            if let solveStartedAt {
-                // At least one second: a sub-second time renders as "0s",
-                // which reads as a bug rather than a brag.
-                solveSeconds = max(1, Int(Date().timeIntervalSince(solveStartedAt).rounded()))
-            }
         } else {
             withAnimation(.spring(duration: 0.4, bounce: 0.5)) { wrongAttempts += 1 }
             // Clear and hand the first cell back rather than leaving the player
@@ -933,10 +831,9 @@ struct OnboardingView: View {
     // MARK: - Flow
 
     private func advance() {
-        var next = page + 1
-        // Past the celebration for a skipper, and past the reminder page's
-        // tag when this run doesn't show it.
-        if next == 2 && !solved { next += 1 }
+        // Over page 2's tag (the removed celebration), and past the reminder
+        // page's when this run doesn't show it.
+        var next = page == 1 ? reminderPage : page + 1
         if next == reminderPage && !asksReminder { next = lastPage }
         withAnimation { page = next }
     }
