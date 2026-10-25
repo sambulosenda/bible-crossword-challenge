@@ -159,7 +159,8 @@ struct PackDetailView: View {
             fill: pack.coverFill,
             isLocked: isLocked
         ) {
-            RisingSteps()
+            GridMotif()
+                .offset(x: 34, y: -28)
         } footer: {
             if !isLocked {
                 coverProgress(progress)
@@ -201,8 +202,9 @@ struct PackDetailView: View {
         return parts.joined(separator: " · ")
     }
 
+    /// "5 crosswords": the word for what they are, in a crossword app.
     private static func puzzleCount(_ total: Int) -> String {
-        "\(total) puzzle\(total == 1 ? "" : "s")"
+        "\(total) crossword\(total == 1 ? "" : "s")"
     }
 
     // MARK: - Play
@@ -284,7 +286,7 @@ struct PackDetailView: View {
     private func puzzleList(_ puzzles: [Puzzle], recordsByID: [String: PuzzleRecord]) -> some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.s + Theme.Spacing.xs) {
             Text("In this pack").sectionHeader()
-            CardGroup(dividerInset: TrackRow<EmptyView>.dividerInset) {
+            CardGroup(dividerInset: TrackRow<EmptyView>.gridDividerInset) {
                 ForEach(Array(puzzles.enumerated()), id: \.element.id) { index, puzzle in
                     let record = recordsByID[puzzle.id]
                     NavigationLink(value: puzzle) {
@@ -292,7 +294,8 @@ struct PackDetailView: View {
                             number: index + 1,
                             title: puzzle.title,
                             detail: Self.detail(puzzle),
-                            numeralTint: pack.accent
+                            numeralTint: pack.accent,
+                            grid: puzzle.grid
                         ) {
                             accessory(for: PuzzleStatus(record: record), record: record)
                         }
@@ -303,9 +306,11 @@ struct PackDetailView: View {
         }
     }
 
-    /// "Psalm 23:1 · Easy".
+    /// "Psalm 23:1 · 7×7 · Easy": where it's from, how big, how hard — what
+    /// a player chooses a crossword by. No time: the app keeps no estimate of
+    /// one, and a guessed "~3 min" would be wrong half the time.
     static func detail(_ puzzle: Puzzle) -> String {
-        "\(puzzle.reference) · \(puzzle.difficulty.label)"
+        "\(puzzle.reference) · \(puzzle.size)×\(puzzle.size) · \(puzzle.difficulty.label)"
     }
 
     @ViewBuilder
@@ -333,15 +338,14 @@ struct PackDetailView: View {
     // MARK: - Locked state
 
     /// The pack's puzzles, shown rather than withheld: the titles are what a
-    /// player is deciding to pay for. Each row opens the paywall. No lock on
-    /// each row since 2026-10-24 — the chip on the cover already says
-    /// Premium once, and five locks made a contents page read as a wall.
-    /// Serif numerals in the pack's colour and the passage each comes from,
-    /// as a book's contents page sets them.
+    /// player is deciding to pay for, and each row's grid shows they're
+    /// crosswords. Each row opens the paywall and wears a small lock
+    /// (2026-10-25), so the tap is expected: a row that looked playable and
+    /// opened an offer read as a trick.
     private func lockedPuzzleList(_ puzzles: [Puzzle]) -> some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.s + Theme.Spacing.xs) {
             Text("In this pack").sectionHeader()
-            CardGroup(dividerInset: TrackRow<EmptyView>.dividerInset) {
+            CardGroup(dividerInset: TrackRow<EmptyView>.gridDividerInset) {
                 ForEach(Array(puzzles.enumerated()), id: \.element.id) { index, puzzle in
                     Button {
                         showPaywall = true
@@ -350,13 +354,16 @@ struct PackDetailView: View {
                             number: index + 1,
                             title: puzzle.title,
                             detail: Self.detail(puzzle),
-                            numeralTint: pack.accent
+                            numeralTint: pack.accent,
+                            grid: puzzle.grid
                         ) {
-                            EmptyView()
+                            Image(systemName: "lock.fill")
+                                .font(.footnote)
+                                .foregroundStyle(.tertiary)
                         }
                     }
                     .buttonStyle(PressableCardStyle())
-                    .accessibilityLabel("\(puzzle.title). \(puzzle.difficulty.label). \(puzzle.clueCount) clues. Premium")
+                    .accessibilityLabel("\(puzzle.title). \(puzzle.size) by \(puzzle.size). \(puzzle.difficulty.label). \(puzzle.clueCount) clues. Premium")
                     .accessibilityHint("Opens Premium plans")
                 }
             }
@@ -376,27 +383,34 @@ struct TrackRow<Accessory: View>: View {
     /// Sets the number in serif, in this colour — a locked pack's contents
     /// page. Nil keeps the plain grey track number.
     var numeralTint: Color? = nil
+    /// The puzzle's grid, drawn small in place of the number — a pack's rows,
+    /// so the list reads as crosswords (2026-10-25). Journeys keep numbers:
+    /// their order is the point.
+    var grid: [String]? = nil
     @ViewBuilder let accessory: Accessory
 
     /// Where a list of these starts its dividers: under the title, past the
     /// number column.
     static var dividerInset: CGFloat { Theme.Spacing.m + 28 + Theme.Spacing.m }
+    /// The same, past the grid column.
+    static var gridDividerInset: CGFloat { Theme.Spacing.m + gridSide + Theme.Spacing.m }
+    static var gridSide: CGFloat { 44 }
 
     var body: some View {
         HStack(spacing: Theme.Spacing.m) {
-            Group {
-                if let numeralTint {
-                    Text("\(number)")
-                        .font(.system(.title2, design: .serif, weight: .semibold))
-                        .foregroundStyle(numeralTint)
-                } else {
-                    Text("\(number)")
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(.secondary)
-                }
+            if let grid {
+                // The pack's colour on a pale wash, as every icon square in the
+                // app is set; the grid's own cells in it, blocks left out.
+                let tint = numeralTint ?? Theme.accent
+                // No gap past a Mini: at 32pt a 15×15's cells are 2pt, and a
+                // 1pt gap left a faint scatter of dots instead of a grid.
+                GridThumbnail(grid: grid, tint: tint, gap: grid.count > 9 ? 0 : 1, cropsToContent: true)
+                    .padding(6)
+                    .frame(width: Self.gridSide, height: Self.gridSide)
+                    .background(tint.opacity(0.14), in: .rect(cornerRadius: 10, style: .continuous))
+            } else {
+                numeral
             }
-            .monospacedDigit()
-            .frame(width: 28)
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
                     .font(.headline)
@@ -412,5 +426,21 @@ struct TrackRow<Accessory: View>: View {
         .cardRowPadding()
         .frame(maxWidth: .infinity, alignment: .leading)
         .contentShape(.rect)
+    }
+
+    private var numeral: some View {
+        Group {
+            if let numeralTint {
+                Text("\(number)")
+                    .font(.system(.title2, design: .serif, weight: .semibold))
+                    .foregroundStyle(numeralTint)
+            } else {
+                Text("\(number)")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .monospacedDigit()
+        .frame(width: 28)
     }
 }

@@ -20,6 +20,10 @@ struct CollectionPageCover<Mark: View, Footer: View>: View {
     let caption: String
     let fill: Color
     var isLocked = false
+    /// The cover's height under the bar. 200 since 2026-10-25 (about 300 with
+    /// the bar): at 290 the cover took nearly half a 17e and the contents
+    /// started under the pinned offer.
+    var minHeight: CGFloat = 200
     /// Drawn in the bottom-trailing corner, behind the type.
     @ViewBuilder var mark: Mark
     @ViewBuilder var footer: Footer
@@ -45,8 +49,7 @@ struct CollectionPageCover<Mark: View, Footer: View>: View {
         .padding(.horizontal, Theme.Spacing.m + Theme.Spacing.xs)
         .padding(.top, Theme.Spacing.xl)
         .padding(.bottom, 28)
-        // 290 under the bar, about 388 with it — the canvas's cover.
-        .frame(maxWidth: .infinity, minHeight: 290, alignment: .bottom)
+        .frame(maxWidth: .infinity, minHeight: minHeight, alignment: .bottom)
         .background(alignment: .bottomTrailing) {
             mark
                 .padding(.trailing, Theme.Spacing.m + Theme.Spacing.xs)
