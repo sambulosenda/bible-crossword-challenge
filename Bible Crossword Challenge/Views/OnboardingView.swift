@@ -116,7 +116,13 @@ struct OnboardingView: View {
 
             TabView(selection: $page) {
                 firstSolvePage.tag(1)
-                celebrationPage.tag(2)
+                // Solvers only (2026-10-25): a skipper's version — a tick,
+                // "You're all set." and two library counts — celebrated
+                // nothing, and was one more tap between a hesitant player and
+                // the app. Out of the pager too, so a swipe can't reach it.
+                if solved {
+                    celebrationPage.tag(2)
+                }
                 if asksReminder {
                     reminderAskPage.tag(reminderPage)
                 }
@@ -433,27 +439,19 @@ struct OnboardingView: View {
     /// high point directly under the offer, which used to arrive off the back
     /// of a keyboard.
     ///
-    /// A skipper gets the same page with honest content: no "well done" for a
-    /// clue they didn't solve, and library tiles instead of a solve time.
+    /// Solvers only — a skipper goes straight on (see the pager in `body`).
     private var celebrationPage: some View {
         let active = page == 2
         return pageFrame(spacing: Theme.Spacing.xl, alignment: .upperThird) {
             // The mark is the grid the player just filled (see CelebrationBadge:
-            // a tick says "succeeded", the grid says what). Skippers get the
-            // tick — there is nothing of theirs to show. No gold rim here: gold
-            // is the offer bar's signal on the next page.
+            // a tick says "succeeded", the grid says what). No gold rim here:
+            // gold is the offer bar's signal on the next page.
             //
             // Ink, not the accent: a saturated system-blue disc was the
             // loudest object in the flow, on a page of warm paper and serif.
             // Ink is the colour of the one button on every page, so the badge
             // reads as part of the same object family rather than a stock icon.
-            Group {
-                if solved {
-                    CelebrationBadge(grid: ["GRACE", "..R..", "..K.."], confetti: "puzzle_complete", tint: Theme.ink, markTint: Theme.onInk, size: 96, showsRim: false)
-                } else {
-                    CelebrationBadge(systemImage: "checkmark", tint: Theme.ink, markTint: Theme.onInk, size: 96, showsRim: false)
-                }
-            }
+            CelebrationBadge(grid: ["GRACE", "..R..", "..K.."], confetti: "puzzle_complete", tint: Theme.ink, markTint: Theme.onInk, size: 96, showsRim: false)
             .entrance(active: active, delay: 0.05, reduceMotion: reduceMotion)
 
             // No kicker: "First solve" over "Well done" said the same thing
@@ -474,9 +472,7 @@ struct OnboardingView: View {
     private var celebrationHeadline: String {
         let trimmed = profile.username.trimmingCharacters(in: .whitespaces)
         let suffix = trimmed.isEmpty || trimmed == ChallengeService.placeholderName ? "" : ", \(trimmed)"
-        return solved
-            ? "Well done\(suffix)."
-            : "You're all set\(suffix)."
+        return "Well done\(suffix)."
     }
 
     /// Two tiles, Duolingo's stats-moment pattern in this app's own units.
@@ -937,8 +933,11 @@ struct OnboardingView: View {
     // MARK: - Flow
 
     private func advance() {
-        // Past the reminder page's tag when this run doesn't show it.
-        let next = page + 1 == reminderPage && !asksReminder ? lastPage : page + 1
+        var next = page + 1
+        // Past the celebration for a skipper, and past the reminder page's
+        // tag when this run doesn't show it.
+        if next == 2 && !solved { next += 1 }
+        if next == reminderPage && !asksReminder { next = lastPage }
         withAnimation { page = next }
     }
 
