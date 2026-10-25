@@ -23,6 +23,24 @@ struct CrosswordGameView: View {
     let profile: PlayerProfile
     let entrySource: String
 
+    var body: some View {
+        CrosswordGameLoader(puzzle: puzzle, profile: profile, entrySource: entrySource)
+            // One model per puzzle. A puzzle link (notification, challenge,
+            // "next in pack") replaces the stack [A] with [B] at the same
+            // depth, and SwiftUI kept this view, handing it B while the model
+            // built for A stayed: B's title over A's grid, and A's letters
+            // saved into B's record (2026-10-25). A new id is a new view, so
+            // A's screen disappears and B's appears with its own model.
+            .id(puzzle.id)
+    }
+}
+
+/// Builds the model once for the puzzle it was created with.
+private struct CrosswordGameLoader: View {
+    let puzzle: Puzzle
+    let profile: PlayerProfile
+    let entrySource: String
+
     @State private var vm: GameViewModel?
 
     var body: some View {
