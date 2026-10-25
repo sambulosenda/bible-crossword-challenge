@@ -522,6 +522,24 @@ enum Achievements {
         Achievement(id: "pilgrim", title: "Pilgrim", detail: "Complete 3 Journeys", symbol: "signpost.right.fill", goal: .questsCompleted(3)),
     ]
 
+    /// The counted badge two or fewer short, nearest first — never a time
+    /// goal, which is met or not. Today names it; the Badges screen leads
+    /// with it, so the two always point at the same badge.
+    static func withinReach(for p: PlayerProfile) -> Achievement? {
+        all.filter { !$0.isUnlocked(by: p) }
+            .compactMap { badge in badge.remaining(for: p).map { (badge, $0) } }
+            .filter { $0.1 <= 2 }
+            .min { $0.1 < $1.1 }?
+            .0
+    }
+
+    /// The badge to name as next: the one within reach, else the first not
+    /// yet earned in the list's order. Badges and Profile both use it, so
+    /// neither can name a different badge than Today does.
+    static func next(for p: PlayerProfile) -> Achievement? {
+        withinReach(for: p) ?? all.first { !$0.isUnlocked(by: p) }
+    }
+
     /// Returns achievement IDs newly satisfied that aren't already recorded.
     static func newlyUnlocked(for p: PlayerProfile) -> [Achievement] {
         let already = Set(p.unlockedAchievementIDs)

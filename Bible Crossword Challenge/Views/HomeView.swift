@@ -197,12 +197,7 @@ struct HomeView: View {
     /// never a time goal, which is met or not and so is never "close".
     private var badgeWithinReach: Achievement? {
         guard !Calendar.current.isDate(profile.createdAt, inSameDayAs: currentDay) else { return nil }
-        return Achievements.all
-            .filter { !$0.isUnlocked(by: profile) }
-            .compactMap { badge in badge.remaining(for: profile).map { (badge, $0) } }
-            .filter { $0.1 <= 2 }
-            .min { $0.1 < $1.1 }?
-            .0
+        return Achievements.withinReach(for: profile)
     }
 
     // MARK: - Comeback
@@ -1573,7 +1568,9 @@ private struct CompactPuzzleRow: View {
             }
             return "Played before · go again"
         case .play(.inProgress):
-            return "In progress · \(puzzle.size)×\(puzzle.size)"
+            // The size went (2026-10-25): "In progress · 7×7" wrapped on a
+            // 17e, and the row's kind already says which grid it is.
+            return "In progress"
         case .play:
             return billing.blurb(puzzle)
         }

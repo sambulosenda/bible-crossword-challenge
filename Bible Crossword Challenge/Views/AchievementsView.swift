@@ -26,10 +26,10 @@ struct AchievementsView: View {
         Achievements.all.filter { $0.isUnlocked(by: profile) }
     }
 
-    /// The same badge Today's row names: the first not yet earned, in the
-    /// list's own order.
+    /// The badge Today's row names when one is within reach, so the two
+    /// agree; otherwise the first not yet earned, in the list's own order.
     private var next: Achievement? {
-        Achievements.all.first { !$0.isUnlocked(by: profile) }
+        Achievements.next(for: profile)
     }
 
     private var stillToEarn: [Achievement] {

@@ -312,7 +312,7 @@ struct ProfileView: View {
     }
 
     private var badgesSubtitle: String {
-        let next = Achievements.all.first { !$0.isUnlocked(by: profile) }
+        let next = Achievements.next(for: profile)
         guard unlockedCount > 0 else {
             return next.map { "\($0.title) · \($0.detail)" } ?? "Solve puzzles to earn your first badge"
         }
