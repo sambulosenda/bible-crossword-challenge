@@ -904,9 +904,9 @@ struct CompletionView: View {
                     .font(.headline)
                 Spacer(minLength: Theme.Spacing.s)
                 if let streakNote {
-                    Text(streakNote)
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                    Text(streakNote.text)
+                        .font(streakNote.isMilestone ? .subheadline.weight(.semibold) : .subheadline)
+                        .foregroundStyle(streakNote.isMilestone ? AnyShapeStyle(FeatureTint.streak) : AnyShapeStyle(.secondary))
                 }
             }
 
@@ -916,11 +916,44 @@ struct CompletionView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 
-    /// "Your longest yet" when today's run matches the best — the one thing
-    /// about a streak worth saying out loud at the moment it grows.
-    private var streakNote: String? {
-        guard streak > 1, !isComeback, streak >= profile.bestStreak else { return nil }
-        return "Your longest yet"
+    /// The one thing about the run worth saying today, most notable first:
+    /// a milestone, the week's goal just met, "Your longest yet", or how the
+    /// week stands against its goal.
+    ///
+    /// The weekly goal (2026-10-25) is the forgiving half of the habit: five
+    /// days in seven, resetting with the week, so a missed day costs the
+    /// streak but not the week. Milestones mark the days a run is worth
+    /// stopping for, in the streak's own orange.
+    private var streakNote: (text: String, isMilestone: Bool)? {
+        if !isComeback, let milestone = Self.milestoneLine(streak) {
+            return (milestone, true)
+        }
+        let thisWeek = completedWeekdays.count
+        if thisWeek == Self.weeklyGoal {
+            return ("This week's goal met", true)
+        }
+        if streak > 1, !isComeback, streak >= profile.bestStreak {
+            return ("Your longest yet", false)
+        }
+        guard thisWeek > 0 else { return nil }
+        return thisWeek < Self.weeklyGoal
+            ? ("\(thisWeek) of \(Self.weeklyGoal) this week", false)
+            : ("\(thisWeek) days this week", false)
+    }
+
+    /// Days a week the habit asks for.
+    static let weeklyGoal = 5
+
+    /// The words for a streak milestone, or nil on an ordinary day.
+    static func milestoneLine(_ streak: Int) -> String? {
+        switch streak {
+        case 7: "A full week"
+        case 14: "Two weeks running"
+        case 30: "A month in the Word"
+        case 50, 100, 200, 300: "\(streak) days"
+        case 365: "A whole year"
+        default: nil
+        }
     }
 
     /// "1-day streak" is a true but bleak thing to show someone who just lost
@@ -938,6 +971,9 @@ struct CompletionView: View {
         }
         let days = completedWeekdays.count
         parts.append("\(days) \(days == 1 ? "day" : "days") completed this week")
+        if let note = streakNote?.text, !note.hasSuffix("this week") {
+            parts.append(note)
+        }
         return parts.joined(separator: ". ")
     }
 
