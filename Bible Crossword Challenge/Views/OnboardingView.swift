@@ -561,19 +561,36 @@ struct OnboardingView: View {
             .multilineTextAlignment(.center)
             .entrance(active: active, delay: 0.14, reduceMotion: reduceMotion)
 
-            NotificationPreviewCard()
-                .accessibilityElement(children: .combine)
-                .accessibilityLabel("Example reminder: Today's puzzle is ready.")
-                .entrance(active: active, delay: 0.24, reduceMotion: reduceMotion)
+            VStack(spacing: Theme.Spacing.m) {
+                NotificationPreviewCard()
+                    .accessibilityElement(children: .combine)
+                    .accessibilityLabel("Example reminder: Today's puzzle is ready.")
+                // The time, picked here rather than taken as given (2026-10-25):
+                // a reminder at the wrong hour is the one most often turned
+                // off. As the return-day sheet sets it.
+                HStack {
+                    Text("Every day at")
+                        .font(.body)
+                    Spacer()
+                    DatePicker("Reminder time", selection: reminderTime, displayedComponents: .hourAndMinute)
+                        .labelsHidden()
+                }
+                .padding(.horizontal, Theme.Spacing.m)
+                .padding(.vertical, Theme.Spacing.s)
+                .elevatedCard()
+            }
+            .entrance(active: active, delay: 0.24, reduceMotion: reduceMotion)
         }
         // A first sitting, so "now" is the hour this player plays — see
         // `seedSuggestionIfUnset`.
         .onAppear { ReminderTime.seedSuggestionIfUnset() }
     }
 
-    private var reminderTimeText: String {
-        ReminderTime.date(fromMinutes: reminderMinutes)
-            .formatted(date: .omitted, time: .shortened)
+    private var reminderTime: Binding<Date> {
+        Binding(
+            get: { ReminderTime.date(fromMinutes: reminderMinutes) },
+            set: { reminderMinutes = ReminderTime.minutes(from: $0) }
+        )
     }
 
     private var premiumPage: some View {
@@ -694,7 +711,7 @@ struct OnboardingView: View {
                         if reminderWorking {
                             ProgressView().tint(Theme.onInk)
                         } else {
-                            Text("Remind me at \(reminderTimeText)")
+                            Text("Remind me")
                         }
                     }
                 }

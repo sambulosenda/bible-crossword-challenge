@@ -735,16 +735,7 @@ struct HomeView: View {
             return pinned
         }
         #endif
-        let pool = puzzleProvider.puzzles.filter { $0.id != daily?.id }
-        guard !pool.isEmpty else { return nil }
-        // Counted from noon, not from `currentDay` itself: at local midnight
-        // in BST `ordinality(of: .day, in: .era)` still returns the previous
-        // day's number, so midnight would shift the whole rotation back a
-        // day. Noon is inside the right day in every time zone, and matches
-        // what `Date()` gave for most of the day before this moved off it.
-        let noon = calendar.date(byAdding: .hour, value: 12, to: currentDay) ?? currentDay
-        let day = calendar.ordinality(of: .day, in: .era, for: noon) ?? 0
-        return pool[((day % pool.count) + pool.count) % pool.count]
+        return puzzleProvider.verseOfTheDay(on: currentDay, excluding: daily?.id, calendar: calendar)
     }
 }
 

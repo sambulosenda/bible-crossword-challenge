@@ -141,6 +141,34 @@ struct ReminderCopyTests {
         #expect(copy.title == "Today's puzzle is ready")
     }
 
+    /// An ordinary day quotes the day's verse when there is one, and falls
+    /// back to the rotation when there isn't.
+    @Test func ordinaryDayQuotesTheVerse() {
+        let verse = "“I can do all things through Christ who gives me strength.” — Philippians 4:13"
+        let withVerse = NotificationService.reminderCopy(
+            dayOffset: 2, streak: 0, completedToday: false, projectedLapse: nil, verse: verse
+        )
+        #expect(withVerse.title == "Today's puzzle is ready")
+        #expect(withVerse.body == verse)
+        let without = NotificationService.reminderCopy(
+            dayOffset: 2, streak: 0, completedToday: false, projectedLapse: nil
+        )
+        #expect(without.body != verse)
+    }
+
+    /// The streak-saver and win-back days keep their own words; the verse only
+    /// replaces the generic rotation.
+    @Test func verseNeverReplacesStreakOrWinBack() {
+        let streakDay = NotificationService.reminderCopy(
+            dayOffset: 0, streak: 4, completedToday: false, projectedLapse: 1, verse: "v"
+        )
+        #expect(streakDay.body != "v")
+        let winBackDay = NotificationService.reminderCopy(
+            dayOffset: 0, streak: 0, completedToday: false, projectedLapse: 3, verse: "v"
+        )
+        #expect(winBackDay.body != "v")
+    }
+
     /// No streak means no streak copy, whatever the day.
     @Test func noStreakNeverClaimsOne() {
         for offset in 0...2 {

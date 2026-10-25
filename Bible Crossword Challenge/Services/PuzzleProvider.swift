@@ -159,6 +159,22 @@ final class PuzzleProvider {
         }
     }
 
+    /// The day's inspirational verse: a puzzle's verse, rotated by calendar
+    /// day, from any puzzle but that day's daily — so it never spoils the
+    /// daily's answers. Shared by Today's header and the daily reminder, so
+    /// the notification quotes the verse the player then finds on Today.
+    func verseOfTheDay(on day: Date, excluding dailyID: String?, calendar: Calendar = .current) -> Puzzle? {
+        let pool = puzzles.filter { $0.id != dailyID }
+        guard !pool.isEmpty else { return nil }
+        // Counted from noon, not from the day's start: at local midnight in
+        // BST `ordinality(of: .day, in: .era)` still returns the previous
+        // day's number, so midnight would shift the whole rotation back a
+        // day. Noon is inside the right day in every time zone.
+        let noon = calendar.date(byAdding: .hour, value: 12, to: calendar.startOfDay(for: day)) ?? day
+        let index = calendar.ordinality(of: .day, in: .era, for: noon) ?? 0
+        return pool[((index % pool.count) + pool.count) % pool.count]
+    }
+
     /// Deterministic daily puzzle: rotates through the bundled set by calendar day.
     func dailyPuzzle(for date: Date = RotationClock.now, calendar: Calendar = .current) -> Puzzle? {
         rotated(puzzles, for: date, calendar: calendar)

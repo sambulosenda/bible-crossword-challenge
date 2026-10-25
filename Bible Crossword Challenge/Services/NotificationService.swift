@@ -253,7 +253,8 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
             let projectedLapse = daysSinceLastSolve.map { $0 + dayOffset }
             let copy = Self.reminderCopy(
                 dayOffset: dayOffset, streak: streak,
-                completedToday: completedToday, projectedLapse: projectedLapse
+                completedToday: completedToday, projectedLapse: projectedLapse,
+                verse: Self.verseLine(on: day, calendar: calendar)
             )
             content.title = copy.title
             content.body = copy.body
@@ -337,13 +338,17 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
     /// Targets tonight when today is still unsolved, or tomorrow night right
     /// after a solve — every reschedule clears and recomputes it, so it only
     /// fires if the day genuinely ends with the streak on the line. Skipped
-    /// when there's no streak or the regular reminder already fires at 9 PM
-    /// or later.
+    /// for streaks under three days, or when the regular reminder already
+    /// fires at 9 PM or later.
     private func scheduleStreakRiskNudge(
         minutes: Int, streak: Int, completedToday: Bool, freezes: Int,
         calendar: Calendar, now: Date
     ) async {
-        guard streak > 0, minutes < Self.streakRiskMinutes else { return }
+        // From three days up (2026-10-25). A one- or two-day streak already
+        // gets the day's reminder in streak-saver words; a second
+        // notification the same evening, for a run that young, read as
+        // nagging rather than as something worth protecting.
+        guard streak >= 3, minutes < Self.streakRiskMinutes else { return }
         guard let day = calendar.date(
             byAdding: .day, value: completedToday ? 1 : 0, to: calendar.startOfDay(for: now)
         ), let fireDate = calendar.date(
@@ -399,8 +404,15 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
     /// `passive` asks for the Passive interruption level and no sound: true
     /// for win-back copy, which is addressed to someone who has already been
     /// ignoring us.
+    ///
+    /// `verse`, when given, is the day's verse of the day (never the daily's
+    /// own, which would spoil it), and replaces the rotating prompt on an
+    /// ordinary day (2026-10-25): after a week "Today's puzzle is ready" has
+    /// stopped carrying information, and a verse is a reason to open the app
+    /// in itself.
     static func reminderCopy(
-        dayOffset: Int, streak: Int, completedToday: Bool, projectedLapse: Int?
+        dayOffset: Int, streak: Int, completedToday: Bool, projectedLapse: Int?,
+        verse: String? = nil
     ) -> (title: String, body: String, passive: Bool) {
         let streakSaveOffset = completedToday ? 1 : 0
         if streak > 0 && dayOffset == streakSaveOffset {
@@ -420,7 +432,17 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
         if let projectedLapse, let winBack = winBack(lapseDays: projectedLapse) {
             return (winBack.title, winBack.body, passive: true)
         }
-        return ("Today's puzzle is ready", prompts[dayOffset % prompts.count], passive: false)
+        return ("Today's puzzle is ready", verse ?? prompts[dayOffset % prompts.count], passive: false)
+    }
+
+    /// "“I can do all things…” — Philippians 4:13", the verse Today shows on
+    /// `day`.
+    private static func verseLine(on day: Date, calendar: Calendar) -> String? {
+        let provider = PuzzleProvider.shared
+        guard let verse = provider.verseOfTheDay(
+            on: day, excluding: provider.dailyPuzzle(for: day, calendar: calendar)?.id, calendar: calendar
+        ), !verse.verse.isEmpty else { return nil }
+        return "“\(verse.verse)” — \(verse.reference)"
     }
 
     /// Copy for the day a lapse reaches three days, a week, or a fortnight —
