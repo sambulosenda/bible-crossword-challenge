@@ -66,12 +66,20 @@ struct CardColumns<Lead: View, More: View>: View {
         sizeClass == .regular && size.width > size.height
     }
 
+    /// The navigation bar's own side margin, so a card's edge lines up with
+    /// the large title over it: 16pt compact, 20pt regular. At a flat 16 the
+    /// cards on open iPhone Duo started 4pt left of "Today" (2026-10-25).
+    private var sideMargin: CGFloat {
+        horizontalSizeClass == .regular ? Theme.Spacing.m + Theme.Spacing.xs : Theme.Spacing.m
+    }
+
     /// One scrolling column of cards at the readable width. `width` is the
     /// measured window width when the column stands alone, `nil` in a split.
     private func column<Content: View>(width: CGFloat?, @ViewBuilder _ content: () -> Content) -> some View {
         ScrollView {
             VStack(alignment: alignment, spacing: Theme.Spacing.l, content: content)
-                .padding(Theme.Spacing.m)
+                .padding(.vertical, Theme.Spacing.m)
+                .padding(.horizontal, sideMargin)
                 .frame(maxWidth: maxWidth)
                 .modifier(ColumnWidth(width: width))
         }
