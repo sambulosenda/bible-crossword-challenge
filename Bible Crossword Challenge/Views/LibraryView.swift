@@ -371,6 +371,11 @@ struct LibraryView: View {
                     // beside the facts it goes with.
                     metaLine(puzzle, status: status, record: record)
                 }
+                // The separator starts under the title, as in a system list.
+                // Left to the list it found the first text in the row — the
+                // book's abbreviation inside the cover — so every rule began
+                // at a different point ("Ps", "1 Co"; 2026-10-25).
+                .alignmentGuide(.listRowSeparatorLeading) { $0[.leading] }
                 Spacer(minLength: 0)
                 if status == .completed {
                     Image(systemName: "checkmark.circle.fill")
@@ -577,6 +582,8 @@ struct LibraryView: View {
                         .font(.subheadline)
                         .foregroundStyle(.tertiary)
                 }
+                // Under the title, as on a playable row (see `row`).
+                .alignmentGuide(.listRowSeparatorLeading) { $0[.leading] }
                 Spacer(minLength: 0)
                 Image(systemName: "lock.fill")
                     .font(.footnote)
