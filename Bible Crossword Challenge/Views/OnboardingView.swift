@@ -2,10 +2,12 @@
 //  OnboardingView.swift
 //  Bible Crossword Challenge
 //
-//  First-run experience. Four pages — intro, the first solve, a payoff, the
-//  offer:
+//  First-run experience. It opens on the first solve, under the welcome
+//  headline (design canvas, 2026-10-25): a player is solving on screen one.
+//  The welcome page that came before it went — finishing a puzzle on day 0 is
+//  the strongest return signal the app has, and a page of brand ahead of it
+//  was one more tap between a new player and the puzzle.
 //
-//    0  Welcome     the brand, in the app's own vocabulary (a crossword)
 //    1  First solve two letters, then a verse — the whole product in ten seconds
 //    2  Celebration the payoff, with their own numbers — the emotional peak
 //                   the offer used to arrive without
@@ -55,7 +57,9 @@ struct OnboardingView: View {
     /// meets before it should too, or the first screen teaches that keys
     /// don't work here.
     @FocusState private var solveFocused: Bool
-    @State private var page = 0
+    /// Starts on the first solve: there is no page 0 any more. The tags keep
+    /// their numbers so `step_index` in analytics stays comparable.
+    @State private var page = 1
     @State private var didLogPaywallOpen = false
     @State private var didLogFirstSolve = false
 
@@ -99,13 +103,9 @@ struct OnboardingView: View {
     private let reminderPage = 3
     private let lastPage = 4
 
-    /// How many of the pages are setup steps. The celebration and the offer
-    /// both sit past the end of the bar — one is payoff, the other a bonus,
-    /// and neither asks the player for anything.
-    private let stepCount = 2
-
-    /// Analytics labels for the four pages, indexed by page number. Labels are
-    /// stable across the name page's removal; `step_index` for celebration and
+    /// Analytics labels, indexed by page number. "welcome" is no longer
+    /// logged (2026-10-25): funnels start at first_solve. Labels are stable
+    /// across the name page's removal; `step_index` for celebration and
     /// premium dropped by one on 2026-10-24 and premium's rose by one again
     /// with the reminder page on 2026-10-25, so funnels should key on the name.
     private let stepNames = ["welcome", "first_solve", "celebration", "reminder", "premium"]
@@ -115,7 +115,6 @@ struct OnboardingView: View {
             progressBar
 
             TabView(selection: $page) {
-                welcomePage.tag(0)
                 firstSolvePage.tag(1)
                 celebrationPage.tag(2)
                 if asksReminder {
@@ -199,19 +198,11 @@ struct OnboardingView: View {
         .ignoresSafeArea()
     }
 
-    /// Two hairline segments instead of dots: it reads as progress rather
-    /// than decoration, and it tells the player up front how short this is.
-    /// Hairline and hierarchical grey, not 4pt ink: solid black bars were the
-    /// heaviest thing at the top of every page, above the headline they sit
-    /// over.
-    ///
-    /// Two, not four — neither the celebration nor the premium page is a
-    /// step. The celebration asks nothing (it's the payoff, and it arrives
-    /// with the bar already full, which is the point). Filling a final segment
-    /// on the offer framed paying as the way to finish setting the app up,
-    /// which is both untrue (the free daily is the whole product for most
-    /// players) and the kind of bait-and-switch that earns a one-star review.
-    /// On the offer the segments give way to `offerBar`.
+    /// The bar over the pages: on the solve page, a quiet Skip on the
+    /// trailing edge (2026-10-25) — it sat between the grid and the keys,
+    /// where a thumb typing the answer could catch it. On the offer, the ✕
+    /// and Restore of `offerBar`. Elsewhere nothing: one step needs no
+    /// progress segments.
     private var progressBar: some View {
         let onOffer = page == lastPage
         return Group {
@@ -219,28 +210,26 @@ struct OnboardingView: View {
                 offerBar
                     .transition(.opacity)
             } else {
-                HStack(spacing: 5) {
-                    ForEach(0..<stepCount, id: \.self) { i in
-                        Capsule()
-                            .fill(i <= page ? AnyShapeStyle(HierarchicalShapeStyle.secondary)
-                                            : AnyShapeStyle(HierarchicalShapeStyle.quaternary))
-                            .frame(height: 2)
+                HStack {
+                    Spacer(minLength: 0)
+                    if page == 1 && !solved {
+                        // Never trap a player on a puzzle; quiet, so it
+                        // doesn't compete with the clue.
+                        Button("Skip") { advance() }
+                            .font(.body.weight(.semibold))
+                            .tint(.secondary)
+                            .frame(minHeight: 44)
+                            .transition(.opacity)
                     }
                 }
-                .transition(.opacity)
+                .frame(height: 44)
             }
         }
         .padding(.horizontal, onOffer ? Theme.Spacing.m : Theme.Spacing.l)
         .padding(.top, Theme.Spacing.s)
         .animation(.spring(duration: 0.35), value: page)
-        .accessibilityElement(children: onOffer ? .contain : .ignore)
-        .accessibilityLabel(
-            onOffer
-                ? "Setup complete. Premium offer, optional."
-                : page >= stepCount
-                    ? "Setup complete."
-                    : "Step \(page + 1) of \(stepCount)"
-        )
+        .animation(.easeInOut, value: solved)
+        .accessibilityElement(children: .contain)
     }
 
     /// The offer page's bar, as the paywall sheet's (design canvas,
@@ -286,33 +275,27 @@ struct OnboardingView: View {
 
     // MARK: - Pages
 
-    private var welcomePage: some View {
-        let active = page == 0
-        return pageFrame(spacing: Theme.Spacing.xl, alignment: .upperThird) {
-            MiniCrossword(layout: MiniCrossword.faithHopeLove)
-                .padding(.bottom, Theme.Spacing.s)
-
-            VStack(spacing: Theme.Spacing.m) {
-                Text("Bible Crossword")
-                    .kicker()
-                    .entrance(active: active, delay: 0.30, reduceMotion: reduceMotion)
-                Text("Know the Word,\none clue at a time.")
-                    .font(.scripture(.largeTitle, weight: .semibold))
-                    .multilineTextAlignment(.center)
-                    .entrance(active: active, delay: 0.36, reduceMotion: reduceMotion)
-                Text("A fresh Scripture crossword every day — with the verse behind every answer.")
-                    .font(.body)
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, Theme.Spacing.s)
-                    .entrance(active: active, delay: 0.44, reduceMotion: reduceMotion)
-            }
-        }
-    }
-
     private var firstSolvePage: some View {
         let active = page == 1
         return pageFrame(spacing: Theme.Spacing.l) {
+            // The welcome, on the page where the playing starts (2026-10-25):
+            // what the app is, in a line, over the clue that shows it. It
+            // folds away once the word is solved — the verse needs the room,
+            // and by then the puzzle has said it better.
+            if !solved {
+                VStack(alignment: .leading, spacing: Theme.Spacing.s) {
+                    Text("Bible Crossword")
+                        .kicker()
+                    Text("Know the Word,\none clue at a time.")
+                        .font(.scripture(.largeTitle, weight: .semibold))
+                        .fixedSize(horizontal: false, vertical: true)
+                        .accessibilityAddTraits(.isHeader)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .entrance(active: active, delay: 0, reduceMotion: reduceMotion)
+                .transition(.opacity)
+            }
+
             // Two spacers to the one below the grid: the clue and grid sit in
             // the lower part of the space above the keypad, near the thumb
             // and the keys they answer to, instead of floating mid-screen
@@ -321,7 +304,7 @@ struct OnboardingView: View {
             Spacer(minLength: 0)
 
             VStack(spacing: Theme.Spacing.xs) {
-                Text(solved ? "1 Down · Solved" : "1 Down")
+                Text(solved ? "1 Down · Solved" : "1 Down · try it")
                     .kicker()
                 Text("Noah built one to save his family")
                     .font(.scripture(.title2, weight: .semibold))
@@ -405,9 +388,14 @@ struct OnboardingView: View {
             return .handled
         }
         // Focus follows the page, not `onAppear`: the paged TabView builds
-        // every page up front, so this view appears while page 0 is showing
-        // and an appear-time write would land on an unsettled tree anyway.
+        // every page up front, so an appear-time write would land on an
+        // unsettled tree. The flow opens on this page, so it takes focus
+        // once the tree has settled, and again on a swipe back.
         .onChange(of: page) { _, new in solveFocused = (new == 1) }
+        .task {
+            try? await Task.sleep(for: .milliseconds(400))
+            if page == 1 { solveFocused = true }
+        }
     }
 
     /// The payoff. Same shape as the verse card on the completion screen, so a
@@ -677,21 +665,11 @@ struct OnboardingView: View {
     private var controls: some View {
         VStack(spacing: Theme.Spacing.s) {
             switch page {
-            case 0:
-                Button("Get started") { advance() }
-                    .buttonStyle(.pillProminent)
-
             case 1:
+                // Skip is in the bar above while unsolved — see `progressBar`.
                 if solved {
                     Button("Continue") { advance() }
                         .buttonStyle(.pillProminent)
-                } else {
-                    // Never trap a player on a puzzle. The quiet treatment keeps
-                    // the nudge without the wall.
-                    Button("Skip for now") { advance() }
-                        .font(.subheadline.weight(.semibold))
-                        .tint(.secondary)
-                        .padding(.vertical, Theme.Spacing.m)
                 }
 
             case lastPage:
@@ -718,7 +696,7 @@ struct OnboardingView: View {
                 .buttonStyle(.pillProminent)
                 .disabled(reminderWorking)
                 .accessibilityHint("Asks for notification permission")
-                // As quiet as "Skip for now": declining costs nothing, and the
+                // As quiet as the solve page's Skip: declining costs nothing, and the
                 // offer is the next page either way.
                 Button("Not now") {
                     analytics.log(.reminderDeclined(source: ReminderAsk.Surface.onboarding.rawValue))
@@ -816,7 +794,7 @@ struct OnboardingView: View {
         // promise the app breaks.
         // The vertical padding is the tap target: bare subheadline text is
         // ~20pt tall, and this is an exit — the one control that must never
-        // take two tries. Same treatment as "Skip for now".
+        // take two tries. Same treatment as the solve page's Skip.
         Button("Not now, play today's free puzzle") { finish(exit: .freeLink) }
             .font(.subheadline.weight(.semibold))
             .tint(.secondary)
