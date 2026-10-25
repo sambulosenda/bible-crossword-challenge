@@ -107,7 +107,10 @@ struct ClueListView: View {
                 centreActive(proxy, animated: true)
             }
         }
-        .background(Theme.background)
+        // Beside the grid, the game's own ground: on paper the panel met the
+        // board's system grey at the seam and read as a second screen (open
+        // iPhone Duo, 2026-10-25). The sheet keeps the paper.
+        .background(embedded ? Theme.gameCanvas : Theme.background)
     }
 
     private func centreActive(_ proxy: ScrollViewProxy, animated: Bool) {
