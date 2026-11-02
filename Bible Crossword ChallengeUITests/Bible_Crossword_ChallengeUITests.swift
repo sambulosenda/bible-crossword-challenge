@@ -92,6 +92,55 @@ final class Bible_Crossword_ChallengeUITests: XCTestCase {
         XCTAssertEqual(events.count(of: "pack_opened"), 1, "\(events)")
     }
 
+    @MainActor
+    func testBeginnerPathCompletesSevenStepsAndLeavesToday() throws {
+        let app = launch(extra: ["-uiAutoSolve"])
+        let start = app.buttons["beginnerPathPlay"]
+        XCTAssertTrue(start.waitForExistence(timeout: 20))
+        start.tap()
+        for step in 1...7 {
+            let close = app.buttons["Close"]
+            XCTAssertTrue(close.waitForExistence(timeout: 15), "No completion for step \(step)")
+            if step < 7 {
+                let next = app.buttons["completionNextPuzzle"]
+                XCTAssertTrue(next.waitForExistence(timeout: 10))
+                next.tap()
+                // Wait for the next solve event, not a stale completion button.
+                let expected = step + 1
+                let predicate = NSPredicate { _, _ in
+                    self.loggedEvents().count(of: "quest_step_completed") >= expected
+                }
+                expectation(for: predicate, evaluatedWith: nil)
+                waitForExpectations(timeout: 20)
+            } else {
+                XCTAssertFalse(app.buttons["completionNextPuzzle"].exists)
+                close.tap()
+            }
+        }
+        XCTAssertFalse(app.buttons["beginnerPathPlay"].exists)
+        let events = loggedEvents()
+        XCTAssertEqual(events.count(of: "quest_step_completed"), 7)
+        XCTAssertEqual(events.count(of: "quest_completed"), 1)
+        XCTAssertEqual(events.count(of: "completion_chain_tapped"), 6)
+    }
+
+    @MainActor
+    func testBeginnerPathCanBeLeftAndResumedWithoutCompletingAStep() throws {
+        let app = launch()
+        let start = app.buttons["beginnerPathPlay"]
+        XCTAssertTrue(start.waitForExistence(timeout: 20))
+        start.tap()
+        XCTAssertTrue(app.buttons["Q"].waitForExistence(timeout: 10))
+        app.buttons["Q"].tap()
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        XCTAssertTrue(start.waitForExistence(timeout: 10))
+        XCTAssertTrue(start.label.contains("Continue"))
+        start.tap()
+        XCTAssertTrue(app.buttons["Q"].waitForExistence(timeout: 15), app.debugDescription)
+        XCTAssertEqual(loggedEvents().count(of: "daily_puzzle_started"), 2)
+        XCTAssertEqual(loggedEvents().count(of: "quest_step_completed"), 0)
+    }
+
     // MARK: - Helpers
 
     @MainActor

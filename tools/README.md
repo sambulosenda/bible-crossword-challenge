@@ -107,8 +107,10 @@ Two consequences worth knowing:
 
 ## Daily rotation
 `PuzzleProvider.dailyPuzzle(for:)` shows `puzzles[(daysSinceEpoch) % count]`,
-epoch = 2026-07-01. With 82 puzzles the daily puzzle is unique for ~82 days
-before repeating.
+epoch = 2026-07-01. The current pools contain 92 dailies and 97 minis, so they repeat after
+92 and 97 days respectively. These are shared rotations, not a promise of
+never-repeating content. Adding entries changes the modulo calculation;
+verify pool sizes and update `RotationWrapTests` and `roadmap/README.md`.
 
 ## Ship a pack
 
@@ -196,3 +198,15 @@ New mini specs still go in **without** an `id` — the generator assigns the nex
 free one — but an id, once shipped, must be written back into its spec. Dailies are processed first
 with unchanged parameters, so adding minis never changes the daily output —
 verify with `git diff` showing only added lines in puzzles.json.
+
+## November 2026 mini expansion
+
+Added `mini-091` through `mini-097`: seven easy 7×7 puzzles with 40 clues,
+covering familiar Gospel stories. Every clue has a verse reference checked
+against the bundled BSB reader. Existing puzzle objects and their relative
+order are preserved. The mini pool grows from 90 to 97 entries.
+
+These extend the shared daily-mini rotation and also form the free
+`first-week` journey in `quests.json`. See `docs/beginner-path.md` for its
+entry rules, progression, and measurement. A sustained publishing schedule
+remains follow-up work.

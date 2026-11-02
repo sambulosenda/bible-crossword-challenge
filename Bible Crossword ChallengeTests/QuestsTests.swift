@@ -59,9 +59,10 @@ struct QuestsTests {
         }
     }
 
-    @Test func exactlyOneFreeQuestAndItIsFirst() {
+    @Test func beginnerAndBeginningsAreFreeAndBeginnerIsFirst() {
         let quests = PuzzleProvider.shared.quests
-        #expect(quests.filter { !$0.isPremium }.count == 1)
+        #expect(Set(quests.filter { !$0.isPremium }.map(\.id)) == ["first-week", "beginnings"])
+        #expect(quests.first?.id == BeginnerPath.questID)
         #expect(quests.first?.isPremium == false)
     }
 

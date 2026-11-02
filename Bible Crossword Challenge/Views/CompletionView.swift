@@ -707,7 +707,9 @@ struct CompletionView: View {
                 } else {
                     Text("\(ctx.quest.title) · step \(ctx.progress.solved) of \(ctx.progress.total)")
                         .font(.subheadline.weight(.semibold))
-                    Text("The next step will be waiting tomorrow.")
+                    Text(ctx.quest.id == BeginnerPath.questID
+                         ? "Try another mini now, or come back tomorrow."
+                         : "The next step will be waiting tomorrow.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -720,7 +722,7 @@ struct CompletionView: View {
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(ctx.progress.isComplete
             ? "\(ctx.quest.title) Journey complete."
-            : "\(ctx.quest.title), step \(ctx.progress.solved) of \(ctx.progress.total) done. The next step will be waiting tomorrow.")
+            : "\(ctx.quest.title), \(ctx.progress.solved) of \(ctx.progress.total) completed.")
     }
 
     /// Where this solve sits in its pack. Finished → a celebratory seal; more
@@ -1000,6 +1002,11 @@ struct CompletionView: View {
     /// completion is the strongest D1 signal we have; this is the moment the
     /// appetite for "one more" exists, so the next solve is one tap away.
     private func loadChainTarget() {
+        if BeginnerPath.contains(puzzle, provider: puzzleProvider) {
+            let records = (try? context.fetch(FetchDescriptor<PuzzleRecord>())) ?? []
+            chainTarget = BeginnerPath.next(provider: puzzleProvider, recordsByID: records.byPuzzleID)
+            return
+        }
         guard puzzle.isMini,
               let daily = puzzleProvider.dailyPuzzle(),
               daily.id != puzzle.id
@@ -1102,7 +1109,8 @@ struct CompletionView: View {
     }
 
     private func maybeShowCompletionOffer() {
-        guard !store.isPremium, !completionOfferShown else { return }
+        guard !store.isPremium, !completionOfferShown,
+              !BeginnerPath.contains(puzzle, provider: puzzleProvider) else { return }
         completionOfferShown = true
         showsCompletionOffer = true
     }
@@ -1458,11 +1466,12 @@ struct CompletionView: View {
                         onHome()
                     }
                 } label: {
-                    barLabel("Play Today's Full Puzzle", systemImage: "play.fill")
+                    barLabel(BeginnerPath.contains(puzzle, provider: puzzleProvider) ? "Next Mini" : "Play Today's Full Puzzle", systemImage: "play.fill")
                 }
                 .buttonStyle(.borderedProminent)
                 .tint(Theme.ink)
-                .accessibilityHint("Closes this screen and opens today's full-size puzzle")
+                .accessibilityHint("Opens \(chainTarget.title)")
+                .accessibilityIdentifier("completionNextPuzzle")
             }
         } else if challenge == nil {
             ToolbarItem(placement: .bottomBar) {

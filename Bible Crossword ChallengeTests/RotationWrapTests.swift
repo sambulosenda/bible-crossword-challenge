@@ -71,18 +71,18 @@ struct RotationWrapTests {
     @Test func theMiniPoolWrapsAfterItsOwnLength() {
         let provider = PuzzleProvider.shared
         let pool = provider.minis
-        #expect(pool.count == 90, "mini pool changed — the wrap date has moved")
+        #expect(pool.count == 97, "mini pool changed — the wrap date has moved")
 
         #expect(provider.dailyMini(for: epochPlus(pool.count))?.id == pool.first?.id)
         #expect(provider.dailyMini(for: epochPlus(pool.count - 1))?.id != pool.first?.id)
     }
 
-    @Test func theMiniWrapLandsOn29September2026() {
+    @Test func theMiniWrapLandsOn6October2026() {
         let wrap = epochPlus(PuzzleProvider.shared.minis.count)
         let parts = Calendar.current.dateComponents([.year, .month, .day], from: wrap)
         #expect(parts.year == 2026)
-        #expect(parts.month == 9)
-        #expect(parts.day == 29)
+        #expect(parts.month == 10)
+        #expect(parts.day == 6)
     }
 
     /// The wrap is a repeat, not a new puzzle — the whole problem in one line.

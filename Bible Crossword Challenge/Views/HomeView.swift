@@ -127,6 +127,7 @@ struct HomeView: View {
     /// every quest is walked — the card earns its slot or gives it back.
     private func activeQuest(_ recordsByID: [String: PuzzleRecord]) -> QuestLine? {
         puzzleProvider.quests.first {
+            $0.id != BeginnerPath.questID &&
             !QuestProgress(quest: $0, recordsByID: recordsByID).isComplete
         }
     }
@@ -353,7 +354,7 @@ struct HomeView: View {
 
         return NavigationStack(path: $path) {
             CardColumns {
-                leadColumn(today, lead: lead)
+                leadColumn(today, lead: lead, recordsByID: byID)
             } more: {
                 moreColumn(byID, heroPuzzleID: today.puzzle(lead)?.puzzle.id)
             }
@@ -404,6 +405,9 @@ struct HomeView: View {
                     .presentationDetents([.height(streakSheetHeight)])
                     .presentationDragIndicator(.visible)
             }
+            .navigationDestination(for: BeginnerPuzzleRoute.self) { route in
+                CrosswordGameView(puzzle: route.puzzle, profile: profile, entrySource: "beginner_path")
+            }
             .navigationDestination(for: Puzzle.self) { puzzle in
                 CrosswordGameView(puzzle: puzzle, profile: profile, entrySource: "home")
             }
@@ -446,8 +450,16 @@ struct HomeView: View {
 
     /// Today's puzzles: the verse, the lead card and the ones under it.
     @ViewBuilder
-    private func leadColumn(_ today: TodayPuzzles, lead: TodayLead) -> some View {
-        TodayHeader(verse: verseOfTheDay(excluding: today.daily))
+    private func leadColumn(_ today: TodayPuzzles, lead: TodayLead, recordsByID: [String: PuzzleRecord]) -> some View {
+        let beginnerQuest = puzzleProvider.quest(id: BeginnerPath.questID)
+        let beginnerProgress = beginnerQuest.map {
+            QuestProgress(quest: $0, recordsByID: recordsByID, now: currentDay, calendar: calendar)
+        }
+        let beginner = beginnerProgress.flatMap { progress in
+            BeginnerPath.shouldFeature(totalCompleted: profile.totalPuzzlesCompleted, progress: progress)
+                ? BeginnerPath.next(provider: puzzleProvider, recordsByID: recordsByID) : nil
+        }
+        TodayHeader(verse: verseOfTheDay(excluding: beginner ?? today.daily))
 
         // A player still inside their first three finishes leads
         // with the Mini; everyone else leads with the daily — or, on a
@@ -468,7 +480,10 @@ struct HomeView: View {
         // habit existed. After three finishes the screen is the one
         // everybody else has, permanently — the daily is the habit,
         // the Mini is just a gentler way in.
-        if let hero = today.puzzle(lead) {
+        if let beginner, let beginnerProgress {
+            BeginnerPathCard(puzzle: beginner, progress: beginnerProgress,
+                             hasEntries: recordsByID[beginner.id]?.hasPlayerEntries == true)
+        } else if let hero = today.puzzle(lead) {
             LeadPuzzleCard(
                 puzzle: hero.puzzle,
                 billing: hero.billing,
@@ -482,7 +497,10 @@ struct HomeView: View {
         // The day's other puzzles as rows of one card, not a card each:
         // they are one idea ("also today"), and two white cards stacked
         // under the hero read as two more headlines.
-        let companions = companionPuzzles(today, lead: lead)
+        let companions = beginner == nil
+            ? companionPuzzles(today, lead: lead)
+            : [TodayLead.mini, .daily, .sunday].compactMap { today.puzzle($0) }
+                .filter { $0.puzzle.id != beginner?.id }
         if !companions.isEmpty {
             CompanionPuzzlesCard(rows: companions)
         }

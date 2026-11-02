@@ -217,6 +217,7 @@ final class GameViewModel {
     /// sat 40–250s. The 30s/45s tiers fired for 5 of those 35 players. The
     /// nudge has to arrive inside the patience they actually have.
     let isLearning: Bool
+    let prefersVerseHelp: Bool
 
     /// Whether the stall nudge runs at all — both tiers. Always on in the app
     /// since the `stall-nudge` holdout was retired (2026-10-13); kept as a
@@ -273,12 +274,14 @@ final class GameViewModel {
         puzzle: Puzzle,
         learning: Bool = false,
         now: Date = Date(),
-        stallNudgeEnabled: Bool = true
+        stallNudgeEnabled: Bool = true,
+        prefersVerseHelp: Bool = false
     ) {
         self.puzzle = puzzle
         self.size = puzzle.size
         self.startDate = now
         self.isLearning = learning
+        self.prefersVerseHelp = prefersVerseHelp
         self.stallNudgeEnabled = stallNudgeEnabled
 
         #if DEBUG
@@ -980,7 +983,7 @@ final class GameViewModel {
         } else {
             guard !earlyNudged, idle >= earlyNudgeSeconds else { return }
             earlyNudged = true
-            stallNudgeKind = .hints
+            stallNudgeKind = prefersVerseHelp && activeSlot?.reference != nil ? .readVerse : .hints
         }
         isStallNudgeActive = true
         stallNudgeTick += 1

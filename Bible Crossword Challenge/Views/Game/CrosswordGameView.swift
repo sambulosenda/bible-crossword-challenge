@@ -41,6 +41,7 @@ private struct CrosswordGameLoader: View {
     let profile: PlayerProfile
     let entrySource: String
 
+    @Environment(\.puzzleProvider) private var puzzleProvider
     @State private var vm: GameViewModel?
 
     var body: some View {
@@ -54,7 +55,10 @@ private struct CrosswordGameLoader: View {
                     // thresholds — see `GameViewModel.isLearning`.
                     vm = GameViewModel(
                         puzzle: puzzle,
-                        learning: profile.isStillLearning
+                        learning: profile.isStillLearning ||
+                            (BeginnerPath.contains(puzzle, provider: puzzleProvider) &&
+                             !profile.completedQuestIDs.contains(BeginnerPath.questID)),
+                        prefersVerseHelp: BeginnerPath.contains(puzzle, provider: puzzleProvider)
                     )
                 }
         }
@@ -624,7 +628,7 @@ struct CrosswordGameScreen: View {
             // back up, and on a zoomed 15×15 named a word scrolled out of
             // view. The word pulses where it landed instead, and the zoomed
             // grid holds it in view for the pulse (`CrosswordGridView`).
-            if profile.isStillLearning,
+            if vm.isLearning,
                !rec.isCompleted, !isResume,
                let gifted = await vm.giftStarterWordPaced(
                    letterInterval: reduceMotion ? .zero : .milliseconds(170)

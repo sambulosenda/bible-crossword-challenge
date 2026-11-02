@@ -23668,6 +23668,513 @@
     "kind": "mini"
   },
   {
+    "id": "mini-091",
+    "title": "A Welcome for Jesus",
+    "difficulty": "easy",
+    "verse": "When Jesus came to that place, He looked up and said, \u201cZacchaeus, hurry down, for I must stay at your house today.\u201d",
+    "reference": "Luke 19:5",
+    "publishDate": "2026-09-29",
+    "size": 7,
+    "grid": [
+      "C.JESUS",
+      "R.....T",
+      "O.T...A",
+      "WEALTHY",
+      "D.X.R..",
+      "....E..",
+      ".CHIEF."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 0,
+        "text": "Group Zacchaeus could not see over",
+        "answer": "CROWD",
+        "reference": "Luke 19:3"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 0,
+        "col": 2,
+        "text": "Person Zacchaeus climbed up to see",
+        "answer": "JESUS",
+        "reference": "Luke 19:4"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 0,
+        "col": 6,
+        "text": "Remain as a guest, as Jesus said He would",
+        "answer": "STAY",
+        "reference": "Luke 19:5"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 2,
+        "col": 2,
+        "text": "Kind of money Zacchaeus collected",
+        "answer": "TAX",
+        "reference": "Luke 19:2"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "Rich, like Zacchaeus",
+        "answer": "WEALTHY",
+        "reference": "Luke 19:2"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 3,
+        "col": 4,
+        "text": "What Zacchaeus climbed to see Jesus",
+        "answer": "TREE",
+        "reference": "Luke 19:4"
+      },
+      {
+        "number": 7,
+        "direction": "across",
+        "row": 6,
+        "col": 1,
+        "text": "Zacchaeus was a ___ tax collector",
+        "answer": "CHIEF",
+        "reference": "Luke 19:2"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-092",
+    "title": "Care on the Road",
+    "difficulty": "easy",
+    "verse": "But a Samaritan on a journey came upon him, and when he saw him, he had compassion.",
+    "reference": "Luke 10:33",
+    "publishDate": "2026-09-30",
+    "size": 7,
+    "grid": [
+      "CARE.W.",
+      "..E.OIL",
+      "..T..N.",
+      "JOURNEY",
+      "..R....",
+      ".ANIMAL",
+      "......."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 0,
+        "text": "\u201cTake ___ of him,\u201d the Samaritan said",
+        "answer": "CARE",
+        "reference": "Luke 10:35"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 2,
+        "text": "The Samaritan promised to repay expenses on his ___",
+        "answer": "RETURN",
+        "reference": "Luke 10:35"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 0,
+        "col": 5,
+        "text": "Liquid used on the wounds along with oil",
+        "answer": "WINE",
+        "reference": "Luke 10:34"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 1,
+        "col": 4,
+        "text": "Liquid poured on the wounds along with wine",
+        "answer": "OIL",
+        "reference": "Luke 10:34"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "Trip the Samaritan was on when he saw the man",
+        "answer": "JOURNEY",
+        "reference": "Luke 10:33"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 5,
+        "col": 1,
+        "text": "The Samaritan\u2019s mount, used to carry the man",
+        "answer": "ANIMAL",
+        "reference": "Luke 10:34"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-093",
+    "title": "Good News at Night",
+    "difficulty": "easy",
+    "verse": "Today in the city of David a Savior has been born to you. He is Christ the Lord!",
+    "reference": "Luke 2:11",
+    "publishDate": "2026-10-01",
+    "size": 7,
+    "grid": [
+      "R...A..",
+      "O..INN.",
+      "O...G..",
+      "MANGER.",
+      "..E.L..",
+      "..W....",
+      "..S...."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 0,
+        "text": "What was unavailable for the family in the inn",
+        "answer": "ROOM",
+        "reference": "Luke 2:7"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 4,
+        "text": "Heavenly messenger who appeared to the shepherds",
+        "answer": "ANGEL",
+        "reference": "Luke 2:9"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 1,
+        "col": 3,
+        "text": "Lodging that had no room for the family",
+        "answer": "INN",
+        "reference": "Luke 2:7"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "Feeding trough used as the baby\u2019s bed",
+        "answer": "MANGER",
+        "reference": "Luke 2:7"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 3,
+        "col": 2,
+        "text": "The angel brought good ___ of great joy",
+        "answer": "NEWS",
+        "reference": "Luke 2:10"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-094",
+    "title": "Lunch for a Crowd",
+    "difficulty": "easy",
+    "verse": "Then Jesus took the loaves and the fish, gave thanks, and distributed to those who were seated as much as they wanted.",
+    "reference": "John 6:11",
+    "publishDate": "2026-10-02",
+    "size": 7,
+    "grid": [
+      "....F..",
+      ".G.FISH",
+      ".R..V..",
+      "BASKETS",
+      ".S...W.",
+      ".S..BOY",
+      "......."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 4,
+        "text": "Number of loaves in the boy\u2019s lunch",
+        "answer": "FIVE",
+        "reference": "John 6:9"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 1,
+        "col": 1,
+        "text": "Green ground cover where the crowd sat",
+        "answer": "GRASS",
+        "reference": "John 6:10"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 1,
+        "col": 3,
+        "text": "Food shared along with the bread",
+        "answer": "FISH",
+        "reference": "John 6:9"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "Containers filled with leftover pieces",
+        "answer": "BASKETS",
+        "reference": "John 6:13"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 3,
+        "col": 5,
+        "text": "Number of fish in the boy\u2019s lunch",
+        "answer": "TWO",
+        "reference": "John 6:9"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 5,
+        "col": 4,
+        "text": "Young person who had the loaves and fish",
+        "answer": "BOY",
+        "reference": "John 6:9"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-095",
+    "title": "One Sheep Found",
+    "difficulty": "easy",
+    "verse": "comes home, and calls together his friends and neighbors to tell them, \u2018Rejoice with me, for I have found my lost sheep!\u2019",
+    "reference": "Luke 15:6",
+    "publishDate": "2026-10-03",
+    "size": 7,
+    "grid": [
+      ".....H.",
+      "....JOY",
+      "S.O..M.",
+      "HUNDRED",
+      "E.E....",
+      "E......",
+      "PASTURE"
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 5,
+        "text": "Place the man returned to with his sheep",
+        "answer": "HOME",
+        "reference": "Luke 15:6"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 1,
+        "col": 4,
+        "text": "Gladness in heaven over a sinner who repents",
+        "answer": "JOY",
+        "reference": "Luke 15:7"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 2,
+        "col": 0,
+        "text": "Animal the man searched for in Jesus\u2019 parable",
+        "answer": "SHEEP",
+        "reference": "Luke 15:4"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 2,
+        "col": 2,
+        "text": "Number of sheep that went missing",
+        "answer": "ONE",
+        "reference": "Luke 15:4"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "Number in the flock before one went missing",
+        "answer": "HUNDRED",
+        "reference": "Luke 15:4"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 6,
+        "col": 0,
+        "text": "Grazing land where the other sheep stayed",
+        "answer": "PASTURE",
+        "reference": "Luke 15:4"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-096",
+    "title": "Peace on the Water",
+    "difficulty": "easy",
+    "verse": "Then Jesus got up and rebuked the wind and the sea. \u201cSilence!\u201d He commanded. \u201cBe still!\u201d And the wind died down, and it was perfectly calm.",
+    "reference": "Mark 4:39",
+    "publishDate": "2026-10-04",
+    "size": 7,
+    "grid": [
+      "T......",
+      "E...F.W",
+      "A...A.I",
+      "CUSHION",
+      "H.E.T.D",
+      "E.A.H..",
+      "R......"
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 0,
+        "text": "Title the frightened disciples used for Jesus",
+        "answer": "TEACHER",
+        "reference": "Mark 4:38"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 1,
+        "col": 4,
+        "text": "Trust Jesus asked His disciples about",
+        "answer": "FAITH",
+        "reference": "Mark 4:40"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 1,
+        "col": 6,
+        "text": "Moving air that died down at Jesus\u2019 command",
+        "answer": "WIND",
+        "reference": "Mark 4:39"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "Soft support Jesus slept on",
+        "answer": "CUSHION",
+        "reference": "Mark 4:38"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 3,
+        "col": 2,
+        "text": "Body of water Jesus rebuked along with the wind",
+        "answer": "SEA",
+        "reference": "Mark 4:39"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-097",
+    "title": "Water at the Wedding",
+    "difficulty": "easy",
+    "verse": "His mother said to the servants, \u201cDo whatever He tells you.\u201d",
+    "reference": "John 2:5",
+    "publishDate": "2026-10-05",
+    "size": 7,
+    "grid": [
+      ".W..G..",
+      ".A.CANA",
+      ".T..L..",
+      "WEDDING",
+      ".R..L..",
+      "....E..",
+      ".WINE.."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 1,
+        "text": "Liquid the servants poured into the jars",
+        "answer": "WATER",
+        "reference": "John 2:7"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 4,
+        "text": "Region where Cana was located",
+        "answer": "GALILEE",
+        "reference": "John 2:1"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 1,
+        "col": 3,
+        "text": "Town where Jesus attended a wedding",
+        "answer": "CANA",
+        "reference": "John 2:1"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "Marriage celebration Jesus attended in Cana",
+        "answer": "WEDDING",
+        "reference": "John 2:1"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 6,
+        "col": 1,
+        "text": "Drink that ran out at the wedding",
+        "answer": "WINE",
+        "reference": "John 2:3"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
     "id": "sunday-001",
     "title": "From Eden to Ararat",
     "difficulty": "medium",
