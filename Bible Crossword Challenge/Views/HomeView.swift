@@ -916,12 +916,10 @@ private enum PuzzleBilling {
 
 // MARK: - Lead puzzle card
 //
-// The hero of the screen: a solid feature card in its puzzle's colour — blue
-// for the daily, teal for the Mini, rust for the Special — with white type, a
-// white pill and a faint crossword in the corner. Every other module is white,
-// so the eye lands here first. It was a 10% accent wash until 2026-10-24: the
-// palest card on the page carried the most important thing on it, while
-// Journeys and memory practice elsewhere had already gone solid.
+// The hero of the screen: a white card with ink type and the page's one blue
+// pill. It was a solid fill in its puzzle's colour (blue daily, teal Mini,
+// rust Special) with a crossword motif until 2026-11-02 — too much colour for
+// an Apple-plain screen; the button alone carries the blue now.
 // When solved it becomes a quiet win moment (the time you earned) rather than
 // a dead "done" tile.
 //
@@ -945,12 +943,9 @@ private struct LeadPuzzleCard: View {
         // the motif in the corner (see `info`).
         .padding(20)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .foregroundStyle(.white)
-        .background(alignment: .topTrailing) {
-            CrosswordMotif()
-                .padding(20)
-        }
-        .elevatedCard(fill: billing.heroFill, cornerRadius: Theme.featureCornerRadius)
+        // White with ink type since 2026-11-02, not a solid fill in the
+        // puzzle's colour: Today keeps one colour, and it's the button's.
+        .elevatedCard(cornerRadius: Theme.featureCornerRadius)
         .onAppear {
             // Only a puzzle finished *today* is worth celebrating. The rotation
             // repeat is also `isCompleted`, and bouncing a seal at it is exactly
@@ -970,13 +965,11 @@ private struct LeadPuzzleCard: View {
             VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
                 Text(billing.name)
                     .font(.footnote.weight(.semibold))
-                    .foregroundStyle(.white.opacity(0.9))
+                    .foregroundStyle(.secondary)
                 Text(puzzle.title)
                     .font(.title2.bold())
                     .fixedSize(horizontal: false, vertical: true)
             }
-            // Clear of the motif in the corner: its five squares plus a gap.
-            .padding(.trailing, 76)
             .frame(maxWidth: .infinity, alignment: .leading)
 
             switch presentation {
@@ -996,7 +989,7 @@ private struct LeadPuzzleCard: View {
                 metaRow
                 if let progress {
                     ProgressView(value: progress)
-                        .tint(.white)
+                        .tint(Theme.progressBar)
                 }
             }
         }
@@ -1012,9 +1005,7 @@ private struct LeadPuzzleCard: View {
     private var metaRow: some View {
         Text(metaLine)
             .font(.subheadline)
-            // Explicit, not `.secondary`: the hierarchical style dims white
-            // too far on the fill, under 4.5:1 at this size.
-            .foregroundStyle(.white.opacity(0.9))
+            .foregroundStyle(.secondary)
             .fixedSize(horizontal: false, vertical: true)
     }
 
@@ -1023,11 +1014,12 @@ private struct LeadPuzzleCard: View {
     }
 
     // The win moment: leads with the time the user just earned, echoing the
-    // CompletionView language (seal + monospaced clock). White on the fill:
-    // green on blue or teal failed contrast and fought the card's colour.
+    // CompletionView language (seal + monospaced clock), the seal in the
+    // app's solved green.
     private func solvedReward(_ seconds: Int?) -> some View {
         HStack(spacing: Theme.Spacing.xs) {
             Image(systemName: "checkmark.seal.fill")
+                .foregroundStyle(FeatureTint.solved)
                 .symbolEffect(.bounce, value: celebrate)
             Text("Solved")
             if let secs = seconds, secs > 0 {
@@ -1060,7 +1052,7 @@ private struct LeadPuzzleCard: View {
             NavigationLink(value: puzzle) {
                 Label("Play again", systemImage: "arrow.clockwise")
             }
-            .buttonStyle(.pillOnColorTonal)
+            .buttonStyle(.pillTonal)
         case .playedBefore(let previous):
             // Prominent, unlike the solved-today replay: this *is* the day's
             // action, and the streak depends on it being taken. It names the
@@ -1072,12 +1064,12 @@ private struct LeadPuzzleCard: View {
                     Label("Play again", systemImage: "arrow.clockwise")
                 }
             }
-            .buttonStyle(.pillOnColor)
+            .buttonStyle(.pillAccent)
         case .play(let status):
             NavigationLink(value: puzzle) {
                 Label(status.actionTitle, systemImage: status.actionSymbol)
             }
-            .buttonStyle(.pillOnColor)
+            .buttonStyle(.pillAccent)
         }
     }
 
@@ -1530,7 +1522,7 @@ private struct CompactPuzzleRow: View {
             HStack(spacing: Theme.Spacing.s + 4) {
                 CollectionCover(
                     symbol: leadingSymbol,
-                    accent: isSolvedToday ? FeatureTint.solved : billing.heroFill,
+                    accent: isSolvedToday ? FeatureTint.solved : Color.secondary,
                     isLocked: false,
                     side: iconSize,
                     font: .body.weight(.semibold),

@@ -80,7 +80,6 @@ struct QuestDetailView: View {
         }
         // White bar items over the cover; the system's own once it has
         // scrolled away and the bar sits on the paper.
-        .toolbarColorScheme(headerScrolledAway ? nil : .dark, for: .navigationBar)
         .navigationTitle(quest.title)
         .navigationBarTitleDisplayMode(.inline)
         // The header names the screen; the bar takes the name over only once
@@ -112,12 +111,11 @@ struct QuestDetailView: View {
         return CollectionPageCover(
             title: quest.title,
             caption: label.caption.isEmpty ? size : "\(label.caption) · \(size)",
-            fill: quest.coverFill,
             isLocked: isLocked
         ) {
             EmptyView()
         } footer: {
-            StepPath(done: isLocked ? 0 : progress.solved, total: progress.total)
+            StepPath(done: isLocked ? 0 : progress.solved, total: progress.total, ink: .primary)
                 .padding(.vertical, Theme.Spacing.xs)
             if !isLocked {
                 if progress.isComplete {
@@ -126,7 +124,7 @@ struct QuestDetailView: View {
                 } else if progress.solved > 0 {
                     Text(progressLine(progress))
                         .font(.subheadline.weight(.medium))
-                        .foregroundStyle(.white.opacity(0.82))
+                        .foregroundStyle(.secondary)
                         .monospacedDigit()
                         .fixedSize(horizontal: false, vertical: true)
                 }
@@ -148,7 +146,7 @@ struct QuestDetailView: View {
 
     // MARK: - Play
 
-    /// The page's one action: the current step, the white pill on the cover.
+    /// The page's one action: the current step, the blue pill on the cover.
     /// Once today's step is done the next still opens — pacing is soft — but
     /// the pill drops to its quiet weight, so playing ahead is offered rather
     /// than urged.
@@ -158,13 +156,13 @@ struct QuestDetailView: View {
                 NavigationLink(value: puzzle) {
                     Label("Play ahead · \(puzzle.title)", systemImage: "forward.fill")
                 }
-                .buttonStyle(.pillOnColorTonal)
+                .buttonStyle(.pillTonal)
             } else {
                 NavigationLink(value: puzzle) {
                     Label("\(index == 0 ? "Start" : "Step \(index + 1)") · \(puzzle.title)",
                           systemImage: "play.fill")
                 }
-                .buttonStyle(.pillOnColor)
+                .buttonStyle(.pillAccent)
             }
         }
     }

@@ -140,9 +140,10 @@ struct StreakCard: View {
 /// and the screen read as one colour. Blue now belongs to actions and the
 /// daily puzzle.
 extension EnvironmentValues {
-    /// Draws `RowIcon`s in ink instead of their feature tint — for a list
-    /// whose rows don't need colour to be told apart (Today's Keep going).
-    @Entry var rowIconsNeutral = false
+    /// Draws `RowIcon`s and `CoverRow`s grey instead of their feature tint.
+    /// On everywhere since 2026-11-02: a hue per feature put five colours on
+    /// a screen. Blue is for actions; set false only where colour is status.
+    @Entry var rowIconsNeutral = true
 }
 
 struct RowIcon: View {

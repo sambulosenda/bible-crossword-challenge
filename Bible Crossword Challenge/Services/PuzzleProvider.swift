@@ -159,12 +159,26 @@ final class PuzzleProvider {
         }
     }
 
+    /// The longest verse Today opens on — three lines of body serif on a phone.
+    static let verseOfTheDayMaxLength = 120
+
     /// The day's inspirational verse: a puzzle's verse, rotated by calendar
     /// day, from any puzzle but that day's daily — so it never spoils the
     /// daily's answers. Shared by Today's header and the daily reminder, so
     /// the notification quotes the verse the player then finds on Today.
     func verseOfTheDay(on day: Date, excluding dailyID: String?, calendar: Calendar = .current) -> Puzzle? {
-        let pool = puzzles.filter { $0.id != dailyID }
+        // Short verses only (2026-11-02): it opens Today, and a 190-character
+        // verse ran five lines and pushed the day's puzzle down. 120 fits in
+        // three lines without a clamp cutting it mid-word.
+        // Whole sentences too: 13 verses open mid-sentence ("asking, …") and
+        // read as fragments on their own. 162 pass both.
+        // Falls back to every verse if a future set has too few.
+        let others = puzzles.filter { $0.id != dailyID }
+        let short = others.filter {
+            $0.verse.count <= Self.verseOfTheDayMaxLength
+                && $0.verse.first.map { !$0.isLowercase } ?? false
+        }
+        let pool = short.count >= 30 ? short : others
         guard !pool.isEmpty else { return nil }
         // Counted from noon, not from the day's start: at local midnight in
         // BST `ordinality(of: .day, in: .era)` still returns the previous

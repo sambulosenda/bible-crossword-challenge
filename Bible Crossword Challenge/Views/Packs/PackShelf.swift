@@ -167,28 +167,30 @@ struct LeadFeatureCard: View {
 struct StepPath: View {
     let done: Int
     let total: Int
+    /// White on a coloured shelf cover; `.primary` on a page's paper.
+    var ink: Color = .white
 
     var body: some View {
         HStack(spacing: 0) {
             ForEach(0..<total, id: \.self) { index in
                 let isNext = index == done
                 Circle()
-                    .fill(index < done || isNext ? Color.white : Color.clear)
+                    .fill(index < done || isNext ? ink : Color.clear)
                     .overlay {
                         if index > done {
-                            Circle().strokeBorder(.white.opacity(0.45), lineWidth: 2)
+                            Circle().strokeBorder(ink.opacity(0.45), lineWidth: 2)
                         }
                     }
                     .padding(isNext ? -2 : 0)
                     .background {
                         if isNext {
-                            Circle().fill(.white.opacity(0.3)).padding(-5)
+                            Circle().fill(ink.opacity(0.3)).padding(-5)
                         }
                     }
                     .frame(width: 10, height: 10)
                 if index < total - 1 {
                     Rectangle()
-                        .fill(.white.opacity(index < done ? 1 : 0.3))
+                        .fill(ink.opacity(index < done ? 1 : 0.3))
                         .frame(height: 2)
                 }
             }

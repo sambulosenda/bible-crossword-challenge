@@ -77,9 +77,6 @@ struct PackDetailView: View {
         .safeAreaInset(edge: .bottom) {
             if isLocked { CollectionLockedOffer { showPaywall = true } }
         }
-        // White bar items over the cover; the system's own once it has
-        // scrolled away and the bar sits on the paper.
-        .toolbarColorScheme(headerScrolledAway ? nil : .dark, for: .navigationBar)
         .navigationTitle(pack.title)
         .navigationBarTitleDisplayMode(.inline)
         // The header names the screen; the bar takes the name over only once
@@ -156,11 +153,11 @@ struct PackDetailView: View {
         CollectionPageCover(
             title: pack.title,
             caption: coverCaption(label: label, total: progress.total),
-            fill: pack.coverFill,
             isLocked: isLocked
         ) {
-            GridMotif()
-                .offset(x: 34, y: -28)
+            // No grid motif since the cover went to paper: it was white on
+            // the colour and would vanish.
+            EmptyView()
         } footer: {
             if !isLocked {
                 coverProgress(progress)
@@ -172,7 +169,7 @@ struct PackDetailView: View {
         }
     }
 
-    /// Where the player stands, on the cover in white: nothing before the
+    /// Where the player stands, on the cover: nothing before the
     /// first solve (the caption already says how many there are), a bar and
     /// a count once begun, a seal once every puzzle is solved.
     @ViewBuilder
@@ -183,10 +180,10 @@ struct PackDetailView: View {
         } else if progress.solved > 0 {
             VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
                 ProgressView(value: progress.fraction)
-                    .tint(.white)
+                    .tint(Theme.progressBar)
                 Text("\(progress.solved) of \(progress.total) solved")
                     .font(.subheadline.weight(.medium))
-                    .foregroundStyle(.white.opacity(0.82))
+                    .foregroundStyle(.secondary)
                     .monospacedDigit()
             }
             .accessibilityElement(children: .combine)
@@ -216,8 +213,7 @@ struct PackDetailView: View {
             ?? puzzles.first { recordsByID[$0.id]?.isCompleted != true }
     }
 
-    /// The page's one action, as an album page has Play — the white pill on
-    /// the cover's colour. Before it, the only way into a pack was to choose
+    /// The page's one action, as an album page has Play — the blue pill. Before it, the only way into a pack was to choose
     /// a row: the screen asked a question ("which one?") it already knew the
     /// answer to.
     private func playButton(
@@ -227,7 +223,7 @@ struct PackDetailView: View {
         return NavigationLink(value: puzzle) {
             Label("\(begun ? "Continue" : "Start") · \(puzzle.title)", systemImage: "play.fill")
         }
-        .buttonStyle(.pillOnColor)
+        .buttonStyle(.pillAccent)
     }
 
     // MARK: - Books

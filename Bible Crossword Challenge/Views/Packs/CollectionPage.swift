@@ -11,14 +11,14 @@
 
 import SwiftUI
 
-/// The cover: the collection's colour edge to edge and up under the bar, a
-/// mark in the corner, the gold chip when it's locked, the serif title and
-/// where in Scripture it sits, then whatever the page puts under that —
-/// progress, a step path, the play pill.
+/// The cover: on the page's own paper with ink type since 2026-11-02 — it was
+/// the collection's colour edge to edge, and the app keeps one colour (the
+/// play pill's blue). A mark in the corner, the gold chip when it's locked,
+/// the serif title and where in Scripture it sits, then whatever the page
+/// puts under that — progress, a step path, the play pill.
 struct CollectionPageCover<Mark: View, Footer: View>: View {
     let title: String
     let caption: String
-    let fill: Color
     var isLocked = false
     /// The cover's height under the bar. 200 since 2026-10-25 (about 300 with
     /// the bar): at 290 the cover took nearly half a 17e and the contents
@@ -40,11 +40,10 @@ struct CollectionPageCover<Mark: View, Footer: View>: View {
                 .accessibilityAddTraits(.isHeader)
             Text(caption)
                 .font(.body)
-                .foregroundStyle(.white.opacity(0.82))
+                .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
             footer
         }
-        .foregroundStyle(.white)
         .frame(maxWidth: 560, alignment: .leading)
         .padding(.horizontal, Theme.Spacing.m + Theme.Spacing.xs)
         .padding(.top, Theme.Spacing.xl)
@@ -53,14 +52,6 @@ struct CollectionPageCover<Mark: View, Footer: View>: View {
         .background(alignment: .bottomTrailing) {
             mark
                 .padding(.trailing, Theme.Spacing.m + Theme.Spacing.xs)
-        }
-        // The colour runs on up under the bar and the status bar, so the cover
-        // is the page's top edge; the scroll view still insets its content
-        // for the bar, which is where the type wants to start anyway.
-        .background {
-            fill
-                .padding(.top, -400)
-                .ignoresSafeArea(edges: .top)
         }
         .accessibilityElement(children: .contain)
     }

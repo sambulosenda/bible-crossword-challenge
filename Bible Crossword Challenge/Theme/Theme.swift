@@ -430,7 +430,7 @@ private struct PressableCardBody: View {
 /// solid fill, where ink would sink into the colour: a white pill, and a
 /// translucent white one. Same press behaviour as `PressableCardStyle`.
 struct PillButtonStyle: ButtonStyle {
-    enum Emphasis { case primary, tonal, onColor, onColorTonal }
+    enum Emphasis { case primary, accent, tonal, onColor, onColorTonal }
     var emphasis: Emphasis = .primary
 
     func makeBody(configuration: Configuration) -> some View {
@@ -459,6 +459,7 @@ private struct PillButtonBody: View {
     private var foreground: Color {
         switch emphasis {
         case .primary: Theme.onInk
+        case .accent: .white
         case .tonal: .primary
         // Fixed near-black, not `ink`: the pill is white in both appearances,
         // so its label must not flip to white in dark mode.
@@ -470,6 +471,7 @@ private struct PillButtonBody: View {
     private var fill: Color {
         switch emphasis {
         case .primary: Theme.ink
+        case .accent: Theme.accent
         case .tonal: Color.primary.opacity(0.08)
         case .onColor: .white
         case .onColorTonal: .white.opacity(0.2)
@@ -480,6 +482,9 @@ private struct PillButtonBody: View {
 extension ButtonStyle where Self == PillButtonStyle {
     static var pillProminent: PillButtonStyle { PillButtonStyle(emphasis: .primary) }
     static var pillTonal: PillButtonStyle { PillButtonStyle(emphasis: .tonal) }
+    /// Blue, white label: the day's puzzle on Today's white hero card — the
+    /// screen's one colour (2026-11-02).
+    static var pillAccent: PillButtonStyle { PillButtonStyle(emphasis: .accent) }
     /// The loud action on a feature card's solid fill.
     static var pillOnColor: PillButtonStyle { PillButtonStyle(emphasis: .onColor) }
     /// The quiet action on a feature card's solid fill.
