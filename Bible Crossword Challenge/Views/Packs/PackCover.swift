@@ -69,10 +69,11 @@ extension QuestLine {
     }
 }
 
-/// A pack cover tile, as the Packs shelf draws it.
+/// A pack cover tile, as the Packs shelf draws it: ink type on a white card
+/// since 2026-11-03. A shelf of solid colour blocks put six or eight hues on
+/// one screen; the serif mark is what makes it read as a book.
 struct PackCover: View {
     let label: PackCoverLabel
-    let fill: Color
     /// The SF Symbol to draw when no reference parses.
     var fallbackSymbol: String = "square.stack.3d.up"
     var isLocked: Bool = false
@@ -83,7 +84,7 @@ struct PackCover: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             Capsule()
-                .fill(.white.opacity(0.6))
+                .fill(Color.primary.opacity(0.25))
                 .frame(width: 20, height: 2)
 
             Spacer(minLength: Theme.Spacing.s)
@@ -106,21 +107,21 @@ struct PackCover: View {
             }
             if let progress {
                 ProgressView(value: progress)
-                    .tint(.white)
+                    .tint(Theme.progressBar)
                     .padding(.top, Theme.Spacing.s)
             }
         }
-        .foregroundStyle(.white)
+        .foregroundStyle(.primary)
         .padding(16)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-        .background(fill, in: .rect(cornerRadius: Theme.cornerRadius, style: .continuous))
+        .elevatedCard()
         .overlay(alignment: .topTrailing) {
             if isLocked {
                 Image(systemName: "lock.fill")
                     .font(.caption.weight(.bold))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(.secondary)
                     .frame(width: 28, height: 28)
-                    .background(.black.opacity(0.22), in: .circle)
+                    .background(Color.primary.opacity(0.06), in: .circle)
                     .padding(12)
             }
         }
@@ -132,8 +133,8 @@ struct PackCover: View {
 
 #Preview {
     HStack(spacing: 14) {
-        PackCover(label: PackCoverLabel(puzzles: []), fill: Color.blue.mix(with: .black, by: 0.25))
-        PackCover(label: PackCoverLabel(puzzles: []), fill: Color.teal.mix(with: .black, by: 0.25), isLocked: true)
+        PackCover(label: PackCoverLabel(puzzles: []))
+        PackCover(label: PackCoverLabel(puzzles: []), isLocked: true)
     }
     .frame(height: 200)
     .padding()

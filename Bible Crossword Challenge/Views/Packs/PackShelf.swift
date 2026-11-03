@@ -42,7 +42,6 @@ struct ShelfTile: View {
     let title: String
     let meta: String
     let label: PackCoverLabel
-    let fill: Color
     let fallbackSymbol: String
     let isLocked: Bool
     var progress: Double? = nil
@@ -54,7 +53,6 @@ struct ShelfTile: View {
         VStack(alignment: .leading, spacing: Theme.Spacing.s) {
             PackCover(
                 label: label,
-                fill: fill,
                 fallbackSymbol: fallbackSymbol,
                 isLocked: isLocked,
                 progress: progress
@@ -92,14 +90,13 @@ struct ShelfTile: View {
     }
 }
 
-/// The collection to play next, as the tab's one feature card: its colour,
-/// the title in serif with the book's mark behind it, the Journey's steps as
-/// a path, and one white pill.
+/// The collection to play next, as the tab's one feature card: white, as
+/// Today's hero is (2026-11-03), the title in serif with the book's mark faint
+/// behind it, the Journey's steps as a path, and one blue pill.
 struct LeadFeatureCard: View {
     let kicker: String
     let title: String
     let mark: String
-    let fill: Color
     /// Steps done and total, drawn as a path — for a Journey.
     var steps: (done: Int, total: Int)? = nil
     let actionTitle: String
@@ -111,7 +108,7 @@ struct LeadFeatureCard: View {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(kicker)
                         .font(.footnote.weight(.semibold))
-                        .foregroundStyle(.white.opacity(0.9))
+                        .foregroundStyle(.secondary)
                     Text(title)
                         .font(.scripture(.title, weight: .semibold))
                         .fixedSize(horizontal: false, vertical: true)
@@ -120,7 +117,7 @@ struct LeadFeatureCard: View {
                 // A path reads only while the dots stay apart; past fourteen
                 // steps they'd run together.
                 if let steps, steps.total > 1, steps.total <= 14 {
-                    StepPath(done: steps.done, total: steps.total)
+                    StepPath(done: steps.done, total: steps.total, ink: .primary)
                         // A phone card's width. Across open iPhone Duo's
                         // ~830pt card five steps sat 190pt apart and the
                         // path read as a rule (2026-10-25).
@@ -131,27 +128,27 @@ struct LeadFeatureCard: View {
                     Spacer(minLength: 0)
                     Text(actionTitle)
                         .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(Color(white: 0.07))
+                        .foregroundStyle(.white)
                         .padding(.horizontal, 20)
                         .frame(minHeight: 44)
-                        .background(.white, in: .capsule)
+                        .background(Theme.accent, in: .capsule)
                 }
             }
-            .foregroundStyle(.white)
+            .foregroundStyle(.primary)
             .padding(20)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(alignment: .topTrailing) {
                 Text(mark)
                     .font(.system(size: 150, weight: .semibold, design: .serif))
                     .tracking(-6)
-                    .foregroundStyle(.white.opacity(0.10))
+                    .foregroundStyle(Color.primary.opacity(0.05))
                     .lineLimit(1)
                     .fixedSize()
                     .offset(x: 10, y: -28)
                     .accessibilityHidden(true)
             }
-            .background(fill)
             .clipShape(.rect(cornerRadius: Theme.featureCornerRadius, style: .continuous))
+            .elevatedCard(cornerRadius: Theme.featureCornerRadius)
             .contentShape(.rect)
         }
         .buttonStyle(PressableCardStyle())

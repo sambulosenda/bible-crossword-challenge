@@ -246,7 +246,6 @@ struct PacksView: View {
                     kicker: "Journey · " + QuestProgress.stepLine(solved: progress.solved, total: progress.total),
                     title: quest.title,
                     mark: PackCoverLabel(puzzles: puzzleProvider.puzzles(in: quest)).mark,
-                    fill: quest.coverFill,
                     steps: (progress.solved, progress.total),
                     actionTitle: Self.actionTitle(action),
                     open: { path.append(QuestRoute(quest: quest, source: .packs)) }
@@ -260,7 +259,6 @@ struct PacksView: View {
                     kicker: "Pack · \(progress.solved) of \(progress.total) solved",
                     title: pack.title,
                     mark: packLabels[pack.id]?.mark ?? "",
-                    fill: pack.coverFill,
                     actionTitle: Self.actionTitle(action),
                     open: { path.append(PackRoute(pack: pack, source: .packs)) }
                 )
@@ -307,7 +305,6 @@ struct PacksView: View {
             title: pack.title,
             meta: meta,
             label: label ?? PackCoverLabel(puzzles: []),
-            fill: pack.coverFill,
             fallbackSymbol: pack.coverSymbol,
             isLocked: locked,
             progress: !locked && progress.solved > 0 && !progress.isComplete ? progress.fraction : nil,
@@ -325,7 +322,6 @@ struct PacksView: View {
             title: quest.title,
             meta: meta,
             label: PackCoverLabel(puzzles: puzzleProvider.puzzles(in: quest)),
-            fill: quest.coverFill,
             fallbackSymbol: quest.coverSymbol,
             isLocked: locked,
             progress: !locked && progress.solved > 0 && !progress.isComplete ? progress.fraction : nil
