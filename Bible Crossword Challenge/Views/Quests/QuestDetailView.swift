@@ -309,6 +309,7 @@ struct QuestHomeCard: View {
                 subtitle: subtitle,
                 progress: progress.solved > 0 ? progress.fraction : nil
             )
+            .cardRowPadding()
         }
         .buttonStyle(PressableCardStyle())
         .accessibilityElement(children: .ignore)

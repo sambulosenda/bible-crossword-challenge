@@ -587,18 +587,20 @@ struct HomeView: View {
         // of an uppercase kicker on each card — Today had seven of those,
         // and a label per card is a label nobody reads.
         //
-        // Cover rows on the paper, as YouVersion lists plans (2026-10-24):
-        // each thing in its own colour with where the player stands, and
-        // space between rows rather than a card, dividers and chevrons. As
-        // a grouped list it read as the Settings app — a Journey halfway
-        // done looked like a menu item. The colour is per feature, which
-        // reverses the neutral icons of 2026-10-13: at 52pt a cover is
-        // artwork, where a 36pt tinted square in a list was decoration.
+        // Cover rows in one grouped card (2026-11-03). They were bare on the
+        // paper from 2026-10-24, when each cover was its feature's colour
+        // and read as artwork; grey since the one-colour pass, they read
+        // as unfinished without a card around them.
         VStack(alignment: .leading, spacing: Theme.Spacing.m) {
-            // On the page's one content edge, with the covers below it.
+            // On the page's one content edge (32pt), where the verse and the
+            // hero's title start; the cards below sit on the cards' edge.
             Text("Keep going").sectionHeader()
+                .padding(.horizontal, Theme.Spacing.m)
 
-            VStack(alignment: .leading, spacing: Theme.Spacing.m) {
+            // One white grouped card since 2026-11-03, as Profile's rows are:
+            // with the covers grey (one-colour pass) the bare rows read as
+            // grey squares floating on the system grey.
+            CardGroup(dividerInset: Theme.Spacing.m + CoverRow.coverSide + Theme.Spacing.m) {
                 // A habit surface like the streak: only while a plan is
                 // running, one row, checked once today's chapter is read.
                 // `readingPlans` needs no Bible decode — the plan recorded
@@ -661,6 +663,7 @@ struct HomeView: View {
                     .contentShape(.rect)
             }
             .buttonStyle(.plain)
+            .padding(.horizontal, Theme.Spacing.m)
             .accessibilityHint("Opens search, reading and reading plans")
 
             // The offer as one row, last on the page (2026-10-24). It was a
@@ -671,16 +674,18 @@ struct HomeView: View {
             // inside it read as one more badge. Set apart by space, and by the
             // solid gold the Premium mark wears everywhere.
             if !store.isPremium {
-                UpgradeRow(
-                    currentStreak: profile.currentStreak,
-                    onOpen: { paywall = PaywallRequest(source: $0) }
-                )
+                // A one-row card of its own (2026-11-03), apart from the
+                // group above so the offer doesn't read as one more item
+                // of the player's progress.
+                CardGroup {
+                    UpgradeRow(
+                        currentStreak: profile.currentStreak,
+                        onOpen: { paywall = PaywallRequest(source: $0) }
+                    )
+                }
                 .padding(.top, Theme.Spacing.s)
             }
         }
-        // The covers start on the page's one content edge — 32pt, where the
-        // verse, the hero's title and the headers start.
-        .padding(.horizontal, Theme.Spacing.m)
 
         // Only packs the player can open. For a free player every tile here
         // used to be locked behind a crown, a second pitch beside the
@@ -1316,6 +1321,7 @@ private struct NextAchievementRow: View {
             subtitle: subtitle,
             progress: isTimeGoal || fraction <= 0 ? nil : fraction
         )
+        .cardRowPadding()
         .accessibilityElement(children: .ignore)
         .accessibilityAddTraits(.isButton)
         .accessibilityLabel("Next badge: \(achievement.title). \(achievement.detail). \(progress)")
@@ -1388,6 +1394,7 @@ private struct UpgradeRow: View {
             onOpen(isStreakVariant ? .streakCard : .homeCard)
         } label: {
             CoverRow(symbol: "crown.fill", tint: Theme.badgeRim, title: title, subtitle: subtitle)
+                .cardRowPadding()
         }
         .buttonStyle(PressableCardStyle())
         .accessibilityElement(children: .ignore)
