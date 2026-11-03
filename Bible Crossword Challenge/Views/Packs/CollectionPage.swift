@@ -188,12 +188,9 @@ struct CollectionLockedOffer: View {
         }
     }
 
-    /// "Then $9.99 a year · every pack and Journey" — the price behind the
-    /// button, and that it's the whole shelf, not this one collection.
+    /// The price behind the button, in the buy screens' words (see
+    /// `PremiumCopy.terms`).
     private var terms: String {
-        guard let yearly = store.yearly else { return "Every pack and Journey included" }
-        let price = "\(store.yearlyPriceText) a year"
-        let lead = store.introOffer(for: yearly) != nil ? "Then \(price)" : price
-        return "\(lead) · every pack and Journey"
+        PremiumCopy.terms(store) ?? "Every pack and Journey included"
     }
 }

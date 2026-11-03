@@ -397,14 +397,13 @@ struct PremiumOfferCTA: View {
 }
 
 enum PremiumCopy {
-    /// "Then £9.99 a year. Cancel anytime." under a trial; the yearly price
-    /// alone without one; nil until the products load.
+    /// The yearly plan's terms, word for word as the buy screens state them —
+    /// "Free for 7 days, then $9.99/year. Renews automatically." (2026-11-03).
+    /// The cards said "Then $9.99 a year. Cancel anytime." while onboarding
+    /// and the paywall had dropped the cancel line, so a player read two
+    /// offers. Nil until the products load.
     static func terms(_ store: StoreService) -> String? {
-        guard let yearly = store.yearly else { return nil }
-        guard store.introOffer(for: yearly) != nil else {
-            return "\(store.yearlyPriceText) a year. Cancel anytime."
-        }
-        return "Then \(store.yearlyPriceText) a year. Cancel anytime."
+        PremiumOfferView.commitmentText(for: store.yearly, store: store)
     }
 
     /// The promise itself, in the app's own register: what you'd be doing with

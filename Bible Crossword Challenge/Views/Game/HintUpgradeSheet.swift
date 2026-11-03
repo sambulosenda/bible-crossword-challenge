@@ -85,15 +85,11 @@ struct HintUpgradeSheet: View {
         return "Unlock unlimited hints"
     }
 
-    /// What follows the trial, said once. The CTA already names the free
-    /// days, so repeating "Free for 7 days" here only pushed the price down a
-    /// line. Without a trial, the full renewal disclosure.
+    /// The terms, word for word as every buy screen states them (2026-11-03):
+    /// "Free for 7 days, then $9.99/year. Renews automatically." This sheet
+    /// had its own "renewing until cancelled" wording.
     private var terms: String? {
-        guard let product else { return nil }
-        if trial != nil, let period = store.periodText(for: product) {
-            return "Then \(product.displayPrice)\(period), renewing until cancelled."
-        }
-        return PremiumOfferView.commitmentText(for: product, store: store)
+        PremiumOfferView.commitmentText(for: product, store: store)
     }
 
     var body: some View {
@@ -152,7 +148,9 @@ struct HintUpgradeSheet: View {
                 // rather than in the small print under it.
                 if trial != nil {
                     Label {
-                        Text("Nothing to pay today · Cancel anytime")
+                        // No cancel line (2026-11-03), as on every buy
+                        // screen: it read as an invitation to.
+                        Text("Nothing to pay today")
                             .foregroundStyle(.primary)
                     } icon: {
                         Image(systemName: "checkmark.circle.fill")
