@@ -208,7 +208,8 @@ struct SpecVectorsTests {
             "reviewAsk": [
                 "milestones": ReviewAsk.milestones,
                 "streakFloor": ReviewAsk.streakFloor,
-                "versionFloor": ReviewAsk.versionFloor,
+                "loyaltyFloor": ReviewAsk.loyaltyFloor,
+                "periodicGapDays": ReviewAsk.periodicGap / 86_400,
                 "minimumGapDays": ReviewAsk.minimumGap / 86_400,
                 "minimumInstallAgeDays": ReviewAsk.minimumInstallAge / 86_400,
             ],
@@ -695,28 +696,31 @@ struct SpecVectorsTests {
             description: "ReviewAsk.decide: which trigger fires (or none). Offsets are in days; fractional values are deliberate boundary probes.",
             source: ["Models/ReviewAsk.swift"]
         )
-        struct S { let total: Int; let streak: Int; let milestoneAsked: Int; let streakAsked: Bool; let versionAsked: String; let version: String; let lastAskDaysAgo: Double?; let installedDaysAgo: Double? }
+        struct S { let total: Int; let streak: Int; let milestoneAsked: Int; let streakAsked: Bool; let finished: Bool; let lastAskDaysAgo: Double?; let installedDaysAgo: Double? }
         let states: [S] = [
-            S(total: 3, streak: 0, milestoneAsked: 0, streakAsked: false, versionAsked: "", version: "2.10", lastAskDaysAgo: nil, installedDaysAgo: nil),
-            S(total: 3, streak: 0, milestoneAsked: 0, streakAsked: false, versionAsked: "", version: "2.10", lastAskDaysAgo: nil, installedDaysAgo: 2.9),
-            S(total: 3, streak: 0, milestoneAsked: 0, streakAsked: false, versionAsked: "", version: "2.10", lastAskDaysAgo: nil, installedDaysAgo: 3.0),
-            S(total: 2, streak: 0, milestoneAsked: 0, streakAsked: false, versionAsked: "", version: "2.10", lastAskDaysAgo: nil, installedDaysAgo: 10),
-            S(total: 12, streak: 0, milestoneAsked: 3, streakAsked: false, versionAsked: "", version: "2.10", lastAskDaysAgo: 20, installedDaysAgo: 40),
-            S(total: 12, streak: 0, milestoneAsked: 3, streakAsked: false, versionAsked: "", version: "2.10", lastAskDaysAgo: 13.9, installedDaysAgo: 40),
-            S(total: 12, streak: 0, milestoneAsked: 10, streakAsked: false, versionAsked: "", version: "2.10", lastAskDaysAgo: 20, installedDaysAgo: 40),
-            S(total: 12, streak: 7, milestoneAsked: 10, streakAsked: false, versionAsked: "", version: "2.10", lastAskDaysAgo: 20, installedDaysAgo: 40),
-            S(total: 12, streak: 7, milestoneAsked: 10, streakAsked: true, versionAsked: "", version: "2.10", lastAskDaysAgo: 20, installedDaysAgo: 40),
-            S(total: 12, streak: 8, milestoneAsked: 3, streakAsked: false, versionAsked: "", version: "2.10", lastAskDaysAgo: 20, installedDaysAgo: 40), // milestone outranks streak
-            S(total: 30, streak: 0, milestoneAsked: 30, streakAsked: true, versionAsked: "2.9", version: "2.10", lastAskDaysAgo: 20, installedDaysAgo: 90),
-            S(total: 30, streak: 0, milestoneAsked: 30, streakAsked: true, versionAsked: "2.10", version: "2.10", lastAskDaysAgo: 20, installedDaysAgo: 90),
-            S(total: 29, streak: 0, milestoneAsked: 10, streakAsked: true, versionAsked: "2.9", version: "2.10", lastAskDaysAgo: 20, installedDaysAgo: 90),
-            S(total: 30, streak: 0, milestoneAsked: 30, streakAsked: true, versionAsked: "2.9", version: "", lastAskDaysAgo: 20, installedDaysAgo: 90),
-            S(total: 300, streak: 0, milestoneAsked: 150, streakAsked: true, versionAsked: "2.10", version: "2.10", lastAskDaysAgo: 20, installedDaysAgo: 400),
+            S(total: 3, streak: 0, milestoneAsked: 0, streakAsked: false, finished: false, lastAskDaysAgo: nil, installedDaysAgo: nil),
+            S(total: 3, streak: 0, milestoneAsked: 0, streakAsked: false, finished: false, lastAskDaysAgo: nil, installedDaysAgo: 2.9),
+            S(total: 3, streak: 0, milestoneAsked: 0, streakAsked: false, finished: false, lastAskDaysAgo: nil, installedDaysAgo: 3.0),
+            S(total: 2, streak: 0, milestoneAsked: 0, streakAsked: false, finished: false, lastAskDaysAgo: nil, installedDaysAgo: 10),
+            S(total: 12, streak: 0, milestoneAsked: 3, streakAsked: false, finished: false, lastAskDaysAgo: 20, installedDaysAgo: 40),
+            S(total: 12, streak: 0, milestoneAsked: 3, streakAsked: false, finished: false, lastAskDaysAgo: 13.9, installedDaysAgo: 40),
+            S(total: 12, streak: 0, milestoneAsked: 10, streakAsked: false, finished: false, lastAskDaysAgo: 20, installedDaysAgo: 40),
+            S(total: 12, streak: 7, milestoneAsked: 10, streakAsked: false, finished: false, lastAskDaysAgo: 20, installedDaysAgo: 40),
+            S(total: 12, streak: 7, milestoneAsked: 10, streakAsked: true, finished: false, lastAskDaysAgo: 20, installedDaysAgo: 40),
+            S(total: 12, streak: 8, milestoneAsked: 3, streakAsked: false, finished: false, lastAskDaysAgo: 20, installedDaysAgo: 40), // milestone outranks streak
+            S(total: 12, streak: 7, milestoneAsked: 10, streakAsked: false, finished: true, lastAskDaysAgo: 20, installedDaysAgo: 40), // collection outranks streak
+            S(total: 12, streak: 0, milestoneAsked: 3, streakAsked: false, finished: true, lastAskDaysAgo: 20, installedDaysAgo: 40),  // milestone outranks collection
+            S(total: 12, streak: 0, milestoneAsked: 10, streakAsked: false, finished: true, lastAskDaysAgo: 13.9, installedDaysAgo: 40), // gap silences collection
+            S(total: 30, streak: 0, milestoneAsked: 30, streakAsked: true, finished: false, lastAskDaysAgo: 120, installedDaysAgo: 300),
+            S(total: 30, streak: 0, milestoneAsked: 30, streakAsked: true, finished: false, lastAskDaysAgo: 119.9, installedDaysAgo: 300),
+            S(total: 29, streak: 0, milestoneAsked: 10, streakAsked: true, finished: false, lastAskDaysAgo: 200, installedDaysAgo: 300),
+            S(total: 40, streak: 0, milestoneAsked: 30, streakAsked: true, finished: false, lastAskDaysAgo: nil, installedDaysAgo: 90),
+            S(total: 300, streak: 0, milestoneAsked: 150, streakAsked: true, finished: false, lastAskDaysAgo: 20, installedDaysAgo: 400),
         ]
         for (i, s) in states.enumerated() {
             let state = ReviewAsk.State(
                 totalCompleted: s.total, currentStreak: s.streak, milestoneAsked: s.milestoneAsked,
-                streakAsked: s.streakAsked, versionAsked: s.versionAsked, currentVersion: s.version,
+                streakAsked: s.streakAsked, finishedCollection: s.finished,
                 lastAsk: s.lastAskDaysAgo.map { fixedNow.addingTimeInterval(-$0 * 86_400) },
                 installedAt: s.installedDaysAgo.map { fixedNow.addingTimeInterval(-$0 * 86_400) },
                 now: fixedNow
@@ -726,7 +730,7 @@ struct SpecVectorsTests {
                 name: "state \(i)",
                 given: [
                     "totalCompleted": s.total, "currentStreak": s.streak, "milestoneAsked": s.milestoneAsked,
-                    "streakAsked": s.streakAsked, "versionAsked": s.versionAsked, "currentVersion": s.version,
+                    "streakAsked": s.streakAsked, "finishedCollection": s.finished,
                     "lastAskDaysAgo": s.lastAskDaysAgo ?? NSNull(), "installedDaysAgo": s.installedDaysAgo ?? NSNull(),
                 ],
                 expect: ["trigger": trigger?.analyticsValue ?? NSNull()]

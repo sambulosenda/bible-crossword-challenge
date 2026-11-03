@@ -30,6 +30,9 @@ struct CompletionView: View {
     /// competing with achievements and pack completions.
     var isComeback: Bool = false
     var totalCompleted: Int = 0
+    /// This solve finished a pack or Journey for the first time — a review
+    /// moment (`ReviewAsk`).
+    var finishedCollection: Bool = false
     let onHome: () -> Void
 
     /// Which entry point opened the paywall, carried *as* the sheet's item.
@@ -107,7 +110,6 @@ struct CompletionView: View {
     /// Review-ask bookkeeping — the rules live in `ReviewAsk.decide`.
     @AppStorage("reviewPromptMilestone") private var reviewPromptMilestone = 0
     @AppStorage("streakReviewPromptShown") private var streakReviewPromptShown = false
-    @AppStorage("reviewPromptVersion") private var reviewPromptVersion = ""
     @AppStorage("reviewPromptLastAsk") private var reviewPromptLastAsk = 0.0
     /// Start-of-day stamp of the last challenge-send freeze, capping the
     /// sender's reward at one per day — see `grantSenderFreezeIfDue`.
@@ -1292,8 +1294,7 @@ struct CompletionView: View {
             currentStreak: streak,
             milestoneAsked: reviewPromptMilestone,
             streakAsked: streakReviewPromptShown,
-            versionAsked: reviewPromptVersion,
-            currentVersion: Self.marketingVersion,
+            finishedCollection: finishedCollection,
             lastAsk: reviewPromptLastAsk == 0
                 ? nil : Date(timeIntervalSinceReferenceDate: reviewPromptLastAsk),
             installedAt: profile.createdAt
@@ -1309,11 +1310,10 @@ struct CompletionView: View {
             switch trigger {
             case .milestone(let milestone): reviewPromptMilestone = milestone
             case .streak: streakReviewPromptShown = true
-            case .version: break
+            // Nothing to spend: each finished collection is its own moment,
+            // and the gap and Apple's cap pace them.
+            case .collection, .periodic: break
             }
-            // Any ask spends this version's re-arm — the version trigger can't
-            // stack a second prompt onto a version that already asked.
-            reviewPromptVersion = Self.marketingVersion
             reviewPromptLastAsk = Date().timeIntervalSinceReferenceDate
             analytics.log(.reviewPromptRequested(
                 trigger: trigger.analyticsValue, totalCompleted: totalCompleted))
@@ -1324,9 +1324,6 @@ struct CompletionView: View {
             requestReview()
         })
     }
-
-    private static let marketingVersion =
-        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
 
     // No auto-presented paywall here any more. The first-solve and 3-day-streak
     // sheets (`first_completion`, `streak_3`) were shown to 88 free players in

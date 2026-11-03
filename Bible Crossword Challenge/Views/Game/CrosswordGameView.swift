@@ -148,6 +148,9 @@ struct CrosswordGameScreen: View {
     /// reveal or the verse sheet never races the card's own dismissal.
     @State private var hintUpgradeOutcome: (HintType, HintUpgradeSheet.Outcome)?
     @State private var newlyUnlocked: [Achievement] = []
+    /// This solve finished a pack or Journey — handed to the completion
+    /// screen's review ask.
+    @State private var finishedCollection = false
     /// Whether this solve crossed a streak milestone that granted a freeze.
     @State private var earnedFreeze = false
     /// True when this solve is the one that restarted a broken streak, so the
@@ -535,6 +538,7 @@ struct CrosswordGameScreen: View {
                 earnedFreeze: earnedFreeze,
                 isComeback: isComeback,
                 totalCompleted: profile.totalPuzzlesCompleted,
+                finishedCollection: finishedCollection,
                 onHome: {
                     showCompletion = false
                     dismiss()
@@ -1424,13 +1428,15 @@ struct CrosswordGameScreen: View {
         if !puzzle.isMini, seconds > 0 {
             profile.bestSolveSeconds = min(profile.bestSolveSeconds ?? .max, seconds)
         }
+        finishedCollection = false
         if firstCompletion {
             if !rec.usedHint && !puzzle.isMini { profile.noHintSolves += 1 }
             if puzzle.difficulty == .hard { profile.hardCompleted += 1 }
             // This solve may have finished one or more packs — record them
             // before evaluating achievements so a pack unlock lands on this
             // completion screen, not the next one.
-            for pack in recordPackCompletions() {
+            let finishedPacks = recordPackCompletions()
+            for pack in finishedPacks {
                 analytics.log(.packCompleted(id: pack.id))
             }
             // Same contract for Journeys: step credit on every quest this
@@ -1445,9 +1451,11 @@ struct CrosswordGameScreen: View {
                     ))
                 }
             }
-            for quest in recordQuestCompletions() {
+            let finishedQuests = recordQuestCompletions()
+            for quest in finishedQuests {
                 analytics.log(.questCompleted(id: quest.id))
             }
+            finishedCollection = !finishedPacks.isEmpty || !finishedQuests.isEmpty
         }
 
         let unlocked = Achievements.newlyUnlocked(for: profile)

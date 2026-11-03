@@ -6,13 +6,12 @@
       },
       "given" : {
         "currentStreak" : 0,
-        "currentVersion" : "2.10",
+        "finishedCollection" : false,
         "installedDaysAgo" : null,
         "lastAskDaysAgo" : null,
         "milestoneAsked" : 0,
         "streakAsked" : false,
-        "totalCompleted" : 3,
-        "versionAsked" : ""
+        "totalCompleted" : 3
       },
       "name" : "state 0"
     },
@@ -22,13 +21,12 @@
       },
       "given" : {
         "currentStreak" : 0,
-        "currentVersion" : "2.10",
+        "finishedCollection" : false,
         "installedDaysAgo" : 2.8999999999999999,
         "lastAskDaysAgo" : null,
         "milestoneAsked" : 0,
         "streakAsked" : false,
-        "totalCompleted" : 3,
-        "versionAsked" : ""
+        "totalCompleted" : 3
       },
       "name" : "state 1"
     },
@@ -38,13 +36,12 @@
       },
       "given" : {
         "currentStreak" : 0,
-        "currentVersion" : "2.10",
+        "finishedCollection" : false,
         "installedDaysAgo" : 3,
         "lastAskDaysAgo" : null,
         "milestoneAsked" : 0,
         "streakAsked" : false,
-        "totalCompleted" : 3,
-        "versionAsked" : ""
+        "totalCompleted" : 3
       },
       "name" : "state 2"
     },
@@ -54,13 +51,12 @@
       },
       "given" : {
         "currentStreak" : 0,
-        "currentVersion" : "2.10",
+        "finishedCollection" : false,
         "installedDaysAgo" : 10,
         "lastAskDaysAgo" : null,
         "milestoneAsked" : 0,
         "streakAsked" : false,
-        "totalCompleted" : 2,
-        "versionAsked" : ""
+        "totalCompleted" : 2
       },
       "name" : "state 3"
     },
@@ -70,13 +66,12 @@
       },
       "given" : {
         "currentStreak" : 0,
-        "currentVersion" : "2.10",
+        "finishedCollection" : false,
         "installedDaysAgo" : 40,
         "lastAskDaysAgo" : 20,
         "milestoneAsked" : 3,
         "streakAsked" : false,
-        "totalCompleted" : 12,
-        "versionAsked" : ""
+        "totalCompleted" : 12
       },
       "name" : "state 4"
     },
@@ -86,13 +81,12 @@
       },
       "given" : {
         "currentStreak" : 0,
-        "currentVersion" : "2.10",
+        "finishedCollection" : false,
         "installedDaysAgo" : 40,
         "lastAskDaysAgo" : 13.9,
         "milestoneAsked" : 3,
         "streakAsked" : false,
-        "totalCompleted" : 12,
-        "versionAsked" : ""
+        "totalCompleted" : 12
       },
       "name" : "state 5"
     },
@@ -102,13 +96,12 @@
       },
       "given" : {
         "currentStreak" : 0,
-        "currentVersion" : "2.10",
+        "finishedCollection" : false,
         "installedDaysAgo" : 40,
         "lastAskDaysAgo" : 20,
         "milestoneAsked" : 10,
         "streakAsked" : false,
-        "totalCompleted" : 12,
-        "versionAsked" : ""
+        "totalCompleted" : 12
       },
       "name" : "state 6"
     },
@@ -118,13 +111,12 @@
       },
       "given" : {
         "currentStreak" : 7,
-        "currentVersion" : "2.10",
+        "finishedCollection" : false,
         "installedDaysAgo" : 40,
         "lastAskDaysAgo" : 20,
         "milestoneAsked" : 10,
         "streakAsked" : false,
-        "totalCompleted" : 12,
-        "versionAsked" : ""
+        "totalCompleted" : 12
       },
       "name" : "state 7"
     },
@@ -134,13 +126,12 @@
       },
       "given" : {
         "currentStreak" : 7,
-        "currentVersion" : "2.10",
+        "finishedCollection" : false,
         "installedDaysAgo" : 40,
         "lastAskDaysAgo" : 20,
         "milestoneAsked" : 10,
         "streakAsked" : true,
-        "totalCompleted" : 12,
-        "versionAsked" : ""
+        "totalCompleted" : 12
       },
       "name" : "state 8"
     },
@@ -150,45 +141,42 @@
       },
       "given" : {
         "currentStreak" : 8,
-        "currentVersion" : "2.10",
+        "finishedCollection" : false,
         "installedDaysAgo" : 40,
         "lastAskDaysAgo" : 20,
         "milestoneAsked" : 3,
         "streakAsked" : false,
-        "totalCompleted" : 12,
-        "versionAsked" : ""
+        "totalCompleted" : 12
       },
       "name" : "state 9"
     },
     {
       "expect" : {
-        "trigger" : "version"
+        "trigger" : "collection_complete"
       },
       "given" : {
-        "currentStreak" : 0,
-        "currentVersion" : "2.10",
-        "installedDaysAgo" : 90,
+        "currentStreak" : 7,
+        "finishedCollection" : true,
+        "installedDaysAgo" : 40,
         "lastAskDaysAgo" : 20,
-        "milestoneAsked" : 30,
-        "streakAsked" : true,
-        "totalCompleted" : 30,
-        "versionAsked" : "2.9"
+        "milestoneAsked" : 10,
+        "streakAsked" : false,
+        "totalCompleted" : 12
       },
       "name" : "state 10"
     },
     {
       "expect" : {
-        "trigger" : null
+        "trigger" : "milestone_10"
       },
       "given" : {
         "currentStreak" : 0,
-        "currentVersion" : "2.10",
-        "installedDaysAgo" : 90,
+        "finishedCollection" : true,
+        "installedDaysAgo" : 40,
         "lastAskDaysAgo" : 20,
-        "milestoneAsked" : 30,
-        "streakAsked" : true,
-        "totalCompleted" : 30,
-        "versionAsked" : "2.10"
+        "milestoneAsked" : 3,
+        "streakAsked" : false,
+        "totalCompleted" : 12
       },
       "name" : "state 11"
     },
@@ -198,15 +186,29 @@
       },
       "given" : {
         "currentStreak" : 0,
-        "currentVersion" : "2.10",
-        "installedDaysAgo" : 90,
-        "lastAskDaysAgo" : 20,
+        "finishedCollection" : true,
+        "installedDaysAgo" : 40,
+        "lastAskDaysAgo" : 13.9,
         "milestoneAsked" : 10,
-        "streakAsked" : true,
-        "totalCompleted" : 29,
-        "versionAsked" : "2.9"
+        "streakAsked" : false,
+        "totalCompleted" : 12
       },
       "name" : "state 12"
+    },
+    {
+      "expect" : {
+        "trigger" : "periodic"
+      },
+      "given" : {
+        "currentStreak" : 0,
+        "finishedCollection" : false,
+        "installedDaysAgo" : 300,
+        "lastAskDaysAgo" : 120,
+        "milestoneAsked" : 30,
+        "streakAsked" : true,
+        "totalCompleted" : 30
+      },
+      "name" : "state 13"
     },
     {
       "expect" : {
@@ -214,15 +216,44 @@
       },
       "given" : {
         "currentStreak" : 0,
-        "currentVersion" : "",
-        "installedDaysAgo" : 90,
-        "lastAskDaysAgo" : 20,
+        "finishedCollection" : false,
+        "installedDaysAgo" : 300,
+        "lastAskDaysAgo" : 119.90000000000001,
         "milestoneAsked" : 30,
         "streakAsked" : true,
-        "totalCompleted" : 30,
-        "versionAsked" : "2.9"
+        "totalCompleted" : 30
       },
-      "name" : "state 13"
+      "name" : "state 14"
+    },
+    {
+      "expect" : {
+        "trigger" : null
+      },
+      "given" : {
+        "currentStreak" : 0,
+        "finishedCollection" : false,
+        "installedDaysAgo" : 300,
+        "lastAskDaysAgo" : 200,
+        "milestoneAsked" : 10,
+        "streakAsked" : true,
+        "totalCompleted" : 29
+      },
+      "name" : "state 15"
+    },
+    {
+      "expect" : {
+        "trigger" : "periodic"
+      },
+      "given" : {
+        "currentStreak" : 0,
+        "finishedCollection" : false,
+        "installedDaysAgo" : 90,
+        "lastAskDaysAgo" : null,
+        "milestoneAsked" : 30,
+        "streakAsked" : true,
+        "totalCompleted" : 40
+      },
+      "name" : "state 16"
     },
     {
       "expect" : {
@@ -230,15 +261,14 @@
       },
       "given" : {
         "currentStreak" : 0,
-        "currentVersion" : "2.10",
+        "finishedCollection" : false,
         "installedDaysAgo" : 400,
         "lastAskDaysAgo" : 20,
         "milestoneAsked" : 150,
         "streakAsked" : true,
-        "totalCompleted" : 300,
-        "versionAsked" : "2.10"
+        "totalCompleted" : 300
       },
-      "name" : "state 14"
+      "name" : "state 17"
     }
   ],
   "description" : "ReviewAsk.decide: which trigger fires (or none). Offsets are in days; fractional values are deliberate boundary probes.",
