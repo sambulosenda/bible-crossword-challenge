@@ -74,6 +74,10 @@ extension QuestLine {
 /// one screen; the serif mark is what makes it read as a book.
 struct PackCover: View {
     let label: PackCoverLabel
+    /// The collection's first grid, in the corner where a book's cover has
+    /// its emblem: it says crossword at a glance (2026-11-03). Replaced a
+    /// short rule that said nothing.
+    var grid: [String]? = nil
     /// The SF Symbol to draw when no reference parses.
     var fallbackSymbol: String = "square.stack.3d.up"
     var isLocked: Bool = false
@@ -83,9 +87,11 @@ struct PackCover: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Capsule()
-                .fill(Color.primary.opacity(0.25))
-                .frame(width: 20, height: 2)
+            if let grid {
+                GridThumbnail(grid: grid, tint: Color.secondary.opacity(0.6),
+                              gap: grid.count > 9 ? 0 : 1, cropsToContent: true)
+                    .frame(width: 28, height: 28)
+            }
 
             Spacer(minLength: Theme.Spacing.s)
 

@@ -51,18 +51,3 @@ struct CollectionCover: View {
         isLocked ? Color.primary.opacity(0.06) : accent.opacity(0.14)
     }
 }
-
-// MARK: - Lead card
-
-/// The call to action on the lead card.
-enum CollectionLeadAction: String {
-    case start = "Start"
-    case resume = "Resume"
-
-    /// `nil` when there is nothing to do: a finished collection has no next
-    /// step worth promoting, and a locked one's only action is the paywall.
-    static func forRow(isLocked: Bool, solved: Int, isComplete: Bool) -> CollectionLeadAction? {
-        guard !isLocked, !isComplete else { return nil }
-        return solved > 0 ? .resume : .start
-    }
-}
