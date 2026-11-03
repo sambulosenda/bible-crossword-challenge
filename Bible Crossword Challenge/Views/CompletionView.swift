@@ -191,7 +191,7 @@ struct CompletionView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     /// The solve time is the hero's headline; it scales with Dynamic Type from
     /// a display size, and shrinks to fit rather than wrap.
-    @ScaledMetric(relativeTo: .largeTitle) private var heroTimeSize: CGFloat = 88
+    @ScaledMetric(relativeTo: .largeTitle) private var heroTimeSize: CGFloat = 64
 
     var body: some View {
         // A navigation stack for its bars alone. The close button and the
@@ -216,7 +216,10 @@ struct CompletionView: View {
                 VStack(spacing: 0) {
                     hero
 
-                    VStack(spacing: 28) {
+                    // 32 between groups (2026-11-03): hero, streak, verse,
+                        // pack read as separate groups, as a results screen
+                        // sets them, rather than one run of blocks.
+                    VStack(spacing: Theme.Spacing.xl) {
                         scorecard
 
                         if let challenge {
@@ -1183,31 +1186,41 @@ struct CompletionView: View {
     /// screen after the bar.
     private var verseCard: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.s) {
+            // A size down from title2 (2026-11-03): at title2 under a large
+            // time and a full card the screen read as crowded.
             Text(puzzle.verse)
-                .font(.scripture(.title2))
+                .font(.scripture(.title3))
                 .tracking(-0.2)
-                .lineSpacing(4)
+                .lineSpacing(3)
                 .fixedSize(horizontal: false, vertical: true)
-            HStack(alignment: .firstTextBaseline, spacing: Theme.Spacing.m) {
-                Text(puzzle.reference)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                Spacer(minLength: Theme.Spacing.s)
+            Text(puzzle.reference)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+            // The two doors on one line, falling back to two where they
+            // don't fit (large text, a narrow fold).
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: Theme.Spacing.l) { verseLinks }
+                VStack(alignment: .leading, spacing: Theme.Spacing.s) { verseLinks }
+            }
+            .padding(.top, 2)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    @ViewBuilder
+    private var verseLinks: some View {
                 Button {
                     analytics.log(.scriptureOpened(reference: puzzle.reference, source: "puzzle_completion"))
                     readerRouter.open(reference: puzzle.reference, source: "puzzle_completion")
                     onHome()
                 } label: {
-                    Text("Read the passage")
-                        .font(.body)
+                    Label("Read the passage", systemImage: "book")
+                        .font(.subheadline.weight(.medium))
                 }
                 .buttonStyle(.borderless)
                 .tint(Theme.accent)
                 .accessibilityHint("Closes this screen and opens the passage in the reader")
-            }
             memorizeButton
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     /// "Try it from memory": the verse they just filled in, as the level-1
@@ -1244,7 +1257,7 @@ struct CompletionView: View {
                     }
                 } label: {
                     Label(held ? "Practice it from memory" : "Try it from memory", systemImage: "brain")
-                        .font(.body)
+                        .font(.subheadline.weight(.medium))
                 }
                 // A link since 2026-10-24, beside the passage link it
                 // belongs with, not a pill competing with the bar's action.

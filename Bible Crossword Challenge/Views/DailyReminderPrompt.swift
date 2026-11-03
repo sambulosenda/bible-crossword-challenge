@@ -238,59 +238,60 @@ struct ReminderAskRow: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: Theme.Spacing.s) {
-            HStack(spacing: Theme.Spacing.s) {
-                Image(systemName: "bell.badge")
+        // One row (2026-11-03): bell, what it does, the button, and a quiet ✕
+        // to decline. It was a title, a two-line pitch and a row of two
+        // buttons, which made the scorecard two cards in one.
+        HStack(spacing: Theme.Spacing.s) {
+            Image(systemName: "bell.badge")
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(.secondary)
+                .accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: 1) {
+                Text("Remind me at \(reminderTimeText)")
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(Theme.accent)
-                    .accessibilityHidden(true)
-                VStack(alignment: .leading, spacing: 1) {
-                    Text("Same time tomorrow?")
-                        .font(.subheadline.weight(.semibold))
-                    // Not "one a day": a player with a streak also gets the
-                    // 9 PM last call, so the old line promised a quota the
-                    // scheduler was never going to keep.
-                    Text("A nudge at \(reminderTimeText), plus a last call if your streak is about to break. Change it any time.")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-                .accessibilityElement(children: .combine)
+                // Not "one a day": a player with a streak also gets the 9 PM
+                // last call, so the line says so.
+                Text("Plus a last call for your streak")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
             }
+            .fixedSize(horizontal: false, vertical: true)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .accessibilityElement(children: .combine)
 
-            HStack(spacing: Theme.Spacing.m) {
-                // Quiet, same weight as the other asks' declines.
-                Button("Not now") {
-                    analytics.log(.reminderDeclined(source: surface.rawValue))
-                    onFinish()
+            Button {
+                enable()
+            } label: {
+                Group {
+                    if working {
+                        ProgressView().tint(.white)
+                    } else {
+                        Text("Remind me")
+                            .foregroundStyle(.white)
+                    }
                 }
                 .font(.subheadline.weight(.semibold))
-                .tint(.secondary)
-                .disabled(working)
-
-                Spacer(minLength: 0)
-
-                Button {
-                    enable()
-                } label: {
-                    Group {
-                        if working {
-                            ProgressView().tint(.white)
-                        } else {
-                            Text("Remind me")
-                                .foregroundStyle(.white)
-                        }
-                    }
-                    .font(.subheadline.weight(.semibold))
-                    .padding(.horizontal, Theme.Spacing.xs)
-                }
-                .buttonStyle(.borderedProminent)
-                .buttonBorderShape(.capsule)
-                .tint(Theme.accent)
-                .disabled(working)
-                .accessibilityLabel("Remind me at \(reminderTimeText)")
-                .accessibilityHint("Asks for notification permission")
             }
+            .buttonStyle(.borderedProminent)
+            .buttonBorderShape(.capsule)
+            .tint(Theme.accent)
+            .disabled(working)
+            .accessibilityLabel("Remind me at \(reminderTimeText)")
+            .accessibilityHint("Asks for notification permission")
+
+            Button {
+                analytics.log(.reminderDeclined(source: surface.rawValue))
+                onFinish()
+            } label: {
+                Image(systemName: "xmark")
+                    .font(.footnote.weight(.semibold))
+                    .foregroundStyle(.secondary)
+                    .frame(width: 28, height: 28)
+                    .contentShape(.rect)
+            }
+            .buttonStyle(.plain)
+            .disabled(working)
+            .accessibilityLabel("Not now")
         }
         // Mid-play, so "now" is the play hour the button should offer — see
         // `seedSuggestionIfUnset`.
