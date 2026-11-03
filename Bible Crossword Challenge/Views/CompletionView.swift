@@ -201,9 +201,6 @@ struct CompletionView: View {
         NavigationStack {
             content
                 .navigationBarTitleDisplayMode(.inline)
-                // The top bar sits on the blue hero: light status text and a
-                // close button drawn for a dark background.
-                .toolbarColorScheme(.dark, for: .navigationBar)
                 .toolbar { toolbarContent }
                 .observeVerticalBars($barsVertical)
         }
@@ -461,7 +458,7 @@ struct CompletionView: View {
         }
         .padding(Theme.Spacing.l)
         .frame(maxWidth: .infinity)
-        .background(Theme.accent.opacity(0.1), in: .rect(cornerRadius: Theme.cornerRadius, style: .continuous))
+        .background(Theme.surface, in: .rect(cornerRadius: Theme.cornerRadius, style: .continuous))
     }
 
     private func comparisonStat(label: String, value: Int, highlight: Bool) -> some View {
@@ -590,7 +587,7 @@ struct CompletionView: View {
         }
         .padding(Theme.Spacing.l)
         .frame(maxWidth: .infinity)
-        .background(Theme.accent.opacity(0.1), in: .rect(cornerRadius: Theme.cornerRadius, style: .continuous))
+        .background(Theme.surface, in: .rect(cornerRadius: Theme.cornerRadius, style: .continuous))
         .accessibilityElement(children: .contain)
     }
 
@@ -698,7 +695,7 @@ struct CompletionView: View {
         HStack(spacing: Theme.Spacing.m) {
             Image(systemName: ctx.progress.isComplete ? "checkmark.seal.fill" : ctx.quest.coverSymbol)
                 .font(.title)
-                .foregroundStyle(ctx.quest.accent)
+                .foregroundStyle(.secondary)
             VStack(alignment: .leading, spacing: 2) {
                 if ctx.progress.isComplete {
                     Text("\(ctx.quest.title) — Journey complete!")
@@ -720,7 +717,7 @@ struct CompletionView: View {
         }
         .padding(Theme.Spacing.l)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(ctx.quest.accent.opacity(0.12), in: .rect(cornerRadius: Theme.cornerRadius, style: .continuous))
+        .background(Theme.surface, in: .rect(cornerRadius: Theme.cornerRadius, style: .continuous))
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(ctx.progress.isComplete
             ? "\(ctx.quest.title) Journey complete."
@@ -737,7 +734,7 @@ struct CompletionView: View {
             HStack(spacing: Theme.Spacing.m) {
                 Image(systemName: "checkmark.seal.fill")
                     .font(.title)
-                    .foregroundStyle(ctx.pack.accent)
+                    .foregroundStyle(.secondary)
                 VStack(alignment: .leading, spacing: 2) {
                     Text("\(ctx.pack.title) complete!")
                         .font(.subheadline.weight(.semibold))
@@ -749,7 +746,7 @@ struct CompletionView: View {
             }
             .padding(Theme.Spacing.l)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(ctx.pack.accent.opacity(0.12), in: .rect(cornerRadius: Theme.cornerRadius, style: .continuous))
+            .background(Theme.surface, in: .rect(cornerRadius: Theme.cornerRadius, style: .continuous))
             .accessibilityElement(children: .ignore)
             .accessibilityLabel("\(ctx.pack.title) complete. Every puzzle in the pack is solved.")
         } else if let next = ctx.next {
@@ -765,7 +762,7 @@ struct CompletionView: View {
                 HStack(spacing: Theme.Spacing.m) {
                     Image(systemName: locked ? "crown.fill" : ctx.pack.coverSymbol)
                         .font(.title)
-                        .foregroundStyle(locked ? .yellow : ctx.pack.accent)
+                        .foregroundStyle(.secondary)
                     VStack(alignment: .leading, spacing: 2) {
                         Text("\(ctx.pack.title) · \(ctx.progress.solved) of \(ctx.progress.total)")
                             .font(.subheadline.weight(.semibold))
@@ -784,7 +781,7 @@ struct CompletionView: View {
                 }
                 .padding(Theme.Spacing.l)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(ctx.pack.accent.opacity(0.12), in: .rect(cornerRadius: Theme.cornerRadius, style: .continuous))
+                .background(Theme.surface, in: .rect(cornerRadius: Theme.cornerRadius, style: .continuous))
             }
             .buttonStyle(PressableCardStyle())
             .accessibilityElement(children: .ignore)
@@ -809,9 +806,10 @@ struct CompletionView: View {
         VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
             Label("Solved", systemImage: "checkmark")
                 .font(.footnote.weight(.bold))
+                .foregroundStyle(FeatureTint.solved)
                 .padding(.vertical, 5)
                 .padding(.horizontal, 12)
-                .background(.white.opacity(0.18), in: .capsule)
+                .background(FeatureTint.solved.opacity(0.14), in: .capsule)
                 .padding(.bottom, Theme.Spacing.s)
 
             Text(TimeFormat.clock(seconds))
@@ -822,10 +820,10 @@ struct CompletionView: View {
 
             Text(heroSubtitle)
                 .font(.body)
-                .foregroundStyle(.white.opacity(0.88))
+                .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
         }
-        .foregroundStyle(.white)
+        .foregroundStyle(.primary)
         // One stop: "Solved, 4:12, The New Jerusalem · Daily · Friday, October 24".
         .accessibilityElement(children: .combine)
         .accessibilityAddTraits(.isHeader)
@@ -838,7 +836,7 @@ struct CompletionView: View {
             // About 20pt a square whatever the size, so a 7×7 Mini reads as
             // the same faint texture as a 15×15 rather than as big blocks.
             let side = min(300, CGFloat(puzzle.size) * 20)
-            GridThumbnail(grid: puzzle.grid, tint: .white.opacity(0.10), gap: 3, cropsToContent: true)
+            GridThumbnail(grid: puzzle.grid, tint: Color.primary.opacity(0.05), gap: 3, cropsToContent: true)
                 .frame(width: side, height: side)
                 .offset(x: 24, y: -20)
         }
@@ -851,12 +849,9 @@ struct CompletionView: View {
                     .accessibilityHidden(true)
             }
         }
-        // Taller than the hero and pinned to its bottom edge, so the blue
-        // also fills the space under the top bar and the pull-down bounce.
-        .background(alignment: .bottom) {
-            Theme.heroSolved
-                .frame(height: 1600)
-        }
+        // On the page's own ground since 2026-11-03, as every hero in the
+        // app is: the solid blue band was the last full-colour block left,
+        // and blue is the action's colour — the bar's button below.
     }
 
     /// "The Shepherd King · Daily · Friday, October 24" — what was solved,
@@ -1004,6 +999,15 @@ struct CompletionView: View {
     /// completion is the strongest D1 signal we have; this is the moment the
     /// appetite for "one more" exists, so the next solve is one tap away.
     private func loadChainTarget() {
+        // A pack's next puzzle, when this solve was in one and the next is
+        // open to this player (2026-11-03): "play another" is the screen's
+        // most valuable action, and it sat in the pack card below the verse.
+        // Journeys stay out — their frame is one step a day.
+        if let ctx = packContext, let next = ctx.next,
+           !(ctx.pack.isPremium && !store.isPremium) {
+            chainTarget = next
+            return
+        }
         if BeginnerPath.contains(puzzle, provider: puzzleProvider) {
             let records = (try? context.fetch(FetchDescriptor<PuzzleRecord>())) ?? []
             chainTarget = BeginnerPath.next(provider: puzzleProvider, recordsByID: records.byPuzzleID)
@@ -1111,7 +1115,9 @@ struct CompletionView: View {
     }
 
     private func maybeShowCompletionOffer() {
-        guard !store.isPremium, !completionOfferShown,
+        // One ask under the scorecard at a time: the reminder ask, when it's
+        // due, outranks the offer, which waits for a later solve unspent.
+        guard !store.isPremium, !completionOfferShown, !showReminderAsk,
               !BeginnerPath.contains(puzzle, provider: puzzleProvider) else { return }
         completionOfferShown = true
         showsCompletionOffer = true
@@ -1143,7 +1149,8 @@ struct CompletionView: View {
     }
 
     private func maybeShowWidgetOffer() {
-        guard !widgetOfferShown, !showsCompletionOffer, profile.totalPuzzlesCompleted >= 3 else { return }
+        guard !widgetOfferShown, !showsCompletionOffer, !showReminderAsk,
+              profile.totalPuzzlesCompleted >= 3 else { return }
         widgetOfferShown = true
         showsWidgetOffer = true
     }
@@ -1463,10 +1470,10 @@ struct CompletionView: View {
                         onHome()
                     }
                 } label: {
-                    barLabel(BeginnerPath.contains(puzzle, provider: puzzleProvider) ? "Next Mini" : "Play Today's Full Puzzle", systemImage: "play.fill")
+                    barLabel(chainTitle, systemImage: "play.fill")
                 }
                 .buttonStyle(.borderedProminent)
-                .tint(Theme.ink)
+                .tint(Theme.accent)
                 .accessibilityHint("Opens \(chainTarget.title)")
                 .accessibilityIdentifier("completionNextPuzzle")
             }
@@ -1495,6 +1502,13 @@ struct CompletionView: View {
         }
     }
 
+    /// The bar's "next" label: the pack's next puzzle, the beginner path's
+    /// next Mini, or today's full puzzle after a Mini.
+    private var chainTitle: String {
+        if let next = packContext?.next, next.id == chainTarget?.id { return "Next Puzzle" }
+        return BeginnerPath.contains(puzzle, provider: puzzleProvider) ? "Next Mini" : "Play Today's Full Puzzle"
+    }
+
     /// The invite, in the bar. Same action and name prompt as the menu item had.
     private var challengeButton: some View {
         Button {
@@ -1502,10 +1516,9 @@ struct CompletionView: View {
         } label: {
             barLabel(challengeTitle, systemImage: "flag.checkered")
         }
-        // Ink, the app's one loud action colour, as the design draws it; the
-        // accent blue beside the blue hero made two blues the screen's loudest.
+        // Blue, the app's action colour, since the hero left blue (2026-11-03).
         .buttonStyle(.borderedProminent)
-        .tint(Theme.ink)
+        .tint(Theme.accent)
         .accessibilityHint("Shares this puzzle and your time with a friend")
     }
 
@@ -1520,7 +1533,7 @@ struct CompletionView: View {
         } else {
             Text(title)
                 .font(.body.weight(.semibold))
-                .foregroundStyle(Theme.onInk)
+                .foregroundStyle(.white)
                 .padding(.horizontal, Theme.Spacing.s)
         }
     }
@@ -1583,7 +1596,7 @@ struct CompletionView: View {
                 barLabel("Share", systemImage: "square.and.arrow.up")
             }
             .buttonStyle(.borderedProminent)
-            .tint(Theme.ink)
+            .tint(Theme.accent)
         } else {
             Button {
                 openShareCard()

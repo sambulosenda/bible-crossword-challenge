@@ -230,14 +230,6 @@ enum Theme {
         darkHighContrast: rgb(0x873F0A)
     )
 
-    /// The completion screen's hero — a deeper blue than the daily's, so the
-    /// solve reads as the same family as Today's card without repeating it.
-    static let heroSolved = adaptive(
-        light: rgb(0x0A4FA8),
-        lightHighContrast: rgb(0x083E86),
-        dark: rgb(0x0B3F86),
-        darkHighContrast: rgb(0x08306A)
-    )
 
     private static func rgb(_ hex: UInt32) -> UIColor {
         UIColor(
