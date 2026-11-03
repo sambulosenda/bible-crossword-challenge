@@ -61,6 +61,9 @@ struct BeginnerPathTests {
         let puzzle = try #require(BeginnerPath.next(provider: provider, recordsByID: [:]))
         let start = Date(timeIntervalSinceReferenceDate: 0)
         let vm = GameViewModel(puzzle: puzzle, learning: true, now: start, prefersVerseHelp: true)
+        // The clock only runs on screen; without this every tick is dropped
+        // and the nudge never comes (as EngineTests sets it).
+        vm.isAttachedToWindow = true
         vm.tick(now: start)
         for second in 1...(vm.earlyNudgeSeconds + 1) {
             vm.tick(now: start.addingTimeInterval(Double(second)))

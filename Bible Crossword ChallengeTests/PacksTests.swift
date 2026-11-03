@@ -358,7 +358,7 @@ struct PacksTests {
     @Test func profileMergeUnionsCompletedPacks() throws {
         let container = try ModelContainer(
             for: PlayerProfile.self, PuzzleRecord.self,
-            configurations: ModelConfiguration(isStoredInMemoryOnly: true)
+            configurations: ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none)
         )
         let context = ModelContext(container)
         let old = PlayerProfile(completedPackIDs: ["first-steps"], createdAt: day(2026, 6, 1))

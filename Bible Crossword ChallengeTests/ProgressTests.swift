@@ -355,13 +355,22 @@ struct AchievementTests {
 }
 
 struct SyncMergeTests {
+    /// Held for the test's lifetime, so the store outlives the helper.
+    private let container: ModelContainer
+
+    /// iCloud off: the default (`.automatic`) gave the in-memory store
+    /// CloudKit mirroring, which on a simulator with no iCloud account
+    /// removed the store and crashed the next fetch with "No eligible
+    /// connection available", taking down every test queued behind it.
+    init() throws {
+        container = try ModelContainer(
+            for: PlayerProfile.self, PuzzleRecord.self,
+            configurations: ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none)
+        )
+    }
 
     private func makeContext() throws -> ModelContext {
-        let container = try ModelContainer(
-            for: PlayerProfile.self, PuzzleRecord.self,
-            configurations: ModelConfiguration(isStoredInMemoryOnly: true)
-        )
-        return ModelContext(container)
+        ModelContext(container)
     }
 
     @Test func profileMergeKeepsBestOfEverything() throws {
