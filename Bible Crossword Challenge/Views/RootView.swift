@@ -14,7 +14,7 @@ import os
 /// held until 2.8 — the trophy list now lives inside Profile (and behind
 /// Today's next-achievement card), and the scripture surfaces got the tab.
 enum RootTab: Hashable {
-    case today, packs, library, profile
+    case today, packs, profile
 }
 
 struct RootView: View {
@@ -440,13 +440,11 @@ struct RootView: View {
                     selectedTab = .packs
                 }
             }
-            Tab("Packs", systemImage: "square.stack.3d.up", value: RootTab.packs) {
+            // Packs and Library as one tab since 2026-11-03: both were ways
+            // into the same puzzles. The shelves lead; "All Puzzles" pushes
+            // the searchable list that was the Library tab.
+            Tab("Puzzles", systemImage: "square.grid.3x3", value: RootTab.packs) {
                 PacksView(profile: profile, path: $packsPath)
-            }
-            // A grid, not a bookshelf: the Library is the puzzle archive, and a
-            // shelf of books beside the Read tab's book made the two read as one.
-            Tab("Library", systemImage: "square.grid.3x3", value: RootTab.library) {
-                LibraryView(profile: profile)
             }
             // No Verses tab since 2026-10-13: it's pushed from Today's
             // "Bible" row (see HomeView). About 1 in 20 actives used it in a

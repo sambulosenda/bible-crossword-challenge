@@ -2,7 +2,8 @@
 //  PacksView.swift
 //  Bible Crossword Challenge
 //
-//  The "Packs" tab: curated collections of related puzzles. Free to browse; a
+//  The "Puzzles" tab (was "Packs"; the Library joined it 2026-11-03, one row
+//  under the lead): curated collections of related puzzles. Free to browse; a
 //  premium pack shows its contents but gates play behind the paywall (the free
 //  starter pack is always playable). Seasonal packs surface only in-window.
 //
@@ -67,7 +68,7 @@ struct PacksView: View {
                 }
             }
             .background(Theme.background)
-            .navigationTitle("Packs")
+            .navigationTitle("Puzzles")
             // Large, as Today's is: a tab root names itself at the top and
             // hands the name to the bar on scroll.
             .navigationBarTitleDisplayMode(.large)
@@ -85,6 +86,12 @@ struct PacksView: View {
             }
             .navigationDestination(for: Puzzle.self) { puzzle in
                 CrosswordGameView(puzzle: puzzle, profile: profile, entrySource: "pack")
+            }
+            .navigationDestination(for: LibraryRoute.self) { _ in
+                LibraryView(profile: profile, path: $path)
+            }
+            .navigationDestination(for: LibraryPuzzleRoute.self) { route in
+                CrosswordGameView(puzzle: route.puzzle, profile: profile, entrySource: "library")
             }
         }
     }
@@ -142,6 +149,7 @@ struct PacksView: View {
         return ScrollView {
             LazyVStack(alignment: .leading, spacing: Theme.Spacing.xl) {
                 leadCard(lead, packLabels: packLabels)
+                allPuzzlesRow(recordsByID: recordsByID)
 
                 if !shownQuests.isEmpty {
                     PackShelf(title: "Journeys") {
@@ -322,6 +330,30 @@ struct PacksView: View {
             isLocked: locked,
             progress: !locked && progress.solved > 0 && !progress.isComplete ? progress.fraction : nil
         )
+    }
+
+    // MARK: - All puzzles
+
+    /// The way into every puzzle, under the lead: what was the Library tab
+    /// (merged 2026-11-03). A row, not a shelf — it's a list to search and
+    /// filter, and the shelves above are the curated way in.
+    private func allPuzzlesRow(recordsByID: [String: PuzzleRecord]) -> some View {
+        let all = puzzleProvider.puzzles + puzzleProvider.sundays + puzzleProvider.minis
+        let solved = all.count { recordsByID[$0.id]?.isCompleted == true }
+        return CardGroup {
+            NavigationLink(value: LibraryRoute()) {
+                CoverRow(
+                    symbol: "square.grid.3x3",
+                    tint: .secondary,
+                    title: "All Puzzles",
+                    subtitle: solved > 0
+                        ? "\(all.count) crosswords · \(solved) solved"
+                        : "\(all.count) crosswords to search and filter"
+                )
+                .cardRowPadding()
+            }
+            .buttonStyle(PressableCardStyle())
+        }
     }
 
     // MARK: - Offer

@@ -1109,7 +1109,8 @@ private struct CollectionsCarousel: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.s) {
-            // "Packs", as the tab, the paywall and Settings call them. The
+            // "Packs", as the paywall and Settings call them (the shelf is on the
+            // Puzzles tab since 2026-11-03). The
             // header is the way to the rest of the shelf, App Store–style:
             // the section title with a grey chevron after it.
             Button(action: onShowAll) {

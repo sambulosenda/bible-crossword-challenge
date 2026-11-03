@@ -72,7 +72,7 @@ final class Bible_Crossword_ChallengeUITests: XCTestCase {
     @MainActor
     func testPackOpenLogsOncePerVisit() throws {
         let app = launch()
-        let packsTab = app.tabBars.buttons["Packs"]
+        let packsTab = app.tabBars.buttons["Puzzles"]
         XCTAssertTrue(packsTab.waitForExistence(timeout: 20))
         packsTab.tap()
 
