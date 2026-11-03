@@ -66,6 +66,11 @@ struct UpNextCard<Action: View>: View {
     let kicker: String
     /// A glyph before the kicker — the seal on a finished collection.
     var kickerSymbol: String? = nil
+    /// One reassuring line under the puzzle — how long, what helps.
+    var note: String? = nil
+    /// 0...1 once the collection is under way; nil draws no bar (an empty bar
+    /// is a gauge with nothing to measure).
+    var progress: Double? = nil
     @ViewBuilder let action: Action
 
     /// The grid tile grows with the title beside it, as a shelf cover does.
@@ -100,6 +105,16 @@ struct UpNextCard<Action: View>: View {
                 Spacer(minLength: 0)
             }
             .accessibilityElement(children: .combine)
+            if let note {
+                Text(note)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            if let progress {
+                ProgressView(value: progress)
+                    .tint(Theme.progressBar)
+            }
             action
         }
         .padding(Theme.Spacing.m + Theme.Spacing.xs)
