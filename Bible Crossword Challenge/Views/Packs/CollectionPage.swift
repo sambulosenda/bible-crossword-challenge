@@ -68,15 +68,18 @@ struct UpNextCard<Action: View>: View {
     var kickerSymbol: String? = nil
     @ViewBuilder let action: Action
 
+    /// The grid tile grows with the title beside it, as a shelf cover does.
+    @ScaledMetric(relativeTo: .title3) private var gridSide: CGFloat = 72
+
     var body: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.m) {
             HStack(spacing: Theme.Spacing.m) {
                 GridThumbnail(grid: puzzle.grid, tint: Color.secondary,
                               gap: puzzle.grid.count > 9 ? 0 : 1, cropsToContent: true)
-                    .padding(8)
-                    .frame(width: 72, height: 72)
+                    .padding(gridSide / 9)
+                    .frame(width: gridSide, height: gridSide)
                     .background(Color.primary.opacity(0.06),
-                                in: .rect(cornerRadius: 14, style: .continuous))
+                                in: .rect(cornerRadius: gridSide * 0.2, style: .continuous))
                     .accessibilityHidden(true)
                 VStack(alignment: .leading, spacing: 2) {
                     HStack(spacing: 4) {
@@ -90,7 +93,7 @@ struct UpNextCard<Action: View>: View {
                     Text(puzzle.title)
                         .font(.title3.weight(.semibold))
                         .fixedSize(horizontal: false, vertical: true)
-                    Text(PackDetailView.detail(puzzle))
+                    Text(puzzle.detailLine)
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }

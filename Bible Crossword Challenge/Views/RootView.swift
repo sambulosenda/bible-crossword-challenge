@@ -14,7 +14,7 @@ import os
 /// held until 2.8 — the trophy list now lives inside Profile (and behind
 /// Today's next-achievement card), and the scripture surfaces got the tab.
 enum RootTab: Hashable {
-    case today, packs, profile
+    case today, puzzles, profile
 }
 
 struct RootView: View {
@@ -48,9 +48,9 @@ struct RootView: View {
     /// push the daily puzzle onto it. Type-erased so the Today feed can push both
     /// puzzles and pack details.
     @State private var todayPath = NavigationPath()
-    /// Navigation stack for the Packs tab, held here for the same reason as
+    /// Navigation stack for the Puzzles tab, held here for the same reason as
     /// `todayPath`: a season-opening notification deep-links into a pack.
-    @State private var packsPath = NavigationPath()
+    @State private var puzzlesPath = NavigationPath()
     // Sorted so `first` is the oldest profile — the survivor SyncMerge keeps
     // when CloudKit sync delivers a duplicate from another device.
     @Query(sort: \PlayerProfile.createdAt) private var profiles: [PlayerProfile]
@@ -344,8 +344,8 @@ struct RootView: View {
            let id = URLComponents(url: url, resolvingAgainstBaseURL: false)?
                .queryItems?.first(where: { $0.name == "id" })?.value,
            let pack = puzzleProvider.pack(id: id), pack.isAvailable() {
-            selectedTab = .packs
-            packsPath = NavigationPath([PackRoute(pack: pack, source: .notification)])
+            selectedTab = .puzzles
+            puzzlesPath = NavigationPath([PackRoute(pack: pack, source: .notification)])
             return
         }
 
@@ -436,15 +436,15 @@ struct RootView: View {
                 // "Packs ›" asks for the shelf, not whichever pack the tab
                 // was last left open on.
                 HomeView(profile: profile, path: $todayPath) {
-                    packsPath = NavigationPath()
-                    selectedTab = .packs
+                    puzzlesPath = NavigationPath()
+                    selectedTab = .puzzles
                 }
             }
             // Packs and Library as one tab since 2026-11-03: both were ways
             // into the same puzzles. The shelves lead; "All Puzzles" pushes
             // the searchable list that was the Library tab.
-            Tab("Puzzles", systemImage: "square.grid.3x3", value: RootTab.packs) {
-                PacksView(profile: profile, path: $packsPath)
+            Tab("Puzzles", systemImage: "square.grid.3x3", value: RootTab.puzzles) {
+                PacksView(profile: profile, path: $puzzlesPath)
             }
             // No Verses tab since 2026-10-13: it's pushed from Today's
             // "Bible" row (see HomeView). About 1 in 20 actives used it in a

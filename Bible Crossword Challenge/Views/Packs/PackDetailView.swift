@@ -287,7 +287,7 @@ struct PackDetailView: View {
                         TrackRow(
                             number: index + 1,
                             title: puzzle.title,
-                            detail: Self.detail(puzzle),
+                            detail: puzzle.detailLine,
                             numeralTint: Color.secondary,
                             grid: puzzle.grid
                         ) {
@@ -298,13 +298,6 @@ struct PackDetailView: View {
                 }
             }
         }
-    }
-
-    /// "Psalm 23:1 · 7×7 · Easy": where it's from, how big, how hard — what
-    /// a player chooses a crossword by. No time: the app keeps no estimate of
-    /// one, and a guessed "~3 min" would be wrong half the time.
-    static func detail(_ puzzle: Puzzle) -> String {
-        "\(puzzle.reference) · \(puzzle.size)×\(puzzle.size) · \(puzzle.difficulty.label)"
     }
 
     @ViewBuilder
@@ -347,7 +340,7 @@ struct PackDetailView: View {
                         TrackRow(
                             number: index + 1,
                             title: puzzle.title,
-                            detail: Self.detail(puzzle),
+                            detail: puzzle.detailLine,
                             numeralTint: Color.secondary,
                             grid: puzzle.grid
                         ) {

@@ -235,7 +235,7 @@ struct QuestDetailView: View {
         TrackRow(
             number: index + 1,
             title: puzzle.title,
-            detail: PackDetailView.detail(puzzle),
+            detail: puzzle.detailLine,
             numeralTint: Color.secondary,
             grid: puzzle.grid
         ) {
