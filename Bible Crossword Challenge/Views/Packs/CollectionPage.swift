@@ -20,10 +20,9 @@ struct CollectionPageCover<Mark: View, Footer: View>: View {
     let title: String
     let caption: String
     var isLocked = false
-    /// The cover's height under the bar. 200 since 2026-10-25 (about 300 with
-    /// the bar): at 290 the cover took nearly half a 17e and the contents
-    /// started under the pinned offer.
-    var minHeight: CGFloat = 200
+    /// A floor on the cover's height. None since 2026-11-03: the cover is
+    /// just its type now, sized to it.
+    var minHeight: CGFloat = 0
     /// Drawn in the bottom-trailing corner, behind the type.
     @ViewBuilder var mark: Mark
     @ViewBuilder var footer: Footer
@@ -46,7 +45,9 @@ struct CollectionPageCover<Mark: View, Footer: View>: View {
         }
         .frame(maxWidth: 560, alignment: .leading)
         .padding(.horizontal, Theme.Spacing.m + Theme.Spacing.xs)
-        .padding(.top, Theme.Spacing.xl)
+        // Tight under the bar, where a large title sits: 32pt here left an
+        // empty band between the back button and the title (2026-11-03).
+        .padding(.top, Theme.Spacing.xs)
         .padding(.bottom, 28)
         .frame(maxWidth: .infinity, minHeight: minHeight, alignment: .bottom)
         .background(alignment: .bottomTrailing) {

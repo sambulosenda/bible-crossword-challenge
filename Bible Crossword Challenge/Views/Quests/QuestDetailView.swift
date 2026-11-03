@@ -118,10 +118,7 @@ struct QuestDetailView: View {
         return CollectionPageCover(
             title: quest.title,
             caption: label.caption.isEmpty ? size : "\(label.caption) · \(size)",
-            isLocked: isLocked,
-            // Sized to its text: the pack page's 200pt floor left an empty
-            // band above the title.
-            minHeight: 0
+            isLocked: isLocked
         ) {
             EmptyView()
         } footer: {
