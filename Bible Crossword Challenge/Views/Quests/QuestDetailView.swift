@@ -33,6 +33,15 @@ struct QuestRoute: Hashable {
     let source: QuestOpenSource
 }
 
+/// A Journey step opened from a Journey — its page or the Puzzles tab's lead.
+/// Its own type, not a bare `Puzzle`, so the game logs `entrySource:
+/// "journey"`: until 2026-11-03 these logged as whichever stack pushed them
+/// ("pack" on the Puzzles tab, "home", "profile"), and Journey starts were
+/// unreadable. Every stack that can show a Journey page registers it.
+struct JourneyPuzzleRoute: Hashable {
+    let puzzle: Puzzle
+}
+
 struct QuestDetailView: View {
     let quest: QuestLine
     let profile: PlayerProfile
@@ -139,7 +148,7 @@ struct QuestDetailView: View {
                 kicker: "Complete · \(progress.total) of \(progress.total)",
                 kickerSymbol: "checkmark.seal.fill"
             ) {
-                NavigationLink(value: first) {
+                NavigationLink(value: JourneyPuzzleRoute(puzzle: first)) {
                     Label("Play again from step 1", systemImage: "arrow.counterclockwise")
                 }
                 .buttonStyle(.pillTonal)
@@ -166,12 +175,12 @@ struct QuestDetailView: View {
     private func playButton(_ puzzle: Puzzle, index: Int, progress: QuestProgress) -> some View {
         Group {
             if progress.steppedToday {
-                NavigationLink(value: puzzle) {
+                NavigationLink(value: JourneyPuzzleRoute(puzzle: puzzle)) {
                     Label("Play ahead", systemImage: "forward.fill")
                 }
                 .buttonStyle(.pillTonal)
             } else {
-                NavigationLink(value: puzzle) {
+                NavigationLink(value: JourneyPuzzleRoute(puzzle: puzzle)) {
                     Label(index == 0 ? "Start" : "Play step \(index + 1)", systemImage: "play.fill")
                 }
                 .buttonStyle(.pillAccent)
@@ -215,7 +224,7 @@ struct QuestDetailView: View {
             // the step before it is solved — no date gate, just order.
             row(index: index, puzzle: puzzle, state: state)
         } else {
-            NavigationLink(value: puzzle) {
+            NavigationLink(value: JourneyPuzzleRoute(puzzle: puzzle)) {
                 row(index: index, puzzle: puzzle, state: state)
             }
             .buttonStyle(PressableCardStyle())

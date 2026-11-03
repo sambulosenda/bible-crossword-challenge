@@ -417,6 +417,9 @@ struct HomeView: View {
             .navigationDestination(for: QuestRoute.self) { route in
                 QuestDetailView(quest: route.quest, profile: profile, source: route.source)
             }
+            .navigationDestination(for: JourneyPuzzleRoute.self) { route in
+                CrosswordGameView(puzzle: route.puzzle, profile: profile, entrySource: "journey")
+            }
             // Routes on `path`, not `isPresented` flags: a deep link that
             // replaces the path clears these too, and the plan route carries
             // the day it was opened on. Built from the live `nextDay`, the

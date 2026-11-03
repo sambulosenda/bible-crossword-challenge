@@ -81,6 +81,9 @@ struct PacksView: View {
             .navigationDestination(for: QuestRoute.self) { route in
                 QuestDetailView(quest: route.quest, profile: profile, source: route.source)
             }
+            .navigationDestination(for: JourneyPuzzleRoute.self) { route in
+                CrosswordGameView(puzzle: route.puzzle, profile: profile, entrySource: "journey")
+            }
             .navigationDestination(for: Puzzle.self) { puzzle in
                 CrosswordGameView(puzzle: puzzle, profile: profile, entrySource: "pack")
             }
@@ -246,7 +249,7 @@ struct PacksView: View {
                     puzzle: steps[index],
                     kicker: "\(quest.title) · " + QuestProgress.stepLine(solved: progress.solved, total: progress.total)
                 ) {
-                    leadButton(steps[index], begun: progress.solved > 0)
+                    leadButton(JourneyPuzzleRoute(puzzle: steps[index]), begun: progress.solved > 0)
                 }
             }
         case let .pack(pack, progress):
@@ -264,8 +267,8 @@ struct PacksView: View {
         }
     }
 
-    private func leadButton(_ puzzle: Puzzle, begun: Bool) -> some View {
-        NavigationLink(value: puzzle) {
+    private func leadButton(_ route: some Hashable, begun: Bool) -> some View {
+        NavigationLink(value: route) {
             Label(begun ? "Continue" : "Start", systemImage: "play.fill")
         }
         .buttonStyle(.pillAccent)
