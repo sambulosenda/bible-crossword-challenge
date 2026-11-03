@@ -7,10 +7,10 @@
 //  persistence (@AppStorage) and the actual `requestReview` call; this owns
 //  the rules, so the triggers and their interplay are testable without SwiftUI.
 //
-//  Three triggers, in priority order: solve-count milestones, the first 7-day
-//  streak, and — for players well past the ladder's start — once per app
-//  version, so loyal players who exhausted the ladder are still reachable on
-//  a new release. Apple shows at most 3 prompts per 365 days and decides
+//  Four triggers, in priority order: solve-count milestones, finishing a pack
+//  or Journey, the first 7-day streak, and — for players well past the
+//  ladder's start — a periodic re-ask every 120 days, so loyal players who
+//  exhausted the ladder are still reachable. Apple shows at most 3 prompts per 365 days and decides
 //  whether a call displays at all; the spacing gap below keeps a cluster of
 //  triggers (e.g. solve #10 landing days after streak 7) from spending those
 //  three displays in one burst.
@@ -22,15 +22,19 @@ enum ReviewAsk {
     /// Which trigger fired, so the caller can spend the matching flag.
     enum Trigger: Equatable {
         case milestone(Int)
+        /// This solve finished a pack or Journey for the first time.
+        case collection
         case streak
-        case version
+        /// A loyal player's re-ask, `periodicGap` after the last ask.
+        case periodic
 
         /// The analytics `trigger` value for `review_prompt_requested`.
         var analyticsValue: String {
             switch self {
             case .milestone(let rung): return "milestone_\(rung)"
+            case .collection: return "collection_complete"
             case .streak: return "streak"
-            case .version: return "version"
+            case .periodic: return "periodic"
             }
         }
     }
@@ -42,9 +46,15 @@ enum ReviewAsk {
     /// A first week-long streak is a happier moment than any mid-ladder rung.
     static let streakFloor = 7
 
-    /// Solves needed before a new app version re-arms the prompt: version
-    /// re-asks are for proven loyalists, not everyone who updates.
-    static let versionFloor = 30
+    /// Solves needed before the periodic re-ask: it's for proven loyalists.
+    static let loyaltyFloor = 30
+
+    /// How long after any ask a loyal player is asked again. 120 days, about
+    /// three a year — Apple's display cap. It was once per app version until
+    /// 2026-11-03: shipping every week or two, that fired about twice per
+    /// loyal player in 60 days (64 asks to 28 players), and each call could
+    /// spend one of the year's three displays before a better moment.
+    static let periodicGap: TimeInterval = 120 * 86_400
 
     /// Minimum spacing between asks on any trigger.
     static let minimumGap: TimeInterval = 14 * 86_400
@@ -62,10 +72,9 @@ enum ReviewAsk {
         /// Highest milestone already asked at.
         var milestoneAsked: Int
         var streakAsked: Bool
-        /// Marketing version at the time of the last ask on ANY trigger —
-        /// spending one also spends that version's re-arm.
-        var versionAsked: String
-        var currentVersion: String
+        /// This solve finished a pack or Journey for the first time — the
+        /// biggest high in the loop after a streak, and earned.
+        var finishedCollection: Bool = false
         /// When the last ask fired, `nil` if never.
         var lastAsk: Date?
         /// When the profile was created. `nil` (unknown) is treated as old
@@ -88,13 +97,17 @@ enum ReviewAsk {
            milestone > s.milestoneAsked {
             return .milestone(milestone)
         }
+        if s.finishedCollection {
+            return .collection
+        }
         if s.currentStreak >= Self.streakFloor && !s.streakAsked {
             return .streak
         }
-        if s.totalCompleted >= Self.versionFloor,
-           !s.currentVersion.isEmpty,
-           s.currentVersion != s.versionAsked {
-            return .version
+        // Never asked counts as long enough: a loyal player the ladder missed
+        // (say, every rung landed inside the install floor) is still reached.
+        if s.totalCompleted >= Self.loyaltyFloor,
+           s.lastAsk.map({ s.now.timeIntervalSince($0) >= Self.periodicGap }) ?? true {
+            return .periodic
         }
         return nil
     }

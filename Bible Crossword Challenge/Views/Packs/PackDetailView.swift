@@ -6,11 +6,11 @@
 //  Premium packs show their contents but route play through the paywall (the
 //  free starter pack plays straight through). Celebrates a fully-solved pack.
 //
-//  One page for every pack, locked or open (design canvas, 2026-10-24): a
-//  full-bleed cover in the pack's colour, the verse the pack opens on, and
-//  the puzzles it holds. Locked, the cover wears the Premium chip and one
-//  offer is pinned to the bottom; open, the cover carries the player's
-//  progress and the Start pill. Until 2026-10 a locked pack hid its list
+//  One page for every pack, locked or open, laid out as a Journey's
+//  (2026-11-03): the title, the puzzle to play next as a card with its grid
+//  and the Start pill, the puzzles it holds, and the verse it opens on at the
+//  foot. Locked, the cover wears the Premium chip and one offer is pinned to
+//  the bottom. Until 2026-10 a locked pack hid its list
 //  behind a centred crown block — the page sold a pack without showing what
 //  was in it, from the entry point that converts best (3 purchases from 14
 //  openers in 60 days).
@@ -77,9 +77,6 @@ struct PackDetailView: View {
         .safeAreaInset(edge: .bottom) {
             if isLocked { CollectionLockedOffer { showPaywall = true } }
         }
-        // White bar items over the cover; the system's own once it has
-        // scrolled away and the bar sits on the paper.
-        .toolbarColorScheme(headerScrolledAway ? nil : .dark, for: .navigationBar)
         .navigationTitle(pack.title)
         .navigationBarTitleDisplayMode(.inline)
         // The header names the screen; the bar takes the name over only once
@@ -122,24 +119,22 @@ struct PackDetailView: View {
     ) -> some View {
         ScrollView {
             VStack(spacing: 0) {
-                cover(
-                    label: PackCoverLabel(puzzles: puzzles),
-                    progress: progress,
-                    next: isLocked ? nil : nextPuzzle(puzzles, recordsByID: recordsByID),
-                    recordsByID: recordsByID
-                )
-                .onScrolledUnderBar { headerScrolledAway = $0 }
+                cover(label: PackCoverLabel(puzzles: puzzles), progress: progress)
+                    .onScrolledUnderBar { headerScrolledAway = $0 }
+                // As a Journey's page (2026-11-03): the puzzle to play as a
+                // card with its grid, the list, then the verse at the foot.
                 VStack(alignment: .leading, spacing: 28) {
-                    CollectionOpening(first: puzzles.first, blurb: pack.blurb)
                     if isLocked {
                         lockedPuzzleList(puzzles)
                     } else {
+                        upNextCard(puzzles, recordsByID: recordsByID, progress: progress)
                         puzzleList(puzzles, recordsByID: recordsByID)
                         booksLine(puzzles)
                     }
+                    CollectionAbout(heading: "About this pack", first: puzzles.first, blurb: pack.blurb)
                 }
                 .padding(.horizontal, Theme.Spacing.m + Theme.Spacing.xs)
-                .padding(.top, 28)
+                .padding(.top, Theme.Spacing.s)
                 .padding(.bottom, Theme.Spacing.l)
                 .frame(maxWidth: 560, alignment: .leading)
             }
@@ -147,49 +142,49 @@ struct PackDetailView: View {
         }
     }
 
-    /// The cover — see `CollectionPageCover` — with the rising steps in the
-    /// corner. Locked, the gold chip says what it costs; open, the player's
-    /// progress and the pill that plays the next puzzle take its place.
-    private func cover(
-        label: PackCoverLabel, progress: PackProgress, next: Puzzle?, recordsByID: [String: PuzzleRecord]
-    ) -> some View {
+    /// The cover — see `CollectionPageCover`: the title and caption. Progress
+    /// and the play pill moved into the up-next card (2026-11-03). Locked,
+    /// the gold chip says what it costs.
+    private func cover(label: PackCoverLabel, progress: PackProgress) -> some View {
         CollectionPageCover(
             title: pack.title,
             caption: coverCaption(label: label, total: progress.total),
-            fill: pack.coverFill,
             isLocked: isLocked
         ) {
-            GridMotif()
-                .offset(x: 34, y: -28)
+            EmptyView()
         } footer: {
-            if !isLocked {
-                coverProgress(progress)
-                if let next {
-                    playButton(next, recordsByID: recordsByID, progress: progress)
-                        .padding(.top, Theme.Spacing.xs)
-                }
-            }
+            EmptyView()
         }
     }
 
-    /// Where the player stands, on the cover in white: nothing before the
-    /// first solve (the caption already says how many there are), a bar and
-    /// a count once begun, a seal once every puzzle is solved.
+    /// The puzzle to play next, as a card: one begun, else the first not yet
+    /// solved, with how far the pack has come. Finished, the seal and the
+    /// first puzzle again.
     @ViewBuilder
-    private func coverProgress(_ progress: PackProgress) -> some View {
-        if progress.isComplete {
-            Label("Pack complete — every puzzle solved", systemImage: "checkmark.seal.fill")
-                .font(.subheadline.weight(.semibold))
-        } else if progress.solved > 0 {
-            VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
-                ProgressView(value: progress.fraction)
-                    .tint(.white)
-                Text("\(progress.solved) of \(progress.total) solved")
-                    .font(.subheadline.weight(.medium))
-                    .foregroundStyle(.white.opacity(0.82))
-                    .monospacedDigit()
+    private func upNextCard(
+        _ puzzles: [Puzzle], recordsByID: [String: PuzzleRecord], progress: PackProgress
+    ) -> some View {
+        if progress.isComplete, let first = puzzles.first {
+            UpNextCard(
+                puzzle: first,
+                kicker: "Complete · \(progress.total) of \(progress.total) solved",
+                kickerSymbol: "checkmark.seal.fill"
+            ) {
+                NavigationLink(value: first) {
+                    Label("Play again from the start", systemImage: "arrow.counterclockwise")
+                }
+                .buttonStyle(.pillTonal)
             }
-            .accessibilityElement(children: .combine)
+        } else if let next = nextPuzzle(puzzles, recordsByID: recordsByID),
+                  let index = puzzles.firstIndex(of: next) {
+            UpNextCard(
+                puzzle: next,
+                kicker: progress.solved > 0
+                    ? "Puzzle \(index + 1) of \(progress.total) · \(progress.solved) solved"
+                    : "Puzzle \(index + 1) of \(progress.total)"
+            ) {
+                playButton(next, recordsByID: recordsByID, progress: progress)
+            }
         }
     }
 
@@ -216,8 +211,7 @@ struct PackDetailView: View {
             ?? puzzles.first { recordsByID[$0.id]?.isCompleted != true }
     }
 
-    /// The page's one action, as an album page has Play — the white pill on
-    /// the cover's colour. Before it, the only way into a pack was to choose
+    /// The page's one action, as an album page has Play — the blue pill. Before it, the only way into a pack was to choose
     /// a row: the screen asked a question ("which one?") it already knew the
     /// answer to.
     private func playButton(
@@ -225,9 +219,9 @@ struct PackDetailView: View {
     ) -> some View {
         let begun = progress.solved > 0 || PuzzleStatus(record: recordsByID[puzzle.id]) == .inProgress
         return NavigationLink(value: puzzle) {
-            Label("\(begun ? "Continue" : "Start") · \(puzzle.title)", systemImage: "play.fill")
+            Label(begun ? "Continue" : "Start", systemImage: "play.fill")
         }
-        .buttonStyle(.pillOnColor)
+        .buttonStyle(.pillAccent)
     }
 
     // MARK: - Books
@@ -293,8 +287,8 @@ struct PackDetailView: View {
                         TrackRow(
                             number: index + 1,
                             title: puzzle.title,
-                            detail: Self.detail(puzzle),
-                            numeralTint: pack.accent,
+                            detail: puzzle.detailLine,
+                            numeralTint: Color.secondary,
                             grid: puzzle.grid
                         ) {
                             accessory(for: PuzzleStatus(record: record), record: record)
@@ -304,13 +298,6 @@ struct PackDetailView: View {
                 }
             }
         }
-    }
-
-    /// "Psalm 23:1 · 7×7 · Easy": where it's from, how big, how hard — what
-    /// a player chooses a crossword by. No time: the app keeps no estimate of
-    /// one, and a guessed "~3 min" would be wrong half the time.
-    static func detail(_ puzzle: Puzzle) -> String {
-        "\(puzzle.reference) · \(puzzle.size)×\(puzzle.size) · \(puzzle.difficulty.label)"
     }
 
     @ViewBuilder
@@ -353,8 +340,8 @@ struct PackDetailView: View {
                         TrackRow(
                             number: index + 1,
                             title: puzzle.title,
-                            detail: Self.detail(puzzle),
-                            numeralTint: pack.accent,
+                            detail: puzzle.detailLine,
+                            numeralTint: Color.secondary,
                             grid: puzzle.grid
                         ) {
                             Image(systemName: "lock.fill")
@@ -399,8 +386,8 @@ struct TrackRow<Accessory: View>: View {
     var body: some View {
         HStack(spacing: Theme.Spacing.m) {
             if let grid {
-                // The pack's colour on a pale wash, as every icon square in the
-                // app is set; the grid's own cells in it, blocks left out.
+                // Grey on a pale wash, as every icon square in the app is set since
+                // 2026-11-02; the grid's own cells in it, blocks left out.
                 let tint = numeralTint ?? Theme.accent
                 // No gap past a Mini: at 32pt a 15×15's cells are 2pt, and a
                 // 1pt gap left a faint scatter of dots instead of a grid.

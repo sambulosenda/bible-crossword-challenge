@@ -88,13 +88,7 @@ struct AchievementsView: View {
     /// when.
     private func medallion(_ badge: Achievement) -> some View {
         VStack(spacing: Theme.Spacing.s) {
-            Image(systemName: badge.symbol)
-                .font(.title2)
-                .foregroundStyle(Theme.badgeInk)
-                .frame(width: 72, height: 72)
-                .background(Theme.premiumWash, in: .circle)
-                .overlay(Circle().strokeBorder(Theme.badgeRim, lineWidth: 2.5))
-                .shadow(color: Theme.badgeRim.opacity(0.22), radius: 6, y: 4)
+            BadgeMedal(symbol: badge.symbol)
             Text(badge.title)
                 .font(.subheadline.weight(.semibold))
                 .multilineTextAlignment(.center)

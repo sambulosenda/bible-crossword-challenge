@@ -27,6 +27,8 @@ struct CoverRow: View {
     /// large text size grows the text column rather than the artwork.
     static let coverSide: CGFloat = 52
 
+    @Environment(\.rowIconsNeutral) private var neutral
+
     var body: some View {
         HStack(spacing: Theme.Spacing.m) {
             // Pale, every row alike, Premium's crown included (2026-10-25):
@@ -35,7 +37,9 @@ struct CoverRow: View {
             // in the row.
             CollectionCover(
                 symbol: symbol,
-                accent: tint,
+                // Grey on Today (2026-11-02): one colour per feature put five
+                // hues on one screen. Blue is for actions only.
+                accent: neutral ? Color.secondary : tint,
                 isLocked: false,
                 side: Self.coverSide,
                 font: .title3,

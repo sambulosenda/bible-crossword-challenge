@@ -101,6 +101,9 @@ struct ProfileView: View {
             .navigationDestination(for: QuestRoute.self) { route in
                 QuestDetailView(quest: route.quest, profile: profile, source: route.source)
             }
+            .navigationDestination(for: JourneyPuzzleRoute.self) { route in
+                CrosswordGameView(puzzle: route.puzzle, profile: profile, entrySource: "journey")
+            }
             .navigationDestination(for: Puzzle.self) { puzzle in
                 CrosswordGameView(puzzle: puzzle, profile: profile, entrySource: "profile")
             }

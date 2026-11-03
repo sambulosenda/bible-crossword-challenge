@@ -330,6 +330,7 @@ struct MemoryVerseCard: View {
                 subtitle: subtitle,
                 progress: activeCount > 0 ? Double(masteredCount) / Double(activeCount) : nil
             )
+            .cardRowPadding()
         }
         .buttonStyle(PressableCardStyle())
         .accessibilityElement(children: .ignore)

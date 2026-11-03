@@ -23,6 +23,25 @@ struct CrosswordGameView: View {
     let profile: PlayerProfile
     let entrySource: String
 
+    var body: some View {
+        CrosswordGameLoader(puzzle: puzzle, profile: profile, entrySource: entrySource)
+            // One model per puzzle. A puzzle link (notification, challenge,
+            // "next in pack") replaces the stack [A] with [B] at the same
+            // depth, and SwiftUI kept this view, handing it B while the model
+            // built for A stayed: B's title over A's grid, and A's letters
+            // saved into B's record (2026-10-25). A new id is a new view, so
+            // A's screen disappears and B's appears with its own model.
+            .id(puzzle.id)
+    }
+}
+
+/// Builds the model once for the puzzle it was created with.
+private struct CrosswordGameLoader: View {
+    let puzzle: Puzzle
+    let profile: PlayerProfile
+    let entrySource: String
+
+    @Environment(\.puzzleProvider) private var puzzleProvider
     @State private var vm: GameViewModel?
 
     var body: some View {
@@ -36,7 +55,10 @@ struct CrosswordGameView: View {
                     // thresholds — see `GameViewModel.isLearning`.
                     vm = GameViewModel(
                         puzzle: puzzle,
-                        learning: profile.isStillLearning
+                        learning: profile.isStillLearning ||
+                            (BeginnerPath.contains(puzzle, provider: puzzleProvider) &&
+                             !profile.completedQuestIDs.contains(BeginnerPath.questID)),
+                        prefersVerseHelp: BeginnerPath.contains(puzzle, provider: puzzleProvider)
                     )
                 }
         }
@@ -126,6 +148,9 @@ struct CrosswordGameScreen: View {
     /// reveal or the verse sheet never races the card's own dismissal.
     @State private var hintUpgradeOutcome: (HintType, HintUpgradeSheet.Outcome)?
     @State private var newlyUnlocked: [Achievement] = []
+    /// This solve finished a pack or Journey — handed to the completion
+    /// screen's review ask.
+    @State private var finishedCollection = false
     /// Whether this solve crossed a streak milestone that granted a freeze.
     @State private var earnedFreeze = false
     /// True when this solve is the one that restarted a broken streak, so the
@@ -513,6 +538,7 @@ struct CrosswordGameScreen: View {
                 earnedFreeze: earnedFreeze,
                 isComeback: isComeback,
                 totalCompleted: profile.totalPuzzlesCompleted,
+                finishedCollection: finishedCollection,
                 onHome: {
                     showCompletion = false
                     dismiss()
@@ -606,7 +632,7 @@ struct CrosswordGameScreen: View {
             // back up, and on a zoomed 15×15 named a word scrolled out of
             // view. The word pulses where it landed instead, and the zoomed
             // grid holds it in view for the pulse (`CrosswordGridView`).
-            if profile.isStillLearning,
+            if vm.isLearning,
                !rec.isCompleted, !isResume,
                let gifted = await vm.giftStarterWordPaced(
                    letterInterval: reduceMotion ? .zero : .milliseconds(170)
@@ -642,6 +668,18 @@ struct CrosswordGameScreen: View {
                 let fraction = args.firstIndex(of: "-uiFillPartial")
                     .flatMap { $0 + 1 < args.count ? Double(args[$0 + 1]) : nil } ?? 0.5
                 vm.fillPartial(fraction: fraction)
+            } else if let flag = args.firstIndex(of: "-uiFillAllBut"), flag + 1 < args.count,
+                      let count = Int(args[flag + 1]) {
+                // `-uiFillAllBut 3`: everything in but three answers.
+                vm.fillAllBut(count)
+            }
+            // The selected clue's verse, open as the screen settles — for a
+            // device whose taps can't be driven (iPhone Duo).
+            if args.contains("-uiOpenVerse") {
+                Task {
+                    try? await Task.sleep(for: .seconds(1))
+                    useVerseHint()
+                }
             }
             #endif
         }
@@ -1390,13 +1428,15 @@ struct CrosswordGameScreen: View {
         if !puzzle.isMini, seconds > 0 {
             profile.bestSolveSeconds = min(profile.bestSolveSeconds ?? .max, seconds)
         }
+        finishedCollection = false
         if firstCompletion {
             if !rec.usedHint && !puzzle.isMini { profile.noHintSolves += 1 }
             if puzzle.difficulty == .hard { profile.hardCompleted += 1 }
             // This solve may have finished one or more packs — record them
             // before evaluating achievements so a pack unlock lands on this
             // completion screen, not the next one.
-            for pack in recordPackCompletions() {
+            let finishedPacks = recordPackCompletions()
+            for pack in finishedPacks {
                 analytics.log(.packCompleted(id: pack.id))
             }
             // Same contract for Journeys: step credit on every quest this
@@ -1411,9 +1451,11 @@ struct CrosswordGameScreen: View {
                     ))
                 }
             }
-            for quest in recordQuestCompletions() {
+            let finishedQuests = recordQuestCompletions()
+            for quest in finishedQuests {
                 analytics.log(.questCompleted(id: quest.id))
             }
+            finishedCollection = !finishedPacks.isEmpty || !finishedQuests.isEmpty
         }
 
         let unlocked = Achievements.newlyUnlocked(for: profile)

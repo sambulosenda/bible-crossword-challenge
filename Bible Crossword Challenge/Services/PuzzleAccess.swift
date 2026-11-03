@@ -45,6 +45,7 @@ struct PuzzleAccess {
     /// pack exclusive. Kept apart from the window so Library doesn't frame it
     /// as "free this week".
     private let challengedIDs: Set<String>
+    private let beginnerIDs: Set<String>
 
     init(
         provider: PuzzleProvider,
@@ -54,6 +55,7 @@ struct PuzzleAccess {
         challengedIDs: Set<String> = []
     ) {
         self.challengedIDs = challengedIDs
+        self.beginnerIDs = Set(provider.quest(id: BeginnerPath.questID)?.puzzleIDs ?? [])
         // Each pool rotates on its own index, so each gets its own window —
         // otherwise the smaller pool's window would be a slice of the larger
         // one's day count and drift out of step with what Home is serving.
@@ -86,6 +88,7 @@ struct PuzzleAccess {
     /// its last windowed day without playing it doesn't bank it forever.
     func canPlay(_ puzzle: Puzzle, isPremium: Bool, hasProgress: Bool) -> Bool {
         if isPremium { return true }
+        if beginnerIDs.contains(puzzle.id) { return true }
         if challengedIDs.contains(puzzle.id) { return true }
         // Pack exclusives are sold with their pack and never enter a rotation,
         // so they have no window to fall into. Checked ahead of `hasProgress`

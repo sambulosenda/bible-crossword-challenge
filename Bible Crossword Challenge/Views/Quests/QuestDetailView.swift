@@ -2,11 +2,12 @@
 //  QuestDetailView.swift
 //  Bible Crossword Challenge
 //
-//  One Journey, on the same page as a pack (design canvas, 2026-10-24): the
-//  cover full-bleed in the Journey's colour with its step path, the verse it
-//  opens on, then its steps in walking order. Steps unlock front to back —
+//  One Journey: its title, then today's step as a card with its grid and the
+//  page's one button, the steps in walking order with their grids, and the
+//  verse it opens on at the foot (2026-11-03; it was the pack page's layout,
+//  which read as a document rather than a game). Steps unlock front to back —
 //  the sequence is the feature — but pacing stays soft: finishing today's step
-//  swaps the copy to "back tomorrow" without ever locking the next one.
+//  swaps the copy to "ready tomorrow" without ever locking the next one.
 //  Premium Journeys show their steps but gate play behind the paywall, like
 //  premium packs.
 //
@@ -30,6 +31,15 @@ enum QuestOpenSource: String, Hashable {
 struct QuestRoute: Hashable {
     let quest: QuestLine
     let source: QuestOpenSource
+}
+
+/// A Journey step opened from a Journey — its page or the Puzzles tab's lead.
+/// Its own type, not a bare `Puzzle`, so the game logs `entrySource:
+/// "journey"`: until 2026-11-03 these logged as whichever stack pushed them
+/// ("pack" on the Puzzles tab, "home", "profile"), and Journey starts were
+/// unreadable. Every stack that can show a Journey page registers it.
+struct JourneyPuzzleRoute: Hashable {
+    let puzzle: Puzzle
 }
 
 struct QuestDetailView: View {
@@ -64,11 +74,18 @@ struct QuestDetailView: View {
                 cover(steps: steps, progress: progress)
                     .onScrolledUnderBar { headerScrolledAway = $0 }
                 VStack(alignment: .leading, spacing: 28) {
-                    CollectionOpening(first: steps.first, blurb: quest.blurb)
+                    // Today's step first, as a card with its grid: the one
+                    // thing to do here (2026-11-03). The verse and blurb went
+                    // to the foot — between the button and the list they
+                    // pushed the steps off the first screen.
+                    if !isLocked {
+                        upNextCard(steps: steps, progress: progress)
+                    }
                     stepList(steps, recordsByID: recordsByID, progress: progress)
+                    CollectionAbout(heading: "About this Journey", first: steps.first, blurb: quest.blurb)
                 }
                 .padding(.horizontal, Theme.Spacing.m + Theme.Spacing.xs)
-                .padding(.top, 28)
+                .padding(.top, Theme.Spacing.s)
                 .padding(.bottom, Theme.Spacing.l)
                 .frame(maxWidth: 560, alignment: .leading)
             }
@@ -80,7 +97,6 @@ struct QuestDetailView: View {
         }
         // White bar items over the cover; the system's own once it has
         // scrolled away and the bar sits on the paper.
-        .toolbarColorScheme(headerScrolledAway ? nil : .dark, for: .navigationBar)
         .navigationTitle(quest.title)
         .navigationBarTitleDisplayMode(.inline)
         // The header names the screen; the bar takes the name over only once
@@ -102,86 +118,89 @@ struct QuestDetailView: View {
 
     // MARK: - Cover
 
-    /// The pack page's cover, with the Journey's step path where a pack has
-    /// its rising steps — the path is what a Journey is, and the Packs shelf
-    /// already draws it on the Journey's card. Locked, the chip; open, where
-    /// the player stands and the pill for today's step.
+    /// The title and where in Scripture it runs. No step path since
+    /// 2026-11-03: the step list below already shows where the player stands,
+    /// and the path said it a third time.
     private func cover(steps: [Puzzle], progress: QuestProgress) -> some View {
         let label = PackCoverLabel(puzzles: steps)
         let size = "\(progress.total) step\(progress.total == 1 ? "" : "s"), one a day"
         return CollectionPageCover(
             title: quest.title,
             caption: label.caption.isEmpty ? size : "\(label.caption) · \(size)",
-            fill: quest.coverFill,
             isLocked: isLocked
         ) {
             EmptyView()
         } footer: {
-            StepPath(done: isLocked ? 0 : progress.solved, total: progress.total)
-                .padding(.vertical, Theme.Spacing.xs)
-            if !isLocked {
-                if progress.isComplete {
-                    Label("Journey complete", systemImage: "checkmark.seal.fill")
-                        .font(.subheadline.weight(.semibold))
-                } else if progress.solved > 0 {
-                    Text(progressLine(progress))
-                        .font(.subheadline.weight(.medium))
-                        .foregroundStyle(.white.opacity(0.82))
-                        .monospacedDigit()
-                        .fixedSize(horizontal: false, vertical: true)
+            EmptyView()
+        }
+    }
+
+    // MARK: - Up next
+
+    /// Today's step as a card: its grid, where it sits in the run, what it
+    /// is, and the page's one action. Finished, the card says so and offers
+    /// the first step again.
+    @ViewBuilder
+    private func upNextCard(steps: [Puzzle], progress: QuestProgress) -> some View {
+        if progress.isComplete, let first = steps.first {
+            UpNextCard(
+                puzzle: first,
+                kicker: "Complete · \(progress.total) of \(progress.total)",
+                kickerSymbol: "checkmark.seal.fill"
+            ) {
+                NavigationLink(value: JourneyPuzzleRoute(puzzle: first)) {
+                    Label("Play again from step 1", systemImage: "arrow.counterclockwise")
                 }
-                if let index = progress.currentIndex, steps.indices.contains(index) {
-                    playButton(steps[index], index: index, progress: progress)
-                        .padding(.top, Theme.Spacing.xs)
-                }
+                .buttonStyle(.pillTonal)
+            }
+        } else if let index = progress.currentIndex, steps.indices.contains(index) {
+            let puzzle = steps[index]
+            UpNextCard(
+                puzzle: puzzle,
+                kicker: progress.steppedToday
+                    ? "Step \(index + 1) of \(progress.total) · ready tomorrow"
+                    : "Step \(index + 1) of \(progress.total) · today",
+                kickerSymbol: nil
+            ) {
+                playButton(puzzle, index: index, progress: progress)
             }
         }
     }
 
-    /// "Step 3 of 7" plus the soft-pacing nudge when today's step is done.
-    private func progressLine(_ progress: QuestProgress) -> String {
-        let position = "Step \(min(progress.solved + 1, progress.total)) of \(progress.total)"
-        return progress.steppedToday
-            ? "\(position) — today's step is done, the next is ready tomorrow"
-            : position
-    }
-
     // MARK: - Play
 
-    /// The page's one action: the current step, the white pill on the cover.
-    /// Once today's step is done the next still opens — pacing is soft — but
-    /// the pill drops to its quiet weight, so playing ahead is offered rather
-    /// than urged.
+    /// The page's one action: the current step, the blue pill. Once today's
+    /// step is done the next still opens — pacing is soft — but the pill drops
+    /// to its quiet weight, so playing ahead is offered rather than urged.
     private func playButton(_ puzzle: Puzzle, index: Int, progress: QuestProgress) -> some View {
         Group {
             if progress.steppedToday {
-                NavigationLink(value: puzzle) {
-                    Label("Play ahead · \(puzzle.title)", systemImage: "forward.fill")
+                NavigationLink(value: JourneyPuzzleRoute(puzzle: puzzle)) {
+                    Label("Play ahead", systemImage: "forward.fill")
                 }
-                .buttonStyle(.pillOnColorTonal)
+                .buttonStyle(.pillTonal)
             } else {
-                NavigationLink(value: puzzle) {
-                    Label("\(index == 0 ? "Start" : "Step \(index + 1)") · \(puzzle.title)",
-                          systemImage: "play.fill")
+                NavigationLink(value: JourneyPuzzleRoute(puzzle: puzzle)) {
+                    Label(index == 0 ? "Start" : "Play step \(index + 1)", systemImage: "play.fill")
                 }
-                .buttonStyle(.pillOnColor)
+                .buttonStyle(.pillAccent)
             }
         }
     }
 
     // MARK: - Steps
 
-    /// The path as one grouped list, as a pack's puzzles: serif numerals in
-    /// the Journey's colour, each step's passage and difficulty. Locked, every
-    /// row opens the paywall and none wears a lock — the chip on the cover
-    /// says Premium once. Open, done steps carry a check, today's step says
-    /// so, and later steps sit back until the one before is solved.
+    /// The path as one grouped list, as a pack's puzzles: each step's grid,
+    /// passage and difficulty. Locked, every row opens the paywall and none
+    /// wears a lock — the chip on the cover says Premium once. Open, done
+    /// steps carry a check, today's step says so in blue, and later steps say
+    /// what opens them (they were faded to half, which read as broken).
     private func stepList(
         _ steps: [Puzzle], recordsByID: [String: PuzzleRecord], progress: QuestProgress
     ) -> some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.s + Theme.Spacing.xs) {
             Text("The steps").sectionHeader()
-            CardGroup(dividerInset: TrackRow<EmptyView>.dividerInset) {
+            CardGroup(dividerInset: TrackRow<EmptyView>.gridDividerInset) {
                 ForEach(Array(steps.enumerated()), id: \.element.id) { index, puzzle in
                     stepRow(index: index, puzzle: puzzle,
                             state: stepState(index: index, recordsByID: recordsByID, progress: progress))
@@ -204,9 +223,8 @@ struct QuestDetailView: View {
             // Not navigable: the sequence is the point. It unlocks the moment
             // the step before it is solved — no date gate, just order.
             row(index: index, puzzle: puzzle, state: state)
-                .opacity(0.5)
         } else {
-            NavigationLink(value: puzzle) {
+            NavigationLink(value: JourneyPuzzleRoute(puzzle: puzzle)) {
                 row(index: index, puzzle: puzzle, state: state)
             }
             .buttonStyle(PressableCardStyle())
@@ -226,8 +244,9 @@ struct QuestDetailView: View {
         TrackRow(
             number: index + 1,
             title: puzzle.title,
-            detail: PackDetailView.detail(puzzle),
-            numeralTint: quest.accent
+            detail: puzzle.detailLine,
+            numeralTint: Color.secondary,
+            grid: puzzle.grid
         ) {
             if !isLocked {
                 switch state {
@@ -236,9 +255,12 @@ struct QuestDetailView: View {
                 case .current:
                     Text("Today")
                         .font(.caption.weight(.semibold))
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Theme.accent)
                 case .upcoming:
-                    EmptyView()
+                    Label("After step \(index)", systemImage: "lock.fill")
+                        .labelStyle(.titleAndIcon)
+                        .font(.caption)
+                        .foregroundStyle(.tertiary)
                 }
             }
         }
@@ -287,6 +309,7 @@ struct QuestHomeCard: View {
                 subtitle: subtitle,
                 progress: progress.solved > 0 ? progress.fraction : nil
             )
+            .cardRowPadding()
         }
         .buttonStyle(PressableCardStyle())
         .accessibilityElement(children: .ignore)

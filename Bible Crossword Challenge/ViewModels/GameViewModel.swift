@@ -217,6 +217,7 @@ final class GameViewModel {
     /// sat 40–250s. The 30s/45s tiers fired for 5 of those 35 players. The
     /// nudge has to arrive inside the patience they actually have.
     let isLearning: Bool
+    let prefersVerseHelp: Bool
 
     /// Whether the stall nudge runs at all — both tiers. Always on in the app
     /// since the `stall-nudge` holdout was retired (2026-10-13); kept as a
@@ -273,12 +274,14 @@ final class GameViewModel {
         puzzle: Puzzle,
         learning: Bool = false,
         now: Date = Date(),
-        stallNudgeEnabled: Bool = true
+        stallNudgeEnabled: Bool = true,
+        prefersVerseHelp: Bool = false
     ) {
         self.puzzle = puzzle
         self.size = puzzle.size
         self.startDate = now
         self.isLearning = learning
+        self.prefersVerseHelp = prefersVerseHelp
         self.stallNudgeEnabled = stallNudgeEnabled
 
         #if DEBUG
@@ -980,7 +983,7 @@ final class GameViewModel {
         } else {
             guard !earlyNudged, idle >= earlyNudgeSeconds else { return }
             earlyNudged = true
-            stallNudgeKind = .hints
+            stallNudgeKind = prefersVerseHelp && activeSlot?.reference != nil ? .readVerse : .hints
         }
         isStallNudgeActive = true
         stallNudgeTick += 1
@@ -1089,6 +1092,33 @@ final class GameViewModel {
             direction = .across
             selected = next.positions.first { grid[$0.row][$0.col].entry == nil }
                 ?? next.positions[0]
+        }
+        onEntryChanged?()
+    }
+
+    /// Development-only: the whole grid filled in except `count` across
+    /// answers, spread down the board — the nearly-finished state a store
+    /// screenshot wants. Unlike `fillPartial`, no cell is left bare that
+    /// belongs only to a down answer, and there is no green overlay: a grid
+    /// mid-solve shows plain letters.
+    func fillAllBut(_ count: Int) {
+        for r in 0..<size {
+            for c in 0..<size where !grid[r][c].isBlock {
+                grid[r][c].entry = grid[r][c].solution
+            }
+        }
+        let slots = acrossSlots
+        let left = min(max(count, 1), slots.count)
+        // Evenly spaced through the across list, so the gaps sit at the
+        // top, middle and foot of the board rather than in one clump.
+        let picks = (1...left).map { slots[$0 * slots.count / (left + 1)] }
+        for slot in picks {
+            for pos in slot.positions { grid[pos.row][pos.col].entry = nil }
+        }
+        seedSolvedSlots()
+        if let first = picks.first {
+            direction = .across
+            selected = first.positions[0]
         }
         onEntryChanged?()
     }

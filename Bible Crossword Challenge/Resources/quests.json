@@ -1,8 +1,25 @@
 [
   {
+    "id": "first-week",
+    "title": "Your First Seven",
+    "blurb": "Seven easy minis through familiar Gospel stories. Try one each day, or keep going at your own pace.",
+    "coverSymbol": "sunrise.fill",
+    "accentHex": "#2E7D4F",
+    "isPremium": false,
+    "puzzleIDs": [
+      "mini-093",
+      "mini-096",
+      "mini-097",
+      "mini-095",
+      "mini-094",
+      "mini-092",
+      "mini-091"
+    ]
+  },
+  {
     "id": "beginnings",
     "title": "Beginnings",
-    "blurb": "From the Garden to Egypt — five steps through Genesis.",
+    "blurb": "From the Garden to Egypt \u2014 five steps through Genesis.",
     "coverSymbol": "leaf.fill",
     "accentHex": "#2E7D4F",
     "isPremium": false,

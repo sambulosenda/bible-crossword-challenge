@@ -205,6 +205,7 @@
       ]
     },
     "reviewAsk" : {
+      "loyaltyFloor" : 30,
       "milestones" : [
         3,
         10,
@@ -215,15 +216,15 @@
       ],
       "minimumGapDays" : 14,
       "minimumInstallAgeDays" : 3,
-      "streakFloor" : 7,
-      "versionFloor" : 30
+      "periodicGapDays" : 120,
+      "streakFloor" : 7
     },
     "rotation" : {
       "epochDay" : "2026-07-01",
       "poolCounts" : {
-        "all" : 241,
+        "all" : 248,
         "daily" : 92,
-        "mini" : 90,
+        "mini" : 97,
         "sunday" : 13
       },
       "sundayRotationOffset" : 5

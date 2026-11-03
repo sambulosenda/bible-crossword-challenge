@@ -2,7 +2,8 @@
 //  PacksView.swift
 //  Bible Crossword Challenge
 //
-//  The "Packs" tab: curated collections of related puzzles. Free to browse; a
+//  The "Puzzles" tab (was "Packs"; the Library joined it 2026-11-03, one row
+//  under the lead): curated collections of related puzzles. Free to browse; a
 //  premium pack shows its contents but gates play behind the paywall (the free
 //  starter pack is always playable). Seasonal packs surface only in-window.
 //
@@ -38,9 +39,6 @@ struct PacksView: View {
     private enum Lead {
         case quest(QuestLine, QuestProgress)
         case pack(PuzzlePack, PackProgress)
-
-        var questID: String? { if case let .quest(q, _) = self { q.id } else { nil } }
-        var packID: String? { if case let .pack(p, _) = self { p.id } else { nil } }
     }
 
     private var quests: [QuestLine] { puzzleProvider.quests }
@@ -67,7 +65,7 @@ struct PacksView: View {
                 }
             }
             .background(Theme.background)
-            .navigationTitle("Packs")
+            .navigationTitle("Puzzles")
             // Large, as Today's is: a tab root names itself at the top and
             // hands the name to the bar on scroll.
             .navigationBarTitleDisplayMode(.large)
@@ -83,8 +81,17 @@ struct PacksView: View {
             .navigationDestination(for: QuestRoute.self) { route in
                 QuestDetailView(quest: route.quest, profile: profile, source: route.source)
             }
+            .navigationDestination(for: JourneyPuzzleRoute.self) { route in
+                CrosswordGameView(puzzle: route.puzzle, profile: profile, entrySource: "journey")
+            }
             .navigationDestination(for: Puzzle.self) { puzzle in
                 CrosswordGameView(puzzle: puzzle, profile: profile, entrySource: "pack")
+            }
+            .navigationDestination(for: LibraryRoute.self) { _ in
+                LibraryView(profile: profile, path: $path)
+            }
+            .navigationDestination(for: LibraryPuzzleRoute.self) { route in
+                CrosswordGameView(puzzle: route.puzzle, profile: profile, entrySource: "library")
             }
         }
     }
@@ -121,16 +128,16 @@ struct PacksView: View {
         )
         let lead = self.lead(packs: packs, book: book)
 
-        // The promoted collection is lifted out of its shelf rather than
-        // repeated on it. On each shelf: something to do first, locked after
+        // The lead stays on its shelf: the card opens its puzzle, the cover
+        // its page. On each shelf: something to do first, locked after
         // what's open, finished last.
         let shownQuests = openFirst(Self.playOrder(
-            quests.filter { $0.id != lead?.questID },
+            quests,
             solved: { book.of($0).solved }, isComplete: { book.of($0).isComplete }
         ), isPremium: \.isPremium)
-        let seasonal = packs.filter { $0.isSeasonal && $0.id != lead?.packID }
+        let seasonal = packs.filter(\.isSeasonal)
         let evergreen = openFirst(Self.playOrder(
-            packs.filter { !$0.isSeasonal && $0.id != lead?.packID },
+            packs.filter { !$0.isSeasonal },
             solved: { book.of($0).solved }, isComplete: { book.of($0).isComplete }
         ), isPremium: \.isPremium)
         let oldTestament = evergreen.filter { packLabels[$0.id]?.testament != .new }
@@ -141,7 +148,8 @@ struct PacksView: View {
 
         return ScrollView {
             LazyVStack(alignment: .leading, spacing: Theme.Spacing.xl) {
-                leadCard(lead, packLabels: packLabels)
+                leadCard(lead, recordsByID: recordsByID)
+                allPuzzlesRow(recordsByID: recordsByID)
 
                 if !shownQuests.isEmpty {
                     PackShelf(title: "Journeys") {
@@ -227,45 +235,43 @@ struct PacksView: View {
         return nil
     }
 
+    /// The lead as the collection pages lead (2026-11-03): the puzzle to play,
+    /// with its grid, and a pill that opens it directly. It was a cover with a
+    /// step path and a pill to the collection page — a tap away from the
+    /// puzzle, and on this tab the only card that showed no crossword.
     @ViewBuilder
-    private func leadCard(_ lead: Lead?, packLabels: [String: PackCoverLabel]) -> some View {
+    private func leadCard(_ lead: Lead?, recordsByID: [String: PuzzleRecord]) -> some View {
         switch lead {
         case let .quest(quest, progress):
-            if let action = CollectionLeadAction.forRow(
-                isLocked: false, solved: progress.solved, isComplete: progress.isComplete
-            ) {
-                LeadFeatureCard(
-                    kicker: "Journey · " + QuestProgress.stepLine(solved: progress.solved, total: progress.total),
-                    title: quest.title,
-                    mark: PackCoverLabel(puzzles: puzzleProvider.puzzles(in: quest)).mark,
-                    fill: quest.coverFill,
-                    steps: (progress.solved, progress.total),
-                    actionTitle: Self.actionTitle(action),
-                    open: { path.append(QuestRoute(quest: quest, source: .packs)) }
-                )
+            let steps = puzzleProvider.puzzles(in: quest)
+            if let index = progress.currentIndex, steps.indices.contains(index) {
+                UpNextCard(
+                    puzzle: steps[index],
+                    kicker: "\(quest.title) · " + QuestProgress.stepLine(solved: progress.solved, total: progress.total)
+                ) {
+                    leadButton(JourneyPuzzleRoute(puzzle: steps[index]), begun: progress.solved > 0)
+                }
             }
         case let .pack(pack, progress):
-            if let action = CollectionLeadAction.forRow(
-                isLocked: false, solved: progress.solved, isComplete: progress.isComplete
-            ) {
-                LeadFeatureCard(
-                    kicker: "Pack · \(progress.solved) of \(progress.total) solved",
-                    title: pack.title,
-                    mark: packLabels[pack.id]?.mark ?? "",
-                    fill: pack.coverFill,
-                    actionTitle: Self.actionTitle(action),
-                    open: { path.append(PackRoute(pack: pack, source: .packs)) }
-                )
+            let puzzles = puzzleProvider.puzzles(in: pack)
+            if let next = puzzles.first(where: { recordsByID[$0.id]?.isCompleted != true }) {
+                UpNextCard(
+                    puzzle: next,
+                    kicker: "\(pack.title) · \(progress.solved) of \(progress.total) solved"
+                ) {
+                    leadButton(next, begun: progress.solved > 0)
+                }
             }
         case nil:
             EmptyView()
         }
     }
 
-    /// "Continue", not "Resume", on the card's pill: it reads as the next
-    /// step of something under way rather than a paused video.
-    private static func actionTitle(_ action: CollectionLeadAction) -> String {
-        action == .resume ? "Continue" : "Start"
+    private func leadButton(_ route: some Hashable, begun: Bool) -> some View {
+        NavigationLink(value: route) {
+            Label(begun ? "Continue" : "Start", systemImage: "play.fill")
+        }
+        .buttonStyle(.pillAccent)
     }
 
     // MARK: - Shelves
@@ -299,7 +305,7 @@ struct PacksView: View {
             title: pack.title,
             meta: meta,
             label: label ?? PackCoverLabel(puzzles: []),
-            fill: pack.coverFill,
+            grid: puzzleProvider.puzzles(in: pack).first?.grid,
             fallbackSymbol: pack.coverSymbol,
             isLocked: locked,
             progress: !locked && progress.solved > 0 && !progress.isComplete ? progress.fraction : nil,
@@ -309,19 +315,46 @@ struct PacksView: View {
 
     private func questTile(_ quest: QuestLine, progress: QuestProgress) -> some View {
         let locked = isLocked(quest.isPremium)
-        let meta = locked ? "\(progress.total) days"
+        // "5 steps", as a pack says "5 puzzles": it was "9 days" locked and
+        // "5 steps, one a day" open, two words for one thing side by side.
+        let size = "\(progress.total) step\(progress.total == 1 ? "" : "s")"
+        let meta = locked ? size
             : progress.isComplete ? "Complete"
             : progress.solved > 0 ? QuestProgress.stepLine(solved: progress.solved, total: progress.total)
-            : "\(progress.total) steps, one a day"
+            : size
         return ShelfTile(
             title: quest.title,
             meta: meta,
             label: PackCoverLabel(puzzles: puzzleProvider.puzzles(in: quest)),
-            fill: quest.coverFill,
+            grid: puzzleProvider.puzzles(in: quest).first?.grid,
             fallbackSymbol: quest.coverSymbol,
             isLocked: locked,
             progress: !locked && progress.solved > 0 && !progress.isComplete ? progress.fraction : nil
         )
+    }
+
+    // MARK: - All puzzles
+
+    /// The way into every puzzle, under the lead: what was the Library tab
+    /// (merged 2026-11-03). A row, not a shelf — it's a list to search and
+    /// filter, and the shelves above are the curated way in.
+    private func allPuzzlesRow(recordsByID: [String: PuzzleRecord]) -> some View {
+        let all = puzzleProvider.puzzles + puzzleProvider.sundays + puzzleProvider.minis
+        let solved = all.count { recordsByID[$0.id]?.isCompleted == true }
+        return CardGroup {
+            NavigationLink(value: LibraryRoute()) {
+                CoverRow(
+                    symbol: "square.grid.3x3",
+                    tint: .secondary,
+                    title: "All Puzzles",
+                    subtitle: solved > 0
+                        ? "\(all.count) crosswords · \(solved) solved"
+                        : "\(all.count) crosswords to search and filter"
+                )
+                .cardRowPadding()
+            }
+            .buttonStyle(PressableCardStyle())
+        }
     }
 
     // MARK: - Offer

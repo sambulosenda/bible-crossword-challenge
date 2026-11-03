@@ -169,8 +169,8 @@ def check_packs(packs, puzzles):
 
 
 def check_quests(quests, puzzles):
-    """quests.json mirrors packs.json, plus quest-specific rules: exactly one
-    free quest and it must be authored first (QuestsTests asserts both), and a
+    """quests.json mirrors packs.json, plus quest-specific rules: free journeys
+    must include the beginner path and Beginnings, with a free journey first (QuestsTests asserts both), and a
     free quest may not contain pack- exclusives — PuzzleAccess hard-locks those
     for non-premium players, which would dead-end the free journey."""
     by_id = {p["id"]: p for p in puzzles}
@@ -181,8 +181,8 @@ def check_quests(quests, puzzles):
             error(f"quests.json: duplicate quest id {slug}")
 
     free = [q["id"] for q in quests if not q.get("isPremium", True)]
-    if len(free) != 1:
-        error(f"quests.json: expected exactly one free quest, found {free or 'none'}")
+    if set(free) != {"first-week", "beginnings"}:
+        error(f"quests.json: expected free first-week and beginnings journeys, found {free}")
     if quests and quests[0].get("isPremium", True):
         error("quests.json: the first quest must be the free one "
               "(authored order is display order; the Home card starts there)")

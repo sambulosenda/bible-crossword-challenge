@@ -18,8 +18,21 @@
 import SwiftUI
 import SwiftData
 
+/// Pushes the Library onto the Puzzles tab's stack (2026-11-03: Packs and
+/// Library became one tab — the shelves on top, every puzzle one row down).
+struct LibraryRoute: Hashable {}
+
+/// A puzzle opened from the Library. Its own type, not a bare `Puzzle`, so the
+/// Puzzles tab's stack can log `entrySource: "library"` for these and
+/// `"pack"` for the ones its shelves push.
+struct LibraryPuzzleRoute: Hashable {
+    let puzzle: Puzzle
+}
+
 struct LibraryView: View {
     let profile: PlayerProfile
+    /// The Puzzles tab's stack, which this screen is pushed onto.
+    @Binding var path: NavigationPath
 
     @Environment(\.puzzleProvider) private var puzzleProvider
     @Environment(StoreService.self) private var store
@@ -35,10 +48,6 @@ struct LibraryView: View {
     /// The premium section shows a taste of what's locked, not all of it.
     @State private var showAllLocked = false
     @State private var showPaywall = false
-    /// Driven by hand in the two-column layout, where each half is a button:
-    /// a List row holding two NavigationLinks treats the whole row as one
-    /// target, so a tap on the right-hand puzzle opened the left.
-    @State private var path = NavigationPath()
     /// Width the list has to work with, measured. Wide — iPhone Duo open,
     /// iPad landscape — the rows go two to a line across the whole width;
     /// one 640pt column there left a third of the screen empty and sat
@@ -156,30 +165,25 @@ struct LibraryView: View {
     }
 
     var body: some View {
-        NavigationStack(path: $path) {
-            Group {
-                if store.isPremium {
-                    premiumList
-                } else {
-                    freeList
-                }
+        Group {
+            if store.isPremium {
+                premiumList
+            } else {
+                freeList
             }
-            .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { listWidth = $0 }
-            .navigationTitle("Library")
-            // Inline, like Today: a large title can't collapse over a list with
-            // a pinned inset above it — it vanished and left a blank band.
-            // The bar then carries the title, the search field and the type
-            // picker as one fixed header, which is what this screen is for.
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationDestination(for: Puzzle.self) { puzzle in
-                CrosswordGameView(puzzle: puzzle, profile: profile, entrySource: "library")
-            }
-            .sheet(isPresented: $showPaywall) {
-                // Source stays "archive" even though the screen is now called
-                // Library — renaming it would split this entry point's
-                // conversion history in Firebase at an arbitrary point.
-                PaywallView(source: .archive)
-            }
+        }
+        .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { listWidth = $0 }
+        .navigationTitle("All Puzzles")
+        // Inline: a large title can't collapse over a list with a pinned inset
+        // above it — it vanished and left a blank band. The bar then carries
+        // the title, the search field and the type picker as one fixed header,
+        // which is what this screen is for.
+        .navigationBarTitleDisplayMode(.inline)
+        .sheet(isPresented: $showPaywall) {
+            // Source stays "archive" even though the screen is now called
+            // All Puzzles — renaming it would split this entry point's
+            // conversion history at an arbitrary point.
+            PaywallView(source: .archive)
         }
     }
 
@@ -299,7 +303,7 @@ struct LibraryView: View {
     }
 
     private func nextUnsolvedRow(_ puzzle: Puzzle) -> some View {
-        NavigationLink(value: puzzle) {
+        NavigationLink(value: LibraryPuzzleRoute(puzzle: puzzle)) {
             HStack(spacing: Theme.Spacing.m) {
                 Image(systemName: "play.circle.fill")
                     .font(.title)
@@ -391,7 +395,7 @@ struct LibraryView: View {
     /// List draws a chevron on every row, and the rest of the app's rows
     /// dropped theirs (2026-10-24): the whole row is the tap target.
     private func rowLink<Label: View>(_ puzzle: Puzzle, @ViewBuilder label: () -> Label) -> some View {
-        Button { path.append(puzzle) } label: { label() }
+        Button { path.append(LibraryPuzzleRoute(puzzle: puzzle)) } label: { label() }
             .foregroundStyle(.primary)
     }
 

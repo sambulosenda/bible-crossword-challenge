@@ -14,7 +14,7 @@ Dated work first — 13 has a hard deadline that the rest do not.
 
 | # | Epic | Goal | File |
 |---|------|------|------|
-| 13 | **Daily rotation wrap** — due **2026-09-29** (minis) / **2026-10-01** (dailies) | Streak-break event | [13-daily-rotation-wrap.md](./13-daily-rotation-wrap.md) |
+| 13 | **Daily rotation wrap** — due **2026-10-06** (minis) / **2026-10-01** (dailies) | Streak-break event | [13-daily-rotation-wrap.md](./13-daily-rotation-wrap.md) |
 | 1 | Seasonal packs + content cadence | Retention + Premium | [01-seasonal-packs-content-cadence.md](./01-seasonal-packs-content-cadence.md) |
 | 2 | Challenge history / family challenge | Growth | [02-challenge-history-family.md](./02-challenge-history-family.md) |
 | 3 | Deeper post-solve scripture loop | Positioning | [03-post-solve-scripture-loop.md](./03-post-solve-scripture-loop.md) |
@@ -41,13 +41,14 @@ whenever puzzles are added — every daily added moves the first date by one.
 | Pool | Size | Wraps |
 |------|------|-------|
 | Dailies | 92 | 2026-10-01 |
-| Minis | 90 | 2026-09-29 |
+| Minis | 97 | 2026-10-06 |
 | Sundays | 13 | first repeat 2026-11-08 (weekly pool, rolls each Sunday; see `PuzzleProvider.sundayRotationOffset`) |
 
 `RotationWrapTests` asserts both pool sizes and both dates, so adding content
 fails the suite until these are re-recorded — the table can't quietly go stale.
 
-**The mini pool now wraps first**, on 29 September, two days before the dailies.
+The daily pool wraps first, on 1 October; the expanded mini pool wraps on 6 October.
+These are rotation dates from the fixed epoch, not release dates.
 
 ## Status legend
 

@@ -139,3 +139,12 @@ struct Slot: Identifiable, Hashable {
     var id: String { "\(number)-\(direction.rawValue)" }
     var length: Int { positions.count }
 }
+
+extension Puzzle {
+    /// "Psalm 23:1 · 7×7 · Easy": where it's from, how big, how hard — what
+    /// a player chooses a crossword by. No time: the app keeps no estimate of
+    /// one, and a guessed "~3 min" would be wrong half the time.
+    var detailLine: String {
+        "\(reference) · \(size)×\(size) · \(difficulty.label)"
+    }
+}

@@ -127,6 +127,7 @@ struct HomeView: View {
     /// every quest is walked — the card earns its slot or gives it back.
     private func activeQuest(_ recordsByID: [String: PuzzleRecord]) -> QuestLine? {
         puzzleProvider.quests.first {
+            $0.id != BeginnerPath.questID &&
             !QuestProgress(quest: $0, recordsByID: recordsByID).isComplete
         }
     }
@@ -353,7 +354,7 @@ struct HomeView: View {
 
         return NavigationStack(path: $path) {
             CardColumns {
-                leadColumn(today, lead: lead)
+                leadColumn(today, lead: lead, recordsByID: byID)
             } more: {
                 moreColumn(byID, heroPuzzleID: today.puzzle(lead)?.puzzle.id)
             }
@@ -404,6 +405,9 @@ struct HomeView: View {
                     .presentationDetents([.height(streakSheetHeight)])
                     .presentationDragIndicator(.visible)
             }
+            .navigationDestination(for: BeginnerPuzzleRoute.self) { route in
+                CrosswordGameView(puzzle: route.puzzle, profile: profile, entrySource: "beginner_path")
+            }
             .navigationDestination(for: Puzzle.self) { puzzle in
                 CrosswordGameView(puzzle: puzzle, profile: profile, entrySource: "home")
             }
@@ -412,6 +416,9 @@ struct HomeView: View {
             }
             .navigationDestination(for: QuestRoute.self) { route in
                 QuestDetailView(quest: route.quest, profile: profile, source: route.source)
+            }
+            .navigationDestination(for: JourneyPuzzleRoute.self) { route in
+                CrosswordGameView(puzzle: route.puzzle, profile: profile, entrySource: "journey")
             }
             // Routes on `path`, not `isPresented` flags: a deep link that
             // replaces the path clears these too, and the plan route carries
@@ -446,8 +453,16 @@ struct HomeView: View {
 
     /// Today's puzzles: the verse, the lead card and the ones under it.
     @ViewBuilder
-    private func leadColumn(_ today: TodayPuzzles, lead: TodayLead) -> some View {
-        TodayHeader(verse: verseOfTheDay(excluding: today.daily))
+    private func leadColumn(_ today: TodayPuzzles, lead: TodayLead, recordsByID: [String: PuzzleRecord]) -> some View {
+        let beginnerQuest = puzzleProvider.quest(id: BeginnerPath.questID)
+        let beginnerProgress = beginnerQuest.map {
+            QuestProgress(quest: $0, recordsByID: recordsByID, now: currentDay, calendar: calendar)
+        }
+        let beginner = beginnerProgress.flatMap { progress in
+            BeginnerPath.shouldFeature(totalCompleted: profile.totalPuzzlesCompleted, progress: progress)
+                ? BeginnerPath.next(provider: puzzleProvider, recordsByID: recordsByID) : nil
+        }
+        TodayHeader(verse: verseOfTheDay(excluding: beginner ?? today.daily))
 
         // A player still inside their first three finishes leads
         // with the Mini; everyone else leads with the daily — or, on a
@@ -468,7 +483,10 @@ struct HomeView: View {
         // habit existed. After three finishes the screen is the one
         // everybody else has, permanently — the daily is the habit,
         // the Mini is just a gentler way in.
-        if let hero = today.puzzle(lead) {
+        if let beginner, let beginnerProgress {
+            BeginnerPathCard(puzzle: beginner, progress: beginnerProgress,
+                             hasEntries: recordsByID[beginner.id]?.hasPlayerEntries == true)
+        } else if let hero = today.puzzle(lead) {
             LeadPuzzleCard(
                 puzzle: hero.puzzle,
                 billing: hero.billing,
@@ -482,7 +500,10 @@ struct HomeView: View {
         // The day's other puzzles as rows of one card, not a card each:
         // they are one idea ("also today"), and two white cards stacked
         // under the hero read as two more headlines.
-        let companions = companionPuzzles(today, lead: lead)
+        let companions = beginner == nil
+            ? companionPuzzles(today, lead: lead)
+            : [TodayLead.mini, .daily, .sunday].compactMap { today.puzzle($0) }
+                .filter { $0.puzzle.id != beginner?.id }
         if !companions.isEmpty {
             CompanionPuzzlesCard(rows: companions)
         }
@@ -566,18 +587,20 @@ struct HomeView: View {
         // of an uppercase kicker on each card — Today had seven of those,
         // and a label per card is a label nobody reads.
         //
-        // Cover rows on the paper, as YouVersion lists plans (2026-10-24):
-        // each thing in its own colour with where the player stands, and
-        // space between rows rather than a card, dividers and chevrons. As
-        // a grouped list it read as the Settings app — a Journey halfway
-        // done looked like a menu item. The colour is per feature, which
-        // reverses the neutral icons of 2026-10-13: at 52pt a cover is
-        // artwork, where a 36pt tinted square in a list was decoration.
+        // Cover rows in one grouped card (2026-11-03). They were bare on the
+        // paper from 2026-10-24, when each cover was its feature's colour
+        // and read as artwork; grey since the one-colour pass, they read
+        // as unfinished without a card around them.
         VStack(alignment: .leading, spacing: Theme.Spacing.m) {
-            // On the page's one content edge, with the covers below it.
+            // On the page's one content edge (32pt), where the verse and the
+            // hero's title start; the cards below sit on the cards' edge.
             Text("Keep going").sectionHeader()
+                .padding(.horizontal, Theme.Spacing.m)
 
-            VStack(alignment: .leading, spacing: Theme.Spacing.m) {
+            // One white grouped card since 2026-11-03, as Profile's rows are:
+            // with the covers grey (one-colour pass) the bare rows read as
+            // grey squares floating on the system grey.
+            CardGroup(dividerInset: Theme.Spacing.m + CoverRow.coverSide + Theme.Spacing.m) {
                 // A habit surface like the streak: only while a plan is
                 // running, one row, checked once today's chapter is read.
                 // `readingPlans` needs no Bible decode — the plan recorded
@@ -640,6 +663,7 @@ struct HomeView: View {
                     .contentShape(.rect)
             }
             .buttonStyle(.plain)
+            .padding(.horizontal, Theme.Spacing.m)
             .accessibilityHint("Opens search, reading and reading plans")
 
             // The offer as one row, last on the page (2026-10-24). It was a
@@ -650,16 +674,18 @@ struct HomeView: View {
             // inside it read as one more badge. Set apart by space, and by the
             // solid gold the Premium mark wears everywhere.
             if !store.isPremium {
-                UpgradeRow(
-                    currentStreak: profile.currentStreak,
-                    onOpen: { paywall = PaywallRequest(source: $0) }
-                )
+                // A one-row card of its own (2026-11-03), apart from the
+                // group above so the offer doesn't read as one more item
+                // of the player's progress.
+                CardGroup {
+                    UpgradeRow(
+                        currentStreak: profile.currentStreak,
+                        onOpen: { paywall = PaywallRequest(source: $0) }
+                    )
+                }
                 .padding(.top, Theme.Spacing.s)
             }
         }
-        // The covers start on the page's one content edge — 32pt, where the
-        // verse, the hero's title and the headers start.
-        .padding(.horizontal, Theme.Spacing.m)
 
         // Only packs the player can open. For a free player every tile here
         // used to be locked behind a crown, a second pitch beside the
@@ -898,12 +924,10 @@ private enum PuzzleBilling {
 
 // MARK: - Lead puzzle card
 //
-// The hero of the screen: a solid feature card in its puzzle's colour — blue
-// for the daily, teal for the Mini, rust for the Special — with white type, a
-// white pill and a faint crossword in the corner. Every other module is white,
-// so the eye lands here first. It was a 10% accent wash until 2026-10-24: the
-// palest card on the page carried the most important thing on it, while
-// Journeys and memory practice elsewhere had already gone solid.
+// The hero of the screen: a white card with ink type and the page's one blue
+// pill. It was a solid fill in its puzzle's colour (blue daily, teal Mini,
+// rust Special) with a crossword motif until 2026-11-02 — too much colour for
+// an Apple-plain screen; the button alone carries the blue now.
 // When solved it becomes a quiet win moment (the time you earned) rather than
 // a dead "done" tile.
 //
@@ -927,12 +951,9 @@ private struct LeadPuzzleCard: View {
         // the motif in the corner (see `info`).
         .padding(20)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .foregroundStyle(.white)
-        .background(alignment: .topTrailing) {
-            CrosswordMotif()
-                .padding(20)
-        }
-        .elevatedCard(fill: billing.heroFill, cornerRadius: Theme.featureCornerRadius)
+        // White with ink type since 2026-11-02, not a solid fill in the
+        // puzzle's colour: Today keeps one colour, and it's the button's.
+        .elevatedCard(cornerRadius: Theme.featureCornerRadius)
         .onAppear {
             // Only a puzzle finished *today* is worth celebrating. The rotation
             // repeat is also `isCompleted`, and bouncing a seal at it is exactly
@@ -952,13 +973,11 @@ private struct LeadPuzzleCard: View {
             VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
                 Text(billing.name)
                     .font(.footnote.weight(.semibold))
-                    .foregroundStyle(.white.opacity(0.9))
+                    .foregroundStyle(.secondary)
                 Text(puzzle.title)
                     .font(.title2.bold())
                     .fixedSize(horizontal: false, vertical: true)
             }
-            // Clear of the motif in the corner: its five squares plus a gap.
-            .padding(.trailing, 76)
             .frame(maxWidth: .infinity, alignment: .leading)
 
             switch presentation {
@@ -978,7 +997,7 @@ private struct LeadPuzzleCard: View {
                 metaRow
                 if let progress {
                     ProgressView(value: progress)
-                        .tint(.white)
+                        .tint(Theme.progressBar)
                 }
             }
         }
@@ -994,9 +1013,7 @@ private struct LeadPuzzleCard: View {
     private var metaRow: some View {
         Text(metaLine)
             .font(.subheadline)
-            // Explicit, not `.secondary`: the hierarchical style dims white
-            // too far on the fill, under 4.5:1 at this size.
-            .foregroundStyle(.white.opacity(0.9))
+            .foregroundStyle(.secondary)
             .fixedSize(horizontal: false, vertical: true)
     }
 
@@ -1005,11 +1022,12 @@ private struct LeadPuzzleCard: View {
     }
 
     // The win moment: leads with the time the user just earned, echoing the
-    // CompletionView language (seal + monospaced clock). White on the fill:
-    // green on blue or teal failed contrast and fought the card's colour.
+    // CompletionView language (seal + monospaced clock), the seal in the
+    // app's solved green.
     private func solvedReward(_ seconds: Int?) -> some View {
         HStack(spacing: Theme.Spacing.xs) {
             Image(systemName: "checkmark.seal.fill")
+                .foregroundStyle(FeatureTint.solved)
                 .symbolEffect(.bounce, value: celebrate)
             Text("Solved")
             if let secs = seconds, secs > 0 {
@@ -1042,7 +1060,7 @@ private struct LeadPuzzleCard: View {
             NavigationLink(value: puzzle) {
                 Label("Play again", systemImage: "arrow.clockwise")
             }
-            .buttonStyle(.pillOnColorTonal)
+            .buttonStyle(.pillTonal)
         case .playedBefore(let previous):
             // Prominent, unlike the solved-today replay: this *is* the day's
             // action, and the streak depends on it being taken. It names the
@@ -1054,12 +1072,12 @@ private struct LeadPuzzleCard: View {
                     Label("Play again", systemImage: "arrow.clockwise")
                 }
             }
-            .buttonStyle(.pillOnColor)
+            .buttonStyle(.pillAccent)
         case .play(let status):
             NavigationLink(value: puzzle) {
                 Label(status.actionTitle, systemImage: status.actionSymbol)
             }
-            .buttonStyle(.pillOnColor)
+            .buttonStyle(.pillAccent)
         }
     }
 
@@ -1099,7 +1117,8 @@ private struct CollectionsCarousel: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.s) {
-            // "Packs", as the tab, the paywall and Settings call them. The
+            // "Packs", as the paywall and Settings call them (the shelf is on the
+            // Puzzles tab since 2026-11-03). The
             // header is the way to the rest of the shelf, App Store–style:
             // the section title with a grey chevron after it.
             Button(action: onShowAll) {
@@ -1302,6 +1321,7 @@ private struct NextAchievementRow: View {
             subtitle: subtitle,
             progress: isTimeGoal || fraction <= 0 ? nil : fraction
         )
+        .cardRowPadding()
         .accessibilityElement(children: .ignore)
         .accessibilityAddTraits(.isButton)
         .accessibilityLabel("Next badge: \(achievement.title). \(achievement.detail). \(progress)")
@@ -1374,6 +1394,7 @@ private struct UpgradeRow: View {
             onOpen(isStreakVariant ? .streakCard : .homeCard)
         } label: {
             CoverRow(symbol: "crown.fill", tint: Theme.badgeRim, title: title, subtitle: subtitle)
+                .cardRowPadding()
         }
         .buttonStyle(PressableCardStyle())
         .accessibilityElement(children: .ignore)
@@ -1475,7 +1496,11 @@ private struct CompanionPuzzlesCard: View {
                 CompactPuzzleRow(
                     puzzle: row.puzzle,
                     billing: row.billing,
-                    presentation: row.presentation
+                    presentation: row.presentation,
+                    // Three across (a Sunday): the icon goes over the text.
+                    // Beside it, a third of the width broke words mid-word
+                    // ("Sund-ay", "pro-gress") — 2026-11-03.
+                    stacksIcon: rows.count > 2 && !typeSize.isAccessibilitySize
                 )
             }
         }
@@ -1488,6 +1513,8 @@ private struct CompactPuzzleRow: View {
     let puzzle: Puzzle
     let billing: PuzzleBilling
     let presentation: DailyPresentation
+    /// Icon above the text rather than beside it, for a tile a third wide.
+    var stacksIcon = false
 
     /// Only a puzzle finished today wears the green check. Each pool wraps on
     /// its own schedule — the mini's eight days after the daily's — and a repeat
@@ -1509,10 +1536,13 @@ private struct CompactPuzzleRow: View {
             // enough to choose by.
             // A pale square like every other row's since 2026-10-25, not a
             // solid block of the hero's colour.
-            HStack(spacing: Theme.Spacing.s + 4) {
+            let layout = stacksIcon
+                ? AnyLayout(VStackLayout(alignment: .leading, spacing: Theme.Spacing.s + 2))
+                : AnyLayout(HStackLayout(spacing: Theme.Spacing.s + 4))
+            layout {
                 CollectionCover(
                     symbol: leadingSymbol,
-                    accent: isSolvedToday ? FeatureTint.solved : billing.heroFill,
+                    accent: isSolvedToday ? FeatureTint.solved : Color.secondary,
                     isLocked: false,
                     side: iconSize,
                     font: .body.weight(.semibold),
@@ -1530,8 +1560,9 @@ private struct CompactPuzzleRow: View {
                         .fixedSize(horizontal: false, vertical: true)
                 }
 
-                Spacer(minLength: 0)
+                if !stacksIcon { Spacer(minLength: 0) }
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
             .padding(14)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
             .elevatedCard()
