@@ -1075,11 +1075,6 @@ struct CompletionView: View {
     }
 
     /// Star mark crowning the new-achievements card.
-    private var achievementMark: some View {
-        CelebrationBadge(systemImage: "star.fill",
-                         confetti: "achievement_unlock",
-                         size: 112)
-    }
 
     /// The verse is the emotional payoff of the solve — the one card that gets
     /// special treatment (accent wash) while everything else recedes.
@@ -1287,25 +1282,45 @@ struct CompletionView: View {
         .accessibilityLabel("Streak freeze earned. It'll cover you if you miss a day.")
     }
 
+    /// The badge just earned, as Profile → Badges shows it (2026-11-03): its
+    /// own medal, "Badge earned", its name and what earned it. It was a
+    /// generic blue star in a gold ring over "New Achievement!" and a second,
+    /// different icon per badge — clip art, and not the object the player
+    /// then finds in Profile.
     private var achievementsCard: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.m) {
-            achievementMark
-                .frame(maxWidth: .infinity)
-            Text("New Achievement\(newAchievements.count > 1 ? "s" : "")!")
-                .font(.headline)
-            ForEach(newAchievements) { achievement in
-                Label {
-                    VStack(alignment: .leading) {
-                        Text(achievement.title).font(.subheadline.weight(.semibold))
-                        Text(achievement.detail).font(.caption).foregroundStyle(.secondary)
+            ForEach(Array(newAchievements.enumerated()), id: \.element.id) { index, achievement in
+                HStack(spacing: Theme.Spacing.m) {
+                    BadgeMedal(symbol: achievement.symbol, size: 56)
+                        .overlay {
+                            // The burst on the first medal only; Reduce Motion
+                            // keeps the medal and drops the confetti.
+                            if index == 0, !reduceMotion {
+                                LottieView(animation: .named("achievement_unlock"))
+                                    .configure { $0.contentMode = .scaleAspectFit }
+                                    .playing(loopMode: .playOnce)
+                                    .frame(width: 140, height: 140)
+                                    .allowsHitTesting(false)
+                                    .accessibilityHidden(true)
+                            }
+                        }
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Badge earned")
+                            .font(.footnote.weight(.semibold))
+                            .foregroundStyle(.secondary)
+                        Text(achievement.title)
+                            .font(.headline)
+                        Text(achievement.detail)
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
-                } icon: {
-                    Image(systemName: achievement.symbol)
-                        .foregroundStyle(.yellow)
+                    Spacer(minLength: 0)
                 }
+                .accessibilityElement(children: .combine)
             }
         }
-        .padding(Theme.Spacing.l)
+        .padding(Theme.Spacing.m + Theme.Spacing.xs)
         .frame(maxWidth: .infinity, alignment: .leading)
         .elevatedCard()
     }
