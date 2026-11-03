@@ -76,7 +76,13 @@ final class Bible_Crossword_ChallengeUITests: XCTestCase {
         XCTAssertTrue(packsTab.waitForExistence(timeout: 20))
         packsTab.tap()
 
+        // First Steps sits on the Old Testament shelf, below the fold, and
+        // the tab's shelves are lazy: the cover isn't in the tree until it's
+        // scrolled to.
         let pack = app.buttons.matching(NSPredicate(format: "label CONTAINS 'First Steps'")).firstMatch
+        for _ in 0..<6 where !(pack.exists && pack.isHittable) {
+            app.swipeUp()
+        }
         XCTAssertTrue(pack.waitForExistence(timeout: 10))
         pack.tap()
 
