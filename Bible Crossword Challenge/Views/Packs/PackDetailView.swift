@@ -290,7 +290,7 @@ struct PackDetailView: View {
                             number: index + 1,
                             title: puzzle.title,
                             detail: Self.detail(puzzle),
-                            numeralTint: pack.accent,
+                            numeralTint: Color.secondary,
                             grid: puzzle.grid
                         ) {
                             accessory(for: PuzzleStatus(record: record), record: record)
@@ -350,7 +350,7 @@ struct PackDetailView: View {
                             number: index + 1,
                             title: puzzle.title,
                             detail: Self.detail(puzzle),
-                            numeralTint: pack.accent,
+                            numeralTint: Color.secondary,
                             grid: puzzle.grid
                         ) {
                             Image(systemName: "lock.fill")
@@ -395,8 +395,8 @@ struct TrackRow<Accessory: View>: View {
     var body: some View {
         HStack(spacing: Theme.Spacing.m) {
             if let grid {
-                // The pack's colour on a pale wash, as every icon square in the
-                // app is set; the grid's own cells in it, blocks left out.
+                // Grey on a pale wash, as every icon square in the app is set since
+                // 2026-11-02; the grid's own cells in it, blocks left out.
                 let tint = numeralTint ?? Theme.accent
                 // No gap past a Mini: at 32pt a 15×15's cells are 2pt, and a
                 // 1pt gap left a faint scatter of dots instead of a grid.

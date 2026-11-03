@@ -225,7 +225,7 @@ struct QuestDetailView: View {
             number: index + 1,
             title: puzzle.title,
             detail: PackDetailView.detail(puzzle),
-            numeralTint: quest.accent
+            numeralTint: Color.secondary
         ) {
             if !isLocked {
                 switch state {
