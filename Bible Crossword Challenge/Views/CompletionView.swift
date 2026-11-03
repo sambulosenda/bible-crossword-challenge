@@ -769,10 +769,18 @@ struct CompletionView: View {
                             .foregroundStyle(.primary)
                         // The count, not just the wall: "3 more puzzles in
                         // this pack" is the reason to keep going, said at the
-                        // moment the pack has proved itself.
-                        Text(locked ? lockedPackLine(ctx) : "Next: \(next.title)")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                        // moment the pack has proved itself. Open, how far
+                        // along rather than "Next: …" (2026-11-03) — the bar's
+                        // Next Puzzle already names the next step.
+                        if locked {
+                            Text(lockedPackLine(ctx))
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        } else {
+                            ProgressView(value: ctx.progress.fraction)
+                                .tint(Theme.progressBar)
+                                .padding(.top, 4)
+                        }
                     }
                     Spacer(minLength: 0)
                     Image(systemName: "chevron.forward")
@@ -836,7 +844,9 @@ struct CompletionView: View {
             // About 20pt a square whatever the size, so a 7×7 Mini reads as
             // the same faint texture as a 15×15 rather than as big blocks.
             let side = min(300, CGFloat(puzzle.size) * 20)
-            GridThumbnail(grid: puzzle.grid, tint: Color.primary.opacity(0.05), gap: 3, cropsToContent: true)
+            // Half strength: on a 15×15 the stronger texture read as a
+            // pattern behind the time rather than a texture.
+            GridThumbnail(grid: puzzle.grid, tint: Color.primary.opacity(0.025), gap: 3, cropsToContent: true)
                 .frame(width: side, height: side)
                 .offset(x: 24, y: -20)
         }
@@ -1138,8 +1148,11 @@ struct CompletionView: View {
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
             } icon: {
+                // Grey (2026-11-03): beside the bar's blue button and the
+                // verse's two blue links, a third blue item blurred which one
+                // was the action.
                 Image(systemName: "square.text.square")
-                    .foregroundStyle(Theme.accent)
+                    .foregroundStyle(.secondary)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .contentShape(.rect)

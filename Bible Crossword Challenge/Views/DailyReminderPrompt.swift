@@ -132,7 +132,9 @@ struct DailyReminderPrompt: View {
                         }
                     }
                 }
-                .buttonStyle(.pillProminent)
+                // Blue, the app's action colour (2026-11-03); it was the ink
+                // pill, the last black button in the solve flow.
+                .buttonStyle(.pillAccent)
                 .disabled(working)
 
                 // Same weight as onboarding's. A second ask is already pushing
@@ -363,16 +365,16 @@ struct ReminderAskCard: View {
             } label: {
                 Group {
                     if working {
-                        ProgressView().tint(Theme.onInk)
+                        ProgressView().tint(.white)
                     } else {
                         Text("Turn on")
                     }
                 }
                 .font(.subheadline.weight(.semibold))
-                .foregroundStyle(Theme.onInk)
+                .foregroundStyle(.white)
                 .padding(.horizontal, Theme.Spacing.s + 4)
                 .padding(.vertical, 7)
-                .background(Theme.ink, in: .capsule)
+                .background(Theme.accent, in: .capsule)
             }
             .buttonStyle(.plain)
             .disabled(working)
