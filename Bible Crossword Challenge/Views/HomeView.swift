@@ -1496,7 +1496,11 @@ private struct CompanionPuzzlesCard: View {
                 CompactPuzzleRow(
                     puzzle: row.puzzle,
                     billing: row.billing,
-                    presentation: row.presentation
+                    presentation: row.presentation,
+                    // Three across (a Sunday): the icon goes over the text.
+                    // Beside it, a third of the width broke words mid-word
+                    // ("Sund-ay", "pro-gress") — 2026-11-03.
+                    stacksIcon: rows.count > 2 && !typeSize.isAccessibilitySize
                 )
             }
         }
@@ -1509,6 +1513,8 @@ private struct CompactPuzzleRow: View {
     let puzzle: Puzzle
     let billing: PuzzleBilling
     let presentation: DailyPresentation
+    /// Icon above the text rather than beside it, for a tile a third wide.
+    var stacksIcon = false
 
     /// Only a puzzle finished today wears the green check. Each pool wraps on
     /// its own schedule — the mini's eight days after the daily's — and a repeat
@@ -1530,7 +1536,10 @@ private struct CompactPuzzleRow: View {
             // enough to choose by.
             // A pale square like every other row's since 2026-10-25, not a
             // solid block of the hero's colour.
-            HStack(spacing: Theme.Spacing.s + 4) {
+            let layout = stacksIcon
+                ? AnyLayout(VStackLayout(alignment: .leading, spacing: Theme.Spacing.s + 2))
+                : AnyLayout(HStackLayout(spacing: Theme.Spacing.s + 4))
+            layout {
                 CollectionCover(
                     symbol: leadingSymbol,
                     accent: isSolvedToday ? FeatureTint.solved : Color.secondary,
@@ -1551,8 +1560,9 @@ private struct CompactPuzzleRow: View {
                         .fixedSize(horizontal: false, vertical: true)
                 }
 
-                Spacer(minLength: 0)
+                if !stacksIcon { Spacer(minLength: 0) }
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
             .padding(14)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
             .elevatedCard()
