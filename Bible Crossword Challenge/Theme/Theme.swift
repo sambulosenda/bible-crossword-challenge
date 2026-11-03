@@ -2,8 +2,8 @@
 //  Theme.swift
 //  Bible Crossword Challenge
 //
-//  Shared design system, inspired by YouVersion's component language: a warm
-//  paper canvas with white cards, solid "ink" pill CTAs, and serif type
+//  Shared design system, inspired by YouVersion's component language: Apple's
+//  grouped background with white cards (since 2026-11-03), pill CTAs, and serif type
 //  reserved for scripture and hero titles — on the app's own blue accent.
 //  Hierarchy (not colour) still carries emphasis.
 //
@@ -28,7 +28,7 @@ enum Theme {
     static let featureCornerRadius: CGFloat = 28
 
     /// The system accent (blue) — kept as the brand colour; the YouVersion
-    /// influence lives in the components (paper canvas, ink pills, serif
+    /// influence lives in the components (white cards, pills, serif
     /// scripture, streak week row), not the hue.
     static let accent = Color.accentColor
 
@@ -110,37 +110,16 @@ enum Theme {
 
     // MARK: - Surfaces
 
-    /// Warm paper canvas instead of the cool system grey.
-    ///
-    /// Increased contrast pulls the paper down and away from the white card on
-    /// top of it, which is the same move the system makes with its own grouped
-    /// backgrounds. The warmth is kept: this is a darker paper, not a grey one.
-    static let background = adaptive(
-        light: UIColor(red: 0.969, green: 0.961, blue: 0.949, alpha: 1),          // paper #F7F5F2
-        lightHighContrast: UIColor(red: 0.906, green: 0.894, blue: 0.875, alpha: 1),
-        dark: UIColor(red: 0.055, green: 0.051, blue: 0.047, alpha: 1),           // warm near-black
-        darkHighContrast: UIColor(red: 0.027, green: 0.024, blue: 0.022, alpha: 1),
-        darkElevated: UIColor(red: 0.098, green: 0.094, blue: 0.090, alpha: 1),
-        darkElevatedHighContrast: UIColor(red: 0.075, green: 0.071, blue: 0.067, alpha: 1)
-    )
+    /// The canvas: Apple's grouped background (2026-11-03), so every screen,
+    /// the game included, sits on the same ground as Settings and Health. It
+    /// was a warm paper (#F7F5F2) that the game screen didn't share, and the
+    /// ground changed temperature when a puzzle opened. The system colour
+    /// carries dark, increased contrast and elevated (sheet) variants itself.
+    static let background = Color(.systemGroupedBackground)
 
-    /// Card surface: white on paper in light; a warm elevated grey in dark.
-    ///
-    /// White has nowhere to go in light, so there the separation is won by the
-    /// canvas above. In dark the card lifts instead — the canvas is already
-    /// close to black.
-    ///
-    /// It lifts with the canvas when elevated, by the same step, so a card
-    /// inside a sheet keeps exactly the separation it has on a screen. Lifting
-    /// the canvas alone would have closed the gap and swallowed the cards.
-    static let surface = adaptive(
-        light: .white,
-        lightHighContrast: .white,
-        dark: UIColor(red: 0.110, green: 0.106, blue: 0.102, alpha: 1),           // #1C1B1A
-        darkHighContrast: UIColor(red: 0.157, green: 0.153, blue: 0.149, alpha: 1),
-        darkElevated: UIColor(red: 0.153, green: 0.149, blue: 0.145, alpha: 1),
-        darkElevatedHighContrast: UIColor(red: 0.200, green: 0.196, blue: 0.192, alpha: 1)
-    )
+    /// Card surface: Apple's grouped cell colour — white on the grey in light,
+    /// a lifted grey on black in dark, one step lighter again in a sheet.
+    static let surface = Color(.secondarySystemGroupedBackground)
 
     /// Every progress bar off a cover, in one colour (2026-10-25). Bars took
     /// their row's colour — green, gold, the pack's, the accent blue — and a
