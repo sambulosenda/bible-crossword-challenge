@@ -58,6 +58,67 @@ struct CollectionPageCover<Mark: View, Footer: View>: View {
     }
 }
 
+/// The puzzle to play next on a collection's page, as a card: its grid, where
+/// it sits in the collection, what it is, and the page's one action. Shared by
+/// packs and Journeys (2026-11-03), so the two pages lead the same way.
+struct UpNextCard<Action: View>: View {
+    let puzzle: Puzzle
+    let kicker: String
+    /// A glyph before the kicker — the seal on a finished collection.
+    var kickerSymbol: String? = nil
+    @ViewBuilder let action: Action
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: Theme.Spacing.m) {
+            HStack(spacing: Theme.Spacing.m) {
+                GridThumbnail(grid: puzzle.grid, tint: Color.secondary,
+                              gap: puzzle.grid.count > 9 ? 0 : 1, cropsToContent: true)
+                    .padding(8)
+                    .frame(width: 72, height: 72)
+                    .background(Color.primary.opacity(0.06),
+                                in: .rect(cornerRadius: 14, style: .continuous))
+                    .accessibilityHidden(true)
+                VStack(alignment: .leading, spacing: 2) {
+                    HStack(spacing: 4) {
+                        if let kickerSymbol {
+                            Image(systemName: kickerSymbol).foregroundStyle(FeatureTint.solved)
+                        }
+                        Text(kicker)
+                    }
+                    .font(.footnote.weight(.semibold))
+                    .foregroundStyle(.secondary)
+                    Text(puzzle.title)
+                        .font(.title3.weight(.semibold))
+                        .fixedSize(horizontal: false, vertical: true)
+                    Text(PackDetailView.detail(puzzle))
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
+                Spacer(minLength: 0)
+            }
+            .accessibilityElement(children: .combine)
+            action
+        }
+        .padding(Theme.Spacing.m + Theme.Spacing.xs)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .elevatedCard(cornerRadius: Theme.featureCornerRadius)
+    }
+}
+
+/// The opening verse and what the collection is, at the foot of its page.
+struct CollectionAbout: View {
+    let heading: String
+    let first: Puzzle?
+    let blurb: String
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: Theme.Spacing.s + Theme.Spacing.xs) {
+            Text(heading).sectionHeader()
+            CollectionOpening(first: first, blurb: blurb)
+        }
+    }
+}
+
 /// The verse the collection opens on, in serif, with where it's from and
 /// what the collection is. Falls back to the blurb alone when the first
 /// puzzle has no verse.

@@ -73,7 +73,7 @@ struct QuestDetailView: View {
                         upNextCard(steps: steps, progress: progress)
                     }
                     stepList(steps, recordsByID: recordsByID, progress: progress)
-                    about(steps: steps)
+                    CollectionAbout(heading: "About this Journey", first: steps.first, blurb: quest.blurb)
                 }
                 .padding(.horizontal, Theme.Spacing.m + Theme.Spacing.xs)
                 .padding(.top, Theme.Spacing.s)
@@ -134,7 +134,7 @@ struct QuestDetailView: View {
     @ViewBuilder
     private func upNextCard(steps: [Puzzle], progress: QuestProgress) -> some View {
         if progress.isComplete, let first = steps.first {
-            stepCard(
+            UpNextCard(
                 puzzle: first,
                 kicker: "Complete · \(progress.total) of \(progress.total)",
                 kickerSymbol: "checkmark.seal.fill"
@@ -146,7 +146,7 @@ struct QuestDetailView: View {
             }
         } else if let index = progress.currentIndex, steps.indices.contains(index) {
             let puzzle = steps[index]
-            stepCard(
+            UpNextCard(
                 puzzle: puzzle,
                 kicker: progress.steppedToday
                     ? "Step \(index + 1) of \(progress.total) · ready tomorrow"
@@ -156,45 +156,6 @@ struct QuestDetailView: View {
                 playButton(puzzle, index: index, progress: progress)
             }
         }
-    }
-
-    private func stepCard<Action: View>(
-        puzzle: Puzzle, kicker: String, kickerSymbol: String?,
-        @ViewBuilder action: () -> Action
-    ) -> some View {
-        VStack(alignment: .leading, spacing: Theme.Spacing.m) {
-            HStack(spacing: Theme.Spacing.m) {
-                GridThumbnail(grid: puzzle.grid, tint: Color.secondary,
-                              gap: puzzle.grid.count > 9 ? 0 : 1, cropsToContent: true)
-                    .padding(8)
-                    .frame(width: 72, height: 72)
-                    .background(Color.primary.opacity(0.06),
-                                in: .rect(cornerRadius: 14, style: .continuous))
-                    .accessibilityHidden(true)
-                VStack(alignment: .leading, spacing: 2) {
-                    HStack(spacing: 4) {
-                        if let kickerSymbol {
-                            Image(systemName: kickerSymbol).foregroundStyle(FeatureTint.solved)
-                        }
-                        Text(kicker)
-                    }
-                    .font(.footnote.weight(.semibold))
-                    .foregroundStyle(.secondary)
-                    Text(puzzle.title)
-                        .font(.title3.weight(.semibold))
-                        .fixedSize(horizontal: false, vertical: true)
-                    Text(PackDetailView.detail(puzzle))
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                }
-                Spacer(minLength: 0)
-            }
-            .accessibilityElement(children: .combine)
-            action()
-        }
-        .padding(Theme.Spacing.m + Theme.Spacing.xs)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .elevatedCard(cornerRadius: Theme.featureCornerRadius)
     }
 
     // MARK: - Play
@@ -215,16 +176,6 @@ struct QuestDetailView: View {
                 }
                 .buttonStyle(.pillAccent)
             }
-        }
-    }
-
-    // MARK: - About
-
-    /// The verse the Journey opens on and what it is, at the foot.
-    private func about(steps: [Puzzle]) -> some View {
-        VStack(alignment: .leading, spacing: Theme.Spacing.s + Theme.Spacing.xs) {
-            Text("About this Journey").sectionHeader()
-            CollectionOpening(first: steps.first, blurb: quest.blurb)
         }
     }
 
