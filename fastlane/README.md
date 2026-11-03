@@ -23,6 +23,14 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 Push title/subtitle/keywords for all locales. Shows an HTML preview and asks for confirmation before uploading. No binary, no screenshots, no submission. Pass version:X.Y to create/select that editable version in App Store Connect.
 
+### ios push_release_notes
+
+```sh
+[bundle exec] fastlane ios push_release_notes
+```
+
+Push only the What's New text (release_notes.txt) for every locale to the editable version — no title, keywords, description, screenshots, binary or submission. Pass version:X.Y.
+
 ### ios upload_build
 
 ```sh

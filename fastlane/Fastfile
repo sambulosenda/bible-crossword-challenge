@@ -22,6 +22,31 @@ platform :ios do
     )
   end
 
+  desc "Push only the What's New text (release_notes.txt) for every locale to the " \
+       "editable version — no title, keywords, description, screenshots, binary " \
+       "or submission. Pass version:X.Y."
+  lane :push_release_notes do |options|
+    require "tmpdir"
+    Dir.mktmpdir do |dir|
+      # deliver uploads only the fields it finds files for, so a metadata
+      # folder holding nothing but each locale's release notes sends just those.
+      Dir.glob(File.join(__dir__, "metadata", "*", "release_notes.txt")).each do |notes|
+        locale = File.basename(File.dirname(notes))
+        FileUtils.mkdir_p(File.join(dir, locale))
+        FileUtils.cp(notes, File.join(dir, locale, "release_notes.txt"))
+      end
+      deliver(
+        api_key: asc_api_key,
+        app_version: options.fetch(:version),
+        metadata_path: dir,
+        skip_screenshots: true,
+        skip_binary_upload: true,
+        submit_for_review: false,
+        force: true,
+      )
+    end
+  end
+
   desc "Archive the app and upload the binary to App Store Connect. No metadata, " \
        "no screenshots, no submission — the build lands in ASC for manual selection. " \
        "Signing is cloud-managed through the ASC API key, so no local distribution " \
