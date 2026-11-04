@@ -23000,5 +23000,665 @@
         "reference": "John 12:2"
       }
     ]
+  },
+  {
+    "kind": "mini",
+    "id": "mini-102",
+    "title": "God Will Provide",
+    "theme": "Genesis 22",
+    "difficulty": "easy",
+    "verse": "God Himself will provide the lamb for the burnt offering, my son.",
+    "reference": "Genesis 22:8",
+    "words": [
+      {
+        "answer": "ISAAC",
+        "clue": "Abraham's only son, whom he loved",
+        "reference": "Genesis 22:2"
+      },
+      {
+        "answer": "MORIAH",
+        "clue": "Land of the mountain God showed Abraham",
+        "reference": "Genesis 22:2"
+      },
+      {
+        "answer": "WOOD",
+        "clue": "Isaac carried it up the mountain",
+        "reference": "Genesis 22:6"
+      },
+      {
+        "answer": "FIRE",
+        "clue": "Abraham carried it, with the knife",
+        "reference": "Genesis 22:6"
+      },
+      {
+        "answer": "KNIFE",
+        "clue": "Abraham took it in his hand",
+        "reference": "Genesis 22:10"
+      },
+      {
+        "answer": "LAMB",
+        "clue": "\"Where is the ___ for the burnt offering?\"",
+        "reference": "Genesis 22:7"
+      },
+      {
+        "answer": "ANGEL",
+        "clue": "He called from heaven, \"Abraham, Abraham!\"",
+        "reference": "Genesis 22:11"
+      },
+      {
+        "answer": "RAM",
+        "clue": "Caught by its horns in a thicket",
+        "reference": "Genesis 22:13"
+      },
+      {
+        "answer": "HORNS",
+        "clue": "How the ram was caught",
+        "reference": "Genesis 22:13"
+      },
+      {
+        "answer": "STARS",
+        "clue": "Abraham's descendants would be like these in the sky",
+        "reference": "Genesis 22:17"
+      },
+      {
+        "answer": "SAND",
+        "clue": "Also like the grains of this on the seashore",
+        "reference": "Genesis 22:17"
+      }
+    ]
+  },
+  {
+    "kind": "mini",
+    "id": "mini-098",
+    "title": "A Bowl of Stew",
+    "theme": "Genesis 25",
+    "difficulty": "easy",
+    "verse": "Thus Esau despised his birthright.",
+    "reference": "Genesis 25:34",
+    "words": [
+      {
+        "answer": "ESAU",
+        "clue": "Firstborn twin, red and hairy",
+        "reference": "Genesis 25:25"
+      },
+      {
+        "answer": "JACOB",
+        "clue": "Twin born grasping his brother's heel",
+        "reference": "Genesis 25:26"
+      },
+      {
+        "answer": "HEEL",
+        "clue": "What the second twin was holding at birth",
+        "reference": "Genesis 25:26"
+      },
+      {
+        "answer": "RED",
+        "clue": "How the firstborn looked at birth",
+        "reference": "Genesis 25:25"
+      },
+      {
+        "answer": "HUNTER",
+        "clue": "Esau became a skillful one",
+        "reference": "Genesis 25:27"
+      },
+      {
+        "answer": "HOME",
+        "clue": "Jacob was a quiet man who stayed at ___",
+        "reference": "Genesis 25:27"
+      },
+      {
+        "answer": "STEW",
+        "clue": "Jacob was cooking it when Esau came in",
+        "reference": "Genesis 25:29"
+      },
+      {
+        "answer": "LENTIL",
+        "clue": "The stew's main ingredient",
+        "reference": "Genesis 25:34"
+      },
+      {
+        "answer": "BREAD",
+        "clue": "Jacob gave it with the stew",
+        "reference": "Genesis 25:34"
+      },
+      {
+        "answer": "EDOM",
+        "clue": "Esau's other name, from the red stew",
+        "reference": "Genesis 25:30"
+      },
+      {
+        "answer": "SWORE",
+        "clue": "Esau ___ to Jacob and sold him the birthright",
+        "reference": "Genesis 25:33"
+      }
+    ]
+  },
+  {
+    "kind": "mini",
+    "id": "mini-100",
+    "title": "Drawn from the Water",
+    "theme": "Exodus 2",
+    "difficulty": "easy",
+    "verse": "She named him Moses and explained, “I drew him out of the water.”",
+    "reference": "Exodus 2:10",
+    "words": [
+      {
+        "answer": "MOSES",
+        "clue": "Name meaning \"drawn out\"",
+        "reference": "Exodus 2:10"
+      },
+      {
+        "answer": "BASKET",
+        "clue": "Made of papyrus and coated with tar and pitch",
+        "reference": "Exodus 2:3"
+      },
+      {
+        "answer": "REEDS",
+        "clue": "Where the basket was placed, along the bank",
+        "reference": "Exodus 2:3"
+      },
+      {
+        "answer": "NILE",
+        "clue": "The river where the baby was hidden",
+        "reference": "Exodus 2:3"
+      },
+      {
+        "answer": "TAR",
+        "clue": "Coated the basket, with pitch",
+        "reference": "Exodus 2:3"
+      },
+      {
+        "answer": "SISTER",
+        "clue": "She stood at a distance to see what would happen",
+        "reference": "Exodus 2:4"
+      },
+      {
+        "answer": "BATHE",
+        "clue": "Pharaoh's daughter went down to the river to do this",
+        "reference": "Exodus 2:5"
+      },
+      {
+        "answer": "CRYING",
+        "clue": "The baby was doing this when the basket was opened",
+        "reference": "Exodus 2:6"
+      },
+      {
+        "answer": "NURSE",
+        "clue": "The sister offered to find one among the Hebrew women",
+        "reference": "Exodus 2:7"
+      },
+      {
+        "answer": "WAGES",
+        "clue": "Pharaoh's daughter offered to pay the nurse these",
+        "reference": "Exodus 2:9"
+      },
+      {
+        "answer": "SON",
+        "clue": "He became Pharaoh's daughter's",
+        "reference": "Exodus 2:10"
+      }
+    ]
+  },
+  {
+    "kind": "mini",
+    "id": "mini-105",
+    "title": "The Scarlet Cord",
+    "theme": "Joshua 2",
+    "difficulty": "easy",
+    "verse": "And when they had gone, she tied the scarlet cord in the window.",
+    "reference": "Joshua 2:21",
+    "words": [
+      {
+        "answer": "RAHAB",
+        "clue": "Woman of Jericho who hid the spies",
+        "reference": "Joshua 2:1"
+      },
+      {
+        "answer": "SPIES",
+        "clue": "Two men sent out from Shittim",
+        "reference": "Joshua 2:1"
+      },
+      {
+        "answer": "ROOF",
+        "clue": "Where she hid the men",
+        "reference": "Joshua 2:6"
+      },
+      {
+        "answer": "FLAX",
+        "clue": "Stalks she hid them under",
+        "reference": "Joshua 2:6"
+      },
+      {
+        "answer": "ROPE",
+        "clue": "She let them down by one through the window",
+        "reference": "Joshua 2:15"
+      },
+      {
+        "answer": "WALL",
+        "clue": "Her house was built into it",
+        "reference": "Joshua 2:15"
+      },
+      {
+        "answer": "HIDE",
+        "clue": "\"___ yourselves there for three days\"",
+        "reference": "Joshua 2:16"
+      },
+      {
+        "answer": "THREE",
+        "clue": "Days the spies hid before returning",
+        "reference": "Joshua 2:22"
+      },
+      {
+        "answer": "CORD",
+        "clue": "Scarlet, tied in the window",
+        "reference": "Joshua 2:21"
+      },
+      {
+        "answer": "WINDOW",
+        "clue": "Where the scarlet cord was tied",
+        "reference": "Joshua 2:21"
+      },
+      {
+        "answer": "SIGN",
+        "clue": "She asked for a sure one of their oath",
+        "reference": "Joshua 2:12"
+      }
+    ]
+  },
+  {
+    "kind": "mini",
+    "id": "mini-104",
+    "title": "Speak, LORD",
+    "theme": "1 Samuel 3",
+    "difficulty": "easy",
+    "verse": "Speak, for Your servant is listening.",
+    "reference": "1 Samuel 3:10",
+    "words": [
+      {
+        "answer": "SAMUEL",
+        "clue": "Boy who ministered before the LORD",
+        "reference": "1 Samuel 3:1"
+      },
+      {
+        "answer": "ELI",
+        "clue": "Old priest whose eyes had grown dim",
+        "reference": "1 Samuel 3:2"
+      },
+      {
+        "answer": "LAMP",
+        "clue": "God's ___ had not yet gone out",
+        "reference": "1 Samuel 3:3"
+      },
+      {
+        "answer": "ARK",
+        "clue": "It was in the temple where the boy lay down",
+        "reference": "1 Samuel 3:3"
+      },
+      {
+        "answer": "CALLED",
+        "clue": "The LORD did this to the boy three times, then a fourth",
+        "reference": "1 Samuel 3:8"
+      },
+      {
+        "answer": "HERE",
+        "clue": "\"___ I am,\" the boy answered",
+        "reference": "1 Samuel 3:4"
+      },
+      {
+        "answer": "SPEAK",
+        "clue": "\"___, for Your servant is listening\"",
+        "reference": "1 Samuel 3:10"
+      },
+      {
+        "answer": "EARS",
+        "clue": "What God said would tingle at His news",
+        "reference": "1 Samuel 3:11"
+      },
+      {
+        "answer": "DOORS",
+        "clue": "Samuel opened them in the morning",
+        "reference": "1 Samuel 3:15"
+      },
+      {
+        "answer": "AFRAID",
+        "clue": "How Samuel felt about telling Eli the vision",
+        "reference": "1 Samuel 3:15"
+      },
+      {
+        "answer": "PROPHET",
+        "clue": "All Israel knew Samuel was one",
+        "reference": "1 Samuel 3:20"
+      }
+    ]
+  },
+  {
+    "kind": "mini",
+    "id": "mini-101",
+    "title": "Fed by Ravens",
+    "theme": "1 Kings 17",
+    "difficulty": "easy",
+    "verse": "The ravens would bring him bread and meat in the morning and evening, and he would drink from the brook.",
+    "reference": "1 Kings 17:6",
+    "words": [
+      {
+        "answer": "ELIJAH",
+        "clue": "The Tishbite who told Ahab of the drought",
+        "reference": "1 Kings 17:1"
+      },
+      {
+        "answer": "AHAB",
+        "clue": "King who heard there would be no rain",
+        "reference": "1 Kings 17:1"
+      },
+      {
+        "answer": "DEW",
+        "clue": "There would be none, nor rain",
+        "reference": "1 Kings 17:1"
+      },
+      {
+        "answer": "RAVENS",
+        "clue": "Birds that brought the prophet food",
+        "reference": "1 Kings 17:6"
+      },
+      {
+        "answer": "BROOK",
+        "clue": "He drank from it until it dried up",
+        "reference": "1 Kings 17:7"
+      },
+      {
+        "answer": "WIDOW",
+        "clue": "God commanded her to feed the prophet",
+        "reference": "1 Kings 17:9"
+      },
+      {
+        "answer": "STICKS",
+        "clue": "She was gathering a couple of these",
+        "reference": "1 Kings 17:12"
+      },
+      {
+        "answer": "FLOUR",
+        "clue": "Her jar of it was not used up",
+        "reference": "1 Kings 17:16"
+      },
+      {
+        "answer": "OIL",
+        "clue": "Her jug of it did not run dry",
+        "reference": "1 Kings 17:16"
+      },
+      {
+        "answer": "JAR",
+        "clue": "Held the flour that did not run out",
+        "reference": "1 Kings 17:16"
+      },
+      {
+        "answer": "CAKE",
+        "clue": "Elijah asked her to make him a small one first",
+        "reference": "1 Kings 17:13"
+      }
+    ]
+  },
+  {
+    "kind": "mini",
+    "id": "mini-103",
+    "title": "My Father's House",
+    "theme": "Luke 2:41-52",
+    "difficulty": "easy",
+    "verse": "Did you not know that I had to be in My Father’s house?",
+    "reference": "Luke 2:49",
+    "words": [
+      {
+        "answer": "TWELVE",
+        "clue": "Jesus' age at this Passover",
+        "reference": "Luke 2:42"
+      },
+      {
+        "answer": "FEAST",
+        "clue": "The family went up for it every year",
+        "reference": "Luke 2:42"
+      },
+      {
+        "answer": "BOY",
+        "clue": "Jesus stayed behind as one in Jerusalem",
+        "reference": "Luke 2:43"
+      },
+      {
+        "answer": "DAY",
+        "clue": "They traveled a whole one before missing Him",
+        "reference": "Luke 2:44"
+      },
+      {
+        "answer": "THREE",
+        "clue": "Days before they found Him",
+        "reference": "Luke 2:46"
+      },
+      {
+        "answer": "TEMPLE",
+        "clue": "Where He sat among the teachers",
+        "reference": "Luke 2:46"
+      },
+      {
+        "answer": "ANSWERS",
+        "clue": "All who heard were astounded at His understanding and these",
+        "reference": "Luke 2:47"
+      },
+      {
+        "answer": "CHILD",
+        "clue": "\"___, why have You done this to us?\"",
+        "reference": "Luke 2:48"
+      },
+      {
+        "answer": "HOUSE",
+        "clue": "He had to be in His Father's",
+        "reference": "Luke 2:49"
+      },
+      {
+        "answer": "HEART",
+        "clue": "His mother treasured all these things in hers",
+        "reference": "Luke 2:51"
+      },
+      {
+        "answer": "WISDOM",
+        "clue": "Jesus grew in it and in stature",
+        "reference": "Luke 2:52"
+      }
+    ]
+  },
+  {
+    "kind": "mini",
+    "id": "mini-106",
+    "title": "Through the Roof",
+    "theme": "Mark 2:1-12",
+    "difficulty": "easy",
+    "verse": "They uncovered the roof above Him, made an opening, and lowered the paralytic on his mat.",
+    "reference": "Mark 2:4",
+    "words": [
+      {
+        "answer": "FOUR",
+        "clue": "Men who carried the paralytic",
+        "reference": "Mark 2:3"
+      },
+      {
+        "answer": "CROWD",
+        "clue": "It kept them from getting to Jesus",
+        "reference": "Mark 2:4"
+      },
+      {
+        "answer": "ROOF",
+        "clue": "They uncovered it above Him",
+        "reference": "Mark 2:4"
+      },
+      {
+        "answer": "MAT",
+        "clue": "The paralytic was lowered on it",
+        "reference": "Mark 2:4"
+      },
+      {
+        "answer": "FAITH",
+        "clue": "Jesus saw theirs",
+        "reference": "Mark 2:5"
+      },
+      {
+        "answer": "SON",
+        "clue": "\"___, your sins are forgiven\"",
+        "reference": "Mark 2:5"
+      },
+      {
+        "answer": "SINS",
+        "clue": "Jesus said they were forgiven",
+        "reference": "Mark 2:5"
+      },
+      {
+        "answer": "SCRIBES",
+        "clue": "They sat there, questioning in their hearts",
+        "reference": "Mark 2:6"
+      },
+      {
+        "answer": "GET",
+        "clue": "\"___ up, pick up your mat, and go home\"",
+        "reference": "Mark 2:11"
+      },
+      {
+        "answer": "HOME",
+        "clue": "Where Jesus told the healed man to go",
+        "reference": "Mark 2:11"
+      },
+      {
+        "answer": "WALKED",
+        "clue": "He picked up his mat and ___ out in front of them all",
+        "reference": "Mark 2:12"
+      }
+    ]
+  },
+  {
+    "kind": "mini",
+    "id": "mini-099",
+    "title": "Bartimaeus Sees",
+    "theme": "Mark 10:46-52",
+    "difficulty": "easy",
+    "verse": "“Go,” said Jesus, “your faith has healed you.”",
+    "reference": "Mark 10:52",
+    "words": [
+      {
+        "answer": "JERICHO",
+        "clue": "Jesus was leaving it with a large crowd",
+        "reference": "Mark 10:46"
+      },
+      {
+        "answer": "BLIND",
+        "clue": "Bartimaeus could not see",
+        "reference": "Mark 10:46"
+      },
+      {
+        "answer": "BEGGAR",
+        "clue": "Bartimaeus sat by the road as one",
+        "reference": "Mark 10:46"
+      },
+      {
+        "answer": "ROAD",
+        "clue": "Where he sat, and where he followed",
+        "reference": "Mark 10:46"
+      },
+      {
+        "answer": "DAVID",
+        "clue": "\"Jesus, Son of ___, have mercy on me!\"",
+        "reference": "Mark 10:47"
+      },
+      {
+        "answer": "MERCY",
+        "clue": "What he cried out for",
+        "reference": "Mark 10:47"
+      },
+      {
+        "answer": "CLOAK",
+        "clue": "He threw it aside and jumped up",
+        "reference": "Mark 10:50"
+      },
+      {
+        "answer": "AGAIN",
+        "clue": "\"Rabboni, let me see ___\"",
+        "reference": "Mark 10:51"
+      },
+      {
+        "answer": "SEE",
+        "clue": "What the blind man asked to do",
+        "reference": "Mark 10:51"
+      },
+      {
+        "answer": "FAITH",
+        "clue": "\"Your ___ has healed you\"",
+        "reference": "Mark 10:52"
+      },
+      {
+        "answer": "SIGHT",
+        "clue": "He received it immediately",
+        "reference": "Mark 10:52"
+      }
+    ]
+  },
+  {
+    "kind": "mini",
+    "id": "mini-107",
+    "title": "Before the Rooster Crows",
+    "theme": "Luke 22:54-62",
+    "difficulty": "medium",
+    "verse": "And the Lord turned and looked at Peter.",
+    "reference": "Luke 22:61",
+    "words": [
+      {
+        "answer": "PETER",
+        "clue": "He followed at a distance",
+        "reference": "Luke 22:54"
+      },
+      {
+        "answer": "FIRE",
+        "clue": "Kindled in the middle of the courtyard",
+        "reference": "Luke 22:55"
+      },
+      {
+        "answer": "SERVANT",
+        "clue": "The girl in the courtyard was one",
+        "reference": "Luke 22:56"
+      },
+      {
+        "answer": "GIRL",
+        "clue": "\"This man also was with Him,\" said this servant",
+        "reference": "Luke 22:56"
+      },
+      {
+        "answer": "WOMAN",
+        "clue": "\"___, I do not know Him\"",
+        "reference": "Luke 22:57"
+      },
+      {
+        "answer": "HOUR",
+        "clue": "About one passed before the third accusation",
+        "reference": "Luke 22:59"
+      },
+      {
+        "answer": "GALILEAN",
+        "clue": "\"He too is a ___,\" another man insisted",
+        "reference": "Luke 22:59"
+      },
+      {
+        "answer": "ROOSTER",
+        "clue": "It crowed while Peter was still speaking",
+        "reference": "Luke 22:60"
+      },
+      {
+        "answer": "DENY",
+        "clue": "Peter would do it three times",
+        "reference": "Luke 22:61"
+      },
+      {
+        "answer": "WEPT",
+        "clue": "Peter went outside and did this bitterly",
+        "reference": "Luke 22:62"
+      },
+      {
+        "answer": "THREE",
+        "clue": "Times Peter said he did not know Him",
+        "reference": "Luke 22:61"
+      }
+    ]
   }
 ]

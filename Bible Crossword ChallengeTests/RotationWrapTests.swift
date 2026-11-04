@@ -75,18 +75,20 @@ struct RotationWrapTests {
     @Test func theMiniPoolWrapsAfterItsOwnLength() {
         let provider = PuzzleProvider.shared
         let pool = provider.minis
-        #expect(pool.count == 97, "mini pool changed — the wrap date has moved")
+        #expect(pool.count == 107, "mini pool changed — update this and roadmap/README.md")
 
-        #expect(provider.dailyMini(for: epochPlus(pool.count))?.id == pool.first?.id)
-        #expect(provider.dailyMini(for: epochPlus(pool.count - 1))?.id != pool.first?.id)
+        let start = farDay - farDay % pool.count
+        #expect(provider.dailyMini(for: epochPlus(start + pool.count))?.id == pool.first?.id)
+        #expect(provider.dailyMini(for: epochPlus(start + pool.count - 1))?.id != pool.first?.id)
     }
 
-    @Test func theMiniWrapLandsOn6October2026() {
-        let wrap = epochPlus(PuzzleProvider.shared.minis.count)
+    /// History: the shipped 97 minis wrapped on 6 October 2026, kept as served.
+    @Test func theMiniWrapOn6October2026StaysInHistory() {
+        let provider = PuzzleProvider.shared
+        let wrap = epochPlus(97)
         let parts = Calendar.current.dateComponents([.year, .month, .day], from: wrap)
-        #expect(parts.year == 2026)
-        #expect(parts.month == 10)
-        #expect(parts.day == 6)
+        #expect(parts.month == 10 && parts.day == 6)
+        #expect(provider.dailyMini(for: wrap)?.id == provider.dailyMini(for: epochPlus(0))?.id)
     }
 
     // MARK: - Telling a repeat from today's work

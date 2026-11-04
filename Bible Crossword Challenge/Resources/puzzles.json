@@ -26255,6 +26255,765 @@
     "kind": "mini"
   },
   {
+    "id": "mini-098",
+    "title": "A Bowl of Stew",
+    "difficulty": "easy",
+    "verse": "Thus Esau despised his birthright.",
+    "reference": "Genesis 25:34",
+    "publishDate": "2026-10-06",
+    "size": 7,
+    "grid": [
+      ".E.....",
+      ".STEW..",
+      ".A.....",
+      "HUNTER.",
+      "O...D.R",
+      "M.SWORE",
+      "E...M.D"
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 1,
+        "text": "Firstborn twin, red and hairy",
+        "answer": "ESAU",
+        "reference": "Genesis 25:25"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 1,
+        "col": 1,
+        "text": "Jacob was cooking it when Esau came in",
+        "answer": "STEW",
+        "reference": "Genesis 25:29"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "Esau became a skillful one",
+        "answer": "HUNTER",
+        "reference": "Genesis 25:27"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 3,
+        "col": 0,
+        "text": "Jacob was a quiet man who stayed at ___",
+        "answer": "HOME",
+        "reference": "Genesis 25:27"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 3,
+        "col": 4,
+        "text": "Esau's other name, from the red stew",
+        "answer": "EDOM",
+        "reference": "Genesis 25:30"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 4,
+        "col": 6,
+        "text": "How the firstborn looked at birth",
+        "answer": "RED",
+        "reference": "Genesis 25:25"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 5,
+        "col": 2,
+        "text": "Esau ___ to Jacob and sold him the birthright",
+        "answer": "SWORE",
+        "reference": "Genesis 25:33"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-099",
+    "title": "Bartimaeus Sees",
+    "difficulty": "easy",
+    "verse": "\u201cGo,\u201d said Jesus, \u201cyour faith has healed you.\u201d",
+    "reference": "Mark 10:52",
+    "publishDate": "2026-10-07",
+    "size": 7,
+    "grid": [
+      ".ROAD..",
+      "...G..C",
+      ".S.A..L",
+      "JERICHO",
+      ".E.N..A",
+      "......K",
+      "......."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 1,
+        "text": "Where he sat, and where he followed",
+        "answer": "ROAD",
+        "reference": "Mark 10:46"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 3,
+        "text": "\"Rabboni, let me see ___\"",
+        "answer": "AGAIN",
+        "reference": "Mark 10:51"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 1,
+        "col": 6,
+        "text": "He threw it aside and jumped up",
+        "answer": "CLOAK",
+        "reference": "Mark 10:50"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 2,
+        "col": 1,
+        "text": "What the blind man asked to do",
+        "answer": "SEE",
+        "reference": "Mark 10:51"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "Jesus was leaving it with a large crowd",
+        "answer": "JERICHO",
+        "reference": "Mark 10:46"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-100",
+    "title": "Drawn from the Water",
+    "difficulty": "easy",
+    "verse": "She named him Moses and explained, \u201cI drew him out of the water.\u201d",
+    "reference": "Exodus 2:10",
+    "publishDate": "2026-10-08",
+    "size": 7,
+    "grid": [
+      "CRYING.",
+      "....I..",
+      ".W..L..",
+      "BASKET.",
+      ".G...A.",
+      ".E...R.",
+      ".SON..."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 0,
+        "text": "The baby was doing this when the basket was opened",
+        "answer": "CRYING",
+        "reference": "Exodus 2:6"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 4,
+        "text": "The river where the baby was hidden",
+        "answer": "NILE",
+        "reference": "Exodus 2:3"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 2,
+        "col": 1,
+        "text": "Pharaoh's daughter offered to pay the nurse these",
+        "answer": "WAGES",
+        "reference": "Exodus 2:9"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "Made of papyrus and coated with tar and pitch",
+        "answer": "BASKET",
+        "reference": "Exodus 2:3"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 3,
+        "col": 5,
+        "text": "Coated the basket, with pitch",
+        "answer": "TAR",
+        "reference": "Exodus 2:3"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 6,
+        "col": 1,
+        "text": "He became Pharaoh's daughter's",
+        "answer": "SON",
+        "reference": "Exodus 2:10"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-101",
+    "title": "Fed by Ravens",
+    "difficulty": "easy",
+    "verse": "The ravens would bring him bread and meat in the morning and evening, and he would drink from the brook.",
+    "reference": "1 Kings 17:6",
+    "publishDate": "2026-10-09",
+    "size": 7,
+    "grid": [
+      "R......",
+      "A......",
+      "V.O....",
+      "ELIJAH.",
+      "N.L.H.D",
+      "S..CAKE",
+      "....B.W"
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 0,
+        "text": "Birds that brought the prophet food",
+        "answer": "RAVENS",
+        "reference": "1 Kings 17:6"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 2,
+        "col": 2,
+        "text": "Her jug of it did not run dry",
+        "answer": "OIL",
+        "reference": "1 Kings 17:16"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "The Tishbite who told Ahab of the drought",
+        "answer": "ELIJAH",
+        "reference": "1 Kings 17:1"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 3,
+        "col": 4,
+        "text": "King who heard there would be no rain",
+        "answer": "AHAB",
+        "reference": "1 Kings 17:1"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 4,
+        "col": 6,
+        "text": "There would be none, nor rain",
+        "answer": "DEW",
+        "reference": "1 Kings 17:1"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 5,
+        "col": 3,
+        "text": "Elijah asked her to make him a small one first",
+        "answer": "CAKE",
+        "reference": "1 Kings 17:13"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-102",
+    "title": "God Will Provide",
+    "difficulty": "easy",
+    "verse": "God Himself will provide the lamb for the burnt offering, my son.",
+    "reference": "Genesis 22:8",
+    "publishDate": "2026-10-10",
+    "size": 7,
+    "grid": [
+      ".ISAAC.",
+      "R.T....",
+      "A.A.S..",
+      "MORIAH.",
+      "..S.N..",
+      "....D..",
+      "......."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 1,
+        "text": "Abraham's only son, whom he loved",
+        "answer": "ISAAC",
+        "reference": "Genesis 22:2"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 2,
+        "text": "Abraham's descendants would be like these in the sky",
+        "answer": "STARS",
+        "reference": "Genesis 22:17"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 1,
+        "col": 0,
+        "text": "Caught by its horns in a thicket",
+        "answer": "RAM",
+        "reference": "Genesis 22:13"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 2,
+        "col": 4,
+        "text": "Also like the grains of this on the seashore",
+        "answer": "SAND",
+        "reference": "Genesis 22:17"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "Land of the mountain God showed Abraham",
+        "answer": "MORIAH",
+        "reference": "Genesis 22:2"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-103",
+    "title": "My Father's House",
+    "difficulty": "easy",
+    "verse": "Did you not know that I had to be in My Father\u2019s house?",
+    "reference": "Luke 2:49",
+    "publishDate": "2026-10-11",
+    "size": 7,
+    "grid": [
+      ".THREE.",
+      "..O...W",
+      "D.U.F.I",
+      "ANSWERS",
+      "Y.E.A.D",
+      "....S.O",
+      "HEART.M"
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 1,
+        "text": "Days before they found Him",
+        "answer": "THREE",
+        "reference": "Luke 2:46"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 2,
+        "text": "He had to be in His Father's",
+        "answer": "HOUSE",
+        "reference": "Luke 2:49"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 1,
+        "col": 6,
+        "text": "Jesus grew in it and in stature",
+        "answer": "WISDOM",
+        "reference": "Luke 2:52"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 2,
+        "col": 0,
+        "text": "They traveled a whole one before missing Him",
+        "answer": "DAY",
+        "reference": "Luke 2:44"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 2,
+        "col": 4,
+        "text": "The family went up for it every year",
+        "answer": "FEAST",
+        "reference": "Luke 2:42"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "All who heard were astounded at His understanding and these",
+        "answer": "ANSWERS",
+        "reference": "Luke 2:47"
+      },
+      {
+        "number": 7,
+        "direction": "across",
+        "row": 6,
+        "col": 0,
+        "text": "His mother treasured all these things in hers",
+        "answer": "HEART",
+        "reference": "Luke 2:51"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-104",
+    "title": "Speak, LORD",
+    "difficulty": "easy",
+    "verse": "Speak, for Your servant is listening.",
+    "reference": "1 Samuel 3:10",
+    "publishDate": "2026-10-12",
+    "size": 7,
+    "grid": [
+      "...L...",
+      "..EARS.",
+      "S..M...",
+      "PROPHET",
+      "E...E..",
+      "ARK.R..",
+      "K...ELI"
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 3,
+        "text": "God's ___ had not yet gone out",
+        "answer": "LAMP",
+        "reference": "1 Samuel 3:3"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 1,
+        "col": 2,
+        "text": "What God said would tingle at His news",
+        "answer": "EARS",
+        "reference": "1 Samuel 3:11"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 2,
+        "col": 0,
+        "text": "\"___, for Your servant is listening\"",
+        "answer": "SPEAK",
+        "reference": "1 Samuel 3:10"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "All Israel knew Samuel was one",
+        "answer": "PROPHET",
+        "reference": "1 Samuel 3:20"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 3,
+        "col": 4,
+        "text": "\"___ I am,\" the boy answered",
+        "answer": "HERE",
+        "reference": "1 Samuel 3:4"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 5,
+        "col": 0,
+        "text": "It was in the temple where the boy lay down",
+        "answer": "ARK",
+        "reference": "1 Samuel 3:3"
+      },
+      {
+        "number": 7,
+        "direction": "across",
+        "row": 6,
+        "col": 4,
+        "text": "Old priest whose eyes had grown dim",
+        "answer": "ELI",
+        "reference": "1 Samuel 3:2"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-105",
+    "title": "The Scarlet Cord",
+    "difficulty": "easy",
+    "verse": "And when they had gone, she tied the scarlet cord in the window.",
+    "reference": "Joshua 2:21",
+    "publishDate": "2026-10-13",
+    "size": 7,
+    "grid": [
+      "..SPIES",
+      "..I....",
+      "..G.C..",
+      "WINDOW.",
+      "A...R..",
+      "L.HIDE.",
+      "L......"
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 2,
+        "text": "Two men sent out from Shittim",
+        "answer": "SPIES",
+        "reference": "Joshua 2:1"
+      },
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 2,
+        "text": "She asked for a sure one of their oath",
+        "answer": "SIGN",
+        "reference": "Joshua 2:12"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 2,
+        "col": 4,
+        "text": "Scarlet, tied in the window",
+        "answer": "CORD",
+        "reference": "Joshua 2:21"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "Where the scarlet cord was tied",
+        "answer": "WINDOW",
+        "reference": "Joshua 2:21"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 3,
+        "col": 0,
+        "text": "Her house was built into it",
+        "answer": "WALL",
+        "reference": "Joshua 2:15"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 5,
+        "col": 2,
+        "text": "\"___ yourselves there for three days\"",
+        "answer": "HIDE",
+        "reference": "Joshua 2:16"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-106",
+    "title": "Through the Roof",
+    "difficulty": "easy",
+    "verse": "They uncovered the roof above Him, made an opening, and lowered the paralytic on his mat.",
+    "reference": "Mark 2:4",
+    "publishDate": "2026-10-14",
+    "size": 7,
+    "grid": [
+      ".FAITH.",
+      ".....O.",
+      ".....M.",
+      "SCRIBES",
+      "I.O...O",
+      "N.O...N",
+      "S.FOUR."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 1,
+        "text": "Jesus saw theirs",
+        "answer": "FAITH",
+        "reference": "Mark 2:5"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 5,
+        "text": "Where Jesus told the healed man to go",
+        "answer": "HOME",
+        "reference": "Mark 2:11"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "They sat there, questioning in their hearts",
+        "answer": "SCRIBES",
+        "reference": "Mark 2:6"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 3,
+        "col": 0,
+        "text": "Jesus said they were forgiven",
+        "answer": "SINS",
+        "reference": "Mark 2:5"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 3,
+        "col": 2,
+        "text": "They uncovered it above Him",
+        "answer": "ROOF",
+        "reference": "Mark 2:4"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 3,
+        "col": 6,
+        "text": "\"___, your sins are forgiven\"",
+        "answer": "SON",
+        "reference": "Mark 2:5"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 6,
+        "col": 2,
+        "text": "Men who carried the paralytic",
+        "answer": "FOUR",
+        "reference": "Mark 2:3"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-107",
+    "title": "Before the Rooster Crows",
+    "difficulty": "medium",
+    "verse": "And the Lord turned and looked at Peter.",
+    "reference": "Luke 22:61",
+    "publishDate": "2026-10-15",
+    "size": 7,
+    "grid": [
+      "......W",
+      "...FIRE",
+      ".P....P",
+      "SERVANT",
+      ".T.....",
+      "DENY...",
+      ".R....."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 6,
+        "text": "Peter went outside and did this bitterly",
+        "answer": "WEPT",
+        "reference": "Luke 22:62"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 1,
+        "col": 3,
+        "text": "Kindled in the middle of the courtyard",
+        "answer": "FIRE",
+        "reference": "Luke 22:55"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 2,
+        "col": 1,
+        "text": "He followed at a distance",
+        "answer": "PETER",
+        "reference": "Luke 22:54"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "The girl in the courtyard was one",
+        "answer": "SERVANT",
+        "reference": "Luke 22:56"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 5,
+        "col": 0,
+        "text": "Peter would do it three times",
+        "answer": "DENY",
+        "reference": "Luke 22:61"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
     "id": "sunday-001",
     "title": "From Eden to Ararat",
     "difficulty": "medium",
