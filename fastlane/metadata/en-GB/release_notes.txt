@@ -1,9 +1,8 @@
 Thanks for playing Bible Crossword Challenge!
 
-• A calmer, simpler look across the app
-• Packs and Library are now one Puzzles tab
-• See each puzzle's grid before you play
-• Your First Seven: an easy start for new players
-• After a solve, your next puzzle is one tap away
-• Badges look the same everywhere you earn them
+• New puzzles: 20 Dailies, 20 Minis and 4 Sunday Specials, from Hannah's prayer to Paul's road to Rome
+• New puzzles come first: you'll see fresh ones before any repeats
+• The keyboard is the same in every puzzle and in Memory Verses
+• Verse of the day sits in its own card on Today
+• A short note on why this app exists, in Settings
 • Small fixes and polish
