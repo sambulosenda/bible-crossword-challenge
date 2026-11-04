@@ -782,7 +782,7 @@ struct SpecVectorsTests {
         )
         let container = try ModelContainer(
             for: PlayerProfile.self, PuzzleRecord.self,
-            configurations: ModelConfiguration(isStoredInMemoryOnly: true)
+            configurations: ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none)
         )
         let context = container.mainContext
 

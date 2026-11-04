@@ -271,10 +271,17 @@ struct SettingsView: View {
         }
     }
 
-    /// The legal pair App Review expects a subscription app to expose. The
-    /// version lives in the footer: a static fact doesn't earn a row of its own.
+    /// The maker's note, then the legal pair App Review expects a
+    /// subscription app to expose. The version lives in the footer: a static fact doesn't earn a row of its own.
     private var aboutSection: some View {
         Section {
+            // The maker's note (2026-11-04): why the app exists, signed.
+            NavigationLink {
+                WhyIMadeThisView()
+            } label: {
+                Text("Why I made this")
+                    .foregroundStyle(SettingsRowColor.title)
+            }
             SettingsLinkRow(title: "Privacy policy", external: true) {
                 openURL(AppLinks.privacy)
             }

@@ -13,9 +13,14 @@ import SwiftUI
 /// What a pack's cover says, worked out from its puzzles' verse references —
 /// nothing maps packs to books, and every puzzle already anchors to one.
 struct PackCoverLabel: Equatable {
-    /// The book's short mark: "Ps", "1 Sa", "Lk". Empty when no puzzle's
+    /// The book's name, set large on a shelf cover: "Psalms", "1 Samuel".
+    /// It was the short mark ("Ps", "1 Sa", "Mk") until 2026-11-04 —
+    /// scholar's shorthand most players can't read. Empty when no puzzle's
     /// reference parses, so the caller can fall back.
     let mark: String
+    /// The line under the name on a shelf cover, which already names the
+    /// book: "Chapters 120–134", or "through John" for several books.
+    let subtitle: String
     /// Where the pack sits: "Psalms 120–134" for one book, "Matthew – John"
     /// for several.
     let caption: String
@@ -34,19 +39,23 @@ struct PackCoverLabel: Equatable {
             .sorted { BibleCanon.position(of: $0.name) < BibleCanon.position(of: $1.name) }
 
         if books.count == 1, let book = books.first {
-            mark = book.abbreviation
+            mark = book.displayName
             let chapters = pairs.map(\.1)
             if let low = chapters.min(), let high = chapters.max() {
                 caption = low == high ? "\(book.displayName) \(low)" : "\(book.displayName) \(low)–\(high)"
+                subtitle = low == high ? "Chapter \(low)" : "Chapters \(low)–\(high)"
             } else {
                 caption = book.displayName
+                subtitle = ""
             }
         } else if let first = books.first, let last = books.last {
-            mark = first.abbreviation
+            mark = first.displayName
             caption = "\(first.displayName) – \(last.displayName)"
+            subtitle = "through \(last.displayName)"
         } else {
             mark = ""
             caption = ""
+            subtitle = ""
         }
 
         let oldCount = pairs.filter { $0.0.testament == .old }.count
@@ -70,7 +79,9 @@ extension QuestLine {
 }
 
 /// A pack cover tile, as the Packs shelf draws it: ink type on a white card
-/// since 2026-11-03. A shelf of solid colour blocks put six or eight hues on
+/// since 2026-11-03. No progress bar since 2026-11-04: it lifted and shrank
+/// the name on covers that had one, so a row's names didn't line up, and the
+/// line under the cover already says how far along it is. A shelf of solid colour blocks put six or eight hues on
 /// one screen; the serif mark is what makes it read as a book.
 struct PackCover: View {
     let label: PackCoverLabel
@@ -81,14 +92,15 @@ struct PackCover: View {
     /// The SF Symbol to draw when no reference parses.
     var fallbackSymbol: String = "square.stack.3d.up"
     var isLocked: Bool = false
-    var progress: Double? = nil
 
-    @ScaledMetric(relativeTo: .largeTitle) private var markSize: CGFloat = 40
+    @ScaledMetric(relativeTo: .largeTitle) private var markSize: CGFloat = 34
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             if let grid {
-                GridThumbnail(grid: grid, tint: Color.secondary.opacity(0.6),
+                // Full secondary: at 0.6 the grid was near-invisible grey on
+                // white, and it's the one thing that says "crossword".
+                GridThumbnail(grid: grid, tint: Color.secondary,
                               gap: grid.count > 9 ? 0 : 1, cropsToContent: true)
                     .frame(width: 28, height: 28)
             }
@@ -103,18 +115,13 @@ struct PackCover: View {
                     .font(.system(size: markSize, weight: .semibold, design: .serif))
                     .tracking(-0.8)
                     .lineLimit(1)
-                    .minimumScaleFactor(0.6)
+                    .minimumScaleFactor(0.55)
             }
-            if !label.caption.isEmpty {
-                Text(label.caption)
+            if !label.subtitle.isEmpty {
+                Text(label.subtitle)
                     .font(.footnote.weight(.semibold))
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)
-            }
-            if let progress {
-                ProgressView(value: progress)
-                    .tint(Theme.progressBar)
-                    .padding(.top, Theme.Spacing.s)
             }
         }
         .foregroundStyle(.primary)

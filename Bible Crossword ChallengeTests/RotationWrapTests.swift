@@ -46,51 +46,49 @@ struct RotationWrapTests {
         return calendar.date(byAdding: .day, value: days, to: epoch)!
     }
 
-    /// The dates epic 13 is scheduled against. If content is added these move
-    /// later, and this is the test that says so out loud.
+    /// Far past any schedule.json horizon, where the modulo rotation is
+    /// still the fallback. The schedule decides every date it covers.
+    private let farDay = 2_000
+
+    /// The fallback rotation wraps after the pool's own length. The count is
+    /// asserted so adding dailies is a visible change.
     @Test func theDailyPoolWrapsAfterItsOwnLength() {
         let provider = PuzzleProvider.shared
         let pool = provider.puzzles
-        #expect(pool.count == 92, "daily pool changed — the wrap date has moved")
+        #expect(pool.count == 112, "daily pool changed — update this and roadmap/README.md")
 
-        #expect(provider.dailyPuzzle(for: epochPlus(pool.count))?.id == pool.first?.id)
-        #expect(provider.dailyPuzzle(for: epochPlus(pool.count - 1))?.id != pool.first?.id)
+        let start = farDay - farDay % pool.count
+        #expect(provider.dailyPuzzle(for: epochPlus(start + pool.count))?.id == pool.first?.id)
+        #expect(provider.dailyPuzzle(for: epochPlus(start + pool.count - 1))?.id != pool.first?.id)
     }
 
-    /// The pool length turned into the calendar date the roadmap plans around.
-    /// It was 21 September at 82 dailies; ten more moved it to 1 October, and
-    /// every daily added from here moves it another day.
-    @Test func theDailyWrapLandsOn1October2026() {
-        let wrap = epochPlus(PuzzleProvider.shared.puzzles.count)
+    /// History: the shipped 92 dailies wrapped on 1 October 2026, and the
+    /// schedule keeps that — 1 October still serves 1 July's puzzle.
+    @Test func theDailyWrapOn1October2026StaysInHistory() {
+        let provider = PuzzleProvider.shared
+        let wrap = epochPlus(92)
         let parts = Calendar.current.dateComponents([.year, .month, .day], from: wrap)
-        #expect(parts.year == 2026)
-        #expect(parts.month == 10)
-        #expect(parts.day == 1)
+        #expect(parts.month == 10 && parts.day == 1)
+        #expect(provider.dailyPuzzle(for: wrap)?.id == provider.dailyPuzzle(for: epochPlus(0))?.id)
     }
 
     @Test func theMiniPoolWrapsAfterItsOwnLength() {
         let provider = PuzzleProvider.shared
         let pool = provider.minis
-        #expect(pool.count == 97, "mini pool changed — the wrap date has moved")
+        #expect(pool.count == 117, "mini pool changed — update this and roadmap/README.md")
 
-        #expect(provider.dailyMini(for: epochPlus(pool.count))?.id == pool.first?.id)
-        #expect(provider.dailyMini(for: epochPlus(pool.count - 1))?.id != pool.first?.id)
+        let start = farDay - farDay % pool.count
+        #expect(provider.dailyMini(for: epochPlus(start + pool.count))?.id == pool.first?.id)
+        #expect(provider.dailyMini(for: epochPlus(start + pool.count - 1))?.id != pool.first?.id)
     }
 
-    @Test func theMiniWrapLandsOn6October2026() {
-        let wrap = epochPlus(PuzzleProvider.shared.minis.count)
-        let parts = Calendar.current.dateComponents([.year, .month, .day], from: wrap)
-        #expect(parts.year == 2026)
-        #expect(parts.month == 10)
-        #expect(parts.day == 6)
-    }
-
-    /// The wrap is a repeat, not a new puzzle — the whole problem in one line.
-    @Test func theWrappedDailyIsTheOneServedOnDayOne() {
+    /// History: the shipped 97 minis wrapped on 6 October 2026, kept as served.
+    @Test func theMiniWrapOn6October2026StaysInHistory() {
         let provider = PuzzleProvider.shared
-        let firstDay = provider.dailyPuzzle(for: epochPlus(0))
-        let wrapDay = provider.dailyPuzzle(for: epochPlus(provider.puzzles.count))
-        #expect(firstDay?.id == wrapDay?.id)
+        let wrap = epochPlus(97)
+        let parts = Calendar.current.dateComponents([.year, .month, .day], from: wrap)
+        #expect(parts.month == 10 && parts.day == 6)
+        #expect(provider.dailyMini(for: wrap)?.id == provider.dailyMini(for: epochPlus(0))?.id)
     }
 
     // MARK: - Telling a repeat from today's work
@@ -186,7 +184,7 @@ struct RotationWrapTests {
     @Test func theSundayPoolWrapsAfterItsOwnLength() {
         let provider = PuzzleProvider.shared
         let pool = provider.sundays
-        #expect(pool.count == 13, "sunday pool changed — the wrap week has moved")
+        #expect(pool.count == 17, "sunday pool changed — the wrap week has moved")
 
         // 2026-08-16 is a Sunday.
         let sunday = day(2026, 8, 16)

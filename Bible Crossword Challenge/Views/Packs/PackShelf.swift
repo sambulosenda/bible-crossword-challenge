@@ -46,7 +46,6 @@ struct ShelfTile: View {
     var grid: [String]? = nil
     let fallbackSymbol: String
     let isLocked: Bool
-    var progress: Double? = nil
     var badge: PackBadge? = nil
 
     /// 130 since 2026-11-03: at 190 the cover was mostly blank white, and
@@ -59,8 +58,7 @@ struct ShelfTile: View {
                 label: label,
                 grid: grid,
                 fallbackSymbol: fallbackSymbol,
-                isLocked: isLocked,
-                progress: progress
+                isLocked: isLocked
             )
             .frame(height: coverHeight)
 

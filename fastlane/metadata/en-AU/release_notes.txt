@@ -1,9 +1,8 @@
 Thanks for playing Bible Crossword Challenge!
 
-• A cleaner crossword: rounded squares and an iPhone-style keyboard
-• New Verse of the Day widget for your Home Screen
-• Your daily reminder now brings the day's verse
-• Streak milestones and a weekly goal after each puzzle
-• Redesigned badges, Packs, Journeys and Library
-• Roomier layouts on iPad and iPhone Duo
+• New puzzles: 20 Dailies, 20 Minis and 4 Sunday Specials, from Hannah's prayer to Paul's road to Rome
+• New puzzles come first: you'll see fresh ones before any repeats
+• The keyboard is the same in every puzzle and in Memory Verses
+• Verse of the day sits in its own card on Today
+• A short note on why this app exists, in Settings
 • Small fixes and polish

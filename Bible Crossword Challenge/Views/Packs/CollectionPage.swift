@@ -66,6 +66,9 @@ struct UpNextCard<Action: View>: View {
     let kicker: String
     /// A glyph before the kicker — the seal on a finished collection.
     var kickerSymbol: String? = nil
+    /// The line under the title. Defaults to `puzzle.detailLine` (reference,
+    /// size, difficulty); a caller can say it its own way, once.
+    var detail: String? = nil
     /// One reassuring line under the puzzle — how long, what helps.
     var note: String? = nil
     /// 0...1 once the collection is under way; nil draws no bar (an empty bar
@@ -75,10 +78,17 @@ struct UpNextCard<Action: View>: View {
 
     /// The grid tile grows with the title beside it, as a shelf cover does.
     @ScaledMetric(relativeTo: .title3) private var gridSide: CGFloat = 72
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
+        // Grid above the text at accessibility sizes: beside it, the grown
+        // tile took the width the words need and broke the kicker mid-phrase
+        // ("2 of / 7 done"). AnyLayout keeps identity across the swap.
+        let header = typeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: Theme.Spacing.s))
+            : AnyLayout(HStackLayout(spacing: Theme.Spacing.m))
         VStack(alignment: .leading, spacing: Theme.Spacing.m) {
-            HStack(spacing: Theme.Spacing.m) {
+            header {
                 GridThumbnail(grid: puzzle.grid, tint: Color.secondary,
                               gap: puzzle.grid.count > 9 ? 0 : 1, cropsToContent: true)
                     .padding(gridSide / 9)
@@ -98,12 +108,13 @@ struct UpNextCard<Action: View>: View {
                     Text(puzzle.title)
                         .font(.title3.weight(.semibold))
                         .fixedSize(horizontal: false, vertical: true)
-                    Text(puzzle.detailLine)
+                    Text(detail ?? puzzle.detailLine)
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
-                Spacer(minLength: 0)
+                if !typeSize.isAccessibilitySize { Spacer(minLength: 0) }
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
             .accessibilityElement(children: .combine)
             if let note {
                 Text(note)
@@ -137,32 +148,38 @@ struct CollectionAbout: View {
     }
 }
 
-/// The verse the collection opens on, in serif, with where it's from and
-/// what the collection is. Falls back to the blurb alone when the first
-/// puzzle has no verse.
+/// What the collection is, then the verse it opens on. The blurb leads:
+/// it answers the "About" heading above it. The verse sits in a card set
+/// like Today's verse of the day — body serif, reference in ink — rather
+/// than bare title2 serif, which outranked the page's own headings and
+/// left the description as fine print after the reference (2026-11-04).
 struct CollectionOpening: View {
     let first: Puzzle?
     let blurb: String
 
     var body: some View {
-        if let first, !first.verse.isEmpty {
-            VStack(alignment: .leading, spacing: 10) {
-                Text(first.verse)
-                    .font(.scripture(.title2))
-                    .tracking(-0.2)
-                    .lineSpacing(4)
-                    .fixedSize(horizontal: false, vertical: true)
-                Text("\(first.reference) · \(blurb)")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-            .accessibilityElement(children: .combine)
-        } else {
+        VStack(alignment: .leading, spacing: Theme.Spacing.m) {
             Text(blurb)
                 .font(.body)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(.primary)
                 .fixedSize(horizontal: false, vertical: true)
+
+            if let first, !first.verse.isEmpty {
+                VStack(alignment: .leading, spacing: Theme.Spacing.m) {
+                    Text(first.verse)
+                        .font(.scripture(.body))
+                        .lineSpacing(6)
+                        .foregroundStyle(.primary)
+                        .fixedSize(horizontal: false, vertical: true)
+                    Text(first.reference)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.primary)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(Theme.Spacing.l)
+                .elevatedCard()
+                .accessibilityElement(children: .combine)
+            }
         }
     }
 }

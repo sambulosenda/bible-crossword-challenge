@@ -157,12 +157,14 @@ struct MemoryVerseListView: View {
                     Text(entry.reference)
                         .font(.headline)
                     if isDue {
+                        // Ink on grey like the level-up chip: a status. The
+                        // row itself is the action.
                         Text("Review")
                             .font(.caption2.weight(.bold))
                             .padding(.horizontal, Theme.Spacing.s)
                             .padding(.vertical, 2)
-                            .background(Theme.accent.opacity(0.14), in: .capsule)
-                            .foregroundStyle(Theme.accent)
+                            .background(Color.primary.opacity(0.08), in: .capsule)
+                            .foregroundStyle(.primary)
                     } else if entry.isMastered {
                         Image(systemName: "medal.fill")
                             .font(.caption)
@@ -215,12 +217,15 @@ struct MemoryVerseListView: View {
                         .lineLimit(1)
                 }
                 Spacer(minLength: 0)
+                // The App Store's "Get": blue on a grey capsule. Five solid
+                // black pills down the list were the heaviest marks on the
+                // screen (2026-11-04); a repeated row action should be quiet.
                 Text("Start")
-                    .font(.caption.weight(.bold))
-                    .foregroundStyle(Theme.onInk)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(shelfFull ? AnyShapeStyle(.tertiary) : AnyShapeStyle(Theme.accent))
                     .padding(.horizontal, Theme.Spacing.m)
-                    .padding(.vertical, Theme.Spacing.s)
-                    .background(Theme.ink, in: .capsule)
+                    .padding(.vertical, 6)
+                    .background(Color(.tertiarySystemFill), in: .capsule)
             }
             .padding(.vertical, Theme.Spacing.xs)
         }
@@ -321,14 +326,14 @@ struct MemoryVerseCard: View {
 
     var body: some View {
         NavigationLink(value: MemoryRoute()) {
-            // A cover row like the Journey and badge rows it sits with. The
-            // bar is the share mastered, once there are verses to master.
+            // A cover row like the Journey and badge rows it sits with. No
+            // bar since 2026-11-04: it was the only one on Today, and the
+            // subtitle already says where the verses stand.
             CoverRow(
                 symbol: "brain.fill",
                 tint: FeatureTint.memory,
                 title: headline,
-                subtitle: subtitle,
-                progress: activeCount > 0 ? Double(masteredCount) / Double(activeCount) : nil
+                subtitle: subtitle
             )
             .cardRowPadding()
         }

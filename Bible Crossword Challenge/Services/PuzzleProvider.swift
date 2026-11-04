@@ -86,6 +86,13 @@ final class PuzzleProvider {
     /// the in-game "next in pack" affordance.
     private let packByPuzzleID: [String: String]
 
+    /// Date → puzzle id, from `schedule.json` (built by
+    /// `tools/build_schedule.py`). Pins each day to a puzzle so the pools can
+    /// grow without moving history. Dates it doesn't cover fall back to the
+    /// legacy `dayIndex % pool.count` rotation, which is also what every past
+    /// entry was built from.
+    let schedule: PuzzleSchedule?
+
     init(bundle: Bundle = .main) {
         let all = Self.loadBundledPuzzles(bundle: bundle)
         self.allPuzzles = all
@@ -99,6 +106,7 @@ final class PuzzleProvider {
         let loadedPacks = Self.loadBundledPacks(bundle: bundle)
         self.packs = loadedPacks
         self.quests = Self.loadBundledQuests(bundle: bundle)
+        self.schedule = Self.loadBundledSchedule(bundle: bundle)
 
         var reverse: [String: String] = [:]
         for pack in loadedPacks {
@@ -144,6 +152,20 @@ final class PuzzleProvider {
         }
     }
 
+    /// Loads `schedule.json` if present. Missing or broken → `nil`, and the
+    /// rotation runs on the legacy modulo alone.
+    private static func loadBundledSchedule(bundle: Bundle) -> PuzzleSchedule? {
+        guard let url = bundle.url(forResource: "schedule", withExtension: "json") else {
+            return nil
+        }
+        do {
+            return try JSONDecoder().decode(PuzzleSchedule.self, from: Data(contentsOf: url))
+        } catch {
+            assertionFailure("Failed to decode schedule.json: \(error)")
+            return nil
+        }
+    }
+
     /// Loads `quests.json` if present — same degrade-to-absent contract as
     /// `loadBundledPacks`.
     private static func loadBundledQuests(bundle: Bundle) -> [QuestLine] {
@@ -162,6 +184,9 @@ final class PuzzleProvider {
     /// The longest verse Today opens on — three lines of body serif on a phone.
     static let verseOfTheDayMaxLength = 120
 
+    /// The dailies the verse rotation draws from. Frozen: see `verseOfTheDay`.
+    static let verseOfTheDayPoolSize = 92
+
     /// The day's inspirational verse: a puzzle's verse, rotated by calendar
     /// day, from any puzzle but that day's daily — so it never spoils the
     /// daily's answers. Shared by Today's header and the daily reminder, so
@@ -173,7 +198,11 @@ final class PuzzleProvider {
         // Whole sentences too: 13 verses open mid-sentence ("asking, …") and
         // read as fragments on their own. 162 pass both.
         // Falls back to every verse if a future set has too few.
-        let others = puzzles.filter { $0.id != dailyID }
+        // The shipped 92 only (2026-11-04): the index is a modulo over this
+        // pool, so every daily added would move every day's verse, and the
+        // reminders already scheduled with today's verse would disagree with
+        // Today. New dailies append after these in file order.
+        let others = puzzles.prefix(Self.verseOfTheDayPoolSize).filter { $0.id != dailyID }
         let short = others.filter {
             $0.verse.count <= Self.verseOfTheDayMaxLength
                 && $0.verse.first.map { !$0.isLowercase } ?? false
@@ -191,12 +220,14 @@ final class PuzzleProvider {
 
     /// Deterministic daily puzzle: rotates through the bundled set by calendar day.
     func dailyPuzzle(for date: Date = RotationClock.now, calendar: Calendar = .current) -> Puzzle? {
-        rotated(puzzles, for: date, calendar: calendar)
+        scheduled(schedule?.daily, in: puzzles, on: date, calendar: calendar)
+            ?? rotated(puzzles, for: date, calendar: calendar)
     }
 
     /// Today's Mini — the quick 7×7, rotating through its own pool.
     func dailyMini(for date: Date = RotationClock.now, calendar: Calendar = .current) -> Puzzle? {
-        rotated(minis, for: date, calendar: calendar)
+        scheduled(schedule?.mini, in: minis, on: date, calendar: calendar)
+            ?? rotated(minis, for: date, calendar: calendar)
     }
 
     /// This week's Sunday Special — the big 21×21, one per week. The card
@@ -204,6 +235,12 @@ final class PuzzleProvider {
     /// the day.
     func sundaySpecial(for date: Date = RotationClock.now, calendar: Calendar = .current) -> Puzzle? {
         guard !sundays.isEmpty else { return nil }
+        let start = calendar.startOfDay(for: date)
+        let weekday = calendar.component(.weekday, from: start)
+        if let sunday = calendar.date(byAdding: .day, value: -(weekday - 1), to: start),
+           let puzzle = scheduled(schedule?.sunday, in: sundays, on: sunday, calendar: calendar) {
+            return puzzle
+        }
         let week = weekIndex(for: date, calendar: calendar) - Self.sundayRotationOffset
         let count = sundays.count
         return sundays[((week % count) + count) % count]
@@ -240,6 +277,14 @@ final class PuzzleProvider {
         return Int((Double(sundayDay) / 7.0).rounded(.down))
     }
 
+    /// The puzzle `map` pins to `date`'s local calendar day, if it's in `pool`.
+    /// An id outside the pool (a typo, or a puzzle this build doesn't carry)
+    /// reads as unscheduled rather than serving the wrong kind of puzzle.
+    private func scheduled(_ map: [String: String]?, in pool: [Puzzle], on date: Date, calendar: Calendar) -> Puzzle? {
+        guard let map, let id = map[PuzzleSchedule.key(for: date, calendar: calendar)] else { return nil }
+        return pool.first { $0.id == id }
+    }
+
     private func rotated(_ pool: [Puzzle], for date: Date, calendar: Calendar) -> Puzzle? {
         guard !pool.isEmpty else { return nil }
         return pool[index(in: pool.count, for: date, calendar: calendar)]
@@ -273,6 +318,28 @@ final class PuzzleProvider {
         length: Int
     ) -> [Puzzle] {
         guard !pool.isEmpty, length > 0 else { return [] }
+        // Scheduled pools walk back by date: the window is what the last
+        // `length` days actually served. Falls back per day like the daily.
+        let map: [String: String]? = pool.first.map { $0.isMini ? schedule?.mini : schedule?.daily } ?? nil
+        if let map, !map.isEmpty, !pool.contains(where: \.isSunday) {
+            let start = calendar.startOfDay(for: date)
+            let today = dayIndex(for: date, calendar: calendar)
+            // Walk back until the window holds `span` distinct puzzles: where
+            // the schedule hands over to the modulo the two can name the same
+            // puzzle on neighbouring days, and the window must not shrink.
+            let span = min(length, pool.count)
+            var seen = Set<String>()
+            var window: [Puzzle] = []
+            var offset = 0
+            while window.count < span, offset < span * 2 + 7 {
+                defer { offset += 1 }
+                guard let day = calendar.date(byAdding: .day, value: -offset, to: start) else { continue }
+                let i = (((today - offset) % pool.count) + pool.count) % pool.count
+                let puzzle = scheduled(map, in: pool, on: day, calendar: calendar) ?? pool[i]
+                if seen.insert(puzzle.id).inserted { window.append(puzzle) }
+            }
+            return window
+        }
         let today = dayIndex(for: date, calendar: calendar)
         // A window longer than the pool would repeat puzzles rather than widen.
         let span = min(length, pool.count)
@@ -344,5 +411,21 @@ final class PuzzleProvider {
             }
             return puzzle
         }
+    }
+}
+
+
+/// `schedule.json`: local calendar date (`yyyy-MM-dd`) → puzzle id. Sundays are
+/// keyed by the date of their week's Sunday.
+struct PuzzleSchedule: Decodable, Sendable {
+    let version: Int
+    let daily: [String: String]
+    let mini: [String: String]
+    let sunday: [String: String]
+
+    /// The local calendar day of `date`, as the schedule keys it.
+    static func key(for date: Date, calendar: Calendar) -> String {
+        let c = calendar.dateComponents([.year, .month, .day], from: date)
+        return String(format: "%04d-%02d-%02d", c.year ?? 0, c.month ?? 0, c.day ?? 0)
     }
 }

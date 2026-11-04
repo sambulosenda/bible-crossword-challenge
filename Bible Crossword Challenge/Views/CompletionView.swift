@@ -660,7 +660,14 @@ struct CompletionView: View {
     }
 
     private func loadPackContext() {
-        guard let pack = puzzleProvider.pack(forPuzzle: puzzle.id) else { return }
+        // A pack a Journey already covers is the Journey here, as on every
+        // other screen (`notShadowedByQuests`). Both cards showed on a Life
+        // of David daily (2026-11-04): the pack's said "play the next one
+        // now" and drove Next Puzzle, the Journey's said "the next step will
+        // be waiting tomorrow".
+        guard let pack = puzzleProvider.pack(forPuzzle: puzzle.id),
+              !PuzzlePack.notShadowedByQuests([pack], quests: puzzleProvider.quests).isEmpty
+        else { return }
         let records = (try? context.fetch(FetchDescriptor<PuzzleRecord>())) ?? []
         let recordsByID = records.byPuzzleID
         let next = puzzleProvider.puzzles(in: pack).first {
@@ -775,14 +782,12 @@ struct CompletionView: View {
                         // moment the pack has proved itself. Open, how far
                         // along rather than "Next: …" (2026-11-03) — the bar's
                         // Next Puzzle already names the next step.
+                        // No bar open (2026-11-04): the title counts it, and
+                        // the bar was the heaviest mark under the verse.
                         if locked {
                             Text(lockedPackLine(ctx))
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
-                        } else {
-                            ProgressView(value: ctx.progress.fraction)
-                                .tint(Theme.progressBar)
-                                .padding(.top, 4)
                         }
                     }
                     Spacer(minLength: 0)

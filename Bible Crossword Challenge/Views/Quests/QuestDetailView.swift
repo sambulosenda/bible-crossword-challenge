@@ -244,7 +244,7 @@ struct QuestDetailView: View {
         TrackRow(
             number: index + 1,
             title: puzzle.title,
-            detail: puzzle.detailLine,
+            detail: puzzle.detailLine(among: steps),
             numeralTint: Color.secondary,
             grid: puzzle.grid
         ) {
@@ -253,9 +253,11 @@ struct QuestDetailView: View {
                 case .done:
                     Image(systemName: "checkmark.circle.fill").foregroundStyle(.green)
                 case .current:
+                    // Ink, not blue: blue means "tap this", and it's a label
+                    // (2026-11-04). The whole row is the tap target.
                     Text("Today")
                         .font(.caption.weight(.semibold))
-                        .foregroundStyle(Theme.accent)
+                        .foregroundStyle(.primary)
                 case .upcoming:
                     Label("After step \(index)", systemImage: "lock.fill")
                         .labelStyle(.titleAndIcon)
@@ -299,15 +301,14 @@ struct QuestHomeCard: View {
         NavigationLink(value: QuestRoute(quest: quest, source: .home)) {
             // The Journey feature's tint, not this Journey's own colour: on
             // Today each row is coloured by what kind of thing it is. The
-            // Packs tab keeps the per-Journey colour on its covers. The bar
-            // shows once a step is walked — an empty one is a gauge with
-            // nothing to measure.
+            // Packs tab keeps the per-Journey colour on its covers. No bar
+            // (2026-11-04): Today's rows say where things stand in words,
+            // and the subtitle already counts the steps.
             CoverRow(
                 symbol: quest.coverSymbol,
                 tint: FeatureTint.journey,
                 title: headline,
-                subtitle: subtitle,
-                progress: progress.solved > 0 ? progress.fraction : nil
+                subtitle: subtitle
             )
             .cardRowPadding()
         }

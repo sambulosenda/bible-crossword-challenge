@@ -147,4 +147,12 @@ extension Puzzle {
     var detailLine: String {
         "\(reference) · \(size)×\(size) · \(difficulty.label)"
     }
+
+    /// The line under this puzzle in a list of `siblings`: the reference alone
+    /// when they all share a size and difficulty (a Journey of seven easy
+    /// Minis said "7×7 · Easy" seven times), else the full `detailLine`.
+    func detailLine(among siblings: [Puzzle]) -> String {
+        let uniform = siblings.allSatisfy { $0.size == size && $0.difficulty == difficulty }
+        return uniform ? reference : detailLine
+    }
 }

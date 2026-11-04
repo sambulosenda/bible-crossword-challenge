@@ -22,6 +22,40 @@ platform :ios do
     )
   end
 
+  desc "Push only the What's New text (release_notes.txt) for every locale to the " \
+       "editable version. Pass version:X.Y."
+  lane :push_release_notes do |options|
+    push_text_fields(version: options.fetch(:version), fields: "release_notes")
+  end
+
+  desc "Push only the named text fields for every locale to the editable version — " \
+       "nothing else, no screenshots, binary or submission. Pass version:X.Y and " \
+       "fields:release_notes,promotional_text (file names without .txt)."
+  lane :push_text_fields do |options|
+    require "tmpdir"
+    fields = options.fetch(:fields).to_s.split(",").map(&:strip)
+    Dir.mktmpdir do |dir|
+      # deliver uploads only the fields it finds files for, so a metadata
+      # folder holding nothing but these files sends just those.
+      fields.each do |field|
+        Dir.glob(File.join(__dir__, "metadata", "*", "#{field}.txt")).each do |file|
+          locale = File.basename(File.dirname(file))
+          FileUtils.mkdir_p(File.join(dir, locale))
+          FileUtils.cp(file, File.join(dir, locale, "#{field}.txt"))
+        end
+      end
+      deliver(
+        api_key: asc_api_key,
+        app_version: options.fetch(:version),
+        metadata_path: dir,
+        skip_screenshots: true,
+        skip_binary_upload: true,
+        submit_for_review: false,
+        force: true,
+      )
+    end
+  end
+
   desc "Archive the app and upload the binary to App Store Connect. No metadata, " \
        "no screenshots, no submission — the build lands in ASC for manual selection. " \
        "Signing is cloud-managed through the ASC API key, so no local distribution " \

@@ -793,23 +793,13 @@ private struct TodayHeader: View {
                 scripture(verse)
             }
         }
-        // The page's one content edge — the cards' inner edge — so the verse
-        // starts where the headers and the hero's title do.
-        .padding(.horizontal, Theme.Spacing.m)
         // Flush in a split, so "Verse of the day" starts level with the
         // first card at the top of the other column.
         .padding(.top, inSplit ? 0 : Theme.Spacing.s)
     }
 
-    /// Scripture, set plainly. No rule, no box, no quote glyph: the serif is
-    /// the only serif in the header, and that is the whole signal. An ornament
-    /// here would be decoration standing in for a typographic distinction that
-    /// the type is already making.
-    ///
-    /// It is labelled, though. Removing the card removed the kicker with it,
-    /// which left an unexplained quotation under the greeting — the VoiceOver
-    /// label named it all along, so only sighted readers lost the answer to
-    /// "what is this?".
+    /// Scripture in a plain card, labelled. No rule or quote glyph: the
+    /// serif is the only serif on the page, and that is the signal.
     private func scripture(_ verse: Puzzle) -> some View {
         Button {
             analytics.log(.scriptureOpened(reference: verse.reference, source: "verse_of_the_day"))
@@ -820,8 +810,11 @@ private struct TodayHeader: View {
                     // A small label, not a section header: the verse and the
                     // puzzle title under it were two big serif headlines
                     // back to back, and the page had no one place to land.
+                    // Sentence case, as every other label on Today: the
+                        // uppercase eyebrow was the last one on the page.
                     Text("Verse of the day")
-                        .kicker()
+                        .font(.footnote.weight(.semibold))
+                        .foregroundStyle(.secondary)
                     // Three lines, then truncate. Verses run from one line to
                     // six, and an unbounded header pushed the daily card's CTA
                     // below the fold on a 667pt screen while landing it in a
@@ -844,17 +837,24 @@ private struct TodayHeader: View {
                         .fixedSize(horizontal: false, vertical: true)
                 }
 
+                // Ink, not blue: the whole card is the tap target, and
+                // Start Puzzle below should be the only blue on the screen.
                 HStack(spacing: 4) {
                     Text(verse.reference)
-                        .font(.headline)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.primary)
                     Image(systemName: "chevron.forward")
-                        .font(.caption.weight(.bold))
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(.tertiary)
                 }
-                .foregroundStyle(Theme.accent)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
+            // A card like every other section: bare on the grouped canvas
+            // the verse read as stray text, not part of the page.
+            .padding(Theme.Spacing.l)
+            .elevatedCard()
         }
-        .buttonStyle(.plain)
+        .buttonStyle(PressableCardStyle())
         .accessibilityElement(children: .ignore)
         .accessibilityAddTraits(.isButton)
         .accessibilityLabel("Verse of the day. \(verse.verse). \(verse.reference)")
@@ -915,9 +915,14 @@ private enum PuzzleBilling {
     /// unplayed. "A quick two-minute puzzle" is a promise only the Mini keeps.
     func blurb(_ puzzle: Puzzle) -> String {
         switch self {
-        case .daily: "\(puzzle.size)×\(puzzle.size) · \(puzzle.clueCount) clues"
+        // Clues only: "15×15 · 20 clues" broke after the dot on a third-
+        // width tile, and the kind above it already says it's the big grid.
+        case .daily: "\(puzzle.clueCount) clues"
         case .mini: "About 2 min"
-        case .sunday: "Every Sunday"
+        // How long this one stays: "Every Sunday" was a schedule, and on a
+        // Thursday told the player nothing. One phrase — "21×21 · this week"
+        // broke after the dot on a third-width tile.
+        case .sunday: "This week"
         }
     }
 }
@@ -1115,6 +1120,14 @@ private struct CollectionsCarousel: View {
     /// Opens the Packs tab, where the whole shelf lives.
     let onShowAll: () -> Void
 
+    @Environment(\.puzzleProvider) private var puzzleProvider
+    @Environment(\.dynamicTypeSize) private var typeSize
+
+    /// 160 holds a two-line title at standard sizes; at accessibility sizes
+    /// the tile widens instead of clipping. Still a carousel, so a wider tile
+    /// costs a swipe, not the layout.
+    private var tileWidth: CGFloat { typeSize.isAccessibilitySize ? 280 : 160 }
+
     var body: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.s) {
             // "Packs", as the paywall and Settings call them (the shelf is on the
@@ -1145,14 +1158,10 @@ private struct CollectionsCarousel: View {
             // edge a few points short of the screen's. The negative padding
             // keeps the column's measured width unchanged.
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: Theme.Spacing.m) {
+                HStack(alignment: .top, spacing: Theme.Spacing.m) {
                     ForEach(packs) { pack in
                         NavigationLink(value: PackRoute(pack: pack, source: .home)) {
-                            PackTile(
-                                pack: pack,
-                                progress: PackProgress(pack: pack, recordsByID: recordsByID),
-                                isLocked: pack.isPremium && !isPremium
-                            )
+                            tile(pack, progress: PackProgress(pack: pack, recordsByID: recordsByID))
                         }
                         .buttonStyle(PressableCardStyle())
                     }
@@ -1175,128 +1184,32 @@ private struct CollectionsCarousel: View {
             .clipped()
         }
     }
-}
 
-/// A compact, fixed-width pack card sized for the horizontal carousel.
-private struct PackTile: View {
-    let pack: PuzzlePack
-    let progress: PackProgress
-    let isLocked: Bool
-
-    /// The cover band across the top of the tile. Scaled with the text so a
-    /// larger size doesn't squeeze the title beneath it.
-    @ScaledMetric(relativeTo: .subheadline) private var coverHeight = 72
-
-    /// The tile is a fixed size so the carousel's rows line up, which means the
-    /// tallest combination has to fit: the cover and a two-line title over the
-    /// count. The badge rides on the cover, so it no longer adds a line — at
-    /// 150, with the badge under the title, "Women of the Bible" pushed its
-    /// puzzle count out past the bottom edge, and the height reserved for that
-    /// line left every badgeless tile with a gap under its title. Scaled
-    /// rather than a constant, because the text inside it scales.
-    @ScaledMetric(relativeTo: .subheadline) private var tileHeight = 172
-    @Environment(\.dynamicTypeSize) private var typeSize
-
-    /// 160 holds a two-line title at standard sizes. At accessibility sizes the
-    /// tile widens instead of clipping — at 160 the largest type cut every
-    /// title to "She…" and broke "puzzles" across two lines. Still a
-    /// carousel, so a wider tile costs a swipe, not the layout.
-    private var tileWidth: CGFloat { typeSize.isAccessibilitySize ? 280 : 160 }
-
-    /// The one badge this tile shows, if any, on the cover band.
-    private var packBadge: PackBadge? { PackBadge.forPack(pack) }
-
-    var body: some View {
-        // Cover-led, as the App Store's and Books' shelves are: the pack's own
-        // symbol and tint across the top, then the title and where you are.
-        // It was a small chip above the title with about 60pt of empty card
-        // under it — the tile's height was spent on nothing.
-        VStack(alignment: .leading, spacing: 0) {
-            cover
-
-            VStack(alignment: .leading, spacing: Theme.Spacing.s) {
-                Text(pack.title)
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(.primary)
-                    .lineLimit(2)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-
-                Spacer(minLength: 0)
-
-                // Same rule as `PackCard`: a locked collection states its size, not
-                // the player's progress through it. This tile was missed when that
-                // landed, so the carousel could still show a crowned pack as
-                // "Complete" — the one surface where it sat on the home screen.
-                // An unstarted pack states its size too: an empty bar over "0/5"
-                // is a gauge with nothing to measure.
-                if isLocked || progress.solved == 0 {
-                    Text("\(progress.total) puzzle\(progress.total == 1 ? "" : "s")")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                        .monospacedDigit()
-                } else if progress.isComplete {
-                    Label("Complete", systemImage: "checkmark.seal.fill")
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(.green)
-                } else {
-                    ProgressView(value: progress.fraction).tint(Theme.progressBar)
-                    Text("\(progress.solved)/\(progress.total)")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                        .monospacedDigit()
-                }
-            }
-            .padding(Theme.Spacing.m)
-        }
-        .frame(width: tileWidth, height: tileHeight, alignment: .topLeading)
-        .elevatedCard()
-        // The band runs to the tile's edge, so the tile clips it to its own
-        // rounded shape rather than letting square corners show.
-        .clipShape(.rect(cornerRadius: Theme.cornerRadius, style: .continuous))
-        .accessibilityElement(children: .ignore)
-        .accessibilityAddTraits(.isButton)
-        .accessibilityLabel(accessibilityLabel)
-    }
-
-    /// The pack's symbol on a band of its own tint. Neutral while locked —
-    /// colour means "you can open this" on every surface that lists a
-    /// collection — with the crown in the corner. The fills match
-    /// `CollectionCover`'s, so a pack is the same colour everywhere.
-    private var cover: some View {
-        Image(systemName: pack.coverSymbol)
-            .font(.title)
-            .foregroundStyle(isLocked ? AnyShapeStyle(.secondary) : AnyShapeStyle(pack.accent))
-            .frame(maxWidth: .infinity)
-            .frame(height: coverHeight)
-            .background(isLocked ? Color.primary.opacity(0.06) : pack.accent.opacity(0.14))
-            .overlay(alignment: .topTrailing) {
-                if isLocked {
-                    Image(systemName: "crown.fill")
-                        .font(.caption)
-                        .foregroundStyle(.yellow)
-                        .padding(Theme.Spacing.s)
-                }
-            }
-            // "New" or "Closing soon" in the corner opposite the crown.
-            .overlay(alignment: .topLeading) {
-                if let packBadge {
-                    packBadge
-                        .padding(Theme.Spacing.s)
-                }
-            }
-    }
-
-    private var accessibilityLabel: String {
-        var parts = [pack.title]
-        if isLocked { parts.append("Premium") }
-        if let packBadge { parts.append(packBadge.label) }
-        parts.append(isLocked || progress.solved == 0
-            ? "\(progress.total) puzzle\(progress.total == 1 ? "" : "s")"
-            : (progress.isComplete ? "Complete" : "\(progress.solved) of \(progress.total) solved"))
-        return parts.joined(separator: ". ")
+    /// The same cover the Puzzles tab shelves a pack with (2026-11-04): ink
+    /// mark and the pack's first grid on a white card. The tinted symbol band
+    /// this replaced was the last colour block left on Today.
+    private func tile(_ pack: PuzzlePack, progress: PackProgress) -> some View {
+        let locked = pack.isPremium && !isPremium
+        let size = "\(progress.total) puzzle\(progress.total == 1 ? "" : "s")"
+        // A locked or unstarted pack states its size, never progress.
+        let meta = locked ? size
+            : progress.isComplete ? "Complete"
+            : progress.solved > 0 ? "\(progress.solved) of \(progress.total) solved"
+            : size
+        let puzzles = puzzleProvider.puzzles(in: pack)
+        return ShelfTile(
+            title: pack.title,
+            meta: meta,
+            label: PackCoverLabel(puzzles: puzzles),
+            grid: puzzles.first?.grid,
+            fallbackSymbol: pack.coverSymbol,
+            isLocked: locked,
+            badge: PackBadge.forPack(pack)
+        )
+        .frame(width: tileWidth)
     }
 }
+
 
 // MARK: - Next achievement row
 
@@ -1307,19 +1220,13 @@ private struct NextAchievementRow: View {
     let profile: PlayerProfile
 
     var body: some View {
-        // A time goal is met or not, so it gets no bar — an empty one would
-        // sit there until the day it jumped to full.
-        let fraction = achievement.progress(for: profile)
-        let isTimeGoal: Bool = {
-            if case .fastSolve = achievement.goal { return true }
-            return false
-        }()
+        // No bar (2026-11-04): Today's rows say where things stand in
+        // words, and the subtitle already counts it.
         CoverRow(
             symbol: achievement.symbol,
             tint: FeatureTint.badge,
             title: achievement.title,
-            subtitle: subtitle,
-            progress: isTimeGoal || fraction <= 0 ? nil : fraction
+            subtitle: subtitle
         )
         .cardRowPadding()
         .accessibilityElement(children: .ignore)
@@ -1327,18 +1234,18 @@ private struct NextAchievementRow: View {
         .accessibilityLabel("Next badge: \(achievement.title). \(achievement.detail). \(progress)")
     }
 
-    /// "Next badge · 3 / 5", or for a time goal the player's best against it —
-    /// a time goal is met or not, so a bar for it sat empty until the day it
-    /// jumped to full.
-    ///
-    /// Before the first step it names the goal instead: "Next badge · 0 / 5"
-    /// told a new player only that they had done nothing yet.
+    /// "Badge · Complete 5 puzzles · 2 to go". It leads with what the row
+    /// is: titled "First Journey" under a Journey row, "Next badge" at the
+    /// end of the line read as a second Journey (2026-11-04). The goal names
+    /// what earns it; the count only when there's more than one left.
     private var subtitle: String {
+        var parts = ["Badge", achievement.detail]
         if let left = achievement.remaining(for: profile) {
-            return "Next badge · \(left) to go"
+            if left > 1 { parts.append("\(left) to go") }
+        } else if case .fastSolve = achievement.goal, let best = profile.bestSolveSeconds {
+            parts.append("best \(TimeFormat.clock(best))")
         }
-        guard achievement.progress(for: profile) > 0 else { return achievement.detail }
-        return "Next badge · \(progress)"
+        return parts.joined(separator: " · ")
     }
 
     private var progress: String {
@@ -1497,10 +1404,9 @@ private struct CompanionPuzzlesCard: View {
                     puzzle: row.puzzle,
                     billing: row.billing,
                     presentation: row.presentation,
-                    // Three across (a Sunday): the icon goes over the text.
-                    // Beside it, a third of the width broke words mid-word
-                    // ("Sund-ay", "pro-gress") — 2026-11-03.
-                    stacksIcon: rows.count > 2 && !typeSize.isAccessibilitySize
+                    // Three across (a Sunday): a third of the width needs a
+                    // third line for the title.
+                    isNarrow: rows.count > 2 && !typeSize.isAccessibilitySize
                 )
             }
         }
@@ -1513,8 +1419,8 @@ private struct CompactPuzzleRow: View {
     let puzzle: Puzzle
     let billing: PuzzleBilling
     let presentation: DailyPresentation
-    /// Icon above the text rather than beside it, for a tile a third wide.
-    var stacksIcon = false
+    /// A tile a third wide (three across): the title gets a third line.
+    var isNarrow = false
 
     /// Only a puzzle finished today wears the green check. Each pool wraps on
     /// its own schedule — the mini's eight days after the daily's — and a repeat
@@ -1524,43 +1430,44 @@ private struct CompactPuzzleRow: View {
         return false
     }
 
-    @ScaledMetric(relativeTo: .headline) private var iconSize: CGFloat = 36
+    /// The state, green with a check once today's is solved — the only
+    /// colour on the tile, and only when it means "done".
+    @ViewBuilder private var stateLine: some View {
+        if isSolvedToday {
+            Label(state, systemImage: "checkmark.circle.fill")
+                .labelStyle(.titleAndIcon)
+                .font(.footnote.weight(.semibold))
+                .foregroundStyle(FeatureTint.solved)
+                .monospacedDigit()
+                .fixedSize(horizontal: false, vertical: true)
+        } else {
+            Text(state)
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+                .monospacedDigit()
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
 
     var body: some View {
         NavigationLink(value: puzzle) {
-            // The billing's mark in a square of its hero colour — the colour
-            // the card above wears when this puzzle leads — beside the kind
-            // and where the player stands. It was a 64pt band over the text
-            // until 2026-10-24: two cards each nearly as tall as the hero.
-            // The title is in the VoiceOver label; on the card the kind says
-            // enough to choose by.
-            // A pale square like every other row's since 2026-10-25, not a
-            // solid block of the hero's colour.
-            let layout = stacksIcon
-                ? AnyLayout(VStackLayout(alignment: .leading, spacing: Theme.Spacing.s + 2))
-                : AnyLayout(HStackLayout(spacing: Theme.Spacing.s + 4))
-            layout {
-                CollectionCover(
-                    symbol: leadingSymbol,
-                    accent: isSolvedToday ? FeatureTint.solved : Color.secondary,
-                    isLocked: false,
-                    side: iconSize,
-                    font: .body.weight(.semibold),
-                    cornerRadius: iconSize * 0.28
-                )
-
-                VStack(alignment: .leading, spacing: 0) {
-                    Text(billing.shortName)
-                        .font(.headline)
-                        .foregroundStyle(.primary)
-                    // Wraps rather than truncates at large type.
-                    Text(state)
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-
-                if !stacksIcon { Spacer(minLength: 0) }
+            // Kind, then the puzzle's own name, then where the player
+            // stands (2026-11-04). It led with a grey icon chip over the kind
+            // alone, so three tiles said "Mini / Daily / Sunday" and nothing
+            // about today: the chip was in the title's place. The solved
+            // check moved into the state line, the one place it means
+            // something.
+            VStack(alignment: .leading, spacing: 2) {
+                Text(billing.shortName)
+                    .font(.footnote.weight(.semibold))
+                    .foregroundStyle(.secondary)
+                Text(puzzle.title)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(.primary)
+                    .lineLimit(isNarrow ? 3 : 2)
+                    .fixedSize(horizontal: false, vertical: true)
+                Spacer(minLength: Theme.Spacing.s)
+                stateLine
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(14)
@@ -1575,25 +1482,14 @@ private struct CompactPuzzleRow: View {
         .accessibilityAddTraits(.isButton)
     }
 
-    /// Solved wears the green check; unsolved leads with the billing's own
-    /// mark, so the Special's row reads as an occasion rather than a second
-    /// bolt of the same kind.
-    /// The bolt means "quick", which is the Mini's trait; the daily gets the
-    /// calendar it's billed under. Both used to share the bolt.
-    private var leadingSymbol: String {
-        if isSolvedToday { return "checkmark" }
-        switch billing {
-        case .mini: return "bolt.fill"
-        case .daily: return "calendar"
-        case .sunday: return "star.fill"
-        }
-    }
-
     private var state: String {
         switch presentation {
         case .solvedToday(let seconds):
             if let secs = seconds, secs > 0 {
-                return "Solved in \(TimeFormat.clock(secs))"
+                // The time alone: the green check already says solved, and
+                // "Solved in 2:34" wrapped in a third-width tile. VoiceOver
+                // still hears "Solved in".
+                return TimeFormat.clock(secs)
             }
             return "Solved"
         case .playedBefore(let previous):

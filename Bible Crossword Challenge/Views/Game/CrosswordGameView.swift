@@ -783,8 +783,7 @@ struct CrosswordGameScreen: View {
             vm: vm,
             onStallTap: runStallAction,
             onVerseTap: { useVerseHint() },
-            showsClue: !cluesStanding,
-            onBed: true
+            showsClue: !cluesStanding
         )
     }
 
@@ -793,27 +792,19 @@ struct CrosswordGameScreen: View {
             isPencilMode: vm.isPencilMode,
             onLetter: { vm.enter($0) },
             onDelete: { vm.delete() },
-            onTogglePencil: { vm.isPencilMode.toggle() },
-            onBed: true
+            onTogglePencil: { vm.isPencilMode.toggle() }
         )
     }
 
-    /// The clue strip and the keys, on the keyboard bed (2026-10 design):
-    /// the board is the page, and everything you type with sits on one
-    /// surface under it, down to the screen's bottom edge. Replaced the pad
-    /// laid straight on the paper, where the clue floated between the board
-    /// and the keys and belonged to neither.
+    /// The clue strip and the keys. No keyboard bed since 2026-11-04: the
+    /// white strip over keys set on the page, the same pad as memory
+    /// practice, at Sambulo's call — the grey bed with white key caps made
+    /// two keyboards in one app.
     private var entryDock: some View {
         VStack(spacing: 0) {
             clueBar
             keypad
         }
-        // With the bars on a side rail, the bed stops where the rail's
-        // column starts: drawn under it, the keys sat to one side of a bed
-        // running on to the edge, about 85pt bare beside them on open iPhone
-        // Duo (2026-10-25). The keys stay out of that column — it is held
-        // for the rail down the whole edge.
-        .background(Theme.keyboardBed, ignoresSafeAreaEdges: barsVertical ? .bottom : .all)
     }
 
     // MARK: - Toolbar

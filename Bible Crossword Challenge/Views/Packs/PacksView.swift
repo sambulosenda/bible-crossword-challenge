@@ -2,14 +2,15 @@
 //  PacksView.swift
 //  Bible Crossword Challenge
 //
-//  The "Puzzles" tab (was "Packs"; the Library joined it 2026-11-03, one row
-//  under the lead): curated collections of related puzzles. Free to browse; a
+//  The "Puzzles" tab (was "Packs"; the Library joined it 2026-11-03, the
+//  first row): curated collections of related puzzles. Free to browse; a
 //  premium pack shows its contents but gates play behind the paywall (the free
 //  starter pack is always playable). Seasonal packs surface only in-window.
 //
-//  A bookshelf since 2026-10-24: one feature card for the collection to play
-//  next, then shelves of tall typographic covers — the Journeys, anything in
+//  A bookshelf since 2026-10-24: shelves of tall typographic covers — the Journeys, anything in
 //  season, and the packs by Testament, the way the Bible itself is shelved.
+//  No lead card since 2026-11-04: it was the same "Continue" card Today
+//  leads with, so the two tabs opened alike. Today owns the next puzzle.
 //  It was an inset-grouped list of symbol rows (2026-10-13): native, but every
 //  collection looked the same at a glance, and the covers carried nothing of
 //  the book a pack draws from. Locked collections keep their colour now, with
@@ -31,16 +32,6 @@ struct PacksView: View {
     @Query private var records: [PuzzleRecord]
     @State private var showPaywall = false
 
-    /// The collection promoted to the top of the tab, carried with the
-    /// progress that was already computed to choose it.
-    ///
-    /// Quests and packs share ids where a collection ships as both, so the
-    /// lead has to say which list it came from, not just which collection.
-    private enum Lead {
-        case quest(QuestLine, QuestProgress)
-        case pack(PuzzlePack, PackProgress)
-    }
-
     private var quests: [QuestLine] { puzzleProvider.quests }
 
     var body: some View {
@@ -48,7 +39,7 @@ struct PacksView: View {
         // inside each tile's closure.
         let recordsByID = records.byPuzzleID
         // A pack a Journey already covers is dropped here, so nothing
-        // downstream — the shelves, the empty state, the lead — can count
+        // downstream — the shelves and the empty state — can count
         // the same collection twice.
         let packs = PuzzlePack.notShadowedByQuests(puzzleProvider.availablePacks(), quests: quests)
 
@@ -96,8 +87,8 @@ struct PacksView: View {
         }
     }
 
-    /// Every collection's progress, worked out once per body pass. The lead,
-    /// the sort and each tile all read it.
+    /// Every collection's progress, worked out once per body pass. The sort
+    /// and each tile read it.
     private struct ProgressBook {
         let packs: [String: PackProgress]
         let quests: [String: QuestProgress]
@@ -126,11 +117,8 @@ struct PacksView: View {
             packs.map { ($0.id, PackCoverLabel(puzzles: puzzleProvider.puzzles(in: $0))) },
             uniquingKeysWith: { a, _ in a }
         )
-        let lead = self.lead(packs: packs, book: book)
-
-        // The lead stays on its shelf: the card opens its puzzle, the cover
-        // its page. On each shelf: something to do first, locked after
-        // what's open, finished last.
+        // On each shelf: something to do first, locked after what's open,
+        // finished last.
         let shownQuests = openFirst(Self.playOrder(
             quests,
             solved: { book.of($0).solved }, isComplete: { book.of($0).isComplete }
@@ -148,7 +136,6 @@ struct PacksView: View {
 
         return ScrollView {
             LazyVStack(alignment: .leading, spacing: Theme.Spacing.xl) {
-                leadCard(lead, recordsByID: recordsByID)
                 allPuzzlesRow(recordsByID: recordsByID)
 
                 if !shownQuests.isEmpty {
@@ -206,74 +193,6 @@ struct PacksView: View {
         isPremiumContent && !store.isPremium
     }
 
-    // MARK: - Lead
-
-    /// Which single collection gets promoted.
-    ///
-    /// Something already begun beats something not yet begun: the useful next
-    /// step is the one in progress. A locked or finished collection is never
-    /// the lead — there is nothing to start. Journeys are considered first,
-    /// because a paced run is the stronger reason to come back tomorrow.
-    private func lead(packs: [PuzzlePack], book: ProgressBook) -> Lead? {
-        let openQuests = quests
-            .filter { !$0.isPremium || store.isPremium }
-            .map { ($0, book.of($0)) }
-            .filter { !$0.1.isComplete }
-        let openPacks = packs
-            .filter { !$0.isPremium || store.isPremium }
-            .map { ($0, book.of($0)) }
-            .filter { !$0.1.isComplete }
-
-        if let started = openQuests.first(where: { $0.1.solved > 0 }) {
-            return .quest(started.0, started.1)
-        }
-        if let started = openPacks.first(where: { $0.1.solved > 0 }) {
-            return .pack(started.0, started.1)
-        }
-        if let first = openQuests.first { return .quest(first.0, first.1) }
-        if let first = openPacks.first { return .pack(first.0, first.1) }
-        return nil
-    }
-
-    /// The lead as the collection pages lead (2026-11-03): the puzzle to play,
-    /// with its grid, and a pill that opens it directly. It was a cover with a
-    /// step path and a pill to the collection page — a tap away from the
-    /// puzzle, and on this tab the only card that showed no crossword.
-    @ViewBuilder
-    private func leadCard(_ lead: Lead?, recordsByID: [String: PuzzleRecord]) -> some View {
-        switch lead {
-        case let .quest(quest, progress):
-            let steps = puzzleProvider.puzzles(in: quest)
-            if let index = progress.currentIndex, steps.indices.contains(index) {
-                UpNextCard(
-                    puzzle: steps[index],
-                    kicker: "\(quest.title) · " + QuestProgress.stepLine(solved: progress.solved, total: progress.total)
-                ) {
-                    leadButton(JourneyPuzzleRoute(puzzle: steps[index]), begun: progress.solved > 0)
-                }
-            }
-        case let .pack(pack, progress):
-            let puzzles = puzzleProvider.puzzles(in: pack)
-            if let next = puzzles.first(where: { recordsByID[$0.id]?.isCompleted != true }) {
-                UpNextCard(
-                    puzzle: next,
-                    kicker: "\(pack.title) · \(progress.solved) of \(progress.total) solved"
-                ) {
-                    leadButton(next, begun: progress.solved > 0)
-                }
-            }
-        case nil:
-            EmptyView()
-        }
-    }
-
-    private func leadButton(_ route: some Hashable, begun: Bool) -> some View {
-        NavigationLink(value: route) {
-            Label(begun ? "Continue" : "Start", systemImage: "play.fill")
-        }
-        .buttonStyle(.pillAccent)
-    }
-
     // MARK: - Shelves
 
     @ViewBuilder
@@ -308,7 +227,6 @@ struct PacksView: View {
             grid: puzzleProvider.puzzles(in: pack).first?.grid,
             fallbackSymbol: pack.coverSymbol,
             isLocked: locked,
-            progress: !locked && progress.solved > 0 && !progress.isComplete ? progress.fraction : nil,
             badge: PackBadge.forPack(pack)
         )
     }
@@ -328,14 +246,13 @@ struct PacksView: View {
             label: PackCoverLabel(puzzles: puzzleProvider.puzzles(in: quest)),
             grid: puzzleProvider.puzzles(in: quest).first?.grid,
             fallbackSymbol: quest.coverSymbol,
-            isLocked: locked,
-            progress: !locked && progress.solved > 0 && !progress.isComplete ? progress.fraction : nil
+            isLocked: locked
         )
     }
 
     // MARK: - All puzzles
 
-    /// The way into every puzzle, under the lead: what was the Library tab
+    /// The way into every puzzle, at the top of the tab: what was the Library tab
     /// (merged 2026-11-03). A row, not a shelf — it's a list to search and
     /// filter, and the shelves above are the curated way in.
     private func allPuzzlesRow(recordsByID: [String: PuzzleRecord]) -> some View {
