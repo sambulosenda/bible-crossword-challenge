@@ -687,14 +687,15 @@ struct HomeView: View {
             }
         }
 
-        // Only packs the player can open. For a free player every tile here
-        // used to be locked behind a crown, a second pitch beside the
-        // Premium offer; locked packs keep their offer on the Packs tab. A
-        // shelf of nothing but finished packs is a dead end, so it goes too —
-        // and so does a shelf of one (2026-10-24): a free player's only open
-        // pack sat alone in a two-column row, half a row of empty paper,
-        // showing how little was free rather than what the shelf holds.
-        let packs = collectionPacks(recordsByID).filter { !$0.isPremium || store.isPremium }
+        // Locked packs show again (2026-11-04), after the ones the player can
+        // open — `collectionPacks` ranks them there. Hidden since 2026-10-24
+        // as "a second pitch", but the 30-day readout says wanting a locked
+        // collection is what sells: locked pack/journey/archive pages tap
+        // through at ~21% against 1% for the hint wall, and they were opened
+        // only 38 times because Today never showed one. The tile's lock says
+        // Premium; its page carries the trial button. A shelf of nothing but
+        // finished packs is still a dead end, and a shelf of one still goes.
+        let packs = collectionPacks(recordsByID)
         if packs.count > 1,
            packs.contains(where: { !PackProgress(pack: $0, recordsByID: recordsByID).isComplete }) {
             CollectionsCarousel(

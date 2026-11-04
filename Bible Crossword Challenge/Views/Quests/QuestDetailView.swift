@@ -297,6 +297,8 @@ struct QuestHomeCard: View {
     let quest: QuestLine
     let progress: QuestProgress
 
+    @Environment(StoreService.self) private var store
+
     var body: some View {
         NavigationLink(value: QuestRoute(quest: quest, source: .home)) {
             // The Journey feature's tint, not this Journey's own colour: on
@@ -327,6 +329,11 @@ struct QuestHomeCard: View {
     /// "Journey" leads the line only before the first step; after that the
     /// cover and the bar say what kind of thing this is.
     private var subtitle: String {
+        // Said on the row (2026-11-04): a locked Journey looked like any
+        // other until its page, so the tap felt like a bait-and-switch.
+        if quest.isPremium && !store.isPremium {
+            return "Premium Journey · \(progress.total) steps"
+        }
         if progress.solved == 0 { return "Journey · \(progress.total) steps, one a day" }
         if progress.steppedToday { return "Step \(progress.solved) of \(progress.total) done · next one tomorrow" }
         // "Step", as the Packs tab and the journey itself count it.
