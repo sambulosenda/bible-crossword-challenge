@@ -355,12 +355,9 @@ struct OnboardingView: View {
                     )
                 Spacer(minLength: 0)
             } else {
-                // The game's keys on the game's bed, so the first keyboard a
-                // player meets is the one they'll solve every puzzle with.
-                // Rounded here: the page's controls sit under it, where the
-                // game's bed runs to the screen's edge.
-                LetterKeyboardView(onLetter: type(_:), onDelete: deleteLetter, onBed: true)
-                    .background(Theme.keyboardBed, in: .rect(cornerRadius: Theme.cornerRadius, style: .continuous))
+                // The game's keys, so the first keyboard a player meets is
+                // the one they'll solve every puzzle with.
+                LetterKeyboardView(onLetter: type(_:), onDelete: deleteLetter)
                     .transition(.opacity)
             }
         }
