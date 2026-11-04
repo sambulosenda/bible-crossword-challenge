@@ -40,8 +40,8 @@ whenever puzzles are added — every daily added moves the first date by one.
 
 | Pool | Size | Wraps |
 |------|------|-------|
-| Dailies | 102 | wrapped 2026-10-01 at 92; 10 new served 2026-11-12 → 2026-11-21 via `schedule.json` |
-| Minis | 107 | wrapped 2026-10-06 at 97; 10 new served from 2026-11-12 via `schedule.json` |
+| Dailies | 112 | wrapped 2026-10-01 at 92; 20 new served 2026-11-12 → 2026-12-01 via `schedule.json` |
+| Minis | 117 | wrapped 2026-10-06 at 97; 20 new served 2026-11-12 → 2026-12-01 via `schedule.json` |
 | Sundays | 17 | 2026-11-08 repeats (shipped builds); 4 new served 2026-11-15 → 2026-12-06 via `schedule.json` once 2.18 is live |
 
 `RotationWrapTests` asserts both pool sizes and both dates, so adding content

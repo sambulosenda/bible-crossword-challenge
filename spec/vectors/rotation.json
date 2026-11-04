@@ -2,26 +2,26 @@
   "cases" : [
     {
       "expect" : {
-        "daily" : "daily-102",
+        "daily" : "daily-112",
         "dailyWindow" : [
-          "daily-102",
-          "daily-101",
-          "daily-100",
-          "daily-099",
-          "daily-098",
-          "daily-097",
-          "daily-096"
+          "daily-112",
+          "daily-111",
+          "daily-110",
+          "daily-109",
+          "daily-108",
+          "daily-107",
+          "daily-106"
         ],
         "dayIndex" : -1,
-        "mini" : "mini-107",
+        "mini" : "mini-117",
         "miniWindow" : [
-          "mini-107",
-          "mini-106",
-          "mini-105",
-          "mini-104",
-          "mini-103",
-          "mini-102",
-          "mini-101"
+          "mini-117",
+          "mini-116",
+          "mini-115",
+          "mini-114",
+          "mini-113",
+          "mini-112",
+          "mini-111"
         ],
         "sunday" : "sunday-008",
         "weekIndex" : -1
@@ -36,23 +36,23 @@
         "daily" : "daily-001",
         "dailyWindow" : [
           "daily-001",
-          "daily-102",
-          "daily-101",
-          "daily-100",
-          "daily-099",
-          "daily-098",
-          "daily-097"
+          "daily-112",
+          "daily-111",
+          "daily-110",
+          "daily-109",
+          "daily-108",
+          "daily-107"
         ],
         "dayIndex" : 0,
         "mini" : "mini-031",
         "miniWindow" : [
           "mini-031",
-          "mini-107",
-          "mini-106",
-          "mini-105",
-          "mini-104",
-          "mini-103",
-          "mini-102"
+          "mini-117",
+          "mini-116",
+          "mini-115",
+          "mini-114",
+          "mini-113",
+          "mini-112"
         ],
         "sunday" : "sunday-008",
         "weekIndex" : -1
@@ -68,22 +68,22 @@
         "dailyWindow" : [
           "daily-002",
           "daily-001",
-          "daily-102",
-          "daily-101",
-          "daily-100",
-          "daily-099",
-          "daily-098"
+          "daily-112",
+          "daily-111",
+          "daily-110",
+          "daily-109",
+          "daily-108"
         ],
         "dayIndex" : 1,
         "mini" : "mini-001",
         "miniWindow" : [
           "mini-001",
           "mini-031",
-          "mini-107",
-          "mini-106",
-          "mini-105",
-          "mini-104",
-          "mini-103"
+          "mini-117",
+          "mini-116",
+          "mini-115",
+          "mini-114",
+          "mini-113"
         ],
         "sunday" : "sunday-008",
         "weekIndex" : -1
@@ -102,8 +102,8 @@
           "daily-003",
           "daily-002",
           "daily-001",
-          "daily-102",
-          "daily-101"
+          "daily-112",
+          "daily-111"
         ],
         "dayIndex" : 4,
         "mini" : "mini-003",
@@ -113,8 +113,8 @@
           "mini-032",
           "mini-001",
           "mini-031",
-          "mini-107",
-          "mini-106"
+          "mini-117",
+          "mini-116"
         ],
         "sunday" : "sunday-009",
         "weekIndex" : 0
@@ -250,26 +250,26 @@
     },
     {
       "expect" : {
-        "daily" : "daily-076",
+        "daily" : "daily-066",
         "dailyWindow" : [
-          "daily-076",
-          "daily-075",
-          "daily-074",
-          "daily-073",
-          "daily-072",
-          "daily-071",
-          "daily-070"
+          "daily-066",
+          "daily-065",
+          "daily-064",
+          "daily-063",
+          "daily-062",
+          "daily-061",
+          "daily-060"
         ],
         "dayIndex" : 177,
-        "mini" : "mini-024",
+        "mini" : "mini-070",
         "miniWindow" : [
-          "mini-024",
-          "mini-023",
-          "mini-077",
-          "mini-076",
-          "mini-075",
-          "mini-022",
-          "mini-074"
+          "mini-070",
+          "mini-021",
+          "mini-069",
+          "mini-068",
+          "mini-067",
+          "mini-020",
+          "mini-066"
         ],
         "sunday" : "sunday-003",
         "weekIndex" : 24
@@ -281,26 +281,26 @@
     },
     {
       "expect" : {
-        "daily" : "daily-040",
+        "daily" : "daily-020",
         "dailyWindow" : [
-          "daily-040",
-          "daily-039",
-          "daily-038",
-          "daily-037",
-          "daily-036",
-          "daily-035",
-          "daily-034"
+          "daily-020",
+          "daily-019",
+          "daily-018",
+          "daily-017",
+          "daily-016",
+          "daily-015",
+          "daily-014"
         ],
         "dayIndex" : 243,
-        "mini" : "mini-011",
+        "mini" : "mini-035",
         "miniWindow" : [
-          "mini-011",
-          "mini-010",
-          "mini-009",
-          "mini-049",
-          "mini-048",
-          "mini-047",
-          "mini-008"
+          "mini-035",
+          "mini-005",
+          "mini-034",
+          "mini-004",
+          "mini-033",
+          "mini-003",
+          "mini-002"
         ],
         "sunday" : "sunday-013",
         "weekIndex" : 34
@@ -312,26 +312,26 @@
     },
     {
       "expect" : {
-        "daily" : "daily-060",
+        "daily" : "daily-030",
         "dailyWindow" : [
-          "daily-060",
-          "daily-059",
-          "daily-058",
-          "daily-057",
-          "daily-056",
-          "daily-055",
-          "daily-054"
+          "daily-030",
+          "daily-029",
+          "daily-028",
+          "daily-027",
+          "daily-026",
+          "daily-025",
+          "daily-024"
         ],
         "dayIndex" : 365,
-        "mini" : "mini-058",
+        "mini" : "mini-040",
         "miniWindow" : [
-          "mini-058",
-          "mini-017",
-          "mini-016",
-          "mini-057",
-          "mini-056",
-          "mini-055",
-          "mini-054"
+          "mini-040",
+          "mini-039",
+          "mini-038",
+          "mini-037",
+          "mini-036",
+          "mini-035",
+          "mini-005"
         ],
         "sunday" : "sunday-013",
         "weekIndex" : 51
@@ -343,26 +343,26 @@
     },
     {
       "expect" : {
-        "daily" : "daily-099",
+        "daily" : "daily-049",
         "dailyWindow" : [
-          "daily-099",
-          "daily-098",
-          "daily-097",
-          "daily-096",
-          "daily-095",
-          "daily-094",
-          "daily-093"
+          "daily-049",
+          "daily-048",
+          "daily-047",
+          "daily-046",
+          "daily-045",
+          "daily-044",
+          "daily-043"
         ],
         "dayIndex" : 608,
-        "mini" : "mini-079",
+        "mini" : "mini-008",
         "miniWindow" : [
-          "mini-079",
-          "mini-025",
-          "mini-078",
-          "mini-024",
-          "mini-023",
-          "mini-077",
-          "mini-076"
+          "mini-008",
+          "mini-007",
+          "mini-046",
+          "mini-045",
+          "mini-044",
+          "mini-043",
+          "mini-006"
         ],
         "sunday" : "sunday-014",
         "weekIndex" : 86

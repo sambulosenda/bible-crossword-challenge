@@ -55,7 +55,7 @@ struct RotationWrapTests {
     @Test func theDailyPoolWrapsAfterItsOwnLength() {
         let provider = PuzzleProvider.shared
         let pool = provider.puzzles
-        #expect(pool.count == 102, "daily pool changed — update this and roadmap/README.md")
+        #expect(pool.count == 112, "daily pool changed — update this and roadmap/README.md")
 
         let start = farDay - farDay % pool.count
         #expect(provider.dailyPuzzle(for: epochPlus(start + pool.count))?.id == pool.first?.id)
@@ -75,7 +75,7 @@ struct RotationWrapTests {
     @Test func theMiniPoolWrapsAfterItsOwnLength() {
         let provider = PuzzleProvider.shared
         let pool = provider.minis
-        #expect(pool.count == 107, "mini pool changed — update this and roadmap/README.md")
+        #expect(pool.count == 117, "mini pool changed — update this and roadmap/README.md")
 
         let start = farDay - farDay % pool.count
         #expect(provider.dailyMini(for: epochPlus(start + pool.count))?.id == pool.first?.id)

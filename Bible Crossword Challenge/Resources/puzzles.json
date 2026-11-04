@@ -19857,6 +19857,2050 @@
     ]
   },
   {
+    "id": "daily-103",
+    "title": "Come Down Quickly",
+    "difficulty": "easy",
+    "verse": "For the Son of Man came to seek and to save the lost.",
+    "reference": "Luke 19:10",
+    "publishDate": "2026-10-11",
+    "size": 15,
+    "grid": [
+      "......P........",
+      "..T...O....L...",
+      ".FOURFOLD.HOUSE",
+      "..D...R....S.Y.",
+      "..A........T.C.",
+      "JOY..GUEST...A.",
+      "E...H....R...M.",
+      "R..ZACCHAEUS.O.",
+      "I.S.L.R..E.M.R.",
+      "CHIEF.O...SAVE.",
+      "H.N...W....L...",
+      "O.F...D.WEALTHY",
+      ".HURRY.........",
+      "..L.A..........",
+      "....N.........."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 6,
+        "text": "They would receive half of his goods",
+        "answer": "POOR",
+        "reference": "Luke 19:8"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 1,
+        "col": 2,
+        "text": "\"For I must stay at your house ___\"",
+        "answer": "TODAY",
+        "reference": "Luke 19:5"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 1,
+        "col": 11,
+        "text": "Whom the Son of Man came to seek",
+        "answer": "LOST",
+        "reference": "Luke 19:10"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 2,
+        "col": 1,
+        "text": "How much he would repay anyone he cheated",
+        "answer": "FOURFOLD",
+        "reference": "Luke 19:8"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 2,
+        "col": 10,
+        "text": "Jesus said He must stay at his",
+        "answer": "HOUSE",
+        "reference": "Luke 19:5"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 2,
+        "col": 13,
+        "text": "Kind of tree he climbed",
+        "answer": "SYCAMORE",
+        "reference": "Luke 19:4"
+      },
+      {
+        "number": 7,
+        "direction": "across",
+        "row": 5,
+        "col": 0,
+        "text": "How Zacchaeus welcomed Him",
+        "answer": "JOY",
+        "reference": "Luke 19:6"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 5,
+        "col": 0,
+        "text": "Jesus was passing through it",
+        "answer": "JERICHO",
+        "reference": "Luke 19:1"
+      },
+      {
+        "number": 8,
+        "direction": "across",
+        "row": 5,
+        "col": 5,
+        "text": "What Jesus became in a sinner's house",
+        "answer": "GUEST",
+        "reference": "Luke 19:7"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 5,
+        "col": 9,
+        "text": "He climbed it",
+        "answer": "TREE",
+        "reference": "Luke 19:4"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 6,
+        "col": 4,
+        "text": "Of his possessions, given to the poor",
+        "answer": "HALF",
+        "reference": "Luke 19:8"
+      },
+      {
+        "number": 11,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "Chief tax collector who wanted to see Jesus",
+        "answer": "ZACCHAEUS",
+        "reference": "Luke 19:2"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 7,
+        "col": 6,
+        "text": "It kept him from seeing Jesus",
+        "answer": "CROWD",
+        "reference": "Luke 19:3"
+      },
+      {
+        "number": 13,
+        "direction": "down",
+        "row": 7,
+        "col": 11,
+        "text": "Zacchaeus was this in stature",
+        "answer": "SMALL",
+        "reference": "Luke 19:3"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 8,
+        "col": 2,
+        "text": "\"He has gone to be the guest of a ___ man!\"",
+        "answer": "SINFUL",
+        "reference": "Luke 19:7"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 9,
+        "col": 0,
+        "text": "His rank among the tax collectors",
+        "answer": "CHIEF",
+        "reference": "Luke 19:2"
+      },
+      {
+        "number": 16,
+        "direction": "across",
+        "row": 9,
+        "col": 10,
+        "text": "The Son of Man came to seek and do this",
+        "answer": "SAVE",
+        "reference": "Luke 19:10"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 11,
+        "col": 8,
+        "text": "How rich Zacchaeus was",
+        "answer": "WEALTHY",
+        "reference": "Luke 19:2"
+      },
+      {
+        "number": 18,
+        "direction": "across",
+        "row": 12,
+        "col": 1,
+        "text": "\"Zacchaeus, ___ down\"",
+        "answer": "HURRY",
+        "reference": "Luke 19:5"
+      },
+      {
+        "number": 19,
+        "direction": "down",
+        "row": 12,
+        "col": 4,
+        "text": "He did this ahead to see Jesus",
+        "answer": "RAN",
+        "reference": "Luke 19:4"
+      }
+    ]
+  },
+  {
+    "id": "daily-104",
+    "title": "Hosanna",
+    "difficulty": "easy",
+    "verse": "Hosanna to the Son of David! Blessed is He who comes in the name of the Lord!",
+    "reference": "Matthew 21:9",
+    "publishDate": "2026-10-12",
+    "size": 15,
+    "grid": [
+      ".............H.",
+      ".............O.",
+      "....G...HIGHEST",
+      "DONKEY.......A.",
+      "....N....C.DEN.",
+      ".COLT....L.O.N.",
+      "....L....O.V.A.",
+      "...BETHPHAGE..C",
+      "...R.A.R.K.S..R",
+      ".K.A.B.A.S....O",
+      "ZION.L.Y....D.W",
+      ".N.C.E.E.R..A.D",
+      ".G.H.S.R.OLIVES",
+      "...E.....A..I..",
+      "...STIRRED..D.."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 13,
+        "text": "The shout of the crowd",
+        "answer": "HOSANNA",
+        "reference": "Matthew 21:9"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 2,
+        "col": 4,
+        "text": "How the King comes, riding on a donkey",
+        "answer": "GENTLE",
+        "reference": "Matthew 21:5"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 2,
+        "col": 8,
+        "text": "\"Hosanna in the ___!\"",
+        "answer": "HIGHEST",
+        "reference": "Matthew 21:9"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "Found tied there, with her colt",
+        "answer": "DONKEY",
+        "reference": "Matthew 21:2"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 4,
+        "col": 9,
+        "text": "Spread on the road by the crowd",
+        "answer": "CLOAKS",
+        "reference": "Matthew 21:8"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 4,
+        "col": 11,
+        "text": "\"But you are making it a ___ of robbers\"",
+        "answer": "DEN",
+        "reference": "Matthew 21:13"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 4,
+        "col": 11,
+        "text": "Their sellers' seats were overturned",
+        "answer": "DOVES",
+        "reference": "Matthew 21:12"
+      },
+      {
+        "number": 7,
+        "direction": "across",
+        "row": 5,
+        "col": 1,
+        "text": "Young one tied with its mother",
+        "answer": "COLT",
+        "reference": "Matthew 21:2"
+      },
+      {
+        "number": 8,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "Village at the Mount of Olives where they drew near",
+        "answer": "BETHPHAGE",
+        "reference": "Matthew 21:1"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 7,
+        "col": 3,
+        "text": "Cut from the trees and spread on the road",
+        "answer": "BRANCHES",
+        "reference": "Matthew 21:8"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 7,
+        "col": 5,
+        "text": "Jesus overturned the money changers'",
+        "answer": "TABLES",
+        "reference": "Matthew 21:12"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 7,
+        "col": 7,
+        "text": "\"My house will be called a house of ___\"",
+        "answer": "PRAYER",
+        "reference": "Matthew 21:13"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 7,
+        "col": 14,
+        "text": "They went ahead and followed, shouting",
+        "answer": "CROWDS",
+        "reference": "Matthew 21:9"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 9,
+        "col": 1,
+        "text": "\"See, your ___ comes to you\"",
+        "answer": "KING",
+        "reference": "Matthew 21:5"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 10,
+        "col": 0,
+        "text": "\"Say to the Daughter of ___\"",
+        "answer": "ZION",
+        "reference": "Matthew 21:5"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 10,
+        "col": 12,
+        "text": "\"Hosanna to the Son of ___!\"",
+        "answer": "DAVID",
+        "reference": "Matthew 21:9"
+      },
+      {
+        "number": 15,
+        "direction": "down",
+        "row": 11,
+        "col": 9,
+        "text": "Cloaks and branches were laid on it",
+        "answer": "ROAD",
+        "reference": "Matthew 21:8"
+      },
+      {
+        "number": 16,
+        "direction": "across",
+        "row": 12,
+        "col": 9,
+        "text": "Mount near Jerusalem where the journey paused",
+        "answer": "OLIVES",
+        "reference": "Matthew 21:1"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 14,
+        "col": 3,
+        "text": "The whole city was this",
+        "answer": "STIRRED",
+        "reference": "Matthew 21:10"
+      }
+    ]
+  },
+  {
+    "id": "daily-105",
+    "title": "I Am Joseph",
+    "difficulty": "easy",
+    "verse": "It was to save lives that God sent me before you.",
+    "reference": "Genesis 45:5",
+    "publishDate": "2026-10-13",
+    "size": 15,
+    "grid": [
+      "..GRAIN.JACOB..",
+      "..O.....U......",
+      "..STEWARD...W..",
+      "..H..A..ALIVE..",
+      "..E..G..H...P.F",
+      "..N..O.F.L..T.A",
+      "...BENJAMIN...T",
+      ".....S.M.V....H",
+      "SACKS..I.E....E",
+      "I...P..N.SILVER",
+      "M..KISSED....G.",
+      "E...E........Y.",
+      "O.JOSEPH...CUP.",
+      "N............T.",
+      "..............."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 2,
+        "text": "The brothers came to Egypt to buy it",
+        "answer": "GRAIN",
+        "reference": "Genesis 42:3"
+      },
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 2,
+        "text": "Region where the family would live",
+        "answer": "GOSHEN",
+        "reference": "Genesis 45:10"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 0,
+        "col": 8,
+        "text": "Their father, whose spirit revived",
+        "answer": "JACOB",
+        "reference": "Genesis 45:27"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 8,
+        "text": "\"Send the boy with me,\" this brother told his father",
+        "answer": "JUDAH",
+        "reference": "Genesis 43:8"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 2,
+        "col": 2,
+        "text": "Joseph's servant who chased the brothers",
+        "answer": "STEWARD",
+        "reference": "Genesis 44:4"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 2,
+        "col": 5,
+        "text": "Sent to bring Jacob down to Egypt",
+        "answer": "WAGONS",
+        "reference": "Genesis 45:21"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 2,
+        "col": 12,
+        "text": "Joseph did this so loudly the Egyptians heard",
+        "answer": "WEPT",
+        "reference": "Genesis 45:2"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 3,
+        "col": 8,
+        "text": "\"Joseph is still ___!\" the brothers reported",
+        "answer": "ALIVE",
+        "reference": "Genesis 45:26"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 4,
+        "col": 14,
+        "text": "\"He has made me a ___ to Pharaoh\"",
+        "answer": "FATHER",
+        "reference": "Genesis 45:8"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 5,
+        "col": 7,
+        "text": "It was severe in all the land",
+        "answer": "FAMINE",
+        "reference": "Genesis 41:57"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 5,
+        "col": 9,
+        "text": "God sent Joseph ahead to save these",
+        "answer": "LIVES",
+        "reference": "Genesis 45:5"
+      },
+      {
+        "number": 10,
+        "direction": "across",
+        "row": 6,
+        "col": 3,
+        "text": "Youngest brother, whom Jacob would not let go",
+        "answer": "BENJAMIN",
+        "reference": "Genesis 42:4"
+      },
+      {
+        "number": 11,
+        "direction": "across",
+        "row": 8,
+        "col": 0,
+        "text": "Their silver was returned in these",
+        "answer": "SACKS",
+        "reference": "Genesis 42:35"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 8,
+        "col": 0,
+        "text": "Brother bound and kept in Egypt",
+        "answer": "SIMEON",
+        "reference": "Genesis 42:24"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 8,
+        "col": 4,
+        "text": "Joseph accused his brothers of being these",
+        "answer": "SPIES",
+        "reference": "Genesis 42:9"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 9,
+        "col": 9,
+        "text": "Found back in the brothers' sacks",
+        "answer": "SILVER",
+        "reference": "Genesis 42:35"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 9,
+        "col": 13,
+        "text": "Where Joseph ruled under Pharaoh",
+        "answer": "EGYPT",
+        "reference": "Genesis 45:8"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 10,
+        "col": 3,
+        "text": "Joseph did this to all his brothers",
+        "answer": "KISSED",
+        "reference": "Genesis 45:15"
+      },
+      {
+        "number": 16,
+        "direction": "across",
+        "row": 12,
+        "col": 2,
+        "text": "Governor of Egypt who knew his brothers",
+        "answer": "JOSEPH",
+        "reference": "Genesis 42:8"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 12,
+        "col": 11,
+        "text": "Silver one hidden in the youngest's sack",
+        "answer": "CUP",
+        "reference": "Genesis 44:2"
+      }
+    ]
+  },
+  {
+    "id": "daily-106",
+    "title": "Wash One Another's Feet",
+    "difficulty": "easy",
+    "verse": "So if I, your Lord and Teacher, have washed your feet, you also should wash one another\u2019s feet.",
+    "reference": "John 13:14",
+    "publishDate": "2026-10-14",
+    "size": 15,
+    "grid": [
+      "......H........",
+      "JUDAS.E...NIGHT",
+      "....EXAMPLE....",
+      "PETER.D...W.B..",
+      "....V....L..L..",
+      "..MEAL..MORSEL.",
+      "....N.B..V..S..",
+      "....TEACHER.S..",
+      "......S...O.E..",
+      "..C.WAIST.O.D..",
+      "..L.A.N.O.S....",
+      ".FEET...W.T....",
+      "..A.E..NEVER...",
+      "..N.R...L.R....",
+      "..............."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 6,
+        "text": "Peter asked for his hands and this washed too",
+        "answer": "HEAD",
+        "reference": "John 13:9"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 1,
+        "col": 0,
+        "text": "The devil had put betrayal in his heart",
+        "answer": "JUDAS",
+        "reference": "John 13:2"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 1,
+        "col": 4,
+        "text": "No one is greater than his master",
+        "answer": "SERVANT",
+        "reference": "John 13:16"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 1,
+        "col": 10,
+        "text": "Judas went out, and it was this",
+        "answer": "NIGHT",
+        "reference": "John 13:30"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 1,
+        "col": 10,
+        "text": "Kind of commandment Jesus gave",
+        "answer": "NEW",
+        "reference": "John 13:34"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 2,
+        "col": 4,
+        "text": "\"I have set you an ___\"",
+        "answer": "EXAMPLE",
+        "reference": "John 13:15"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "\"Lord, are You going to wash my feet?\"",
+        "answer": "PETER",
+        "reference": "John 13:6"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 3,
+        "col": 12,
+        "text": "You will be this if you do these things",
+        "answer": "BLESSED",
+        "reference": "John 13:17"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 4,
+        "col": 9,
+        "text": "\"A new commandment I give you: ___ one another\"",
+        "answer": "LOVE",
+        "reference": "John 13:34"
+      },
+      {
+        "number": 9,
+        "direction": "across",
+        "row": 5,
+        "col": 2,
+        "text": "The evening one was underway when Jesus got up",
+        "answer": "MEAL",
+        "reference": "John 13:2"
+      },
+      {
+        "number": 10,
+        "direction": "across",
+        "row": 5,
+        "col": 8,
+        "text": "Jesus dipped it and gave it to Judas",
+        "answer": "MORSEL",
+        "reference": "John 13:26"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 6,
+        "col": 6,
+        "text": "He poured water into it",
+        "answer": "BASIN",
+        "reference": "John 13:5"
+      },
+      {
+        "number": 12,
+        "direction": "across",
+        "row": 7,
+        "col": 4,
+        "text": "\"You call Me ___ and Lord\"",
+        "answer": "TEACHER",
+        "reference": "John 13:13"
+      },
+      {
+        "number": 13,
+        "direction": "down",
+        "row": 7,
+        "col": 10,
+        "text": "It will not crow before Peter denies Jesus three times",
+        "answer": "ROOSTER",
+        "reference": "John 13:38"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 9,
+        "col": 2,
+        "text": "\"You are ___, though not all of you\"",
+        "answer": "CLEAN",
+        "reference": "John 13:10"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 9,
+        "col": 4,
+        "text": "Where Jesus tied the towel",
+        "answer": "WAIST",
+        "reference": "John 13:4"
+      },
+      {
+        "number": 15,
+        "direction": "down",
+        "row": 9,
+        "col": 4,
+        "text": "Poured into the basin",
+        "answer": "WATER",
+        "reference": "John 13:5"
+      },
+      {
+        "number": 16,
+        "direction": "down",
+        "row": 9,
+        "col": 8,
+        "text": "Jesus wrapped it around His waist",
+        "answer": "TOWEL",
+        "reference": "John 13:4"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 11,
+        "col": 1,
+        "text": "Jesus began to wash the disciples'",
+        "answer": "FEET",
+        "reference": "John 13:5"
+      },
+      {
+        "number": 18,
+        "direction": "across",
+        "row": 12,
+        "col": 7,
+        "text": "\"You shall ___ wash my feet!\" Peter said",
+        "answer": "NEVER",
+        "reference": "John 13:8"
+      }
+    ]
+  },
+  {
+    "id": "daily-107",
+    "title": "Where Are the Other Nine?",
+    "difficulty": "easy",
+    "verse": "When one of them saw that he was healed, he came back, praising God in a loud voice.",
+    "reference": "Luke 17:15",
+    "publishDate": "2026-10-15",
+    "size": 15,
+    "grid": [
+      ".......FAITH...",
+      ".....N.A.......",
+      ".....O.CLEANSED",
+      ".VILLAGE...I..I",
+      ".....H.....N..S",
+      ".F.M..H.P.TEN.T",
+      ".O.A..E.R.H...A",
+      ".R.SAMARITAN..N",
+      ".E.T..L.E.N...C",
+      "WIFE..E.S.K.L.E",
+      ".G.R..D.T.SEED.",
+      ".N......S...P..",
+      "MERCY.......E..",
+      ".R.....MUSTARD.",
+      "............S.."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 7,
+        "text": "\"Your ___ has made you well\"",
+        "answer": "FAITH",
+        "reference": "Luke 17:19"
+      },
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 7,
+        "text": "He fell on it at Jesus' feet",
+        "answer": "FACE",
+        "reference": "Luke 17:16"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 1,
+        "col": 5,
+        "text": "As in his days, so it will be when the Son of Man comes",
+        "answer": "NOAH",
+        "reference": "Luke 17:26"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 2,
+        "col": 7,
+        "text": "What happened to them as they went",
+        "answer": "CLEANSED",
+        "reference": "Luke 17:14"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 2,
+        "col": 11,
+        "text": "\"Where are the other ___?\"",
+        "answer": "NINE",
+        "reference": "Luke 17:17"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 2,
+        "col": 14,
+        "text": "Where the lepers stood",
+        "answer": "DISTANCE",
+        "reference": "Luke 17:12"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 3,
+        "col": 1,
+        "text": "Jesus was entering one when they met Him",
+        "answer": "VILLAGE",
+        "reference": "Luke 17:12"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 5,
+        "col": 1,
+        "text": "Jesus called the grateful man this",
+        "answer": "FOREIGNER",
+        "reference": "Luke 17:18"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 5,
+        "col": 3,
+        "text": "\"Jesus, ___, have mercy on us!\"",
+        "answer": "MASTER",
+        "reference": "Luke 17:13"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 5,
+        "col": 6,
+        "text": "One saw that he was, and came back",
+        "answer": "HEALED",
+        "reference": "Luke 17:15"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 5,
+        "col": 8,
+        "text": "\"Go, show yourselves to the ___\"",
+        "answer": "PRIESTS",
+        "reference": "Luke 17:14"
+      },
+      {
+        "number": 11,
+        "direction": "across",
+        "row": 5,
+        "col": 10,
+        "text": "Lepers who met Jesus at the entrance of a village",
+        "answer": "TEN",
+        "reference": "Luke 17:12"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 5,
+        "col": 10,
+        "text": "What the returning leper gave",
+        "answer": "THANKS",
+        "reference": "Luke 17:16"
+      },
+      {
+        "number": 12,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "The one who came back was this",
+        "answer": "SAMARITAN",
+        "reference": "Luke 17:16"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 9,
+        "col": 0,
+        "text": "\"Remember Lot's ___!\"",
+        "answer": "WIFE",
+        "reference": "Luke 17:32"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 9,
+        "col": 12,
+        "text": "They stood at a distance",
+        "answer": "LEPERS",
+        "reference": "Luke 17:12"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 10,
+        "col": 10,
+        "text": "A mustard one, a picture of faith",
+        "answer": "SEED",
+        "reference": "Luke 17:6"
+      },
+      {
+        "number": 16,
+        "direction": "across",
+        "row": 12,
+        "col": 0,
+        "text": "What the lepers cried out for",
+        "answer": "MERCY",
+        "reference": "Luke 17:13"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 13,
+        "col": 7,
+        "text": "Faith the size of its seed could uproot a mulberry tree",
+        "answer": "MUSTARD",
+        "reference": "Luke 17:6"
+      }
+    ]
+  },
+  {
+    "id": "daily-108",
+    "title": "Do Not Look Back",
+    "difficulty": "medium",
+    "verse": "But Lot\u2019s wife looked back, and she became a pillar of salt.",
+    "reference": "Genesis 19:26",
+    "publishDate": "2026-10-16",
+    "size": 15,
+    "grid": [
+      "........F.BLIND",
+      "........I.....A",
+      ".B......R..S..Y",
+      ".R.SQUARE..A..B",
+      ".E.O.....PILLAR",
+      "HANDS..L.L.T..E",
+      ".D.O.S.O.A....A",
+      "...MOUNTAINS..K",
+      ".....L...N.M...",
+      "...WIFE.F.DOOR.",
+      ".....U..E..K...",
+      "..ZOAR..ANGELS.",
+      "........S......",
+      "......GATEWAY..",
+      "..............."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 8,
+        "text": "It fell with sulfur from heaven",
+        "answer": "FIRE",
+        "reference": "Genesis 19:24"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 0,
+        "col": 10,
+        "text": "The men at the door were struck with this",
+        "answer": "BLIND",
+        "reference": "Genesis 19:11"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 0,
+        "col": 14,
+        "text": "At it, the angels hurried Lot along",
+        "answer": "DAYBREAK",
+        "reference": "Genesis 19:15"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 2,
+        "col": 1,
+        "text": "Lot baked it without yeast for them",
+        "answer": "BREAD",
+        "reference": "Genesis 19:3"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 2,
+        "col": 11,
+        "text": "She became a pillar of it",
+        "answer": "SALT",
+        "reference": "Genesis 19:26"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 3,
+        "col": 3,
+        "text": "\"We will spend the night in the ___,\" the visitors said",
+        "answer": "SQUARE",
+        "reference": "Genesis 19:2"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 3,
+        "col": 3,
+        "text": "City Lot lived in, destroyed for its wickedness",
+        "answer": "SODOM",
+        "reference": "Genesis 19:1"
+      },
+      {
+        "number": 7,
+        "direction": "across",
+        "row": 4,
+        "col": 9,
+        "text": "What Lot's wife became",
+        "answer": "PILLAR",
+        "reference": "Genesis 19:26"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 4,
+        "col": 9,
+        "text": "The whole one was overthrown",
+        "answer": "PLAIN",
+        "reference": "Genesis 19:25"
+      },
+      {
+        "number": 8,
+        "direction": "across",
+        "row": 5,
+        "col": 0,
+        "text": "The men seized Lot, his wife and daughters by these",
+        "answer": "HANDS",
+        "reference": "Genesis 19:16"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 5,
+        "col": 7,
+        "text": "Abraham's nephew, sitting in the gateway of Sodom",
+        "answer": "LOT",
+        "reference": "Genesis 19:1"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 6,
+        "col": 5,
+        "text": "Rained down with fire from the LORD",
+        "answer": "SULFUR",
+        "reference": "Genesis 19:24"
+      },
+      {
+        "number": 11,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "\"Flee to the ___, or you will be swept away!\"",
+        "answer": "MOUNTAINS",
+        "reference": "Genesis 19:17"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 7,
+        "col": 11,
+        "text": "Abraham saw it rising like a furnace",
+        "answer": "SMOKE",
+        "reference": "Genesis 19:28"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 9,
+        "col": 3,
+        "text": "She looked back",
+        "answer": "WIFE",
+        "reference": "Genesis 19:26"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 9,
+        "col": 8,
+        "text": "Lot prepared one for his guests",
+        "answer": "FEAST",
+        "reference": "Genesis 19:3"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 9,
+        "col": 10,
+        "text": "The mob could not find it",
+        "answer": "DOOR",
+        "reference": "Genesis 19:11"
+      },
+      {
+        "number": 16,
+        "direction": "across",
+        "row": 11,
+        "col": 2,
+        "text": "The small town Lot fled to instead",
+        "answer": "ZOAR",
+        "reference": "Genesis 19:22"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 11,
+        "col": 8,
+        "text": "Two of them arrived in the evening",
+        "answer": "ANGELS",
+        "reference": "Genesis 19:1"
+      },
+      {
+        "number": 18,
+        "direction": "across",
+        "row": 13,
+        "col": 6,
+        "text": "Where Lot was sitting when they came",
+        "answer": "GATEWAY",
+        "reference": "Genesis 19:1"
+      }
+    ]
+  },
+  {
+    "id": "daily-109",
+    "title": "Here Am I",
+    "difficulty": "medium",
+    "verse": "And I said: \u201cHere am I. Send me!\u201d",
+    "reference": "Isaiah 6:8",
+    "publishDate": "2026-10-17",
+    "size": 15,
+    "grid": [
+      "...........S...",
+      ".....TONGS.M.S.",
+      "........L.ROBE.",
+      "..W.A.S.O..K.N.",
+      ".COAL.THRONE.D.",
+      "..E.T.U.Y......",
+      "....A.M....L.I.",
+      "..SERAPHIM.I.S.",
+      "..I.....N..P.A.",
+      "..X....WINGS.I.",
+      ".....M..Q....A.",
+      ".....O..UZZIAH.",
+      ".....U..I......",
+      ".....T..TEMPLE.",
+      ".....HOLY......"
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 11,
+        "text": "It filled the temple",
+        "answer": "SMOKE",
+        "reference": "Isaiah 6:4"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 1,
+        "col": 5,
+        "text": "The coal was taken from the altar with these",
+        "answer": "TONGS",
+        "reference": "Isaiah 6:6"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 1,
+        "col": 8,
+        "text": "The whole earth is full of it",
+        "answer": "GLORY",
+        "reference": "Isaiah 6:3"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 1,
+        "col": 13,
+        "text": "\"Whom shall I ___?\"",
+        "answer": "SEND",
+        "reference": "Isaiah 6:8"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 2,
+        "col": 10,
+        "text": "Its train filled the temple",
+        "answer": "ROBE",
+        "reference": "Isaiah 6:1"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 3,
+        "col": 2,
+        "text": "\"___ is me, for I am ruined\"",
+        "answer": "WOE",
+        "reference": "Isaiah 6:5"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 3,
+        "col": 4,
+        "text": "Where the glowing coal came from",
+        "answer": "ALTAR",
+        "reference": "Isaiah 6:6"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 3,
+        "col": 6,
+        "text": "The holy seed would be one in the land",
+        "answer": "STUMP",
+        "reference": "Isaiah 6:13"
+      },
+      {
+        "number": 9,
+        "direction": "across",
+        "row": 4,
+        "col": 1,
+        "text": "A seraph flew with a glowing one",
+        "answer": "COAL",
+        "reference": "Isaiah 6:6"
+      },
+      {
+        "number": 10,
+        "direction": "across",
+        "row": 4,
+        "col": 6,
+        "text": "The Lord was seated on one, high and exalted",
+        "answer": "THRONE",
+        "reference": "Isaiah 6:1"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 6,
+        "col": 11,
+        "text": "\"I am a man of unclean ___\"",
+        "answer": "LIPS",
+        "reference": "Isaiah 6:5"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 6,
+        "col": 13,
+        "text": "Prophet who saw the Lord in the year King Uzziah died",
+        "answer": "ISAIAH",
+        "reference": "Isaiah 1:1"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 7,
+        "col": 2,
+        "text": "They stood above Him",
+        "answer": "SERAPHIM",
+        "reference": "Isaiah 6:2"
+      },
+      {
+        "number": 13,
+        "direction": "down",
+        "row": 7,
+        "col": 2,
+        "text": "Number of wings on each seraph",
+        "answer": "SIX",
+        "reference": "Isaiah 6:2"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 7,
+        "col": 8,
+        "text": "\"Your ___ is removed and your sin is atoned for\"",
+        "answer": "INIQUITY",
+        "reference": "Isaiah 6:7"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 9,
+        "col": 7,
+        "text": "Each seraph had six",
+        "answer": "WINGS",
+        "reference": "Isaiah 6:2"
+      },
+      {
+        "number": 16,
+        "direction": "down",
+        "row": 10,
+        "col": 5,
+        "text": "The coal touched it",
+        "answer": "MOUTH",
+        "reference": "Isaiah 6:7"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 11,
+        "col": 8,
+        "text": "King in the year of whose death the vision came",
+        "answer": "UZZIAH",
+        "reference": "Isaiah 6:1"
+      },
+      {
+        "number": 18,
+        "direction": "across",
+        "row": 13,
+        "col": 8,
+        "text": "Filled by the train of His robe",
+        "answer": "TEMPLE",
+        "reference": "Isaiah 6:1"
+      },
+      {
+        "number": 19,
+        "direction": "across",
+        "row": 14,
+        "col": 5,
+        "text": "Called out three times",
+        "answer": "HOLY",
+        "reference": "Isaiah 6:3"
+      }
+    ]
+  },
+  {
+    "id": "daily-110",
+    "title": "No Favoritism",
+    "difficulty": "medium",
+    "verse": "I now truly understand that God does not show favoritism,",
+    "reference": "Acts 10:34",
+    "publishDate": "2026-10-18",
+    "size": 15,
+    "grid": [
+      ".HUNGRY........",
+      "..N..........T.",
+      "..CAESAREA...H.",
+      "B.L.......C..R.",
+      "A.E.D...I.E..E.",
+      "PEACE.G.TONGUES",
+      "T.N.V.E.A.T...I",
+      "I..CORNELIUS..M",
+      "Z...U.T.I.R...O",
+      "E...T.I.A.I.S.N",
+      "D.....L.N.O.H..",
+      ".TRANCE..ANGEL.",
+      "..O...SEA...E..",
+      ".JOPPA......T..",
+      "..F............"
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 1,
+        "text": "Peter became this and wanted to eat",
+        "answer": "HUNGRY",
+        "reference": "Acts 10:10"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 2,
+        "text": "Peter said he had never eaten anything this",
+        "answer": "UNCLEAN",
+        "reference": "Acts 10:14"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 1,
+        "col": 13,
+        "text": "Times the vision happened",
+        "answer": "THREE",
+        "reference": "Acts 10:16"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 2,
+        "col": 2,
+        "text": "Where the centurion lived",
+        "answer": "CAESAREA",
+        "reference": "Acts 10:1"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 3,
+        "col": 0,
+        "text": "Peter ordered them to be this",
+        "answer": "BAPTIZED",
+        "reference": "Acts 10:48"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 3,
+        "col": 10,
+        "text": "Cornelius's rank",
+        "answer": "CENTURION",
+        "reference": "Acts 10:1"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 4,
+        "col": 4,
+        "text": "Cornelius and his household were this and God-fearing",
+        "answer": "DEVOUT",
+        "reference": "Acts 10:2"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 4,
+        "col": 8,
+        "text": "The regiment Cornelius served in",
+        "answer": "ITALIAN",
+        "reference": "Acts 10:1"
+      },
+      {
+        "number": 9,
+        "direction": "across",
+        "row": 5,
+        "col": 0,
+        "text": "The gospel of it, through Jesus Christ",
+        "answer": "PEACE",
+        "reference": "Acts 10:36"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 5,
+        "col": 6,
+        "text": "The gift of the Spirit was poured out on them too",
+        "answer": "GENTILES",
+        "reference": "Acts 10:45"
+      },
+      {
+        "number": 11,
+        "direction": "across",
+        "row": 5,
+        "col": 8,
+        "text": "They heard them speaking in these",
+        "answer": "TONGUES",
+        "reference": "Acts 10:46"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 5,
+        "col": 14,
+        "text": "Tanner with whom Peter was staying",
+        "answer": "SIMON",
+        "reference": "Acts 10:6"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "Centurion of the Italian Regiment",
+        "answer": "CORNELIUS",
+        "reference": "Acts 10:1"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 9,
+        "col": 12,
+        "text": "Lowered from heaven by its four corners",
+        "answer": "SHEET",
+        "reference": "Acts 10:11"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 11,
+        "col": 1,
+        "text": "Peter fell into one",
+        "answer": "TRANCE",
+        "reference": "Acts 10:10"
+      },
+      {
+        "number": 16,
+        "direction": "down",
+        "row": 11,
+        "col": 2,
+        "text": "Peter went up on it to pray",
+        "answer": "ROOF",
+        "reference": "Acts 10:9"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 11,
+        "col": 9,
+        "text": "He appeared to Cornelius in a vision",
+        "answer": "ANGEL",
+        "reference": "Acts 10:3"
+      },
+      {
+        "number": 18,
+        "direction": "across",
+        "row": 12,
+        "col": 6,
+        "text": "Simon's house was by it",
+        "answer": "SEA",
+        "reference": "Acts 10:6"
+      },
+      {
+        "number": 19,
+        "direction": "across",
+        "row": 13,
+        "col": 1,
+        "text": "Where Cornelius sent for Peter",
+        "answer": "JOPPA",
+        "reference": "Acts 10:5"
+      }
+    ]
+  },
+  {
+    "id": "daily-111",
+    "title": "Hezekiah's Tears",
+    "difficulty": "hard",
+    "verse": "I have heard your prayer; I have seen your tears. I will surely heal you.",
+    "reference": "2 Kings 20:5",
+    "publishDate": "2026-10-19",
+    "size": 15,
+    "grid": [
+      ".B..P......W...",
+      ".R..O......A...",
+      ".O..O..BABYLON.",
+      "ANGEL...S..L...",
+      ".Z....N.S.L....",
+      "TEARS.I.Y.A.B..",
+      "....T.N.R.C.O..",
+      ".F.HEZEKIAH.I..",
+      ".I..P.V.A.ILL..",
+      ".FIGS.E...S....",
+      ".T....H..SHADOW",
+      "LETTER...N.....",
+      ".E.....ISAIAH..",
+      ".N.......K.....",
+      "....TRUSTED...."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 1,
+        "text": "The serpent Hezekiah broke was made of this",
+        "answer": "BRONZE",
+        "reference": "2 Kings 18:4"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 4,
+        "text": "He made it and the tunnel to bring water into the city",
+        "answer": "POOL",
+        "reference": "2 Kings 20:20"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 0,
+        "col": 11,
+        "text": "Hezekiah turned his face to it and prayed",
+        "answer": "WALL",
+        "reference": "2 Kings 20:2"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 2,
+        "col": 7,
+        "text": "Envoys came from here bearing letters and a gift",
+        "answer": "BABYLON",
+        "reference": "2 Kings 20:12"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 2,
+        "col": 8,
+        "text": "Empire whose king came against Judah",
+        "answer": "ASSYRIA",
+        "reference": "2 Kings 18:13"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "He struck down the Assyrian camp in one night",
+        "answer": "ANGEL",
+        "reference": "2 Kings 19:35"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 4,
+        "col": 6,
+        "text": "Where Sennacherib went home and stayed",
+        "answer": "NINEVEH",
+        "reference": "2 Kings 19:36"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 4,
+        "col": 10,
+        "text": "City from which the Assyrian king sent his officials",
+        "answer": "LACHISH",
+        "reference": "2 Kings 18:17"
+      },
+      {
+        "number": 9,
+        "direction": "across",
+        "row": 5,
+        "col": 0,
+        "text": "God said, \"I have seen your ___\"",
+        "answer": "TEARS",
+        "reference": "2 Kings 20:5"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 5,
+        "col": 4,
+        "text": "The shadow went back ten of these",
+        "answer": "STEPS",
+        "reference": "2 Kings 20:11"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 5,
+        "col": 12,
+        "text": "The poultice was applied to it",
+        "answer": "BOIL",
+        "reference": "2 Kings 20:7"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 7,
+        "col": 1,
+        "text": "Years added to his life",
+        "answer": "FIFTEEN",
+        "reference": "2 Kings 20:6"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "King of Judah: none like him before or after",
+        "answer": "HEZEKIAH",
+        "reference": "2 Kings 18:5"
+      },
+      {
+        "number": 14,
+        "direction": "across",
+        "row": 8,
+        "col": 10,
+        "text": "Hezekiah became this, to the point of death",
+        "answer": "ILL",
+        "reference": "2 Kings 20:1"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 9,
+        "col": 1,
+        "text": "A poultice of them was laid on the boil",
+        "answer": "FIGS",
+        "reference": "2 Kings 20:7"
+      },
+      {
+        "number": 16,
+        "direction": "across",
+        "row": 10,
+        "col": 9,
+        "text": "It went back ten steps as a sign",
+        "answer": "SHADOW",
+        "reference": "2 Kings 20:11"
+      },
+      {
+        "number": 16,
+        "direction": "down",
+        "row": 10,
+        "col": 9,
+        "text": "Bronze one called Nehushtan, demolished by the king",
+        "answer": "SNAKE",
+        "reference": "2 Kings 18:4"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 11,
+        "col": 0,
+        "text": "Hezekiah spread it out before the LORD",
+        "answer": "LETTER",
+        "reference": "2 Kings 19:14"
+      },
+      {
+        "number": 18,
+        "direction": "across",
+        "row": 12,
+        "col": 7,
+        "text": "Prophet son of Amoz who sent word to the king",
+        "answer": "ISAIAH",
+        "reference": "2 Kings 19:20"
+      },
+      {
+        "number": 19,
+        "direction": "across",
+        "row": 14,
+        "col": 4,
+        "text": "How Hezekiah held to the LORD",
+        "answer": "TRUSTED",
+        "reference": "2 Kings 18:5"
+      }
+    ]
+  },
+  {
+    "id": "daily-112",
+    "title": "The Book Found",
+    "difficulty": "hard",
+    "verse": "I have found the Book of the Law in the house of the LORD!",
+    "reference": "2 Kings 22:8",
+    "publishDate": "2026-10-20",
+    "size": 15,
+    "grid": [
+      ".H.............",
+      ".I.............",
+      "CLOTHES......M.",
+      ".K....C..BETHEL",
+      ".I.KIDRON.I..G.",
+      "LAW...I...G..I.",
+      ".H..M.B.B.H..D.",
+      "R..COVENANT..D.",
+      "E...N...A..S.O.",
+      "PEACE.HULDAH..P",
+      "A...Y......A..I",
+      "I......B...P..L",
+      "R.....JOSIAH..L",
+      ".......O...A..A",
+      ".......K.TENDER"
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 1,
+        "text": "High priest who found the Book",
+        "answer": "HILKIAH",
+        "reference": "2 Kings 22:8"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 2,
+        "col": 0,
+        "text": "The king tore them when he heard the words",
+        "answer": "CLOTHES",
+        "reference": "2 Kings 22:11"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 2,
+        "col": 6,
+        "text": "Shaphan's office",
+        "answer": "SCRIBE",
+        "reference": "2 Kings 22:8"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 2,
+        "col": 13,
+        "text": "Where Pharaoh Neco killed Josiah",
+        "answer": "MEGIDDO",
+        "reference": "2 Kings 23:29"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 3,
+        "col": 9,
+        "text": "Its altar was torn down",
+        "answer": "BETHEL",
+        "reference": "2 Kings 23:15"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 3,
+        "col": 10,
+        "text": "Josiah's age when he became king",
+        "answer": "EIGHT",
+        "reference": "2 Kings 22:1"
+      },
+      {
+        "number": 7,
+        "direction": "across",
+        "row": 4,
+        "col": 3,
+        "text": "Fields where the idols were burned",
+        "answer": "KIDRON",
+        "reference": "2 Kings 23:4"
+      },
+      {
+        "number": 8,
+        "direction": "across",
+        "row": 5,
+        "col": 0,
+        "text": "The Book found was the Book of the ___",
+        "answer": "LAW",
+        "reference": "2 Kings 22:8"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 6,
+        "col": 4,
+        "text": "Hilkiah was to count it for the workers",
+        "answer": "MONEY",
+        "reference": "2 Kings 22:4"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 6,
+        "col": 8,
+        "text": "Articles made for him were burned",
+        "answer": "BAAL",
+        "reference": "2 Kings 23:4"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 7,
+        "col": 0,
+        "text": "Josiah ordered it for the temple",
+        "answer": "REPAIR",
+        "reference": "2 Kings 22:5"
+      },
+      {
+        "number": 12,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "Renewed by king and people before the LORD",
+        "answer": "COVENANT",
+        "reference": "2 Kings 23:3"
+      },
+      {
+        "number": 13,
+        "direction": "down",
+        "row": 8,
+        "col": 11,
+        "text": "Scribe who read the Book to the king",
+        "answer": "SHAPHAN",
+        "reference": "2 Kings 22:10"
+      },
+      {
+        "number": 14,
+        "direction": "across",
+        "row": 9,
+        "col": 0,
+        "text": "Josiah would be gathered to his grave in it",
+        "answer": "PEACE",
+        "reference": "2 Kings 22:20"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 9,
+        "col": 6,
+        "text": "Prophetess the king's men consulted",
+        "answer": "HULDAH",
+        "reference": "2 Kings 22:14"
+      },
+      {
+        "number": 16,
+        "direction": "down",
+        "row": 9,
+        "col": 14,
+        "text": "The king stood by it and made a covenant",
+        "answer": "PILLAR",
+        "reference": "2 Kings 23:3"
+      },
+      {
+        "number": 17,
+        "direction": "down",
+        "row": 11,
+        "col": 7,
+        "text": "Of the Law, found in the house of the LORD",
+        "answer": "BOOK",
+        "reference": "2 Kings 22:8"
+      },
+      {
+        "number": 18,
+        "direction": "across",
+        "row": 12,
+        "col": 6,
+        "text": "King at eight years old",
+        "answer": "JOSIAH",
+        "reference": "2 Kings 22:1"
+      },
+      {
+        "number": 19,
+        "direction": "across",
+        "row": 14,
+        "col": 9,
+        "text": "Josiah's heart was this, and he humbled himself",
+        "answer": "TENDER",
+        "reference": "2 Kings 22:19"
+      }
+    ]
+  },
+  {
     "id": "mini-031",
     "title": "A Bride for Isaac",
     "difficulty": "easy",
@@ -27009,6 +29053,711 @@
         "text": "Peter would do it three times",
         "answer": "DENY",
         "reference": "Luke 22:61"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-108",
+    "title": "An Understanding Heart",
+    "difficulty": "easy",
+    "verse": "Therefore give Your servant an understanding heart to judge Your people.",
+    "reference": "1 Kings 3:9",
+    "publishDate": "2026-10-16",
+    "size": 7,
+    "grid": [
+      "ASK....",
+      ".W.S.H.",
+      "SOLOMON",
+      ".R.N.N.",
+      ".D...O.",
+      "..HEART",
+      "......."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 0,
+        "text": "\"___, and I will give it to you!\"",
+        "answer": "ASK",
+        "reference": "1 Kings 3:5"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 1,
+        "text": "\"Bring me a ___\"",
+        "answer": "SWORD",
+        "reference": "1 Kings 3:24"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 1,
+        "col": 3,
+        "text": "Both women said the living one was their ___",
+        "answer": "SON",
+        "reference": "1 Kings 3:22"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 1,
+        "col": 5,
+        "text": "Given too, with riches",
+        "answer": "HONOR",
+        "reference": "1 Kings 3:13"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 2,
+        "col": 0,
+        "text": "King to whom the LORD appeared in a dream",
+        "answer": "SOLOMON",
+        "reference": "1 Kings 3:5"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 5,
+        "col": 2,
+        "text": "Solomon asked for an understanding one",
+        "answer": "HEART",
+        "reference": "1 Kings 3:9"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-109",
+    "title": "Chariot of Fire",
+    "difficulty": "easy",
+    "verse": "Elijah went up into heaven in a whirlwind.",
+    "reference": "2 Kings 2:11",
+    "publishDate": "2026-10-17",
+    "size": 7,
+    "grid": [
+      "F...C..",
+      "I.E.L..",
+      "R.L.O..",
+      "ELIJAH.",
+      "..S.K..",
+      "..H....",
+      ".SALT.."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 0,
+        "text": "The chariot and horses were made of it",
+        "answer": "FIRE",
+        "reference": "2 Kings 2:11"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 4,
+        "text": "Rolled up and used to strike the water",
+        "answer": "CLOAK",
+        "reference": "2 Kings 2:8"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 1,
+        "col": 2,
+        "text": "He would not leave his master",
+        "answer": "ELISHA",
+        "reference": "2 Kings 2:2"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "Prophet taken up into heaven",
+        "answer": "ELIJAH",
+        "reference": "2 Kings 2:11"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 6,
+        "col": 1,
+        "text": "Thrown into the spring to heal the water",
+        "answer": "SALT",
+        "reference": "2 Kings 2:21"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-110",
+    "title": "Fishers of Men",
+    "difficulty": "easy",
+    "verse": "From now on you will catch men.",
+    "reference": "Luke 5:10",
+    "publishDate": "2026-10-18",
+    "size": 7,
+    "grid": [
+      ".......",
+      "J......",
+      "AFRAID.",
+      "M....E.",
+      "E...MEN",
+      "SINK.P.",
+      "......."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 1,
+        "col": 0,
+        "text": "Son of Zebedee, one of Simon's partners",
+        "answer": "JAMES",
+        "reference": "Luke 5:10"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 2,
+        "col": 0,
+        "text": "\"Do not be ___,\" Jesus said to Simon",
+        "answer": "AFRAID",
+        "reference": "Luke 5:10"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 2,
+        "col": 5,
+        "text": "\"Put out into ___ water\"",
+        "answer": "DEEP",
+        "reference": "Luke 5:4"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 4,
+        "col": 4,
+        "text": "\"From now on you will catch ___\"",
+        "answer": "MEN",
+        "reference": "Luke 5:10"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 5,
+        "col": 0,
+        "text": "Both boats began to do this",
+        "answer": "SINK",
+        "reference": "Luke 5:7"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-111",
+    "title": "Little Girl, Get Up",
+    "difficulty": "easy",
+    "verse": "Talitha koum!",
+    "reference": "Mark 5:41",
+    "publishDate": "2026-10-19",
+    "size": 7,
+    "grid": [
+      "...EAT.",
+      "..W.S.T",
+      "..A.L.W",
+      "BELIEVE",
+      "..K.E.L",
+      "....P.V",
+      "......E"
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 3,
+        "text": "Jesus said to give her something to do this",
+        "answer": "EAT",
+        "reference": "Mark 5:43"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 4,
+        "text": "\"The child is not dead, but ___\"",
+        "answer": "ASLEEP",
+        "reference": "Mark 5:39"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 1,
+        "col": 2,
+        "text": "She got up and began to do this",
+        "answer": "WALK",
+        "reference": "Mark 5:42"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 1,
+        "col": 6,
+        "text": "Years the woman had suffered bleeding",
+        "answer": "TWELVE",
+        "reference": "Mark 5:25"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "\"Do not be afraid; just ___\"",
+        "answer": "BELIEVE",
+        "reference": "Mark 5:36"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-112",
+    "title": "Peter Set Free",
+    "difficulty": "easy",
+    "verse": "Suddenly an angel of the Lord appeared and a light shone in the cell.",
+    "reference": "Acts 12:7",
+    "publishDate": "2026-10-20",
+    "size": 7,
+    "grid": [
+      "..I...P",
+      "MARY..R",
+      "..O.G.I",
+      "SANDALS",
+      "....T.O",
+      "VOICE.N",
+      "......."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 2,
+        "text": "The gate that opened by itself was made of it",
+        "answer": "IRON",
+        "reference": "Acts 12:10"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 6,
+        "text": "Where Peter was kept",
+        "answer": "PRISON",
+        "reference": "Acts 12:5"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 1,
+        "col": 0,
+        "text": "Mother of John Mark, where many were praying",
+        "answer": "MARY",
+        "reference": "Acts 12:12"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 2,
+        "col": 4,
+        "text": "It led into the city and opened by itself",
+        "answer": "GATE",
+        "reference": "Acts 12:10"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "\"Get dressed and put on your ___\"",
+        "answer": "SANDALS",
+        "reference": "Acts 12:8"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 5,
+        "col": 0,
+        "text": "Rhoda recognized Peter's, and forgot to open the gate",
+        "answer": "VOICE",
+        "reference": "Acts 12:14"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-113",
+    "title": "Pick Up Your Mat",
+    "difficulty": "easy",
+    "verse": "Get up, pick up your mat, and walk.",
+    "reference": "John 5:8",
+    "publishDate": "2026-10-21",
+    "size": 7,
+    "grid": [
+      "...WALK",
+      ".....A.",
+      "..F..M.",
+      "STIRRED",
+      "..V....",
+      ".WELL..",
+      "......."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 3,
+        "text": "\"Get up, pick up your mat, and ___\"",
+        "answer": "WALK",
+        "reference": "John 5:8"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 5,
+        "text": "Others who lay there were this",
+        "answer": "LAME",
+        "reference": "John 5:3"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 2,
+        "col": 2,
+        "text": "Covered colonnades around the pool",
+        "answer": "FIVE",
+        "reference": "John 5:2"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "The water when someone went in first",
+        "answer": "STIRRED",
+        "reference": "John 5:7"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 5,
+        "col": 1,
+        "text": "\"Do you want to get ___?\"",
+        "answer": "WELL",
+        "reference": "John 5:6"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-114",
+    "title": "Silver or Gold",
+    "difficulty": "easy",
+    "verse": "Silver or gold I do not have, but what I have I give you.",
+    "reference": "Acts 3:6",
+    "publishDate": "2026-10-22",
+    "size": 7,
+    "grid": [
+      ".....J.",
+      "G..LOOK",
+      "O.W..H.",
+      "LEAPING",
+      "D.L...A",
+      "..K...T",
+      "...LAME"
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 5,
+        "text": "He went up to the temple with Peter",
+        "answer": "JOHN",
+        "reference": "Acts 3:1"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 1,
+        "col": 0,
+        "text": "Peter had no silver or this",
+        "answer": "GOLD",
+        "reference": "Acts 3:6"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 1,
+        "col": 3,
+        "text": "\"___ at us!\" Peter said",
+        "answer": "LOOK",
+        "reference": "Acts 3:4"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 2,
+        "col": 2,
+        "text": "\"In the name of Jesus Christ of Nazareth, get up and ___!\"",
+        "answer": "WALK",
+        "reference": "Acts 3:6"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "He went into the temple walking and doing this",
+        "answer": "LEAPING",
+        "reference": "Acts 3:8"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 3,
+        "col": 6,
+        "text": "Called Beautiful",
+        "answer": "GATE",
+        "reference": "Acts 3:2"
+      },
+      {
+        "number": 7,
+        "direction": "across",
+        "row": 6,
+        "col": 3,
+        "text": "The man had been this from birth",
+        "answer": "LAME",
+        "reference": "Acts 3:2"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-115",
+    "title": "Tabitha, Get Up",
+    "difficulty": "easy",
+    "verse": "Tabitha, get up!",
+    "reference": "Acts 9:40",
+    "publishDate": "2026-10-23",
+    "size": 7,
+    "grid": [
+      ".TANNER",
+      ".....Y.",
+      ".J...E.",
+      "DORCAS.",
+      ".P.....",
+      "UPPER..",
+      ".A....."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 1,
+        "text": "Simon, with whom Peter stayed",
+        "answer": "TANNER",
+        "reference": "Acts 9:43"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 5,
+        "text": "She opened them and saw Peter",
+        "answer": "EYES",
+        "reference": "Acts 9:40"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 2,
+        "col": 1,
+        "text": "Town where Tabitha lived",
+        "answer": "JOPPA",
+        "reference": "Acts 9:36"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "Tabitha's name in Greek",
+        "answer": "DORCAS",
+        "reference": "Acts 9:36"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 5,
+        "col": 0,
+        "text": "The room where she was laid",
+        "answer": "UPPER",
+        "reference": "Acts 9:37"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-116",
+    "title": "Two Small Coins",
+    "difficulty": "easy",
+    "verse": "This poor widow has put more than all the others into the treasury.",
+    "reference": "Mark 12:43",
+    "publishDate": "2026-10-24",
+    "size": 7,
+    "grid": [
+      ".....C.",
+      "...POOR",
+      ".R...I.",
+      "SITTING",
+      ".C.W.S.",
+      ".H.O...",
+      "......."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 5,
+        "text": "Small copper ones she put in",
+        "answer": "COINS",
+        "reference": "Mark 12:42"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 1,
+        "col": 3,
+        "text": "How the widow was",
+        "answer": "POOR",
+        "reference": "Mark 12:42"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 2,
+        "col": 1,
+        "text": "Many of these put in large amounts",
+        "answer": "RICH",
+        "reference": "Mark 12:41"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "Jesus was ___ opposite the treasury",
+        "answer": "SITTING",
+        "reference": "Mark 12:41"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 3,
+        "col": 3,
+        "text": "Number of small copper coins",
+        "answer": "TWO",
+        "reference": "Mark 12:42"
+      }
+    ],
+    "kind": "mini"
+  },
+  {
+    "id": "mini-117",
+    "title": "Young Man, Get Up",
+    "difficulty": "easy",
+    "verse": "\u201cYoung man,\u201d He said, \u201cI tell you, get up!\u201d",
+    "reference": "Luke 7:14",
+    "publishDate": "2026-10-25",
+    "size": 7,
+    "grid": [
+      "...W.G.",
+      ".AWE.A.",
+      "S..E.T.",
+      "PROPHET",
+      "E.N....",
+      "A.L....",
+      "K.Y...."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 3,
+        "text": "\"Do not ___,\" Jesus told her",
+        "answer": "WEEP",
+        "reference": "Luke 7:13"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 5,
+        "text": "He approached the town's",
+        "answer": "GATE",
+        "reference": "Luke 7:12"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 1,
+        "col": 1,
+        "text": "A sense of it swept over them all",
+        "answer": "AWE",
+        "reference": "Luke 7:16"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 2,
+        "col": 0,
+        "text": "The dead man sat up and began to do this",
+        "answer": "SPEAK",
+        "reference": "Luke 7:15"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "\"A great ___ has appeared among us!\"",
+        "answer": "PROPHET",
+        "reference": "Luke 7:16"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 3,
+        "col": 2,
+        "text": "The dead man was his mother's ___ son",
+        "answer": "ONLY",
+        "reference": "Luke 7:12"
       }
     ],
     "kind": "mini"
