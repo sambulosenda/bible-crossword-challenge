@@ -73,6 +73,17 @@ struct ScheduleHistoryTests {
         }
     }
 
+    /// Adding dailies must not move the verse of the day: it is a modulo
+    /// over its pool, so the pool stays the shipped 92.
+    @Test func verseOfTheDayDrawsOnlyFromTheShippedDailies() {
+        let shipped = Set(legacyDailies.map(\.id))
+        for offset in 0..<200 {
+            let date = calendar.date(byAdding: .day, value: offset, to: noon("2026-11-01"))!
+            let verse = provider.verseOfTheDay(on: date, excluding: nil, calendar: calendar)
+            #expect(verse.map { shipped.contains($0.id) } == true, "verse \(offset)")
+        }
+    }
+
     @Test func datesPastTheScheduleFallBackToTheRotation() {
         let far = noon("2030-01-01")
         #expect(provider.dailyPuzzle(for: far, calendar: calendar)?.id == legacy(provider.puzzles, far))

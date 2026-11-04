@@ -222,8 +222,8 @@
     "rotation" : {
       "epochDay" : "2026-07-01",
       "poolCounts" : {
-        "all" : 252,
-        "daily" : 92,
+        "all" : 262,
+        "daily" : 102,
         "mini" : 97,
         "sunday" : 17
       },

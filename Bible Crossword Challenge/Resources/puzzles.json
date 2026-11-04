@@ -17777,6 +17777,2086 @@
     ]
   },
   {
+    "id": "daily-093",
+    "title": "Am I My Brother's Keeper?",
+    "difficulty": "easy",
+    "verse": "And the LORD said to Cain, \u201cWhere is your brother Abel?\u201d \u201cI do not know!\u201d he answered. \u201cAm I my brother\u2019s keeper?\u201d",
+    "reference": "Genesis 4:9",
+    "publishDate": "2026-10-01",
+    "size": 15,
+    "grid": [
+      ".......B.......",
+      ".......L.......",
+      ".....E.O.......",
+      ".....V.O....K..",
+      "...FIELD..SHEEP",
+      "ABEL....S...E..",
+      "D..OFFERING.P..",
+      "A..C..N.N.R.E..",
+      "MARK.NOD.DOOR..",
+      "......C...U..E.",
+      "...SETH.C.N..D.",
+      "...O...WANDERER",
+      "...I....I....N.",
+      "...L....N......",
+      "..............."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 7,
+        "text": "Its voice cried out to God from the ground",
+        "answer": "BLOOD",
+        "reference": "Genesis 4:10"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 2,
+        "col": 5,
+        "text": "She said, \"With the help of the LORD I have brought forth a man\"",
+        "answer": "EVE",
+        "reference": "Genesis 4:1"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 3,
+        "col": 12,
+        "text": "\"Am I my brother's ___?\"",
+        "answer": "KEEPER",
+        "reference": "Genesis 4:9"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 4,
+        "col": 3,
+        "text": "\"Let us go out to the ___\"",
+        "answer": "FIELD",
+        "reference": "Genesis 4:8"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 4,
+        "col": 3,
+        "text": "Abel gave the best portions of the firstborn of his",
+        "answer": "FLOCK",
+        "reference": "Genesis 4:4"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 4,
+        "col": 10,
+        "text": "What Abel kept",
+        "answer": "SHEEP",
+        "reference": "Genesis 4:2"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 5,
+        "col": 0,
+        "text": "Younger brother who kept sheep",
+        "answer": "ABEL",
+        "reference": "Genesis 4:2"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 5,
+        "col": 0,
+        "text": "Father of the two brothers",
+        "answer": "ADAM",
+        "reference": "Genesis 4:1"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 5,
+        "col": 8,
+        "text": "It was crouching at Cain's door",
+        "answer": "SIN",
+        "reference": "Genesis 4:7"
+      },
+      {
+        "number": 8,
+        "direction": "across",
+        "row": 6,
+        "col": 3,
+        "text": "The LORD looked with favor on Abel and his",
+        "answer": "OFFERING",
+        "reference": "Genesis 4:4"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 6,
+        "col": 6,
+        "text": "Cain's son, and the city named after him",
+        "answer": "ENOCH",
+        "reference": "Genesis 4:17"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 6,
+        "col": 10,
+        "text": "It opened its mouth to receive a brother's blood",
+        "answer": "GROUND",
+        "reference": "Genesis 4:11"
+      },
+      {
+        "number": 11,
+        "direction": "across",
+        "row": 8,
+        "col": 0,
+        "text": "The LORD placed one on Cain to protect him",
+        "answer": "MARK",
+        "reference": "Genesis 4:15"
+      },
+      {
+        "number": 12,
+        "direction": "across",
+        "row": 8,
+        "col": 5,
+        "text": "Land east of Eden where Cain settled",
+        "answer": "NOD",
+        "reference": "Genesis 4:16"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 8,
+        "col": 9,
+        "text": "Where sin crouched, desiring Cain",
+        "answer": "DOOR",
+        "reference": "Genesis 4:7"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 9,
+        "col": 13,
+        "text": "Nod lay east of it",
+        "answer": "EDEN",
+        "reference": "Genesis 4:16"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 10,
+        "col": 3,
+        "text": "Son given to Eve in place of Abel",
+        "answer": "SETH",
+        "reference": "Genesis 4:25"
+      },
+      {
+        "number": 15,
+        "direction": "down",
+        "row": 10,
+        "col": 3,
+        "text": "Cain brought some of its fruit as an offering",
+        "answer": "SOIL",
+        "reference": "Genesis 4:3"
+      },
+      {
+        "number": 16,
+        "direction": "down",
+        "row": 10,
+        "col": 8,
+        "text": "Firstborn son of Adam and Eve, a tiller of the soil",
+        "answer": "CAIN",
+        "reference": "Genesis 4:2"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 11,
+        "col": 7,
+        "text": "Cain would be a fugitive and this on the earth",
+        "answer": "WANDERER",
+        "reference": "Genesis 4:12"
+      }
+    ]
+  },
+  {
+    "id": "daily-094",
+    "title": "Born Again",
+    "difficulty": "easy",
+    "verse": "For God so loved the world that He gave His one and only Son, that everyone who believes in Him shall not perish but have eternal life.",
+    "reference": "John 3:16",
+    "publishDate": "2026-10-02",
+    "size": 15,
+    "grid": [
+      "DARKNESS.......",
+      "......O.PERISH.",
+      "....TRUTH......",
+      ".W....N.AGAIN..",
+      ".O....D.R......",
+      ".MOSES.LIFE....",
+      ".B.O..W.S......",
+      "S..NICODEMUS...",
+      "P.....R.E..N..L",
+      "I...N.L...RABBI",
+      "R..WIND....K..G",
+      "I...G...WATER.H",
+      "TEACHER.......T",
+      "....T..........",
+      "..............."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 0,
+        "text": "Men loved it instead of the light",
+        "answer": "DARKNESS",
+        "reference": "John 3:19"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 6,
+        "text": "You hear it, but do not know where the wind comes from",
+        "answer": "SOUND",
+        "reference": "John 3:8"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 1,
+        "col": 8,
+        "text": "Whoever believes shall not",
+        "answer": "PERISH",
+        "reference": "John 3:16"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 1,
+        "col": 8,
+        "text": "Nicodemus was one, a ruler of the Jews",
+        "answer": "PHARISEE",
+        "reference": "John 3:1"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 2,
+        "col": 4,
+        "text": "Whoever practices it comes into the light",
+        "answer": "TRUTH",
+        "reference": "John 3:21"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 3,
+        "col": 1,
+        "text": "Can a man enter his mother's a second time?",
+        "answer": "WOMB",
+        "reference": "John 3:4"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 3,
+        "col": 8,
+        "text": "Unless one is born this way, he cannot see the kingdom",
+        "answer": "AGAIN",
+        "reference": "John 3:3"
+      },
+      {
+        "number": 7,
+        "direction": "across",
+        "row": 5,
+        "col": 1,
+        "text": "He lifted up the snake in the wilderness",
+        "answer": "MOSES",
+        "reference": "John 3:14"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 5,
+        "col": 3,
+        "text": "God gave His one and only",
+        "answer": "SON",
+        "reference": "John 3:16"
+      },
+      {
+        "number": 9,
+        "direction": "across",
+        "row": 5,
+        "col": 7,
+        "text": "Eternal, for everyone who believes",
+        "answer": "LIFE",
+        "reference": "John 3:16"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 6,
+        "col": 6,
+        "text": "God so loved it",
+        "answer": "WORLD",
+        "reference": "John 3:16"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 7,
+        "col": 0,
+        "text": "What is born of it is spirit",
+        "answer": "SPIRIT",
+        "reference": "John 3:6"
+      },
+      {
+        "number": 12,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "Pharisee who came to Jesus at night",
+        "answer": "NICODEMUS",
+        "reference": "John 3:1"
+      },
+      {
+        "number": 13,
+        "direction": "down",
+        "row": 7,
+        "col": 11,
+        "text": "Lifted up in the wilderness, a sign of the Son",
+        "answer": "SNAKE",
+        "reference": "John 3:14"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 8,
+        "col": 14,
+        "text": "It has come into the world, but men loved darkness",
+        "answer": "LIGHT",
+        "reference": "John 3:19"
+      },
+      {
+        "number": 15,
+        "direction": "down",
+        "row": 9,
+        "col": 4,
+        "text": "When Nicodemus came",
+        "answer": "NIGHT",
+        "reference": "John 3:2"
+      },
+      {
+        "number": 16,
+        "direction": "across",
+        "row": 9,
+        "col": 10,
+        "text": "How Nicodemus addressed Jesus",
+        "answer": "RABBI",
+        "reference": "John 3:2"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 10,
+        "col": 3,
+        "text": "It blows where it wishes",
+        "answer": "WIND",
+        "reference": "John 3:8"
+      },
+      {
+        "number": 18,
+        "direction": "across",
+        "row": 11,
+        "col": 8,
+        "text": "Born of it and the Spirit",
+        "answer": "WATER",
+        "reference": "John 3:5"
+      },
+      {
+        "number": 19,
+        "direction": "across",
+        "row": 12,
+        "col": 0,
+        "text": "\"We know that You are a ___ who has come from God\"",
+        "answer": "TEACHER",
+        "reference": "John 3:2"
+      }
+    ]
+  },
+  {
+    "id": "daily-095",
+    "title": "Hannah's Prayer",
+    "difficulty": "easy",
+    "verse": "I prayed for this boy, and since the LORD has granted me what I asked of Him,",
+    "reference": "1 Samuel 1:27",
+    "publishDate": "2026-10-03",
+    "size": 15,
+    "grid": [
+      "....SHILOH.....",
+      ".....A.....S.B.",
+      "...V.N.....A.U.",
+      "...O.N...TEMPLE",
+      "...WEANED..U.L.",
+      ".F...H..ROBE...",
+      "ELI...L.U..L...",
+      ".O.PENINNAH....",
+      ".U..L.P.K.O...P",
+      ".ROCK.S...RAZOR",
+      "....A.....N...A",
+      "....N.........Y",
+      "...BARREN.....E",
+      "....H.....EPHOD",
+      "..............."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 4,
+        "text": "Where the family went up each year to worship",
+        "answer": "SHILOH",
+        "reference": "1 Samuel 1:3"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 5,
+        "text": "She wept and would not eat because she had no child",
+        "answer": "HANNAH",
+        "reference": "1 Samuel 1:7"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 1,
+        "col": 11,
+        "text": "Named because \"I have asked for him from the LORD\"",
+        "answer": "SAMUEL",
+        "reference": "1 Samuel 1:20"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 1,
+        "col": 13,
+        "text": "Brought, three years old, when she presented the boy",
+        "answer": "BULL",
+        "reference": "1 Samuel 1:24"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 2,
+        "col": 3,
+        "text": "She made one: the son would be given to the LORD",
+        "answer": "VOW",
+        "reference": "1 Samuel 1:11"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 3,
+        "col": 9,
+        "text": "Eli sat by its doorpost",
+        "answer": "TEMPLE",
+        "reference": "1 Samuel 1:9"
+      },
+      {
+        "number": 7,
+        "direction": "across",
+        "row": 4,
+        "col": 3,
+        "text": "She stayed home until the boy was this",
+        "answer": "WEANED",
+        "reference": "1 Samuel 1:22"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 4,
+        "col": 8,
+        "text": "What Eli wrongly took her to be",
+        "answer": "DRUNK",
+        "reference": "1 Samuel 1:13"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 5,
+        "col": 1,
+        "text": "An ephah of it came with the offering",
+        "answer": "FLOUR",
+        "reference": "1 Samuel 1:24"
+      },
+      {
+        "number": 10,
+        "direction": "across",
+        "row": 5,
+        "col": 8,
+        "text": "She made her son a little one each year",
+        "answer": "ROBE",
+        "reference": "1 Samuel 2:19"
+      },
+      {
+        "number": 11,
+        "direction": "across",
+        "row": 6,
+        "col": 0,
+        "text": "Priest who thought she was drunk",
+        "answer": "ELI",
+        "reference": "1 Samuel 1:13"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 6,
+        "col": 6,
+        "text": "They moved, but her voice was not heard",
+        "answer": "LIPS",
+        "reference": "1 Samuel 1:13"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "Elkanah's other wife, who had children",
+        "answer": "PENINNAH",
+        "reference": "1 Samuel 1:2"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 7,
+        "col": 4,
+        "text": "Her husband, who asked, \"Am I not better to you than ten sons?\"",
+        "answer": "ELKANAH",
+        "reference": "1 Samuel 1:8"
+      },
+      {
+        "number": 15,
+        "direction": "down",
+        "row": 7,
+        "col": 10,
+        "text": "\"My ___ is exalted in the LORD\"",
+        "answer": "HORN",
+        "reference": "1 Samuel 2:1"
+      },
+      {
+        "number": 16,
+        "direction": "down",
+        "row": 8,
+        "col": 14,
+        "text": "\"I ___ for this boy\"",
+        "answer": "PRAYED",
+        "reference": "1 Samuel 1:27"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 9,
+        "col": 1,
+        "text": "\"There is no ___ like our God\"",
+        "answer": "ROCK",
+        "reference": "1 Samuel 2:2"
+      },
+      {
+        "number": 18,
+        "direction": "across",
+        "row": 9,
+        "col": 10,
+        "text": "Never to be used on the promised son's head",
+        "answer": "RAZOR",
+        "reference": "1 Samuel 1:11"
+      },
+      {
+        "number": 19,
+        "direction": "across",
+        "row": 12,
+        "col": 3,
+        "text": "\"The ___ woman gives birth to seven\"",
+        "answer": "BARREN",
+        "reference": "1 Samuel 2:5"
+      },
+      {
+        "number": 20,
+        "direction": "across",
+        "row": 13,
+        "col": 10,
+        "text": "Young Samuel ministered wearing a linen one",
+        "answer": "EPHOD",
+        "reference": "1 Samuel 2:18"
+      }
+    ]
+  },
+  {
+    "id": "daily-096",
+    "title": "Living Water",
+    "difficulty": "easy",
+    "verse": "But whoever drinks the water I give him will never thirst. Indeed, the water I give him will become in him a fount of water springing up to eternal life.",
+    "reference": "John 4:14",
+    "publishDate": "2026-10-04",
+    "size": 15,
+    "grid": [
+      "..S.F..........",
+      ".JACOB.HUSBAND.",
+      "..M.O..A.....E.",
+      "..A.D.DRINK..E.",
+      "..R....V.....P.",
+      "THIRST.E.......",
+      "..A..R.S.F....S",
+      ".L.MOUNTAIN.P.A",
+      "FIVE.T...E..R.V",
+      ".V.S.H.WELL.O.I",
+      ".I.S...E.D..P.O",
+      ".N.I...A.SYCHAR",
+      ".G.A.JAR....E..",
+      "...H...Y....T..",
+      "..............."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 2,
+        "text": "Jesus had to pass through it",
+        "answer": "SAMARIA",
+        "reference": "John 4:4"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 4,
+        "text": "\"My ___ is to do the will of Him who sent Me\"",
+        "answer": "FOOD",
+        "reference": "John 4:34"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 1,
+        "col": 1,
+        "text": "The well was his",
+        "answer": "JACOB",
+        "reference": "John 4:6"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 1,
+        "col": 7,
+        "text": "\"Go, call your ___ and come back\"",
+        "answer": "HUSBAND",
+        "reference": "John 4:16"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 1,
+        "col": 7,
+        "text": "\"The fields are ripe for ___\"",
+        "answer": "HARVEST",
+        "reference": "John 4:35"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 1,
+        "col": 13,
+        "text": "How the well was",
+        "answer": "DEEP",
+        "reference": "John 4:11"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 3,
+        "col": 6,
+        "text": "\"Will you give Me a ___?\"",
+        "answer": "DRINK",
+        "reference": "John 4:7"
+      },
+      {
+        "number": 7,
+        "direction": "across",
+        "row": 5,
+        "col": 0,
+        "text": "Whoever drinks the water Jesus gives never will",
+        "answer": "THIRST",
+        "reference": "John 4:14"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 5,
+        "col": 5,
+        "text": "True worshipers worship in spirit and in this",
+        "answer": "TRUTH",
+        "reference": "John 4:23"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 6,
+        "col": 9,
+        "text": "Lift up your eyes and look at them",
+        "answer": "FIELDS",
+        "reference": "John 4:35"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 6,
+        "col": 14,
+        "text": "The townspeople said He is truly this of the world",
+        "answer": "SAVIOR",
+        "reference": "John 4:42"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 7,
+        "col": 1,
+        "text": "\"Where then will You get this ___ water?\"",
+        "answer": "LIVING",
+        "reference": "John 4:11"
+      },
+      {
+        "number": 12,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "Where her fathers worshiped",
+        "answer": "MOUNTAIN",
+        "reference": "John 4:20"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 7,
+        "col": 3,
+        "text": "\"I know that ___ is coming\"",
+        "answer": "MESSIAH",
+        "reference": "John 4:25"
+      },
+      {
+        "number": 13,
+        "direction": "down",
+        "row": 7,
+        "col": 12,
+        "text": "\"Sir, I see that You are a ___\"",
+        "answer": "PROPHET",
+        "reference": "John 4:19"
+      },
+      {
+        "number": 14,
+        "direction": "across",
+        "row": 8,
+        "col": 0,
+        "text": "How many husbands she had had",
+        "answer": "FIVE",
+        "reference": "John 4:18"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 9,
+        "col": 7,
+        "text": "Jesus sat down beside it, tired from the journey",
+        "answer": "WELL",
+        "reference": "John 4:6"
+      },
+      {
+        "number": 15,
+        "direction": "down",
+        "row": 9,
+        "col": 7,
+        "text": "How Jesus was from His journey when He sat by the well",
+        "answer": "WEARY",
+        "reference": "John 4:6"
+      },
+      {
+        "number": 16,
+        "direction": "across",
+        "row": 11,
+        "col": 9,
+        "text": "Town near the plot Jacob gave to Joseph",
+        "answer": "SYCHAR",
+        "reference": "John 4:5"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 12,
+        "col": 5,
+        "text": "She left her water one and went back to town",
+        "answer": "JAR",
+        "reference": "John 4:28"
+      }
+    ]
+  },
+  {
+    "id": "daily-097",
+    "title": "The Good Portion",
+    "difficulty": "easy",
+    "verse": "But only one thing is necessary. Mary has chosen the good portion, and it will not be taken away from her.",
+    "reference": "Luke 10:42",
+    "publishDate": "2026-10-05",
+    "size": 15,
+    "grid": [
+      "PERFUME........",
+      "...O...........",
+      "..JUDAS........",
+      "...R..I.P......",
+      "......STONE....",
+      "L..FEET.R......",
+      "A.....E.T......",
+      "Z...WORRIED....",
+      "ALONE...O.I....",
+      "R...P...N.NARD.",
+      "U...TOMB..N....",
+      "SICK..A...E..H.",
+      "......R.MARTHA.",
+      "BETHANY......I.",
+      "..........POOR."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 0,
+        "text": "Its fragrance filled the house",
+        "answer": "PERFUME",
+        "reference": "John 12:3"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 3,
+        "text": "Days Lazarus had been dead",
+        "answer": "FOUR",
+        "reference": "John 11:17"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 2,
+        "col": 2,
+        "text": "Disciple who asked why the perfume wasn't sold",
+        "answer": "JUDAS",
+        "reference": "John 12:4"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 2,
+        "col": 6,
+        "text": "Martha said hers had left her to serve alone",
+        "answer": "SISTER",
+        "reference": "Luke 10:40"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 3,
+        "col": 8,
+        "text": "Mary chose the good one",
+        "answer": "PORTION",
+        "reference": "Luke 10:42"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 4,
+        "col": 6,
+        "text": "\"Take away the ___,\" Jesus said",
+        "answer": "STONE",
+        "reference": "John 11:39"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 5,
+        "col": 0,
+        "text": "Their brother, who fell ill",
+        "answer": "LAZARUS",
+        "reference": "John 11:1"
+      },
+      {
+        "number": 8,
+        "direction": "across",
+        "row": 5,
+        "col": 3,
+        "text": "Where Mary sat to hear His word",
+        "answer": "FEET",
+        "reference": "Luke 10:39"
+      },
+      {
+        "number": 9,
+        "direction": "across",
+        "row": 7,
+        "col": 4,
+        "text": "\"Martha, Martha, you are ___ and upset\"",
+        "answer": "WORRIED",
+        "reference": "Luke 10:41"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 7,
+        "col": 4,
+        "text": "Jesus did this",
+        "answer": "WEPT",
+        "reference": "John 11:35"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 7,
+        "col": 10,
+        "text": "Given in Jesus' honor, with Martha serving",
+        "answer": "DINNER",
+        "reference": "John 12:2"
+      },
+      {
+        "number": 11,
+        "direction": "across",
+        "row": 8,
+        "col": 0,
+        "text": "\"Do You not care that my sister has left me to serve ___?\"",
+        "answer": "ALONE",
+        "reference": "Luke 10:40"
+      },
+      {
+        "number": 12,
+        "direction": "across",
+        "row": 9,
+        "col": 10,
+        "text": "Pure and expensive, Mary poured a pint of it",
+        "answer": "NARD",
+        "reference": "John 12:3"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 10,
+        "col": 4,
+        "text": "He had already been in it four days",
+        "answer": "TOMB",
+        "reference": "John 11:17"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 10,
+        "col": 6,
+        "text": "She sat at the Lord's feet listening",
+        "answer": "MARY",
+        "reference": "Luke 10:39"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 11,
+        "col": 0,
+        "text": "\"Lord, the one You love is ___\"",
+        "answer": "SICK",
+        "reference": "John 11:3"
+      },
+      {
+        "number": 16,
+        "direction": "down",
+        "row": 11,
+        "col": 13,
+        "text": "Mary wiped His feet with hers",
+        "answer": "HAIR",
+        "reference": "John 12:3"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 12,
+        "col": 8,
+        "text": "She welcomed Jesus into her home",
+        "answer": "MARTHA",
+        "reference": "Luke 10:38"
+      },
+      {
+        "number": 18,
+        "direction": "across",
+        "row": 13,
+        "col": 0,
+        "text": "Village of Mary and her sister",
+        "answer": "BETHANY",
+        "reference": "John 11:1"
+      },
+      {
+        "number": 19,
+        "direction": "across",
+        "row": 14,
+        "col": 10,
+        "text": "\"You will always have the ___ with you\"",
+        "answer": "POOR",
+        "reference": "John 12:8"
+      }
+    ]
+  },
+  {
+    "id": "daily-098",
+    "title": "Deborah Judges Israel",
+    "difficulty": "medium",
+    "verse": "Now Deborah, a prophetess, the wife of Lappidoth, was judging Israel at that time.",
+    "reference": "Judges 4:4",
+    "publishDate": "2026-10-06",
+    "size": 15,
+    "grid": [
+      "...........W...",
+      ".......S...O...",
+      "M.P.S..O...M...",
+      "O.A.IRON.S.A...",
+      "T.L.S..G.TENT..",
+      "HAMMER...A.....",
+      "E...R.K..R.....",
+      "R.CHARIOTS.....",
+      ".P....S.A..H...",
+      "DEBORAH.BARAK..",
+      ".G....O.O..Z...",
+      "..JABIN.R..O...",
+      "..A......FORTY.",
+      "..E............",
+      "MILK..........."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 11,
+        "text": "The LORD would sell Sisera into the hand of one",
+        "answer": "WOMAN",
+        "reference": "Judges 4:9"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 1,
+        "col": 7,
+        "text": "Deborah and Barak sang one that day",
+        "answer": "SONG",
+        "reference": "Judges 5:1"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 2,
+        "col": 0,
+        "text": "Deborah arose as one in Israel",
+        "answer": "MOTHER",
+        "reference": "Judges 5:7"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 2,
+        "col": 2,
+        "text": "Deborah sat under one between Ramah and Bethel",
+        "answer": "PALM",
+        "reference": "Judges 4:5"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 2,
+        "col": 4,
+        "text": "Commander of Jabin's army",
+        "answer": "SISERA",
+        "reference": "Judges 4:2"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 3,
+        "col": 4,
+        "text": "What the nine hundred chariots were made of",
+        "answer": "IRON",
+        "reference": "Judges 4:3"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 3,
+        "col": 9,
+        "text": "\"From the heavens the ___ fought\"",
+        "answer": "STARS",
+        "reference": "Judges 5:20"
+      },
+      {
+        "number": 8,
+        "direction": "across",
+        "row": 4,
+        "col": 9,
+        "text": "Sisera fled on foot to Jael's",
+        "answer": "TENT",
+        "reference": "Judges 4:17"
+      },
+      {
+        "number": 9,
+        "direction": "across",
+        "row": 5,
+        "col": 0,
+        "text": "Jael's other tool",
+        "answer": "HAMMER",
+        "reference": "Judges 4:21"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 6,
+        "col": 6,
+        "text": "River where Sisera's chariots were swept away",
+        "answer": "KISHON",
+        "reference": "Judges 5:21"
+      },
+      {
+        "number": 11,
+        "direction": "across",
+        "row": 7,
+        "col": 2,
+        "text": "Sisera had nine hundred, all of iron",
+        "answer": "CHARIOTS",
+        "reference": "Judges 4:3"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 7,
+        "col": 8,
+        "text": "Mount where Barak gathered ten thousand men",
+        "answer": "TABOR",
+        "reference": "Judges 4:6"
+      },
+      {
+        "number": 13,
+        "direction": "down",
+        "row": 8,
+        "col": 1,
+        "text": "Jael drove one through the general's temple",
+        "answer": "PEG",
+        "reference": "Judges 4:21"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 8,
+        "col": 11,
+        "text": "Royal city of the Canaanite king",
+        "answer": "HAZOR",
+        "reference": "Judges 4:2"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 9,
+        "col": 0,
+        "text": "Prophetess who held court under a palm tree",
+        "answer": "DEBORAH",
+        "reference": "Judges 4:5"
+      },
+      {
+        "number": 16,
+        "direction": "across",
+        "row": 9,
+        "col": 8,
+        "text": "He would not go to battle unless she went with him",
+        "answer": "BARAK",
+        "reference": "Judges 4:8"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 11,
+        "col": 2,
+        "text": "King of Canaan who reigned in Hazor",
+        "answer": "JABIN",
+        "reference": "Judges 4:2"
+      },
+      {
+        "number": 17,
+        "direction": "down",
+        "row": 11,
+        "col": 2,
+        "text": "Wife of Heber who struck down the enemy general",
+        "answer": "JAEL",
+        "reference": "Judges 4:21"
+      },
+      {
+        "number": 18,
+        "direction": "across",
+        "row": 12,
+        "col": 9,
+        "text": "Years the land had rest afterward",
+        "answer": "FORTY",
+        "reference": "Judges 5:31"
+      },
+      {
+        "number": 19,
+        "direction": "across",
+        "row": 14,
+        "col": 0,
+        "text": "Asked for water, she gave him this",
+        "answer": "MILK",
+        "reference": "Judges 4:19"
+      }
+    ]
+  },
+  {
+    "id": "daily-099",
+    "title": "Knit Together",
+    "difficulty": "medium",
+    "verse": "After David had finished speaking with Saul, the souls of Jonathan and David were knit together, and Jonathan loved him as himself.",
+    "reference": "1 Samuel 18:1",
+    "publishDate": "2026-10-07",
+    "size": 15,
+    "grid": [
+      ".......SAUL....",
+      ".STONE..R......",
+      ".W......R......",
+      ".O..N.M.O...H..",
+      ".ROBE.I.W...A..",
+      ".D..W.C.SPEAR..",
+      "....M.H..E..P..",
+      "...JONATHAN....",
+      "....O.L..C.....",
+      "BEYOND..BELT...",
+      "O....A..O......",
+      "Y....V..WINDOW.",
+      ".....I.......E.",
+      ".FIELD.......P.",
+      "......COVENANT."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 7,
+        "text": "King whose jealousy drove his son's friend away",
+        "answer": "SAUL",
+        "reference": "1 Samuel 18:9"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 8,
+        "text": "Shot beyond the boy as a hidden message",
+        "answer": "ARROWS",
+        "reference": "1 Samuel 20:36"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 1,
+        "col": 1,
+        "text": "David hid by the stone Ezel",
+        "answer": "STONE",
+        "reference": "1 Samuel 20:19"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 1,
+        "col": 1,
+        "text": "Given with the robe, the bow and the belt",
+        "answer": "SWORD",
+        "reference": "1 Samuel 18:4"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 3,
+        "col": 4,
+        "text": "The feast David skipped at Saul's table",
+        "answer": "NEWMOON",
+        "reference": "1 Samuel 20:5"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 3,
+        "col": 6,
+        "text": "Saul's daughter, who loved David",
+        "answer": "MICHAL",
+        "reference": "1 Samuel 18:20"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 3,
+        "col": 12,
+        "text": "David was playing it when the king's mood turned",
+        "answer": "HARP",
+        "reference": "1 Samuel 18:10"
+      },
+      {
+        "number": 7,
+        "direction": "across",
+        "row": 4,
+        "col": 1,
+        "text": "Jonathan took his off and gave it to David",
+        "answer": "ROBE",
+        "reference": "1 Samuel 18:4"
+      },
+      {
+        "number": 8,
+        "direction": "across",
+        "row": 5,
+        "col": 8,
+        "text": "Saul was holding one while David played",
+        "answer": "SPEAR",
+        "reference": "1 Samuel 18:10"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 5,
+        "col": 9,
+        "text": "\"Go in ___,\" Jonathan said at parting",
+        "answer": "PEACE",
+        "reference": "1 Samuel 20:42"
+      },
+      {
+        "number": 10,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "Saul's son who loved David as himself",
+        "answer": "JONATHAN",
+        "reference": "1 Samuel 18:1"
+      },
+      {
+        "number": 11,
+        "direction": "across",
+        "row": 9,
+        "col": 0,
+        "text": "\"Isn't the arrow ___ you?\"",
+        "answer": "BEYOND",
+        "reference": "1 Samuel 20:37"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 9,
+        "col": 0,
+        "text": "The small one who went to fetch Jonathan's arrows",
+        "answer": "BOY",
+        "reference": "1 Samuel 20:35"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 9,
+        "col": 5,
+        "text": "Son of Jesse, the friend Saul's son swore to protect",
+        "answer": "DAVID",
+        "reference": "1 Samuel 20:42"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 9,
+        "col": 8,
+        "text": "The last item Jonathan handed over",
+        "answer": "BELT",
+        "reference": "1 Samuel 18:4"
+      },
+      {
+        "number": 13,
+        "direction": "down",
+        "row": 9,
+        "col": 8,
+        "text": "Part of the gift, and later used for a signal",
+        "answer": "BOW",
+        "reference": "1 Samuel 18:4"
+      },
+      {
+        "number": 14,
+        "direction": "across",
+        "row": 11,
+        "col": 8,
+        "text": "She let David down through one",
+        "answer": "WINDOW",
+        "reference": "1 Samuel 19:12"
+      },
+      {
+        "number": 15,
+        "direction": "down",
+        "row": 11,
+        "col": 13,
+        "text": "The friends kissed each other and did this",
+        "answer": "WEPT",
+        "reference": "1 Samuel 20:41"
+      },
+      {
+        "number": 16,
+        "direction": "across",
+        "row": 13,
+        "col": 1,
+        "text": "Where David hid until the agreed sign",
+        "answer": "FIELD",
+        "reference": "1 Samuel 20:35"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 14,
+        "col": 6,
+        "text": "Jonathan made one with David",
+        "answer": "COVENANT",
+        "reference": "1 Samuel 18:3"
+      }
+    ]
+  },
+  {
+    "id": "daily-100",
+    "title": "The Donkey Speaks",
+    "difficulty": "medium",
+    "verse": "Then the LORD opened the donkey\u2019s mouth, and she said to Balaam, \u201cWhat have I done to you that you have beaten me these three times?\u201d",
+    "reference": "Numbers 22:28",
+    "publishDate": "2026-10-08",
+    "size": 15,
+    "grid": [
+      ".S.......MOUTH.",
+      ".T.......O.....",
+      "BALAAM...A.B...",
+      ".F..L.D..BALAK.",
+      ".FOOT.O.T..E...",
+      "....A.N.EYES...",
+      ".STAR.K.N..S...",
+      "....SCEPTER...W",
+      "......Y.S.O...A",
+      "..........ANGEL",
+      "......SWORD...L",
+      "..CURSE........",
+      "......V........",
+      ".....PETHOR....",
+      "......N........"
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 1,
+        "text": "Balaam beat the donkey with it",
+        "answer": "STAFF",
+        "reference": "Numbers 22:27"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 0,
+        "col": 9,
+        "text": "Balaam could speak only the word God put in his",
+        "answer": "MOUTH",
+        "reference": "Numbers 22:38"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 9,
+        "text": "Its people dreaded the Israelites camped nearby",
+        "answer": "MOAB",
+        "reference": "Numbers 22:3"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 2,
+        "col": 0,
+        "text": "Son of Beor, hired to curse Israel",
+        "answer": "BALAAM",
+        "reference": "Numbers 22:5"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 2,
+        "col": 4,
+        "text": "Balaam had seven built on the heights",
+        "answer": "ALTARS",
+        "reference": "Numbers 23:1"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 2,
+        "col": 11,
+        "text": "What Balaam did instead, three times over",
+        "answer": "BLESS",
+        "reference": "Numbers 24:10"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 3,
+        "col": 6,
+        "text": "She saw the angel before her rider did",
+        "answer": "DONKEY",
+        "reference": "Numbers 22:23"
+      },
+      {
+        "number": 7,
+        "direction": "across",
+        "row": 3,
+        "col": 9,
+        "text": "King of Moab who sent for a prophet",
+        "answer": "BALAK",
+        "reference": "Numbers 22:4"
+      },
+      {
+        "number": 8,
+        "direction": "across",
+        "row": 4,
+        "col": 1,
+        "text": "Crushed against a vineyard wall",
+        "answer": "FOOT",
+        "reference": "Numbers 22:25"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 4,
+        "col": 8,
+        "text": "\"How lovely are your ___, O Jacob\"",
+        "answer": "TENTS",
+        "reference": "Numbers 24:5"
+      },
+      {
+        "number": 10,
+        "direction": "across",
+        "row": 5,
+        "col": 8,
+        "text": "The LORD opened them, and Balaam saw the angel",
+        "answer": "EYES",
+        "reference": "Numbers 22:31"
+      },
+      {
+        "number": 11,
+        "direction": "across",
+        "row": 6,
+        "col": 1,
+        "text": "\"A ___ will come forth from Jacob\"",
+        "answer": "STAR",
+        "reference": "Numbers 24:17"
+      },
+      {
+        "number": 12,
+        "direction": "across",
+        "row": 7,
+        "col": 4,
+        "text": "It will arise from Israel, says the fourth oracle",
+        "answer": "SCEPTER",
+        "reference": "Numbers 24:17"
+      },
+      {
+        "number": 13,
+        "direction": "down",
+        "row": 7,
+        "col": 10,
+        "text": "The donkey turned off it into a field",
+        "answer": "ROAD",
+        "reference": "Numbers 22:23"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 7,
+        "col": 14,
+        "text": "The donkey pressed Balaam's foot against it",
+        "answer": "WALL",
+        "reference": "Numbers 22:25"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 9,
+        "col": 10,
+        "text": "Stood in the road with a drawn sword",
+        "answer": "ANGEL",
+        "reference": "Numbers 22:23"
+      },
+      {
+        "number": 16,
+        "direction": "across",
+        "row": 10,
+        "col": 6,
+        "text": "The angel held one, drawn, in his hand",
+        "answer": "SWORD",
+        "reference": "Numbers 22:31"
+      },
+      {
+        "number": 16,
+        "direction": "down",
+        "row": 10,
+        "col": 6,
+        "text": "Number of bulls and rams offered each time",
+        "answer": "SEVEN",
+        "reference": "Numbers 23:1"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 11,
+        "col": 2,
+        "text": "What Balak wanted spoken over Israel",
+        "answer": "CURSE",
+        "reference": "Numbers 22:6"
+      },
+      {
+        "number": 18,
+        "direction": "across",
+        "row": 13,
+        "col": 5,
+        "text": "Balaam's town near the Euphrates",
+        "answer": "PETHOR",
+        "reference": "Numbers 22:5"
+      }
+    ]
+  },
+  {
+    "id": "daily-101",
+    "title": "Wash and Be Clean",
+    "difficulty": "medium",
+    "verse": "So Naaman went down and dipped himself in the Jordan seven times, according to the word of the man of God, and his flesh was restored and became like that of a little child, and he was clean.",
+    "reference": "2 Kings 5:14",
+    "publishDate": "2026-10-09",
+    "size": 15,
+    "grid": [
+      ".LEPER..GIRL...",
+      "..L.....I......",
+      "G.I.....F......",
+      "E.SERVANTS.....",
+      "H.H...B........",
+      "ARAM.NAAMAN....",
+      "Z...S.N........",
+      "I..DAMASCUS..P.",
+      "....M..E..N..H.",
+      ".CLEAN.V.JORDAN",
+      ".H..R..E..W..R.",
+      ".I..I..N.S...P.",
+      ".L.RAGE..O...A.",
+      ".D......SILVER.",
+      ".........L....."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 1,
+        "text": "A mighty man of valor, but he was a ___",
+        "answer": "LEPER",
+        "reference": "2 Kings 5:1"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 2,
+        "text": "He sent word: go wash in the river",
+        "answer": "ELISHA",
+        "reference": "2 Kings 5:10"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 0,
+        "col": 8,
+        "text": "Captive from Israel who told her mistress of the prophet",
+        "answer": "GIRL",
+        "reference": "2 Kings 5:2"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 0,
+        "col": 8,
+        "text": "Naaman urged Elisha to accept one",
+        "answer": "GIFT",
+        "reference": "2 Kings 5:15"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 2,
+        "col": 0,
+        "text": "Elisha's servant who ran after the chariot",
+        "answer": "GEHAZI",
+        "reference": "2 Kings 5:20"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 3,
+        "col": 2,
+        "text": "They reasoned with him to do the simple thing",
+        "answer": "SERVANTS",
+        "reference": "2 Kings 5:13"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 3,
+        "col": 6,
+        "text": "One of the rivers of Damascus he preferred",
+        "answer": "ABANA",
+        "reference": "2 Kings 5:12"
+      },
+      {
+        "number": 7,
+        "direction": "across",
+        "row": 5,
+        "col": 0,
+        "text": "The kingdom whose army he commanded",
+        "answer": "ARAM",
+        "reference": "2 Kings 5:1"
+      },
+      {
+        "number": 8,
+        "direction": "across",
+        "row": 5,
+        "col": 5,
+        "text": "Commander of the army of Aram, a leper",
+        "answer": "NAAMAN",
+        "reference": "2 Kings 5:1"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 6,
+        "col": 4,
+        "text": "Where the prophet who could heal him lived",
+        "answer": "SAMARIA",
+        "reference": "2 Kings 5:3"
+      },
+      {
+        "number": 10,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "Its rivers were \"better than all the waters of Israel\"",
+        "answer": "DAMASCUS",
+        "reference": "2 Kings 5:12"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 7,
+        "col": 7,
+        "text": "Times he was told to dip",
+        "answer": "SEVEN",
+        "reference": "2 Kings 5:10"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 7,
+        "col": 10,
+        "text": "Gehazi left, leprous and white as this",
+        "answer": "SNOW",
+        "reference": "2 Kings 5:27"
+      },
+      {
+        "number": 13,
+        "direction": "down",
+        "row": 7,
+        "col": 13,
+        "text": "The other river of Damascus",
+        "answer": "PHARPAR",
+        "reference": "2 Kings 5:12"
+      },
+      {
+        "number": 14,
+        "direction": "across",
+        "row": 9,
+        "col": 1,
+        "text": "What he was after the seventh dip",
+        "answer": "CLEAN",
+        "reference": "2 Kings 5:14"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 9,
+        "col": 1,
+        "text": "His flesh became like that of a little one",
+        "answer": "CHILD",
+        "reference": "2 Kings 5:14"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 9,
+        "col": 9,
+        "text": "The river Naaman thought beneath him",
+        "answer": "JORDAN",
+        "reference": "2 Kings 5:10"
+      },
+      {
+        "number": 16,
+        "direction": "down",
+        "row": 11,
+        "col": 9,
+        "text": "As much as a pair of mules could carry home",
+        "answer": "SOIL",
+        "reference": "2 Kings 5:17"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 12,
+        "col": 3,
+        "text": "Naaman turned and went away in this",
+        "answer": "RAGE",
+        "reference": "2 Kings 5:12"
+      },
+      {
+        "number": 18,
+        "direction": "across",
+        "row": 13,
+        "col": 8,
+        "text": "Gehazi asked for a talent of it",
+        "answer": "SILVER",
+        "reference": "2 Kings 5:22"
+      }
+    ]
+  },
+  {
+    "id": "daily-102",
+    "title": "Dry Bones Live",
+    "difficulty": "hard",
+    "verse": "Dry bones, hear the word of the LORD!",
+    "reference": "Ezekiel 37:4",
+    "publishDate": "2026-10-10",
+    "size": 15,
+    "grid": [
+      "..SKIN.JUDAH...",
+      "..T....O.......",
+      ".WINDS.SHEPHERD",
+      "..C..P.E...O...",
+      "..K..I.P...P...",
+      ".F...R.H.BREATH",
+      ".O.D.I...O...E.",
+      ".U.RATTLING..N.",
+      "ARMY.....E...D.",
+      "....GRAVES...O.",
+      ".......A.....N.",
+      ".EZEKIEL..FLESH",
+      ".......L.......",
+      "......PEACE....",
+      ".......Y......."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 2,
+        "text": "It covered them, but there was no breath in them",
+        "answer": "SKIN",
+        "reference": "Ezekiel 37:8"
+      },
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 2,
+        "text": "Two of these became one in the prophet's hand",
+        "answer": "STICK",
+        "reference": "Ezekiel 37:17"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 0,
+        "col": 7,
+        "text": "Name written on the first stick",
+        "answer": "JUDAH",
+        "reference": "Ezekiel 37:16"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 7,
+        "text": "Name written on the second stick",
+        "answer": "JOSEPH",
+        "reference": "Ezekiel 37:16"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 2,
+        "col": 1,
+        "text": "\"Come from the four ___, O breath\"",
+        "answer": "WINDS",
+        "reference": "Ezekiel 37:9"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 2,
+        "col": 5,
+        "text": "The LORD brought the prophet out by His",
+        "answer": "SPIRIT",
+        "reference": "Ezekiel 37:1"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 2,
+        "col": 7,
+        "text": "\"They will all have one ___\"",
+        "answer": "SHEPHERD",
+        "reference": "Ezekiel 37:24"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 2,
+        "col": 11,
+        "text": "\"Our bones are dried up, and our ___ has perished\"",
+        "answer": "HOPE",
+        "reference": "Ezekiel 37:11"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 5,
+        "col": 1,
+        "text": "How many winds the breath came from",
+        "answer": "FOUR",
+        "reference": "Ezekiel 37:9"
+      },
+      {
+        "number": 8,
+        "direction": "across",
+        "row": 5,
+        "col": 9,
+        "text": "\"I will cause ___ to enter you\"",
+        "answer": "BREATH",
+        "reference": "Ezekiel 37:5"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 5,
+        "col": 9,
+        "text": "\"Son of man, can these ___ come to life?\"",
+        "answer": "BONES",
+        "reference": "Ezekiel 37:3"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 5,
+        "col": 13,
+        "text": "Put on the bones before the flesh",
+        "answer": "TENDONS",
+        "reference": "Ezekiel 37:6"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 6,
+        "col": 3,
+        "text": "How the bones were, very much so",
+        "answer": "DRY",
+        "reference": "Ezekiel 37:2"
+      },
+      {
+        "number": 11,
+        "direction": "across",
+        "row": 7,
+        "col": 3,
+        "text": "The sound as bone came to bone",
+        "answer": "RATTLING",
+        "reference": "Ezekiel 37:7"
+      },
+      {
+        "number": 12,
+        "direction": "across",
+        "row": 8,
+        "col": 0,
+        "text": "They stood on their feet, a vast one",
+        "answer": "ARMY",
+        "reference": "Ezekiel 37:10"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 9,
+        "col": 4,
+        "text": "\"I will open your ___ and bring you up\"",
+        "answer": "GRAVES",
+        "reference": "Ezekiel 37:12"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 9,
+        "col": 7,
+        "text": "It was full of bones",
+        "answer": "VALLEY",
+        "reference": "Ezekiel 37:1"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 11,
+        "col": 1,
+        "text": "Prophet set down in the middle of a valley",
+        "answer": "EZEKIEL",
+        "reference": "Ezekiel 37:1"
+      },
+      {
+        "number": 16,
+        "direction": "across",
+        "row": 11,
+        "col": 10,
+        "text": "It came upon the bones, then skin covered them",
+        "answer": "FLESH",
+        "reference": "Ezekiel 37:8"
+      },
+      {
+        "number": 17,
+        "direction": "across",
+        "row": 13,
+        "col": 6,
+        "text": "An everlasting covenant of it",
+        "answer": "PEACE",
+        "reference": "Ezekiel 37:26"
+      }
+    ]
+  },
+  {
     "id": "mini-031",
     "title": "A Bride for Isaac",
     "difficulty": "easy",

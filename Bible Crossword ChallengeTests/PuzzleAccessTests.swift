@@ -163,17 +163,17 @@ struct PuzzleAccessTests {
         #expect(Set(window.map(\.id)).count == 7)
     }
 
-    /// After one full lap the same day-of-rotation opens the same seven, so the
-    /// gate keeps working once the pool starts repeating.
+    /// Past the schedule, on the fallback rotation, one full lap later the
+    /// same seven open, so the gate keeps working once the pool repeats.
     @Test func windowRepeatsAfterAFullRotation() {
         let provider = PuzzleProvider.shared
         let lap = provider.puzzles.count
         let first = provider.rotationWindow(
-            provider.puzzles, for: day(2026, 8, 8), calendar: utc, length: 7
+            provider.puzzles, for: day(2032, 8, 8), calendar: utc, length: 7
         )
         let second = provider.rotationWindow(
             provider.puzzles,
-            for: utc.date(byAdding: .day, value: lap, to: day(2026, 8, 8))!,
+            for: utc.date(byAdding: .day, value: lap, to: day(2032, 8, 8))!,
             calendar: utc,
             length: 7
         )
