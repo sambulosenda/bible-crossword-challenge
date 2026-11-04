@@ -12,6 +12,11 @@ struct ClueBarView: View {
     /// At accessibility text sizes the pill can no longer share the number
     /// line without running into it, so it falls back to its own row there.
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    /// Bumped when the stall nudge offers the verse: the book bounces, as
+    /// the Hints bulb does for its nudge, instead of a second control
+    /// appearing (2026-11-04).
+    @State private var verseBounce = 0
     /// Runs the stall nudge's action when the line is tapped — a whole-puzzle
     /// check or the verse per `vm.stallNudgeKind`. Owned by the
     /// game view so the analytics and check/hint plumbing stay in one place.
@@ -211,7 +216,13 @@ struct ClueBarView: View {
     /// letter" pill on this line it appeared with nothing to say where it
     /// came from.
     private var showsStallLine: Bool {
-        vm.isStallNudgeActive && vm.stallNudgeKind != .hints
+        vm.isStallNudgeActive && vm.stallNudgeKind == .checkAnswers
+    }
+
+    /// The stall nudge is offering the verse: shown as the Verse button's
+    /// bounce, not a line of its own.
+    private var verseNudgeActive: Bool {
+        vm.isStallNudgeActive && vm.stallNudgeKind == .readVerse
     }
 
     /// The stall line's copy, matched to the action the tap performs. A vague
@@ -242,7 +253,7 @@ struct ClueBarView: View {
     private var stallNudgeAccessibilityHint: String {
         switch vm.stallNudgeKind {
         case .checkAnswers: "Checks the whole puzzle for mistakes"
-        case .readVerse: "Opens the passage this clue comes from, without using a hint"
+        case .readVerse: "Opens the passage this clue comes from. Counts as a hint."
         case .hints: "Opens hints"
         }
     }
@@ -262,22 +273,30 @@ struct ClueBarView: View {
 
     /// Only on clues that have a passage: an always-present button would
     /// advertise a hint most clues can't offer yet, and a dimmed one is a
-    /// question the player can't answer. See ClueListView. Stands down while
-    /// the stall line is offering the same verse, so one action isn't on the
-    /// line twice.
+    /// question the player can't answer. See ClueListView.
     private var showsVerseButton: Bool {
-        guard vm.activeSlot?.reference != nil, onVerseTap != nil else { return false }
-        return !(vm.isStallNudgeActive && vm.stallNudgeKind == .readVerse)
+        vm.activeSlot?.reference != nil && onVerseTap != nil
     }
 
     /// The verse button's appearance, with no behaviour — rendered hidden on
     /// the number line to reserve its width, like `nudgeBody`.
+    ///
+    /// One look, always (2026-11-04): it used to turn into a tinted "Read the
+    /// verse" pill when the player stalled — the same action in two shapes.
+    /// Now a small native capsule, blue on grey as the app's other inline
+    /// actions (Memory's Start), at footnote size rather than caption2.
     private var verseLabel: some View {
         Label("Verse", systemImage: "book")
-            .font(.caption.weight(.semibold))
+            .font(.footnote.weight(.semibold))
             .foregroundStyle(Theme.accent)
             .lineLimit(1)
-            .padding(.vertical, Theme.Spacing.xs)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 5)
+            .background(Color(.tertiarySystemFill), in: .capsule)
+            // Sized before the countdown beside it: sharing the line with
+            // "2 clues to go!" it was squeezed to "Ve…" (2026-11-04). The
+            // countdown can shrink; the control can't.
+            .layoutPriority(1)
     }
 
     /// The free verse hint, on the clue-number line. It used to be a 44pt
@@ -287,17 +306,22 @@ struct ClueBarView: View {
     private var verseButton: some View {
         if showsVerseButton, let onVerseTap {
             Button {
-                onVerseTap()
+                // Taken while it was bouncing: that's the nudge taken, and
+                // the stall action logs it and stands the nudge down.
+                if verseNudgeActive, let onStallTap { onStallTap() } else { onVerseTap() }
             } label: {
                 verseLabel
-                    // The label is caption-sized (~24pt tall with its
-                    // padding); the touch target isn't. 10pt each way makes 44.
-                    .contentShape(.rect.inset(by: -10))
+                    .symbolEffect(.bounce, value: verseBounce)
+                    // ~26pt tall with its padding; the touch target isn't.
+                    .contentShape(.rect.inset(by: -9))
             }
             .buttonStyle(.plain)
             .accessibilityLabel("Read the verse")
             .accessibilityHint("Opens the passage this clue comes from. Free, but counts as a hint.")
             .transition(.opacity)
+            .onChange(of: verseNudgeActive) { _, active in
+                if active, !reduceMotion { verseBounce += 1 }
+            }
         }
     }
 
