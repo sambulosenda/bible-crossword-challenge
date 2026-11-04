@@ -352,7 +352,9 @@ struct MasteryDots: View {
         HStack(spacing: 4) {
             ForEach(1...MemoryVerseStore.masteredLevel, id: \.self) { dot in
                 Circle()
-                    .fill(dot <= level ? Theme.accent : Color(.tertiarySystemFill))
+                    // Ink, not blue (2026-11-04): a level is a status, and
+                    // blue means "tap this".
+                    .fill(dot <= level ? Theme.ink : Color(.tertiarySystemFill))
                     .frame(width: 8, height: 8)
                     .scaleEffect(pops && dot == level && !shown ? 0.1 : 1)
             }
