@@ -793,23 +793,13 @@ private struct TodayHeader: View {
                 scripture(verse)
             }
         }
-        // The page's one content edge — the cards' inner edge — so the verse
-        // starts where the headers and the hero's title do.
-        .padding(.horizontal, Theme.Spacing.m)
         // Flush in a split, so "Verse of the day" starts level with the
         // first card at the top of the other column.
         .padding(.top, inSplit ? 0 : Theme.Spacing.s)
     }
 
-    /// Scripture, set plainly. No rule, no box, no quote glyph: the serif is
-    /// the only serif in the header, and that is the whole signal. An ornament
-    /// here would be decoration standing in for a typographic distinction that
-    /// the type is already making.
-    ///
-    /// It is labelled, though. Removing the card removed the kicker with it,
-    /// which left an unexplained quotation under the greeting — the VoiceOver
-    /// label named it all along, so only sighted readers lost the answer to
-    /// "what is this?".
+    /// Scripture in a plain card, labelled. No rule or quote glyph: the
+    /// serif is the only serif on the page, and that is the signal.
     private func scripture(_ verse: Puzzle) -> some View {
         Button {
             analytics.log(.scriptureOpened(reference: verse.reference, source: "verse_of_the_day"))
@@ -847,17 +837,24 @@ private struct TodayHeader: View {
                         .fixedSize(horizontal: false, vertical: true)
                 }
 
+                // Ink, not blue: the whole card is the tap target, and
+                // Start Puzzle below should be the only blue on the screen.
                 HStack(spacing: 4) {
                     Text(verse.reference)
-                        .font(.headline)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.primary)
                     Image(systemName: "chevron.forward")
-                        .font(.caption.weight(.bold))
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(.tertiary)
                 }
-                .foregroundStyle(Theme.accent)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
+            // A card like every other section: bare on the grouped canvas
+            // the verse read as stray text, not part of the page.
+            .padding(Theme.Spacing.l)
+            .elevatedCard()
         }
-        .buttonStyle(.plain)
+        .buttonStyle(PressableCardStyle())
         .accessibilityElement(children: .ignore)
         .accessibilityAddTraits(.isButton)
         .accessibilityLabel("Verse of the day. \(verse.verse). \(verse.reference)")
@@ -1489,7 +1486,10 @@ private struct CompactPuzzleRow: View {
         switch presentation {
         case .solvedToday(let seconds):
             if let secs = seconds, secs > 0 {
-                return "Solved in \(TimeFormat.clock(secs))"
+                // The time alone: the green check already says solved, and
+                // "Solved in 2:34" wrapped in a third-width tile. VoiceOver
+                // still hears "Solved in".
+                return TimeFormat.clock(secs)
             }
             return "Solved"
         case .playedBefore(let previous):
