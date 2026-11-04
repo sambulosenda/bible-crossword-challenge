@@ -184,6 +184,9 @@ final class PuzzleProvider {
     /// The longest verse Today opens on — three lines of body serif on a phone.
     static let verseOfTheDayMaxLength = 120
 
+    /// The dailies the verse rotation draws from. Frozen: see `verseOfTheDay`.
+    static let verseOfTheDayPoolSize = 92
+
     /// The day's inspirational verse: a puzzle's verse, rotated by calendar
     /// day, from any puzzle but that day's daily — so it never spoils the
     /// daily's answers. Shared by Today's header and the daily reminder, so
@@ -195,7 +198,11 @@ final class PuzzleProvider {
         // Whole sentences too: 13 verses open mid-sentence ("asking, …") and
         // read as fragments on their own. 162 pass both.
         // Falls back to every verse if a future set has too few.
-        let others = puzzles.filter { $0.id != dailyID }
+        // The shipped 92 only (2026-11-04): the index is a modulo over this
+        // pool, so every daily added would move every day's verse, and the
+        // reminders already scheduled with today's verse would disagree with
+        // Today. New dailies append after these in file order.
+        let others = puzzles.prefix(Self.verseOfTheDayPoolSize).filter { $0.id != dailyID }
         let short = others.filter {
             $0.verse.count <= Self.verseOfTheDayMaxLength
                 && $0.verse.first.map { !$0.isLowercase } ?? false
