@@ -299,15 +299,14 @@ struct QuestHomeCard: View {
         NavigationLink(value: QuestRoute(quest: quest, source: .home)) {
             // The Journey feature's tint, not this Journey's own colour: on
             // Today each row is coloured by what kind of thing it is. The
-            // Packs tab keeps the per-Journey colour on its covers. The bar
-            // shows once a step is walked — an empty one is a gauge with
-            // nothing to measure.
+            // Packs tab keeps the per-Journey colour on its covers. No bar
+            // (2026-11-04): Today's rows say where things stand in words,
+            // and the subtitle already counts the steps.
             CoverRow(
                 symbol: quest.coverSymbol,
                 tint: FeatureTint.journey,
                 title: headline,
-                subtitle: subtitle,
-                progress: progress.solved > 0 ? progress.fraction : nil
+                subtitle: subtitle
             )
             .cardRowPadding()
         }

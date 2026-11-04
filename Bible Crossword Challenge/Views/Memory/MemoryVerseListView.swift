@@ -321,14 +321,14 @@ struct MemoryVerseCard: View {
 
     var body: some View {
         NavigationLink(value: MemoryRoute()) {
-            // A cover row like the Journey and badge rows it sits with. The
-            // bar is the share mastered, once there are verses to master.
+            // A cover row like the Journey and badge rows it sits with. No
+            // bar since 2026-11-04: it was the only one on Today, and the
+            // subtitle already says where the verses stand.
             CoverRow(
                 symbol: "brain.fill",
                 tint: FeatureTint.memory,
                 title: headline,
-                subtitle: subtitle,
-                progress: activeCount > 0 ? Double(masteredCount) / Double(activeCount) : nil
+                subtitle: subtitle
             )
             .cardRowPadding()
         }

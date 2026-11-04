@@ -13,18 +13,25 @@ struct BeginnerPathCard: View {
     let hasEntries: Bool
 
     var body: some View {
+        // 2026-11-04, three things said once each:
+        // - No bar. It measured the seven but sat under the puzzle, so it
+        //   read as progress through this grid; the kicker already says
+        //   "2 of 7 done", and it was the heaviest mark after the button.
+        // - Size, difficulty and time on one line. "7×7 · Easy" above and
+        //   "About 2 minutes" below said how big twice.
+        // - "Continue" only for a grid with letters in it. After a solve the
+        //   next step is new, and "Continue" promised something begun.
         UpNextCard(
             puzzle: puzzle,
             kicker: kicker,
+            detail: "\(puzzle.reference) · \(puzzle.difficulty.label) · About 2 min",
             note: progress.steppedToday
                 ? "Today's done. The next one is ready whenever you are."
-                : "About 2 minutes. Verse hints help you along.",
-            // The bar once there is something to show on it.
-            progress: progress.solved > 0 ? progress.fraction : nil
+                : "Verse hints help you along."
         ) {
             NavigationLink(value: BeginnerPuzzleRoute(puzzle: puzzle)) {
                 // "Start Puzzle" is what the UI tests find the hero by.
-                Label(hasEntries || progress.solved > 0 ? "Continue" : "Start Puzzle", systemImage: "play.fill")
+                Label(hasEntries ? "Continue" : "Start Puzzle", systemImage: "play.fill")
             }
             .buttonStyle(.pillAccent)
             .accessibilityIdentifier("beginnerPathPlay")
