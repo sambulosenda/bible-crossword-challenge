@@ -5,8 +5,8 @@
 //  A row for something the player is partway through — a Journey, their
 //  memory verses, the next badge, a reading plan — drawn the way YouVersion
 //  lists plans: a cover in the feature's colour, the title, where they stand,
-//  and a slim bar when there's a count to fill. No chevron and no divider;
-//  the whole row is the tap target and space separates one from the next.
+//  and a slim bar when there's a count to fill, and the system chevron:
+//  every row opens something.
 //
 //  It replaced the settings-style row (36pt grey icon square, hairline
 //  divider, chevron) on Today's "Keep going", where a Journey halfway done
@@ -65,6 +65,13 @@ struct CoverRow: View {
             }
 
             Spacer(minLength: 0)
+
+            // Every caller opens something. Without the system chevron the
+            // rows read as information, not as places to go (2026-11-04).
+            Image(systemName: "chevron.forward")
+                .font(.footnote.weight(.semibold))
+                .foregroundStyle(.tertiary)
+                .accessibilityHidden(true)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .contentShape(.rect)

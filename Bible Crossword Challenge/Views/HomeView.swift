@@ -1221,7 +1221,7 @@ private struct NextAchievementRow: View {
 
     var body: some View {
         // No bar (2026-11-04): Today's rows say where things stand in
-        // words, and the subtitle already counts it ("Next badge · 3 / 5").
+        // words, and the subtitle already counts it.
         CoverRow(
             symbol: achievement.symbol,
             tint: FeatureTint.badge,
@@ -1234,18 +1234,18 @@ private struct NextAchievementRow: View {
         .accessibilityLabel("Next badge: \(achievement.title). \(achievement.detail). \(progress)")
     }
 
-    /// "Next badge · 3 / 5", or for a time goal the player's best against it —
-    /// a time goal is met or not, so a bar for it sat empty until the day it
-    /// jumped to full.
-    ///
-    /// Before the first step it names the goal instead: "Next badge · 0 / 5"
-    /// told a new player only that they had done nothing yet.
+    /// "Badge · Complete 5 puzzles · 2 to go". It leads with what the row
+    /// is: titled "First Journey" under a Journey row, "Next badge" at the
+    /// end of the line read as a second Journey (2026-11-04). The goal names
+    /// what earns it; the count only when there's more than one left.
     private var subtitle: String {
+        var parts = ["Badge", achievement.detail]
         if let left = achievement.remaining(for: profile) {
-            return "Next badge · \(left) to go"
+            if left > 1 { parts.append("\(left) to go") }
+        } else if case .fastSolve = achievement.goal, let best = profile.bestSolveSeconds {
+            parts.append("best \(TimeFormat.clock(best))")
         }
-        guard achievement.progress(for: profile) > 0 else { return achievement.detail }
-        return "Next badge · \(progress)"
+        return parts.joined(separator: " · ")
     }
 
     private var progress: String {
