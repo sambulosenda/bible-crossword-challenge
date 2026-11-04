@@ -18485,7 +18485,7 @@
         "direction": "across",
         "row": 3,
         "col": 6,
-        "text": "\"Will you give Me a ___?\"",
+        "text": "\"Give Me a ___\"",
         "answer": "DRINK",
         "reference": "John 4:7"
       },
@@ -18720,7 +18720,7 @@
         "direction": "down",
         "row": 7,
         "col": 4,
-        "text": "Jesus did this",
+        "text": "Jesus did this at Lazarus's tomb",
         "answer": "WEPT",
         "reference": "John 11:35"
       },
@@ -18810,7 +18810,7 @@
         "direction": "across",
         "row": 14,
         "col": 10,
-        "text": "\"You will always have the ___ with you\"",
+        "text": "\"The ___ you will always have with you\"",
         "answer": "POOR",
         "reference": "John 12:8"
       }
@@ -19073,7 +19073,7 @@
         "direction": "across",
         "row": 1,
         "col": 1,
-        "text": "David hid by the stone Ezel",
+        "text": "David was to wait beside this, called Ezel",
         "answer": "STONE",
         "reference": "1 Samuel 20:19"
       },
@@ -19219,7 +19219,7 @@
         "col": 1,
         "text": "Where David hid until the agreed sign",
         "answer": "FIELD",
-        "reference": "1 Samuel 20:35"
+        "reference": "1 Samuel 20:24"
       },
       {
         "number": 17,
@@ -19449,121 +19449,130 @@
     "publishDate": "2026-10-09",
     "size": 15,
     "grid": [
-      ".LEPER..GIRL...",
-      "..L.....I......",
-      "G.I.....F......",
-      "E.SERVANTS.....",
-      "H.H...B........",
-      "ARAM.NAAMAN....",
-      "Z...S.N........",
-      "I..DAMASCUS..P.",
-      "....M..E..N..H.",
-      ".CLEAN.V.JORDAN",
-      ".H..R..E..W..R.",
-      ".I..I..N.S...P.",
-      ".L.RAGE..O...A.",
-      ".D......SILVER.",
-      ".........L....."
+      "....SILVER.....",
+      "....O....A.....",
+      "....I..S.GIRL..",
+      "...CLEAN.E..E..",
+      "J..H...O....P..",
+      "O.GIFT.W....E..",
+      "R..L........R..",
+      "D..DAMASCUS..E.",
+      "A...R..E..A..L.",
+      "NAAMAN.V..M..I.",
+      ".B..M.SERVANTS.",
+      ".A.....N..R..H.",
+      ".N........I..A.",
+      ".A.....GEHAZI..",
+      "PHARPAR........"
     ],
     "clues": [
       {
         "number": 1,
         "direction": "across",
         "row": 0,
-        "col": 1,
-        "text": "A mighty man of valor, but he was a ___",
-        "answer": "LEPER",
-        "reference": "2 Kings 5:1"
+        "col": 4,
+        "text": "Gehazi asked for a talent of it",
+        "answer": "SILVER",
+        "reference": "2 Kings 5:22"
+      },
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 4,
+        "text": "As much as a pair of mules could carry home",
+        "answer": "SOIL",
+        "reference": "2 Kings 5:17"
       },
       {
         "number": 2,
         "direction": "down",
         "row": 0,
-        "col": 2,
-        "text": "He sent word: go wash in the river",
-        "answer": "ELISHA",
-        "reference": "2 Kings 5:10"
+        "col": 9,
+        "text": "Naaman turned and went away in this",
+        "answer": "RAGE",
+        "reference": "2 Kings 5:12"
       },
       {
         "number": 3,
+        "direction": "down",
+        "row": 2,
+        "col": 7,
+        "text": "Gehazi left, leprous and white as this",
+        "answer": "SNOW",
+        "reference": "2 Kings 5:27"
+      },
+      {
+        "number": 4,
         "direction": "across",
-        "row": 0,
-        "col": 8,
+        "row": 2,
+        "col": 9,
         "text": "Captive from Israel who told her mistress of the prophet",
         "answer": "GIRL",
         "reference": "2 Kings 5:2"
       },
       {
-        "number": 3,
-        "direction": "down",
-        "row": 0,
-        "col": 8,
-        "text": "Naaman urged Elisha to accept one",
-        "answer": "GIFT",
-        "reference": "2 Kings 5:15"
-      },
-      {
-        "number": 4,
+        "number": 5,
         "direction": "down",
         "row": 2,
-        "col": 0,
-        "text": "Elisha's servant who ran after the chariot",
-        "answer": "GEHAZI",
-        "reference": "2 Kings 5:20"
+        "col": 12,
+        "text": "A mighty man of valor, but he was a ___",
+        "answer": "LEPER",
+        "reference": "2 Kings 5:1"
       },
       {
-        "number": 5,
+        "number": 6,
         "direction": "across",
         "row": 3,
-        "col": 2,
-        "text": "They reasoned with him to do the simple thing",
-        "answer": "SERVANTS",
-        "reference": "2 Kings 5:13"
+        "col": 3,
+        "text": "What he was after the seventh dip",
+        "answer": "CLEAN",
+        "reference": "2 Kings 5:14"
       },
       {
         "number": 6,
         "direction": "down",
         "row": 3,
-        "col": 6,
-        "text": "One of the rivers of Damascus he preferred",
-        "answer": "ABANA",
-        "reference": "2 Kings 5:12"
+        "col": 3,
+        "text": "His flesh became like that of a little one",
+        "answer": "CHILD",
+        "reference": "2 Kings 5:14"
       },
       {
         "number": 7,
-        "direction": "across",
-        "row": 5,
+        "direction": "down",
+        "row": 4,
         "col": 0,
-        "text": "The kingdom whose army he commanded",
-        "answer": "ARAM",
-        "reference": "2 Kings 5:1"
+        "text": "The river Naaman thought beneath him",
+        "answer": "JORDAN",
+        "reference": "2 Kings 5:10"
       },
       {
         "number": 8,
         "direction": "across",
         "row": 5,
-        "col": 5,
-        "text": "Commander of the army of Aram, a leper",
-        "answer": "NAAMAN",
-        "reference": "2 Kings 5:1"
+        "col": 2,
+        "text": "Naaman urged Elisha to accept one",
+        "answer": "GIFT",
+        "reference": "2 Kings 5:15"
       },
       {
         "number": 9,
-        "direction": "down",
-        "row": 6,
-        "col": 4,
-        "text": "Where the prophet who could heal him lived",
-        "answer": "SAMARIA",
-        "reference": "2 Kings 5:3"
-      },
-      {
-        "number": 10,
         "direction": "across",
         "row": 7,
         "col": 3,
         "text": "Its rivers were \"better than all the waters of Israel\"",
         "answer": "DAMASCUS",
         "reference": "2 Kings 5:12"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 7,
+        "col": 4,
+        "text": "The kingdom whose army he commanded",
+        "answer": "ARAM",
+        "reference": "2 Kings 5:1"
       },
       {
         "number": 11,
@@ -19579,72 +19588,63 @@
         "direction": "down",
         "row": 7,
         "col": 10,
-        "text": "Gehazi left, leprous and white as this",
-        "answer": "SNOW",
-        "reference": "2 Kings 5:27"
+        "text": "Where the prophet who could heal him lived",
+        "answer": "SAMARIA",
+        "reference": "2 Kings 5:3"
       },
       {
         "number": 13,
         "direction": "down",
         "row": 7,
         "col": 13,
-        "text": "The other river of Damascus",
-        "answer": "PHARPAR",
-        "reference": "2 Kings 5:12"
-      },
-      {
-        "number": 14,
-        "direction": "across",
-        "row": 9,
-        "col": 1,
-        "text": "What he was after the seventh dip",
-        "answer": "CLEAN",
-        "reference": "2 Kings 5:14"
-      },
-      {
-        "number": 14,
-        "direction": "down",
-        "row": 9,
-        "col": 1,
-        "text": "His flesh became like that of a little one",
-        "answer": "CHILD",
-        "reference": "2 Kings 5:14"
-      },
-      {
-        "number": 15,
-        "direction": "across",
-        "row": 9,
-        "col": 9,
-        "text": "The river Naaman thought beneath him",
-        "answer": "JORDAN",
+        "text": "He sent word: go wash in the river",
+        "answer": "ELISHA",
         "reference": "2 Kings 5:10"
       },
       {
-        "number": 16,
+        "number": 14,
+        "direction": "across",
+        "row": 9,
+        "col": 0,
+        "text": "Commander of the army of Aram, a leper",
+        "answer": "NAAMAN",
+        "reference": "2 Kings 5:1"
+      },
+      {
+        "number": 15,
         "direction": "down",
-        "row": 11,
-        "col": 9,
-        "text": "As much as a pair of mules could carry home",
-        "answer": "SOIL",
-        "reference": "2 Kings 5:17"
+        "row": 9,
+        "col": 1,
+        "text": "One of the rivers of Damascus he preferred",
+        "answer": "ABANAH",
+        "reference": "2 Kings 5:12"
+      },
+      {
+        "number": 16,
+        "direction": "across",
+        "row": 10,
+        "col": 6,
+        "text": "They reasoned with him to do the simple thing",
+        "answer": "SERVANTS",
+        "reference": "2 Kings 5:13"
       },
       {
         "number": 17,
         "direction": "across",
-        "row": 12,
-        "col": 3,
-        "text": "Naaman turned and went away in this",
-        "answer": "RAGE",
-        "reference": "2 Kings 5:12"
+        "row": 13,
+        "col": 7,
+        "text": "Elisha's servant who ran after the chariot",
+        "answer": "GEHAZI",
+        "reference": "2 Kings 5:20"
       },
       {
         "number": 18,
         "direction": "across",
-        "row": 13,
-        "col": 8,
-        "text": "Gehazi asked for a talent of it",
-        "answer": "SILVER",
-        "reference": "2 Kings 5:22"
+        "row": 14,
+        "col": 0,
+        "text": "The other river of Damascus",
+        "answer": "PHARPAR",
+        "reference": "2 Kings 5:12"
       }
     ]
   },
@@ -19733,7 +19733,7 @@
         "direction": "across",
         "row": 2,
         "col": 7,
-        "text": "\"They will all have one ___\"",
+        "text": "\"There will be one ___ for all of them\"",
         "answer": "SHEPHERD",
         "reference": "Ezekiel 37:24"
       },
@@ -19941,7 +19941,7 @@
         "direction": "across",
         "row": 5,
         "col": 0,
-        "text": "How Zacchaeus welcomed Him",
+        "text": "Zacchaeus welcomed Jesus with it",
         "answer": "JOY",
         "reference": "Luke 19:6"
       },
@@ -20918,7 +20918,7 @@
         "direction": "across",
         "row": 0,
         "col": 10,
-        "text": "The men at the door were struck with this",
+        "text": "What the angels made the men at Lot's door",
         "answer": "BLIND",
         "reference": "Genesis 19:11"
       },
@@ -28771,7 +28771,7 @@
         "direction": "down",
         "row": 0,
         "col": 3,
-        "text": "God's ___ had not yet gone out",
+        "text": "\"The ___ of God had not yet gone out\"",
         "answer": "LAMP",
         "reference": "1 Samuel 3:3"
       },
@@ -34619,7 +34619,7 @@
         "direction": "down",
         "row": 2,
         "col": 12,
-        "text": "Enter these with thanksgiving",
+        "text": "Enter His ___, and His courts with praise",
         "answer": "GATES",
         "reference": "Psalm 100:4"
       },
@@ -34700,7 +34700,7 @@
         "direction": "down",
         "row": 8,
         "col": 7,
-        "text": "Enter His gates with this, His courts with praise",
+        "text": "Bring it as you enter, and praise into His courts",
         "answer": "THANKSGIVING",
         "reference": "Psalm 100:4"
       },
@@ -34745,7 +34745,7 @@
         "direction": "across",
         "row": 10,
         "col": 3,
-        "text": "The righteous man is like a tree planted by these",
+        "text": "The blessed man is planted by these, yielding fruit in season",
         "answer": "STREAMSOFWATER",
         "reference": "Psalm 1:3"
       },
@@ -34763,7 +34763,7 @@
         "direction": "across",
         "row": 13,
         "col": 1,
-        "text": "As the deer pants for these, so my soul longs for God",
+        "text": "My soul longs for God as a panting animal longs for these",
         "answer": "STREAMS",
         "reference": "Psalm 42:1"
       },
@@ -34808,7 +34808,7 @@
         "direction": "down",
         "row": 16,
         "col": 9,
-        "text": "Musical pause found throughout the Psalms",
+        "text": "Word found throughout the Psalms, perhaps a musical pause",
         "answer": "SELAH",
         "reference": "Psalm 3:2"
       },
@@ -34844,7 +34844,7 @@
         "direction": "down",
         "row": 17,
         "col": 14,
-        "text": "It pants for streams of water",
+        "text": "As it pants for water, so my soul longs for God",
         "answer": "DEER",
         "reference": "Psalm 42:1"
       },
@@ -34915,9 +34915,9 @@
         "direction": "down",
         "row": 0,
         "col": 2,
-        "text": "The Horonite who mocked the builders of the wall",
+        "text": "The Horonite who ridiculed the builders of the wall",
         "answer": "SANBALLAT",
-        "reference": "Nehemiah 2:10"
+        "reference": "Nehemiah 4:1"
       },
       {
         "number": 3,
@@ -35068,7 +35068,7 @@
         "direction": "down",
         "row": 10,
         "col": 2,
-        "text": "Governor who set the returned exiles to work on the altar",
+        "text": "Son of Shealtiel who, with Jeshua, began rebuilding the altar",
         "answer": "ZERUBBABEL",
         "reference": "Ezra 3:2"
       },
@@ -35104,7 +35104,7 @@
         "direction": "across",
         "row": 11,
         "col": 15,
-        "text": "Ezra was one, skilled in the Law of Moses",
+        "text": "Office of the priest from Babylon skilled in the Law of Moses",
         "answer": "SCRIBE",
         "reference": "Ezra 7:6"
       },
@@ -35158,7 +35158,7 @@
         "direction": "across",
         "row": 15,
         "col": 10,
-        "text": "Worn with sackcloth by Mordecai at the city's center",
+        "text": "Mordecai put these on, with rough mourning cloth",
         "answer": "ASHES",
         "reference": "Esther 4:1"
       },
@@ -35355,7 +35355,7 @@
         "direction": "down",
         "row": 5,
         "col": 14,
-        "text": "Blessed are these, for they will inherit the earth",
+        "text": "Blessed are these, for the earth will be theirs",
         "answer": "MEEK",
         "reference": "Matthew 5:5"
       },
@@ -35364,7 +35364,7 @@
         "direction": "down",
         "row": 6,
         "col": 8,
-        "text": "Birds of the air do not gather into these",
+        "text": "Creatures of the air do not gather into these, yet are fed",
         "answer": "BARNS",
         "reference": "Matthew 6:26"
       },
@@ -35409,7 +35409,7 @@
         "direction": "across",
         "row": 10,
         "col": 3,
-        "text": "False prophets come in this, but inwardly are ravenous wolves",
+        "text": "False prophets come to you disguised in this",
         "answer": "SHEEPSCLOTHING",
         "reference": "Matthew 7:15"
       },
@@ -35472,7 +35472,7 @@
         "direction": "down",
         "row": 13,
         "col": 19,
-        "text": "They break in and steal treasures on earth",
+        "text": "They break in and steal",
         "answer": "THIEVES",
         "reference": "Matthew 6:19"
       },
@@ -35608,7 +35608,7 @@
         "col": 1,
         "text": "City where Paul stayed a year and a half",
         "answer": "CORINTH",
-        "reference": "Acts 18:1"
+        "reference": "Acts 18:11"
       },
       {
         "number": 2,
@@ -35660,7 +35660,7 @@
         "direction": "across",
         "row": 3,
         "col": 11,
-        "text": "A man from here appeared in a vision: \"Come over and help us\"",
+        "text": "A man in a vision pleaded, \"Come over to ___ and help us\"",
         "answer": "MACEDONIA",
         "reference": "Acts 16:9"
       },
@@ -35815,14 +35815,14 @@
         "col": 10,
         "text": "Where Paul lived two years in his own rented house",
         "answer": "ROME",
-        "reference": "Acts 28:16"
+        "reference": "Acts 28:30"
       },
       {
         "number": 23,
         "direction": "down",
         "row": 14,
         "col": 13,
-        "text": "Where a riot broke out over Artemis",
+        "text": "City where Paul found some disciples who had not heard of the Holy Spirit",
         "answer": "EPHESUS",
         "reference": "Acts 19:1"
       },
@@ -35831,7 +35831,7 @@
         "direction": "down",
         "row": 14,
         "col": 19,
-        "text": "\"Great is ___ of the Ephesians!\"",
+        "text": "Goddess whose silver shrines Demetrius made",
         "answer": "ARTEMIS",
         "reference": "Acts 19:28"
       },
