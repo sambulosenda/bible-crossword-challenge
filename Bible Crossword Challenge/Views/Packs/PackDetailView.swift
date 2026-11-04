@@ -287,7 +287,7 @@ struct PackDetailView: View {
                         TrackRow(
                             number: index + 1,
                             title: puzzle.title,
-                            detail: puzzle.detailLine,
+                            detail: puzzle.detailLine(among: puzzles),
                             numeralTint: Color.secondary,
                             grid: puzzle.grid
                         ) {
@@ -340,7 +340,7 @@ struct PackDetailView: View {
                         TrackRow(
                             number: index + 1,
                             title: puzzle.title,
-                            detail: puzzle.detailLine,
+                            detail: puzzle.detailLine(among: puzzles),
                             numeralTint: Color.secondary,
                             grid: puzzle.grid
                         ) {

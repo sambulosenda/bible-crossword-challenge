@@ -281,8 +281,9 @@ struct ProfileView: View {
                     symbol: journey.coverSymbol,
                     tint: FeatureTint.journey,
                     title: progress.solved == 0 ? "Start a Journey" : journey.title,
-                    subtitle: journeySubtitle(journey, progress: progress),
-                    progress: progress.solved > 0 ? progress.fraction : nil
+                    // No bar (2026-11-04), as on Today: the subtitle says
+                    // "Step 3 of 7", and the bar was the one heavy mark here.
+                    subtitle: journeySubtitle(journey, progress: progress)
                 )
                 .cardRowPadding()
             }
