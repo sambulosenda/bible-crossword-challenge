@@ -186,7 +186,7 @@ struct RotationWrapTests {
     @Test func theSundayPoolWrapsAfterItsOwnLength() {
         let provider = PuzzleProvider.shared
         let pool = provider.sundays
-        #expect(pool.count == 13, "sunday pool changed — the wrap week has moved")
+        #expect(pool.count == 17, "sunday pool changed — the wrap week has moved")
 
         // 2026-08-16 is a Sunday.
         let sunday = day(2026, 8, 16)

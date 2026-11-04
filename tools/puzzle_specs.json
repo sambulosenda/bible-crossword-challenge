@@ -21071,5 +21071,834 @@
       }
     ],
     "id": "mini-097"
+  },
+  {
+    "kind": "sunday",
+    "title": "Such a Time as This",
+    "theme": "Return and rebuilding (Ezra, Nehemiah, Esther)",
+    "difficulty": "medium",
+    "verse": "And who knows if perhaps you have come to the kingdom for such a time as this?",
+    "reference": "Esther 4:14",
+    "words": [
+      {
+        "answer": "DELIVERANCE",
+        "clue": "Mordecai warned it would arise from another place if she kept silent",
+        "reference": "Esther 4:14"
+      },
+      {
+        "answer": "FIFTYTWODAYS",
+        "clue": "How long the rebuilt wall of Jerusalem took to finish",
+        "reference": "Nehemiah 6:15"
+      },
+      {
+        "answer": "ZERUBBABEL",
+        "clue": "Governor who set the returned exiles to work on the altar",
+        "reference": "Ezra 3:2"
+      },
+      {
+        "answer": "ARTAXERXES",
+        "clue": "King who let his cupbearer go home to rebuild",
+        "reference": "Nehemiah 2:1"
+      },
+      {
+        "answer": "FOUNDATION",
+        "clue": "Laid for the temple while some shouted and the old men wept",
+        "reference": "Ezra 3:10"
+      },
+      {
+        "answer": "SIGNETRING",
+        "clue": "The king took it off his hand and gave it to Haman",
+        "reference": "Esther 3:10"
+      },
+      {
+        "answer": "SACKCLOTH",
+        "clue": "Mordecai tore his clothes and put this on, with ashes",
+        "reference": "Esther 4:1"
+      },
+      {
+        "answer": "WATERGATE",
+        "clue": "Square where the people gathered to hear the Law read",
+        "reference": "Nehemiah 8:1"
+      },
+      {
+        "answer": "SANBALLAT",
+        "clue": "The Horonite who mocked the builders of the wall",
+        "reference": "Nehemiah 2:10"
+      },
+      {
+        "answer": "CUPBEARER",
+        "clue": "Nehemiah's post in the Persian king's court",
+        "reference": "Nehemiah 1:11"
+      },
+      {
+        "answer": "JERUSALEM",
+        "clue": "Its walls lay broken down and its gates burned",
+        "reference": "Nehemiah 2:17"
+      },
+      {
+        "answer": "NEHEMIAH",
+        "clue": "He prayed, then asked the king for timber and letters",
+        "reference": "Nehemiah 2:8"
+      },
+      {
+        "answer": "MORDECAI",
+        "clue": "Benjamite at the king's gate who raised his cousin",
+        "reference": "Esther 2:7"
+      },
+      {
+        "answer": "HADASSAH",
+        "clue": "Esther's other name",
+        "reference": "Esther 2:7"
+      },
+      {
+        "answer": "BABYLON",
+        "clue": "Where the exiles were carried, and from where they came home",
+        "reference": "Ezra 1:11"
+      },
+      {
+        "answer": "AGAGITE",
+        "clue": "Haman's people, as the book names them",
+        "reference": "Esther 3:1"
+      },
+      {
+        "answer": "SCEPTER",
+        "clue": "Held out in gold, it meant the queen would live",
+        "reference": "Esther 5:2"
+      },
+      {
+        "answer": "BANQUET",
+        "clue": "Esther invited the king and Haman to two of these",
+        "reference": "Esther 5:4"
+      },
+      {
+        "answer": "GALLOWS",
+        "clue": "Built for Mordecai, used for Haman",
+        "reference": "Esther 7:10"
+      },
+      {
+        "answer": "ESTHER",
+        "clue": "Queen who said, \"If I perish, I perish\"",
+        "reference": "Esther 4:16"
+      },
+      {
+        "answer": "XERXES",
+        "clue": "King who ruled from India to Cush",
+        "reference": "Esther 1:1"
+      },
+      {
+        "answer": "VASHTI",
+        "clue": "Queen who refused to come at the king's command",
+        "reference": "Esther 1:12"
+      },
+      {
+        "answer": "TOBIAH",
+        "clue": "The Ammonite official who opposed the rebuilding",
+        "reference": "Nehemiah 2:10"
+      },
+      {
+        "answer": "DARIUS",
+        "clue": "King whose search of the archives found Cyrus's decree",
+        "reference": "Ezra 6:1"
+      },
+      {
+        "answer": "SCRIBE",
+        "clue": "Ezra was one, skilled in the Law of Moses",
+        "reference": "Ezra 7:6"
+      },
+      {
+        "answer": "BOOTHS",
+        "clue": "The people lived in these during the feast, as the Law said",
+        "reference": "Nehemiah 8:14"
+      },
+      {
+        "answer": "PERSIA",
+        "clue": "Empire of Cyrus",
+        "reference": "Ezra 1:1"
+      },
+      {
+        "answer": "PURIM",
+        "clue": "The feast named for the lots Haman cast",
+        "reference": "Esther 9:26"
+      },
+      {
+        "answer": "HAMAN",
+        "clue": "Son of Hammedatha, enemy of the Jews",
+        "reference": "Esther 3:1"
+      },
+      {
+        "answer": "CYRUS",
+        "clue": "King stirred by the LORD to send the exiles home",
+        "reference": "Ezra 1:1"
+      },
+      {
+        "answer": "SWORD",
+        "clue": "Each builder wore one at his side while he worked",
+        "reference": "Nehemiah 4:18"
+      },
+      {
+        "answer": "TEMPLE",
+        "clue": "House of God completed in Darius's sixth year",
+        "reference": "Ezra 6:15"
+      },
+      {
+        "answer": "ASHES",
+        "clue": "Worn with sackcloth by Mordecai at the city's center",
+        "reference": "Esther 4:1"
+      },
+      {
+        "answer": "SUSA",
+        "clue": "Citadel where the Persian king held court",
+        "reference": "Esther 1:2"
+      },
+      {
+        "answer": "EZRA",
+        "clue": "Priest who read the Law from a wooden platform",
+        "reference": "Nehemiah 8:4"
+      },
+      {
+        "answer": "ADAR",
+        "clue": "The twelfth month, chosen by lot for the destruction",
+        "reference": "Esther 3:7"
+      },
+      {
+        "answer": "ELUL",
+        "clue": "Month in which the wall was finished",
+        "reference": "Nehemiah 6:15"
+      },
+      {
+        "answer": "WALL",
+        "clue": "Builders carried loads with one hand and a weapon in the other on this",
+        "reference": "Nehemiah 4:17"
+      },
+      {
+        "answer": "LAW",
+        "clue": "Ezra read it aloud from daybreak until noon",
+        "reference": "Nehemiah 8:3"
+      }
+    ],
+    "id": "sunday-015"
+  },
+  {
+    "kind": "sunday",
+    "title": "The Sermon on the Mount",
+    "theme": "Matthew 5-7",
+    "difficulty": "medium",
+    "verse": "You are the light of the world. A city on a hill cannot be hidden.",
+    "reference": "Matthew 5:14",
+    "words": [
+      {
+        "answer": "SHEEPSCLOTHING",
+        "clue": "False prophets come in this, but inwardly are ravenous wolves",
+        "reference": "Matthew 7:15"
+      },
+      {
+        "answer": "POORINSPIRIT",
+        "clue": "Blessed are these, for theirs is the kingdom of heaven",
+        "reference": "Matthew 5:3"
+      },
+      {
+        "answer": "PEACEMAKERS",
+        "clue": "They will be called sons of God",
+        "reference": "Matthew 5:9"
+      },
+      {
+        "answer": "PUREINHEART",
+        "clue": "Blessed are these, for they will see God",
+        "reference": "Matthew 5:8"
+      },
+      {
+        "answer": "NARROWGATE",
+        "clue": "Enter by this; the wide one leads to destruction",
+        "reference": "Matthew 7:13"
+      },
+      {
+        "answer": "DAILYBREAD",
+        "clue": "\"Give us this day our ___\"",
+        "reference": "Matthew 6:11"
+      },
+      {
+        "answer": "HYPOCRITES",
+        "clue": "They sound a trumpet to be honored by men",
+        "reference": "Matthew 6:2"
+      },
+      {
+        "answer": "PERSECUTED",
+        "clue": "Blessed are those who are this for righteousness",
+        "reference": "Matthew 5:10"
+      },
+      {
+        "answer": "TEMPTATION",
+        "clue": "\"And lead us not into ___\"",
+        "reference": "Matthew 6:13"
+      },
+      {
+        "answer": "TREASURES",
+        "clue": "Store these up in heaven, not on earth",
+        "reference": "Matthew 6:20"
+      },
+      {
+        "answer": "AUTHORITY",
+        "clue": "The crowds were amazed: He taught as one who had it",
+        "reference": "Matthew 7:29"
+      },
+      {
+        "answer": "LAMP",
+        "clue": "No one lights one and puts it under a basket",
+        "reference": "Matthew 5:15"
+      },
+      {
+        "answer": "MERCIFUL",
+        "clue": "Blessed are these, for they will be shown mercy",
+        "reference": "Matthew 5:7"
+      },
+      {
+        "answer": "HALLOWED",
+        "clue": "\"Our Father in heaven, ___ be Your name\"",
+        "reference": "Matthew 6:9"
+      },
+      {
+        "answer": "MOUNTAIN",
+        "clue": "Seeing the crowds, Jesus went up on this and sat down",
+        "reference": "Matthew 5:1"
+      },
+      {
+        "answer": "TOMORROW",
+        "clue": "Do not worry about it; it will worry about itself",
+        "reference": "Matthew 6:34"
+      },
+      {
+        "answer": "BLESSED",
+        "clue": "The first word of each beatitude",
+        "reference": "Matthew 5:3"
+      },
+      {
+        "answer": "INHERIT",
+        "clue": "What the meek will do to the earth",
+        "reference": "Matthew 5:5"
+      },
+      {
+        "answer": "ENEMIES",
+        "clue": "Love these, and pray for those who persecute you",
+        "reference": "Matthew 5:44"
+      },
+      {
+        "answer": "PERFECT",
+        "clue": "Be this, as your heavenly Father is",
+        "reference": "Matthew 5:48"
+      },
+      {
+        "answer": "LILIES",
+        "clue": "Consider how these of the field grow",
+        "reference": "Matthew 6:28"
+      },
+      {
+        "answer": "PEARLS",
+        "clue": "Do not throw these before pigs",
+        "reference": "Matthew 7:6"
+      },
+      {
+        "answer": "THIEVES",
+        "clue": "They break in and steal treasures on earth",
+        "reference": "Matthew 6:19"
+      },
+      {
+        "answer": "THISTLES",
+        "clue": "Figs are not gathered from these",
+        "reference": "Matthew 7:16"
+      },
+      {
+        "answer": "WOLVES",
+        "clue": "What false prophets are inwardly",
+        "reference": "Matthew 7:15"
+      },
+      {
+        "answer": "MOURN",
+        "clue": "Blessed are those who do this, for they will be comforted",
+        "reference": "Matthew 5:4"
+      },
+      {
+        "answer": "SPECK",
+        "clue": "Why look at this in your brother's eye?",
+        "reference": "Matthew 7:3"
+      },
+      {
+        "answer": "KNOCK",
+        "clue": "Do this and the door will be opened to you",
+        "reference": "Matthew 7:7"
+      },
+      {
+        "answer": "CHEEK",
+        "clue": "If someone slaps the right one, turn the other also",
+        "reference": "Matthew 5:39"
+      },
+      {
+        "answer": "BIRDS",
+        "clue": "They neither sow nor reap, yet the Father feeds them",
+        "reference": "Matthew 6:26"
+      },
+      {
+        "answer": "BARNS",
+        "clue": "Birds of the air do not gather into these",
+        "reference": "Matthew 6:26"
+      },
+      {
+        "answer": "DEBTS",
+        "clue": "\"Forgive us our ___, as we also have forgiven\"",
+        "reference": "Matthew 6:12"
+      },
+      {
+        "answer": "SECRET",
+        "clue": "Give, pray and fast in this, and your Father will see",
+        "reference": "Matthew 6:4"
+      },
+      {
+        "answer": "SALT",
+        "clue": "\"You are the ___ of the earth\"",
+        "reference": "Matthew 5:13"
+      },
+      {
+        "answer": "MEEK",
+        "clue": "Blessed are these, for they will inherit the earth",
+        "reference": "Matthew 5:5"
+      },
+      {
+        "answer": "ROCK",
+        "clue": "The wise man built his house on this",
+        "reference": "Matthew 7:24"
+      },
+      {
+        "answer": "SAND",
+        "clue": "The foolish man's foundation",
+        "reference": "Matthew 7:26"
+      },
+      {
+        "answer": "MOTH",
+        "clue": "It destroys treasures stored on earth, along with rust",
+        "reference": "Matthew 6:19"
+      },
+      {
+        "answer": "SEEK",
+        "clue": "Do this first for His kingdom",
+        "reference": "Matthew 6:33"
+      }
+    ],
+    "id": "sunday-016"
+  },
+  {
+    "kind": "sunday",
+    "title": "Songs for the Journey",
+    "theme": "The Psalms",
+    "difficulty": "medium",
+    "verse": "The LORD is my shepherd; I shall not want.",
+    "reference": "Psalm 23:1",
+    "words": [
+      {
+        "answer": "STREAMSOFWATER",
+        "clue": "The righteous man is like a tree planted by these",
+        "reference": "Psalm 1:3"
+      },
+      {
+        "answer": "GREENPASTURES",
+        "clue": "He makes me lie down in these",
+        "reference": "Psalm 23:2"
+      },
+      {
+        "answer": "THANKSGIVING",
+        "clue": "Enter His gates with this, His courts with praise",
+        "reference": "Psalm 100:4"
+      },
+      {
+        "answer": "QUIETWATERS",
+        "clue": "He leads me beside these",
+        "reference": "Psalm 23:2"
+      },
+      {
+        "answer": "TAMBOURINE",
+        "clue": "Praise Him with this and with dancing",
+        "reference": "Psalm 150:4"
+      },
+      {
+        "answer": "HALLELUJAH",
+        "clue": "How Psalm 150 begins and ends",
+        "reference": "Psalm 150:1"
+      },
+      {
+        "answer": "CLEANHEART",
+        "clue": "\"Create in me a ___, O God\"",
+        "reference": "Psalm 51:10"
+      },
+      {
+        "answer": "SHEPHERD",
+        "clue": "What the LORD is to David in the best-known psalm",
+        "reference": "Psalm 23:1"
+      },
+      {
+        "answer": "FORTRESS",
+        "clue": "My rock, my ___ and my deliverer",
+        "reference": "Psalm 18:2"
+      },
+      {
+        "answer": "GOODNESS",
+        "clue": "It and mercy will follow me all my days",
+        "reference": "Psalm 23:6"
+      },
+      {
+        "answer": "FEATHERS",
+        "clue": "He will cover you with these",
+        "reference": "Psalm 91:4"
+      },
+      {
+        "answer": "CYMBALS",
+        "clue": "Praise Him with clashing and resounding ones",
+        "reference": "Psalm 150:5"
+      },
+      {
+        "answer": "HEAVENS",
+        "clue": "They declare the glory of God",
+        "reference": "Psalm 19:1"
+      },
+      {
+        "answer": "SLUMBER",
+        "clue": "Israel's Protector will neither do this nor sleep",
+        "reference": "Psalm 121:4"
+      },
+      {
+        "answer": "HARP",
+        "clue": "Praise Him with it and the lyre",
+        "reference": "Psalm 150:3"
+      },
+      {
+        "answer": "NEWSONG",
+        "clue": "Sing one to the LORD, all the earth",
+        "reference": "Psalm 96:1"
+      },
+      {
+        "answer": "MAJESTIC",
+        "clue": "How Your name is in all the earth",
+        "reference": "Psalm 8:1"
+      },
+      {
+        "answer": "HYSSOP",
+        "clue": "\"Purify me with ___, and I will be clean\"",
+        "reference": "Psalm 51:7"
+      },
+      {
+        "answer": "REFUGE",
+        "clue": "God is our ___ and strength",
+        "reference": "Psalm 46:1"
+      },
+      {
+        "answer": "VALLEY",
+        "clue": "Even walking through it, I will fear no evil",
+        "reference": "Psalm 23:4"
+      },
+      {
+        "answer": "STREAMS",
+        "clue": "As the deer pants for these, so my soul longs for God",
+        "reference": "Psalm 42:1"
+      },
+      {
+        "answer": "PASTURE",
+        "clue": "We are the sheep of His",
+        "reference": "Psalm 100:3"
+      },
+      {
+        "answer": "BREATH",
+        "clue": "Let everything that has it praise the LORD",
+        "reference": "Psalm 150:6"
+      },
+      {
+        "answer": "SHIELD",
+        "clue": "The LORD is my strength and my ___",
+        "reference": "Psalm 28:7"
+      },
+      {
+        "answer": "HILLS",
+        "clue": "\"I lift up my eyes to the ___\"",
+        "reference": "Psalm 121:1"
+      },
+      {
+        "answer": "CHAFF",
+        "clue": "The wicked are like this, driven by the wind",
+        "reference": "Psalm 1:4"
+      },
+      {
+        "answer": "SELAH",
+        "clue": "Musical pause found throughout the Psalms",
+        "reference": "Psalm 3:2"
+      },
+      {
+        "answer": "WINGS",
+        "clue": "Under these you will find refuge",
+        "reference": "Psalm 91:4"
+      },
+      {
+        "answer": "STAFF",
+        "clue": "With the rod, it comforts me",
+        "reference": "Psalm 23:4"
+      },
+      {
+        "answer": "SNOW",
+        "clue": "Wash me, and I will be whiter than this",
+        "reference": "Psalm 51:7"
+      },
+      {
+        "answer": "LAMP",
+        "clue": "Your word is one to my feet",
+        "reference": "Psalm 119:105"
+      },
+      {
+        "answer": "PATH",
+        "clue": "Your word is a light to it",
+        "reference": "Psalm 119:105"
+      },
+      {
+        "answer": "ZION",
+        "clue": "By Babylon's rivers we wept as we remembered it",
+        "reference": "Psalm 137:1"
+      },
+      {
+        "answer": "DEER",
+        "clue": "It pants for streams of water",
+        "reference": "Psalm 42:1"
+      },
+      {
+        "answer": "SOUL",
+        "clue": "He restores it",
+        "reference": "Psalm 23:3"
+      },
+      {
+        "answer": "GATES",
+        "clue": "Enter these with thanksgiving",
+        "reference": "Psalm 100:4"
+      },
+      {
+        "answer": "TREE",
+        "clue": "The blessed man is like one that yields fruit in season",
+        "reference": "Psalm 1:3"
+      },
+      {
+        "answer": "ROD",
+        "clue": "With the staff, it comforts me",
+        "reference": "Psalm 23:4"
+      },
+      {
+        "answer": "CUP",
+        "clue": "Mine overflows",
+        "reference": "Psalm 23:5"
+      }
+    ],
+    "id": "sunday-014"
+  },
+  {
+    "kind": "sunday",
+    "title": "The Long Road to Rome",
+    "theme": "Paul's journeys (Acts 9-28)",
+    "difficulty": "hard",
+    "verse": "I have fought the good fight, I have finished the race, I have kept the faith.",
+    "reference": "2 Timothy 4:7",
+    "words": [
+      {
+        "answer": "THESSALONICA",
+        "clue": "City with a synagogue where Paul reasoned three Sabbaths",
+        "reference": "Acts 17:1"
+      },
+      {
+        "answer": "SILVERSMITH",
+        "clue": "Demetrius's trade, threatened by Paul's preaching",
+        "reference": "Acts 19:24"
+      },
+      {
+        "answer": "EARTHQUAKE",
+        "clue": "It shook the prison at midnight as Paul and Silas sang",
+        "reference": "Acts 16:26"
+      },
+      {
+        "answer": "TENTMAKERS",
+        "clue": "The trade Paul shared with Aquila and Priscilla",
+        "reference": "Acts 18:3"
+      },
+      {
+        "answer": "CHRISTIANS",
+        "clue": "What the disciples were first called at Antioch",
+        "reference": "Acts 11:26"
+      },
+      {
+        "answer": "UNKNOWNGOD",
+        "clue": "Inscription on an Athenian altar Paul quoted",
+        "reference": "Acts 17:23"
+      },
+      {
+        "answer": "AREOPAGUS",
+        "clue": "Hill where Paul addressed the men of Athens",
+        "reference": "Acts 17:19"
+      },
+      {
+        "answer": "MACEDONIA",
+        "clue": "A man from here appeared in a vision: \"Come over and help us\"",
+        "reference": "Acts 16:9"
+      },
+      {
+        "answer": "PRISCILLA",
+        "clue": "She and her husband had come from Italy",
+        "reference": "Acts 18:2"
+      },
+      {
+        "answer": "PHILIPPI",
+        "clue": "Leading city of that district, and a Roman colony",
+        "reference": "Acts 16:12"
+      },
+      {
+        "answer": "DAMASCUS",
+        "clue": "Saul was nearing it when a light flashed around him",
+        "reference": "Acts 9:3"
+      },
+      {
+        "answer": "BARNABAS",
+        "clue": "He brought Saul to the apostles in Jerusalem",
+        "reference": "Acts 9:27"
+      },
+      {
+        "answer": "EUTYCHUS",
+        "clue": "Young man who fell asleep during a long sermon",
+        "reference": "Acts 20:9"
+      },
+      {
+        "answer": "ANANIAS",
+        "clue": "Disciple sent to lay hands on the blinded Saul",
+        "reference": "Acts 9:17"
+      },
+      {
+        "answer": "ANTIOCH",
+        "clue": "Church that set apart Barnabas and Saul",
+        "reference": "Acts 13:1"
+      },
+      {
+        "answer": "TIMOTHY",
+        "clue": "Disciple at Lystra whose mother was a believer",
+        "reference": "Acts 16:1"
+      },
+      {
+        "answer": "CORINTH",
+        "clue": "City where Paul stayed a year and a half",
+        "reference": "Acts 18:1"
+      },
+      {
+        "answer": "EPHESUS",
+        "clue": "Where a riot broke out over Artemis",
+        "reference": "Acts 19:1"
+      },
+      {
+        "answer": "AGRIPPA",
+        "clue": "King who asked if Paul could persuade him so quickly",
+        "reference": "Acts 26:28"
+      },
+      {
+        "answer": "STRAIGHT",
+        "clue": "The street in Damascus where Saul waited",
+        "reference": "Acts 9:11"
+      },
+      {
+        "answer": "ARTEMIS",
+        "clue": "\"Great is ___ of the Ephesians!\"",
+        "reference": "Acts 19:28"
+      },
+      {
+        "answer": "WINDOW",
+        "clue": "Eutychus fell from one, three stories down",
+        "reference": "Acts 20:9"
+      },
+      {
+        "answer": "CAESAR",
+        "clue": "\"I appeal to ___!\"",
+        "reference": "Acts 25:11"
+      },
+      {
+        "answer": "PURPLE",
+        "clue": "Lydia was a dealer in cloth of this color",
+        "reference": "Acts 16:14"
+      },
+      {
+        "answer": "JAILER",
+        "clue": "He woke, saw the prison doors open, and drew his sword",
+        "reference": "Acts 16:27"
+      },
+      {
+        "answer": "SCALES",
+        "clue": "Something like these fell from Saul's eyes",
+        "reference": "Acts 9:18"
+      },
+      {
+        "answer": "BASKET",
+        "clue": "Saul was let down the wall in one",
+        "reference": "Acts 9:25"
+      },
+      {
+        "answer": "CYPRUS",
+        "clue": "Island where the first journey began",
+        "reference": "Acts 13:4"
+      },
+      {
+        "answer": "LYSTRA",
+        "clue": "City where the crowd called Paul Hermes",
+        "reference": "Acts 14:12"
+      },
+      {
+        "answer": "ATHENS",
+        "clue": "City Paul found full of idols",
+        "reference": "Acts 17:16"
+      },
+      {
+        "answer": "AQUILA",
+        "clue": "Jew from Pontus who made tents with Paul",
+        "reference": "Acts 18:2"
+      },
+      {
+        "answer": "SILAS",
+        "clue": "Paul's companion on the second journey",
+        "reference": "Acts 15:40"
+      },
+      {
+        "answer": "LYDIA",
+        "clue": "Seller from Thyatira whose heart the Lord opened",
+        "reference": "Acts 16:14"
+      },
+      {
+        "answer": "BEREA",
+        "clue": "Its Jews searched the Scriptures daily",
+        "reference": "Acts 17:10"
+      },
+      {
+        "answer": "MALTA",
+        "clue": "Island where the shipwrecked crew came ashore",
+        "reference": "Acts 28:1"
+      },
+      {
+        "answer": "VIPER",
+        "clue": "It fastened on Paul's hand by the fire",
+        "reference": "Acts 28:3"
+      },
+      {
+        "answer": "FELIX",
+        "clue": "Governor who kept Paul in custody two years",
+        "reference": "Acts 24:27"
+      },
+      {
+        "answer": "SAUL",
+        "clue": "\"___, ___, why do you persecute Me?\"",
+        "reference": "Acts 9:4"
+      },
+      {
+        "answer": "ROME",
+        "clue": "Where Paul lived two years in his own rented house",
+        "reference": "Acts 28:16"
+      },
+      {
+        "answer": "RACE",
+        "clue": "Paul finished it",
+        "reference": "2 Timothy 4:7"
+      }
+    ],
+    "id": "sunday-017"
   }
 ]

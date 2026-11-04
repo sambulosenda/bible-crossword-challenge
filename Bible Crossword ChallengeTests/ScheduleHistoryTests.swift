@@ -30,6 +30,13 @@ struct ScheduleHistoryTests {
     /// Last day the original 248-puzzle bank served before the schedule.
     private let cutover = "2026-11-04"
 
+    /// The pools as they shipped at the cutover. New puzzles append after
+    /// them in file order, so history is the prefix: recomputing it with the
+    /// grown pool would expect a rotation nobody was ever served.
+    private var legacyDailies: [Puzzle] { Array(provider.puzzles.prefix(92)) }
+    private var legacyMinis: [Puzzle] { Array(provider.minis.prefix(97)) }
+    private var legacySundays: [Puzzle] { Array(provider.sundays.prefix(13)) }
+
     @Test func scheduleIsBundled() throws {
         let schedule = try #require(provider.schedule)
         #expect(schedule.daily["2026-07-01"] != nil)
@@ -40,7 +47,7 @@ struct ScheduleHistoryTests {
         let schedule = try #require(provider.schedule)
         for key in schedule.daily.keys where key <= cutover {
             let date = noon(key)
-            #expect(provider.dailyPuzzle(for: date, calendar: calendar)?.id == legacy(provider.puzzles, date), "daily \(key)")
+            #expect(provider.dailyPuzzle(for: date, calendar: calendar)?.id == legacy(legacyDailies, date), "daily \(key)")
         }
     }
 
@@ -48,13 +55,13 @@ struct ScheduleHistoryTests {
         let schedule = try #require(provider.schedule)
         for key in schedule.mini.keys where key <= cutover {
             let date = noon(key)
-            #expect(provider.dailyMini(for: date, calendar: calendar)?.id == legacy(provider.minis, date), "mini \(key)")
+            #expect(provider.dailyMini(for: date, calendar: calendar)?.id == legacy(legacyMinis, date), "mini \(key)")
         }
     }
 
     @Test func pastSundaysMatchTheLegacyRotation() throws {
         let schedule = try #require(provider.schedule)
-        let pool = provider.sundays
+        let pool = legacySundays
         for key in schedule.sunday.keys where key <= cutover {
             // Every day of the week serves the same Special.
             for offset in 0..<7 {

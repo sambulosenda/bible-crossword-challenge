@@ -28923,6 +28923,1406 @@
     "kind": "sunday"
   },
   {
+    "id": "sunday-014",
+    "title": "Songs for the Journey",
+    "difficulty": "medium",
+    "verse": "The LORD is my shepherd; I shall not want.",
+    "reference": "Psalm 23:1",
+    "publishDate": "2026-07-14",
+    "size": 21,
+    "grid": [
+      ".....S...HYSSOP.....F",
+      ".GOODNESS.....A.....O",
+      ".R...O.H..Z.G.SLUMBER",
+      ".E...W.I..I.A.T...R.T",
+      ".E.L...E..O.T.U...E.R",
+      ".N.A..CLEANHEART..A.E",
+      ".P.M...D....S.E...T.S",
+      "HARP.....N........H.S",
+      ".S..P..TREE..C.....Q.",
+      ".T..A..H.W...H.R..CUP",
+      ".U.STREAMSOFWATER..I.",
+      ".R..H..N.O.E.F.F...E.",
+      ".E.....K.N.A.F.U...T.",
+      ".STREAMS.G.T...G...W.",
+      ".......G...HALLELUJAH",
+      ".MAJESTIC..E.......T.",
+      "S....O.V.S.ROD.VALLEY",
+      "TAMBOURINE.S..D....R.",
+      "A....L.N.L...HEAVENS.",
+      "F......G.A....E......",
+      "F.......SHEPHERD....."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 5,
+        "text": "Wash me, and I will be whiter than this",
+        "answer": "SNOW",
+        "reference": "Psalm 51:7"
+      },
+      {
+        "number": 2,
+        "direction": "across",
+        "row": 0,
+        "col": 9,
+        "text": "\"Purify me with ___, and I will be clean\"",
+        "answer": "HYSSOP",
+        "reference": "Psalm 51:7"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 0,
+        "col": 14,
+        "text": "We are the sheep of His",
+        "answer": "PASTURE",
+        "reference": "Psalm 100:3"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 0,
+        "col": 20,
+        "text": "My rock, my ___ and my deliverer",
+        "answer": "FORTRESS",
+        "reference": "Psalm 18:2"
+      },
+      {
+        "number": 5,
+        "direction": "across",
+        "row": 1,
+        "col": 1,
+        "text": "It and mercy will follow me all my days",
+        "answer": "GOODNESS",
+        "reference": "Psalm 23:6"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 1,
+        "col": 1,
+        "text": "He makes me lie down in these",
+        "answer": "GREENPASTURES",
+        "reference": "Psalm 23:2"
+      },
+      {
+        "number": 6,
+        "direction": "down",
+        "row": 1,
+        "col": 7,
+        "text": "The LORD is my strength and my ___",
+        "answer": "SHIELD",
+        "reference": "Psalm 28:7"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 2,
+        "col": 10,
+        "text": "By Babylon's rivers we wept as we remembered it",
+        "answer": "ZION",
+        "reference": "Psalm 137:1"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 2,
+        "col": 12,
+        "text": "Enter these with thanksgiving",
+        "answer": "GATES",
+        "reference": "Psalm 100:4"
+      },
+      {
+        "number": 9,
+        "direction": "across",
+        "row": 2,
+        "col": 14,
+        "text": "Israel's Protector will neither do this nor sleep",
+        "answer": "SLUMBER",
+        "reference": "Psalm 121:4"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 2,
+        "col": 18,
+        "text": "Let everything that has it praise the LORD",
+        "answer": "BREATH",
+        "reference": "Psalm 150:6"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 4,
+        "col": 3,
+        "text": "Your word is one to my feet",
+        "answer": "LAMP",
+        "reference": "Psalm 119:105"
+      },
+      {
+        "number": 12,
+        "direction": "across",
+        "row": 5,
+        "col": 6,
+        "text": "\"Create in me a ___, O God\"",
+        "answer": "CLEANHEART",
+        "reference": "Psalm 51:10"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 7,
+        "col": 0,
+        "text": "Praise Him with it and the lyre",
+        "answer": "HARP",
+        "reference": "Psalm 150:3"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 7,
+        "col": 9,
+        "text": "Sing one to the LORD, all the earth",
+        "answer": "NEWSONG",
+        "reference": "Psalm 96:1"
+      },
+      {
+        "number": 15,
+        "direction": "down",
+        "row": 8,
+        "col": 4,
+        "text": "Your word is a light to it",
+        "answer": "PATH",
+        "reference": "Psalm 119:105"
+      },
+      {
+        "number": 16,
+        "direction": "across",
+        "row": 8,
+        "col": 7,
+        "text": "The blessed man is like one that yields fruit in season",
+        "answer": "TREE",
+        "reference": "Psalm 1:3"
+      },
+      {
+        "number": 16,
+        "direction": "down",
+        "row": 8,
+        "col": 7,
+        "text": "Enter His gates with this, His courts with praise",
+        "answer": "THANKSGIVING",
+        "reference": "Psalm 100:4"
+      },
+      {
+        "number": 17,
+        "direction": "down",
+        "row": 8,
+        "col": 13,
+        "text": "The wicked are like this, driven by the wind",
+        "answer": "CHAFF",
+        "reference": "Psalm 1:4"
+      },
+      {
+        "number": 18,
+        "direction": "down",
+        "row": 8,
+        "col": 19,
+        "text": "He leads me beside these",
+        "answer": "QUIETWATERS",
+        "reference": "Psalm 23:2"
+      },
+      {
+        "number": 19,
+        "direction": "down",
+        "row": 9,
+        "col": 15,
+        "text": "God is our ___ and strength",
+        "answer": "REFUGE",
+        "reference": "Psalm 46:1"
+      },
+      {
+        "number": 20,
+        "direction": "across",
+        "row": 9,
+        "col": 18,
+        "text": "Mine overflows",
+        "answer": "CUP",
+        "reference": "Psalm 23:5"
+      },
+      {
+        "number": 21,
+        "direction": "across",
+        "row": 10,
+        "col": 3,
+        "text": "The righteous man is like a tree planted by these",
+        "answer": "STREAMSOFWATER",
+        "reference": "Psalm 1:3"
+      },
+      {
+        "number": 22,
+        "direction": "down",
+        "row": 10,
+        "col": 11,
+        "text": "He will cover you with these",
+        "answer": "FEATHERS",
+        "reference": "Psalm 91:4"
+      },
+      {
+        "number": 23,
+        "direction": "across",
+        "row": 13,
+        "col": 1,
+        "text": "As the deer pants for these, so my soul longs for God",
+        "answer": "STREAMS",
+        "reference": "Psalm 42:1"
+      },
+      {
+        "number": 24,
+        "direction": "across",
+        "row": 14,
+        "col": 11,
+        "text": "How Psalm 150 begins and ends",
+        "answer": "HALLELUJAH",
+        "reference": "Psalm 150:1"
+      },
+      {
+        "number": 25,
+        "direction": "across",
+        "row": 15,
+        "col": 1,
+        "text": "How Your name is in all the earth",
+        "answer": "MAJESTIC",
+        "reference": "Psalm 8:1"
+      },
+      {
+        "number": 26,
+        "direction": "down",
+        "row": 15,
+        "col": 5,
+        "text": "He restores it",
+        "answer": "SOUL",
+        "reference": "Psalm 23:3"
+      },
+      {
+        "number": 27,
+        "direction": "down",
+        "row": 16,
+        "col": 0,
+        "text": "With the rod, it comforts me",
+        "answer": "STAFF",
+        "reference": "Psalm 23:4"
+      },
+      {
+        "number": 28,
+        "direction": "down",
+        "row": 16,
+        "col": 9,
+        "text": "Musical pause found throughout the Psalms",
+        "answer": "SELAH",
+        "reference": "Psalm 3:2"
+      },
+      {
+        "number": 29,
+        "direction": "across",
+        "row": 16,
+        "col": 11,
+        "text": "With the staff, it comforts me",
+        "answer": "ROD",
+        "reference": "Psalm 23:4"
+      },
+      {
+        "number": 30,
+        "direction": "across",
+        "row": 16,
+        "col": 15,
+        "text": "Even walking through it, I will fear no evil",
+        "answer": "VALLEY",
+        "reference": "Psalm 23:4"
+      },
+      {
+        "number": 31,
+        "direction": "across",
+        "row": 17,
+        "col": 0,
+        "text": "Praise Him with this and with dancing",
+        "answer": "TAMBOURINE",
+        "reference": "Psalm 150:4"
+      },
+      {
+        "number": 32,
+        "direction": "down",
+        "row": 17,
+        "col": 14,
+        "text": "It pants for streams of water",
+        "answer": "DEER",
+        "reference": "Psalm 42:1"
+      },
+      {
+        "number": 33,
+        "direction": "across",
+        "row": 18,
+        "col": 13,
+        "text": "They declare the glory of God",
+        "answer": "HEAVENS",
+        "reference": "Psalm 19:1"
+      },
+      {
+        "number": 34,
+        "direction": "across",
+        "row": 20,
+        "col": 8,
+        "text": "What the LORD is to David in the best-known psalm",
+        "answer": "SHEPHERD",
+        "reference": "Psalm 23:1"
+      }
+    ],
+    "kind": "sunday"
+  },
+  {
+    "id": "sunday-015",
+    "title": "Such a Time as This",
+    "difficulty": "medium",
+    "verse": "And who knows if perhaps you have come to the kingdom for such a time as this?",
+    "reference": "Esther 4:14",
+    "publishDate": "2026-07-15",
+    "size": 21,
+    "grid": [
+      "C.S...........XERXES.",
+      "U.A................A.",
+      "P.N..M.............C.",
+      "BABYLON....BANQUET.K.",
+      "E.A..R.A.S...E.....C.",
+      "A.L..D.G.I.G.HAMAN.L.",
+      "R.L..E.A.G.A.E..D..O.",
+      "E.A..C.G.N.L.M.VASHTI",
+      "R.T..A.I.E.L.I..R..H.",
+      "....FIFTYTWODAYS.....",
+      "S.Z.O..E.R.W.H.U.A..T",
+      "C.ELUL...I.S...SCRIBE",
+      "E.R.N....N..EZRA.T..M",
+      "P.U.D....G..S...LAW.P",
+      "TOBIAH.P....T....X..L",
+      "E.B.T..E..ASHES..E..E",
+      "R.A.I..R....E..PURIM.",
+      "..BOOTHS.SWORD...X...",
+      "..E.N..I.........E...",
+      "WALL..DARIUS.HADASSAH",
+      "....................."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 0,
+        "text": "Nehemiah's post in the Persian king's court",
+        "answer": "CUPBEARER",
+        "reference": "Nehemiah 1:11"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 2,
+        "text": "The Horonite who mocked the builders of the wall",
+        "answer": "SANBALLAT",
+        "reference": "Nehemiah 2:10"
+      },
+      {
+        "number": 3,
+        "direction": "across",
+        "row": 0,
+        "col": 14,
+        "text": "King who ruled from India to Cush",
+        "answer": "XERXES",
+        "reference": "Esther 1:1"
+      },
+      {
+        "number": 4,
+        "direction": "down",
+        "row": 0,
+        "col": 19,
+        "text": "Mordecai tore his clothes and put this on, with ashes",
+        "answer": "SACKCLOTH",
+        "reference": "Esther 4:1"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 2,
+        "col": 5,
+        "text": "Benjamite at the king's gate who raised his cousin",
+        "answer": "MORDECAI",
+        "reference": "Esther 2:7"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "Where the exiles were carried, and from where they came home",
+        "answer": "BABYLON",
+        "reference": "Ezra 1:11"
+      },
+      {
+        "number": 7,
+        "direction": "across",
+        "row": 3,
+        "col": 11,
+        "text": "Esther invited the king and Haman to two of these",
+        "answer": "BANQUET",
+        "reference": "Esther 5:4"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 3,
+        "col": 13,
+        "text": "He prayed, then asked the king for timber and letters",
+        "answer": "NEHEMIAH",
+        "reference": "Nehemiah 2:8"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 4,
+        "col": 7,
+        "text": "Haman's people, as the book names them",
+        "answer": "AGAGITE",
+        "reference": "Esther 3:1"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 4,
+        "col": 9,
+        "text": "The king took it off his hand and gave it to Haman",
+        "answer": "SIGNETRING",
+        "reference": "Esther 3:10"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 5,
+        "col": 11,
+        "text": "Built for Mordecai, used for Haman",
+        "answer": "GALLOWS",
+        "reference": "Esther 7:10"
+      },
+      {
+        "number": 12,
+        "direction": "across",
+        "row": 5,
+        "col": 13,
+        "text": "Son of Hammedatha, enemy of the Jews",
+        "answer": "HAMAN",
+        "reference": "Esther 3:1"
+      },
+      {
+        "number": 13,
+        "direction": "down",
+        "row": 5,
+        "col": 16,
+        "text": "The twelfth month, chosen by lot for the destruction",
+        "answer": "ADAR",
+        "reference": "Esther 3:7"
+      },
+      {
+        "number": 14,
+        "direction": "across",
+        "row": 7,
+        "col": 15,
+        "text": "Queen who refused to come at the king's command",
+        "answer": "VASHTI",
+        "reference": "Esther 1:12"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 9,
+        "col": 4,
+        "text": "How long the rebuilt wall of Jerusalem took to finish",
+        "answer": "FIFTYTWODAYS",
+        "reference": "Nehemiah 6:15"
+      },
+      {
+        "number": 15,
+        "direction": "down",
+        "row": 9,
+        "col": 4,
+        "text": "Laid for the temple while some shouted and the old men wept",
+        "answer": "FOUNDATION",
+        "reference": "Ezra 3:10"
+      },
+      {
+        "number": 16,
+        "direction": "down",
+        "row": 9,
+        "col": 15,
+        "text": "Citadel where the Persian king held court",
+        "answer": "SUSA",
+        "reference": "Esther 1:2"
+      },
+      {
+        "number": 17,
+        "direction": "down",
+        "row": 10,
+        "col": 0,
+        "text": "Held out in gold, it meant the queen would live",
+        "answer": "SCEPTER",
+        "reference": "Esther 5:2"
+      },
+      {
+        "number": 18,
+        "direction": "down",
+        "row": 10,
+        "col": 2,
+        "text": "Governor who set the returned exiles to work on the altar",
+        "answer": "ZERUBBABEL",
+        "reference": "Ezra 3:2"
+      },
+      {
+        "number": 19,
+        "direction": "down",
+        "row": 10,
+        "col": 17,
+        "text": "King who let his cupbearer go home to rebuild",
+        "answer": "ARTAXERXES",
+        "reference": "Nehemiah 2:1"
+      },
+      {
+        "number": 20,
+        "direction": "down",
+        "row": 10,
+        "col": 20,
+        "text": "House of God completed in Darius's sixth year",
+        "answer": "TEMPLE",
+        "reference": "Ezra 6:15"
+      },
+      {
+        "number": 21,
+        "direction": "across",
+        "row": 11,
+        "col": 2,
+        "text": "Month in which the wall was finished",
+        "answer": "ELUL",
+        "reference": "Nehemiah 6:15"
+      },
+      {
+        "number": 22,
+        "direction": "across",
+        "row": 11,
+        "col": 15,
+        "text": "Ezra was one, skilled in the Law of Moses",
+        "answer": "SCRIBE",
+        "reference": "Ezra 7:6"
+      },
+      {
+        "number": 23,
+        "direction": "across",
+        "row": 12,
+        "col": 12,
+        "text": "Priest who read the Law from a wooden platform",
+        "answer": "EZRA",
+        "reference": "Nehemiah 8:4"
+      },
+      {
+        "number": 23,
+        "direction": "down",
+        "row": 12,
+        "col": 12,
+        "text": "Queen who said, \"If I perish, I perish\"",
+        "answer": "ESTHER",
+        "reference": "Esther 4:16"
+      },
+      {
+        "number": 24,
+        "direction": "across",
+        "row": 13,
+        "col": 16,
+        "text": "Ezra read it aloud from daybreak until noon",
+        "answer": "LAW",
+        "reference": "Nehemiah 8:3"
+      },
+      {
+        "number": 25,
+        "direction": "across",
+        "row": 14,
+        "col": 0,
+        "text": "The Ammonite official who opposed the rebuilding",
+        "answer": "TOBIAH",
+        "reference": "Nehemiah 2:10"
+      },
+      {
+        "number": 26,
+        "direction": "down",
+        "row": 14,
+        "col": 7,
+        "text": "Empire of Cyrus",
+        "answer": "PERSIA",
+        "reference": "Ezra 1:1"
+      },
+      {
+        "number": 27,
+        "direction": "across",
+        "row": 15,
+        "col": 10,
+        "text": "Worn with sackcloth by Mordecai at the city's center",
+        "answer": "ASHES",
+        "reference": "Esther 4:1"
+      },
+      {
+        "number": 28,
+        "direction": "across",
+        "row": 16,
+        "col": 15,
+        "text": "The feast named for the lots Haman cast",
+        "answer": "PURIM",
+        "reference": "Esther 9:26"
+      },
+      {
+        "number": 29,
+        "direction": "across",
+        "row": 17,
+        "col": 2,
+        "text": "The people lived in these during the feast, as the Law said",
+        "answer": "BOOTHS",
+        "reference": "Nehemiah 8:14"
+      },
+      {
+        "number": 30,
+        "direction": "across",
+        "row": 17,
+        "col": 9,
+        "text": "Each builder wore one at his side while he worked",
+        "answer": "SWORD",
+        "reference": "Nehemiah 4:18"
+      },
+      {
+        "number": 31,
+        "direction": "across",
+        "row": 19,
+        "col": 0,
+        "text": "Builders carried loads with one hand and a weapon in the other on this",
+        "answer": "WALL",
+        "reference": "Nehemiah 4:17"
+      },
+      {
+        "number": 32,
+        "direction": "across",
+        "row": 19,
+        "col": 6,
+        "text": "King whose search of the archives found Cyrus's decree",
+        "answer": "DARIUS",
+        "reference": "Ezra 6:1"
+      },
+      {
+        "number": 33,
+        "direction": "across",
+        "row": 19,
+        "col": 13,
+        "text": "Esther's other name",
+        "answer": "HADASSAH",
+        "reference": "Esther 2:7"
+      }
+    ],
+    "kind": "sunday"
+  },
+  {
+    "id": "sunday-016",
+    "title": "The Sermon on the Mount",
+    "difficulty": "medium",
+    "verse": "You are the light of the world. A city on a hill cannot be hidden.",
+    "reference": "Matthew 5:14",
+    "publishDate": "2026-07-16",
+    "size": 21,
+    "grid": [
+      ".LILIES..............",
+      "..N....B.....WOLVES..",
+      "..H....I..........P..",
+      "..E.MOURN.PERSECUTED.",
+      "..R....D..E.......C..",
+      "THISTLES..A.LAMP..K..",
+      "R.T.....B.R...E......",
+      "E..B...DAILYBREAD....",
+      "A..L....R.S...K......",
+      "S..E.P..N..T.........",
+      "U..SHEEPSCLOTHING....",
+      "R..S.R.E...M...A.....",
+      "E..E.F.A..ROCK.R.....",
+      "SAND.E.C...R...R.MOTH",
+      ".....CHEEK.R...O.O.H.",
+      "SECRET.M...O...W.U.I.",
+      "E.....HALLOWED.G.N.E.",
+      "E......K......SALT.V.",
+      "KNOCK.DEBTS....T.A.E.",
+      ".......R.....ENEMIES.",
+      ".POORINSPIRIT....N..."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 1,
+        "text": "Consider how these of the field grow",
+        "answer": "LILIES",
+        "reference": "Matthew 6:28"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 2,
+        "text": "What the meek will do to the earth",
+        "answer": "INHERIT",
+        "reference": "Matthew 5:5"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 1,
+        "col": 7,
+        "text": "They neither sow nor reap, yet the Father feeds them",
+        "answer": "BIRDS",
+        "reference": "Matthew 6:26"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 1,
+        "col": 13,
+        "text": "What false prophets are inwardly",
+        "answer": "WOLVES",
+        "reference": "Matthew 7:15"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 1,
+        "col": 18,
+        "text": "Why look at this in your brother's eye?",
+        "answer": "SPECK",
+        "reference": "Matthew 7:3"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 3,
+        "col": 4,
+        "text": "Blessed are those who do this, for they will be comforted",
+        "answer": "MOURN",
+        "reference": "Matthew 5:4"
+      },
+      {
+        "number": 7,
+        "direction": "across",
+        "row": 3,
+        "col": 10,
+        "text": "Blessed are those who are this for righteousness",
+        "answer": "PERSECUTED",
+        "reference": "Matthew 5:10"
+      },
+      {
+        "number": 7,
+        "direction": "down",
+        "row": 3,
+        "col": 10,
+        "text": "Do not throw these before pigs",
+        "answer": "PEARLS",
+        "reference": "Matthew 7:6"
+      },
+      {
+        "number": 8,
+        "direction": "across",
+        "row": 5,
+        "col": 0,
+        "text": "Figs are not gathered from these",
+        "answer": "THISTLES",
+        "reference": "Matthew 7:16"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 5,
+        "col": 0,
+        "text": "Store these up in heaven, not on earth",
+        "answer": "TREASURES",
+        "reference": "Matthew 6:20"
+      },
+      {
+        "number": 9,
+        "direction": "across",
+        "row": 5,
+        "col": 12,
+        "text": "No one lights one and puts it under a basket",
+        "answer": "LAMP",
+        "reference": "Matthew 5:15"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 5,
+        "col": 14,
+        "text": "Blessed are these, for they will inherit the earth",
+        "answer": "MEEK",
+        "reference": "Matthew 5:5"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 6,
+        "col": 8,
+        "text": "Birds of the air do not gather into these",
+        "answer": "BARNS",
+        "reference": "Matthew 6:26"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 7,
+        "col": 3,
+        "text": "The first word of each beatitude",
+        "answer": "BLESSED",
+        "reference": "Matthew 5:3"
+      },
+      {
+        "number": 13,
+        "direction": "across",
+        "row": 7,
+        "col": 7,
+        "text": "\"Give us this day our ___\"",
+        "answer": "DAILYBREAD",
+        "reference": "Matthew 6:11"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 9,
+        "col": 5,
+        "text": "Be this, as your heavenly Father is",
+        "answer": "PERFECT",
+        "reference": "Matthew 5:48"
+      },
+      {
+        "number": 15,
+        "direction": "down",
+        "row": 9,
+        "col": 11,
+        "text": "Do not worry about it; it will worry about itself",
+        "answer": "TOMORROW",
+        "reference": "Matthew 6:34"
+      },
+      {
+        "number": 16,
+        "direction": "across",
+        "row": 10,
+        "col": 3,
+        "text": "False prophets come in this, but inwardly are ravenous wolves",
+        "answer": "SHEEPSCLOTHING",
+        "reference": "Matthew 7:15"
+      },
+      {
+        "number": 17,
+        "direction": "down",
+        "row": 10,
+        "col": 7,
+        "text": "They will be called sons of God",
+        "answer": "PEACEMAKERS",
+        "reference": "Matthew 5:9"
+      },
+      {
+        "number": 18,
+        "direction": "down",
+        "row": 10,
+        "col": 15,
+        "text": "Enter by this; the wide one leads to destruction",
+        "answer": "NARROWGATE",
+        "reference": "Matthew 7:13"
+      },
+      {
+        "number": 19,
+        "direction": "across",
+        "row": 12,
+        "col": 10,
+        "text": "The wise man built his house on this",
+        "answer": "ROCK",
+        "reference": "Matthew 7:24"
+      },
+      {
+        "number": 20,
+        "direction": "across",
+        "row": 13,
+        "col": 0,
+        "text": "The foolish man's foundation",
+        "answer": "SAND",
+        "reference": "Matthew 7:26"
+      },
+      {
+        "number": 21,
+        "direction": "across",
+        "row": 13,
+        "col": 17,
+        "text": "It destroys treasures stored on earth, along with rust",
+        "answer": "MOTH",
+        "reference": "Matthew 6:19"
+      },
+      {
+        "number": 21,
+        "direction": "down",
+        "row": 13,
+        "col": 17,
+        "text": "Seeing the crowds, Jesus went up on this and sat down",
+        "answer": "MOUNTAIN",
+        "reference": "Matthew 5:1"
+      },
+      {
+        "number": 22,
+        "direction": "down",
+        "row": 13,
+        "col": 19,
+        "text": "They break in and steal treasures on earth",
+        "answer": "THIEVES",
+        "reference": "Matthew 6:19"
+      },
+      {
+        "number": 23,
+        "direction": "across",
+        "row": 14,
+        "col": 5,
+        "text": "If someone slaps the right one, turn the other also",
+        "answer": "CHEEK",
+        "reference": "Matthew 5:39"
+      },
+      {
+        "number": 24,
+        "direction": "across",
+        "row": 15,
+        "col": 0,
+        "text": "Give, pray and fast in this, and your Father will see",
+        "answer": "SECRET",
+        "reference": "Matthew 6:4"
+      },
+      {
+        "number": 24,
+        "direction": "down",
+        "row": 15,
+        "col": 0,
+        "text": "Do this first for His kingdom",
+        "answer": "SEEK",
+        "reference": "Matthew 6:33"
+      },
+      {
+        "number": 25,
+        "direction": "across",
+        "row": 16,
+        "col": 6,
+        "text": "\"Our Father in heaven, ___ be Your name\"",
+        "answer": "HALLOWED",
+        "reference": "Matthew 6:9"
+      },
+      {
+        "number": 26,
+        "direction": "across",
+        "row": 17,
+        "col": 14,
+        "text": "\"You are the ___ of the earth\"",
+        "answer": "SALT",
+        "reference": "Matthew 5:13"
+      },
+      {
+        "number": 27,
+        "direction": "across",
+        "row": 18,
+        "col": 0,
+        "text": "Do this and the door will be opened to you",
+        "answer": "KNOCK",
+        "reference": "Matthew 7:7"
+      },
+      {
+        "number": 28,
+        "direction": "across",
+        "row": 18,
+        "col": 6,
+        "text": "\"Forgive us our ___, as we also have forgiven\"",
+        "answer": "DEBTS",
+        "reference": "Matthew 6:12"
+      },
+      {
+        "number": 29,
+        "direction": "across",
+        "row": 19,
+        "col": 13,
+        "text": "Love these, and pray for those who persecute you",
+        "answer": "ENEMIES",
+        "reference": "Matthew 5:44"
+      },
+      {
+        "number": 30,
+        "direction": "across",
+        "row": 20,
+        "col": 1,
+        "text": "Blessed are these, for theirs is the kingdom of heaven",
+        "answer": "POORINSPIRIT",
+        "reference": "Matthew 5:3"
+      }
+    ],
+    "kind": "sunday"
+  },
+  {
+    "id": "sunday-017",
+    "title": "The Long Road to Rome",
+    "difficulty": "hard",
+    "verse": "I have fought the good fight, I have finished the race, I have kept the faith.",
+    "reference": "2 Timothy 4:7",
+    "publishDate": "2026-07-17",
+    "size": 21,
+    "grid": [
+      ".CHRISTIANS.....T....",
+      ".O......Q....FELIX...",
+      ".R......U...S...M....",
+      "WINDOW..I..MACEDONIA.",
+      ".N......L...U...T....",
+      ".T..BEREA...L.ATHENS.",
+      ".H..A....L.U..N.Y..T.",
+      "....S..P.Y.N..T..A.R.",
+      "....K..R.D.K.VIPER.A.",
+      "....E..I.I.N..O..E.I.",
+      "....THESSALONICA.O.G.",
+      "P......C...W..H..P.H.",
+      "H......I...N....MALTA",
+      "I...JAILER.G...S.G...",
+      "L.A....L..ROME.I.U.A.",
+      "I.G...RACE.D.P.LYSTRA",
+      "PURPLE..Y....H.A...T.",
+      "P.I.....P....E.SCALES",
+      "I.P...BARNABAS.....M.",
+      "..P.....U....U.....I.",
+      ".DAMASCUS.CAESAR...S."
+    ],
+    "clues": [
+      {
+        "number": 1,
+        "direction": "across",
+        "row": 0,
+        "col": 1,
+        "text": "What the disciples were first called at Antioch",
+        "answer": "CHRISTIANS",
+        "reference": "Acts 11:26"
+      },
+      {
+        "number": 1,
+        "direction": "down",
+        "row": 0,
+        "col": 1,
+        "text": "City where Paul stayed a year and a half",
+        "answer": "CORINTH",
+        "reference": "Acts 18:1"
+      },
+      {
+        "number": 2,
+        "direction": "down",
+        "row": 0,
+        "col": 8,
+        "text": "Jew from Pontus who made tents with Paul",
+        "answer": "AQUILA",
+        "reference": "Acts 18:2"
+      },
+      {
+        "number": 3,
+        "direction": "down",
+        "row": 0,
+        "col": 16,
+        "text": "Disciple at Lystra whose mother was a believer",
+        "answer": "TIMOTHY",
+        "reference": "Acts 16:1"
+      },
+      {
+        "number": 4,
+        "direction": "across",
+        "row": 1,
+        "col": 13,
+        "text": "Governor who kept Paul in custody two years",
+        "answer": "FELIX",
+        "reference": "Acts 24:27"
+      },
+      {
+        "number": 5,
+        "direction": "down",
+        "row": 2,
+        "col": 12,
+        "text": "\"___, ___, why do you persecute Me?\"",
+        "answer": "SAUL",
+        "reference": "Acts 9:4"
+      },
+      {
+        "number": 6,
+        "direction": "across",
+        "row": 3,
+        "col": 0,
+        "text": "Eutychus fell from one, three stories down",
+        "answer": "WINDOW",
+        "reference": "Acts 20:9"
+      },
+      {
+        "number": 7,
+        "direction": "across",
+        "row": 3,
+        "col": 11,
+        "text": "A man from here appeared in a vision: \"Come over and help us\"",
+        "answer": "MACEDONIA",
+        "reference": "Acts 16:9"
+      },
+      {
+        "number": 8,
+        "direction": "across",
+        "row": 5,
+        "col": 4,
+        "text": "Its Jews searched the Scriptures daily",
+        "answer": "BEREA",
+        "reference": "Acts 17:10"
+      },
+      {
+        "number": 8,
+        "direction": "down",
+        "row": 5,
+        "col": 4,
+        "text": "Saul was let down the wall in one",
+        "answer": "BASKET",
+        "reference": "Acts 9:25"
+      },
+      {
+        "number": 9,
+        "direction": "across",
+        "row": 5,
+        "col": 14,
+        "text": "City Paul found full of idols",
+        "answer": "ATHENS",
+        "reference": "Acts 17:16"
+      },
+      {
+        "number": 9,
+        "direction": "down",
+        "row": 5,
+        "col": 14,
+        "text": "Church that set apart Barnabas and Saul",
+        "answer": "ANTIOCH",
+        "reference": "Acts 13:1"
+      },
+      {
+        "number": 10,
+        "direction": "down",
+        "row": 5,
+        "col": 19,
+        "text": "The street in Damascus where Saul waited",
+        "answer": "STRAIGHT",
+        "reference": "Acts 9:11"
+      },
+      {
+        "number": 11,
+        "direction": "down",
+        "row": 6,
+        "col": 9,
+        "text": "Seller from Thyatira whose heart the Lord opened",
+        "answer": "LYDIA",
+        "reference": "Acts 16:14"
+      },
+      {
+        "number": 12,
+        "direction": "down",
+        "row": 6,
+        "col": 11,
+        "text": "Inscription on an Athenian altar Paul quoted",
+        "answer": "UNKNOWNGOD",
+        "reference": "Acts 17:23"
+      },
+      {
+        "number": 13,
+        "direction": "down",
+        "row": 7,
+        "col": 7,
+        "text": "She and her husband had come from Italy",
+        "answer": "PRISCILLA",
+        "reference": "Acts 18:2"
+      },
+      {
+        "number": 14,
+        "direction": "down",
+        "row": 7,
+        "col": 17,
+        "text": "Hill where Paul addressed the men of Athens",
+        "answer": "AREOPAGUS",
+        "reference": "Acts 17:19"
+      },
+      {
+        "number": 15,
+        "direction": "across",
+        "row": 8,
+        "col": 13,
+        "text": "It fastened on Paul's hand by the fire",
+        "answer": "VIPER",
+        "reference": "Acts 28:3"
+      },
+      {
+        "number": 16,
+        "direction": "across",
+        "row": 10,
+        "col": 4,
+        "text": "City with a synagogue where Paul reasoned three Sabbaths",
+        "answer": "THESSALONICA",
+        "reference": "Acts 17:1"
+      },
+      {
+        "number": 17,
+        "direction": "down",
+        "row": 11,
+        "col": 0,
+        "text": "Leading city of that district, and a Roman colony",
+        "answer": "PHILIPPI",
+        "reference": "Acts 16:12"
+      },
+      {
+        "number": 18,
+        "direction": "across",
+        "row": 12,
+        "col": 16,
+        "text": "Island where the shipwrecked crew came ashore",
+        "answer": "MALTA",
+        "reference": "Acts 28:1"
+      },
+      {
+        "number": 19,
+        "direction": "across",
+        "row": 13,
+        "col": 4,
+        "text": "He woke, saw the prison doors open, and drew his sword",
+        "answer": "JAILER",
+        "reference": "Acts 16:27"
+      },
+      {
+        "number": 20,
+        "direction": "down",
+        "row": 13,
+        "col": 15,
+        "text": "Paul's companion on the second journey",
+        "answer": "SILAS",
+        "reference": "Acts 15:40"
+      },
+      {
+        "number": 21,
+        "direction": "down",
+        "row": 14,
+        "col": 2,
+        "text": "King who asked if Paul could persuade him so quickly",
+        "answer": "AGRIPPA",
+        "reference": "Acts 26:28"
+      },
+      {
+        "number": 22,
+        "direction": "across",
+        "row": 14,
+        "col": 10,
+        "text": "Where Paul lived two years in his own rented house",
+        "answer": "ROME",
+        "reference": "Acts 28:16"
+      },
+      {
+        "number": 23,
+        "direction": "down",
+        "row": 14,
+        "col": 13,
+        "text": "Where a riot broke out over Artemis",
+        "answer": "EPHESUS",
+        "reference": "Acts 19:1"
+      },
+      {
+        "number": 24,
+        "direction": "down",
+        "row": 14,
+        "col": 19,
+        "text": "\"Great is ___ of the Ephesians!\"",
+        "answer": "ARTEMIS",
+        "reference": "Acts 19:28"
+      },
+      {
+        "number": 25,
+        "direction": "across",
+        "row": 15,
+        "col": 6,
+        "text": "Paul finished it",
+        "answer": "RACE",
+        "reference": "2 Timothy 4:7"
+      },
+      {
+        "number": 26,
+        "direction": "down",
+        "row": 15,
+        "col": 8,
+        "text": "Island where the first journey began",
+        "answer": "CYPRUS",
+        "reference": "Acts 13:4"
+      },
+      {
+        "number": 27,
+        "direction": "across",
+        "row": 15,
+        "col": 15,
+        "text": "City where the crowd called Paul Hermes",
+        "answer": "LYSTRA",
+        "reference": "Acts 14:12"
+      },
+      {
+        "number": 28,
+        "direction": "across",
+        "row": 16,
+        "col": 0,
+        "text": "Lydia was a dealer in cloth of this color",
+        "answer": "PURPLE",
+        "reference": "Acts 16:14"
+      },
+      {
+        "number": 29,
+        "direction": "across",
+        "row": 17,
+        "col": 15,
+        "text": "Something like these fell from Saul's eyes",
+        "answer": "SCALES",
+        "reference": "Acts 9:18"
+      },
+      {
+        "number": 30,
+        "direction": "across",
+        "row": 18,
+        "col": 6,
+        "text": "He brought Saul to the apostles in Jerusalem",
+        "answer": "BARNABAS",
+        "reference": "Acts 9:27"
+      },
+      {
+        "number": 31,
+        "direction": "across",
+        "row": 20,
+        "col": 1,
+        "text": "Saul was nearing it when a light flashed around him",
+        "answer": "DAMASCUS",
+        "reference": "Acts 9:3"
+      },
+      {
+        "number": 32,
+        "direction": "across",
+        "row": 20,
+        "col": 10,
+        "text": "\"I appeal to ___!\"",
+        "answer": "CAESAR",
+        "reference": "Acts 25:11"
+      }
+    ],
+    "kind": "sunday"
+  },
+  {
     "id": "pack-advent-002",
     "title": "Hail, Thou That Art Highly Favoured",
     "difficulty": "easy",
