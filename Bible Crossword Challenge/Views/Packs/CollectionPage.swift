@@ -148,32 +148,38 @@ struct CollectionAbout: View {
     }
 }
 
-/// The verse the collection opens on, in serif, with where it's from and
-/// what the collection is. Falls back to the blurb alone when the first
-/// puzzle has no verse.
+/// What the collection is, then the verse it opens on. The blurb leads:
+/// it answers the "About" heading above it. The verse sits in a card set
+/// like Today's verse of the day — body serif, reference in ink — rather
+/// than bare title2 serif, which outranked the page's own headings and
+/// left the description as fine print after the reference (2026-11-04).
 struct CollectionOpening: View {
     let first: Puzzle?
     let blurb: String
 
     var body: some View {
-        if let first, !first.verse.isEmpty {
-            VStack(alignment: .leading, spacing: 10) {
-                Text(first.verse)
-                    .font(.scripture(.title2))
-                    .tracking(-0.2)
-                    .lineSpacing(4)
-                    .fixedSize(horizontal: false, vertical: true)
-                Text("\(first.reference) · \(blurb)")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-            .accessibilityElement(children: .combine)
-        } else {
+        VStack(alignment: .leading, spacing: Theme.Spacing.m) {
             Text(blurb)
                 .font(.body)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(.primary)
                 .fixedSize(horizontal: false, vertical: true)
+
+            if let first, !first.verse.isEmpty {
+                VStack(alignment: .leading, spacing: Theme.Spacing.m) {
+                    Text(first.verse)
+                        .font(.scripture(.body))
+                        .lineSpacing(6)
+                        .foregroundStyle(.primary)
+                        .fixedSize(horizontal: false, vertical: true)
+                    Text(first.reference)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.primary)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(Theme.Spacing.l)
+                .elevatedCard()
+                .accessibilityElement(children: .combine)
+            }
         }
     }
 }
