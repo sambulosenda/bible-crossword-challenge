@@ -55,6 +55,8 @@ struct PaywallView: View {
 
     @State private var selectedID = StoreService.yearlyID
     @State private var didLogOpen = false
+    /// Where the overflowing offer rests: its foot, by the buy button.
+    @State private var offerScroll = ScrollPosition(edge: .bottom)
 
     // Dismissal telemetry. When the sheet appeared, whether the CTA was pressed
     // during this presentation, and a once-only guard — `onDisappear` is the
@@ -104,7 +106,21 @@ struct PaywallView: View {
                 // started under the pinned bar and Monthly couldn't be seen
                 // without scrolling (iPhone Duo, 2026-11-05).
                 .defaultScrollAnchor(.bottom, for: .alignment)
-                .defaultScrollAnchor(.bottom, for: .initialOffset)
+                .scrollPosition($offerScroll)
+                // `defaultScrollAnchor(for: .initialOffset)` alone isn't
+                // enough: it is applied on the first pass, before the bars
+                // attach (insets 0), and once the 74pt top and 172pt bottom
+                // insets land the page rested mid-scroll, with the headline
+                // half under the bar and a dead band over the button. So the
+                // foot is re-pinned whenever the bars' insets change, until
+                // the player scrolls it themselves.
+                .onScrollGeometryChange(for: EdgeInsets.self) { @Sendable geometry in
+                    geometry.contentInsets
+                } action: { _, _ in
+                    if !offerScroll.isPositionedByUser {
+                        offerScroll.scrollTo(edge: .bottom)
+                    }
+                }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             .background {
