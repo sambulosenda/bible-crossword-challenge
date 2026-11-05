@@ -285,6 +285,9 @@ struct CompletionView: View {
             }
         }
         .background(Theme.background)
+        // A bar, not an inset, so the page fades under it as it does under
+        // the system's bars. Only reachable where bars go vertical (27.1+).
+        .modifier(RailPrimaryBar(isOn: barsVertical) { railPrimary })
         // One presenter for every Share entry in the bar — the pill, the icon,
         // and the menu item — so none of them has to own the sheet.
         .sheet(item: $cardShare) { share in
@@ -843,20 +846,35 @@ struct CompletionView: View {
         // One stop: "Solved, 4:12, The New Jerusalem · Daily · Friday, October 24".
         .accessibilityElement(children: .combine)
         .accessibilityAddTraits(.isHeader)
-        .frame(maxWidth: 520, alignment: .leading)
-        .padding(.horizontal, Theme.Spacing.l)
+        // The cards' own column and inset, so the time and the cards share
+        // one left edge. Padded inside the 520 the cards use, it sat 20pt
+        // left of them once the window outgrew the column (iPhone Duo open).
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, Theme.Spacing.m + Theme.Spacing.xs)
+        .frame(maxWidth: 520)
         .padding(.top, 72)
         .padding(.bottom, 28)
         .frame(maxWidth: .infinity)
-        .background(alignment: .bottomTrailing) {
-            // About 20pt a square whatever the size, so a 7×7 Mini reads as
-            // the same faint texture as a 15×15 rather than as big blocks.
-            let side = min(300, CGFloat(puzzle.size) * 20)
-            // Half strength: on a 15×15 the stronger texture read as a
-            // pattern behind the time rather than a texture.
-            GridThumbnail(grid: puzzle.grid, tint: Color.primary.opacity(0.025), gap: 3, cropsToContent: true)
-                .frame(width: side, height: side)
-                .offset(x: 24, y: -20)
+        .background {
+            GeometryReader { geo in
+                // About 20pt a square whatever the size, so a 7×7 Mini reads
+                // as the same faint texture as a 15×15 rather than as big blocks.
+                let full = min(300, CGFloat(puzzle.size) * 20)
+                // Room beside the column: the grid sits low in that gutter,
+                // as it always has. Without it (a phone, the folded Duo) it
+                // went behind the subtitle, so it moves up beside the time,
+                // which is short, and stays clear of the line under it.
+                let gutter = (geo.size.width - 520) / 2
+                let roomy = gutter >= 100
+                let side = roomy ? min(full, gutter + 24) : min(full, geo.size.width * 0.35)
+                // Half strength: on a 15×15 the stronger texture read as a
+                // pattern behind the time rather than a texture.
+                GridThumbnail(grid: puzzle.grid, tint: Color.primary.opacity(0.025), gap: 3, cropsToContent: true)
+                    .frame(width: side, height: side)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity,
+                           alignment: roomy ? .bottomTrailing : .topTrailing)
+                    .offset(x: 24, y: roomy ? -20 : 56)
+            }
         }
         .overlay {
             if !reduceMotion {
@@ -1505,36 +1523,18 @@ struct CompletionView: View {
                 Label("Close", systemImage: "xmark")
             }
         }
-        if let chainTarget {
+        // On a side rail the primary leaves the bar for the foot of the page
+        // (`railPrimary`): the rail draws an item as its glyph alone, and the
+        // screen's one call to action read as an unlabeled ▶ (iPhone Duo,
+        // 2026-11-05).
+        if !barsVertical {
             ToolbarItem(placement: .bottomBar) {
-                Button {
-                    analytics.log(.completionChainTapped(
-                        fromPuzzleID: puzzle.id, toPuzzleID: chainTarget.id
-                    ))
-                    if let url = URL(string: "biblecrossword://puzzle?id=\(chainTarget.id)") {
-                        openURL(url)
-                        onHome()
-                    }
-                } label: {
-                    barLabel(chainTitle, systemImage: "play.fill")
-                }
-                .buttonStyle(.borderedProminent)
-                .tint(Theme.accent)
-                .accessibilityHint("Opens \(chainTarget.title)")
-                .accessibilityIdentifier("completionNextPuzzle")
+                primaryAction
             }
-        } else if challenge == nil {
-            ToolbarItem(placement: .bottomBar) {
-                challengeButton
-            }
+        }
+        if chainTarget == nil && challenge == nil {
             ToolbarItem(placement: .bottomBar) {
                 shareButton(prominent: false)
-            }
-        } else {
-            // A challenge arrived for this puzzle: the result card already
-            // offers "Send Result Back", so Share leads and nothing doubles.
-            ToolbarItem(placement: .bottomBar) {
-                shareButton(prominent: true)
             }
         }
         if hasOverflowActions {
@@ -1546,6 +1546,46 @@ struct CompletionView: View {
                 }
             }
         }
+    }
+
+    /// The screen's one primary: the next puzzle when there is one, else
+    /// the challenge, else (a challenge arrived for this puzzle, and the
+    /// result card already offers "Send Result Back") Share.
+    @ViewBuilder
+    private var primaryAction: some View {
+        if let chainTarget {
+            Button {
+                analytics.log(.completionChainTapped(
+                    fromPuzzleID: puzzle.id, toPuzzleID: chainTarget.id
+                ))
+                if let url = URL(string: "biblecrossword://puzzle?id=\(chainTarget.id)") {
+                    openURL(url)
+                    onHome()
+                }
+            } label: {
+                barLabel(chainTitle, systemImage: "play.fill")
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(Theme.accent)
+            .accessibilityHint("Opens \(chainTarget.title)")
+            .accessibilityIdentifier("completionNextPuzzle")
+        } else if challenge == nil {
+            challengeButton
+        } else {
+            shareButton(prominent: true)
+        }
+    }
+
+    /// The primary as a full-width button pinned at the foot of the page,
+    /// for when the bars are a side rail. Same column as the cards above.
+    private var railPrimary: some View {
+        primaryAction
+            .controlSize(.large)
+            .buttonBorderShape(.capsule)
+            .padding(.horizontal, Theme.Spacing.m + Theme.Spacing.xs)
+            .padding(.vertical, Theme.Spacing.s)
+            .frame(maxWidth: 520)
+            .frame(maxWidth: .infinity)
     }
 
     /// The bar's "next" label: the pack's next puzzle, the beginner path's
@@ -1570,12 +1610,13 @@ struct CompletionView: View {
 
     /// A bar primary's label: the words alone on a phone, where a bottom bar
     /// would reduce a Label to its glyph and the design sets the pill as text;
-    /// a Label on a side rail, which draws the icon and can't take a custom
-    /// view at all.
+    /// icon and words across the column when the rail sends it to the page.
     @ViewBuilder
     private func barLabel(_ title: String, systemImage: String) -> some View {
         if barsVertical {
             Label(title, systemImage: systemImage)
+                .font(.body.weight(.semibold))
+                .frame(maxWidth: .infinity)
         } else {
             Text(title)
                 .font(.body.weight(.semibold))
@@ -1741,5 +1782,23 @@ private struct WidgetHowToSheet: View {
             }
         }
         .presentationDetents([.medium])
+    }
+}
+
+/// Pins the completion's primary at the foot of the page while the bars are
+/// a side rail. `safeAreaBar` gives it the scroll edge the system bars get;
+/// before iOS 26 the rail never appears, so there is nothing to pin.
+private struct RailPrimaryBar<Bar: View>: ViewModifier {
+    var isOn: Bool
+    @ViewBuilder var bar: () -> Bar
+
+    func body(content: Content) -> some View {
+        if #available(iOS 26.0, *) {
+            content.safeAreaBar(edge: .bottom, spacing: 0) {
+                if isOn { bar() }
+            }
+        } else {
+            content
+        }
     }
 }

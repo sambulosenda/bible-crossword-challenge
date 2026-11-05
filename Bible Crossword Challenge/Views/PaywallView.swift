@@ -98,9 +98,13 @@ struct PaywallView: View {
                 ScrollView {
                     offer(compact: true)
                 }
-                // Content shorter than the viewport rests on the bottom; the
-                // scroll still opens at the top when it's taller.
+                // Content shorter than the viewport rests on the bottom, and
+                // a taller page opens at its foot: the plans sit just above
+                // the button that buys them. Opened at the top, both plans
+                // started under the pinned bar and Monthly couldn't be seen
+                // without scrolling (iPhone Duo, 2026-11-05).
                 .defaultScrollAnchor(.bottom, for: .alignment)
+                .defaultScrollAnchor(.bottom, for: .initialOffset)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             .background {
@@ -247,6 +251,10 @@ struct PaywallView: View {
             legal
         }
         .padding(.horizontal, Theme.Spacing.m + Theme.Spacing.xs)
+        // The offer's own column, so the button is as wide as the plans it
+        // buys; uncapped it ran past them on a wide sheet (iPhone Duo open).
+        .frame(maxWidth: 520)
+        .frame(maxWidth: .infinity)
         .padding(.top, Theme.Spacing.m)
         .padding(.bottom, Theme.Spacing.s)
         // Capped like the system's own bars: uncapped, the largest sizes grew
