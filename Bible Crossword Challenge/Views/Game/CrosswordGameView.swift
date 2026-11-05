@@ -763,8 +763,20 @@ struct CrosswordGameScreen: View {
     /// The clue list standing in the keypad's column. Its last row scrolls
     /// to rest a breath above the clue bar rather than flush against it.
     private var columnClueList: some View {
-        ClueListView(vm: vm, embedded: true, standingReaderTarget: $clueReaderTarget)
-            .contentMargins(.bottom, Theme.Spacing.m, for: .scrollContent)
+        ClueListView(
+            vm: vm,
+            embedded: true,
+            standingReaderTarget: $clueReaderTarget,
+            activeAccessory: AnyView(
+                ClueBarView(
+                    vm: vm,
+                    onStallTap: runStallAction,
+                    onVerseTap: { useVerseHint() },
+                    inRow: true
+                )
+            )
+        )
+        .contentMargins(.bottom, Theme.Spacing.m, for: .scrollContent)
     }
 
     /// Takes every point the arrangement can spare in both directions; the grid
@@ -802,7 +814,11 @@ struct CrosswordGameScreen: View {
     /// two keyboards in one app.
     private var entryDock: some View {
         VStack(spacing: 0) {
-            clueBar
+            // With the list in this column, its active row carries what the
+            // strip did (see `columnClueList`); the strip only repeated it.
+            if solveLayout != .cluesInColumn {
+                clueBar
+            }
             keypad
         }
     }

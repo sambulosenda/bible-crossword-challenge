@@ -38,8 +38,42 @@ struct ClueBarView: View {
     /// system keyboard's suggestion bar is: no fill of its own. Memory
     /// practice has no bed, so it keeps the white strip.
     var onBed: Bool = false
+    /// Drawn inside the active row of the clue list standing in the keypad's
+    /// column (open iPhone Duo) instead of as a strip over the keys. There
+    /// the row already is the clue and its number, and the strip repeated
+    /// them in a band that lined up with nothing (2026-11-05). What the row
+    /// lacks — the length, the nudge, Verse — is all this draws.
+    var inRow: Bool = false
 
     var body: some View {
+        if inRow {
+            rowLine
+        } else {
+            strip
+        }
+    }
+
+    /// The length, the nudge and Verse, as a line under the active clue.
+    private var rowLine: some View {
+        HStack(spacing: Theme.Spacing.s) {
+            if let slot = vm.activeSlot {
+                Text("\(slot.length) letters")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+                    .layoutPriority(1)
+            }
+            Spacer(minLength: Theme.Spacing.m)
+            inlineNudge
+            verseButton
+        }
+        .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
+        .animation(.snappy, value: endgameNudge)
+        .animation(.snappy, value: showsStallLine)
+        .animation(.snappy, value: showsVerseButton)
+    }
+
+    private var strip: some View {
         VStack(spacing: Theme.Spacing.s) {
             if dynamicTypeSize.isAccessibilitySize {
                 HStack(spacing: Theme.Spacing.s) {

@@ -25,6 +25,10 @@ struct ClueListView: View {
     /// and presents it: the panel is torn down when iPhone Duo folds, and a
     /// sheet hung off it closed with it, mid-passage.
     var standingReaderTarget: Binding<ReaderRouter.Target?>?
+    /// Drawn under the active clue while it is unsolved: the length, nudge
+    /// and Verse when this list stands in the keypad's column with no clue
+    /// strip under it. See `ClueBarView.inRow`.
+    var activeAccessory: AnyView? = nil
     @Environment(\.dismiss) private var dismiss
     @Environment(\.analytics) private var analytics
 
@@ -196,6 +200,9 @@ struct ClueListView: View {
             // which is a hint arriving by the back door.
             if solved, let reference = slot.reference {
                 referenceLink(reference)
+                    .padding(.leading, numberColumn + Theme.Spacing.s)
+            } else if !solved, slot.id == vm.activeSlot?.id, let activeAccessory {
+                activeAccessory
                     .padding(.leading, numberColumn + Theme.Spacing.s)
             }
         }
