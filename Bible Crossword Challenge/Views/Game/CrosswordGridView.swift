@@ -40,18 +40,6 @@ struct CrosswordGridView: View {
     @State private var zoomSide: CGFloat?
     /// The viewport's edges with more board beyond them.
     @State private var overflowing: Edge.Set = []
-
-    /// `nonisolated`: called from the scroll geometry transform, off the
-    /// main actor. A point of slack keeps rounding from fading a flush edge.
-    nonisolated private static func overflowingEdges(_ g: ScrollGeometry) -> Edge.Set {
-        var edges: Edge.Set = []
-        let offset = g.contentOffset, visible = g.containerSize, content = g.contentSize
-        if offset.y > 1 { edges.insert(.top) }
-        if offset.y + visible.height < content.height - 1 { edges.insert(.bottom) }
-        if offset.x > 1 { edges.insert(.leading) }
-        if offset.x + visible.width < content.width - 1 { edges.insert(.trailing) }
-        return edges
-    }
     /// The side the current pinch started from, so magnification composes
     /// against a stable base instead of feeding back into itself.
     @State private var pinchBase: CGFloat?
@@ -186,7 +174,7 @@ struct CrosswordGridView: View {
             // pannable board read as a broken one: row 14 sliced through
             // its number under the folded Duo's clue bar (2026-11-05).
             .onScrollGeometryChange(for: Edge.Set.self) { @Sendable geometry in
-                Self.overflowingEdges(geometry)
+                EdgeFade.overflowingEdges(geometry)
             } action: { _, edges in
                 overflowing = edges
             }
@@ -444,9 +432,23 @@ nonisolated private struct ShakeEffect: GeometryEffect {
 
 /// A mask that fades the given edges of a scroll viewport to clear, so a
 /// board running past them reads as continuing rather than cut off.
-private struct EdgeFade: View {
+/// Shared by the grid's pan viewport and the standing clue list.
+struct EdgeFade: View {
     var edges: Edge.Set
-    private let depth: CGFloat = 28
+    var depth: CGFloat = 28
+
+    /// The scroll viewport's edges with more content beyond them.
+    /// `nonisolated`: called from scroll geometry transforms, off the main
+    /// actor. A point of slack keeps rounding from fading a flush edge.
+    nonisolated static func overflowingEdges(_ g: ScrollGeometry) -> Edge.Set {
+        var edges: Edge.Set = []
+        let offset = g.contentOffset, visible = g.containerSize, content = g.contentSize
+        if offset.y > 1 { edges.insert(.top) }
+        if offset.y + visible.height < content.height - 1 { edges.insert(.bottom) }
+        if offset.x > 1 { edges.insert(.leading) }
+        if offset.x + visible.width < content.width - 1 { edges.insert(.trailing) }
+        return edges
+    }
 
     var body: some View {
         VStack(spacing: 0) {

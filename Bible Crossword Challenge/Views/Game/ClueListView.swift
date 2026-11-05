@@ -36,6 +36,8 @@ struct ClueListView: View {
     /// through `ReaderRouter`, whose cover hangs off the tab bar and can't come
     /// up while this sheet is — see ReaderModal.
     @State private var readerTarget: ReaderRouter.Target?
+    /// The standing list's edges with more rows beyond them.
+    @State private var listOverflow: Edge.Set = []
 
     /// Width of the clue-number gutter. Shared so the reference line below a
     /// clue starts under the clue text rather than under its number.
@@ -105,6 +107,15 @@ struct ClueListView: View {
             } action: { _, _ in
                 centreActive(proxy, animated: false)
             }
+            // Rows fade where more list continues, top and bottom. Cut flat,
+            // a row slid out of sight under the puzzle's title as if behind
+            // it (open iPhone Duo, 2026-11-05).
+            .onScrollGeometryChange(for: Edge.Set.self) { @Sendable geometry in
+                EdgeFade.overflowingEdges(geometry).intersection([.top, .bottom])
+            } action: { _, edges in
+                listOverflow = edges
+            }
+            .mask { EdgeFade(edges: listOverflow, depth: 20) }
             // The panel follows play: typing to a word's end or tapping the
             // grid moves the active clue, and the panel keeps it in view.
             .onChange(of: vm.activeSlot?.id, initial: true) { _, _ in
