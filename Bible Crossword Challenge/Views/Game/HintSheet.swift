@@ -59,6 +59,7 @@ struct HintSheet: View {
     let onChoose: (Choice) -> Void
 
     @Environment(\.dismiss) private var dismiss
+    @State private var fittedHeight: CGFloat = 0
 
     /// The system's own sheet (2026-10-25): a navigation bar with the system
     /// close button, an inset-grouped list, the clue as the section's header
@@ -87,6 +88,13 @@ struct HintSheet: View {
                 }
             }
             .listStyle(.insetGrouped)
+            // Two or three rows: at the medium detent a third of the sheet
+            // was empty under the footer (open Duo, 2026-11-05).
+            .onScrollGeometryChange(for: CGFloat.self) { @Sendable geometry in
+                geometry.contentSize.height + geometry.contentInsets.top + geometry.contentInsets.bottom
+            } action: { _, height in
+                fittedHeight = height
+            }
             .navigationTitle("Hint")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -95,7 +103,9 @@ struct HintSheet: View {
                 }
             }
         }
-        .presentationDetents([.medium, .large])
+        // Fitted to the rows, as HintUpgradeSheet is; the system caps an
+        // over-tall detent at the screen and the list scrolls at large sizes.
+        .presentationDetents([.height(max(fittedHeight, 280))])
         .presentationDragIndicator(.visible)
     }
 

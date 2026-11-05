@@ -821,6 +821,17 @@ struct CrosswordGameScreen: View {
             }
             keypad
         }
+        // Full width under the side rail. On the folded Duo the rail is a
+        // short column at the top of the trailing edge, but its safe-area
+        // inset runs the screen's height, and it cut ~20% off every key
+        // over empty space (2026-11-05). In the other layouts the dock is a
+        // column of its own beside the rail and keeps the inset.
+        .ignoresSafeArea(.container, edges: dockRunsUnderRail ? .horizontal : [])
+    }
+
+    /// Whether the dock sits below the side rail rather than beside it.
+    private var dockRunsUnderRail: Bool {
+        barsVertical && solveLayout == .stacked
     }
 
     // MARK: - Toolbar
