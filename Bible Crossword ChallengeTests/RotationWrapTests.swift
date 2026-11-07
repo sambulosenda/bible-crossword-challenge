@@ -55,7 +55,7 @@ struct RotationWrapTests {
     @Test func theDailyPoolWrapsAfterItsOwnLength() {
         let provider = PuzzleProvider.shared
         let pool = provider.puzzles
-        #expect(pool.count == 112, "daily pool changed — update this and roadmap/README.md")
+        #expect(pool.count == 143, "daily pool changed — update this and roadmap/README.md")
 
         let start = farDay - farDay % pool.count
         #expect(provider.dailyPuzzle(for: epochPlus(start + pool.count))?.id == pool.first?.id)
@@ -75,7 +75,7 @@ struct RotationWrapTests {
     @Test func theMiniPoolWrapsAfterItsOwnLength() {
         let provider = PuzzleProvider.shared
         let pool = provider.minis
-        #expect(pool.count == 117, "mini pool changed — update this and roadmap/README.md")
+        #expect(pool.count == 148, "mini pool changed — update this and roadmap/README.md")
 
         let start = farDay - farDay % pool.count
         #expect(provider.dailyMini(for: epochPlus(start + pool.count))?.id == pool.first?.id)
@@ -184,7 +184,7 @@ struct RotationWrapTests {
     @Test func theSundayPoolWrapsAfterItsOwnLength() {
         let provider = PuzzleProvider.shared
         let pool = provider.sundays
-        #expect(pool.count == 17, "sunday pool changed — the wrap week has moved")
+        #expect(pool.count == 21, "sunday pool changed — the wrap week has moved")
 
         // 2026-08-16 is a Sunday.
         let sunday = day(2026, 8, 16)

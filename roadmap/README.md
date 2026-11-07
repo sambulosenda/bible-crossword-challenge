@@ -26,7 +26,7 @@ levers the data points at had no epic. Engineering work around these lives in
 | A | **First touch v2:** show the mechanic on the first real grid instead of a banner. Read first-solve replays first. Adaptive difficulty (backlog) belongs here. | Activation | Day-0 completion of starters; zero-touch abandons | `[ ]` |
 | B | **A reason to buy Premium:** built around memory verses, quests, packs, not puzzle volume | Revenue | Trials from non-onboarding sources; trial→paid | `[ ]` |
 | C | **Acquisition:** ASO, web Mini → app handoff, App Clip for challenge links (backlog) | Installs | Installs/day; ASC Sources + `ct=` campaigns | `[ ]` |
-| D | **Content cadence:** December batch before **2026-12-01**, then a monthly batch | Retention | Wrap dates below stay ≥ 30 days out | `[ ]` |
+| D | **Content cadence:** December batch done (fresh to 2027-01-01); next batch must land before **2027-01-02** | Retention | Wrap dates below stay ≥ 30 days out | `[~]` |
 | E | **Small wins** (one per release) | — | — | `[ ]` |
 
 **E — small wins**
@@ -43,9 +43,9 @@ whenever puzzles are added — every daily added moves the first date by one.
 
 | Pool | Size | Wraps |
 |------|------|-------|
-| Dailies | 112 | wrapped 2026-10-01 at 92; 20 new served 2026-11-12 → 2026-12-01 via `schedule.json` |
-| Minis | 117 | wrapped 2026-10-06 at 97; 20 new served 2026-11-12 → 2026-12-01 via `schedule.json` |
-| Sundays | 17 | 2026-11-08 repeats (shipped builds); 4 new served 2026-11-15 → 2026-12-06 via `schedule.json` once 2.18 is live |
+| Dailies | 143 | wrapped 2026-10-01 at 92; new served 2026-11-12 → 2027-01-01 via `schedule.json` (31 December batch from 2026-12-02; Born This Day on 12-25) |
+| Minis | 148 | wrapped 2026-10-06 at 97; new served 2026-11-12 → 2027-01-01 via `schedule.json` |
+| Sundays | 21 | 2026-11-08 repeats (shipped builds); new served 2026-11-15 → 2027-01-03 via `schedule.json` |
 
 `RotationWrapTests` asserts both pool sizes and both dates, so adding content
 fails the suite until these are re-recorded — the table can't quietly go stale.

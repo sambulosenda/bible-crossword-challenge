@@ -343,7 +343,10 @@ def process(specs, out, fails, prefix, build_kwargs, shipped_order, extra_fields
     # decoupling the rotation from what they had already played.
     #
     # Anything already shipped keeps the position it already ships in; anything
-    # new is appended after it, ordered by difficulty then title.
+    # new is appended after it in the order it is written in the specs file.
+    # Position is the serving date, so file order is how an author places a
+    # puzzle on a day (a Christmas daily on 25 December). It was difficulty
+    # then title until 2026-11, which scattered dated puzzles.
     #
     # The daily is served by position, not by id — `index = daysSinceEpoch %
     # pool.count` indexes this array — so the order here *is* the rotation.
@@ -359,11 +362,11 @@ def process(specs, out, fails, prefix, build_kwargs, shipped_order, extra_fields
     # rule that holds for both, and it keeps holding after the ids are written
     # back into the specs, which is when a "does it have an id yet" test would
     # quietly stop working.
-    order = {"easy": 0, "medium": 1, "hard": 2}
+    written = {id(s): i for i, s in enumerate(specs)}
     specs.sort(key=lambda s: (
-        (0, shipped_order[s["id"]], "")
+        (0, shipped_order[s["id"]])
         if s.get("id") in shipped_order
-        else (1, order.get(s.get("difficulty"), 1), s.get("title", ""))
+        else (1, written[id(s)])
     ))
 
     reserved = {s["id"] for s in specs if s.get("id")}

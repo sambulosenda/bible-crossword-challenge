@@ -87,7 +87,9 @@ The generator used to sort every spec by (difficulty, title), which is stable
 only while the bank never grows: the first new easy puzzle with an early title
 sorted to index 0 and pushed all 82 dailies down one. It now orders by the
 previous `puzzles.json` — whatever already shipped keeps its position, new specs
-append after it.
+append after it. New specs append in the order they are written, and the
+schedule serves never-played puzzles in that order, so file order is how a
+puzzle lands on a date (e.g. a Christmas daily on 25 December).
 
 So the step-2 check is a real safety gate, not a formality:
 
