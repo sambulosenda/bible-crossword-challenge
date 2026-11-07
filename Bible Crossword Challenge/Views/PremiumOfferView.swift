@@ -477,9 +477,8 @@ struct PremiumOfferView: View {
                                 .background(Theme.ink, in: .capsule)
                         }
                     }
-                    Text(planSubtitle(product))
+                    planSubtitle(product)
                         .font(.subheadline)
-                        .foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
                 }
                 Spacer(minLength: 0)
@@ -626,14 +625,20 @@ struct PremiumOfferView: View {
     /// The line under a plan's name: what it costs and when. Yearly with a
     /// trial says both halves of the offer — "$9.99 a year after 7 days free" —
     /// so the plan you're choosing states the trial where you choose it.
-    /// The trial is the button's to say ("Try 3 days free"), so the rows carry
-    /// the price alone — and the yearly row the deal: what it costs a month.
-    private func planSubtitle(_ product: Product) -> String {
+    /// The trial is the button's to say, so the rows carry the price — and
+    /// the yearly row the deal, what it comes to a month.
+    ///
+    /// The billed amount leads, in primary ink; the per-month figure follows,
+    /// secondary. Guideline 3.1.2: the amount actually charged must be the
+    /// clearest price, a calculated monthly one subordinate to it.
+    private func planSubtitle(_ product: Product) -> Text {
+        let billed = Text("\(product.displayPrice) \(periodPhrase(product))")
         if product.id == StoreService.yearlyID {
             let perMonth = (product.price / 12).formatted(product.priceFormatStyle)
-            return "\(perMonth)/month · billed \(product.displayPrice) yearly"
+            return billed.foregroundStyle(.primary)
+                + Text(" · \(perMonth)/month").foregroundStyle(.secondary)
         }
-        return "\(product.displayPrice) \(periodPhrase(product))"
+        return billed.foregroundStyle(.secondary)
     }
 
     /// Yearly against twelve months of Monthly, rounded down.
