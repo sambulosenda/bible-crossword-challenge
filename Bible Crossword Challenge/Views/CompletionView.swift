@@ -135,6 +135,10 @@ struct CompletionView: View {
     /// views nobody saw.
     @State private var completionOfferVisible = false
     @State private var didLogCompletionOffer = false
+    /// The graduation row under Your First Seven's finished card — see
+    /// `graduationRow`. Impression once, only when on screen.
+    @State private var graduationRowVisible = false
+    @State private var didLogGraduation = false
     /// The widget line, once ever, from the third solve — see `widgetOffer`.
     @AppStorage("widgetOfferShown") private var widgetOfferShown = false
     @State private var showsWidgetOffer = false
@@ -260,6 +264,14 @@ struct CompletionView: View {
 
                         if let questContext {
                             questCard(questContext)
+                            if let next = graduationJourney(questContext) {
+                                graduationRow(next)
+                                    .onScrollVisibilityChange(threshold: 0.6) { visible in
+                                        graduationRowVisible = visible
+                                        logGraduationIfSeen()
+                                    }
+                                    .onChange(of: showReturnDaySheet) { logGraduationIfSeen() }
+                            }
                         }
 
                         if earnedFreeze || bonusFreezeEarned {
@@ -738,6 +750,55 @@ struct CompletionView: View {
             : "\(ctx.quest.title), \(ctx.progress.solved) of \(ctx.progress.total) completed.")
     }
 
+    /// The Premium Journey to offer when this solve finished Your First Seven,
+    /// for a player without Premium. Nil otherwise.
+    ///
+    /// Graduation is the path's natural "what's next" (theme B, 2026-11): of
+    /// the in-app paywall sources, the ones that showed specific content sold
+    /// (Today's Premium row 4 of 13, a locked Journey 2 of 14) and the walls
+    /// didn't (hint limit 1 of 46). The path itself never pitches, so this is
+    /// the first Premium content a new player is shown after onboarding.
+    private func graduationJourney(_ ctx: QuestContext) -> QuestLine? {
+        guard ctx.quest.id == BeginnerPath.questID, ctx.progress.isComplete,
+              !store.isPremium else { return nil }
+        let records = (try? context.fetch(FetchDescriptor<PuzzleRecord>())) ?? []
+        let byID = records.byPuzzleID
+        return puzzleProvider.quests.first {
+            $0.isPremium && !QuestProgress(quest: $0, recordsByID: byID).isComplete
+        }
+    }
+
+    /// One quiet row under the finished path card, worn like the completion
+    /// offer: the gold crown and the next Journey by name. A row the player
+    /// taps, below the verse — never a sheet.
+    private func graduationRow(_ quest: QuestLine) -> some View {
+        Button {
+            paywallEntry = PaywallEntry(source: .pathGraduation)
+        } label: {
+            Label {
+                Text("Next: \(quest.title), a \(quest.puzzleIDs.count)-step Journey")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            } icon: {
+                Image(systemName: "crown.fill")
+                    .foregroundStyle(Theme.badgeRim)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .contentShape(.rect)
+        }
+        .buttonStyle(.plain)
+        .accessibilityHint("Opens Premium options")
+        .accessibilityIdentifier("graduationOffer")
+    }
+
+    private func logGraduationIfSeen() {
+        guard graduationRowVisible, !didLogGraduation,
+              !showReturnDaySheet, paywallEntry == nil else { return }
+        didLogGraduation = true
+        analytics.log(.upsellShown(source: PaywallSource.pathGraduation.rawValue))
+    }
+
     /// Where this solve sits in its pack. Finished → a celebratory seal; more
     /// to go → one tap into the next puzzle (or the paywall when the pack is
     /// premium and the player isn't — a natural discovery moment for overlay
@@ -1184,7 +1245,9 @@ struct CompletionView: View {
     }
 
     private func maybeShowWidgetOffer() {
+        // Not beside the graduation row either: one ask under the verse.
         guard !widgetOfferShown, !showsCompletionOffer, !showReminderAsk,
+              questContext.flatMap(graduationJourney) == nil,
               profile.totalPuzzlesCompleted >= 3 else { return }
         widgetOfferShown = true
         showsWidgetOffer = true

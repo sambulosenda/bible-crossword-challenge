@@ -147,6 +147,55 @@ final class Bible_Crossword_ChallengeUITests: XCTestCase {
         XCTAssertEqual(loggedEvents().count(of: "quest_step_completed"), 0)
     }
 
+    /// Finishing Your First Seven offers the next Premium Journey under the
+    /// finished card. The impression logs once, only once the row is on
+    /// screen, and survives scrolling away and back without a second count.
+    @MainActor
+    func testGraduationOfferLogsOnceWhenSeen() throws {
+        let app = launch(extra: ["-uiFree", "-uiSeedJourney", "first-week", "6", "-uiAutoSolve", "-uiNoReview"])
+        let start = app.buttons["beginnerPathPlay"]
+        XCTAssertTrue(start.waitForExistence(timeout: 20))
+        tap(start, until: app.buttons["Close"], in: app)
+        let offer = app.buttons["graduationOffer"]
+        XCTAssertTrue(offer.waitForExistence(timeout: 10), "No graduation offer on the last step")
+        for _ in 0..<3 where !offer.isHittable { app.swipeUp() }
+        let seen = NSPredicate { _, _ in
+            self.loggedEvents().count(of: "upsell_shown", source: "path_graduation") == 1
+        }
+        expectation(for: seen, evaluatedWith: nil)
+        waitForExpectations(timeout: 10)
+        app.swipeDown()
+        app.swipeUp()
+        XCTAssertEqual(loggedEvents().count(of: "upsell_shown", source: "path_graduation"), 1)
+        offer.tap()
+        let opened = NSPredicate { _, _ in
+            self.loggedEvents().count(of: "paywall_opened", source: "path_graduation") == 1
+        }
+        expectation(for: opened, evaluatedWith: nil)
+        waitForExpectations(timeout: 10)
+    }
+
+    /// Once the day's puzzles are solved, the hero points at the next Journey
+    /// instead of Play again, and Keep going doesn't list that Journey twice.
+    @MainActor
+    func testSolvedHeroOffersTheNextJourney() throws {
+        let app = launch(extra: ["-uiSeedShowcase", "-uiAutoSolve", "-uiNoReview"])
+        for _ in 0..<2 {
+            // Auto-solve finishes on open, so no keypad to wait for.
+            let hero = app.buttons["Start Puzzle"]
+            XCTAssertTrue(hero.waitForExistence(timeout: 20))
+            let close = app.buttons["Close"]
+            tap(hero, until: close, in: app)
+            close.tap()
+        }
+        let next = app.buttons["heroNextJourney"]
+        XCTAssertTrue(next.waitForExistence(timeout: 10), app.debugDescription)
+        XCTAssertFalse(app.buttons["Play again"].exists)
+        let journey = next.label.replacingOccurrences(of: "Next: ", with: "")
+        let shelfRows = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", "Journey. \(journey)"))
+        XCTAssertEqual(shelfRows.count, 0, "Keep going repeats the hero's Journey")
+    }
+
     // MARK: - Helpers
 
     @MainActor
@@ -160,6 +209,19 @@ final class Bible_Crossword_ChallengeUITests: XCTestCase {
         app.launchEnvironment["UI_ANALYTICS_LOG"] = logURL.path
         app.launch()
         return app
+    }
+
+    /// Taps until `target` shows. `-uiCleanSlate` skips Game Center sign-in,
+    /// but a sheet from a non-test launch could still be up; clear it first.
+    @MainActor
+    private func tap(_ button: XCUIElement, until target: XCUIElement, in app: XCUIApplication) {
+        for _ in 0..<3 {
+            let gameCenter = app.buttons["UIA.GameCenter.SignIn.cancelButton"]
+            if gameCenter.exists { gameCenter.tap() }
+            if button.exists { button.tap() }
+            if target.waitForExistence(timeout: 10) { return }
+        }
+        XCTFail("\(target) never appeared\n\(app.debugDescription)", file: #filePath, line: #line)
     }
 
     /// Starts (or continues) the hero puzzle on Today and waits for the keypad.

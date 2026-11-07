@@ -31,6 +31,10 @@ struct HomeView: View {
     @Environment(\.memoryVerses) private var memoryVerses
     @Environment(\.readingPlans) private var readingPlans
     @Query private var records: [PuzzleRecord]
+    /// The solved hero's locked Next button was on screen this visit — the
+    /// impression logs once (CLAUDE.md: once-per-visit guard on Today, whose
+    /// identity is stable; the card itself sits in an if/else).
+    @State private var didLogHeroNext = false
 
     /// Written by RootView when a launch breaks the streak; cleared here on
     /// dismiss, and on the solve that starts the next run.
@@ -120,6 +124,29 @@ struct HomeView: View {
         return timely.enumerated()
             .sorted { (rank($0.element), $0.offset) < (rank($1.element), $1.offset) }
             .map(\.element)
+    }
+
+    /// Where the solved hero points next: the first Journey with steps left
+    /// (`activeQuest`), unless a step of it was already taken today — a
+    /// Journey is a step a day, and its own card says "back tomorrow".
+    ///
+    /// Theme B, 2026-11: once the day's puzzle is solved the hero was a dead
+    /// end with a Play again button, on the screen every daily player sees.
+    /// In-app paywall sources that showed specific content sold (Today's
+    /// Premium row 4 of 13, a locked Journey 2 of 14); a locked Journey here
+    /// opens its page, which carries the paywall (`quest_locked`).
+    private func heroNextJourney(_ presentation: DailyPresentation) -> QuestLine? {
+        guard case .solvedToday = presentation,
+              let quest = activeQuest(recordsByID) else { return nil }
+        let progress = QuestProgress(quest: quest, recordsByID: recordsByID)
+        return progress.steppedToday ? nil : quest
+    }
+
+    private func logHeroNextIfLocked() {
+        guard !didLogHeroNext, let quest = activeQuest(recordsByID),
+              quest.isPremium, !store.isPremium else { return }
+        didLogHeroNext = true
+        analytics.log(.upsellShown(source: "today_hero"))
     }
 
     /// The first Journey with steps left, in authored order (the free quest is
@@ -356,7 +383,8 @@ struct HomeView: View {
             CardColumns {
                 leadColumn(today, lead: lead, recordsByID: byID)
             } more: {
-                moreColumn(byID, heroPuzzleID: today.puzzle(lead)?.puzzle.id)
+                moreColumn(byID, heroPuzzleID: today.puzzle(lead)?.puzzle.id,
+                           heroNextQuestID: heroNextQuestID(today, lead: lead, recordsByID: byID))
             }
             .background(Theme.background)
             // One ask per sitting, in order of how much the player has already
@@ -487,11 +515,15 @@ struct HomeView: View {
             BeginnerPathCard(puzzle: beginner, progress: beginnerProgress,
                              hasEntries: recordsByID[beginner.id]?.hasPlayerEntries == true)
         } else if let hero = today.puzzle(lead) {
+            let next = heroNextJourney(hero.presentation)
             LeadPuzzleCard(
                 puzzle: hero.puzzle,
                 billing: hero.billing,
                 presentation: hero.presentation,
-                progress: inProgressFraction(hero.puzzle, record: today.record(lead))
+                progress: inProgressFraction(hero.puzzle, record: today.record(lead)),
+                next: next,
+                nextLocked: next.map { $0.isPremium && !store.isPremium } ?? false,
+                onNextSeen: logHeroNextIfLocked
             )
         } else {
             emptyDailyCard
@@ -533,8 +565,24 @@ struct HomeView: View {
 
     /// The habit and the shelf: streak, plan, upgrade, packs, quest,
     /// achievements, memory verses.
+    /// The Journey the solved hero is pointing at, when the hero is the lead
+    /// card (not Your First Seven's) — so Keep going can leave it out rather
+    /// than list it a second time right under the button.
+    private func heroNextQuestID(_ today: TodayPuzzles, lead: TodayLead,
+                                 recordsByID: [String: PuzzleRecord]) -> String? {
+        let beginnerFeatured = puzzleProvider.quest(id: BeginnerPath.questID).map {
+            BeginnerPath.shouldFeature(
+                totalCompleted: profile.totalPuzzlesCompleted,
+                progress: QuestProgress(quest: $0, recordsByID: recordsByID, now: currentDay, calendar: calendar)
+            )
+        } ?? false
+        guard !beginnerFeatured, let hero = today.puzzle(lead) else { return nil }
+        return heroNextJourney(hero.presentation)?.id
+    }
+
     @ViewBuilder
-    private func moreColumn(_ recordsByID: [String: PuzzleRecord], heroPuzzleID: String?) -> some View {
+    private func moreColumn(_ recordsByID: [String: PuzzleRecord], heroPuzzleID: String?,
+                            heroNextQuestID: String? = nil) -> some View {
         // Instead of, not above: a comeback card stacked on a flame
         // card reading 0 would state the loss twice and answer it
         // once. The two are mutually exclusive by construction
@@ -611,7 +659,7 @@ struct HomeView: View {
                 // walked. A locked premium quest still shows — the card is
                 // a discovery surface, and its detail screen carries the
                 // paywall.
-                if let quest = activeQuest(recordsByID) {
+                if let quest = activeQuest(recordsByID), quest.id != heroNextQuestID {
                     QuestHomeCard(
                         quest: quest,
                         progress: QuestProgress(quest: quest, recordsByID: recordsByID)
@@ -944,6 +992,11 @@ private struct LeadPuzzleCard: View {
     let billing: PuzzleBilling
     let presentation: DailyPresentation
     var progress: Double? = nil
+    /// Once solved today, the Journey to carry on with — see
+    /// `HomeView.heroNextJourney`. Nil keeps Play again.
+    var next: QuestLine? = nil
+    var nextLocked = false
+    var onNextSeen: () -> Void = {}
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var celebrate = false
@@ -1061,12 +1114,28 @@ private struct LeadPuzzleCard: View {
     private var actionButton: some View {
         switch presentation {
         case .solvedToday:
-            // Full-width but secondary (tonal) — replay stays available without
-            // out-shouting the ink pill used for unsolved puzzles.
-            NavigationLink(value: puzzle) {
-                Label("Play again", systemImage: "arrow.clockwise")
+            if let next {
+                // Instead of Play again, not beside it: one action per card,
+                // and replaying a puzzle solved minutes ago is the weaker one
+                // (it stays a tap away in Puzzles). Tonal like the replay it
+                // replaces; the crown says Premium, the page says the rest.
+                NavigationLink(value: QuestRoute(quest: next, source: .todayHero)) {
+                    Label("Next: \(next.title)",
+                          systemImage: nextLocked ? "crown.fill" : next.coverSymbol)
+                }
+                .buttonStyle(.pillTonal)
+                .accessibilityIdentifier("heroNextJourney")
+                .onScrollVisibilityChange(threshold: 0.6) { visible in
+                    if visible { onNextSeen() }
+                }
+            } else {
+                // Full-width but secondary (tonal) — replay stays available without
+                // out-shouting the ink pill used for unsolved puzzles.
+                NavigationLink(value: puzzle) {
+                    Label("Play again", systemImage: "arrow.clockwise")
+                }
+                .buttonStyle(.pillTonal)
             }
-            .buttonStyle(.pillTonal)
         case .playedBefore(let previous):
             // Prominent, unlike the solved-today replay: this *is* the day's
             // action, and the streak depends on it being taken. It names the

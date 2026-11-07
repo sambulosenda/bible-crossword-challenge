@@ -25,6 +25,8 @@ enum QuestOpenSource: String, Hashable {
     case home
     case packs
     case profile
+    /// The solved hero's Next button on Today (theme B, 2026-11).
+    case todayHero = "today_hero"
 }
 
 /// A quest push, tagged with the surface that made it.

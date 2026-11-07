@@ -440,7 +440,8 @@ final class StoreService {
 
     /// The one place `CustomerInfo` becomes app state.
     private func apply(_ info: CustomerInfo) {
-        isPremium = info.entitlements[Self.entitlementID]?.isActive == true || Self.forcesPremium
+        isPremium = (info.entitlements[Self.entitlementID]?.isActive == true || Self.forcesPremium)
+            && !Self.forcesFree
         // A grant from anywhere — this sheet, a restore, another device —
         // answers the re-offer's question. Never ask it of a subscriber.
         if isPremium { clearTrialAbandon() }
@@ -709,8 +710,13 @@ final class StoreService {
     /// Screenshot helper: `-uiPremium` launches as a subscriber, so no trial
     /// line or Premium row shows. Held through every entitlement refresh.
     static let forcesPremium = ProcessInfo.processInfo.arguments.contains("-uiPremium")
+    /// The opposite, for a simulator whose sandbox customer already holds the
+    /// entitlement: `-uiFree` launches as a free player so offers and walls
+    /// can be seen and UI-tested. Held through every entitlement refresh.
+    static let forcesFree = ProcessInfo.processInfo.arguments.contains("-uiFree")
     #else
     static let forcesPremium = false
+    static let forcesFree = false
     #endif
 
     #if DEBUG

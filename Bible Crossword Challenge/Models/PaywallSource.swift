@@ -57,6 +57,7 @@ enum PaywallSource: String, CaseIterable, Hashable {
     case packCompletion = "pack_completion"
     /// A premium Journey's detail screen.
     case questLocked = "quest_locked"
+    case pathGraduation = "path_graduation"
     /// A locked puzzle in a book on the Bible map.
     case journey
     /// The one re-offer a player gets after backing out of Apple's sheet.
@@ -108,6 +109,9 @@ enum PaywallSource: String, CaseIterable, Hashable {
         case .questLocked:
             // The Journey's own promise, in the words its locked state uses.
             return "Every Journey, a step a day."
+        case .pathGraduation:
+            // They just finished Your First Seven; the offer is what's next.
+            return "Seven down.\nEvery Journey is next."
         case .journey:
             // A locked puzzle inside a book: the gap is the rest of the book,
             // not the shelf. Said as puzzles, because every benefit under it

@@ -187,6 +187,7 @@
       "pack_locked",
       "pack_completion",
       "quest_locked",
+      "path_graduation",
       "journey",
       "trial_abandon",
       "onboarding"

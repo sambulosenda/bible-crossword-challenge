@@ -29,6 +29,12 @@ final class GameCenterService {
     /// again whenever the signed-in player changes; it must be set before any
     /// score submit, and setting it once is all launch-time setup needed.
     func authenticate() {
+        #if DEBUG
+        // UI tests: the sign-in sheet lands at an unpredictable moment after
+        // launch and swallows whichever tap comes next, failing tests at
+        // random. `-uiCleanSlate` launches are test launches.
+        if ProcessInfo.processInfo.arguments.contains("-uiCleanSlate") { return }
+        #endif
         GKLocalPlayer.local.authenticateHandler = { [weak self] viewController, error in
             if let viewController {
                 Self.topViewController()?.present(viewController, animated: true)
