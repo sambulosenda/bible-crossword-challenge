@@ -2,12 +2,12 @@
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import AppStoreButton from '../../components/AppStoreButton.astro';
-import { ARCHIVE, FEATURED, MINI_COUNT, PUZZLE_COUNT, THEME_PAGE } from '../../data/archive';
+import { ARCHIVE, FEATURED, MINI_COUNT, PACK_COUNT, PUZZLE_COUNT, SUNDAY_COUNT, THEME_PAGE, TOTAL_COUNT } from '../../data/archive';
 import { SITE } from '../../consts';
 
 const title = 'Bible Crossword Puzzles by Theme — Bible Crossword Challenge';
 const description =
-  `Browse ${PUZZLE_COUNT} hand-crafted Bible crossword puzzles by theme, from Noah’s Ark to the Book of Revelation. Clues rooted in the King James Version. Free on iOS.`;
+  `Browse ${PUZZLE_COUNT} hand-crafted Bible crossword puzzles by theme, from Noah’s Ark to the Book of Revelation. Clues rooted in the King James Version. Free on iPhone and iPad.`;
 
 const featured = FEATURED;
 const archive = ARCHIVE;
@@ -78,7 +78,7 @@ const itemListLd = {
       <p class="crumbs"><a href="/">Home</a><span>/</span>Puzzles</p>
       <p class="eyebrow">The archive</p>
       <h1>Bible crossword puzzles, by theme</h1>
-      <p class="meta-chips"><b>{PUZZLE_COUNT}</b> full-size puzzles · <b>{MINI_COUNT}</b> quick minis · a new daily puzzle at midnight</p>
+      <p class="meta-chips"><b>{TOTAL_COUNT}</b> puzzles in the app: <b>{PUZZLE_COUNT}</b> daily 15×15 · <b>{MINI_COUNT}</b> minis · <b>{SUNDAY_COUNT}</b> Sunday Specials · <b>{PACK_COUNT}</b> in themed packs</p>
       <div class="prose">
         <p>Every puzzle in Bible Crossword Challenge is hand-crafted around one story or theme, with clues rooted in the King James Version. Start with a theme below, or browse the whole archive — from <em>In the Beginning</em> to <em>The Book of Revelation</em>.</p>
       </div>
@@ -101,7 +101,7 @@ const itemListLd = {
         </div>
 
         <h2>The full archive</h2>
-        <div class="prose"><p>The daily puzzle is always free. Premium unlocks the complete archive — every puzzle below, plus {MINI_COUNT} mini puzzles for quick play.</p></div>
+        <div class="prose"><p>These are the {PUZZLE_COUNT} daily-size puzzles. Free in the app: today’s puzzle and today’s Mini plus the six before each, this week’s Sunday Special, and the First Steps pack. Free on the web: today’s Mini on our home page and every printable PDF. Premium unlocks everything else: all {TOTAL_COUNT} puzzles, every pack, and unlimited hints.</p></div>
         {archive.map((group) => (
           <div class="arch-group">
             <h3>{group.tier}</h3>

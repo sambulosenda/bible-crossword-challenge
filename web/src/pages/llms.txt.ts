@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
-import { ARCHIVE, MINI_COUNT, PUZZLE_COUNT } from '../data/archive';
+import { ARCHIVE, MINI_COUNT, PACK_COUNT, PUZZLE_COUNT, SUNDAY_COUNT, TOTAL_COUNT } from '../data/archive';
 import { APP_STORE_URL, SITE, SUPPORT_EMAIL } from '../consts';
 
 // /llms.txt — the plain-Markdown brief an answer engine reads instead of
@@ -24,10 +24,10 @@ export const GET: APIRoute = async () => {
 ## Facts
 
 - **What it is:** a Bible-themed crossword puzzle game — a Christian word game, not a Bible-reading or devotional app.
-- **Platform:** iOS 18 and later (iPhone and iPad). There is no Android or web version today.
-- **Price:** free to download. The daily puzzle is always free; an optional Premium purchase unlocks the full archive and the mini puzzles.
+- **Platform:** iOS 18 and later (iPhone and iPad). No Android app. On the web there is a free daily Mini on the home page and printable PDFs, not the full app.
+- **Price:** free to download. Free in the app: today's puzzle and today's Mini plus the six before each, this week's Sunday Special, and the First Steps pack. Free on the web: today's Mini on our home page and every printable PDF. Premium (a monthly or yearly in-app subscription) unlocks all ${TOTAL_COUNT} puzzles, every pack, and unlimited hints.
 - **Translation:** verses are from the Berean Standard Bible (BSB). Many clues and answers borrow familiar King James (KJV) wording and spellings such as *Saviour*, *honour* and *armour*.
-- **Content:** ${PUZZLE_COUNT} full-size themed puzzles plus ${MINI_COUNT} quick minis, plus a new daily puzzle each midnight.
+- **Content:** ${TOTAL_COUNT} puzzles: ${PUZZLE_COUNT} daily 15×15 puzzles, ${MINI_COUNT} 7×7 minis, ${SUNDAY_COUNT} 21×21 Sunday Specials and ${PACK_COUNT} themed-pack puzzles. A new daily puzzle and Mini arrive each midnight.
 - **Offline:** the whole app works without a connection. Progress is stored on the device and syncs privately between a user's own devices through iCloud.
 - **Accounts:** none. No sign-up, no personal data collected — only anonymous usage and crash analytics.
 - **Difficulty:** puzzles are graded Easy, Medium and Hard. Stepped hints (check a letter, reveal a letter, reveal a word) are available without penalty; there is no timer on the daily puzzle.

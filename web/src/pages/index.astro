@@ -5,7 +5,7 @@ import AppRating from '../components/AppRating.astro';
 import QRCode from 'qrcode';
 import { getAppRating } from '../lib/app-store';
 import { SITE, APP_STORE_URL, APP_STORE_ID } from '../consts';
-import { FEATURED } from '../data/archive';
+import { FEATURED, TOTAL_ROUNDED } from '../data/archive';
 import minis from '../data/web-minis.json';
 
 // Read once at build time; null when Apple is unreachable or has no ratings yet.
@@ -13,9 +13,9 @@ const rating = await getAppRating(APP_STORE_ID);
 
 // What the app's library says ("246 crosswords"), rounded down so the copy
 // never has to change when a puzzle is added.
-const LIBRARY = 'more than 200';
+const LIBRARY = `more than ${TOTAL_ROUNDED}`;
 
-const title = 'Bible Crossword Challenge: a daily Bible crossword for iPhone';
+const title = 'Bible Crossword Challenge: Bible crosswords for iPhone and iPad';
 const description =
   "Play today's Bible crossword mini right here, free. A fresh puzzle every day with clues from Scripture, a streak that grows, and every puzzle ends on a verse. Free on iOS.";
 
@@ -91,7 +91,7 @@ const decode = (s: string) => s.replace(/&ndash;/g, '–').replace(/&rsquo;/g, '
 const shelf = FEATURED.map((f) => ({ ...f, eyebrow: decode(f.eyebrow), glyph: glyph(f.name) }));
 
 const faqs = [
-  { q: 'Is Bible Crossword Challenge free?', a: 'Yes. Download it and play the daily puzzle and the daily Mini for free. Premium unlocks the full library, every journey and extra hints.' },
+  { q: 'Is Bible Crossword Challenge free?', a: `Yes. The app is free to download. Free in the app: today’s puzzle and today’s Mini plus the six before each, this week’s Sunday Special, and the First Steps pack. Free on the web: today’s Mini on our home page and every printable PDF. Premium unlocks the whole library (${LIBRARY} puzzles), every pack and journey, and unlimited hints.` },
   { q: 'Can I play a Bible crossword online?', a: "Yes. Today's Mini is at the top of this page, free, with no sign-up. A new one appears every day. For the full daily puzzle, your streak and the whole library, get the app." },
   { q: 'Is there a new Bible crossword puzzle every day?', a: `Yes. A fresh daily puzzle and a two-minute Mini arrive at midnight, and the library holds ${LIBRARY} hand-made crosswords across the whole Bible, from Noah's Ark to Easter morning.` },
   { q: 'How difficult are the puzzles?', a: 'They are made for everyone, lifelong believers and casual solvers alike. If a clue has you stuck, hints check or reveal a letter without giving the whole answer away.' },
@@ -162,7 +162,7 @@ const verseWords = 'I have hidden Your word in my heart that I might not sin aga
     <section class="hero" aria-labelledby="hero-h">
       <div class="wrap hero-grid">
         <div class="hero-copy">
-          <p class="eyebrow rise">A daily Bible crossword for iPhone</p>
+          <p class="eyebrow rise">Bible crosswords for iPhone and iPad</p>
           <h1 id="hero-h" class="rise d1">Know the Word, one&nbsp;square at a&nbsp;time.</h1>
           <p class="lede rise d2">
             A fresh crossword every morning, with clues from Scripture and a verse at the end. Try
