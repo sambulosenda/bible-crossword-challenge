@@ -55,6 +55,9 @@ struct PaywallView: View {
 
     @State private var selectedID = StoreService.yearlyID
     @State private var didLogOpen = false
+    /// Drives the offer's staggered entrance (header, cards, plans), as on
+    /// onboarding's premium page — the sheet used to arrive all at once.
+    @State private var entered = false
     /// Where the overflowing offer rests: its foot, by the buy button.
     @State private var offerScroll = ScrollPosition(edge: .bottom)
 
@@ -123,6 +126,7 @@ struct PaywallView: View {
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .onAppear { entered = true }
             .background {
                 // The chip's gold, let down to a wash and faded into the paper
                 // over the top of the page. Under the bars too: it's the page's
@@ -206,11 +210,13 @@ struct PaywallView: View {
         PremiumOfferView(
             headline: headlineText,
             selectedID: $selectedID,
+            entranceActive: entered,
             highlightedPackID: contextPackID,
             // The pinned bar's terms line already states the trial, the
             // renewal and cancelling.
             compact: compact,
-            keepsSmallHero: keepsSmallHero
+            keepsSmallHero: keepsSmallHero,
+            comparesWithFree: source != .onboarding
         )
         // 20pt, the app's screen edge.
         .padding(.horizontal, Theme.Spacing.m + Theme.Spacing.xs)
@@ -322,6 +328,7 @@ struct PaywallView: View {
                 }
             }
             .buttonStyle(.pillProminent)
+            .premiumOfferButton(purchasing: store.purchaseInFlight)
             .disabled(store.purchaseInFlight || selectedProduct == nil)
 
             // Restate what happens right at the commit point — purchase anxiety
@@ -473,7 +480,7 @@ enum PremiumCopy {
     /// The sheet's headline, beside the cover fan, whatever the entry point:
     /// two short lines, as the design canvas sets it, so the header is one
     /// height everywhere. The entry point's own line goes under it.
-    static let sheetHeadline = "Every puzzle.\nEvery pack."
+    static let sheetHeadline = "Go deeper\nin the Word."
 
     /// The line under the sheet's headline for an entry point with nothing
     /// more specific to say (Profile, the trial re-offer's fallback): what
@@ -518,12 +525,13 @@ struct PremiumBenefit: Identifiable {
     ///
     /// "No ads" stays out: the app serves none, free players included.
     static let all: [PremiumBenefit] = [
-        PremiumBenefit(icon: "square.grid.2x2", title: "Every pack and Journey"),
-        PremiumBenefit(icon: "lightbulb", title: "Unlimited hints"),
-        PremiumBenefit(icon: "calendar", title: "Every past daily and Sunday Special"),
-        // Premium lifts the 3-verse cap. "Memorize", not "Unlimited verses":
+        // Three outcomes since the design pass (2026-11): packs and Journeys
+        // are shown by name in the cards above, so no row repeats them.
+        PremiumBenefit(icon: "lightbulb", title: "Never stuck, with unlimited hints"),
+        PremiumBenefit(icon: "calendar", title: "Every puzzle, back to day one"),
+        // Premium lifts the 3-verse cap. "Learn", not "Unlimited verses":
         // every verse is already free to read.
-        PremiumBenefit(icon: "brain", title: "Memorize unlimited verses"),
+        PremiumBenefit(icon: "brain", title: "Learn as many verses as you like"),
     ]
 }
 

@@ -658,6 +658,7 @@ struct OnboardingView: View {
             // the fetch failed the offer above is a retry card, and a disabled
             // pill under it was a dead button pretending to be the way out.
             .buttonStyle(.pillProminent)
+            .premiumOfferButton(purchasing: store.purchaseInFlight)
             .disabled(store.purchaseInFlight || selectedPlan == nil)
 
             // The commitment line, always: trial length, the price after it,
