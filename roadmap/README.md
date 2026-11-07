@@ -1,36 +1,39 @@
 # Product roadmap
 
-Prioritized feature epics for Bible Crossword Challenge. Each file is a grab-able epic with sub-tickets.
+Rewritten 2026-11-07 after an audit: the August plan had mostly shipped, and the
+levers the data points at had no epic. Engineering work around these lives in
+`../ENGINEERING_ROADMAP.md`.
 
-**Principles (match existing app)**
-- Offline-first, bundled content
-- No backend / accounts unless unavoidable
-- Reuse packs, challenges, CloudKit progress, premium
-- Calm daily habit first; social + Premium second
+**Principles**
+- Offline-first, bundled content. No backend / accounts unless unavoidable.
+- Calm daily habit first; social + Premium second.
+- Build on what retained players use: memory verses, packs, quests.
+- ~14 installs/day: nothing can be A/B tested. Judge before/after on the cohort,
+  2 weeks after a release, with the denominator pinned.
+
+## What the data says (as of 2026-11)
+- **Activation is the lever.** Finish a puzzle on day 0 → 74% return; don't → 27%.
+  ~Half of day-0 abandoners never touch the grid and leave inside 10 s.
+- **Premium has no reason for daily players.** In-app walls sell ~nothing; trials
+  come from onboarding. "More puzzles" doesn't matter to someone who plays once a day.
+- **Install volume caps revenue**, not paywall conversion.
+- **Not levers:** notifications, the Read tab, puzzle chips, the widget (0 opens / 30d).
 
 ## Priority order
 
-Dated work first — 13 has a hard deadline that the rest do not.
+| # | Theme | Goal | Measure | Status |
+|---|-------|------|---------|--------|
+| A | **First touch v2:** show the mechanic on the first real grid instead of a banner. Read first-solve replays first. Adaptive difficulty (backlog) belongs here. | Activation | Day-0 completion of starters; zero-touch abandons | `[ ]` |
+| B | **A reason to buy Premium:** built around memory verses, quests, packs, not puzzle volume | Revenue | Trials from non-onboarding sources; trial→paid | `[ ]` |
+| C | **Acquisition:** ASO, web Mini → app handoff, App Clip for challenge links (backlog) | Installs | Installs/day; ASC Sources + `ct=` campaigns | `[ ]` |
+| D | **Content cadence:** December batch before **2026-12-01**, then a monthly batch | Retention | Wrap dates below stay ≥ 30 days out | `[ ]` |
+| E | **Small wins** (one per release) | — | — | `[ ]` |
 
-| # | Epic | Goal | File |
-|---|------|------|------|
-| 13 | **Daily rotation wrap** — due **2026-10-06** (minis) / **2026-10-01** (dailies) | Streak-break event | [13-daily-rotation-wrap.md](./13-daily-rotation-wrap.md) |
-| 1 | Seasonal packs + content cadence | Retention + Premium | [01-seasonal-packs-content-cadence.md](./01-seasonal-packs-content-cadence.md) |
-| 2 | Challenge history / family challenge | Growth | [02-challenge-history-family.md](./02-challenge-history-family.md) |
-| 3 | Deeper post-solve scripture loop | Positioning | [03-post-solve-scripture-loop.md](./03-post-solve-scripture-loop.md) |
-| 4 | Pencil/check + larger grid / a11y | Audience expansion | [04-pencil-check-a11y.md](./04-pencil-check-a11y.md) |
-| 5 | Bible journey map | Long-term engagement | [05-bible-journey-map.md](./05-bible-journey-map.md) |
-| 6 | Family Premium / gift | Revenue | [06-family-premium-gift.md](./06-family-premium-gift.md) |
-| 7 | Onboarding paywall fix | First-run trial + trust | [07-onboarding-paywall-fix.md](./07-onboarding-paywall-fix.md) |
-| 8 | Main paywall polish | Conversion + honesty | [08-main-paywall-polish.md](./08-main-paywall-polish.md) |
-| 9 | Free archive soft gate | Fairness + reviews | [09-free-archive-soft-gate.md](./09-free-archive-soft-gate.md) |
-| 10 | Widget deep links | Habit loop | [10-widget-deep-links.md](./10-widget-deep-links.md) |
-| 11 | Streak break / comeback | D1–D7 retention | [11-streak-comeback.md](./11-streak-comeback.md) |
-| 12 | Ads: ship or strip claims | Free-tier $ / honesty | [12-ads-honesty-or-ship.md](./12-ads-honesty-or-ship.md) |
-| 14 | **Premium content value** — earn “all packs + every new one” | Trial→paid / catalog | [14-premium-content-value.md](./14-premium-content-value.md) |
-| 15 | Verse hint (“Show the Verse”) | Scripture in the solve loop | [15-verse-hint.md](./15-verse-hint.md) |
-| 16 | Notification opt-in surfaces | Reminder reach / push roadmap | [16-notification-opt-in.md](./16-notification-opt-in.md) |
-| 17 | Sunday Special (weekly 21×21) | Calendar peak / Premium headline | [17-sunday-special.md](./17-sunday-special.md) |
+**E — small wins**
+- [ ] Turn on Family Sharing for the subscription in ASC (from 06; a switch, not a SKU)
+- [ ] Journey milestones (05 T3)
+- [ ] Dedicated Sunday Special events (17 T7)
+- [ ] Game Center weekly explainer (02 T5)
 
 ## Dated
 
@@ -47,28 +50,33 @@ whenever puzzles are added — every daily added moves the first date by one.
 `RotationWrapTests` asserts both pool sizes and both dates, so adding content
 fails the suite until these are re-recorded — the table can't quietly go stale.
 
-The daily pool wraps first, on 1 October; the expanded mini pool wraps on 6 October.
-These are rotation dates from the fixed epoch, not release dates.
+## Done / dropped (August plan)
+
+| # | Epic | Outcome |
+|---|------|---------|
+| 01 | Seasonal packs + cadence | Done 2026-08-08; cadence continues as D |
+| 02 | Challenge history / family | T1–T4 shipped; T5 → E |
+| 03 | Post-solve scripture loop | Built as reader chips, **removed** 2026-10-03 (1.8% tap rate) |
+| 04 | Pencil / check / a11y | Shipped (`GameViewModel.check`, pencil). Epic file not updated |
+| 05 | Bible journey map | T1, T2, T4 shipped; T3 → E; T5 dropped with 03 |
+| 06 | Family Premium / gift | Multi-seat SKU dropped; Family Sharing switch → E |
+| 07 | Onboarding paywall fix | Done |
+| 08 | Main paywall polish | Done |
+| 09 | Free archive soft gate | Done |
+| 10 | Widget deep links | T1–T4 shipped; T5 dropped (widget 0 opens / 30d) |
+| 11 | Streak comeback | Done |
+| 12 | Ads honesty | Done (no ads) |
+| 13 | Daily rotation wrap | Solved by `schedule.json` + `RotationWrapTests`; ongoing as D |
+| 14 | Premium content value | Catalog done; didn't create a reason to buy → B |
+| 15 | Verse hint | Shipped; the most-used assist |
+| 16 | Notification opt-in | Done; data says notifications aren't a retention lever |
+| 17 | Sunday Special | T1–T6 shipped; T7 → E |
+
+Epic files 01–17 are kept as history. New themes get new files (`A-…md` etc.)
+when work starts.
 
 ## Status legend
+`[ ]` todo · `[~]` in progress · `[x]` done · `—` blocked / deferred
 
-- `[ ]` todo
-- `[~]` in progress
-- `[x]` done
-- `—` blocked / deferred
-
-## Related specs
-
-- `docs/themed-packs-spec.md`
-- `docs/friend-challenge-spec.md`
-- `docs/clue-references-spec.md`
-
-## Current baseline (shipped)
-
-- Daily full + daily mini
-- Packs: First Steps, Life of David, Parables, Psalm 23, plus four seasonal —
-  Lent, Easter, Advent, Christmas — on recurring windows (`PackSeason`)
-- Streaks + freezes, achievements, hints, paywall
-- Friend “beat my time” challenges (URL, no backend)
-- Scripture reader + post-solve clue refs (partial)
-- Widget, Game Center mini leaderboard, share cards, CloudKit sync
+## Related
+`BACKLOG.md` (parking lot) · `docs/themed-packs-spec.md` · `docs/friend-challenge-spec.md` · `docs/clue-references-spec.md`
