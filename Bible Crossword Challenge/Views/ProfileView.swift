@@ -110,6 +110,7 @@ struct ProfileView: View {
             .alert(chosenName == nil ? "Add your name" : "Your name", isPresented: $showRename) {
                 TextField("Your name", text: $draftName)
                     .textInputAutocapitalization(.words)
+                    .textContentType(.nickname) // masked in session replay
                 Button("Cancel", role: .cancel) {}
                 Button("Save") { commitRename() }
             } message: {

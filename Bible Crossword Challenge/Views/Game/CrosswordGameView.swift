@@ -181,6 +181,10 @@ struct CrosswordGameScreen: View {
     /// Abandonment fires once per visit to this screen, but every departure
     /// path (window detach, onDisappear) can fire more than once for one exit.
     @State private var didLogAbandon = false
+    /// When the abandon was logged, and whether the screen has since come
+    /// back to a window — see `puzzleReattached`.
+    @State private var abandonedAt: Date?
+    @State private var didLogReattach = false
     /// The passage a verse hint opened, presented as a local sheet (see the
     /// `.sheet(item:)` note below for why not `ReaderRouter`).
     @State private var verseHintTarget: ReaderRouter.Target?
@@ -430,8 +434,16 @@ struct CrosswordGameScreen: View {
                 if !attached {
                     vm.pauseTimer()
                     saveProgress()
-                    logAbandonIfNeeded()
+                    logAbandonIfNeeded(exitPath: "window_detach")
                     PostHogAnalyticsService.stopReplay()
+                } else if let abandonedAt, !didLogReattach {
+                    // Back in a window after an abandon was logged: the same
+                    // screen re-hosted, not a departure. Diagnostic only.
+                    didLogReattach = true
+                    analytics.log(.puzzleReattached(
+                        puzzleID: puzzle.id,
+                        secondsSinceAbandon: Int(Date().timeIntervalSince(abandonedAt).rounded())
+                    ))
                 }
             }
         )
@@ -589,8 +601,11 @@ struct CrosswordGameScreen: View {
         }
         .task {
             gridFocused = true
-            // Before the first solve only — see `startFirstPuzzleReplay`.
-            if profile.totalPuzzlesCompleted == 0 {
+            // Before the first solve only — see `startFirstPuzzleReplay`. Not
+            // with a friend's challenge open: replay shows on-screen text, and
+            // the challenge chip carries the friend's name.
+            if profile.totalPuzzlesCompleted == 0,
+               challengeService.pending(for: puzzle.id) == nil {
                 PostHogAnalyticsService.startFirstPuzzleReplay()
             }
             GameViewModel.seedAutoCheckIfNeeded(totalCompleted: profile.totalPuzzlesCompleted)
@@ -702,7 +717,7 @@ struct CrosswordGameScreen: View {
         .onDisappear {
             vm.pauseTimer()
             saveProgress()
-            logAbandonIfNeeded()
+            logAbandonIfNeeded(exitPath: "disappear")
             PostHogAnalyticsService.stopReplay()
         }
     }
@@ -1582,9 +1597,10 @@ struct CrosswordGameScreen: View {
     /// detaching the grid from the window is not an abandon; a challenge replay
     /// jumps straight to the results with an untouched grid; and both departure
     /// paths can fire for one exit, so this only ever logs once per visit.
-    private func logAbandonIfNeeded() {
+    private func logAbandonIfNeeded(exitPath: String) {
         guard !vm.isComplete, challengeReplaySeconds == nil, !didLogAbandon else { return }
         didLogAbandon = true
+        abandonedAt = Date()
         analytics.log(.puzzleAbandoned(
             puzzleID: puzzle.id,
             fillPercent: fillPercent,
@@ -1592,7 +1608,8 @@ struct CrosswordGameScreen: View {
             wallSeconds: Int(Date().timeIntervalSince(openedAt).rounded()),
             hintsUsed: vm.hintsUsed,
             cellTaps: vm.cellTaps,
-            keyPresses: vm.keyPresses
+            keyPresses: vm.keyPresses,
+            exitPath: exitPath
         ))
     }
 

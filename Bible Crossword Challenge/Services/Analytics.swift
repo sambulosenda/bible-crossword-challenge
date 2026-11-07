@@ -59,7 +59,10 @@ enum AnalyticsEvent {
     /// `hintsUsed` is this sitting's hints. Fires when the screen leaves the
     /// window, so a quit via app-kill from the background is not counted — the
     /// numbers are a floor, not a census.
-    case puzzleAbandoned(puzzleID: String, fillPercent: Int, seconds: Int, wallSeconds: Int, hintsUsed: Int, cellTaps: Int, keyPresses: Int)
+    case puzzleAbandoned(puzzleID: String, fillPercent: Int, seconds: Int, wallSeconds: Int, hintsUsed: Int, cellTaps: Int, keyPresses: Int, exitPath: String)
+    /// The game screen came back to a window after its abandon was logged —
+    /// a re-host, not a departure. Diagnoses instant abandons (2026-11).
+    case puzzleReattached(puzzleID: String, secondsSinceAbandon: Int)
 
     /// Wall-clock ceiling for a `bounce`: an exit with no cell tap and no key
     /// press below this is someone who opened the screen and left, not someone
@@ -391,6 +394,7 @@ enum AnalyticsEvent {
         case .dailyPuzzleStarted: return "daily_puzzle_started"
         case .dailyPuzzleCompleted: return "daily_puzzle_completed"
         case .puzzleAbandoned: return "puzzle_abandoned"
+        case .puzzleReattached: return "puzzle_reattached"
         case .hintUsed: return "hint_used"
         case .hintLimitReached: return "hint_limit_reached"
         case .checkUsed: return "check_used"
@@ -532,7 +536,7 @@ enum AnalyticsEvent {
             return ["puzzle_id": id, "is_resume": isResume, "source": source]
         case .dailyPuzzleCompleted(let id, let seconds):
             return ["puzzle_id": id, "seconds": seconds]
-        case .puzzleAbandoned(let id, let fillPercent, let seconds, let wallSeconds, let hintsUsed, let cellTaps, let keyPresses):
+        case .puzzleAbandoned(let id, let fillPercent, let seconds, let wallSeconds, let hintsUsed, let cellTaps, let keyPresses, let exitPath):
             return [
                 "puzzle_id": id,
                 "fill_percent": fillPercent,
@@ -547,7 +551,13 @@ enum AnalyticsEvent {
                 // governs every query, insight and dashboard.
                 "bounce": cellTaps == 0 && keyPresses == 0
                     && wallSeconds < Self.bounceWallSeconds,
+                // Which departure path fired: "window_detach" or
+                // "disappear". With `puzzle_reattached`, tells a real exit
+                // from the iOS 26 re-host that logs an abandon at open.
+                "exit_path": exitPath,
             ]
+        case .puzzleReattached(let id, let secondsSinceAbandon):
+            return ["puzzle_id": id, "seconds_since_abandon": secondsSinceAbandon]
         case .hintUsed(let type, let cost):
             return ["type": type, "cost": cost]
         case .hintLimitReached(let type):

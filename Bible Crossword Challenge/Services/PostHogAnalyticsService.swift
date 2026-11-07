@@ -53,9 +53,19 @@ struct PostHogAnalyticsService: AnalyticsService {
         // Off at launch: replay burns quota and tells us little about a
         // practised solver. It is started by hand for exactly one stuck-user
         // question — see `startFirstPuzzleReplay`. SwiftUI only records in
-        // screenshot mode; text inputs and images stay masked (SDK defaults).
+        // screenshot mode.
         config.sessionReplay = false
         config.sessionReplayConfig.screenshotMode = true
+        // `maskAllTextInputs` masks every SwiftUI `Text`, not just fields: the
+        // first replays (2026-11) showed clues, grid letters and keys as grey
+        // blocks, so neither a person nor PostHog's summarizer could tell what
+        // a stuck player was reading. Safe because replay only runs on the
+        // game screen before the first solve: it stops when the grid leaves
+        // the window (completion cover included), and never starts with a
+        // friend's challenge open, the one place a name shows there. Name
+        // fields are also `.textContentType(.nickname)`, which the SDK masks
+        // regardless. Images stay masked (default).
+        config.sessionReplayConfig.maskAllTextInputs = false
         // On by default, and wrong for this app: it flags 3 taps landing within
         // 30pt and 1s of each other as `$rageclick`. On a grid whose cells are
         // smaller than that threshold, filling three neighbouring squares at a

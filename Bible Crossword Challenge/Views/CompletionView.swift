@@ -351,6 +351,7 @@ struct CompletionView: View {
         }
         .alert("What should we call you?", isPresented: $showNamePrompt) {
             TextField("Your name", text: $draftName)
+                .textContentType(.nickname) // masked in session replay
             // Alert buttons always dismiss, and a Save on an empty field would
             // silently drop the pending challenge/board intent — so it can't
             // be tapped until there's a name to save.

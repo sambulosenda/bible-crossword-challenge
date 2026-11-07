@@ -73,6 +73,7 @@ struct ChallengeHistoryView: View {
         .alert("What should we call you?", isPresented: $showNamePrompt) {
             TextField("Your name", text: $draftName)
                 .textInputAutocapitalization(.words)
+                .textContentType(.nickname) // masked in session replay
             Button("Save") { saveNameAndSend() }
             Button("Cancel", role: .cancel) { pendingNameEntry = nil }
         } message: {

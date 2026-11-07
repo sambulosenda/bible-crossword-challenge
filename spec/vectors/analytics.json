@@ -83,6 +83,7 @@
         "parameterKeys" : [
           "bounce",
           "cell_taps",
+          "exit_path",
           "fill_percent",
           "hints_used",
           "key_presses",
@@ -95,6 +96,19 @@
         "case" : "puzzleAbandoned"
       },
       "name" : "puzzle_abandoned"
+    },
+    {
+      "expect" : {
+        "name" : "puzzle_reattached",
+        "parameterKeys" : [
+          "puzzle_id",
+          "seconds_since_abandon"
+        ]
+      },
+      "given" : {
+        "case" : "puzzleReattached"
+      },
+      "name" : "puzzle_reattached"
     },
     {
       "expect" : {
@@ -867,7 +881,7 @@
     }
   ],
   "constants" : {
-    "eventCount" : 65,
+    "eventCount" : 66,
     "paywallExits" : [
       "close",
       "free_link",
