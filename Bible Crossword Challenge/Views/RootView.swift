@@ -389,7 +389,21 @@ struct RootView: View {
     ///
     /// Not a trap: it pushes onto the Today stack, so the
     /// back button lands exactly where they'd have been.
+    ///
+    /// The first unfinished Your First Seven step, not today's Mini
+    /// (2026-11): today's Mini is whichever one the rotation serves, and new
+    /// players finished as few as 25–29% of the knowledge-heavy ones
+    /// (HAMAN, VEIL, CEDAR) against 75–100% of the path's easy Gospel steps.
+    /// Pushed as a `BeginnerPuzzleRoute` so the path's beginner pacing and
+    /// completion flow apply. Today's Mini only if the path is missing or
+    /// already done (a reinstall whose records synced back).
     private func openFirstPuzzle() {
+        let records = (try? context.fetch(FetchDescriptor<PuzzleRecord>())) ?? []
+        if let step = BeginnerPath.next(provider: puzzleProvider, recordsByID: records.byPuzzleID) {
+            selectedTab = .today
+            todayPath = NavigationPath([BeginnerPuzzleRoute(puzzle: step)])
+            return
+        }
         guard let mini = puzzleProvider.dailyMini() else { return }
         openPuzzle(id: mini.id)
     }
