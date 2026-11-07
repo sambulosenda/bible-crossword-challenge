@@ -6,7 +6,7 @@
   "description": "Solve an Armour of God Bible crossword: the belt of truth, breastplate of righteousness, shield of faith and sword of the Spirit. KJV clues, free on iPhone and iPad.",
   "prose": [
     "Paul writes to the Ephesians from prison and reaches for a soldier's kit to describe how to stand: loins girt with truth, the breastplate of righteousness, feet shod, the shield, the helmet, the sword. <em>The Armour of God</em> is a grid built piece by piece out of Ephesians 6 — and because Paul names each item with what it stands for, every clue teaches while you solve it.",
-    "Note the KJV spelling in the title: <em>armour</em>, with a u. That is worth remembering across the whole app — answers follow the King James Version, so <em>Saviour</em>, <em>honour</em> and <em>armour</em> all keep their extra letter, and a word that seems one square too long is usually right after all."
+    "Note the KJV spelling in the title: <em>armour</em>, with a u. That is worth remembering across the whole app — many answers keep King James spellings, so <em>Saviour</em>, <em>honour</em> and <em>armour</em> often keep their extra letter, and a word that seems one square too long is usually right after all."
   ],
   "clues": [
     {
@@ -34,8 +34,8 @@
       "len": 9
     }
   ],
-  "verseText": "Put on the whole armour of God, that ye may be able to stand against the wiles of the devil.",
-  "verseCite": "Ephesians 6:11 · KJV",
+  "verseText": "Put on the full armor of God, so that you can make your stand against the devil’s schemes.",
+  "verseCite": "Ephesians 6:11 · BSB",
   "related": [
     {
       "href": "/puzzles/fruit-of-the-spirit/",

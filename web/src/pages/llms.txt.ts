@@ -18,7 +18,7 @@ export const GET: APIRoute = async () => {
 
 > A daily Bible crossword app for iPhone and iPad. A fresh hand-crafted puzzle
 > arrives every day at midnight; clues are drawn from Scripture and every puzzle
-> closes on the King James Version verse behind its theme. Free to download,
+> closes on the verse behind its theme. Free to download,
 > works fully offline, no account required.
 
 ## Facts
@@ -26,7 +26,7 @@ export const GET: APIRoute = async () => {
 - **What it is:** a Bible-themed crossword puzzle game — a Christian word game, not a Bible-reading or devotional app.
 - **Platform:** iOS 18 and later (iPhone and iPad). There is no Android or web version today.
 - **Price:** free to download. The daily puzzle is always free; an optional Premium purchase unlocks the full archive and the mini puzzles.
-- **Translation:** all verses and clue answers follow the King James Version (KJV), including KJV spellings such as *Saviour*, *honour* and *armour*.
+- **Translation:** verses are from the Berean Standard Bible (BSB). Many clues and answers borrow familiar King James (KJV) wording and spellings such as *Saviour*, *honour* and *armour*.
 - **Content:** ${PUZZLE_COUNT} full-size themed puzzles plus ${MINI_COUNT} quick minis, plus a new daily puzzle each midnight.
 - **Offline:** the whole app works without a connection. Progress is stored on the device and syncs privately between a user's own devices through iCloud.
 - **Accounts:** none. No sign-up, no personal data collected — only anonymous usage and crash analytics.
@@ -59,7 +59,7 @@ ${ARCHIVE.map(
 
 - **Is it free?** Yes — the download and the daily puzzle are free. Premium unlocks the full archive.
 - **Is there a new puzzle every day?** Yes, at midnight local time.
-- **Which Bible translation?** King James Version (KJV).
+- **Which Bible translation?** The Berean Standard Bible (BSB) for verses; many clues use King James wording.
 - **Does it work on iPad?** Yes, and progress syncs with iPhone through iCloud.
 - **Is there an Android version?** Not today; iOS only.
 - **Do I need an account?** No.

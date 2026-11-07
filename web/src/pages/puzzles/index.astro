@@ -43,7 +43,7 @@ const itemListLd = {
   '@context': 'https://schema.org',
   '@type': 'ItemList',
   name: 'Bible crossword puzzles by theme',
-  description: `${PUZZLE_COUNT} hand-crafted Bible crossword puzzles, grouped by difficulty. Every puzzle ends on the King James Version verse behind its theme.`,
+  description: `${PUZZLE_COUNT} hand-crafted Bible crossword puzzles, grouped by difficulty. Every puzzle ends on the verse behind its theme.`,
   numberOfItems: PUZZLE_COUNT,
   itemListOrder: 'https://schema.org/ItemListOrderAscending',
   itemListElement: archive.flatMap((group) =>
@@ -58,7 +58,7 @@ const itemListLd = {
           '@type': 'Game',
           name: `${name} — Bible crossword`,
           genre: 'Crossword',
-          about: `${name} (${ref}, King James Version)`,
+          about: `${name} (${ref})`,
           ...(url ? { url } : {}),
           isPartOf: { '@type': 'VideoGameSeries', name: 'Bible Crossword Challenge' },
         },
