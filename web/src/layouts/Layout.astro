@@ -59,9 +59,14 @@ const { title, description, path, robots, ogImage, ogImageAlt, chrome = true } =
               io.unobserve(el);
             });
           },
-          { threshold: 0.15, rootMargin: '0px 0px -8% 0px' }
+          { threshold: 0, rootMargin: '0px 0px -40px 0px' }
         );
         els.forEach((el) => io.observe(el));
+        // A jump (anchor link, fast fling, restored scroll) can skip past an
+        // element; anything already above the fold shows at once.
+        const sweep = () => els.forEach((el) => { if (!el.classList.contains('in') && el.getBoundingClientRect().top < innerHeight) { el.classList.add('in'); io.unobserve(el); } });
+        addEventListener('scroll', sweep, { passive: true });
+        sweep();
       })();
     </script>
   </body>

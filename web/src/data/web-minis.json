@@ -1,0 +1,767 @@
+[
+ {
+  "id": "mini-024",
+  "title": "The Shepherd's Psalm",
+  "verse": "A Psalm of David. The LORD is my shepherd; I shall not want.",
+  "reference": "Psalm 23:1",
+  "grid": [
+   "..PSALM",
+   "...O...",
+   ".P.U...",
+   "VALLEY.",
+   ".T.....",
+   ".HARP..",
+   "......."
+  ],
+  "clues": [
+   {
+    "n": 1,
+    "d": "A",
+    "r": 0,
+    "c": 2,
+    "a": "PSALM",
+    "t": "A sacred song of David"
+   },
+   {
+    "n": 2,
+    "d": "D",
+    "r": 0,
+    "c": 3,
+    "a": "SOUL",
+    "t": "He restoreth it"
+   },
+   {
+    "n": 3,
+    "d": "D",
+    "r": 2,
+    "c": 1,
+    "a": "PATH",
+    "t": "Of righteousness, for his name's sake"
+   },
+   {
+    "n": 4,
+    "d": "A",
+    "r": 3,
+    "c": 0,
+    "a": "VALLEY",
+    "t": "Of the shadow of death"
+   },
+   {
+    "n": 5,
+    "d": "A",
+    "r": 5,
+    "c": 1,
+    "a": "HARP",
+    "t": "Instrument David played for Saul"
+   }
+  ]
+ },
+ {
+  "id": "mini-016",
+  "title": "Noah and the Flood",
+  "verse": "And the rain fell upon the earth for forty days and forty nights.",
+  "reference": "Genesis 7:12",
+  "grid": [
+   ".FLOOD.",
+   ".O.....",
+   "ARARAT.",
+   ".T.A...",
+   ".Y.I...",
+   "...NOAH",
+   "......."
+  ],
+  "clues": [
+   {
+    "n": 1,
+    "d": "A",
+    "r": 0,
+    "c": 1,
+    "a": "FLOOD",
+    "t": "The waters that covered the whole earth"
+   },
+   {
+    "n": 1,
+    "d": "D",
+    "r": 0,
+    "c": 1,
+    "a": "FORTY",
+    "t": "Number of days and nights it rained"
+   },
+   {
+    "n": 2,
+    "d": "A",
+    "r": 2,
+    "c": 0,
+    "a": "ARARAT",
+    "t": "Mountains where the vessel came to rest"
+   },
+   {
+    "n": 3,
+    "d": "D",
+    "r": 2,
+    "c": 3,
+    "a": "RAIN",
+    "t": "It fell for forty days and forty nights"
+   },
+   {
+    "n": 4,
+    "d": "A",
+    "r": 5,
+    "c": 3,
+    "a": "NOAH",
+    "t": "Builder found righteous in his generation"
+   }
+  ]
+ },
+ {
+  "id": "mini-005",
+  "title": "Born in Bethlehem",
+  "verse": "Today in the city of David a Savior has been born to you. He is Christ the Lord!",
+  "reference": "Luke 2:11",
+  "grid": [
+   "....B..",
+   ".S.MARY",
+   ".T..B..",
+   "MANGER.",
+   ".R.O...",
+   "...L...",
+   "...D..."
+  ],
+  "clues": [
+   {
+    "n": 1,
+    "d": "D",
+    "r": 0,
+    "c": 4,
+    "a": "BABE",
+    "t": "Found wrapped in swaddling clothes"
+   },
+   {
+    "n": 2,
+    "d": "D",
+    "r": 1,
+    "c": 1,
+    "a": "STAR",
+    "t": "It went before the wise men to the young child"
+   },
+   {
+    "n": 3,
+    "d": "A",
+    "r": 1,
+    "c": 3,
+    "a": "MARY",
+    "t": "She kept all these things in her heart"
+   },
+   {
+    "n": 4,
+    "d": "A",
+    "r": 3,
+    "c": 0,
+    "a": "MANGER",
+    "t": "Where the newborn Savior was laid"
+   },
+   {
+    "n": 5,
+    "d": "D",
+    "r": 3,
+    "c": 3,
+    "a": "GOLD",
+    "t": "A wise man's gift, with frankincense and myrrh"
+   }
+  ]
+ },
+ {
+  "id": "mini-021",
+  "title": "The Good Shepherd",
+  "verse": "I am the good shepherd. The good shepherd lays down His life for the sheep.",
+  "reference": "John 10:11",
+  "grid": [
+   "......G",
+   "......A",
+   ".L.S..T",
+   "PASTURE",
+   ".M.A...",
+   ".B.FOLD",
+   "...F..."
+  ],
+  "clues": [
+   {
+    "n": 1,
+    "d": "D",
+    "r": 0,
+    "c": 6,
+    "a": "GATE",
+    "t": "The door of the sheep — enter by it"
+   },
+   {
+    "n": 2,
+    "d": "D",
+    "r": 2,
+    "c": 1,
+    "a": "LAMB",
+    "t": "Behold the ___ of God"
+   },
+   {
+    "n": 3,
+    "d": "D",
+    "r": 2,
+    "c": 3,
+    "a": "STAFF",
+    "t": "It comforts, with the rod"
+   },
+   {
+    "n": 4,
+    "d": "A",
+    "r": 3,
+    "c": 0,
+    "a": "PASTURE",
+    "t": "Green place where the shepherd makes us lie"
+   },
+   {
+    "n": 5,
+    "d": "A",
+    "r": 5,
+    "c": 3,
+    "a": "FOLD",
+    "t": "Other sheep I have, which are not of this"
+   }
+  ]
+ },
+ {
+  "id": "mini-013",
+  "title": "In the Garden",
+  "verse": "And the LORD God planted a garden in Eden, in the east, where He placed the man He had formed.",
+  "reference": "Genesis 2:8",
+  "grid": [
+   ".T....D",
+   "FRUIT.U",
+   ".E....S",
+   "SERPENT",
+   "..I.D..",
+   "..B.EVE",
+   "....N.."
+  ],
+  "clues": [
+   {
+    "n": 1,
+    "d": "D",
+    "r": 0,
+    "c": 1,
+    "a": "TREE",
+    "t": "Of life, or of knowledge of good and evil"
+   },
+   {
+    "n": 2,
+    "d": "D",
+    "r": 0,
+    "c": 6,
+    "a": "DUST",
+    "t": "What man was formed from, and returns to"
+   },
+   {
+    "n": 3,
+    "d": "A",
+    "r": 1,
+    "c": 0,
+    "a": "FRUIT",
+    "t": "What the woman took and did eat"
+   },
+   {
+    "n": 4,
+    "d": "A",
+    "r": 3,
+    "c": 0,
+    "a": "SERPENT",
+    "t": "The most subtil beast of the field"
+   },
+   {
+    "n": 5,
+    "d": "D",
+    "r": 3,
+    "c": 2,
+    "a": "RIB",
+    "t": "What God took from Adam to make woman"
+   },
+   {
+    "n": 6,
+    "d": "D",
+    "r": 3,
+    "c": 4,
+    "a": "EDEN",
+    "t": "The garden planted eastward"
+   },
+   {
+    "n": 7,
+    "d": "A",
+    "r": 5,
+    "c": 4,
+    "a": "EVE",
+    "t": "The mother of all living"
+   }
+  ]
+ },
+ {
+  "id": "mini-019",
+  "title": "Swallowed by the Sea",
+  "verse": "Now the LORD had appointed a great fish to swallow Jonah, and Jonah spent three days and three nights in the belly of the fish.",
+  "reference": "Jonah 1:17",
+  "grid": [
+   "..STORM",
+   "...H...",
+   ".F.R..S",
+   "NINEVEH",
+   ".S.E..I",
+   ".H....P",
+   "......."
+  ],
+  "clues": [
+   {
+    "n": 1,
+    "d": "A",
+    "r": 0,
+    "c": 2,
+    "a": "STORM",
+    "t": "The mighty tempest sent upon the sea"
+   },
+   {
+    "n": 2,
+    "d": "D",
+    "r": 0,
+    "c": 3,
+    "a": "THREE",
+    "t": "Days and nights spent inside the fish"
+   },
+   {
+    "n": 3,
+    "d": "D",
+    "r": 2,
+    "c": 1,
+    "a": "FISH",
+    "t": "A great one, prepared by the LORD"
+   },
+   {
+    "n": 4,
+    "d": "D",
+    "r": 2,
+    "c": 6,
+    "a": "SHIP",
+    "t": "It was like to be broken in the tempest"
+   },
+   {
+    "n": 5,
+    "d": "A",
+    "r": 3,
+    "c": 0,
+    "a": "NINEVEH",
+    "t": "The great city that repented in sackcloth"
+   }
+  ]
+ },
+ {
+  "id": "mini-009",
+  "title": "He Is Risen",
+  "verse": "He is not here; He has risen, just as He said! Come, see the place where He lay.",
+  "reference": "Matthew 28:6",
+  "grid": [
+   "..RISEN",
+   "....T..",
+   ".T..O..",
+   "THORNS.",
+   ".I..E..",
+   "VEIL...",
+   ".F....."
+  ],
+  "clues": [
+   {
+    "n": 1,
+    "d": "A",
+    "r": 0,
+    "c": 2,
+    "a": "RISEN",
+    "t": "He is not here, for he is ___"
+   },
+   {
+    "n": 2,
+    "d": "D",
+    "r": 0,
+    "c": 4,
+    "a": "STONE",
+    "t": "Rolled away by an angel"
+   },
+   {
+    "n": 3,
+    "d": "D",
+    "r": 2,
+    "c": 1,
+    "a": "THIEF",
+    "t": "He asked to be remembered in the kingdom"
+   },
+   {
+    "n": 4,
+    "d": "A",
+    "r": 3,
+    "c": 0,
+    "a": "THORNS",
+    "t": "The crown platted by the soldiers"
+   },
+   {
+    "n": 5,
+    "d": "A",
+    "r": 5,
+    "c": 0,
+    "a": "VEIL",
+    "t": "Rent in twain from top to bottom"
+   }
+  ]
+ },
+ {
+  "id": "mini-014",
+  "title": "In the Lions' Den",
+  "verse": "My God sent His angel and shut the mouths of the lions. They have not hurt me, for I was found innocent in His sight, and I have done no wrong against you, O king.",
+  "reference": "Daniel 6:22",
+  "grid": [
+   ".DEN...",
+   ".R....D",
+   ".E....A",
+   "BABYLON",
+   ".M....I",
+   "......E",
+   "..ANGEL"
+  ],
+  "clues": [
+   {
+    "n": 1,
+    "d": "A",
+    "r": 0,
+    "c": 1,
+    "a": "DEN",
+    "t": "Where the faithful man spent the night"
+   },
+   {
+    "n": 1,
+    "d": "D",
+    "r": 0,
+    "c": 1,
+    "a": "DREAM",
+    "t": "Nebuchadnezzar's forgotten vision"
+   },
+   {
+    "n": 2,
+    "d": "D",
+    "r": 1,
+    "c": 6,
+    "a": "DANIEL",
+    "t": "He kneeled three times a day, windows open"
+   },
+   {
+    "n": 3,
+    "d": "A",
+    "r": 3,
+    "c": 0,
+    "a": "BABYLON",
+    "t": "Kingdom of the captivity"
+   },
+   {
+    "n": 4,
+    "d": "A",
+    "r": 6,
+    "c": 2,
+    "a": "ANGEL",
+    "t": "Sent to protect the man in the pit"
+   }
+  ]
+ },
+ {
+  "id": "mini-003",
+  "title": "Ask, Seek, Knock",
+  "verse": "Ask, and it will be given to you; seek, and you will find; knock, and the door will be opened to you.",
+  "reference": "Matthew 7:7",
+  "grid": [
+   "..SEEK.",
+   ".....N.",
+   ".....E.",
+   "PRAISE.",
+   "..M..L.",
+   "..E....",
+   ".KNOCK."
+  ],
+  "clues": [
+   {
+    "n": 1,
+    "d": "A",
+    "r": 0,
+    "c": 2,
+    "a": "SEEK",
+    "t": "Do it, and you will find"
+   },
+   {
+    "n": 2,
+    "d": "D",
+    "r": 0,
+    "c": 5,
+    "a": "KNEEL",
+    "t": "Daniel did this three times a day"
+   },
+   {
+    "n": 3,
+    "d": "A",
+    "r": 3,
+    "c": 0,
+    "a": "PRAISE",
+    "t": "Enter his courts with it"
+   },
+   {
+    "n": 4,
+    "d": "D",
+    "r": 3,
+    "c": 2,
+    "a": "AMEN",
+    "t": "So be it — the word that seals a prayer"
+   },
+   {
+    "n": 5,
+    "d": "A",
+    "r": 6,
+    "c": 1,
+    "a": "KNOCK",
+    "t": "Do it, and it shall be opened"
+   }
+  ]
+ },
+ {
+  "id": "mini-094",
+  "title": "Lunch for a Crowd",
+  "verse": "Then Jesus took the loaves and the fish, gave thanks, and distributed to those who were seated as much as they wanted.",
+  "reference": "John 6:11",
+  "grid": [
+   "....F..",
+   ".G.FISH",
+   ".R..V..",
+   "BASKETS",
+   ".S...W.",
+   ".S..BOY",
+   "......."
+  ],
+  "clues": [
+   {
+    "n": 1,
+    "d": "D",
+    "r": 0,
+    "c": 4,
+    "a": "FIVE",
+    "t": "Number of loaves in the boy’s lunch"
+   },
+   {
+    "n": 2,
+    "d": "D",
+    "r": 1,
+    "c": 1,
+    "a": "GRASS",
+    "t": "Green ground cover where the crowd sat"
+   },
+   {
+    "n": 3,
+    "d": "A",
+    "r": 1,
+    "c": 3,
+    "a": "FISH",
+    "t": "Food shared along with the bread"
+   },
+   {
+    "n": 4,
+    "d": "A",
+    "r": 3,
+    "c": 0,
+    "a": "BASKETS",
+    "t": "Containers filled with leftover pieces"
+   },
+   {
+    "n": 5,
+    "d": "D",
+    "r": 3,
+    "c": 5,
+    "a": "TWO",
+    "t": "Number of fish in the boy’s lunch"
+   },
+   {
+    "n": 6,
+    "d": "A",
+    "r": 5,
+    "c": 4,
+    "a": "BOY",
+    "t": "Young person who had the loaves and fish"
+   }
+  ]
+ },
+ {
+  "id": "mini-097",
+  "title": "Water at the Wedding",
+  "verse": "His mother said to the servants, “Do whatever He tells you.”",
+  "reference": "John 2:5",
+  "grid": [
+   ".W..G..",
+   ".A.CANA",
+   ".T..L..",
+   "WEDDING",
+   ".R..L..",
+   "....E..",
+   ".WINE.."
+  ],
+  "clues": [
+   {
+    "n": 1,
+    "d": "D",
+    "r": 0,
+    "c": 1,
+    "a": "WATER",
+    "t": "Liquid the servants poured into the jars"
+   },
+   {
+    "n": 2,
+    "d": "D",
+    "r": 0,
+    "c": 4,
+    "a": "GALILEE",
+    "t": "Region where Cana was located"
+   },
+   {
+    "n": 3,
+    "d": "A",
+    "r": 1,
+    "c": 3,
+    "a": "CANA",
+    "t": "Town where Jesus attended a wedding"
+   },
+   {
+    "n": 4,
+    "d": "A",
+    "r": 3,
+    "c": 0,
+    "a": "WEDDING",
+    "t": "Marriage celebration Jesus attended in Cana"
+   },
+   {
+    "n": 5,
+    "d": "A",
+    "r": 6,
+    "c": 1,
+    "a": "WINE",
+    "t": "Drink that ran out at the wedding"
+   }
+  ]
+ },
+ {
+  "id": "mini-110",
+  "title": "Fishers of Men",
+  "verse": "From now on you will catch men.",
+  "reference": "Luke 5:10",
+  "grid": [
+   ".......",
+   "J......",
+   "AFRAID.",
+   "M....E.",
+   "E...MEN",
+   "SINK.P.",
+   "......."
+  ],
+  "clues": [
+   {
+    "n": 1,
+    "d": "D",
+    "r": 1,
+    "c": 0,
+    "a": "JAMES",
+    "t": "Son of Zebedee, one of Simon's partners"
+   },
+   {
+    "n": 2,
+    "d": "A",
+    "r": 2,
+    "c": 0,
+    "a": "AFRAID",
+    "t": "\"Do not be ___,\" Jesus said to Simon"
+   },
+   {
+    "n": 3,
+    "d": "D",
+    "r": 2,
+    "c": 5,
+    "a": "DEEP",
+    "t": "\"Put out into ___ water\""
+   },
+   {
+    "n": 4,
+    "d": "A",
+    "r": 4,
+    "c": 4,
+    "a": "MEN",
+    "t": "\"From now on you will catch ___\""
+   },
+   {
+    "n": 5,
+    "d": "A",
+    "r": 5,
+    "c": 0,
+    "a": "SINK",
+    "t": "Both boats began to do this"
+   }
+  ]
+ },
+ {
+  "id": "mini-072",
+  "title": "The Lost Sheep",
+  "verse": "What man among you, if he has a hundred sheep and loses one of them, does not leave the ninety-nine in the pasture and go after the one that is lost, until he finds it?",
+  "reference": "Luke 15:4",
+  "grid": [
+   "FOLD...",
+   "O....J.",
+   "U..S.O.",
+   "NINETY.",
+   "D..E...",
+   "...K...",
+   "......."
+  ],
+  "clues": [
+   {
+    "n": 1,
+    "d": "A",
+    "r": 0,
+    "c": 0,
+    "a": "FOLD",
+    "t": "Where the flock is kept"
+   },
+   {
+    "n": 1,
+    "d": "D",
+    "r": 0,
+    "c": 0,
+    "a": "FOUND",
+    "t": "What it was when he laid it on his shoulders"
+   },
+   {
+    "n": 2,
+    "d": "D",
+    "r": 1,
+    "c": 5,
+    "a": "JOY",
+    "t": "There is more of it in heaven over one that repenteth"
+   },
+   {
+    "n": 3,
+    "d": "D",
+    "r": 2,
+    "c": 3,
+    "a": "SEEK",
+    "t": "What the shepherd goes to do"
+   },
+   {
+    "n": 4,
+    "d": "A",
+    "r": 3,
+    "c": 0,
+    "a": "NINETY",
+    "t": "With 'and nine', those left in the wilderness"
+   }
+  ]
+ }
+]

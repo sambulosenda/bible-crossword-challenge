@@ -239,6 +239,7 @@ h3 {
 }
 .nav-link:hover { color: var(--blue); }
 .nav-link.primary {
+  white-space: nowrap;
   color: #fff; background: var(--blue);
   padding: 6px 16px; border-radius: var(--pill);
   font-weight: 400;
@@ -388,13 +389,19 @@ footer .brand-name { color: var(--near-black); }
 
 /* Scroll-revealed blocks. Hidden only when JS is present to reveal them, so a
    failed script can never leave the page blank. */
-.js .reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s cubic-bezier(.22, 1, .36, 1), transform .7s cubic-bezier(.22, 1, .36, 1); }
+.js .reveal { opacity: 0; transform: translateY(12px); transition: opacity .6s cubic-bezier(.22, 1, .36, 1), transform .7s cubic-bezier(.22, 1, .36, 1); }
 .js .reveal.in { opacity: 1; transform: none; }
 
 @media (max-width: 640px) {
+  .nav .brand-name { font-size: 15px; white-space: nowrap; }
   .arch-list { columns: 1; }
   .nav-link.secondary { display: none; }
   .nav-inner { height: 48px; }
+}
+@media (max-width: 400px) {
+  .nav .brand { gap: 8px; }
+  .nav .brand-name { font-size: 14px; letter-spacing: -.025em; }
+  .nav .nav-link.primary { padding-left: 12px; padding-right: 12px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import AppStoreButton from '../../components/AppStoreButton.astro';
 import { SITE } from '../../consts';
+import play from '../../data/theme-play.json';
 
 export async function getStaticPaths() {
   const puzzles = await getCollection('puzzles');
@@ -27,6 +28,15 @@ const plain = (s: string) =>
     .trim();
 
 const heading = plain(p.heading);
+
+// The real grid this page's puzzle uses in the app (shape only, no letters),
+// and answers for the sample clues so visitors can try them. Answers are
+// base64 in a data attribute: never page text, so never a search snippet.
+const tp = (play as Record<string, { answers: (string | null)[]; shape: string[] }>)[entry.id];
+const shape = tp?.shape ?? [];
+const answers = tp?.answers ?? [];
+const playable = answers.filter(Boolean).length;
+const enc = (a: string) => Buffer.from(a.split('').reverse().join('')).toString('base64');
 // The difficulty is carried in the meta chip line, e.g. "15×15 grid · Easy · …".
 const difficulty = plain(p.meta).split('·').map((s) => s.trim()).find((s) => /^(Easy|Medium|Hard)$/.test(s));
 
@@ -50,7 +60,7 @@ const gameLd = {
   url: `${SITE}${path}`,
   description: p.description,
   genre: ['Crossword', 'Word game', 'Bible trivia'],
-  about: `${p.reference} (King James Version)`,
+  about: p.reference,
   inLanguage: 'en',
   gamePlatform: ['iPhone', 'iPad'],
   numberOfPlayers: { '@type': 'QuantitativeValue', value: 1 },
@@ -78,34 +88,64 @@ const gameLd = {
     <script type="application/ld+json" set:html={JSON.stringify(gameLd)} />
   </Fragment>
 
-  <main id="main" class="page">
+  <main id="main" class="page theme">
     <div class="wrap">
       <p class="crumbs"><a href="/">Home</a><span>/</span><a href="/puzzles/">Puzzles</a><span>/</span><span set:html={p.reference} /></p>
       <article>
-        <p class="eyebrow">{p.reference}</p>
-        <h1 set:html={p.heading} />
-        <p class="meta-chips">{p.meta}</p>
-        <div class="prose">
-          {p.prose.map((para) => <p set:html={para} />)}
+        <div class="theme-hero">
+          <div class="theme-copy">
+            <p class="eyebrow">{p.reference}</p>
+            <h1 set:html={p.heading} />
+            <p class="meta-chips">{p.meta}</p>
+            <div class="prose">
+              {p.prose.map((para) => <p set:html={para} />)}
+            </div>
+            <div class="theme-cta"><AppStoreButton ct="web-theme" /></div>
+          </div>
+          {shape.length > 0 && (
+            <figure class="grid-card" aria-label={`The ${shape.length}×${shape.length} grid for this puzzle`}>
+              <div class="gc-board" style={`--n:${shape.length}`} aria-hidden="true">
+                {shape.join('').split('').map((ch, i) => <span class:list={['gc', ch === 'o' && 'o']} style={`--i:${i}`} />)}
+              </div>
+              <figcaption>The full {shape.length}×{shape.length} grid. Solve it in the app, or <a href={`/printables/${entry.id}.pdf`}>print it</a>.</figcaption>
+            </figure>
+          )}
         </div>
 
-        <div class="content-section">
-          <h2>Clues from the puzzle</h2>
+        <section class="try" aria-labelledby="try-h">
+          <h2 id="try-h">{playable === p.clues.length ? `Try ${['zero','one','two','three','four','five','six'][playable] ?? playable} clues from the puzzle` : 'Clues from the puzzle'}</h2>
+          <p class="try-sub">{playable > 0 ? 'Tap a clue and type the answer.' : ''} The rest of the grid is waiting in the app, with fair hints when you’re stuck.</p>
           <div class="clue-samples">
-            {p.clues.map((c) => (
+            {p.clues.map((c, i) => answers[i] ? (
+              <div class="clue pclue" data-a={enc(answers[i]!)}>
+                <div class="clue-q"><span class="clue-n">{c.n}</span><span class="clue-text"><Fragment set:html={c.text} />{' '}<span class="enum">{c.enum}</span></span></div>
+                <div class="ptiles">
+                  <div class="tiles">
+                    {Array.from({ length: c.len }).map(() => <span class="tile" />)}
+                  </div>
+                  <input class="pin" type="text" maxlength={c.len} autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" enterkeyhint="next" aria-label={`Answer for ${c.n}, ${c.len} letters`} />
+                  <span class="pstate" aria-live="polite"></span>
+                </div>
+                <button type="button" class="pshow" hidden>Show answer</button>
+              </div>
+            ) : (
               <div class="clue">
-                <div class="clue-q"><span class="clue-n">{c.n}</span><span class="clue-text">{c.text} <span class="enum">{c.enum}</span></span></div>
+                <div class="clue-q"><span class="clue-n">{c.n}</span><span class="clue-text"><Fragment set:html={c.text} />{' '}<span class="enum">{c.enum}</span></span></div>
                 <div class="tiles" aria-label={`${c.len}-letter answer, solved in the app`}>
                   {Array.from({ length: c.len }).map(() => <span class="tile" />)}
                 </div>
               </div>
             ))}
           </div>
-          <p class="clues-foot">The answers are waiting in the app — every clue can be solved from the story itself, and fair hints help when you're stuck.</p>
-          <p class="clues-foot"><a href={`/printables/${entry.id}.pdf`}>Print this puzzle</a> — a free PDF with the full grid, clues, and answer key, for church, Sunday school, and home use.</p>
 
-          <div style="margin-top:34px"><AppStoreButton /></div>
-        </div>
+          <div class="try-done" hidden aria-live="polite">
+            <p class="td-title"></p>
+            <p class="td-sub">There are dozens more clues in this grid, and a new puzzle every day.</p>
+            <AppStoreButton ct="web-theme-play" note="Free to play · No account · Works offline" />
+          </div>
+
+          <p class="clues-foot"><a href={`/printables/${entry.id}.pdf`}>Print this puzzle</a>: a free PDF with the full grid, clues, and answer key, for church, Sunday school, and home use.</p>
+        </section>
       </article>
     </div>
   </main>
@@ -133,3 +173,128 @@ const gameLd = {
     </div>
   </section>
 </Layout>
+
+<style>
+  .theme-hero { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: clamp(32px, 6vw, 80px); align-items: start; }
+  .theme-cta { margin-top: 28px; }
+  .grid-card {
+    margin: 8px 0 0; padding: 18px; border-radius: 28px; background: var(--bg-raised, #fff);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .04), 0 18px 48px -24px rgba(0, 0, 0, .18);
+    position: sticky; top: 88px;
+  }
+  .gc-board { display: grid; grid-template-columns: repeat(var(--n), 1fr); gap: 2px; aspect-ratio: 1; }
+  .gc { border-radius: 3px; background: rgba(120, 120, 128, .12); }
+  .gc.o { background: #fff; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .1); }
+  @media (prefers-reduced-motion: no-preference) {
+    .gc.o { animation: gcin .5s cubic-bezier(.22, 1, .36, 1) both; animation-delay: calc(var(--i) * 2.2ms); }
+    @keyframes gcin { from { opacity: 0; transform: scale(.6); } }
+  }
+  .grid-card figcaption { margin-top: 14px; font-size: 14px; color: var(--fg-mute); text-align: center; }
+  .grid-card figcaption a { color: var(--accent); }
+  .grid-card figcaption a:hover { text-decoration: underline; }
+
+  .try { margin-top: clamp(48px, 7vw, 88px); max-width: 720px; }
+  .try h2 { margin: 0 0 8px; }
+  .try-sub { margin: 0 0 20px; font-size: 17px; color: var(--fg-mute); letter-spacing: -.02em; }
+
+  .pclue { cursor: text; }
+  .ptiles { position: relative; display: flex; align-items: center; gap: 12px; margin-left: calc(var(--clue-num-w) + var(--s-2)); }
+  .ptiles .tiles { margin-left: 0; }
+  .pin {
+    position: absolute; inset: 0; width: 100%; opacity: 0; border: 0; padding: 0;
+    font-size: 16px; /* no iOS zoom on focus */ color: transparent; caret-color: transparent; background: transparent; cursor: text;
+  }
+  .pclue .tile { width: 32px; height: 32px; font-size: 16px; transition: background .15s ease, border-color .15s ease, color .15s ease; }
+  .pclue.focus .tile.cur { border-color: var(--blue); box-shadow: inset 0 0 0 1px var(--blue); background: #E8F1FD; }
+  .pclue.focus .tile.word { background: #F2F7FE; }
+  .pclue.bad .tile { color: #D70015; }
+  .pclue.bad .tiles { animation: pshake .42s cubic-bezier(.36, .07, .19, .97); }
+  .pclue.solved .tile { background: var(--green-wash); border-color: transparent; color: #1D1D1F; }
+  .pclue.solved .tile, .pclue.revealed .tile { animation: ppop .45s cubic-bezier(.34, 1.56, .64, 1) both; animation-delay: calc(var(--k, 0) * 40ms); }
+  .pclue.revealed .tile { color: var(--blue); }
+  .pclue.solved .pin, .pclue.revealed .pin { pointer-events: none; }
+  .pstate { font-size: 14px; font-weight: 600; color: #248A3D; white-space: nowrap; }
+  .pclue.bad .pstate { color: #D70015; font-weight: 500; }
+  .pshow { margin: 2px 0 0 calc(var(--clue-num-w) + var(--s-2)); padding: 0; border: 0; background: none; color: var(--accent); font: inherit; font-size: 14px; cursor: pointer; align-self: flex-start; }
+  .pshow:hover { text-decoration: underline; }
+  @keyframes pshake { 10%, 90% { transform: translateX(-1px); } 20%, 80% { transform: translateX(2px); } 30%, 50%, 70% { transform: translateX(-4px); } 40%, 60% { transform: translateX(4px); } }
+  @keyframes ppop { 0% { transform: scale(1); } 40% { transform: scale(1.12); } 100% { transform: scale(1); } }
+  @media (prefers-reduced-motion: reduce) { .pclue .tiles, .pclue .tile { animation: none !important; } }
+
+  .try-done { margin-top: 28px; padding: 28px; border-radius: 24px; background: var(--sys-bg, #F5F5F7); }
+  .td-title { margin: 0; font-size: 28px; font-weight: 600; letter-spacing: -.02em; color: var(--fg); }
+  .td-sub { margin: 6px 0 20px; font-size: 17px; color: var(--fg-soft); letter-spacing: -.02em; }
+
+  @media (max-width: 860px) {
+    .theme-hero { grid-template-columns: 1fr; }
+    .grid-card { position: static; max-width: 420px; margin: 4px auto 0; width: 100%; }
+  }
+  @media (max-width: 420px) { .pclue .tile { width: 28px; height: 28px; font-size: 15px; } }
+</style>
+
+<script>
+  const clues = Array.from(document.querySelectorAll<HTMLElement>('.pclue'));
+  const done = document.querySelector<HTMLElement>('.try-done');
+  const dec = (s: string) => atob(s).split('').reverse().join('');
+  const finished = () => clues.filter((c) => c.classList.contains('solved') || c.classList.contains('revealed'));
+  const words = ['None', 'One', 'Two', 'Three', 'Four', 'Five', 'Six'];
+
+  function checkAll() {
+    const f = finished();
+    if (!done || f.length !== clues.length) return;
+    const solved = clues.filter((c) => c.classList.contains('solved')).length;
+    const t = done.querySelector('.td-title')!;
+    t.textContent = solved === clues.length
+      ? (clues.length === 4 ? 'Four for four.' : 'All solved.')
+      : `${words[solved] ?? solved} of ${(words[clues.length] ?? String(clues.length)).toLowerCase()} on your own.`;
+    done.hidden = false;
+  }
+
+  clues.forEach((clue, idx) => {
+    const ans = dec(clue.dataset.a || '');
+    const input = clue.querySelector<HTMLInputElement>('.pin')!;
+    const tiles = Array.from(clue.querySelectorAll<HTMLElement>('.tile'));
+    const state = clue.querySelector<HTMLElement>('.pstate')!;
+    const show = clue.querySelector<HTMLButtonElement>('.pshow')!;
+    tiles.forEach((t, k) => t.style.setProperty('--k', String(k)));
+
+    const paint = () => {
+      const v = input.value;
+      tiles.forEach((t, k) => {
+        t.textContent = v[k] || '';
+        t.classList.toggle('cur', k === Math.min(v.length, ans.length - 1));
+        t.classList.add('word');
+      });
+    };
+    const finish = (how: 'solved' | 'revealed') => {
+      input.value = ans; paint();
+      clue.classList.remove('bad', 'focus'); clue.classList.add(how);
+      state.textContent = how === 'solved' ? 'Correct' : '';
+      show.hidden = true; input.blur(); input.tabIndex = -1;
+      const next = clues.slice(idx + 1).concat(clues.slice(0, idx)).find((c) => !c.classList.contains('solved') && !c.classList.contains('revealed'));
+      if (next && how === 'solved') next.querySelector<HTMLInputElement>('.pin')!.focus();
+      checkAll();
+    };
+
+    input.addEventListener('focus', () => { clue.classList.add('focus'); paint(); });
+    input.addEventListener('blur', () => clue.classList.remove('focus'));
+    input.addEventListener('input', () => {
+      input.value = input.value.toUpperCase().replace(/[^A-Z]/g, '').slice(0, ans.length);
+      clue.classList.remove('bad'); state.textContent = '';
+      paint();
+      if (input.value.length < ans.length) return;
+      if (input.value === ans) { finish('solved'); return; }
+      void clue.offsetWidth; clue.classList.add('bad');
+      state.textContent = 'Not quite';
+      show.hidden = false;
+    });
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const next = clues[idx + 1];
+        next?.querySelector<HTMLInputElement>('.pin')?.focus();
+      }
+    });
+    show.addEventListener('click', () => finish('revealed'));
+  });
+</script>
