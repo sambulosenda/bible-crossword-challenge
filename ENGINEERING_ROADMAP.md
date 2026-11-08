@@ -15,8 +15,8 @@ Solo dev (Sambulo + Claude). Started 2026-11-07. Living doc: tick items, add dat
 - Big files: CompletionView 1804, CrosswordGameView 1699, HomeView 1521, GameViewModel 1219.
 
 ## Track 1 — Release safety (do first)
-- [x] Xcode Cloud: unit tests on every push to main. Live 2026-11-08 (workflow still named "Default"; Xcode 27.2, iPhone 17, `UnitTests` plan, 435 tests in ~6.5 min). Build 1 failed on dl.google.com timeouts fetching Firebase binaries; the rebuild passed. Watch for repeats.
-- [~] Xcode Cloud: archive + TestFlight upload on a `v*` tag; retires the local archive (no more 10 GB disk issue).
+- [x] Xcode Cloud: unit tests on every push to main. Live 2026-11-08 (workflow "Tests"; Xcode 27.2, iPhone 17, `UnitTests` plan, 435 tests in ~6.5 min). Build 1 failed on dl.google.com timeouts fetching Firebase binaries; the rebuild passed. Watch for repeats.
+- [x] Xcode Cloud: archive + TestFlight upload on a `v*` tag; retires the local archive (no more 10 GB disk issue).
 - [ ] Migration test: open a store saved by the previous release with the current build (SwiftData inline defaults).
 - [ ] CloudKit schema guard: fail if @Model fields changed since last recorded schema deploy.
 - [x] Content runway guard: already exists — `RotationWrapTests` + `schedule.json` (see roadmap/README.md "Dated").
