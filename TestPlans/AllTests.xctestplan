@@ -1,0 +1,33 @@
+{
+  "configurations": [
+    {
+      "id": "67011240-EBAA-490F-A604-8F303CD92143",
+      "name": "Configuration 1",
+      "options": {}
+    }
+  ],
+  "defaultOptions": {
+    "targetForVariableExpansion": {
+      "containerPath": "container:Bible Crossword Challenge.xcodeproj",
+      "identifier": "4F1A3C3D2FE8883C005B59F2",
+      "name": "Bible Crossword Challenge"
+    }
+  },
+  "testTargets": [
+    {
+      "target": {
+        "containerPath": "container:Bible Crossword Challenge.xcodeproj",
+        "identifier": "4F1A3C4A2FE8883E005B59F2",
+        "name": "Bible Crossword ChallengeTests"
+      }
+    },
+    {
+      "target": {
+        "containerPath": "container:Bible Crossword Challenge.xcodeproj",
+        "identifier": "4F1A3C542FE8883E005B59F2",
+        "name": "Bible Crossword ChallengeUITests"
+      }
+    }
+  ],
+  "version": 1
+}

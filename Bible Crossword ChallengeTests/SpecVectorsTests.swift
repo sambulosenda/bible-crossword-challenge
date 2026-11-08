@@ -139,7 +139,13 @@ private func emit(_ file: VectorFile) throws {
 
 // MARK: - Tests
 
+/// Xcode Cloud runs tests on a machine without the repository, so the
+/// checked-in vectors this suite compares against aren't there. Skip rather
+/// than "create" every file and fail.
+private let vectorsAvailable = FileManager.default.fileExists(atPath: vectorsDir.path(percentEncoded: false))
+
 @MainActor
+@Suite(.enabled(if: vectorsAvailable, "spec/vectors not on disk (CI test machine)"))
 struct SpecVectorsTests {
 
     // MARK: Constants

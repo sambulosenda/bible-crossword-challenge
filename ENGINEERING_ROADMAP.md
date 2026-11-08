@@ -15,11 +15,36 @@ Solo dev (Sambulo + Claude). Started 2026-11-07. Living doc: tick items, add dat
 - Big files: CompletionView 1804, CrosswordGameView 1699, HomeView 1521, GameViewModel 1219.
 
 ## Track 1 — Release safety (do first)
-- [ ] Xcode Cloud: unit tests on every push to main (iPhone sim, Xcode 27.1).
-- [ ] Xcode Cloud: archive + TestFlight upload workflow on tag; retire local archive (no more 10 GB disk issue).
+- [~] Xcode Cloud: unit tests on every push to main. Repo side done 2026-11-08 (`ci_scripts/`, `TestPlans/UnitTests`); workflows need the setup steps below.
+- [~] Xcode Cloud: archive + TestFlight upload on a `v*` tag; retires the local archive (no more 10 GB disk issue).
 - [ ] Migration test: open a store saved by the previous release with the current build (SwiftData inline defaults).
 - [ ] CloudKit schema guard: fail if @Model fields changed since last recorded schema deploy.
 - [x] Content runway guard: already exists — `RotationWrapTests` + `schedule.json` (see roadmap/README.md "Dated").
+
+## Xcode Cloud setup (Sambulo, one time)
+Repo side is in place:
+- `ci_scripts/ci_post_clone.sh` trusts package plugins/macros.
+- `ci_scripts/ci_pre_xcodebuild.sh` runs `tools/validate_content.py` before every build.
+- Scheme test plans: `AllTests` (default, local) and `UnitTests` (CI, no UI tests, saves compute hours).
+- `SpecVectorsTests` and `PurchaseFlowTests` skip on CI test machines, which have no repo checkout.
+
+Steps:
+1. Push main to GitHub. Xcode Cloud builds from there.
+2. Xcode → Product → Xcode Cloud → Create Workflow → Bible Crossword Challenge. Grant GitHub access when asked.
+3. Workflow **Tests**:
+   - Start condition: branch changes, `main`.
+   - Environment: latest release Xcode (27.1, not beta).
+   - Action: Test, scheme Bible Crossword Challenge, test plan **UnitTests**, a recent iPhone simulator.
+4. Workflow **Release**:
+   - Start condition: tag changes, `v*`. Same environment.
+   - Action: Archive, iOS, deployment preparation **App Store Connect**.
+   - Post-action: TestFlight internal testing.
+5. App Store Connect → the app → Xcode Cloud → Settings → set the next build number to **32** (2.19 used 31).
+
+Release from then on:
+- Bump `MARKETING_VERSION` and commit.
+- Tag it `v2.20` and push the tag. Cloud signs, archives and uploads.
+- Submit in ASC as before.
 
 ## Track 2 — Code health
 - [ ] Freeze spec vectors while Android is on hold: stop iOS test failing on vector changes; keep files for later.

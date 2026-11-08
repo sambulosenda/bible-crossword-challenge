@@ -19,17 +19,22 @@ import StoreKit
 import StoreKitTest
 @testable import Bible_Crossword_Challenge
 
+/// The scheme's StoreKit configuration, located from this file's own path
+/// so the test needs no bundle-membership changes for the .storekit file.
+private let storeKitConfigurationURL = URL(fileURLWithPath: #filePath)
+    .deletingLastPathComponent() // Bible Crossword ChallengeTests/
+    .deletingLastPathComponent() // repo root
+    .appendingPathComponent("Bible Crossword Challenge/Products.storekit")
+
+/// Xcode Cloud runs tests on a machine without the repository.
+private let storeKitConfigurationAvailable =
+    FileManager.default.fileExists(atPath: storeKitConfigurationURL.path)
+
 @MainActor
+@Suite(.enabled(if: storeKitConfigurationAvailable, "Products.storekit not on disk (CI test machine)"))
 struct PurchaseFlowTests {
 
-    /// The scheme's StoreKit configuration, located from this file's own path
-    /// so the test needs no bundle-membership changes for the .storekit file.
-    private static var configurationURL: URL {
-        URL(fileURLWithPath: #filePath)
-            .deletingLastPathComponent() // Bible Crossword ChallengeTests/
-            .deletingLastPathComponent() // repo root
-            .appendingPathComponent("Bible Crossword Challenge/Products.storekit")
-    }
+    private static var configurationURL: URL { storeKitConfigurationURL }
 
     @Test func yearlyTrialPurchaseGrantsPremium() async throws {
         let session = try SKTestSession(contentsOf: Self.configurationURL)
