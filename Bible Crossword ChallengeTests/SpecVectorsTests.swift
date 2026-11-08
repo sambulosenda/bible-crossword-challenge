@@ -44,7 +44,7 @@ import SwiftData
 
 /// Where the vectors live: `<repo>/spec/vectors/`. Derived from this file's
 /// own path so no environment variable or scheme setting is needed.
-private let vectorsDir: URL = URL(filePath: #filePath)
+nonisolated private let vectorsDir: URL = URL(filePath: #filePath)
     .deletingLastPathComponent()   // Bible Crossword ChallengeTests/
     .deletingLastPathComponent()   // <repo>/
     .appending(path: "spec/vectors", directoryHint: .isDirectory)
@@ -142,7 +142,7 @@ private func emit(_ file: VectorFile) throws {
 /// Xcode Cloud runs tests on a machine without the repository, so the
 /// checked-in vectors this suite compares against aren't there. Skip rather
 /// than "create" every file and fail.
-private let vectorsAvailable = FileManager.default.fileExists(atPath: vectorsDir.path(percentEncoded: false))
+nonisolated private let vectorsAvailable = FileManager.default.fileExists(atPath: vectorsDir.path(percentEncoded: false))
 
 @MainActor
 @Suite(.enabled(if: vectorsAvailable, "spec/vectors not on disk (CI test machine)"))

@@ -21,13 +21,13 @@ import StoreKitTest
 
 /// The scheme's StoreKit configuration, located from this file's own path
 /// so the test needs no bundle-membership changes for the .storekit file.
-private let storeKitConfigurationURL = URL(fileURLWithPath: #filePath)
+nonisolated private let storeKitConfigurationURL = URL(fileURLWithPath: #filePath)
     .deletingLastPathComponent() // Bible Crossword ChallengeTests/
     .deletingLastPathComponent() // repo root
     .appendingPathComponent("Bible Crossword Challenge/Products.storekit")
 
 /// Xcode Cloud runs tests on a machine without the repository.
-private let storeKitConfigurationAvailable =
+nonisolated private let storeKitConfigurationAvailable =
     FileManager.default.fileExists(atPath: storeKitConfigurationURL.path)
 
 @MainActor
