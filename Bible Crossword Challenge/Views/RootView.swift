@@ -150,6 +150,7 @@ struct RootView: View {
             GameViewModel.seedAutoCheckIfNeeded(totalCompleted: profile.totalPuzzlesCompleted)
             context.saveLogged("launch normalise")
             WidgetBridge.publish(profile, context: context)
+            logWidgetClueEvents()
             gameCenter.authenticate()
             analytics.log(.appOpen)
             await notifications.reschedule(
@@ -176,6 +177,7 @@ struct RootView: View {
             guard phase == .active, let profile = profiles.first else { return }
             mergeSyncDuplicates()
             WidgetBridge.publish(profile, context: context)
+            logWidgetClueEvents()
             Task {
                 // Unconditionally, and before anything reads it. Notification
                 // permission is the one setting that can change while the app
@@ -249,6 +251,17 @@ struct RootView: View {
         guard let url = notifications.pendingURL else { return }
         notifications.pendingURL = nil
         handleDeepLink(url)
+    }
+
+    /// The Clue of the Day widget plays without the app, and the extension
+    /// has no analytics SDK: it queues its events in the app group and they
+    /// are logged here, at launch and on each return to the foreground.
+    /// `Date()` rather than `\.today`: this runs from an event, not a body,
+    /// and RootView is where `\.today` is provided, not read.
+    private func logWidgetClueEvents() {
+        for event in WidgetBridge.takeClueEvents(today: Date()) {
+            analytics.log(event)
+        }
     }
 
     /// Deep-link entry: friend challenges (`challenge`, on the custom scheme or
@@ -356,21 +369,23 @@ struct RootView: View {
         // Widget taps carry `src=widget` so their opens are attributable —
         // the same hosts are reachable from notification taps, and a
         // destination funnel that mixes the two channels reads as neither.
-        let fromWidget = URLComponents(url: url, resolvingAgainstBaseURL: false)?
-            .queryItems?.contains { $0.name == "src" && $0.value == "widget" } ?? false
+        // `w` names which widget it was (see `StreakEntry.deepLinkURL`).
+        let query = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems ?? []
+        let fromWidget = query.contains { $0.name == "src" && $0.value == "widget" }
+        let widget = query.first { $0.name == "w" }?.value ?? "unknown"
 
         selectedTab = .today
         if url.host() == "play-daily", let daily = puzzleProvider.dailyPuzzle() {
             todayPath = NavigationPath([daily])
-            if fromWidget { analytics.log(.widgetOpened(destination: "daily")) }
+            if fromWidget { analytics.log(.widgetOpened(destination: "daily", widget: widget)) }
         } else if url.host() == "play-mini", let mini = puzzleProvider.dailyMini() {
             // The widget offers the Mini once the daily is done. A missing
             // mini pool falls through to Home rather than a dead tap.
             todayPath = NavigationPath([mini])
-            if fromWidget { analytics.log(.widgetOpened(destination: "mini")) }
+            if fromWidget { analytics.log(.widgetOpened(destination: "mini", widget: widget)) }
         } else {
             todayPath = NavigationPath()
-            if fromWidget { analytics.log(.widgetOpened(destination: "today")) }
+            if fromWidget { analytics.log(.widgetOpened(destination: "today", widget: widget)) }
         }
     }
 

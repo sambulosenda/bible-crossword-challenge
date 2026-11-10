@@ -3,7 +3,8 @@
 //  BibleCrosswordWidget
 //
 //  Home and Lock Screen widgets showing the streak flame and whether today's
-//  puzzle is still waiting. Reads the snapshot the app writes into the shared
+//  puzzle is still waiting, plus the interactive Clue of the Day (see
+//  ClueWidget.swift). Reads the snapshot the app writes into the shared
 //  app-group defaults (see WidgetBridge in the app target) — it never opens
 //  the SwiftData store. Timeline entries land at each midnight so the
 //  "solved" state resets without the app launching.
@@ -203,14 +204,16 @@ extension StreakEntry {
 
     /// Tap target: straight into whichever puzzle is still open, Home once
     /// both are done. `src=widget` attributes the open in analytics — the
-    /// same hosts are reachable from notifications. Handled by RootView's
-    /// `onOpenURL`.
-    var deepLinkURL: URL {
-        switch target {
-        case .daily: URL(string: "biblecrossword://play-daily?src=widget")!
-        case .mini: URL(string: "biblecrossword://play-mini?src=widget")!
-        case .home: URL(string: "biblecrossword://today?src=widget")!
+    /// same hosts are reachable from notifications. `w` names the widget
+    /// (`streak` / `verse` / `clue`) so each one's opens read on their own.
+    /// Handled by RootView's `onOpenURL`.
+    func deepLinkURL(widget: String) -> URL {
+        let host = switch target {
+        case .daily: "play-daily"
+        case .mini: "play-mini"
+        case .home: "today"
         }
+        return URL(string: "biblecrossword://\(host)?src=widget&w=\(widget)")!
     }
 }
 
@@ -377,7 +380,7 @@ struct BibleCrosswordStreakWidget: Widget {
         StaticConfiguration(kind: kind, provider: StreakProvider()) { entry in
             StreakWidgetEntryView(entry: entry)
                 .containerBackground(.fill.tertiary, for: .widget)
-                .widgetURL(entry.deepLinkURL)
+                .widgetURL(entry.deepLinkURL(widget: "streak"))
         }
         .configurationDisplayName("Daily Streak")
         .description("Your streak flame and today's puzzle at a glance.")
@@ -471,7 +474,7 @@ struct BibleCrosswordVerseWidget: Widget {
         StaticConfiguration(kind: kind, provider: StreakProvider()) { entry in
             VerseView(entry: entry)
                 .containerBackground(.fill.tertiary, for: .widget)
-                .widgetURL(entry.deepLinkURL)
+                .widgetURL(entry.deepLinkURL(widget: "verse"))
         }
         .configurationDisplayName("Verse of the Day")
         .description("Today's verse, with your streak. Tap to play today's puzzle.")
@@ -482,6 +485,7 @@ struct BibleCrosswordVerseWidget: Widget {
 @main
 struct BibleCrosswordWidgetBundle: WidgetBundle {
     var body: some Widget {
+        BibleCrosswordClueWidget()
         BibleCrosswordVerseWidget()
         BibleCrosswordStreakWidget()
     }

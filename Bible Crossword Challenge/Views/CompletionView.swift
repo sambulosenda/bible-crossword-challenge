@@ -1216,8 +1216,11 @@ struct CompletionView: View {
         showsCompletionOffer = true
     }
 
-    /// The Verse of the Day widget, offered once, from the third solve: by
-    /// then the player has a habit for it to serve. One quiet line like the
+    /// The Clue of the Day widget, offered once, from the third solve: by
+    /// then the player has a habit for it to serve. Pointed at the
+    /// interactive clue rather than the verse since 2026-11-10: a widget
+    /// that can be played is a reason to look, and its solve shows the verse
+    /// anyway. One quiet line like the
     /// offer's, and never on the same screen as the offer — one ask under the
     /// verse at a time.
     private var widgetOffer: some View {
@@ -1226,7 +1229,7 @@ struct CompletionView: View {
             showWidgetHow = true
         } label: {
             Label {
-                Text("Put the verse of the day on your Home Screen")
+                Text("Solve a clue a day from your Home Screen")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
@@ -1802,7 +1805,7 @@ struct PaywallEntry: Identifiable {
     var id: String { source.rawValue }
 }
 
-/// How to add the Verse of the Day widget. iOS has no call that adds one for
+/// How to add the Clue of the Day widget. iOS has no call that adds one for
 /// the player, so the three steps are the whole of it.
 private struct WidgetHowToSheet: View {
     @Environment(\.dismiss) private var dismiss
@@ -1810,13 +1813,13 @@ private struct WidgetHowToSheet: View {
     private let steps = [
         "Touch and hold an empty spot on your Home Screen.",
         "Tap Edit, then Add Widget.",
-        "Search for Bible Crossword and choose Verse of the Day.",
+        "Search for Bible Crossword and choose Clue of the Day.",
     ]
 
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading, spacing: Theme.Spacing.l) {
-                Text("Today's verse, every time you unlock your phone, with your streak beside it.")
+                Text("One clue a day, solved by tapping letters right on your Home Screen. Get it and today's verse appears, with your streak beside it.")
                     .font(.body)
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
@@ -1837,7 +1840,7 @@ private struct WidgetHowToSheet: View {
                 Spacer(minLength: 0)
             }
             .padding(Theme.Spacing.m + Theme.Spacing.xs)
-            .navigationTitle("Add the verse widget")
+            .navigationTitle("Add the clue widget")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {

@@ -195,13 +195,41 @@
       "expect" : {
         "name" : "widget_opened",
         "parameterKeys" : [
-          "destination"
+          "destination",
+          "widget"
         ]
       },
       "given" : {
         "case" : "widgetOpened"
       },
       "name" : "widget_opened"
+    },
+    {
+      "expect" : {
+        "name" : "widget_clue_started",
+        "parameterKeys" : [
+          "answer_length",
+          "days_late"
+        ]
+      },
+      "given" : {
+        "case" : "widgetClueStarted"
+      },
+      "name" : "widget_clue_started"
+    },
+    {
+      "expect" : {
+        "name" : "widget_clue_solved",
+        "parameterKeys" : [
+          "answer_length",
+          "days_late",
+          "wrong_attempts"
+        ]
+      },
+      "given" : {
+        "case" : "widgetClueSolved"
+      },
+      "name" : "widget_clue_solved"
     },
     {
       "expect" : {
@@ -931,7 +959,7 @@
     }
   ],
   "constants" : {
-    "eventCount" : 70,
+    "eventCount" : 72,
     "paywallExits" : [
       "close",
       "free_link",
