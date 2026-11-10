@@ -280,6 +280,54 @@ final class Bible_Crossword_ChallengeUITests: XCTestCase {
         XCTAssertEqual(events.count(of: "memory_verse_completed", source: "daily_ritual"), 1, "\(events)")
     }
 
+    /// Today's Premium row logs its impression once, only once it's scrolled
+    /// into view — not on layout at the foot of the page — and not again on
+    /// scrolling away and back or on returning to the tab.
+    @MainActor
+    func testTodayPremiumRowLogsOnceWhenSeen() throws {
+        let app = launch(extra: ["-uiFree"])
+        let row = app.buttons["upgradeRow"]
+        XCTAssertTrue(row.waitForExistence(timeout: 20), "No Premium row on Today")
+        XCTAssertEqual(loggedEvents().count(of: "upsell_shown", source: "home_card"), 0,
+                       "Logged before the row was scrolled to")
+        for _ in 0..<8 where !row.isHittable { app.swipeUp() }
+        let seen = NSPredicate { _, _ in
+            self.loggedEvents().count(of: "upsell_shown", source: "home_card") == 1
+        }
+        expectation(for: seen, evaluatedWith: nil)
+        waitForExpectations(timeout: 10)
+
+        // Away and back: a scroll, then a tab switch, which re-runs Today's
+        // onAppear the way a pop back does.
+        app.swipeDown()
+        app.swipeDown()
+        app.tabBars.buttons["Puzzles"].tap()
+        app.tabBars.buttons["Today"].tap()
+        for _ in 0..<8 where !row.isHittable { app.swipeUp() }
+        XCTAssertTrue(row.isHittable)
+        XCTAssertEqual(loggedEvents().count(of: "upsell_shown", source: "home_card"), 1, "\(loggedEvents())")
+
+        row.tap()
+        let opened = NSPredicate { _, _ in
+            self.loggedEvents().count(of: "paywall_opened", source: "home_card") == 1
+        }
+        expectation(for: opened, evaluatedWith: nil)
+        waitForExpectations(timeout: 10)
+    }
+
+    /// With `premium-row-up` on, the row leads the column, above Keep going,
+    /// and keeps its source.
+    @MainActor
+    func testPromotedPremiumRowLeadsTheColumn() throws {
+        let app = launch(extra: ["-uiFree", "-uiForcePremiumRowUp"])
+        let row = app.buttons["upgradeRow"]
+        let keepGoing = app.staticTexts["Keep going"]
+        XCTAssertTrue(row.waitForExistence(timeout: 20), "No Premium row on Today")
+        XCTAssertTrue(keepGoing.waitForExistence(timeout: 10))
+        XCTAssertLessThan(row.frame.minY, keepGoing.frame.minY, "The row didn't move up")
+        XCTAssertEqual(app.buttons.matching(identifier: "upgradeRow").count, 1, "The row shows twice")
+    }
+
     // MARK: - Helpers
 
     @MainActor
