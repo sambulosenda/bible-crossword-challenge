@@ -105,10 +105,31 @@ struct PostHogAnalyticsService: AnalyticsService {
         // experiment that no longer exists.
         PostHogSDK.shared.unregister("paywall_variant")
 
+        registerStoreEnvironment()
+
         // `personProfiles` stays at its `.identifiedOnly` default: the app has
         // no accounts and never calls `identify`, so every event is anonymous.
         // Funnels and retention still work off `distinct_id`, and anonymous
         // events bill at the cheaper rate.
+    }
+
+    /// Stamps `store_environment` on every event so App Review's and
+    /// TestFlight's sandbox sessions can be filtered out (see
+    /// `StoreEnvironment`). The cached value goes on synchronously, so from
+    /// the second launch on every event carries it; the first launch is
+    /// tagged once `AppTransaction` answers, well before anyone can reach the
+    /// offer page. Events before that have no value, which an `is not
+    /// sandbox` filter keeps — production is never dropped by mistake.
+    private static func registerStoreEnvironment() {
+        let defaults = UserDefaults.standard
+        if let cached = defaults.string(forKey: StoreEnvironment.cacheKey) {
+            PostHogSDK.shared.register([StoreEnvironment.propertyName: cached])
+        }
+        Task {
+            guard let label = await StoreEnvironment.resolve() else { return }
+            defaults.set(label, forKey: StoreEnvironment.cacheKey)
+            PostHogSDK.shared.register([StoreEnvironment.propertyName: label])
+        }
     }
 
     /// Records a player's grid until they have finished one puzzle. About half
