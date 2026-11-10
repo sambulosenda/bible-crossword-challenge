@@ -66,6 +66,21 @@ struct HomeView: View {
     /// paywall's own "you're Premium" state, as every other entry does.
     @State private var paywall: PaywallRequest?
 
+    /// Daily Bread (`DailyRitual`). The verse sheet lives here, not on the
+    /// card: the card is in an `if`, and a sheet it owned would go with it.
+    @State private var ritualVerse: DailyRitual.Verse?
+    /// The day the card's impression was logged this launch — once per day,
+    /// not once per pop back (CLAUDE.md).
+    @State private var ritualShownDay: Date?
+    /// The last row tapped, for `daily_ritual_completed.last_beat`.
+    @State private var lastRitualBeat: DailyRitual.Beat?
+    /// The day beat two was done, as seconds since 1970 (0 = never). The only
+    /// stored part of the ritual — see `DailyRitual`.
+    @AppStorage("dailyRitualVerseDay") private var ritualVerseDay = 0.0
+    /// The day `daily_ritual_completed` last logged, so the ring closing logs
+    /// once per day however many times Today reappears.
+    @AppStorage("dailyRitualCompletedDay") private var ritualCompletedDay = 0.0
+
     /// The day Today is showing — see `TodayClock`. Read here so the screen
     /// redraws at midnight instead of holding yesterday's puzzle as Solved.
     @Environment(\.today) private var currentDay
@@ -379,9 +394,11 @@ struct HomeView: View {
             sunday: sunday, sundayRecord: sundayRecord, sundayPresentation: sundayState
         )
 
+        let ritual = dailyRitual()
+
         return NavigationStack(path: $path) {
             CardColumns {
-                leadColumn(today, lead: lead, recordsByID: byID)
+                leadColumn(today, lead: lead, recordsByID: byID, ritual: ritual)
             } more: {
                 moreColumn(byID, heroPuzzleID: today.puzzle(lead)?.puzzle.id,
                            heroNextQuestID: heroNextQuestID(today, lead: lead, recordsByID: byID))
@@ -395,6 +412,18 @@ struct HomeView: View {
             // 2026-10-03: 75 players saw it in 30 days and none tapped.
             .onAppear {
                 if !maybeShowTrialReoffer() { maybeShowStreakAsk() }
+                // A beat finished on a pushed screen closes the ring here,
+                // on the way back.
+                logRitualCompletedIfNeeded(ritual)
+            }
+            .onChange(of: ritual?.isComplete) { logRitualCompletedIfNeeded(ritual) }
+            .sheet(item: $ritualVerse, onDismiss: { markRitualVerseRead(learned: false) }) { verse in
+                RitualVerseSheet(
+                    verse: verse,
+                    canLearn: canLearn(verse),
+                    onLearn: { learnRitualVerse(verse) },
+                    onDone: { ritualVerse = nil }
+                )
             }
             .sheet(item: $paywall) { request in
                 PaywallView(source: request.source, initialPlanID: request.planID)
@@ -445,6 +474,9 @@ struct HomeView: View {
             .navigationDestination(for: QuestRoute.self) { route in
                 QuestDetailView(quest: route.quest, profile: profile, source: route.source)
             }
+            .navigationDestination(for: DailyRitualPuzzleRoute.self) { route in
+                CrosswordGameView(puzzle: route.puzzle, profile: profile, entrySource: "daily_ritual")
+            }
             .navigationDestination(for: JourneyPuzzleRoute.self) { route in
                 CrosswordGameView(puzzle: route.puzzle, profile: profile, entrySource: "journey")
             }
@@ -481,7 +513,8 @@ struct HomeView: View {
 
     /// Today's puzzles: the verse, the lead card and the ones under it.
     @ViewBuilder
-    private func leadColumn(_ today: TodayPuzzles, lead: TodayLead, recordsByID: [String: PuzzleRecord]) -> some View {
+    private func leadColumn(_ today: TodayPuzzles, lead: TodayLead, recordsByID: [String: PuzzleRecord],
+                            ritual: DailyRitual?) -> some View {
         let beginnerQuest = puzzleProvider.quest(id: BeginnerPath.questID)
         let beginnerProgress = beginnerQuest.map {
             QuestProgress(quest: $0, recordsByID: recordsByID, now: currentDay, calendar: calendar)
@@ -538,6 +571,18 @@ struct HomeView: View {
                 .filter { $0.puzzle.id != beginner?.id }
         if !companions.isEmpty {
             CompanionPuzzlesCard(rows: companions)
+        }
+
+        // Daily Bread, right under the day's puzzles: the puzzle is its first
+        // beat, so it reads as what the day's solve is part of.
+        if let ritual {
+            let play = beginner ?? today.puzzle(lead)?.puzzle
+            DailyRitualCard(
+                ritual: ritual,
+                puzzleTitle: play?.title,
+                onBeat: { beat in tapRitualBeat(beat, ritual: ritual, play: play) },
+                onSeen: { logRitualShown(ritual) }
+            )
         }
     }
 
@@ -768,6 +813,105 @@ struct HomeView: View {
         .padding(Theme.Spacing.l)
         .elevatedCard()
         .accessibilityElement(children: .combine)
+    }
+
+    // MARK: - Daily Bread
+
+    /// Nil before the first finished puzzle: the first sitting belongs to the
+    /// onboarding hand-off and the first real grid (plan, Bet 1), and a
+    /// checklist there is one more thing to read before typing. From the
+    /// first finish on it's for everyone, free or Premium.
+    private func dailyRitual() -> DailyRitual? {
+        guard profile.totalPuzzlesCompleted >= 1 else { return nil }
+        let solves: [DailyRitual.Solve] = records.compactMap { record in
+            guard record.isCompleted, let at = record.completedDate,
+                  calendar.isDate(at, inSameDayAs: currentDay),
+                  let puzzle = puzzleProvider.puzzle(id: record.puzzleID),
+                  !puzzle.verse.isEmpty, !puzzle.reference.isEmpty else { return nil }
+            return DailyRitual.Solve(reference: puzzle.reference, verse: puzzle.verse, completedAt: at)
+        }
+        return DailyRitual.make(
+            day: currentDay,
+            calendar: calendar,
+            solvesToday: solves,
+            verseReadDay: ritualVerseDay > 0 ? Date(timeIntervalSince1970: ritualVerseDay) : nil,
+            memory: memoryVerses
+        )
+    }
+
+    private func logRitualShown(_ ritual: DailyRitual) {
+        guard ritualShownDay.map({ !calendar.isDate($0, inSameDayAs: currentDay) }) ?? true else { return }
+        ritualShownDay = currentDay
+        analytics.log(.dailyRitualShown(beatsDone: ritual.doneCount))
+    }
+
+    private func logRitualCompletedIfNeeded(_ ritual: DailyRitual?) {
+        guard let ritual, ritual.isComplete else { return }
+        let last = Date(timeIntervalSince1970: ritualCompletedDay)
+        guard ritualCompletedDay == 0 || !calendar.isDate(last, inSameDayAs: currentDay) else { return }
+        ritualCompletedDay = currentDay.timeIntervalSince1970
+        analytics.log(.dailyRitualCompleted(lastBeat: lastRitualBeat?.rawValue ?? "elsewhere"))
+    }
+
+    private func tapRitualBeat(_ beat: DailyRitual.Beat, ritual: DailyRitual, play: Puzzle?) {
+        lastRitualBeat = beat
+        analytics.log(.dailyRitualBeatTapped(beat: beat.rawValue))
+        switch beat {
+        case .puzzle:
+            if let play { path.append(DailyRitualPuzzleRoute(puzzle: play)) }
+        case .verse:
+            ritualVerse = ritual.verse
+        case .review:
+            switch ritual.review {
+            case .practice(let key, _, _):
+                path.append(MemoryPracticeRoute(referenceKey: key, source: "daily_ritual"))
+            case .learn(let verse):
+                startRitualVerse(verse)
+            case .choose:
+                path.append(MemoryRoute(source: "daily_ritual"))
+            case .waitingForVerse, nil:
+                break
+            }
+        }
+    }
+
+    /// The verse can go on the shelf from beat two: it fits the grid, isn't
+    /// there already, and a free player has room (`freeVerseLimit`).
+    private func canLearn(_ verse: DailyRitual.Verse) -> Bool {
+        MemoryCloze.isEligible(verseText: verse.text)
+            && memoryVerses.entry(for: verse.id) == nil
+            && memoryVerses.canStartNewVerse(isPremium: store.isPremium)
+    }
+
+    /// Beat two done. Idempotent per day: the sheet's buttons and its
+    /// dismissal both land here, and a re-read logs nothing new.
+    private func markRitualVerseRead(learned: Bool) {
+        guard let verse = dailyRitual()?.verse else { return }
+        let read = Date(timeIntervalSince1970: ritualVerseDay)
+        guard ritualVerseDay == 0 || !calendar.isDate(read, inSameDayAs: currentDay) else { return }
+        ritualVerseDay = currentDay.timeIntervalSince1970
+        analytics.log(.dailyRitualVerseRead(reference: verse.reference, learned: learned))
+    }
+
+    /// "Learn it by heart" on beat two: read, shelved, and the review beat now
+    /// points at it (`DailyRitual.reviewPick` puts a verse started today first).
+    private func learnRitualVerse(_ verse: DailyRitual.Verse) {
+        if canLearn(verse) {
+            memoryVerses.start(reference: verse.reference, verseText: verse.text)
+            analytics.log(.memoryVerseAdded(reference: verse.reference, source: "daily_ritual"))
+        }
+        markRitualVerseRead(learned: true)
+        ritualVerse = nil
+    }
+
+    /// Beat three with nothing on the shelf: today's verse goes on and opens
+    /// as its first grid.
+    private func startRitualVerse(_ verse: DailyRitual.Verse) {
+        if memoryVerses.entry(for: verse.id) == nil {
+            memoryVerses.start(reference: verse.reference, verseText: verse.text)
+            analytics.log(.memoryVerseAdded(reference: verse.reference, source: "daily_ritual"))
+        }
+        path.append(MemoryPracticeRoute(referenceKey: verse.id, source: "daily_ritual"))
     }
 
     // MARK: - Reading plan
@@ -1397,6 +1541,12 @@ private struct PaywallRequest: Identifiable {
 
 /// The trophy list, pushed from the next-achievement row.
 private struct AchievementsRoute: Hashable {}
+
+/// Daily Bread's first row: the hero's puzzle, opened with its own
+/// `daily_puzzle_started.source` so the card's pull reads apart from the hero.
+private struct DailyRitualPuzzleRoute: Hashable {
+    let puzzle: Puzzle
+}
 
 /// A reading-plan chapter, with the day it was opened on.
 private struct PlanChapterRoute: Hashable {
