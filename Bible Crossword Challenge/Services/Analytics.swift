@@ -57,11 +57,15 @@ enum AnalyticsEvent {
     /// legitimately report 0), `wallSeconds` the wall-clock time the screen was
     /// open, so a fast bounce is distinguishable from a prewarm-and-detach.
     /// `hintsUsed` is this sitting's hints. Fires when the screen leaves the
-    /// window, so a quit via app-kill from the background is not counted — the
-    /// numbers are a floor, not a census.
+    /// window, and when the app is backgrounded with the puzzle open
+    /// (`exitPath` "background") — until 2026-11 a player who swiped home
+    /// mid-puzzle and never came back logged nothing, which hid about half
+    /// of first-puzzle quitters. A background abandon followed by
+    /// `puzzle_reattached` is a player who came back, not a quit.
     case puzzleAbandoned(puzzleID: String, fillPercent: Int, seconds: Int, wallSeconds: Int, hintsUsed: Int, cellTaps: Int, keyPresses: Int, exitPath: String)
-    /// The game screen came back to a window after its abandon was logged —
-    /// a re-host, not a departure. Diagnoses instant abandons (2026-11).
+    /// The game screen came back after its abandon was logged — a re-host
+    /// (after "window_detach") or the app returning to the foreground (after
+    /// "background"), not a departure. Diagnoses instant abandons (2026-11).
     case puzzleReattached(puzzleID: String, secondsSinceAbandon: Int)
 
     /// Wall-clock ceiling for a `bounce`: an exit with no cell tap and no key

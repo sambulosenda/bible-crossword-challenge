@@ -148,6 +148,15 @@ struct PostHogAnalyticsService: AnalyticsService {
         PostHogSDK.shared.stopSessionRecording()
     }
 
+    /// Sends the queue now. The SDK flushes on its own when the app enters
+    /// the background, but an event captured from a `scenePhase` change can
+    /// land after that flush — and would then wait for a relaunch that a
+    /// quitting player never makes.
+    static func flush() {
+        guard isEnabled else { return }
+        PostHogSDK.shared.flush()
+    }
+
     func log(_ event: AnalyticsEvent) {
         guard Self.isEnabled else { return }
         PostHogSDK.shared.capture(event.name, properties: event.parameters)

@@ -185,6 +185,9 @@ struct CrosswordGameScreen: View {
     /// back to a window — see `puzzleReattached`.
     @State private var abandonedAt: Date?
     @State private var didLogReattach = false
+    /// The abandon on record came from the app going to the background, so
+    /// coming back to the foreground re-opens the visit — see `scenePhase`.
+    @State private var abandonedToBackground = false
     /// The passage a verse hint opened, presented as a local sheet (see the
     /// `.sheet(item:)` note below for why not `ReaderRouter`).
     @State private var verseHintTarget: ReaderRouter.Target?
@@ -728,12 +731,34 @@ struct CrosswordGameScreen: View {
         .onChange(of: scenePhase) { _, phase in
             switch phase {
             case .active:
-                break
+                // Back from a backgrounding that was logged as an abandon:
+                // the player returned, so say so and re-open the visit — a
+                // later real exit must still log.
+                if abandonedToBackground, let abandonedAt {
+                    abandonedToBackground = false
+                    didLogAbandon = false
+                    self.abandonedAt = nil
+                    analytics.log(.puzzleReattached(
+                        puzzleID: puzzle.id,
+                        secondsSinceAbandon: Int(Date().timeIntervalSince(abandonedAt).rounded())
+                    ))
+                }
             case .inactive, .background:
                 // Leaving the foreground is the last reliable moment before the
                 // app may be suspended/killed — freeze the clock and persist.
                 vm.pauseTimer()
                 saveProgress()
+                // Swiping home mid-puzzle and never returning closes no
+                // screen, so nothing else logs it. `.background` only:
+                // `.inactive` is also the app switcher and the notification
+                // shade. Flushed at once — this player may not relaunch.
+                if phase == .background, !didLogAbandon {
+                    logAbandonIfNeeded(exitPath: "background")
+                    if didLogAbandon {
+                        abandonedToBackground = true
+                        PostHogAnalyticsService.flush()
+                    }
+                }
             @unknown default:
                 break
             }

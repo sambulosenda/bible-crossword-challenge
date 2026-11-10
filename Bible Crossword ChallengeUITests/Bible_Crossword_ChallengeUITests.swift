@@ -48,6 +48,35 @@ final class Bible_Crossword_ChallengeUITests: XCTestCase {
         XCTAssertEqual(events.count(of: "puzzle_abandoned"), 0, "\(events)")
     }
 
+    /// Swiping home mid-puzzle closes no screen, so it logged nothing: about
+    /// half of first-puzzle quitters left no `puzzle_abandoned`. Coming back
+    /// is a `puzzle_reattached`, and a later real exit still logs.
+    @MainActor
+    func testBackgroundingMidPuzzleLogsAnAbandonAndReturningReopensIt() throws {
+        let app = launch()
+        openTodaysPuzzle(app)
+
+        XCUIDevice.shared.press(.home)
+        XCTAssertTrue(app.wait(for: .runningBackground, timeout: 10))
+        var events = loggedEvents()
+        XCTAssertEqual(events.count(of: "puzzle_abandoned"), 1, "\(events)")
+        XCTAssertEqual(events.count(of: "puzzle_reattached"), 0, "\(events)")
+
+        app.activate()
+        XCTAssertTrue(app.buttons["Q"].waitForExistence(timeout: 10))
+        events = loggedEvents()
+        XCTAssertEqual(events.count(of: "puzzle_reattached"), 1, "\(events)")
+        XCTAssertEqual(events.count(of: "daily_puzzle_started"), 1, "\(events)")
+        XCTAssertEqual(events.count(of: "puzzle_abandoned"), 1, "\(events)")
+
+        // A real exit after coming back still logs. The hero's label isn't
+        // waited on: an untouched grid reads "Start Puzzle" again.
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        XCTAssertTrue(app.buttons["Q"].waitForNonExistence(timeout: 10))
+        events = loggedEvents()
+        XCTAssertEqual(events.count(of: "puzzle_abandoned"), 2, "\(events)")
+    }
+
     /// The return-day reminder sheet waits 1.5s for the celebration. Closing
     /// the results screen first used to log `reminder_ask_shown` for a sheet
     /// that never appeared.
