@@ -353,6 +353,7 @@ struct SpecVectorsTests {
         .dailyRitualCompleted(lastBeat: "review"),
         .journeyOpened(source: "profile"),
         .achievementsOpened(source: "profile"),
+        .pastPuzzlesOpened(kind: "daily", solved: 12, locked: 80),
         .appCrash(signal: 11, exceptionType: 1, exceptionCode: 0, reason: "x", build: "21", os: "26.0", frames: "a", appFrames: "b"),
         .appHang(seconds: 2.5, build: "21", os: "26.0", frames: "a", appFrames: "b"),
         ]

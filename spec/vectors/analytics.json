@@ -924,6 +924,20 @@
     },
     {
       "expect" : {
+        "name" : "past_puzzles_opened",
+        "parameterKeys" : [
+          "kind",
+          "locked",
+          "solved"
+        ]
+      },
+      "given" : {
+        "case" : "pastPuzzlesOpened"
+      },
+      "name" : "past_puzzles_opened"
+    },
+    {
+      "expect" : {
         "name" : "app_crash",
         "parameterKeys" : [
           "app_frames",
@@ -959,7 +973,7 @@
     }
   ],
   "constants" : {
-    "eventCount" : 72,
+    "eventCount" : 73,
     "paywallExits" : [
       "close",
       "free_link",

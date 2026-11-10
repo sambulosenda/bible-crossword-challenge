@@ -27,7 +27,7 @@ struct PaywallSourceTests {
     /// The entry points that put the player in front of something they can't
     /// have. Each owes them a line about that, not the standing promise.
     private static let wallSources: [PaywallSource] = [
-        .hintLimit, .hintLimitCard, .archive, .packLocked, .packCompletion,
+        .hintLimit, .hintLimitCard, .archive, .pastPuzzles, .packLocked, .packCompletion,
         .questLocked, .journey,
         // Not a wall, but asked mid-solve from the hint sheet, so it opens
         // on the hint line rather than the standing promise.
@@ -101,6 +101,8 @@ struct PaywallSourceTests {
             "hint_sheet",
             // 2026-11-07: the row under Your First Seven's finished card.
             "path_graduation",
+            // 2026-11-10: the calendar of past puzzles.
+            "past_puzzles",
         ]
         #expect(Set(PaywallSource.allCases.map(\.rawValue)) == expected)
     }

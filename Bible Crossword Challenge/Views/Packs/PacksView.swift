@@ -84,6 +84,12 @@ struct PacksView: View {
             .navigationDestination(for: LibraryPuzzleRoute.self) { route in
                 CrosswordGameView(puzzle: route.puzzle, profile: profile, entrySource: "library")
             }
+            .navigationDestination(for: PastPuzzlesRoute.self) { _ in
+                PastPuzzlesView(profile: profile, path: $path)
+            }
+            .navigationDestination(for: PastPuzzleRoute.self) { route in
+                CrosswordGameView(puzzle: route.puzzle, profile: profile, entrySource: "past_puzzles")
+            }
         }
     }
 
@@ -258,7 +264,20 @@ struct PacksView: View {
     private func allPuzzlesRow(recordsByID: [String: PuzzleRecord]) -> some View {
         let all = puzzleProvider.puzzles + puzzleProvider.sundays + puzzleProvider.minis
         let solved = all.count { recordsByID[$0.id]?.isCompleted == true }
-        return CardGroup {
+        // Under the text, past the cover: see `CardGroup.iconRowInset`.
+        return CardGroup(dividerInset: Theme.Spacing.m + CoverRow.coverSide + Theme.Spacing.m) {
+            // The calendar leads: a day is how a daily player remembers a
+            // puzzle. The list below it is for searching.
+            NavigationLink(value: PastPuzzlesRoute()) {
+                CoverRow(
+                    symbol: "calendar",
+                    tint: .secondary,
+                    title: "Past Puzzles",
+                    subtitle: "Pick a day and play its puzzle"
+                )
+                .cardRowPadding()
+            }
+            .buttonStyle(PressableCardStyle())
             NavigationLink(value: LibraryRoute()) {
                 CoverRow(
                     symbol: "square.grid.3x3",

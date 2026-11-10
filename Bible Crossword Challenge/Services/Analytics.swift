@@ -398,6 +398,13 @@ enum AnalyticsEvent {
     // tappable next-achievement card on Today. `source` says which door.
     case journeyOpened(source: String)
     case achievementsOpened(source: String)
+    /// The calendar of past puzzles (`PastPuzzlesView`), once per visit.
+    /// `kind` is the pool it opened on, `solved` and `locked` how many of
+    /// its days read that way: the read is whether players with holes to
+    /// fill come back to fill them, and whether locked days sell
+    /// (`paywall_opened` source `past_puzzles`). A puzzle opened from it
+    /// logs `daily_puzzle_started` with source `past_puzzles`.
+    case pastPuzzlesOpened(kind: String, solved: Int, locked: Int)
     // MetricKit diagnostics, forwarded by `CrashReporter` on the launch after
     // the event. The app has no crash SDK, and in the 30 days to 2026-09-03,
     // 19 of 51 day-0 non-finishers on 2.0+ builds logged a puzzle start and
@@ -488,6 +495,7 @@ enum AnalyticsEvent {
         case .dailyRitualCompleted: return "daily_ritual_completed"
         case .journeyOpened: return "journey_opened"
         case .achievementsOpened: return "achievements_opened"
+        case .pastPuzzlesOpened: return "past_puzzles_opened"
         case .appCrash: return "app_crash"
         case .appHang: return "app_hang"
         }
@@ -726,6 +734,8 @@ enum AnalyticsEvent {
             return ["last_beat": lastBeat]
         case .journeyOpened(let source), .achievementsOpened(let source):
             return ["source": source]
+        case .pastPuzzlesOpened(let kind, let solved, let locked):
+            return ["kind": kind, "solved": solved, "locked": locked]
         case .appCrash(let signal, let exceptionType, let exceptionCode, let reason, let build, let os, let frames, let appFrames):
             return [
                 // -1 stands in for "not reported" — a dictionary of Any can't

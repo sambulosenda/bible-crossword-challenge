@@ -51,6 +51,9 @@ enum PaywallSource: String, CaseIterable, Hashable {
     case profile
     /// A locked row, or the footer button, in the archive.
     case archive
+    /// A locked day, or the offer row, on the calendar of past puzzles.
+    /// Its own label so the calendar reads apart from the Library list.
+    case pastPuzzles = "past_puzzles"
     /// A premium collection the player opened but can't play.
     case packLocked = "pack_locked"
     /// Finishing a puzzle inside a pack whose remainder is locked.
@@ -100,6 +103,9 @@ enum PaywallSource: String, CaseIterable, Hashable {
             return "You've made it a habit.\nHere's the rest of it."
         case .archive:
             return PremiumCopy.archive
+        case .pastPuzzles:
+            // The wall is a day they can see and can't open.
+            return "Every day's puzzle\nis still here."
         case .packLocked:
             // The evergreen line. A seasonal pack states its own constraint —
             // see `PaywallView.headlineText`.

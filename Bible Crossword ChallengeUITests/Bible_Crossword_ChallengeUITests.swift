@@ -77,6 +77,29 @@ final class Bible_Crossword_ChallengeUITests: XCTestCase {
         XCTAssertEqual(events.count(of: "puzzle_abandoned"), 2, "\(events)")
     }
 
+    /// The calendar's impression is once per visit: `.task` runs again on
+    /// the pop back from a day's puzzle. A day opened from it is attributed
+    /// to the calendar, not the Library.
+    @MainActor
+    func testPastPuzzlesLogsOncePerVisitAndAttributesItsPuzzles() throws {
+        let app = launch()
+        let tab = app.tabBars.buttons["Puzzles"]
+        XCTAssertTrue(tab.waitForExistence(timeout: 20))
+        tab.tap()
+        let row = app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Past Puzzles'")).firstMatch
+        let today = app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Today,'")).firstMatch
+        tap(row, until: today, in: app)
+
+        today.tap()
+        XCTAssertTrue(app.buttons["Q"].waitForExistence(timeout: 10), "The keypad never appeared")
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        XCTAssertTrue(today.waitForExistence(timeout: 10))
+
+        let events = loggedEvents()
+        XCTAssertEqual(events.count(of: "past_puzzles_opened"), 1, "\(events)")
+        XCTAssertEqual(events.count(of: "daily_puzzle_started", source: "past_puzzles"), 1, "\(events)")
+    }
+
     /// The return-day reminder sheet waits 1.5s for the celebration. Closing
     /// the results screen first used to log `reminder_ask_shown` for a sheet
     /// that never appeared.
