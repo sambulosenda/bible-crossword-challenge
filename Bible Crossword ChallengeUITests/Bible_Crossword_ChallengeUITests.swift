@@ -237,6 +237,49 @@ final class Bible_Crossword_ChallengeUITests: XCTestCase {
         XCTAssertEqual(shelfRows.count, 0, "Keep going repeats the hero's Journey")
     }
 
+    /// Daily Bread on Today. The impression logs once however often Today
+    /// reappears (here: after the verse sheet and a pushed memory grid), and
+    /// the ring closing logs once, after the third beat.
+    @MainActor
+    func testDailyRitualLogsOnceAndClosesAfterThreeBeats() throws {
+        // The showcase seeds a solve dated today (daily-001, Isaiah 11:6), so
+        // beat one is done and its verse is waiting.
+        let app = launch(extra: ["-uiSeedShowcase", "-uiAutoSolve", "-uiNoReview"])
+        let verse = app.buttons["ritualVerse"]
+        XCTAssertTrue(verse.waitForExistence(timeout: 20), app.debugDescription)
+        for _ in 0..<3 where !verse.isHittable { app.swipeUp() }
+        let seen = NSPredicate { _, _ in self.loggedEvents().count(of: "daily_ritual_shown") == 1 }
+        expectation(for: seen, evaluatedWith: nil)
+        waitForExpectations(timeout: 10)
+
+        // Beat two: read the verse, and put it on the memory shelf.
+        verse.tap()
+        let learn = app.buttons["ritualVerseLearn"]
+        XCTAssertTrue(learn.waitForExistence(timeout: 10), app.debugDescription)
+        learn.tap()
+
+        // Beat three: the verse just learned, as its first grid. Auto-solve
+        // finishes it; the completion sheet's Done pops back to Today.
+        let review = app.buttons["ritualReview"]
+        XCTAssertTrue(review.waitForExistence(timeout: 10))
+        review.tap()
+        let done = app.buttons["Done"]
+        XCTAssertTrue(done.waitForExistence(timeout: 15), "No completion sheet\n\(app.debugDescription)")
+        done.tap()
+        XCTAssertTrue(verse.waitForExistence(timeout: 10), "Didn't return to Today")
+
+        let closed = NSPredicate { _, _ in self.loggedEvents().count(of: "daily_ritual_completed") == 1 }
+        expectation(for: closed, evaluatedWith: nil)
+        waitForExpectations(timeout: 10)
+
+        let events = loggedEvents()
+        XCTAssertEqual(events.count(of: "daily_ritual_shown"), 1, "\(events)")
+        XCTAssertEqual(events.count(of: "daily_ritual_verse_read"), 1, "\(events)")
+        XCTAssertEqual(events.count(of: "memory_verse_added", source: "daily_ritual"), 1, "\(events)")
+        XCTAssertEqual(events.count(of: "memory_verse_started", source: "daily_ritual"), 1, "\(events)")
+        XCTAssertEqual(events.count(of: "memory_verse_completed", source: "daily_ritual"), 1, "\(events)")
+    }
+
     // MARK: - Helpers
 
     @MainActor
