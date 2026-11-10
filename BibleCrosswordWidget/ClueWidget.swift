@@ -366,13 +366,13 @@ struct ClueBoardView: View {
                 .tracking(0.6)
                 .foregroundStyle(.secondary)
             Spacer(minLength: 0)
-            if entry.streak.streak > 0 {
-                Label("\(entry.streak.streak)", systemImage: entry.streak.state == .solvedToday ? "flame.fill" : "flame")
-                    .font(.caption2.weight(.semibold))
-                    .foregroundStyle(entry.streak.flameColor)
-                    .widgetAccentable()
-                    .accessibilityLabel("\(entry.streak.streak) day streak")
-            }
+            // Always shown, 0 included: the streak is half of what this
+            // widget is for, and a grey 0 is the invitation to start one.
+            Label("\(entry.streak.streak)", systemImage: entry.streak.state == .solvedToday ? "flame.fill" : "flame")
+                .font(.caption2.weight(.semibold))
+                .foregroundStyle(entry.streak.flameColor)
+                .widgetAccentable()
+                .accessibilityLabel("\(entry.streak.streak) day streak")
         }
     }
 
