@@ -115,10 +115,20 @@ enum AnalyticsEvent {
     /// A widget tap landed in the app. `destination` is which surface the tap
     /// resolved to (`daily` / `mini` / `today`) — the widget picks the most
     /// useful next action, and this is the read on whether players take it.
-    case widgetOpened(destination: String)
-    /// The completion screen's once-ever line offering the Verse of the Day
-    /// widget came into view (after a third solve), and was tapped for the
-    /// how-to. Read against `widget_opened`, which was 0 in the 30 days to
+    /// `widget` is which widget was tapped (`streak` / `verse` / `clue`, or
+    /// `unknown` for a link from a widget built before 2026-11-10).
+    case widgetOpened(destination: String, widget: String)
+    /// The Clue of the Day widget's first letter tile of the day was tapped.
+    /// Played inside the widget, so logged by the app when it next opens:
+    /// `daysLate` is how many days after the play that was.
+    case widgetClueStarted(answerLength: Int, daysLate: Int)
+    /// The Clue of the Day widget was solved. `wrongAttempts` is how many
+    /// full wrong spellings came first. Read against `widget_opened` with
+    /// `widget = clue`: does solving on the Home Screen bring players in?
+    case widgetClueSolved(answerLength: Int, wrongAttempts: Int, daysLate: Int)
+    /// The completion screen's once-ever line offering a Home Screen widget
+    /// (Verse of the Day until 2026-11-10, Clue of the Day since) came into
+    /// view (after a third solve), and was tapped for the how-to. Read against `widget_opened`, which was 0 in the 30 days to
     /// 2026-10-14: nobody added a widget nobody had told them about.
     case widgetOfferShown
     case widgetOfferTapped
@@ -415,6 +425,8 @@ enum AnalyticsEvent {
         case .stallNudgeTapped: return "stall_nudge_tapped"
         case .starterWordGifted: return "starter_word_gifted"
         case .widgetOpened: return "widget_opened"
+        case .widgetClueStarted: return "widget_clue_started"
+        case .widgetClueSolved: return "widget_clue_solved"
         case .widgetOfferShown: return "widget_offer_shown"
         case .widgetOfferTapped: return "widget_offer_tapped"
         case .notificationTapped: return "notification_tapped"
@@ -591,8 +603,12 @@ enum AnalyticsEvent {
             ]
         case .starterWordGifted(let puzzleID, let answerLength):
             return ["puzzle_id": puzzleID, "answer_length": answerLength]
-        case .widgetOpened(let destination):
-            return ["destination": destination]
+        case .widgetOpened(let destination, let widget):
+            return ["destination": destination, "widget": widget]
+        case .widgetClueStarted(let answerLength, let daysLate):
+            return ["answer_length": answerLength, "days_late": daysLate]
+        case .widgetClueSolved(let answerLength, let wrongAttempts, let daysLate):
+            return ["answer_length": answerLength, "wrong_attempts": wrongAttempts, "days_late": daysLate]
         case .notificationTapped(let kind, let dayOffset):
             var params: [String: Any] = ["kind": kind]
             if let dayOffset { params["day_offset"] = dayOffset }
