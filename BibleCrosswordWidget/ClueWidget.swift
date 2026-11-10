@@ -474,8 +474,9 @@ struct ClueBoardView: View {
                         .lineLimit(1)
                 }
             }
-            .accessibilityElement(children: .combine)
-            Text("“\(clue.verse)”")
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel("Solved: \(clue.answer)" + (clue.clueReference.map { ", \($0)" } ?? ""))
+            Text(quotedVerse)
                 .font(.system(.footnote, design: .serif))
                 .lineLimit(verseLines)
                 .minimumScaleFactor(0.85)
@@ -495,6 +496,15 @@ struct ClueBoardView: View {
                 }
             }
         }
+    }
+}
+
+extension ClueBoardView {
+    /// Wrapped in quotes unless the verse already carries its own: a verse
+    /// that opens or closes on speech read as “… helper.”” with both.
+    var quotedVerse: String {
+        let quotes: Set<Character> = ["“", "”", "\""]
+        return clue.verse.contains(where: quotes.contains) ? clue.verse : "“\(clue.verse)”"
     }
 }
 
