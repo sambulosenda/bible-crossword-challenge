@@ -111,6 +111,10 @@ struct PastPuzzlesView: View {
             .frame(maxWidth: 560)
             .frame(maxWidth: .infinity)
         }
+        // The other pool is another calendar: start it at this month, not
+        // wherever the last one was scrolled to. Inside the sheet and the
+        // task, whose identity must not move with it.
+        .id(kind)
         .background(Theme.background)
         .safeAreaInset(edge: .top, spacing: 0) { kindPicker }
         .navigationTitle("Past Puzzles")
@@ -231,7 +235,10 @@ struct PastPuzzlesView: View {
                 case .solved:
                     Circle().fill(Theme.ink)
                 case .inProgress, .open:
-                    Circle().fill(Theme.background)
+                    // A system fill, not the canvas colour: in dark mode the
+                    // canvas is black on a grey card, and a day not yet
+                    // played drew heavier than a solved one.
+                    Circle().fill(Color(uiColor: .tertiarySystemFill))
                 case .locked:
                     Color.clear
                 }
