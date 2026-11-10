@@ -116,7 +116,10 @@ final class Bible_Crossword_ChallengeUITests: XCTestCase {
 
         let close = app.buttons["Close and continue with the free puzzle"]
         XCTAssertTrue(close.waitForExistence(timeout: 10), "The offer page never appeared")
-        let corner = close.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+        // Anchored to the app, not to `close`: a coordinate from an element
+        // resolves that element again at tap time, and by then it is gone.
+        let origin = app.coordinate(withNormalizedOffset: .zero)
+        let corner = origin.withOffset(CGVector(dx: close.frame.midX, dy: close.frame.midY))
         close.tap()
         // The player's second press, where the ✕ was, as the puzzle arrives.
         Thread.sleep(forTimeInterval: 1.0)
