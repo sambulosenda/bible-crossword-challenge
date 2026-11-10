@@ -48,6 +48,10 @@ struct RootView: View {
     /// push the daily puzzle onto it. Type-erased so the Today feed can push both
     /// puzzles and pack details.
     @State private var todayPath = NavigationPath()
+    /// How long the onboarding hand-off waits for the tabs to settle before
+    /// pushing the first puzzle — past the swap's default animation. See
+    /// `openFirstPuzzle`.
+    private static let handoffDelay: Duration = .milliseconds(500)
     /// Navigation stack for the Puzzles tab, held here for the same reason as
     /// `todayPath`: a season-opening notification deep-links into a pack.
     @State private var puzzlesPath = NavigationPath()
@@ -397,11 +401,25 @@ struct RootView: View {
     /// Pushed as a `BeginnerPuzzleRoute` so the path's beginner pacing and
     /// completion flow apply. Today's Mini only if the path is missing or
     /// already done (a reinstall whose records synced back).
+    ///
+    /// Pushed a beat after the tabs arrive, not in the same transaction
+    /// (2026-11): 13 new players in 45 days lost this screen 0.3–1.9 s after
+    /// onboarding ended, 11 of them having closed the offer with its ✕, and
+    /// 11 of the 13 never finished a puzzle. Pushed inside the animated swap
+    /// from onboarding, the stack could drop it (the memory link in
+    /// `handleDeepLink` met the same beat); pushed at once, a second tap on the ✕ landed on the back
+    /// button in the same corner. The delay settles the first; the game holds
+    /// its back button for its opening beat (`holdsBackForOpening`) for the
+    /// second. Not if anything else was pushed in the meantime.
     private func openFirstPuzzle() {
         let records = (try? context.fetch(FetchDescriptor<PuzzleRecord>())) ?? []
         if let step = BeginnerPath.next(provider: puzzleProvider, recordsByID: records.byPuzzleID) {
             selectedTab = .today
-            todayPath = NavigationPath([BeginnerPuzzleRoute(puzzle: step)])
+            Task {
+                try? await Task.sleep(for: Self.handoffDelay)
+                guard todayPath.isEmpty, selectedTab == .today else { return }
+                todayPath = NavigationPath([BeginnerPuzzleRoute(puzzle: step, fromOnboarding: true)])
+            }
             return
         }
         guard let mini = puzzleProvider.dailyMini() else { return }

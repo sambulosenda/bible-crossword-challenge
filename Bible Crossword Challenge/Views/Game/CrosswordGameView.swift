@@ -192,6 +192,20 @@ struct CrosswordGameScreen: View {
     private let freeHintLimit = PlayerProfile.freeHintLimit
     /// Keeps the screen focused so a hardware keyboard can type into the grid.
     @FocusState private var gridFocused: Bool
+    /// Whether the onboarding hand-off's opening beat is over — see
+    /// `holdsBackForOpening`.
+    @State private var openingBeatOver = false
+
+    /// The onboarding hand-off holds its back button for `openingBeat`. The
+    /// offer before it closes with a ✕ in the same top-leading corner, and of
+    /// 13 new players whose first puzzle vanished within two seconds of
+    /// onboarding (45 days to 2026-11-10), 11 had just pressed that ✕ — a
+    /// second press landed on Back. Not a trap: it is back in 1.5 s, and only
+    /// on this one screen.
+    private var holdsBackForOpening: Bool {
+        entrySource == BeginnerPuzzleRoute.onboardingSource
+    }
+    private static let openingBeat: Duration = .milliseconds(1500)
 
     init(puzzle: Puzzle, profile: PlayerProfile, entrySource: String, vm: GameViewModel) {
         self.puzzle = puzzle
@@ -492,6 +506,16 @@ struct CrosswordGameScreen: View {
         .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar(.hidden, for: .tabBar)
+        // Hiding it also turns off the edge swipe, which is the point: for
+        // the hand-off's first moments neither can take the player back.
+        .navigationBarBackButtonHidden(holdsBackForOpening && !openingBeatOver)
+        .task {
+            guard holdsBackForOpening, !openingBeatOver else { return }
+            try? await Task.sleep(for: Self.openingBeat)
+            withAnimation(reduceMotion ? nil : Animation.easeOut(duration: 0.2)) {
+                openingBeatOver = true
+            }
+        }
         .toolbar { toolbarContent }
         .sheet(isPresented: $showClues) {
             ClueListView(vm: vm)
