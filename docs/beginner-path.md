@@ -22,11 +22,22 @@ are solved, the journey completion card celebrates the finished path.
 Use existing events, joined by user and puzzle ID:
 
 - `daily_puzzle_started`, `source = beginner_path`: starts and resumes from Today.
+- `daily_puzzle_started`, `source = onboarding_handoff` (from the December
+  release): the first step opened by onboarding itself. Before it, the hand-off
+  also logged `beginner_path`, so a player who lost it and then tapped the card
+  counted once.
 - `puzzle_abandoned`: early exits; group by these seven puzzle IDs and fill level.
 - `quest_step_completed`, `quest_id = first-week`: first completion per step.
 - `quest_completed`, `quest_id = first-week`: completed paths.
 - `completion_chain_tapped`: immediate next-step choices (from/to puzzle IDs).
 - `stall_nudge_shown` / `stall_nudge_tapped`, `kind = verse`: scripture help.
+
+The hand-off pushes half a second after onboarding ends and holds the game's
+back button for its first 1.5 s. The first puzzle used to vanish within two
+seconds for 13 of 418 new players in 45 days, nearly all just after closing the
+offer with its top-left ✕, and 11 of the 13 never finished a puzzle.
+Read it as a `puzzle_abandoned` within 2 s of an `onboarding_handoff` start;
+the bar is zero.
 
 Compare first-step start-to-completion, continuation to step two, and next-day
 and seven-day return rates for players starting the path. Returning after a

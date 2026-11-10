@@ -53,6 +53,7 @@ levers the data points at had no epic. Engineering work around these lives in
 | What | Event / source | Bar |
 |---|---|---|
 | Instant abandons: real exits or detach artefacts? | `puzzle_abandoned.exit_path`, `puzzle_reattached` | Decide the fix |
+| Hand-off kept (first puzzle not lost within 2 s of onboarding) | `daily_puzzle_started` source `onboarding_handoff`, then `puzzle_abandoned` | Zero lost, from 13 in the 45 days to 2026-11-10 |
 | First puzzle finished on day 0, and D1 | beginner path `daily_puzzle_completed`, retention | Up vs pre-release cohort |
 | Graduation offer (B1) | `upsell_shown` / `paywall_opened` source `path_graduation` | Taps ≥ 10% of impressions |
 | Solved-hero Journey (B2) | `quest_opened` source `today_hero`, `upsell_shown:today_hero` | Reach > the old Today card (13 / 30d) |

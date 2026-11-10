@@ -434,7 +434,7 @@ struct HomeView: View {
                     .presentationDragIndicator(.visible)
             }
             .navigationDestination(for: BeginnerPuzzleRoute.self) { route in
-                CrosswordGameView(puzzle: route.puzzle, profile: profile, entrySource: "beginner_path")
+                CrosswordGameView(puzzle: route.puzzle, profile: profile, entrySource: route.entrySource)
             }
             .navigationDestination(for: Puzzle.self) { puzzle in
                 CrosswordGameView(puzzle: puzzle, profile: profile, entrySource: "home")
