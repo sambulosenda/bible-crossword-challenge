@@ -46,6 +46,9 @@ struct SettingsView: View {
     /// Zen mode, inverted: off hides the in-solve clock. Time is still
     /// recorded — challenges and records need honest seconds.
     @AppStorage("showSolveTimer") private var showSolveTimer = true
+    /// Key taps and the word and puzzle chimes. On by default; they already
+    /// follow the ring/silent switch (see `SoundEffects`).
+    @AppStorage(SoundEffects.enabledKey) private var soundEffectsEnabled = true
     @State private var showPaywall = false
 
     private var reminderTime: Binding<Date> {
@@ -144,6 +147,10 @@ struct SettingsView: View {
             Toggle(isOn: $showSolveTimer) {
                 Text("Show solve timer")
                 Text("Your times are recorded either way.")
+            }
+            Toggle(isOn: $soundEffectsEnabled) {
+                Text("Sound effects")
+                Text("Key taps and chimes. Always quiet in silent mode.")
             }
         }
     }

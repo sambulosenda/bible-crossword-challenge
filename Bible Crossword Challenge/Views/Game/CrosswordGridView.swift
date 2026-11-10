@@ -354,11 +354,15 @@ struct CrosswordGridView: View {
             let positions = slot.positions
             // The starter gift lands as a completed word: frame it for its
             // pulse before the cursor's move takes the view elsewhere.
-            if positions.allSatisfy({ vm.grid[$0.row][$0.col].isGift }) {
+            let isGift = positions.allSatisfy({ vm.grid[$0.row][$0.col].isGift })
+            if isGift {
                 holdCursorScrollUntil = .now.addingTimeInterval(Self.giftHold)
                 giftFocus = positions[positions.count / 2]
             }
             wordTick &+= 1
+            // The chime is for words the player finished; the starter gift
+            // lands on their first key press, under its tap, unasked for.
+            if !isGift { SoundEffects.shared.play(.wordComplete) }
             // Confirm the solve to VoiceOver — a no-op when VoiceOver is off.
             AccessibilityNotification.Announcement("\(slot.answer.capitalized) complete").post()
             if reduceMotion {

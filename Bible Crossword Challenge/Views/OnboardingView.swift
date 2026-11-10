@@ -124,6 +124,9 @@ struct OnboardingView: View {
         .background(canvas)
         .sensoryFeedback(.selection, trigger: page)
         .sensoryFeedback(.success, trigger: solved)
+        .onChange(of: solved) { _, isSolved in
+            if isSolved { SoundEffects.shared.play(.puzzleComplete) }
+        }
         .sensoryFeedback(.error, trigger: wrongAttempts)
         .onChange(of: page) { oldPage, newPage in
             // Logged on the way out of the solve page, not on solving, so a
