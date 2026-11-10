@@ -4,7 +4,7 @@
 //
 //  Custom A–Z keypad. A dedicated keyboard avoids autocorrect/return-key issues
 //  and gives precise control over crossword entry. Uses sensory feedback rather
-//  than UIKit feedback generators.
+//  than UIKit feedback generators, with a soft tap sound (`SoundEffects`).
 //
 
 import SwiftUI
@@ -85,11 +85,14 @@ struct LetterKeyboardView: View {
         // scales with `keyHeight`, up to the same cap.
         .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
         .sensoryFeedback(.selection, trigger: lastKeyTick)
+        // Load the taps before the first key, so it isn't late.
+        .onAppear { SoundEffects.shared.prepare() }
     }
 
     private func key(for letter: Character) -> some View {
         Button {
             lastKeyTick &+= 1
+            SoundEffects.shared.play(.keyTap)
             onLetter(letter)
         } label: {
             // Plain SF at regular weight on the bed, as the system keyboard
@@ -110,6 +113,7 @@ struct LetterKeyboardView: View {
     private var pencilKey: some View {
         Button {
             lastKeyTick &+= 1
+            SoundEffects.shared.play(.keyTap)
             onTogglePencil?()
         } label: {
             Image(systemName: isPencilMode ? "pencil.circle.fill" : "pencil")
@@ -127,6 +131,7 @@ struct LetterKeyboardView: View {
     private var deleteKey: some View {
         Button(role: .destructive) {
             lastKeyTick &+= 1
+            SoundEffects.shared.play(.keyDelete)
             onDelete()
         } label: {
             Image(systemName: "delete.left")

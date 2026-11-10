@@ -592,6 +592,9 @@ struct CrosswordGameScreen: View {
             .id(puzzle.id)
         }
         .sensoryFeedback(.success, trigger: vm.isComplete)
+        .onChange(of: vm.isComplete) { _, complete in
+            if complete { SoundEffects.shared.play(.puzzleComplete) }
+        }
         .sensoryFeedback(.warning, trigger: vm.gridFullWithErrorsTick)
         .onChange(of: vm.gridFullWithErrorsTick) { _, _ in
             showFullMissAlert = true
