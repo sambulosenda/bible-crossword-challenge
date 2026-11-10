@@ -35,6 +35,16 @@ struct HomeView: View {
     /// impression logs once (CLAUDE.md: once-per-visit guard on Today, whose
     /// identity is stable; the card itself sits in an if/else).
     @State private var didLogHeroNext = false
+    /// Today's Premium row has been on screen, not under a sheet.
+    /// Held here, not by the row: the row sits in an `if` a purchase removes
+    /// and moves between two places (`PremiumRowPlacement`), and either would
+    /// reset a guard it owned.
+    @State private var upgradeRowVisible = false
+    @State private var didLogUpgradeRow = false
+    /// The row leads the column instead of closing the page — see
+    /// `PremiumRowPlacement`. Decided on appear, never in `body`: a flag
+    /// read is an exposure event, and `body` runs on every redraw.
+    @State private var premiumRowUp = false
 
     /// Written by RootView when a launch breaks the streak; cleared here on
     /// dismiss, and on the solve that starts the next run.
@@ -164,6 +174,61 @@ struct HomeView: View {
     /// five times a pass, once per quest inside `activeQuest` alone.
     private var recordsByID: [String: PuzzleRecord] {
         records.byPuzzleID
+    }
+
+    /// Whether the Premium row leads the column. Eligibility first, so only
+    /// players the change can reach read the flag and join the experiment;
+    /// an unknown flag keeps the shipped layout and enrols nobody.
+    private func updatePremiumRowPlacement() {
+        #if DEBUG
+        if PremiumRowPlacement.isForced {
+            premiumRowUp = true
+            return
+        }
+        #endif
+        let eligible = PremiumRowPlacement.isEligible(PremiumRowPlacement.State(
+            isPremium: store.isPremium,
+            totalCompleted: profile.totalPuzzlesCompleted,
+            createdAt: profile.createdAt,
+            today: currentDay,
+            calendar: calendar
+        ))
+        guard eligible, let on = FeatureFlags.value(of: PremiumRowPlacement.flag) else {
+            premiumRowUp = false
+            return
+        }
+        FeatureFlags.registerVariant(PremiumRowPlacement.variantName, isTreatment: on)
+        premiumRowUp = on
+    }
+
+    /// The row's impression: once while Today is alive (it outlives pops
+    /// back and tab switches, as `didLogHeroNext` does), only while the row
+    /// is actually on screen and nothing covers it, so its open rate is opens
+    /// over players who saw it. Same source as the open (`home_card` or
+    /// `streak_card`).
+    private func logUpgradeRowIfSeen() {
+        guard upgradeRowVisible, !didLogUpgradeRow, !store.isPremium,
+              paywall == nil, !showStreak else { return }
+        didLogUpgradeRow = true
+        analytics.log(.upsellShown(source: UpgradeRow.source(currentStreak: profile.currentStreak).rawValue))
+    }
+
+    /// Today's Premium row in its own one-row card, apart from Keep going so
+    /// the offer doesn't read as one more item of the player's progress.
+    @ViewBuilder
+    private var upgradeRow: some View {
+        if !store.isPremium {
+            CardGroup {
+                UpgradeRow(
+                    currentStreak: profile.currentStreak,
+                    onOpen: { paywall = PaywallRequest(source: $0) }
+                )
+            }
+            .onScrollVisibilityChange(threshold: 0.6) { visible in
+                upgradeRowVisible = visible
+                logUpgradeRowIfSeen()
+            }
+        }
     }
 
     /// Offer the daily reminder once there's a streak worth protecting — the
@@ -394,8 +459,13 @@ struct HomeView: View {
             // The proactive premium ask that sat between them was removed on
             // 2026-10-03: 75 players saw it in 30 days and none tapped.
             .onAppear {
+                updatePremiumRowPlacement()
                 if !maybeShowTrialReoffer() { maybeShowStreakAsk() }
             }
+            // A row already in view under the re-offer or the streak sheet
+            // counts once the sheet goes.
+            .onChange(of: paywall == nil) { logUpgradeRowIfSeen() }
+            .onChange(of: showStreak) { logUpgradeRowIfSeen() }
             .sheet(item: $paywall) { request in
                 PaywallView(source: request.source, initialPlanID: request.planID)
             }
@@ -623,6 +693,13 @@ struct HomeView: View {
             }
         }
 
+        // Promoted for players past their first days when the
+        // `premium-row-up` flag says so — see `PremiumRowPlacement`. The
+        // same row and source as at the foot; only the place differs.
+        if premiumRowUp {
+            upgradeRow
+        }
+
         // Ordered by what players actually open, not by what the app
         // wants opened. 30 days to 2026-10-03: packs carousel 76
         // players, Journey 66, next achievement 63, memory verses 35
@@ -721,17 +798,10 @@ struct HomeView: View {
             // going: that list is the player's own progress, and an offer
             // inside it read as one more badge. Set apart by space, and by the
             // solid gold the Premium mark wears everywhere.
-            if !store.isPremium {
-                // A one-row card of its own (2026-11-03), apart from the
-                // group above so the offer doesn't read as one more item
-                // of the player's progress.
-                CardGroup {
-                    UpgradeRow(
-                        currentStreak: profile.currentStreak,
-                        onOpen: { paywall = PaywallRequest(source: $0) }
-                    )
-                }
-                .padding(.top, Theme.Spacing.s)
+            // A one-row card of its own (2026-11-03) — see `upgradeRow`.
+            if !premiumRowUp {
+                upgradeRow
+                    .padding(.top, Theme.Spacing.s)
             }
         }
 
@@ -1345,6 +1415,12 @@ private struct UpgradeRow: View {
     static let streakThreshold = 7
     private var isStreakVariant: Bool { currentStreak >= Self.streakThreshold }
 
+    /// The label the row opens the paywall under, and logs its impression
+    /// under, so `upsell_shown` and `paywall_opened` pair per variant.
+    static func source(currentStreak: Int) -> PaywallSource {
+        currentStreak >= streakThreshold ? .streakCard : .homeCard
+    }
+
     /// Read here rather than passed in: the row names the trial only when
     /// the product actually carries one — see `PremiumCopy.cardCTA`.
     @Environment(StoreService.self) private var store
@@ -1368,7 +1444,7 @@ private struct UpgradeRow: View {
 
     var body: some View {
         Button {
-            onOpen(isStreakVariant ? .streakCard : .homeCard)
+            onOpen(Self.source(currentStreak: currentStreak))
         } label: {
             CoverRow(symbol: "crown.fill", tint: Theme.badgeRim, title: title, subtitle: subtitle)
                 .cardRowPadding()
@@ -1378,6 +1454,7 @@ private struct UpgradeRow: View {
         .accessibilityAddTraits(.isButton)
         .accessibilityLabel("\(title). \(subtitle)")
         .accessibilityHint("Opens Premium plans")
+        .accessibilityIdentifier("upgradeRow")
     }
 }
 
