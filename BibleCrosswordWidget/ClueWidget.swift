@@ -372,6 +372,7 @@ struct ClueBoardView: View {
                 .font(.caption2.weight(.semibold))
                 .foregroundStyle(entry.streak.flameColor)
                 .widgetAccentable()
+                .accessibilityElement(children: .ignore)
                 .accessibilityLabel("\(entry.streak.streak) day streak")
         }
     }
