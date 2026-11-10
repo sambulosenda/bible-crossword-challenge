@@ -33,6 +33,20 @@ struct BeginnerPathTests {
         #expect(!BeginnerPath.shouldFeature(totalCompleted: 7, progress: progress))
     }
 
+    /// The readout tells onboarding's hand-off from a tap on Today's card,
+    /// and a route that differs only by where it came from is a different
+    /// push.
+    @Test func handOffLogsUnderItsOwnSource() throws {
+        let provider = PuzzleProvider.shared
+        let step = try #require(BeginnerPath.next(provider: provider, recordsByID: [:]))
+        let fromCard = BeginnerPuzzleRoute(puzzle: step)
+        let handOff = BeginnerPuzzleRoute(puzzle: step, fromOnboarding: true)
+        #expect(fromCard.entrySource == "beginner_path")
+        #expect(handOff.entrySource == BeginnerPuzzleRoute.onboardingSource)
+        #expect(handOff.entrySource == "onboarding_handoff")
+        #expect(fromCard != handOff)
+    }
+
     @Test func experiencedPlayersAreNotEnrolledUnlessTheyHaveStarted() throws {
         let provider = PuzzleProvider.shared
         let quest = try #require(provider.quest(id: BeginnerPath.questID))

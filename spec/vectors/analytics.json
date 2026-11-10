@@ -800,7 +800,8 @@
           "hints_used",
           "level",
           "leveled_up",
-          "reference"
+          "reference",
+          "source"
         ]
       },
       "given" : {
@@ -819,6 +820,55 @@
         "case" : "memoryVerseMastered"
       },
       "name" : "memory_verse_mastered"
+    },
+    {
+      "expect" : {
+        "name" : "daily_ritual_shown",
+        "parameterKeys" : [
+          "beats_done"
+        ]
+      },
+      "given" : {
+        "case" : "dailyRitualShown"
+      },
+      "name" : "daily_ritual_shown"
+    },
+    {
+      "expect" : {
+        "name" : "daily_ritual_beat_tapped",
+        "parameterKeys" : [
+          "beat"
+        ]
+      },
+      "given" : {
+        "case" : "dailyRitualBeatTapped"
+      },
+      "name" : "daily_ritual_beat_tapped"
+    },
+    {
+      "expect" : {
+        "name" : "daily_ritual_verse_read",
+        "parameterKeys" : [
+          "learned",
+          "reference"
+        ]
+      },
+      "given" : {
+        "case" : "dailyRitualVerseRead"
+      },
+      "name" : "daily_ritual_verse_read"
+    },
+    {
+      "expect" : {
+        "name" : "daily_ritual_completed",
+        "parameterKeys" : [
+          "last_beat"
+        ]
+      },
+      "given" : {
+        "case" : "dailyRitualCompleted"
+      },
+      "name" : "daily_ritual_completed"
     },
     {
       "expect" : {
@@ -881,7 +931,7 @@
     }
   ],
   "constants" : {
-    "eventCount" : 66,
+    "eventCount" : 70,
     "paywallExits" : [
       "close",
       "free_link",

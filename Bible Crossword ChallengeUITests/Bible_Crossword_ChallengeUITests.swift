@@ -98,6 +98,47 @@ final class Bible_Crossword_ChallengeUITests: XCTestCase {
         XCTAssertEqual(events.count(of: "pack_opened"), 1, "\(events)")
     }
 
+    /// Onboarding hands a new player to the first path step. That screen
+    /// used to vanish within two seconds for players who closed the offer
+    /// with its ✕ and pressed again where it had been — the back button sits
+    /// in the same corner. The second press must not cost the puzzle, and the
+    /// start must log under the hand-off's own source.
+    @MainActor
+    func testOnboardingHandOffSurvivesASecondPressOnTheOfferClose() throws {
+        let app = launch(onboarded: false)
+
+        let skip = app.buttons["Skip"]
+        XCTAssertTrue(skip.waitForExistence(timeout: 20), "Onboarding's solve page never appeared")
+        skip.tap()
+        // The reminder page shows only where iOS has never asked.
+        let notNow = app.buttons["Not now"]
+        if notNow.waitForExistence(timeout: 3) { notNow.tap() }
+
+        let close = app.buttons["Close and continue with the free puzzle"]
+        XCTAssertTrue(close.waitForExistence(timeout: 10), "The offer page never appeared")
+        // Anchored to the app, not to `close`: a coordinate from an element
+        // resolves that element again at tap time, and by then it is gone.
+        let origin = app.coordinate(withNormalizedOffset: .zero)
+        let corner = origin.withOffset(CGVector(dx: close.frame.midX, dy: close.frame.midY))
+        close.tap()
+        // The player's second press, where the ✕ was, as the puzzle arrives.
+        Thread.sleep(forTimeInterval: 1.0)
+        corner.tap()
+
+        XCTAssertTrue(app.buttons["Q"].waitForExistence(timeout: 10), "The first puzzle never appeared")
+        // Past the held beat the way back is there again.
+        let back = app.navigationBars.buttons.matching(
+            NSPredicate(format: "label IN {'Today', 'Back'}")
+        ).firstMatch
+        XCTAssertTrue(back.waitForExistence(timeout: 5), "No way back after the opening beat")
+        XCTAssertTrue(app.buttons["Q"].exists, "The first puzzle closed\n\(app.debugDescription)")
+
+        let events = loggedEvents()
+        XCTAssertEqual(events.count(of: "daily_puzzle_started", source: "onboarding_handoff"), 1, "\(events)")
+        XCTAssertEqual(events.count(of: "daily_puzzle_started"), 1, "\(events)")
+        XCTAssertEqual(events.count(of: "puzzle_abandoned"), 0, "\(events)")
+    }
+
     @MainActor
     func testBeginnerPathCompletesSevenStepsAndLeavesToday() throws {
         let app = launch(extra: ["-uiAutoSolve"])
@@ -196,6 +237,49 @@ final class Bible_Crossword_ChallengeUITests: XCTestCase {
         XCTAssertEqual(shelfRows.count, 0, "Keep going repeats the hero's Journey")
     }
 
+    /// Daily Bread on Today. The impression logs once however often Today
+    /// reappears (here: after the verse sheet and a pushed memory grid), and
+    /// the ring closing logs once, after the third beat.
+    @MainActor
+    func testDailyRitualLogsOnceAndClosesAfterThreeBeats() throws {
+        // The showcase seeds a solve dated today (daily-001, Isaiah 11:6), so
+        // beat one is done and its verse is waiting.
+        let app = launch(extra: ["-uiSeedShowcase", "-uiAutoSolve", "-uiNoReview"])
+        let verse = app.buttons["ritualVerse"]
+        XCTAssertTrue(verse.waitForExistence(timeout: 20), app.debugDescription)
+        for _ in 0..<3 where !verse.isHittable { app.swipeUp() }
+        let seen = NSPredicate { _, _ in self.loggedEvents().count(of: "daily_ritual_shown") == 1 }
+        expectation(for: seen, evaluatedWith: nil)
+        waitForExpectations(timeout: 10)
+
+        // Beat two: read the verse, and put it on the memory shelf.
+        verse.tap()
+        let learn = app.buttons["ritualVerseLearn"]
+        XCTAssertTrue(learn.waitForExistence(timeout: 10), app.debugDescription)
+        learn.tap()
+
+        // Beat three: the verse just learned, as its first grid. Auto-solve
+        // finishes it; the completion sheet's Done pops back to Today.
+        let review = app.buttons["ritualReview"]
+        XCTAssertTrue(review.waitForExistence(timeout: 10))
+        review.tap()
+        let done = app.buttons["Done"]
+        XCTAssertTrue(done.waitForExistence(timeout: 15), "No completion sheet\n\(app.debugDescription)")
+        done.tap()
+        XCTAssertTrue(verse.waitForExistence(timeout: 10), "Didn't return to Today")
+
+        let closed = NSPredicate { _, _ in self.loggedEvents().count(of: "daily_ritual_completed") == 1 }
+        expectation(for: closed, evaluatedWith: nil)
+        waitForExpectations(timeout: 10)
+
+        let events = loggedEvents()
+        XCTAssertEqual(events.count(of: "daily_ritual_shown"), 1, "\(events)")
+        XCTAssertEqual(events.count(of: "daily_ritual_verse_read"), 1, "\(events)")
+        XCTAssertEqual(events.count(of: "memory_verse_added", source: "daily_ritual"), 1, "\(events)")
+        XCTAssertEqual(events.count(of: "memory_verse_started", source: "daily_ritual"), 1, "\(events)")
+        XCTAssertEqual(events.count(of: "memory_verse_completed", source: "daily_ritual"), 1, "\(events)")
+    }
+
     /// Today's Premium row logs its impression once, only once it's scrolled
     /// into view — not on layout at the foot of the page — and not again on
     /// scrolling away and back or on returning to the tab.
@@ -247,13 +331,15 @@ final class Bible_Crossword_ChallengeUITests: XCTestCase {
     // MARK: - Helpers
 
     @MainActor
-    private func launch(extra: [String] = []) -> XCUIApplication {
+    private func launch(onboarded: Bool = true, extra: [String] = []) -> XCUIApplication {
         let app = XCUIApplication()
         // Straight to the tabs: the `hasOnboarded` default, via the
-        // argument domain `@AppStorage` reads.
+        // argument domain `@AppStorage` reads. `onboarded: false` runs the
+        // first-launch flow instead, and passes nothing: an argument would
+        // outrank the write that ends onboarding, and it would never end.
         // `-uiCleanSlate`: in-memory store and no saved settings, so tests
         // can't see each other's solves.
-        app.launchArguments = ["-uiCleanSlate", "-hasOnboarded", "YES"] + extra
+        app.launchArguments = ["-uiCleanSlate"] + (onboarded ? ["-hasOnboarded", "YES"] : []) + extra
         app.launchEnvironment["UI_ANALYTICS_LOG"] = logURL.path
         app.launch()
         return app

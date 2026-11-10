@@ -91,6 +91,18 @@ struct MemoryPracticeView: View {
             didLogStart = true
             analytics.log(.memoryVerseStarted(reference: entry.reference, level: entry.playLevel, source: source))
         }
+
+        #if DEBUG
+        // The game screen's `-uiAutoSolve`, for the Daily Bread UI test. After
+        // the start is logged, so the event order matches a real round.
+        // A beat late: the completion sheet can't present mid-push.
+        if ProcessInfo.processInfo.arguments.contains("-uiAutoSolve") {
+            Task { [weak model] in
+                try? await Task.sleep(for: .seconds(1))
+                model?.autoSolve()
+            }
+        }
+        #endif
     }
 
     private func finishSession(model: GameViewModel, entry: MemoryVerseStore.Entry) {
@@ -102,7 +114,8 @@ struct MemoryPracticeView: View {
             reference: entry.reference,
             level: entry.playLevel,
             leveledUp: result.leveledUp,
-            hintsUsed: model.hintsUsed
+            hintsUsed: model.hintsUsed,
+            source: source
         ))
         if result.mastered {
             analytics.log(.memoryVerseMastered(reference: entry.reference))

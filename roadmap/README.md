@@ -28,7 +28,7 @@ levers the data points at had no epic. Engineering work around these lives in
 | C | **Acquisition:** ASO, In-App Events, store localization, web Mini → app handoff, App Clip (backlog) | Installs | Installs/day; ASC Sources + `ct=` campaigns; event impressions | `[~]` December events ready (`marketing/in-app-events/`) |
 | D | **Content cadence:** December batch done (fresh to 2027-01-01); January batch must land before **2027-01-02** | Retention | Wrap dates below stay ≥ 30 days out | `[~]` |
 | E | **Small wins** (one per release) | — | — | `[ ]` |
-| F | **Retention after D1:** D1 23% → D7 14%. Nothing targets it yet beyond B4 (memory verses, D7 ~50% for users) | Retention | D7 of day-0 finishers | `[ ]` not scoped |
+| F | **Retention after D1:** D1 23% → D7 14%. Nothing targets it yet beyond B4 (memory verses, D7 ~50% for users) | Retention | D7 of day-0 finishers; ritual days per week | `[~]` Daily Bread card on Today (puzzle → its verse → one memory review, one ring), `DailyRitual` |
 
 **C — acquisition notes** (readout 2026-11-07: 94% of installs come from search; store page converts 11.2%, top quartile; the cap is impressions)
 - [ ] December In-App Events: Advent (submit by ~Nov 13, promotes Nov 17) and Twelve Days of Christmas (promotes Dec 12). Sambulo submits.
@@ -53,11 +53,13 @@ levers the data points at had no epic. Engineering work around these lives in
 | What | Event / source | Bar |
 |---|---|---|
 | Instant abandons: real exits or detach artefacts? | `puzzle_abandoned.exit_path`, `puzzle_reattached` | Decide the fix |
+| Hand-off kept (first puzzle not lost within 2 s of onboarding) | `daily_puzzle_started` source `onboarding_handoff`, then `puzzle_abandoned` | Zero lost, from 13 in the 45 days to 2026-11-10 |
 | First puzzle finished on day 0, and D1 | beginner path `daily_puzzle_completed`, retention | Up vs pre-release cohort |
 | Graduation offer (B1) | `upsell_shown` / `paywall_opened` source `path_graduation` | Taps ≥ 10% of impressions |
 | Solved-hero Journey (B2) | `quest_opened` source `today_hero`, `upsell_shown:today_hero` | Reach > the old Today card (13 / 30d) |
 | Paywall redesign | paywall CTA taps, purchase confirms | Taps > 13%, confirms > 37% |
 | In-App Events | ASC App Analytics → In-App Events | Impressions and downloads vs October |
+| Daily Bread (F) | `daily_ritual_shown` → `daily_ritual_completed`; `memory_verse_started` / `_completed` source `daily_ritual`; D7 of day-0 finishers | Completed on ≥ 25% of shown days; D7 of finishers up vs pre-release cohort |
 
 ## Open questions (Sambulo)
 - B3: one new Premium pack a month on top of the monthly batch?

@@ -364,8 +364,21 @@ enum AnalyticsEvent {
     case memoryListOpened(source: String)
     case memoryVerseAdded(reference: String, source: String)
     case memoryVerseStarted(reference: String, level: Int, source: String)
-    case memoryVerseCompleted(reference: String, level: Int, leveledUp: Bool, hintsUsed: Int)
+    /// `source` is the door the session opened from, as on `started`, so the
+    /// Daily Bread review's finish rate reads apart from the list's.
+    case memoryVerseCompleted(reference: String, level: Int, leveledUp: Bool, hintsUsed: Int, source: String)
     case memoryVerseMastered(reference: String)
+    // Daily Bread, the ritual card on Today (`DailyRitual`): solve a puzzle,
+    // read its verse, review one memory verse. `shown` is the impression,
+    // once per day per launch and only once the card is on screen, with how
+    // many beats were already done; `beat_tapped` is a row; `verse_read` is
+    // beat two, with whether the verse went onto the memory shelf;
+    // `completed` is the ring closing, once per day, with the beat that
+    // closed it. Read against D7 of day-0 finishers (plan, Bet 2).
+    case dailyRitualShown(beatsDone: Int)
+    case dailyRitualBeatTapped(beat: String)
+    case dailyRitualVerseRead(reference: String, learned: Bool)
+    case dailyRitualCompleted(lastBeat: String)
     // The two screens re-homed in 2.8: the journey map moved from Profile to
     // the Read tab, and achievements lost their tab for a Profile card and a
     // tappable next-achievement card on Today. `source` says which door.
@@ -453,6 +466,10 @@ enum AnalyticsEvent {
         case .memoryVerseStarted: return "memory_verse_started"
         case .memoryVerseCompleted: return "memory_verse_completed"
         case .memoryVerseMastered: return "memory_verse_mastered"
+        case .dailyRitualShown: return "daily_ritual_shown"
+        case .dailyRitualBeatTapped: return "daily_ritual_beat_tapped"
+        case .dailyRitualVerseRead: return "daily_ritual_verse_read"
+        case .dailyRitualCompleted: return "daily_ritual_completed"
         case .journeyOpened: return "journey_opened"
         case .achievementsOpened: return "achievements_opened"
         case .appCrash: return "app_crash"
@@ -669,15 +686,24 @@ enum AnalyticsEvent {
             return ["reference": reference, "source": source]
         case .memoryVerseStarted(let reference, let level, let source):
             return ["reference": reference, "level": level, "source": source]
-        case .memoryVerseCompleted(let reference, let level, let leveledUp, let hintsUsed):
+        case .memoryVerseCompleted(let reference, let level, let leveledUp, let hintsUsed, let source):
             return [
                 "reference": reference,
                 "level": level,
                 "leveled_up": leveledUp,
                 "hints_used": hintsUsed,
+                "source": source,
             ]
         case .memoryVerseMastered(let reference):
             return ["reference": reference]
+        case .dailyRitualShown(let beatsDone):
+            return ["beats_done": beatsDone]
+        case .dailyRitualBeatTapped(let beat):
+            return ["beat": beat]
+        case .dailyRitualVerseRead(let reference, let learned):
+            return ["reference": reference, "learned": learned]
+        case .dailyRitualCompleted(let lastBeat):
+            return ["last_beat": lastBeat]
         case .journeyOpened(let source), .achievementsOpened(let source):
             return ["source": source]
         case .appCrash(let signal, let exceptionType, let exceptionCode, let reason, let build, let os, let frames, let appFrames):
