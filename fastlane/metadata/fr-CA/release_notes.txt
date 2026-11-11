@@ -1,8 +1,8 @@
 Thanks for playing Bible Crossword Challenge!
 
-• December puzzles: 31 Dailies, 31 Minis and 4 Sunday Specials through Advent, with a Christmas Day puzzle
-• New here? Your first puzzle is now the first step of the beginner path
-• Finished a puzzle? Today points you to the next step of a Journey
-• A clearer Premium page that shows what you get
-• Better layout on iPhone Duo, open and folded
+• Past Puzzles: a calendar of the days behind today, so you can play what you missed
+• Clue of the Day widget you can answer from your Home Screen
+• Daily Bread: a three-minute daily ritual. Solve a puzzle, read its verse, review a memory verse
+• Sounds for keys, finished words and finished puzzles
+• New here? Your first puzzle now shows you how it works
 • Small fixes and polish
