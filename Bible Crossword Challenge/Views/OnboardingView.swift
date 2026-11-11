@@ -97,6 +97,14 @@ struct OnboardingView: View {
     private let reminderPage = 3
     private let lastPage = 4
 
+    /// The reminder page is for a player who solved the clue. One who skipped
+    /// it has done nothing to be reminded of, and "Same time tomorrow?" then
+    /// stood between them and the offer as a second ask with no first value
+    /// (2026-11-11). Their ask is unspent, so the first completion's row
+    /// makes it instead. Not a page of the TabView either until then, so a
+    /// swipe can't reach it. Funnels: `reminder` now counts solvers only.
+    private var showsReminderPage: Bool { asksReminder && solved }
+
     /// Analytics labels, indexed by page number. "welcome" is no longer
     /// logged (2026-10-25): funnels start at first_solve. Labels are stable
     /// across the name page's removal; `step_index` for celebration and
@@ -111,7 +119,7 @@ struct OnboardingView: View {
 
             TabView(selection: $page) {
                 firstSolvePage.tag(1)
-                if asksReminder {
+                if showsReminderPage {
                     reminderAskPage.tag(reminderPage)
                 }
                 premiumPage.tag(lastPage)
@@ -456,7 +464,7 @@ struct OnboardingView: View {
             .entrance(active: active, delay: 0.14, reduceMotion: reduceMotion)
 
             VStack(spacing: Theme.Spacing.m) {
-                NotificationPreviewCard()
+                NotificationPreviewCard(mentionsStreak: profile.currentStreak > 0)
                     .accessibilityElement(children: .combine)
                     .accessibilityLabel("Example reminder: Today's puzzle is ready.")
                 // The time, picked here rather than taken as given (2026-10-25):
@@ -494,9 +502,13 @@ struct OnboardingView: View {
         // hid the prices and the timeline behind the purchase button.
         // `ViewThatFits` decides per layout pass: nothing to measure or latch.
         //
-        // Top-anchored, unlike the other pages: the offer changes height when
-        // the plan does (monthly has no timeline and a one-line headline), and
-        // centred, every tap on a plan card moved the tiles and the headline.
+        // Bottom-anchored, as the sheet is (2026-11-11): the plans sit on the
+        // button that buys them and the spare room goes above the chip. It
+        // was top-anchored, which on a Pro Max crowded the chip 8pt under the
+        // ✕ and left a 69pt band between "Or monthly" and the button. Never
+        // centred: the line under the headline changes height with the plan,
+        // and centred, every tap on a plan moved the plans. From the bottom
+        // only the header shifts.
         return ViewThatFits(in: .vertical) {
             // 20pt sides, the app's edge and the sheet's: at 24 the headline
             // beside the fan broke into three lines and the page fell back to
@@ -517,22 +529,38 @@ struct OnboardingView: View {
                 // a 17e this layout measured 1.7pt over with 12pt here.
                 .padding(.top, Theme.Spacing.s)
                 .padding(.bottom, Theme.Spacing.xs)
-            // Top-anchored like the full layout above: centred, the compact
-            // offer left an empty band over the headline on a 6.1" phone.
-            pageFrame(spacing: Theme.Spacing.l, alignment: .top) {
-                premiumOffer(compact: true, active: active)
+            // The last size, and the one that scrolls if it has to: no chip,
+            // and the gaps a step closer. Until 2026-11-11 this was the
+            // compact page in 24pt of padding, which was as tall as the layout
+            // with the chip — so it never fitted where that didn't, and on a
+            // 6.1" and a 6.3" phone "Or monthly" sat under the buy button.
+            // Measured now: a 17e fits with 3pt to spare, an 18 Pro with 18.
+            // Bottom-anchored like the layouts above when it's shorter than
+            // the page; taller (a mini, an SE), it scrolls from the top.
+            // 20pt sides like them too, so every size shares the button's
+            // edge. No bottom padding: "Or monthly" keeps 12pt of its own
+            // under its text, and the controls start 16pt below that.
+            pageFrame(spacing: Theme.Spacing.l, alignment: .bottom,
+                      padding: EdgeInsets(top: Theme.Spacing.s,
+                                          leading: Theme.Spacing.m + Theme.Spacing.xs,
+                                          bottom: 0,
+                                          trailing: Theme.Spacing.m + Theme.Spacing.xs)) {
+                premiumOffer(compact: true, tight: true, active: active)
             }
         }
-        .frame(maxHeight: .infinity, alignment: .top)
+        .frame(maxHeight: .infinity, alignment: .bottom)
     }
 
-    private func premiumOffer(compact: Bool, keepsSmallHero: Bool = false, active: Bool) -> some View {
+    private func premiumOffer(
+        compact: Bool, keepsSmallHero: Bool = false, tight: Bool = false, active: Bool
+    ) -> some View {
         PremiumOfferView(
             headline: premiumHeadline,
             selectedID: $selectedPlanID,
             entranceActive: active,
             compact: compact,
-            keepsSmallHero: keepsSmallHero
+            keepsSmallHero: keepsSmallHero,
+            tight: tight
         )
     }
 
@@ -543,6 +571,8 @@ struct OnboardingView: View {
     private func pageFrame<Content: View>(
         spacing: CGFloat,
         alignment: Alignment = .center,
+        padding: EdgeInsets = EdgeInsets(top: Theme.Spacing.l, leading: Theme.Spacing.l,
+                                         bottom: Theme.Spacing.l, trailing: Theme.Spacing.l),
         @ViewBuilder content: () -> Content
     ) -> some View {
         // Centred when it fits, scrollable when it doesn't — which is what
@@ -557,8 +587,7 @@ struct OnboardingView: View {
                     // full-bleed onboarding page reads as a stretched phone.
                     .frame(maxWidth: 560)
                     .frame(maxWidth: .infinity)
-                    .padding(.horizontal, Theme.Spacing.l)
-                    .padding(.vertical, Theme.Spacing.l)
+                    .padding(padding)
                     .frame(minHeight: geo.size.height, alignment: alignment)
             }
             .scrollBounceBehavior(.basedOnSize)
@@ -616,7 +645,9 @@ struct OnboardingView: View {
         // content it belongs to.
         .frame(maxWidth: 560)
         .frame(maxWidth: .infinity)
-        .padding(.horizontal, Theme.Spacing.l)
+        // The offer page's column is 20pt in, the others' 24: at 24 the buy
+        // button sat 4pt inside the plan card it buys on each side.
+        .padding(.horizontal, page == lastPage ? Theme.Spacing.m + Theme.Spacing.xs : Theme.Spacing.l)
         .padding(.top, Theme.Spacing.m)
         .padding(.bottom, Theme.Spacing.s)
         // Take the height these labels actually need instead of being
@@ -689,14 +720,16 @@ struct OnboardingView: View {
         // "Not now" first, so it reads as declining the offer rather than as
         // a second way forward (2026-10-24).
         //
-        // "today's free puzzle", not "the free daily puzzle": this button
-        // lands in the Mini, and the Daily Puzzle is a different, named thing
-        // one row below it on Today. Naming the wrong one would be the first
-        // promise the app breaks.
+        // "a free puzzle", not "today's": since 2026-11-07 this lands in the
+        // first step of Your First Seven, not in today's Mini, and Today then
+        // shows a different puzzle under that name. (A player who has
+        // finished the path does get the Mini; "a free puzzle" holds for
+        // both.) Naming the wrong one would be the first promise the app
+        // breaks.
         // The vertical padding is the tap target: bare subheadline text is
         // ~20pt tall, and this is an exit — the one control that must never
         // take two tries. Same treatment as the solve page's Skip.
-        Button("Not now, play today's free puzzle") { finish(exit: .freeLink) }
+        Button("Not now, play a free puzzle") { finish(exit: .freeLink) }
             .font(.subheadline.weight(.semibold))
             .tint(.secondary)
             .padding(.vertical, Theme.Spacing.s)
@@ -835,7 +868,7 @@ struct OnboardingView: View {
         // Over page 2's tag (the removed celebration), and past the reminder
         // page's when this run doesn't show it.
         var next = page == 1 ? reminderPage : page + 1
-        if next == reminderPage && !asksReminder { next = lastPage }
+        if next == reminderPage && !showsReminderPage { next = lastPage }
         withAnimation { page = next }
     }
 

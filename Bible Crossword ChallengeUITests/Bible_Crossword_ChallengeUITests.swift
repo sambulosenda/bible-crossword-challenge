@@ -162,9 +162,8 @@ final class Bible_Crossword_ChallengeUITests: XCTestCase {
         let skip = app.buttons["Skip"]
         XCTAssertTrue(skip.waitForExistence(timeout: 20), "Onboarding's solve page never appeared")
         skip.tap()
-        // The reminder page shows only where iOS has never asked.
-        let notNow = app.buttons["Not now"]
-        if notNow.waitForExistence(timeout: 3) { notNow.tap() }
+        // A skipper goes straight to the offer: the reminder page is for a
+        // player who solved the clue (asserted below).
 
         let close = app.buttons["Close and continue with the free puzzle"]
         XCTAssertTrue(close.waitForExistence(timeout: 10), "The offer page never appeared")
@@ -189,6 +188,9 @@ final class Bible_Crossword_ChallengeUITests: XCTestCase {
         XCTAssertEqual(events.count(of: "daily_puzzle_started", source: "onboarding_handoff"), 1, "\(events)")
         XCTAssertEqual(events.count(of: "daily_puzzle_started"), 1, "\(events)")
         XCTAssertEqual(events.count(of: "puzzle_abandoned"), 0, "\(events)")
+        // Skipping the clue skips the reminder page, so its ask is neither
+        // shown nor spent.
+        XCTAssertEqual(events.count(of: "reminder_ask_shown"), 0, "\(events)")
     }
 
     @MainActor

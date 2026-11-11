@@ -29,6 +29,11 @@ import SwiftUI
 /// show the same notification: the player agrees to a thing they have seen,
 /// rather than to "notifications".
 struct NotificationPreviewCard: View {
+    /// False for a player with no streak to keep: onboarding showed "keep
+    /// your streak alive" to someone ten seconds into the app (2026-11-11).
+    /// Their first reminder really is the plain "Today's puzzle is ready".
+    var mentionsStreak = true
+
     var body: some View {
         HStack(spacing: Theme.Spacing.m) {
             RoundedRectangle(cornerRadius: 9, style: .continuous)
@@ -47,7 +52,9 @@ struct NotificationPreviewCard: View {
             VStack(alignment: .leading, spacing: 1) {
                 Text("Bible Crossword")
                     .font(.footnote.weight(.semibold))
-                Text("Today’s puzzle is ready — keep your streak alive.")
+                Text(mentionsStreak
+                     ? "Today’s puzzle is ready — keep your streak alive."
+                     : "Today’s puzzle is ready.")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
