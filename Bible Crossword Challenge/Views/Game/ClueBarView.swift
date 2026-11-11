@@ -57,7 +57,7 @@ struct ClueBarView: View {
     private var rowLine: some View {
         HStack(spacing: Theme.Spacing.s) {
             if let slot = vm.activeSlot {
-                Text("\(slot.length) letters")
+                labelTail(for: slot)
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
@@ -68,6 +68,7 @@ struct ClueBarView: View {
             verseButton
         }
         .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
+        .animation(.snappy, value: vm.showsFirstTurnCue)
         .animation(.snappy, value: endgameNudge)
         .animation(.snappy, value: showsStallLine)
         .animation(.snappy, value: showsVerseButton)
@@ -86,6 +87,7 @@ struct ClueBarView: View {
             }
             clueRow
         }
+        .animation(.snappy, value: vm.showsFirstTurnCue)
         .animation(.snappy, value: endgameNudge)
         .animation(.snappy, value: showsStallLine)
         .animation(.snappy, value: showsVerseButton)
@@ -221,6 +223,22 @@ struct ClueBarView: View {
                 .minimumScaleFactor(0.85)
                 .padding(.vertical, Theme.Spacing.xs)
         }
+    }
+
+    /// What follows the clue's name on its number line: the answer's length,
+    /// or, for a player who has never finished a puzzle and has yet to press
+    /// a key, "Your turn" (see `GameViewModel.showsFirstTurnCue`).
+    ///
+    /// On the clue's own label, where onboarding's "1 Down · try it" stood
+    /// over its clue, and not out with the nudges: tried there first
+    /// (2026-11-11), it landed beside the Verse button and read as that
+    /// button's caption. In the accent although it can't be tapped, as the
+    /// endgame line is: it is the one instruction on the screen, shown for a
+    /// few seconds, to the player least likely to notice grey.
+    private func labelTail(for slot: Slot) -> Text {
+        vm.showsFirstTurnCue
+            ? Text("Your turn").foregroundStyle(Theme.accent)
+            : Text("\(slot.length) letters")
     }
 
     /// The interactive nudge. Only the stall tier is tappable — the endgame
@@ -449,7 +467,7 @@ struct ClueBarView: View {
                     // alone, and the suffix would push more of them into the
                     // shrink. The clue's name in ink, its length in grey: one
                     // line in two weights, so the bar has a head without a box.
-                    Text("\(Text("\(slot.number) \(slot.direction.label)").foregroundStyle(.primary)) · \(slot.length) letters")
+                    Text("\(Text("\(slot.number) \(slot.direction.label)").foregroundStyle(.primary)) · \(labelTail(for: slot))")
                         .font(.caption.weight(.semibold))
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
@@ -491,7 +509,9 @@ struct ClueBarView: View {
 
     private var clueAccessibilityLabel: String {
         guard let slot = vm.activeSlot else { return "Select a cell to begin" }
-        return "Clue \(slot.number) \(slot.direction.label), \(slot.length) letters: \(slot.clue)"
+        // The cue replaces the length on screen; VoiceOver gets both.
+        let turn = vm.showsFirstTurnCue ? " Your turn." : ""
+        return "Clue \(slot.number) \(slot.direction.label), \(slot.length) letters: \(slot.clue)\(turn)"
     }
 }
 

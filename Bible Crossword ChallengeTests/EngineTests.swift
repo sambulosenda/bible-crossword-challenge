@@ -968,4 +968,91 @@ struct EngineTests {
         // The typed letter (and everything else) is untouched.
         #expect(vm.cell(at: GridPos(row: 0, col: 1)).entry == nil)
     }
+
+    // MARK: - First word guidance
+
+    @Test func theFirstTurnStartsWhenTheStarterWordLandsAndEndsAtTheFirstKey() {
+        let vm = GameViewModel(puzzle: makePuzzle(), learning: true)
+        vm.guidesFirstWord = true
+        // Nothing has landed: there is no turn to announce yet.
+        #expect(!vm.showsFirstTurnCue)
+        vm.giftStarterWord()
+        #expect(vm.showsFirstTurnCue)
+        // Moving between clues is reading, not starting.
+        vm.advanceClue(by: 1)
+        #expect(vm.showsFirstTurnCue)
+        vm.enter("O")
+        #expect(!vm.showsFirstTurnCue)
+    }
+
+    @Test func withoutGuidanceThereIsNoCueAndNoFreeLetter() {
+        // Every puzzle after the first: the gift still lands, nothing else does.
+        let vm = GameViewModel(puzzle: makePuzzle(), learning: true)
+        vm.isAttachedToWindow = true
+        vm.giftStarterWord()
+        idle(vm, seconds: 30)
+        #expect(!vm.showsFirstTurnCue)
+        #expect(vm.firstLetterHelpTick == 0)
+        #expect(vm.cell(at: GridPos(row: 1, col: 0)).entry == nil)
+    }
+
+    @Test func oneLetterLandsAfterEightSecondsOfNothingTyped() {
+        let vm = GameViewModel(puzzle: makePuzzle(), learning: true)
+        vm.isAttachedToWindow = true
+        vm.guidesFirstWord = true
+        vm.giftStarterWord()   // CAT lands; the cursor moves to COD's O
+        idle(vm, seconds: GameViewModel.firstLetterHelpSeconds - 1)
+        #expect(vm.firstLetterHelpTick == 0)
+        #expect(vm.cell(at: GridPos(row: 1, col: 0)).entry == nil)
+
+        idle(vm, seconds: 1, from: GameViewModel.firstLetterHelpSeconds - 1)
+        let helped = vm.cell(at: GridPos(row: 1, col: 0))
+        #expect(helped.entry == "O")
+        // Placed and locked like the starter word, and just as free.
+        #expect(helped.isRevealed && helped.isGift)
+        #expect(vm.hintsUsed == 0)
+        #expect(vm.firstLetterHelpTick == 1)
+        // The cursor moves on to the next empty square, and it is still the
+        // player's turn: they have not typed.
+        #expect(vm.selected == GridPos(row: 2, col: 0))
+        #expect(vm.showsFirstTurnCue)
+        // Help just arrived, so the stall clock starts over.
+        #expect(vm.secondsSinceLastInput == 0)
+
+        // Once a sitting, however long they go on waiting.
+        idle(vm, seconds: 30, from: GameViewModel.firstLetterHelpSeconds)
+        #expect(vm.firstLetterHelpTick == 1)
+        #expect(vm.cell(at: GridPos(row: 2, col: 0)).entry == nil)
+    }
+
+    @Test func aKeyBeforeTheWaitIsUpMeansNoFreeLetter() {
+        let vm = GameViewModel(puzzle: makePuzzle(), learning: true)
+        vm.isAttachedToWindow = true
+        vm.guidesFirstWord = true
+        vm.giftStarterWord()
+        idle(vm, seconds: 5)
+        vm.enter("O")
+        idle(vm, seconds: 30, from: 5)
+        #expect(vm.firstLetterHelpTick == 0)
+        #expect(vm.cell(at: GridPos(row: 2, col: 0)).entry == nil)
+    }
+
+    @Test func aReopenedPuzzleWithNothingTypedIsStillAFirstTurn() {
+        let first = GameViewModel(puzzle: makePuzzle(), learning: true)
+        first.giftStarterWord()
+
+        // Reopened holding only the gifted word: still the player's first turn.
+        let reopened = GameViewModel(puzzle: makePuzzle(), learning: true)
+        reopened.restore(first.snapshot())
+        #expect(reopened.isUntouchedByPlayer)
+        reopened.guidesFirstWord = true
+        reopened.beginFirstTurn()
+        #expect(reopened.showsFirstTurnCue)
+
+        // One letter of their own and it no longer is.
+        first.enter("O")
+        let played = GameViewModel(puzzle: makePuzzle(), learning: true)
+        played.restore(first.snapshot())
+        #expect(!played.isUntouchedByPlayer)
+    }
 }

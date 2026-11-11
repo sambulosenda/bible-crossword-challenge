@@ -270,6 +270,78 @@ final class GameViewModel {
     /// "your turn" cue back until the word has actually landed.
     var isRevealingStarterWord: Bool { pendingGift != nil }
 
+    // MARK: First word guidance
+    //
+    // For a player who has never finished a puzzle (2026-11-11). They arrive
+    // from a three-square guided clue onto a whole grid, and of 249 first
+    // starts in the 30 days to 2026-11-10, 36 ended without one key pressed —
+    // some after a minute of reading clues. Nothing on the screen said the
+    // next move was theirs. So: the starter word lands where they can watch
+    // it, the clue bar says "Your turn" until their first key, and if eight
+    // seconds pass with nothing typed, one letter of the word in front of
+    // them lands as well.
+
+    /// Set by the owning view, before the starter word, for a first solve.
+    /// Off, none of the above happens — which is every later puzzle.
+    var guidesFirstWord = false
+
+    /// Solve-clock second at which the turn passed to the player: the starter
+    /// word's commit, or the open itself on an untouched resume.
+    private var firstTurnStartedSeconds: Int?
+
+    /// "Your turn", from the starter word landing until the first key. Keys
+    /// only: a player stepping through clues is reading, not started.
+    var showsFirstTurnCue: Bool {
+        guidesFirstWord && firstTurnStartedSeconds != nil && keyPresses == 0 && !isComplete
+    }
+
+    /// Increments when the one free letter lands. The view logs it.
+    private(set) var firstLetterHelpTick = 0
+    private var firstLetterHelped = false
+    /// Seconds of the player's turn with nothing typed before a letter of
+    /// the active word lands by itself. Counted from the turn starting, not
+    /// from the last input: moving between clues resets the stall clock, and
+    /// the players this is for do exactly that.
+    static let firstLetterHelpSeconds = 8
+
+    /// No letter on the grid is the player's own: empty, or only what the
+    /// app placed. What makes a reopened first puzzle still a first turn.
+    var isUntouchedByPlayer: Bool {
+        !grid.contains { row in row.contains { !$0.isBlock && $0.entry != nil && !$0.isGift } }
+    }
+
+    /// Passes the turn to the player. The starter word's commit calls it; the
+    /// view does for a resume that has no word left to land.
+    func beginFirstTurn() {
+        guard guidesFirstWord, firstTurnStartedSeconds == nil else { return }
+        firstTurnStartedSeconds = accumulatedSeconds
+    }
+
+    /// The one free letter: the first empty square of the active word, placed
+    /// and locked like the starter word's, costing nothing and leaving the
+    /// solve unaided. Once a sitting, and never after a key or a hint — by
+    /// then the player has found their own way in.
+    private func maybeHelpFirstLetter() {
+        guard showsFirstTurnCue, !firstLetterHelped, hintsUsed == 0, pendingGift == nil,
+              let started = firstTurnStartedSeconds,
+              accumulatedSeconds - started >= Self.firstLetterHelpSeconds,
+              let slot = activeSlot,
+              let target = slot.positions.first(where: { grid[$0.row][$0.col].entry == nil }),
+              let solution = grid[target.row][target.col].solution else { return }
+        firstLetterHelped = true
+        grid[target.row][target.col].entry = solution
+        grid[target.row][target.col].isRevealed = true
+        grid[target.row][target.col].isGift = true
+        selected = target
+        // Help just arrived, so the stall clock starts over: the hints
+        // button's bounce is due a full wait after this, not four seconds on.
+        lastInputSeconds = accumulatedSeconds
+        onEntryChanged?()
+        refreshSolvedSlots(around: [target])
+        advanceWithinWord()
+        firstLetterHelpTick += 1
+    }
+
     init(
         puzzle: Puzzle,
         learning: Bool = false,
@@ -775,6 +847,9 @@ final class GameViewModel {
         // than one word.
         refreshSolvedSlots(around: gift.slot.positions)
         advanceToNextIncompleteSlot(after: gift.slot)
+        // The word has landed and the cursor is on its crossing: for a first
+        // solve, this is where the player's turn starts.
+        beginFirstTurn()
         return gift.slot
     }
 
@@ -958,6 +1033,9 @@ final class GameViewModel {
         if whole > 0 {
             accumulatedSeconds += whole
             tickFraction -= Double(whole)
+            // First: it restarts the stall clock, so the two never land on
+            // one tick.
+            maybeHelpFirstLetter()
             maybeNudgeStall()
         }
     }

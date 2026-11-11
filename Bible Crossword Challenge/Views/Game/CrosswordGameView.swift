@@ -210,6 +210,50 @@ struct CrosswordGameScreen: View {
     }
     private static let openingBeat: Duration = .milliseconds(1500)
 
+    /// A first solve's starter word waits this long before its first letter,
+    /// and then lands slower than the usual 170 ms a letter. It used to start
+    /// with the screen's own `.task` — that is, while the screen was still
+    /// sliding in — and at 170 ms a three-letter word was whole about as the
+    /// push ended: the demonstration played to nobody (2026-11-11).
+    private static let firstWordSettle: Duration = .milliseconds(900)
+    private static let firstWordLetterInterval: Duration = .milliseconds(320)
+
+    /// Set once a sitting opens before the player's first finish, and kept
+    /// through that finish: `totalPuzzlesCompleted` turns 1 while this screen
+    /// is still up, and the bar should not grow a clock at the solve moment.
+    @State private var firstSolveSession = false
+
+    /// No clock before the first finish (2026-11-11). A new player's first
+    /// grid opened with 0:01 already counting over a puzzle they had not yet
+    /// read, which says "test" before the game has said anything. The seconds
+    /// are still counted — the results screen shows them — and a friend's
+    /// challenge keeps its clock, as it does in zen.
+    private var hidesClockForFirstSolve: Bool {
+        (profile.totalPuzzlesCompleted == 0 || firstSolveSession) && incomingChallenge == nil
+    }
+
+    /// What stands under the title in the clock's place: where the puzzle
+    /// sits in Your First Seven, in Today's words for it, or that it is the
+    /// player's first.
+    private var firstSolveCaption: String {
+        if let path = puzzleProvider.quests.first(where: { $0.id == BeginnerPath.questID }),
+           let index = path.puzzleIDs.firstIndex(of: puzzle.id) {
+            return "Your first seven · \(index + 1) of \(path.puzzleIDs.count)"
+        }
+        return "Your first puzzle"
+    }
+
+    /// Drives the solve clock while its digits are hidden for a first solve.
+    /// `vm.tick(now:)` only ever runs from a rendered `TimelineView` (see
+    /// `timerView`), so whatever replaces the clock has to be one, wrapped
+    /// round real content — and, like the clock, in exactly one place.
+    private func tickingWithoutClock<Content: View>(@ViewBuilder _ content: @escaping () -> Content) -> some View {
+        TimelineView(.periodic(from: vm.startDate, by: 1)) { context in
+            content()
+                .onChange(of: context.date) { _, now in vm.tick(now: now) }
+        }
+    }
+
     init(puzzle: Puzzle, profile: PlayerProfile, entrySource: String, vm: GameViewModel) {
         self.puzzle = puzzle
         self.profile = profile
@@ -613,6 +657,17 @@ struct CrosswordGameScreen: View {
                 kind: vm.stallNudgeKind.rawValue
             ))
         }
+        .onChange(of: vm.firstLetterHelpTick) { _, _ in
+            // The first solve's free letter, under the nudge's event so it
+            // reads beside the other rescues: `kind` is `first_letter`, and
+            // the idle time is the wait that earned it.
+            analytics.log(.stallNudgeShown(
+                puzzleID: puzzle.id,
+                fillPercent: fillPercent,
+                idleSeconds: GameViewModel.firstLetterHelpSeconds,
+                kind: "first_letter"
+            ))
+        }
         .alert("Almost There", isPresented: $showFullMissAlert) {
             Button("Check Answers") { runCheck(.puzzle) }
             Button("Keep Trying", role: .cancel) {}
@@ -677,22 +732,47 @@ struct CrosswordGameScreen: View {
             // back up, and on a zoomed 15×15 named a word scrolled out of
             // view. The word pulses where it landed instead, and the zoomed
             // grid holds it in view for the pulse (`CrosswordGridView`).
-            if vm.isLearning,
-               !rec.isCompleted, !isResume,
-               let gifted = await vm.giftStarterWordPaced(
-                   letterInterval: reduceMotion ? .zero : .milliseconds(170)
-               ) {
-                analytics.log(.starterWordGifted(
-                    puzzleID: puzzle.id,
-                    answerLength: gifted.answer.count
-                ))
-            }
+            //
+            // The start is logged before the word, not after it (2026-11-11).
+            // After, a player who left while the letters were landing logged
+            // nothing on the way out and a start once they were gone; with a
+            // first solve's longer wait below, that window would have tripled.
             openedAt = Date()
             analytics.log(.dailyPuzzleStarted(
                 puzzleID: puzzle.id,
                 isResume: isResume,
                 source: entrySource
             ))
+            // A player who has never finished a puzzle is walked into this
+            // one — see `GameViewModel.guidesFirstWord`. Not while racing a
+            // friend's time: a letter that lands by itself is no part of a race.
+            let firstSolve = profile.totalPuzzlesCompleted == 0 && !rec.isCompleted
+            if firstSolve { firstSolveSession = true }
+            let guided = firstSolve && incomingChallenge == nil
+            if vm.isLearning, !rec.isCompleted, !isResume {
+                if guided {
+                    vm.guidesFirstWord = true
+                    if !reduceMotion { try? await Task.sleep(for: Self.firstWordSettle) }
+                }
+                // Left during that wait: nothing has landed, so nothing is
+                // owed. The next open is still a fresh one and gifts then.
+                if !Task.isCancelled,
+                   let gifted = await vm.giftStarterWordPaced(
+                       letterInterval: reduceMotion
+                           ? .zero
+                           : (guided ? Self.firstWordLetterInterval : .milliseconds(170))
+                   ) {
+                    analytics.log(.starterWordGifted(
+                        puzzleID: puzzle.id,
+                        answerLength: gifted.answer.count
+                    ))
+                }
+            } else if guided, vm.isUntouchedByPlayer {
+                // Reopened with nothing of their own on the grid: the word
+                // has already landed, but it is still their first turn.
+                vm.guidesFirstWord = true
+                vm.beginFirstTurn()
+            }
             #if DEBUG
             // Screenshot helpers, triggered by launch arguments — no visible UI.
             let args = ProcessInfo.processInfo.arguments
@@ -794,10 +874,16 @@ struct CrosswordGameScreen: View {
                 Spacer()
                 // The same status line the top bar carries: time, then words.
                 HStack(spacing: Theme.Spacing.xs) {
-                    timerSlot
-                    Text("·")
-                        .accessibilityHidden(true)
-                    progressText
+                    if hidesClockForFirstSolve {
+                        // No clock on a first solve; the words count keeps
+                        // the solve timer ticking in its place.
+                        tickingWithoutClock { progressText }
+                    } else {
+                        timerSlot
+                        Text("·")
+                            .accessibilityHidden(true)
+                        progressText
+                    }
                 }
                 .foregroundStyle(.secondary)
             }
@@ -990,7 +1076,8 @@ struct CrosswordGameScreen: View {
                 // the two never disagree. Left out during a challenge,
                 // where `clockVisible` keeps the clock on regardless and
                 // the switch would do nothing.
-                if incomingChallenge == nil {
+                // Nor on a first solve, which has no clock to show or hide.
+                if incomingChallenge == nil, !hidesClockForFirstSolve {
                     Toggle(isOn: $showSolveTimer) {
                         Label("Show Timer", systemImage: "timer")
                     }
@@ -1048,15 +1135,34 @@ struct CrosswordGameScreen: View {
                 // under it as the subtitle. The words count left the bar with
                 // this; the clue bar's endgame line still says when one or
                 // two clues are left.
+                //
+                // A first solve has no clock (`hidesClockForFirstSolve`): the
+                // name takes the title weight and where it sits in the path
+                // goes under it.
                 VStack(spacing: 0) {
-                    timerSlot
-                        .font(.headline)
-                    Text(puzzle.title)
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.8)
-                        .accessibilityAddTraits(.isHeader)
+                    if hidesClockForFirstSolve {
+                        Text(puzzle.title)
+                            .font(.headline)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.8)
+                            .accessibilityAddTraits(.isHeader)
+                        tickingWithoutClock {
+                            Text(firstSolveCaption)
+                                .font(.footnote)
+                                .foregroundStyle(.secondary)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.8)
+                        }
+                    } else {
+                        timerSlot
+                            .font(.headline)
+                        Text(puzzle.title)
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.8)
+                            .accessibilityAddTraits(.isHeader)
+                    }
                 }
             }
         }
