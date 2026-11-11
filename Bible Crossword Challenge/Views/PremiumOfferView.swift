@@ -89,6 +89,13 @@ struct PremiumOfferView: View {
     /// headline.
     var keepsSmallHero: Bool = false
 
+    /// The compact page with its gaps a step closer, for the phones it still
+    /// overflows: on a 6.1" 17e the onboarding page ran 67pt long, which put
+    /// "Or monthly" under the buy button with nothing to say it was there
+    /// (2026-11-11). Only the space between things gives; nothing is dropped
+    /// or resized.
+    var tight: Bool = false
+
     /// A Free | Premium table instead of the benefit list — for paywalls a
     /// player reaches from inside the app, who already knows the free tier.
     /// Onboarding keeps the list: a first-run player has no free tier yet.
@@ -110,12 +117,15 @@ struct PremiumOfferView: View {
         // group gaps were the ~24pt that left the trial timeline's last line
         // under the pinned button, and on a 17e sheet they were part of what
         // kept the chip and the fan off the page.
-        VStack(alignment: .leading, spacing: compact ? Theme.Spacing.l : Theme.Spacing.xl) {
+        // 16 when tight: still twice the gap inside a group, so the three
+        // still read as three.
+        let groupGap = tight ? Theme.Spacing.m : (compact ? Theme.Spacing.l : Theme.Spacing.xl)
+        VStack(alignment: .leading, spacing: groupGap) {
             staggered(offerHeader, delay: 0)
             if dynamicTypeSize.isAccessibilitySize, let first = previews.first {
                 // One card at its own height: the carousel's fixed height
                 // cut the text off at these sizes.
-                staggered(previewCard(first, fills: false), delay: 0.07)
+                staggered(previewCard(first, fills: false, blurbLines: nil), delay: 0.07)
             } else if !previews.isEmpty {
                 staggered(previewCarousel, delay: 0.07)
             }
@@ -261,22 +271,34 @@ struct PremiumOfferView: View {
         // GeometryReader, not containerRelativeFrame, which sticks at the
         // open width after an iPhone Duo fold.
         VStack(spacing: Theme.Spacing.s) {
-            GeometryReader { proxy in
-                ScrollView(.horizontal) {
-                    LazyHStack(spacing: 0) {
-                        ForEach(previews) { card in
-                            previewCard(card)
-                                .frame(width: proxy.size.width)
-                                .id(card.id)
-                        }
-                    }
-                    .scrollTargetLayout()
+            // The tallest card sets the height, at any text size: the cards
+            // laid out unseen, the scroll view over them. A fixed 104/116 was
+            // shorter than the card's own text in the compact layout, and the
+            // scroll view cut all four corners off it (2026-11-11).
+            ZStack {
+                ForEach(previews) { card in
+                    previewCard(card, fills: false)
                 }
-                .scrollTargetBehavior(.paging)
-                .scrollIndicators(.hidden)
-                .scrollPosition(id: $previewID)
             }
-            .frame(height: compact ? 104 : 116)
+            .hidden()
+            .accessibilityHidden(true)
+            .overlay {
+                GeometryReader { proxy in
+                    ScrollView(.horizontal) {
+                        LazyHStack(spacing: 0) {
+                            ForEach(previews) { card in
+                                previewCard(card)
+                                    .frame(width: proxy.size.width, height: proxy.size.height)
+                                    .id(card.id)
+                            }
+                        }
+                        .scrollTargetLayout()
+                    }
+                    .scrollTargetBehavior(.paging)
+                    .scrollIndicators(.hidden)
+                    .scrollPosition(id: $previewID)
+                }
+            }
             if previews.count > 1 {
                 HStack(spacing: 6) {
                     ForEach(previews) { card in
@@ -291,7 +313,10 @@ struct PremiumOfferView: View {
         }
     }
 
-    private func previewCard(_ card: Preview, fills: Bool = true) -> some View {
+    /// `fills` stretches the card to the height it is given (the carousel's
+    /// pages, so they match); without it the card takes its own height.
+    /// `blurbLines` is nil only for the single card at accessibility sizes.
+    private func previewCard(_ card: Preview, fills: Bool = true, blurbLines: Int? = 2) -> some View {
         HStack(spacing: Theme.Spacing.m) {
             Image(systemName: card.symbol)
                 .font(.system(size: 30, weight: .semibold))
@@ -307,12 +332,15 @@ struct PremiumOfferView: View {
                 Text(card.blurb)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
-                    .lineLimit(fills ? 2 : nil)
+                    .lineLimit(blurbLines)
                     .fixedSize(horizontal: false, vertical: true)
             }
             Spacer(minLength: 0)
         }
-        .padding(Theme.Spacing.m)
+        .padding(.horizontal, Theme.Spacing.m)
+        // 10pt in the compact layouts: the text then comes to the 104pt the
+        // short page budgets for the card, with the cover still 16pt in.
+        .padding(.vertical, compact ? Theme.Spacing.s + 2 : Theme.Spacing.m)
         .frame(maxWidth: .infinity, maxHeight: fills ? .infinity : nil, alignment: .leading)
         .background(Theme.surface, in: .rect(cornerRadius: Theme.cornerRadius, style: .continuous))
         .accessibilityElement(children: .combine)
@@ -377,7 +405,7 @@ struct PremiumOfferView: View {
     private var featureList: some View {
         // Tighter when the page is short: on a 17e sheet these gaps were part
         // of what the chip and the fan needed (2026-10-24, measured 5pt short).
-        VStack(alignment: .leading, spacing: compact ? Theme.Spacing.s + 2 : Theme.Spacing.m) {
+        VStack(alignment: .leading, spacing: tight ? Theme.Spacing.s : (compact ? Theme.Spacing.s + 2 : Theme.Spacing.m)) {
             ForEach(PremiumBenefit.all) { benefit in
                 HStack(spacing: Theme.Spacing.m) {
                     RowIcon(symbol: benefit.icon, tint: Theme.accent)
@@ -433,7 +461,7 @@ struct PremiumOfferView: View {
     /// row per plan says the whole offer in a line: what it's called, and
     /// what it costs and when.
     private var plans: some View {
-        VStack(spacing: Theme.Spacing.s + 2) {
+        VStack(spacing: tight ? Theme.Spacing.s : Theme.Spacing.s + 2) {
             // One plan in focus: Yearly as the card, Monthly a quiet link
             // under it (design pass, 2026-11) — two equal cards made the
             // choice look even when the deal isn't.
