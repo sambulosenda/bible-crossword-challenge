@@ -405,6 +405,16 @@ enum AnalyticsEvent {
     /// (`paywall_opened` source `past_puzzles`). A puzzle opened from it
     /// logs `daily_puzzle_started` with source `past_puzzles`.
     case pastPuzzlesOpened(kind: String, solved: Int, locked: Int)
+    /// Clue of the Day (`ClueOfTheDayView`) was opened from Today, once per
+    /// visit. `state` is where the day's round stood: `new`, `in_progress`,
+    /// `solved` or `missed`. The read is whether a second, short game brings
+    /// players back on days they skip the grid.
+    case clueOfDayOpened(roundID: String, state: String)
+    /// An easier clue was asked for. `clueNumber` is the one now showing (2–4).
+    case clueOfDayClueRevealed(roundID: String, clueNumber: Int)
+    /// The round ended. `outcome` is `solved` or `missed` (the answer was
+    /// shown after the last clue); `cluesUsed` is how many were on screen.
+    case clueOfDayFinished(roundID: String, outcome: String, cluesUsed: Int, wrongGuesses: Int)
     // MetricKit diagnostics, forwarded by `CrashReporter` on the launch after
     // the event. The app has no crash SDK, and in the 30 days to 2026-09-03,
     // 19 of 51 day-0 non-finishers on 2.0+ builds logged a puzzle start and
@@ -496,6 +506,9 @@ enum AnalyticsEvent {
         case .journeyOpened: return "journey_opened"
         case .achievementsOpened: return "achievements_opened"
         case .pastPuzzlesOpened: return "past_puzzles_opened"
+        case .clueOfDayOpened: return "clue_of_day_opened"
+        case .clueOfDayClueRevealed: return "clue_of_day_clue_revealed"
+        case .clueOfDayFinished: return "clue_of_day_finished"
         case .appCrash: return "app_crash"
         case .appHang: return "app_hang"
         }
@@ -736,6 +749,12 @@ enum AnalyticsEvent {
             return ["source": source]
         case .pastPuzzlesOpened(let kind, let solved, let locked):
             return ["kind": kind, "solved": solved, "locked": locked]
+        case .clueOfDayOpened(let roundID, let state):
+            return ["round_id": roundID, "state": state]
+        case .clueOfDayClueRevealed(let roundID, let clueNumber):
+            return ["round_id": roundID, "clue_number": clueNumber]
+        case .clueOfDayFinished(let roundID, let outcome, let cluesUsed, let wrongGuesses):
+            return ["round_id": roundID, "outcome": outcome, "clues_used": cluesUsed, "wrong_guesses": wrongGuesses]
         case .appCrash(let signal, let exceptionType, let exceptionCode, let reason, let build, let os, let frames, let appFrames):
             return [
                 // -1 stands in for "not reported" — a dictionary of Any can't

@@ -354,6 +354,9 @@ struct SpecVectorsTests {
         .journeyOpened(source: "profile"),
         .achievementsOpened(source: "profile"),
         .pastPuzzlesOpened(kind: "daily", solved: 12, locked: 80),
+        .clueOfDayOpened(roundID: "clue-001", state: "new"),
+        .clueOfDayClueRevealed(roundID: "clue-001", clueNumber: 2),
+        .clueOfDayFinished(roundID: "clue-001", outcome: "solved", cluesUsed: 2, wrongGuesses: 1),
         .appCrash(signal: 11, exceptionType: 1, exceptionCode: 0, reason: "x", build: "21", os: "26.0", frames: "a", appFrames: "b"),
         .appHang(seconds: 2.5, build: "21", os: "26.0", frames: "a", appFrames: "b"),
         ]

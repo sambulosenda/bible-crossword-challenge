@@ -100,6 +100,38 @@ final class Bible_Crossword_ChallengeUITests: XCTestCase {
         XCTAssertEqual(events.count(of: "daily_puzzle_started", source: "past_puzzles"), 1, "\(events)")
     }
 
+    /// Clue of the Day's impression is once per visit: a rotation must not
+    /// log it again, and each easier clue logs once.
+    @MainActor
+    func testClueOfTheDayLogsOncePerVisit() throws {
+        let app = launch(extra: ["-uiShowClueOfDay"])
+        let row = app.buttons["clueOfTheDayRow"]
+        XCTAssertTrue(row.waitForExistence(timeout: 20), "The Clue of the Day row never appeared")
+        let easier = app.buttons["clueOfTheDayEasier"]
+        tap(row, until: easier, in: app)
+
+        XCUIDevice.shared.orientation = .landscapeLeft
+        XCTAssertTrue(easier.waitForExistence(timeout: 5))
+        XCUIDevice.shared.orientation = .portrait
+        XCTAssertTrue(easier.waitForExistence(timeout: 5))
+        easier.tap()
+        XCTAssertTrue(app.staticTexts["Clue 2 of 4"].waitForExistence(timeout: 5))
+
+        var events = loggedEvents()
+        XCTAssertEqual(events.count(of: "clue_of_day_opened"), 1, "\(events)")
+        XCTAssertEqual(events.count(of: "clue_of_day_clue_revealed"), 1, "\(events)")
+        XCTAssertEqual(events.count(of: "clue_of_day_finished"), 0, "\(events)")
+
+        // Back on Today the row carries the progress, and a second visit is
+        // a second impression.
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        XCTAssertTrue(row.waitForExistence(timeout: 10))
+        XCTAssertTrue(row.label.contains("Clue 2 of 4"), row.label)
+        tap(row, until: easier, in: app)
+        events = loggedEvents()
+        XCTAssertEqual(events.count(of: "clue_of_day_opened"), 2, "\(events)")
+    }
+
     /// The return-day reminder sheet waits 1.5s for the celebration. Closing
     /// the results screen first used to log `reminder_ask_shown` for a sheet
     /// that never appeared.

@@ -228,6 +228,16 @@ struct HomeView: View {
         analytics.log(.upsellShown(source: UpgradeRow.source(currentStreak: profile.currentStreak).rawValue))
     }
 
+    /// UI tests start from a clean slate, where the beginner path leads Today
+    /// and the row is held back.
+    private static var forcesClueOfTheDay: Bool {
+        #if DEBUG
+        ProcessInfo.processInfo.arguments.contains("-uiShowClueOfDay")
+        #else
+        false
+        #endif
+    }
+
     /// Today's Premium row in its own one-row card, apart from Keep going so
     /// the offer doesn't read as one more item of the player's progress.
     @ViewBuilder
@@ -556,6 +566,12 @@ struct HomeView: View {
             // the day it was opened on. Built from the live `nextDay`, the
             // reader re-rendered as day + 1 while it closed after marking a
             // chapter read — and blank on a plan's last day, where it is nil.
+            .navigationDestination(for: ClueOfTheDayRoute.self) { _ in
+                ClueOfTheDayView()
+            }
+            .navigationDestination(for: CluePuzzleRoute.self) { route in
+                CrosswordGameView(puzzle: route.puzzle, profile: profile, entrySource: "clue_of_day")
+            }
             .navigationDestination(for: AchievementsRoute.self) { _ in
                 AchievementsView(profile: profile, source: "home_card")
             }
@@ -642,6 +658,16 @@ struct HomeView: View {
                 .filter { $0.puzzle.id != beginner?.id }
         if !companions.isEmpty {
             CompanionPuzzlesCard(rows: companions)
+        }
+
+        // Clue of the Day, under the day's grids: a second, thirty-second
+        // thing to do. Not while the beginner path leads the page: a player
+        // who hasn't finished a puzzle yet gets one thing to do, and what
+        // 2.21 changed for them is still being read.
+        if beginner == nil || Self.forcesClueOfTheDay {
+            CardGroup(dividerInset: Theme.Spacing.m + CoverRow.coverSide + Theme.Spacing.m) {
+                ClueOfTheDayRow()
+            }
         }
 
         // Daily Bread, right under the day's puzzles: the puzzle is its first

@@ -938,6 +938,47 @@
     },
     {
       "expect" : {
+        "name" : "clue_of_day_opened",
+        "parameterKeys" : [
+          "round_id",
+          "state"
+        ]
+      },
+      "given" : {
+        "case" : "clueOfDayOpened"
+      },
+      "name" : "clue_of_day_opened"
+    },
+    {
+      "expect" : {
+        "name" : "clue_of_day_clue_revealed",
+        "parameterKeys" : [
+          "clue_number",
+          "round_id"
+        ]
+      },
+      "given" : {
+        "case" : "clueOfDayClueRevealed"
+      },
+      "name" : "clue_of_day_clue_revealed"
+    },
+    {
+      "expect" : {
+        "name" : "clue_of_day_finished",
+        "parameterKeys" : [
+          "clues_used",
+          "outcome",
+          "round_id",
+          "wrong_guesses"
+        ]
+      },
+      "given" : {
+        "case" : "clueOfDayFinished"
+      },
+      "name" : "clue_of_day_finished"
+    },
+    {
+      "expect" : {
         "name" : "app_crash",
         "parameterKeys" : [
           "app_frames",
@@ -973,7 +1014,7 @@
     }
   ],
   "constants" : {
-    "eventCount" : 73,
+    "eventCount" : 76,
     "paywallExits" : [
       "close",
       "free_link",
