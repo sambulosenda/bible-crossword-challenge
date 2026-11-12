@@ -1,8 +1,5 @@
 Thanks for playing Bible Crossword Challenge!
 
-• Past Puzzles: a calendar of the days behind today. The last week is free to play
-• Clue of the Day widget you can answer from your Home Screen
-• Daily Bread: a three-minute daily ritual. Solve a puzzle, read its verse, review a memory verse
-• Sounds for keys, finished words and finished puzzles
-• New here? Your first puzzle now shows you how it works
+• Clue of the Day: one answer, four clues, a new one every day. Solve it in as few clues as you can
+• When you finish the clue, jump straight into today's crossword
 • Small fixes and polish
