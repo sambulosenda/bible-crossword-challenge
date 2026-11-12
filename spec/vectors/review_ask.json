@@ -22,7 +22,7 @@
       "given" : {
         "currentStreak" : 0,
         "finishedCollection" : false,
-        "installedDaysAgo" : 2.8999999999999999,
+        "installedDaysAgo" : 0.90000000000000002,
         "lastAskDaysAgo" : null,
         "milestoneAsked" : 0,
         "streakAsked" : false,
@@ -37,7 +37,7 @@
       "given" : {
         "currentStreak" : 0,
         "finishedCollection" : false,
-        "installedDaysAgo" : 3,
+        "installedDaysAgo" : 1,
         "lastAskDaysAgo" : null,
         "milestoneAsked" : 0,
         "streakAsked" : false,

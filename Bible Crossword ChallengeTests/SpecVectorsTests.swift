@@ -713,8 +713,8 @@ struct SpecVectorsTests {
         struct S { let total: Int; let streak: Int; let milestoneAsked: Int; let streakAsked: Bool; let finished: Bool; let lastAskDaysAgo: Double?; let installedDaysAgo: Double? }
         let states: [S] = [
             S(total: 3, streak: 0, milestoneAsked: 0, streakAsked: false, finished: false, lastAskDaysAgo: nil, installedDaysAgo: nil),
-            S(total: 3, streak: 0, milestoneAsked: 0, streakAsked: false, finished: false, lastAskDaysAgo: nil, installedDaysAgo: 2.9),
-            S(total: 3, streak: 0, milestoneAsked: 0, streakAsked: false, finished: false, lastAskDaysAgo: nil, installedDaysAgo: 3.0),
+            S(total: 3, streak: 0, milestoneAsked: 0, streakAsked: false, finished: false, lastAskDaysAgo: nil, installedDaysAgo: 0.9),
+            S(total: 3, streak: 0, milestoneAsked: 0, streakAsked: false, finished: false, lastAskDaysAgo: nil, installedDaysAgo: 1.0),
             S(total: 2, streak: 0, milestoneAsked: 0, streakAsked: false, finished: false, lastAskDaysAgo: nil, installedDaysAgo: 10),
             S(total: 12, streak: 0, milestoneAsked: 3, streakAsked: false, finished: false, lastAskDaysAgo: 20, installedDaysAgo: 40),
             S(total: 12, streak: 0, milestoneAsked: 3, streakAsked: false, finished: false, lastAskDaysAgo: 13.9, installedDaysAgo: 40),

@@ -61,10 +61,15 @@ enum ReviewAsk {
 
     /// No ask before the install is this old, on any trigger. Solve counts
     /// include Minis, so the first rung is reachable in one sitting: of 20
-    /// first-rung prompts to 2026-09-02, 7 fired on install day and 8 more on
-    /// days 1–2. A day-0 rating is a novelty rating, and it spends one of the
-    /// three yearly displays on the player least likely to still be here.
-    static let minimumInstallAge: TimeInterval = 3 * 86_400
+    /// first-rung prompts to 2026-09-02, 7 fired on install day. A day-0
+    /// rating is a novelty rating, and it spends one of the three yearly
+    /// displays on the player least likely to still be here.
+    ///
+    /// One day, not the three it was until 2026-11-12: over 90 days, 143 of
+    /// 344 players with three or more daily solves were never asked, most
+    /// likely because they solved inside the floor and left before it
+    /// lifted. Coming back on a second day is the signal the floor wanted.
+    static let minimumInstallAge: TimeInterval = 1 * 86_400
 
     struct State {
         var totalCompleted: Int

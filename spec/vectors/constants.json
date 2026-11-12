@@ -217,7 +217,7 @@
         300
       ],
       "minimumGapDays" : 14,
-      "minimumInstallAgeDays" : 3,
+      "minimumInstallAgeDays" : 1,
       "periodicGapDays" : 120,
       "streakFloor" : 7
     },
