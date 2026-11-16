@@ -96,6 +96,7 @@ struct CompletionView: View {
     /// a board exists. Nil until it loads (or when it can't).
     @State private var weeklyRank: (rank: Int, total: Int)?
     @Environment(\.openURL) private var openURL
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.gameCenter) private var gameCenter
     @Environment(\.requestReview) private var requestReview
     @Environment(\.puzzleProvider) private var puzzleProvider
@@ -191,6 +192,8 @@ struct CompletionView: View {
     /// reduces a Label to its glyph — and a rail can't carry a custom view,
     /// so they become Labels there. See `barLabel`.
     @State private var barsVertical = false
+    /// Whether the window is wider than it is tall. See `twoPanes`.
+    @State private var windowIsWide = false
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     /// The solve time is the hero's headline; it scales with Dynamic Type from
@@ -216,90 +219,41 @@ struct CompletionView: View {
         // paper under the verse rather than centring — the hero is the top
         // of the page and has to stay there.
         GeometryReader { viewport in
-            ScrollView {
-                VStack(spacing: 0) {
-                    hero
+            if twoPanes {
+                panes
+            } else {
+                ScrollView {
+                    VStack(spacing: 0) {
+                        hero
 
-                    // 32 between groups (2026-11-03): hero, streak, verse,
+                        // 32 between groups (2026-11-03): hero, streak, verse,
                         // pack read as separate groups, as a results screen
                         // sets them, rather than one run of blocks.
-                    VStack(spacing: Theme.Spacing.xl) {
-                        scorecard
-
-                        if let challenge {
-                            resultCard(challenge)
+                        VStack(spacing: Theme.Spacing.xl) {
+                            resultCards
+                            laterCards
                         }
-
-                        // A board the player is already part of is why they're on this
-                        // screen, so it sits above the verse with the other payoffs.
-                        if let board {
-                            familyBoardCard(board)
-                        }
-
-                        verseCard
-
-                        if showsWidgetOffer {
-                            widgetOffer
-                                .onScrollVisibilityChange(threshold: 0.6) { visible in
-                                    guard visible, !didLogWidgetOffer else { return }
-                                    didLogWidgetOffer = true
-                                    analytics.log(.widgetOfferShown)
-                                }
-                        }
-
-                        if showsCompletionOffer {
-                            completionOffer
-                                .onScrollVisibilityChange(threshold: 0.6) { visible in
-                                    completionOfferVisible = visible
-                                    logCompletionOfferIfSeen()
-                                }
-                                // Already in view under the day-2 sheet: counts
-                                // once the sheet goes.
-                                .onChange(of: showReturnDaySheet) { logCompletionOfferIfSeen() }
-                        }
-
-                        if let packContext {
-                            packCard(packContext)
-                        }
-
-                        if let questContext {
-                            questCard(questContext)
-                            if let next = graduationJourney(questContext) {
-                                graduationRow(next)
-                                    .onScrollVisibilityChange(threshold: 0.6) { visible in
-                                        graduationRowVisible = visible
-                                        logGraduationIfSeen()
-                                    }
-                                    .onChange(of: showReturnDaySheet) { logGraduationIfSeen() }
-                            }
-                        }
-
-                        if earnedFreeze || bonusFreezeEarned {
-                            freezeCard
-                        }
-
-                        if !newAchievements.isEmpty {
-                            achievementsCard
-                        }
-
-                        // The completion reminder ask lives in the scorecard now, not
-                        // here: this slot sat two to four screens below the fold, and
-                        // of 79 players whose screen included the card (2.2–2.6, 45
-                        // days to 2026-09-02) 76 never touched it. See `scorecard`.
-
+                        .padding(.horizontal, Theme.Spacing.m + Theme.Spacing.xs)
+                        .padding(.vertical, Theme.Spacing.l)
+                        .frame(maxWidth: 520)
+                        .frame(maxWidth: .infinity)
                     }
-                    .padding(.horizontal, Theme.Spacing.m + Theme.Spacing.xs)
-                    .padding(.vertical, Theme.Spacing.l)
-                    .frame(maxWidth: 520)
-                    .frame(maxWidth: .infinity)
+                    .frame(minHeight: viewport.size.height, alignment: .top)
                 }
-                .frame(minHeight: viewport.size.height, alignment: .top)
             }
+        }
+        // Whether the window is wider than tall, kept in state so the bar
+        // below can read it too. See `twoPanes`.
+        .onGeometryChange(for: Bool.self) { proxy in
+            proxy.size.width > proxy.size.height
+        } action: { wide in
+            windowIsWide = wide
         }
         .background(Theme.background)
         // A bar, not an inset, so the page fades under it as it does under
         // the system's bars. Only reachable where bars go vertical (27.1+).
-        .modifier(RailPrimaryBar(isOn: barsVertical) { railPrimary })
+        // In two panes it belongs to the result's pane instead — see `panes`.
+        .modifier(RailPrimaryBar(isOn: primaryOnPage && !twoPanes) { railPrimary })
         // One presenter for every Share entry in the bar — the pill, the icon,
         // and the menu item — so none of them has to own the sheet.
         .sheet(item: $cardShare) { share in
@@ -443,6 +397,157 @@ struct CompletionView: View {
                 puzzleID: puzzle.id, puzzleTitle: puzzle.title, mySeconds: seconds
             )
         }
+    }
+
+    /// Two panes when the window is a wide regular one: iPhone Duo open on
+    /// its side, an iPad in landscape. One 520pt column in an 867pt window
+    /// left the verse and its two doors under the fold, behind the bar, with
+    /// a third of the width blank on each side.
+    private var twoPanes: Bool {
+        horizontalSizeClass == .regular && windowIsWide
+    }
+
+    /// Whether the primary action is drawn on the page rather than as a bar
+    /// item: where the bars are a side rail, and in two panes.
+    private var primaryOnPage: Bool {
+        barsVertical || twoPanes
+    }
+
+    /// What you did on the left, what it was for on the right: the time, the
+    /// streak and the next puzzle; then the verse and everything after it.
+    /// The system's split owns the seam, so a partial fold puts one pane on
+    /// each panel.
+    @ViewBuilder
+    private var panes: some View {
+        if #available(iOS 27.1, *) {
+            ArrangementView {
+                resultPane
+            } secondary: {
+                laterPane
+            }
+            .arrangementViewStyle(.split.axes(.horizontal))
+        } else {
+            HStack(spacing: 0) {
+                resultPane
+                laterPane
+            }
+        }
+    }
+
+    private var resultPane: some View {
+        ScrollView {
+            VStack(spacing: 0) {
+                hero
+
+                VStack(spacing: Theme.Spacing.xl) {
+                    resultCards
+                }
+                .padding(.horizontal, Theme.Spacing.m + Theme.Spacing.xs)
+                .padding(.vertical, Theme.Spacing.l)
+                .frame(maxWidth: 520)
+                .frame(maxWidth: .infinity)
+            }
+        }
+        // The next puzzle follows from the result, so its button stands
+        // under the result. Across the window it floated over the verse's
+        // doors, and on a partial fold the system moved it to one panel.
+        // An inset of the pane, not a bar item: open on its side the Duo
+        // keeps its bottom bar horizontal, and the system floats the item as
+        // a pill over the middle of the window, on top of whatever is there.
+        .safeAreaInset(edge: .bottom, spacing: 0) {
+            railPrimary
+        }
+    }
+
+    private var laterPane: some View {
+        ScrollView {
+            VStack(spacing: Theme.Spacing.xl) {
+                laterCards
+            }
+            .padding(.horizontal, Theme.Spacing.m + Theme.Spacing.xs)
+            // The hero's own top inset, so the verse starts level with it.
+            .padding(.top, 72)
+            .padding(.bottom, Theme.Spacing.l)
+            .frame(maxWidth: 520)
+            .frame(maxWidth: .infinity)
+        }
+    }
+
+    /// The solve's own payoffs: the streak, and a challenge or a board the
+    /// player came here from.
+    @ViewBuilder
+    private var resultCards: some View {
+        scorecard
+
+        if let challenge {
+            resultCard(challenge)
+        }
+
+        // A board the player is already part of is why they're on this
+        // screen, so it sits above the verse with the other payoffs.
+        if let board {
+            familyBoardCard(board)
+        }
+    }
+
+    /// The verse and everything offered after it.
+    @ViewBuilder
+    private var laterCards: some View {
+        verseCard
+
+        if showsWidgetOffer {
+            widgetOffer
+                .onScrollVisibilityChange(threshold: 0.6) { visible in
+                    guard visible, !didLogWidgetOffer else { return }
+                    didLogWidgetOffer = true
+                    analytics.log(.widgetOfferShown)
+                }
+        }
+
+        if showsCompletionOffer {
+            completionOffer
+                .onScrollVisibilityChange(threshold: 0.6) { visible in
+                    completionOfferVisible = visible
+                    logCompletionOfferIfSeen()
+                }
+                // Already in view under the day-2 sheet: counts
+                // once the sheet goes.
+                .onChange(of: showReturnDaySheet) { logCompletionOfferIfSeen() }
+        }
+
+        if let packContext {
+            packCard(packContext)
+        }
+
+        if let questContext {
+            questCard(questContext)
+            if let next = graduationJourney(questContext) {
+                graduationRow(next)
+                    .onScrollVisibilityChange(threshold: 0.6) { visible in
+                        graduationRowVisible = visible
+                        logGraduationIfSeen()
+                    }
+                    .onChange(of: showReturnDaySheet) { logGraduationIfSeen() }
+            }
+        }
+
+        if earnedFreeze || bonusFreezeEarned {
+            freezeCard
+        }
+
+        if !newAchievements.isEmpty {
+            achievementsCard
+        }
+
+        // The completion reminder ask lives in the scorecard now, not
+        // here: this slot sat two to four screens below the fold, and
+        // of 79 players whose screen included the card (2.2–2.6, 45
+        // days to 2026-09-02) 76 never touched it. See `scorecard`.
+
+        // The completion reminder ask lives in the scorecard now, not
+        // here: this slot sat two to four screens below the fold, and
+        // of 79 players whose screen included the card (2.2–2.6, 45
+        // days to 2026-09-02) 76 never touched it. See `scorecard`.
     }
 
     /// The head-to-head against a friend's time, crowning the screen above the
@@ -1594,7 +1699,7 @@ struct CompletionView: View {
         // (`railPrimary`): the rail draws an item as its glyph alone, and the
         // screen's one call to action read as an unlabeled ▶ (iPhone Duo,
         // 2026-11-05).
-        if !barsVertical {
+        if !primaryOnPage {
             ToolbarItem(placement: .bottomBar) {
                 primaryAction
             }
@@ -1680,7 +1785,7 @@ struct CompletionView: View {
     /// icon and words across the column when the rail sends it to the page.
     @ViewBuilder
     private func barLabel(_ title: String, systemImage: String) -> some View {
-        if barsVertical {
+        if primaryOnPage {
             Label(title, systemImage: systemImage)
                 .font(.body.weight(.semibold))
                 .frame(maxWidth: .infinity)
