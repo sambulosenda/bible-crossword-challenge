@@ -140,36 +140,32 @@ struct PacksView: View {
         let lockedCount = quests.filter { isLocked($0.isPremium) }.count
             + packs.filter { isLocked($0.isPremium) }.count
 
-        return ScrollView {
-            LazyVStack(alignment: .leading, spacing: Theme.Spacing.xl) {
-                allPuzzlesRow(recordsByID: recordsByID)
+        // Where to start on the left of a wide window, the shelves on the
+        // right: Today's columns. Across the whole width the two rows above
+        // the shelves ran 850pt from title to chevron (iPhone Duo open).
+        return CardColumns(alignment: .leading, spacing: Theme.Spacing.xl) {
+            allPuzzlesRow(recordsByID: recordsByID)
 
-                if !shownQuests.isEmpty {
-                    PackShelf(title: "Journeys") {
-                        ForEach(shownQuests) { quest in
-                            NavigationLink(value: QuestRoute(quest: quest, source: .packs)) {
-                                questTile(quest, progress: book.of(quest))
-                            }
-                            .buttonStyle(PressableCardStyle())
+            if !shownQuests.isEmpty {
+                PackShelf(title: "Journeys") {
+                    ForEach(shownQuests) { quest in
+                        NavigationLink(value: QuestRoute(quest: quest, source: .packs)) {
+                            questTile(quest, progress: book.of(quest))
                         }
+                        .buttonStyle(PressableCardStyle())
                     }
                 }
-                packShelf("In season", packs: seasonal, book: book, labels: packLabels)
-                packShelf("Old Testament", packs: oldTestament, book: book, labels: packLabels)
-                packShelf("New Testament", packs: newTestament, book: book, labels: packLabels)
-
-                // A free player's one offer for everything locked above,
-                // at the foot of the tab rather than a lock on its own.
-                if lockedCount > 0 {
-                    premiumOffer(count: lockedCount)
-                }
             }
-            .padding(.horizontal, Theme.Spacing.l - 4)
-            .padding(.top, Theme.Spacing.s)
-            .padding(.bottom, Theme.Spacing.l)
-            // A readable width on iPad, as the Library's is.
-            .frame(maxWidth: 900)
-            .frame(maxWidth: .infinity)
+        } more: {
+            packShelf("In season", packs: seasonal, book: book, labels: packLabels)
+            packShelf("Old Testament", packs: oldTestament, book: book, labels: packLabels)
+            packShelf("New Testament", packs: newTestament, book: book, labels: packLabels)
+
+            // A free player's one offer for everything locked above,
+            // at the foot of the tab rather than a lock on its own.
+            if lockedCount > 0 {
+                premiumOffer(count: lockedCount)
+            }
         }
     }
 

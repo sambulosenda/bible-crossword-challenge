@@ -19,6 +19,11 @@ struct CardColumns<Lead: View, More: View>: View {
     var maxWidth: CGFloat = 560
     /// How the cards line up inside a column.
     var alignment: HorizontalAlignment = .center
+    /// The space between cards.
+    var spacing: CGFloat = Theme.Spacing.l
+    /// Whether a column pads its cards. Off for a page whose parts set their
+    /// own margins: a collection page's cover pads itself.
+    var insetsContent = true
     /// What the tab is for: first in one column, the left of two.
     @ViewBuilder let lead: () -> Lead
     /// The rest, in the order it already had.
@@ -77,9 +82,9 @@ struct CardColumns<Lead: View, More: View>: View {
     /// measured window width when the column stands alone, `nil` in a split.
     private func column<Content: View>(width: CGFloat?, @ViewBuilder _ content: () -> Content) -> some View {
         ScrollView {
-            VStack(alignment: alignment, spacing: Theme.Spacing.l, content: content)
-                .padding(.vertical, Theme.Spacing.m)
-                .padding(.horizontal, sideMargin)
+            VStack(alignment: alignment, spacing: spacing, content: content)
+                .padding(.vertical, insetsContent ? Theme.Spacing.m : 0)
+                .padding(.horizontal, insetsContent ? sideMargin : 0)
                 .frame(maxWidth: maxWidth)
                 .modifier(ColumnWidth(width: width))
         }

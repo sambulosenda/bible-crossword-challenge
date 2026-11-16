@@ -16,6 +16,9 @@ struct PackShelf<Content: View>: View {
     @ViewBuilder let content: Content
 
     @Environment(\.horizontalSizeClass) private var sizeClass
+    /// In one of Today's two columns a regular window is half its width:
+    /// four covers there came out narrower than a phone's two.
+    @Environment(\.inCardColumnSplit) private var inSplit
 
     var body: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.s + 4) {
@@ -25,7 +28,7 @@ struct PackShelf<Content: View>: View {
             LazyVGrid(
                 columns: Array(
                     repeating: GridItem(.flexible(), spacing: 14, alignment: .top),
-                    count: sizeClass == .regular ? 4 : 2
+                    count: sizeClass == .regular && !inSplit ? 4 : 2
                 ),
                 alignment: .leading,
                 spacing: Theme.Spacing.l

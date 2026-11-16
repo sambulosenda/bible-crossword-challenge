@@ -69,29 +69,29 @@ struct QuestDetailView: View {
         let steps = self.steps
 
         // One view whether locked or open, so the paywall sheet below hangs
-        // off something a purchase can't tear down. One column at every
-        // width, as the pack page: the cover is the page's top edge.
-        return ScrollView {
-            VStack(spacing: 0) {
-                cover(steps: steps, progress: progress)
-                    .onScrolledUnderBar { headerScrolledAway = $0 }
-                VStack(alignment: .leading, spacing: 28) {
-                    // Today's step first, as a card with its grid: the one
-                    // thing to do here (2026-11-03). The verse and blurb went
-                    // to the foot — between the button and the list they
-                    // pushed the steps off the first screen.
-                    if !isLocked {
-                        upNextCard(steps: steps, progress: progress)
-                    }
-                    stepList(steps, recordsByID: recordsByID, progress: progress)
-                    CollectionAbout(heading: "About this Journey", first: steps.first, blurb: quest.blurb)
-                }
-                .padding(.horizontal, Theme.Spacing.m + Theme.Spacing.xs)
-                .padding(.top, Theme.Spacing.s)
-                .padding(.bottom, Theme.Spacing.l)
-                .frame(maxWidth: 560, alignment: .leading)
+        // off something a purchase can't tear down. The cover and today's
+        // step on the left of a wide window, the steps on the right, as the
+        // pack page: Today's columns. One column at every width while the
+        // cover was a band of colour a split would cut in two; it has been
+        // type on the paper since 2026-11-02.
+        return CardColumns(maxWidth: 600, alignment: .leading, spacing: 0, insetsContent: false) {
+            cover(steps: steps, progress: progress)
+                .onScrolledUnderBar { headerScrolledAway = $0 }
+            // Today's step first, as a card with its grid: the one thing to
+            // do here (2026-11-03). The verse and blurb went to the foot —
+            // between the button and the list they pushed the steps off the
+            // first screen.
+            if !isLocked {
+                upNextCard(steps: steps, progress: progress)
+                    .modifier(CollectionPageInset(top: Theme.Spacing.s))
             }
-            .frame(maxWidth: .infinity)
+        } more: {
+            VStack(alignment: .leading, spacing: 28) {
+                stepList(steps, recordsByID: recordsByID, progress: progress)
+                CollectionAbout(heading: "About this Journey", first: steps.first, blurb: quest.blurb)
+            }
+            .modifier(CollectionPageInset(top: isLocked ? Theme.Spacing.s : 28))
+            .padding(.bottom, Theme.Spacing.l)
         }
         .background(Theme.background)
         .safeAreaInset(edge: .bottom) {

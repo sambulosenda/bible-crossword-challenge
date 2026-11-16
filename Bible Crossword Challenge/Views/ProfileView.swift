@@ -54,32 +54,29 @@ struct ProfileView: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
-                    identityRow
-                    memoryVerseCard
-                    if isDayOne {
-                        firstSolveCard
-                    } else {
-                        ProfileStatsRow(
-                            booksExplored: booksExplored,
-                            totalBooks: BibleCanon.books.count,
-                            versesLearned: memoryVerses.entries.count(where: \.isMastered),
-                            currentStreak: profile.currentStreak
-                        )
-                    }
-                    CardGroup(dividerInset: Theme.Spacing.m + CoverRow.coverSide + Theme.Spacing.m) {
-                        journeyRow
-                        badgesRow
-                        leaderboardRow
-                    }
-                    challengesSection
+            // You on the left of a wide window, what you've done on the
+            // right: Today's columns. One 640pt column here sat off on its
+            // own beside every other tab (iPhone Duo open, 2026-11-16).
+            CardColumns(alignment: .leading, spacing: 20) {
+                identityRow
+                memoryVerseCard
+                if isDayOne {
+                    firstSolveCard
+                } else {
+                    ProfileStatsRow(
+                        booksExplored: booksExplored,
+                        totalBooks: BibleCanon.books.count,
+                        versesLearned: memoryVerses.entries.count(where: \.isMastered),
+                        currentStreak: profile.currentStreak
+                    )
                 }
-                .padding(.horizontal, Theme.Spacing.m + Theme.Spacing.xs)
-                .padding(.top, Theme.Spacing.s)
-                .padding(.bottom, Theme.Spacing.l)
-                .frame(maxWidth: 640)
-                .frame(maxWidth: .infinity)
+            } more: {
+                CardGroup(dividerInset: Theme.Spacing.m + CoverRow.coverSide + Theme.Spacing.m) {
+                    journeyRow
+                    badgesRow
+                    leaderboardRow
+                }
+                challengesSection
             }
             .background(Theme.background)
             .navigationTitle("Profile")

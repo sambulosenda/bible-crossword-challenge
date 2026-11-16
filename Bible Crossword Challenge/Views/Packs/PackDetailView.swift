@@ -107,9 +107,11 @@ struct PackDetailView: View {
 
     @State private var headerScrolledAway = false
 
-    /// The cover full-bleed under the bar, then the verse the pack opens on,
-    /// then what's in it. One column at every width — the cover is the page's
-    /// top edge, which a split into columns would cut in half.
+    /// The cover under the bar and the puzzle to play next; then what's in
+    /// the pack and the verse it opens on. Side by side in a wide window, as
+    /// a Journey's page: Today's columns. One column at every width while the
+    /// cover was a band of colour a split would cut in two; it has been type
+    /// on the paper since 2026-11-02.
     ///
     /// The open page was its own layout until 2026-10-24 — an icon header, a
     /// black pill, a card of book chips and a list with chevrons — so buying
@@ -117,29 +119,44 @@ struct PackDetailView: View {
     private func packPage(
         puzzles: [Puzzle], recordsByID: [String: PuzzleRecord], progress: PackProgress
     ) -> some View {
-        ScrollView {
-            VStack(spacing: 0) {
-                cover(label: PackCoverLabel(puzzles: puzzles), progress: progress)
-                    .onScrolledUnderBar { headerScrolledAway = $0 }
-                // As a Journey's page (2026-11-03): the puzzle to play as a
-                // card with its grid, the list, then the verse at the foot.
-                VStack(alignment: .leading, spacing: 28) {
+        // Open, the up-next card; locked, the free sample when there is one.
+        let hasLeadCard = !isLocked
+            || pack.unsolvedFreePuzzleID(isPremium: store.isPremium, recordsByID: recordsByID) != nil
+        return         CardColumns(maxWidth: 600, alignment: .leading, spacing: 0, insetsContent: false) {
+            cover(label: PackCoverLabel(puzzles: puzzles), progress: progress)
+                .onScrolledUnderBar { headerScrolledAway = $0 }
+            // As a Journey's page (2026-11-03): the puzzle to play as a
+            // card with its grid, the list, then the verse at the foot.
+            if hasLeadCard {
+                Group {
                     if isLocked {
                         freeSampleCard(puzzles, recordsByID: recordsByID, total: progress.total)
-                        lockedPuzzleList(puzzles, recordsByID: recordsByID)
                     } else {
                         upNextCard(puzzles, recordsByID: recordsByID, progress: progress)
-                        puzzleList(puzzles, recordsByID: recordsByID)
-                        booksLine(puzzles)
                     }
+                }
+                .modifier(CollectionPageInset(top: Theme.Spacing.s))
+            } else {
+                // A locked pack with no free puzzle has no card to lead with:
+                // what it's about stands under the title instead, and the
+                // left column wasn't a title over a blank (iPhone Duo open).
+                CollectionAbout(heading: "About this pack", first: puzzles.first, blurb: pack.blurb)
+                    .modifier(CollectionPageInset(top: Theme.Spacing.s))
+            }
+        } more: {
+            VStack(alignment: .leading, spacing: 28) {
+                if isLocked {
+                    lockedPuzzleList(puzzles, recordsByID: recordsByID)
+                } else {
+                    puzzleList(puzzles, recordsByID: recordsByID)
+                    booksLine(puzzles)
+                }
+                if hasLeadCard {
                     CollectionAbout(heading: "About this pack", first: puzzles.first, blurb: pack.blurb)
                 }
-                .padding(.horizontal, Theme.Spacing.m + Theme.Spacing.xs)
-                .padding(.top, Theme.Spacing.s)
-                .padding(.bottom, Theme.Spacing.l)
-                .frame(maxWidth: 560, alignment: .leading)
             }
-            .frame(maxWidth: .infinity)
+            .modifier(CollectionPageInset(top: 28))
+            .padding(.bottom, Theme.Spacing.l)
         }
     }
 

@@ -58,6 +58,20 @@ struct CollectionPageCover<Mark: View, Footer: View>: View {
     }
 }
 
+/// The margin a collection page's cards sit in under the cover: the cover's
+/// own 20pt, so the title and the cards share one left edge. They sat 20pt
+/// apart once the page was wider than a phone.
+struct CollectionPageInset: ViewModifier {
+    var top: CGFloat
+
+    func body(content: Content) -> some View {
+        content
+            .padding(.horizontal, Theme.Spacing.m + Theme.Spacing.xs)
+            .padding(.top, top)
+            .frame(maxWidth: .infinity, alignment: .leading)
+    }
+}
+
 /// The puzzle to play next on a collection's page, as a card: its grid, where
 /// it sits in the collection, what it is, and the page's one action. Shared by
 /// packs and Journeys (2026-11-03), so the two pages lead the same way.
