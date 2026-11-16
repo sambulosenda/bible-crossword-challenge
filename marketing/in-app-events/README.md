@@ -17,6 +17,10 @@ Use the same text for en-US, en-GB, en-CA and en-AU.
 
 ## 1. Advent Puzzle Journey
 
+**Status 2026-11-16:** SUBMITTED, Waiting for Review (submitted Nov 16, 2:43 PM,
+submission id 77b3abeb-a032-4cd9-afd6-3b289869a5a0, review note pasted). Fields
+re-checked against the table below before submitting; all matched.
+
 **Status 2026-11-12:** drafted and saved in App Store Connect (event id
 6834042545), not yet added for review. As entered: primary language English
 (U.K.), times in GMT, start Dec 1 00:00, end Dec 26 00:00 (the picker has no
