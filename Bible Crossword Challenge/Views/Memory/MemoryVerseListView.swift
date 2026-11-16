@@ -187,7 +187,9 @@ struct MemoryVerseListView: View {
                 Text(entry.verseText)
                     .font(.scripture(.subheadline))
                     .foregroundStyle(.secondary)
-                    .lineLimit(1)
+                    // Two lines, as Mail and Messages preview: at one, iPhone
+                    // Duo closed showed about 20 characters of the verse.
+                    .lineLimit(2)
             }
             .padding(.vertical, Theme.Spacing.xs)
         }
@@ -214,7 +216,9 @@ struct MemoryVerseListView: View {
                     Text(candidate.verseText)
                         .font(.scripture(.subheadline))
                         .foregroundStyle(.secondary)
-                        .lineLimit(1)
+                        // Two lines: beside the Start pill on iPhone Duo
+                        // closed, one held "For God so loved the world th…".
+                        .lineLimit(2)
                 }
                 Spacer(minLength: 0)
                 // The App Store's "Get": blue on a grey capsule. Five solid
