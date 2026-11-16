@@ -58,7 +58,10 @@ final class Bible_Crossword_ChallengeUITests: XCTestCase {
 
         XCUIDevice.shared.press(.home)
         XCTAssertTrue(app.wait(for: .runningBackground, timeout: 10))
-        var events = loggedEvents()
+        // The process reaches the background before SwiftUI hands the view
+        // its `.background` scene phase, which is what logs the abandon:
+        // read at once, the log had only the start (2026-11-16).
+        var events = loggedEvents(waitingFor: "puzzle_abandoned")
         XCTAssertEqual(events.count(of: "puzzle_abandoned"), 1, "\(events)")
         XCTAssertEqual(events.count(of: "puzzle_reattached"), 0, "\(events)")
 
@@ -458,6 +461,18 @@ final class Bible_Crossword_ChallengeUITests: XCTestCase {
     private func loggedEvents() -> [String] {
         let text = (try? String(contentsOf: logURL, encoding: .utf8)) ?? ""
         return text.split(separator: "\n").map(String.init)
+    }
+
+    /// The log once `name` is in it, or as it stands after `timeout`: for an
+    /// event the app logs on its own time rather than in step with the UI.
+    private func loggedEvents(waitingFor name: String, timeout: TimeInterval = 5) -> [String] {
+        let deadline = Date().addingTimeInterval(timeout)
+        var events = loggedEvents()
+        while events.count(of: name) == 0, Date() < deadline {
+            RunLoop.current.run(until: Date().addingTimeInterval(0.2))
+            events = loggedEvents()
+        }
+        return events
     }
 }
 
