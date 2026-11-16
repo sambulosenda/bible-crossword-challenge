@@ -126,6 +126,9 @@
       "pack-advent-005",
       "pack-advent-006"
     ],
+    "freePuzzleIDs": [
+      "pack-advent-001"
+    ],
     "season": {
       "kind": "annual",
       "from": "12-01",

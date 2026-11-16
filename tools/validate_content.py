@@ -165,6 +165,20 @@ def check_packs(packs, puzzles):
         for field in ("title", "blurb", "coverSymbol"):
             if not pack.get(field):
                 error(f"packs.json: {slug} is missing {field}")
+        # A free sample only means something on a Premium pack, and must be
+        # one of the pack's own puzzles: an id outside it would unlock nothing
+        # on the page and silently promise a puzzle the player never sees.
+        free_ids = pack.get("freePuzzleIDs")
+        if free_ids is not None:
+            if not pack.get("isPremium", True):
+                error(f"packs.json: {slug} is free, so freePuzzleIDs means nothing")
+            if not free_ids:
+                error(f"packs.json: {slug} has an empty freePuzzleIDs; drop the key")
+            for pid in free_ids:
+                if pid not in ids:
+                    error(f"packs.json: {slug} freePuzzleIDs lists {pid}, not in the pack")
+            if free_ids and set(free_ids) >= set(ids):
+                error(f"packs.json: {slug} gives away every puzzle; make it free instead")
         check_season(slug, pack.get("season"))
 
 

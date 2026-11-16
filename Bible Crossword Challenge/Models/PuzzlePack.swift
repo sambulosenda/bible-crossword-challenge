@@ -249,6 +249,38 @@ struct PuzzlePack: Codable, Identifiable, Hashable {
     /// regeneration could quietly re-announce a two-year-old collection.
     let addedOn: String?
 
+    /// Puzzles of a Premium pack that anyone may play: the free sample.
+    ///
+    /// Added for Advent 2026, when the App Store event promised free Advent
+    /// crosswords from Dec 1 and the first free Advent daily in the rotation
+    /// was Dec 6. Content shown has sold (14–31% of openers) where walls
+    /// haven't (~2%), so the sample doubles as the pack's best offer.
+    ///
+    /// Kept out of `PuzzleAccess` on purpose: that rule set is pinned by the
+    /// cross-platform spec vectors, and this is per-pack data, not a rule.
+    /// A `var` with a default so packs without one decode, and fixtures needn't
+    /// pass it.
+    var freePuzzleIDs: [String]? = nil
+
+    /// Whether a player may open `puzzleID` from this pack.
+    func canPlay(_ puzzleID: String, isPremium premium: Bool) -> Bool {
+        premium || !isPremium || (freePuzzleIDs ?? []).contains(puzzleID)
+    }
+
+    /// The free sample a player hasn't finished yet, in pack order: what a
+    /// locked pack can still offer them today. Nil for a free pack, a player
+    /// with Premium, or once every free puzzle is solved.
+    func unsolvedFreePuzzleID(
+        isPremium premium: Bool, recordsByID: [String: PuzzleRecord]
+    ) -> String? {
+        guard isPremium, !premium, let free = freePuzzleIDs else { return nil }
+        return puzzleIDs.first { free.contains($0) && recordsByID[$0]?.isCompleted != true }
+    }
+
+    /// A locked pack tile's line while its free sample is unplayed, in place
+    /// of the puzzle count. One string, so Today and Puzzles say it alike.
+    static let freeSampleMeta = "First one free"
+
     /// Resolved tint, honouring `accentHex` when it parses.
     var accent: Color {
         accentHex.flatMap(Color.init(hex:)) ?? Theme.accent

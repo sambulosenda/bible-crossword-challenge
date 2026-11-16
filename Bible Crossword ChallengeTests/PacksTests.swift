@@ -286,6 +286,56 @@ struct PacksTests {
         #expect(PackProgress(pack: pack, recordsByID: byID).isComplete)
     }
 
+    // MARK: - Free sample (Advent 2026)
+
+    @Test func adventOffersItsFirstPuzzleFree() throws {
+        let advent = try #require(PuzzleProvider.shared.packs.first { $0.id == "advent" })
+        #expect(advent.isPremium)
+        #expect(advent.freePuzzleIDs == ["pack-advent-001"])
+        #expect(advent.canPlay("pack-advent-001", isPremium: false))
+        #expect(!advent.canPlay("pack-advent-002", isPremium: false))
+    }
+
+    @Test func freeSampleOpensOnlyItsOwnPuzzles() {
+        let pack = PuzzlePack.fixture(id: "p", puzzleIDs: ["a", "b"], isPremium: true, freePuzzleIDs: ["a"])
+        #expect(pack.canPlay("a", isPremium: false))
+        #expect(!pack.canPlay("b", isPremium: false))
+        #expect(pack.canPlay("b", isPremium: true))
+    }
+
+    @Test func packWithoutSampleStaysLockedForFreePlayers() {
+        let locked = PuzzlePack.fixture(id: "p", puzzleIDs: ["a"], isPremium: true)
+        #expect(!locked.canPlay("a", isPremium: false))
+        #expect(locked.unsolvedFreePuzzleID(isPremium: false, recordsByID: [:]) == nil)
+        let free = PuzzlePack.fixture(id: "f", puzzleIDs: ["a"])
+        #expect(free.canPlay("a", isPremium: false))
+    }
+
+    @Test func unsolvedSampleIsOfferedUntilSolved() {
+        let pack = PuzzlePack.fixture(id: "p", puzzleIDs: ["a", "b", "c"], isPremium: true, freePuzzleIDs: ["a", "c"])
+        #expect(pack.unsolvedFreePuzzleID(isPremium: false, recordsByID: [:]) == "a")
+        // Begun but not finished still counts as left to play.
+        let begun = ["a": record(id: "a", completed: false)]
+        #expect(pack.unsolvedFreePuzzleID(isPremium: false, recordsByID: begun) == "a")
+        let firstDone = ["a": record(id: "a", completed: true)]
+        #expect(pack.unsolvedFreePuzzleID(isPremium: false, recordsByID: firstDone) == "c")
+        let allDone = ["a": record(id: "a", completed: true), "c": record(id: "c", completed: true)]
+        #expect(pack.unsolvedFreePuzzleID(isPremium: false, recordsByID: allDone) == nil)
+        // Premium owns the whole pack; there's no sample to offer.
+        #expect(pack.unsolvedFreePuzzleID(isPremium: true, recordsByID: [:]) == nil)
+    }
+
+    @Test func freeSampleDecodesAndIsOptional() throws {
+        let json = #"""
+        [{"id":"s","title":"S","blurb":"b","coverSymbol":"star","isPremium":true,
+          "puzzleIDs":["x","y"],"freePuzzleIDs":["x"]},
+         {"id":"t","title":"T","blurb":"b","coverSymbol":"star","isPremium":true,"puzzleIDs":["z"]}]
+        """#
+        let packs = try JSONDecoder().decode([PuzzlePack].self, from: Data(json.utf8))
+        #expect(packs[0].freePuzzleIDs == ["x"])
+        #expect(packs[1].freePuzzleIDs == nil)
+    }
+
     // MARK: - Pack-exclusive puzzles (Phase 2)
 
     /// The daily and mini pools must never contain a pack-exclusive puzzle —
@@ -505,11 +555,13 @@ private extension PuzzlePack {
     static let fixtureEvergreen = PuzzlePack.fixture(id: "e", puzzleIDs: ["x"])
 
     static func fixture(
-        id: String, puzzleIDs: [String], season: PackSeason? = nil, addedOn: String? = nil
+        id: String, puzzleIDs: [String], season: PackSeason? = nil, addedOn: String? = nil,
+        isPremium: Bool = false, freePuzzleIDs: [String]? = nil
     ) -> PuzzlePack {
         PuzzlePack(
             id: id, title: id, blurb: "", coverSymbol: "star", accentHex: nil,
-            isPremium: false, puzzleIDs: puzzleIDs, season: season, addedOn: addedOn
+            isPremium: isPremium, puzzleIDs: puzzleIDs, season: season, addedOn: addedOn,
+            freePuzzleIDs: freePuzzleIDs
         )
     }
 }

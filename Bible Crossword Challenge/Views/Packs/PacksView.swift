@@ -209,7 +209,7 @@ struct PacksView: View {
             PackShelf(title: title) {
                 ForEach(packs) { pack in
                     NavigationLink(value: PackRoute(pack: pack, source: .packs)) {
-                        packTile(pack, progress: book.of(pack), label: labels[pack.id])
+                        packTile(pack, progress: book.of(pack), label: labels[pack.id], recordsByID: book.recordsByID)
                     }
                     .buttonStyle(PressableCardStyle())
                 }
@@ -217,12 +217,17 @@ struct PacksView: View {
         }
     }
 
-    private func packTile(_ pack: PuzzlePack, progress: PackProgress, label: PackCoverLabel?) -> some View {
+    private func packTile(
+        _ pack: PuzzlePack, progress: PackProgress, label: PackCoverLabel?,
+        recordsByID: [String: PuzzleRecord]
+    ) -> some View {
         let locked = isLocked(pack.isPremium)
         let size = "\(progress.total) puzzle\(progress.total == 1 ? "" : "s")"
-        // A locked pack states its size, never progress. Not "· Premium":
+        let hasFreeSample = pack.unsolvedFreePuzzleID(isPremium: store.isPremium, recordsByID: recordsByID) != nil
+        // A locked pack states its size, never progress — or, while its free
+        // sample is unplayed, that the first one is free. Not "· Premium":
         // the cover's lock already says it (2026-10-25).
-        let meta = locked ? size
+        let meta = locked ? (hasFreeSample ? PuzzlePack.freeSampleMeta : size)
             : progress.isComplete ? "Complete"
             : progress.solved > 0 ? "\(progress.solved) of \(progress.total) solved"
             : size

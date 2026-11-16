@@ -141,7 +141,10 @@ struct HomeView: View {
         // locked.
         func rank(_ pack: PuzzlePack) -> Int {
             let progress = PackProgress(pack: pack, recordsByID: records)
+            // A locked pack with a free sample left to play is one they can
+            // start (Advent 2026), so it ranks with the open packs.
             let locked = pack.isPremium && !store.isPremium
+                && pack.unsolvedFreePuzzleID(isPremium: store.isPremium, recordsByID: records) == nil
             if locked { return 2 }
             if progress.isComplete { return 3 }
             return progress.solved > 0 ? 0 : 1
@@ -1502,8 +1505,10 @@ private struct CollectionsCarousel: View {
     private func tile(_ pack: PuzzlePack, progress: PackProgress) -> some View {
         let locked = pack.isPremium && !isPremium
         let size = "\(progress.total) puzzle\(progress.total == 1 ? "" : "s")"
-        // A locked or unstarted pack states its size, never progress.
-        let meta = locked ? size
+        let hasFreeSample = pack.unsolvedFreePuzzleID(isPremium: isPremium, recordsByID: recordsByID) != nil
+        // A locked or unstarted pack states its size, never progress; a
+        // locked one with a free sample left says so instead.
+        let meta = locked ? (hasFreeSample ? PuzzlePack.freeSampleMeta : size)
             : progress.isComplete ? "Complete"
             : progress.solved > 0 ? "\(progress.solved) of \(progress.total) solved"
             : size

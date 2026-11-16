@@ -125,7 +125,8 @@ struct PackDetailView: View {
                 // card with its grid, the list, then the verse at the foot.
                 VStack(alignment: .leading, spacing: 28) {
                     if isLocked {
-                        lockedPuzzleList(puzzles)
+                        freeSampleCard(puzzles, recordsByID: recordsByID, total: progress.total)
+                        lockedPuzzleList(puzzles, recordsByID: recordsByID)
                     } else {
                         upNextCard(puzzles, recordsByID: recordsByID, progress: progress)
                         puzzleList(puzzles, recordsByID: recordsByID)
@@ -324,37 +325,87 @@ struct PackDetailView: View {
 
     // MARK: - Locked state
 
+    /// A locked pack's free sample (`PuzzlePack.freePuzzleIDs`) as the open
+    /// page's up-next card, so the page leads with what the player can do
+    /// now. Gone once the sample is solved: the pinned offer is then the
+    /// page's one action, and a card pointing at a locked puzzle would be a
+    /// second offer.
+    @ViewBuilder
+    private func freeSampleCard(
+        _ puzzles: [Puzzle], recordsByID: [String: PuzzleRecord], total: Int
+    ) -> some View {
+        if let id = pack.unsolvedFreePuzzleID(isPremium: store.isPremium, recordsByID: recordsByID),
+           let index = puzzles.firstIndex(where: { $0.id == id }) {
+            let puzzle = puzzles[index]
+            let begun = PuzzleStatus(record: recordsByID[id]) == .inProgress
+            UpNextCard(puzzle: puzzle, kicker: "Free to try · Puzzle \(index + 1) of \(total)") {
+                NavigationLink(value: puzzle) {
+                    Label(begun ? "Continue" : "Start", systemImage: "play.fill")
+                }
+                .buttonStyle(.pillAccent)
+            }
+        }
+    }
+
     /// The pack's puzzles, shown rather than withheld: the titles are what a
     /// player is deciding to pay for, and each row's grid shows they're
     /// crosswords. Each row opens the paywall and wears a small lock
     /// (2026-10-25), so the tap is expected: a row that looked playable and
-    /// opened an offer read as a trick.
-    private func lockedPuzzleList(_ puzzles: [Puzzle]) -> some View {
+    /// opened an offer read as a trick. A free sample's row plays instead,
+    /// and says "Free" where the lock would be.
+    private func lockedPuzzleList(_ puzzles: [Puzzle], recordsByID: [String: PuzzleRecord]) -> some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.s + Theme.Spacing.xs) {
             Text("In this pack").sectionHeader()
             CardGroup(dividerInset: TrackRow<EmptyView>.gridDividerInset) {
                 ForEach(Array(puzzles.enumerated()), id: \.element.id) { index, puzzle in
-                    Button {
-                        showPaywall = true
-                    } label: {
-                        TrackRow(
-                            number: index + 1,
-                            title: puzzle.title,
-                            detail: puzzle.detailLine(among: puzzles),
-                            numeralTint: Color.secondary,
-                            grid: puzzle.grid
-                        ) {
-                            Image(systemName: "lock.fill")
-                                .font(.footnote)
-                                .foregroundStyle(.tertiary)
+                    if pack.canPlay(puzzle.id, isPremium: store.isPremium) {
+                        let record = recordsByID[puzzle.id]
+                        let status = PuzzleStatus(record: record)
+                        NavigationLink(value: puzzle) {
+                            TrackRow(
+                                number: index + 1,
+                                title: puzzle.title,
+                                detail: puzzle.detailLine(among: puzzles),
+                                numeralTint: Color.secondary,
+                                grid: puzzle.grid
+                            ) {
+                                if status == .start {
+                                    Text("Free")
+                                        .font(.caption.weight(.medium))
+                                        .foregroundStyle(.secondary)
+                                } else {
+                                    accessory(for: status, record: record)
+                                }
+                            }
                         }
+                        .buttonStyle(PressableCardStyle())
+                    } else {
+                        lockedRow(puzzle, index: index, among: puzzles)
                     }
-                    .buttonStyle(PressableCardStyle())
-                    .accessibilityLabel("\(puzzle.title). \(puzzle.size) by \(puzzle.size). \(puzzle.difficulty.label). \(puzzle.clueCount) clues. Premium")
-                    .accessibilityHint("Opens Premium plans")
                 }
             }
         }
+    }
+
+    private func lockedRow(_ puzzle: Puzzle, index: Int, among puzzles: [Puzzle]) -> some View {
+        Button {
+            showPaywall = true
+        } label: {
+            TrackRow(
+                number: index + 1,
+                title: puzzle.title,
+                detail: puzzle.detailLine(among: puzzles),
+                numeralTint: Color.secondary,
+                grid: puzzle.grid
+            ) {
+                Image(systemName: "lock.fill")
+                    .font(.footnote)
+                    .foregroundStyle(.tertiary)
+            }
+        }
+        .buttonStyle(PressableCardStyle())
+        .accessibilityLabel("\(puzzle.title). \(puzzle.size) by \(puzzle.size). \(puzzle.difficulty.label). \(puzzle.clueCount) clues. Premium")
+        .accessibilityHint("Opens Premium plans")
     }
 
 }

@@ -825,7 +825,7 @@ struct CompletionView: View {
             .accessibilityElement(children: .ignore)
             .accessibilityLabel("\(ctx.pack.title) complete. Every puzzle in the pack is solved.")
         } else if let next = ctx.next {
-            let locked = ctx.pack.isPremium && !store.isPremium
+            let locked = !ctx.pack.canPlay(next.id, isPremium: store.isPremium)
             Button {
                 if locked {
                     paywallEntry = PaywallEntry(source: .packCompletion)
@@ -1102,7 +1102,7 @@ struct CompletionView: View {
         // most valuable action, and it sat in the pack card below the verse.
         // Journeys stay out — their frame is one step a day.
         if let ctx = packContext, let next = ctx.next,
-           !(ctx.pack.isPremium && !store.isPremium) {
+           ctx.pack.canPlay(next.id, isPremium: store.isPremium) {
             chainTarget = next
             return
         }
