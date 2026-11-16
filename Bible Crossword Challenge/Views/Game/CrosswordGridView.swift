@@ -14,6 +14,12 @@ import SwiftUI
 
 struct CrosswordGridView: View {
     @Bindable var vm: GameViewModel
+    /// The smallest cell the fitted layout is allowed to produce. Under this a
+    /// cell holds neither a legible letter nor a hittable target, and fitting
+    /// the board on screen has stopped buying anything — see `body`. The game
+    /// lowers it a little on iPhone Duo folded like a laptop, where the board
+    /// has the upper panel to itself and is read from further off.
+    var minimumFittedSide: CGFloat = 24
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     /// Ties the Across and Down rotors' entries to the squares they land on.
@@ -57,10 +63,6 @@ struct CrosswordGridView: View {
     /// The default zoom shows readable, tappable cells rather than the whole
     /// board — the first act on a big grid is reading a clue, not surveying.
     private static let comfortableSide: CGFloat = 30
-    /// The smallest cell the fitted layout is allowed to produce. Under this a
-    /// cell holds neither a legible letter nor a hittable target, and fitting
-    /// the board on screen has stopped buying anything — see `body`.
-    private static let minimumFittedSide: CGFloat = 24
     /// Cropping to the playable cells can leave a sparse mini with a lot of
     /// room; past this a cell stops looking like a crossword square.
     private static let maximumFittedSide: CGFloat = 60
@@ -103,7 +105,7 @@ struct CrosswordGridView: View {
                 floor(geo.size.height / CGFloat(box.rows.count)),
                 Self.maximumFittedSide
             )
-            let zooms = vm.size > Self.zoomThreshold || fit < Self.minimumFittedSide
+            let zooms = vm.size > Self.zoomThreshold || fit < minimumFittedSide
             Group {
                 if zooms {
                     zoomableGrid(in: geo.size)

@@ -116,6 +116,10 @@ struct CrosswordGameScreen: View {
     /// solve surface when this is set, and the Hints button becomes a Label
     /// the rail can draw as an icon.
     @State private var barsVertical = false
+    /// Height of the gap between the notes and the keys in the keypad's pane:
+    /// nothing in a pane sized to its content, a hundred points and more when
+    /// a fold sizes the pane instead. See `foldedLikeLaptop`.
+    @State private var hingeSlack: CGFloat = 0
     @State private var showCompletion = false
     @State private var showPaywall = false
     /// Who opened `showPaywall`: the wall's chip or the hint sheet's link.
@@ -350,8 +354,27 @@ struct CrosswordGameScreen: View {
 
     /// Whether the clue list is on screen as a panel rather than a sheet.
     private var cluesStanding: Bool {
-        solveLayout == .withCluePanel || solveLayout == .cluesInColumn
+        solveLayout == .withCluePanel || cluesInDockColumn
     }
+
+    /// Whether the clue list stands in the keypad's column, above the keys:
+    /// always in `cluesInColumn`, and in `stacked` when a fold has handed the
+    /// pane more height than the keys need.
+    private var cluesInDockColumn: Bool {
+        solveLayout == .cluesInColumn || foldedLikeLaptop
+    }
+
+    /// iPhone Duo half open with the hinge across the screen: the split seats
+    /// its seam on the hinge, so the pane under it is taller than the keypad
+    /// (421pt against 285) and the board above it shorter than a flat window
+    /// would give. Read from the slack itself, because nothing else says so:
+    /// the size classes and the window are the same as flat.
+    private var foldedLikeLaptop: Bool {
+        solveLayout == .stacked && hingeSlack >= Self.clueListSlack
+    }
+
+    /// The least slack worth a clue list: two rows and the start of a third.
+    private static let clueListSlack: CGFloat = 110
 
     /// Width of the standing clue list in `withCluePanel`.
     private static let cluePanelWidth: CGFloat = 340
@@ -398,6 +421,21 @@ struct CrosswordGameScreen: View {
     /// keys that were already big enough.
     private static let landscapeKeypadWidth: CGFloat = 400
 
+    /// The least the system's split may give the keypad pane. iPhone Duo half
+    /// open seats the seam on the hinge with a 40pt gap, which leaves the
+    /// pane 371pt of the 867pt window. Asked for 400 it got nothing: the
+    /// split dropped the pane and left the grid beside a blank half.
+    private static let splitKeypadMinWidth: CGFloat = 360
+
+    /// Whether the panes go in the system's split. Not in a compact-width
+    /// window on its side (iPhone 18 Pro in landscape, 750×304pt for the
+    /// game): there the split showed its primary alone, the board with no
+    /// clue and no keys, whatever axis or pane width it was asked for. The
+    /// hand-built columns below were the layout before 27.1 and still are.
+    private var usesSystemSplit: Bool {
+        !(solveLayout == .sideBySide && horizontalSizeClass == .compact)
+    }
+
     /// The solving surface: notes, grid, clue bar and keyboard. Stacked in
     /// portrait and on iPad (where it is the left column beside the clue
     /// panel); side by side in landscape on a phone. `stacked` keeps it one
@@ -411,7 +449,7 @@ struct CrosswordGameScreen: View {
                     gridArea
                     entryDock
                 }
-            } else if #available(iOS 27.1, *) {
+            } else if #available(iOS 27.1, *), usesSystemSplit {
                 // The system's own two-pane container. It picks the axis
                 // from the window's size and size classes — its rule, not
                 // the branches below — and on iPhone Duo it moves the seam
@@ -430,18 +468,46 @@ struct CrosswordGameScreen: View {
                         // taller than the keypad. Under the grid on a phone
                         // the pane is sized to its content, so the spacer
                         // costs nothing there.
-                        if solveLayout == .cluesInColumn {
-                            columnClueList
-                        } else {
-                            Spacer(minLength: 0)
+                        Group {
+                            if cluesInDockColumn {
+                                columnClueList
+                                    // No height of its own: the list takes
+                                    // the slack a pane is given, and never
+                                    // asks a content-sized pane for more.
+                                    .frame(idealHeight: 0, maxHeight: .infinity)
+                            } else {
+                                Spacer(minLength: 0)
+                            }
                         }
+                        .onGeometryChange(for: CGFloat.self) { proxy in
+                            proxy.size.height
+                        } action: { slack in
+                            hingeSlack = slack
+                        }
+                        // Measured, the spacer is no longer a spacer to the
+                        // stack: it bid for height like any flexible view
+                        // and took a line off the clue bar, which shrank the
+                        // clue to fit. It gets what the dock leaves.
+                        .layoutPriority(-1)
                         entryDock
                     }
+                    // Under the grid the pane is exactly its content. Left
+                    // flexible, iPhone Duo open in portrait split the window
+                    // in half: 25pt cells over 133pt of nothing. A fold still
+                    // seats the seam on the hinge whatever this asks for.
+                    // Regular width only: a phone's pane already hugs its
+                    // content, and measured at its ideal size the clue
+                    // shrank to one line there instead of wrapping to two.
+                    .splitArrangementFixedLayoutSize(
+                        horizontal: false,
+                        vertical: solveLayout == .stacked && horizontalSizeClass == .regular
+                    )
                     // Left to itself the split sizes this pane by ratio;
                     // hold it to the same keypad width the fallback
-                    // column gets.
+                    // column gets. The minimum sits under that: a pane
+                    // that can't have its minimum is removed, not squeezed.
                     .splitArrangementLayoutSize(
-                        minWidth: Self.landscapeKeypadWidth,
+                        minWidth: Self.splitKeypadMinWidth,
                         idealWidth: Self.landscapeKeypadWidth
                     )
                 }
@@ -938,8 +1004,12 @@ struct CrosswordGameScreen: View {
     /// handing it to the keys (until 2026-10-25) grew them to about 58pt
     /// against the system keyboard's 43, and the pad stopped reading as one.
     private var gridArea: some View {
-        CrosswordGridView(vm: vm)
-            .padding(Theme.Spacing.m)
+        // Above the hinge the board has 373pt: 22pt cells at the usual
+        // margin, under the grid's floor, so it gave up fitting and showed
+        // eleven rows of fifteen. A tighter margin and a lower floor keep the
+        // whole board standing on the upper panel.
+        CrosswordGridView(vm: vm, minimumFittedSide: foldedLikeLaptop ? 22 : 24)
+            .padding(foldedLikeLaptop ? Theme.Spacing.s : Theme.Spacing.m)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
@@ -969,7 +1039,7 @@ struct CrosswordGameScreen: View {
         VStack(spacing: 0) {
             // With the list in this column, its active row carries what the
             // strip did (see `columnClueList`); the strip only repeated it.
-            if solveLayout != .cluesInColumn {
+            if !cluesInDockColumn {
                 clueBar
             }
             keypad
