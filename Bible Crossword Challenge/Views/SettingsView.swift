@@ -58,6 +58,17 @@ struct SettingsView: View {
         )
     }
 
+    /// The form's measured width, for `sideMargin`.
+    @State private var formWidth: CGFloat = 0
+    /// The widest the rows run.
+    private static let readableWidth: CGFloat = 520
+
+    /// Side margins that hold the rows to `readableWidth`; nil leaves the
+    /// form untouched, which is every phone.
+    private var sideMargin: CGFloat? {
+        formWidth > Self.readableWidth + 40 ? (formWidth - Self.readableWidth) / 2 : nil
+    }
+
     var body: some View {
         NavigationStack {
             Form {
@@ -71,6 +82,15 @@ struct SettingsView: View {
                 #if DEBUG
                 developerSection
                 #endif
+            }
+            // A readable column once the sheet is wider than a phone. On
+            // iPhone Duo open the form ran 650pt across, with each label a
+            // hand's width from its switch.
+            .modifier(ReadableFormWidth(margin: sideMargin))
+            .onGeometryChange(for: CGFloat.self) { proxy in
+                proxy.size.width
+            } action: { width in
+                formWidth = width
             }
             .scrollContentBackground(.hidden)
             .background(Theme.background)
@@ -448,4 +468,19 @@ private enum AppLinks {
     /// Apple's standard EULA — the app has no bespoke terms page.
     static let terms = URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!
     static let support = URL(string: "mailto:sambulosendas@gmail.com")!
+}
+
+/// Holds a form's rows to a readable column, or leaves the form alone.
+/// Two branches rather than a nil margin: `contentMargins` with nil is the
+/// system's default margin, not none, and on a phone it narrowed every row.
+private struct ReadableFormWidth: ViewModifier {
+    let margin: CGFloat?
+
+    func body(content: Content) -> some View {
+        if let margin {
+            content.contentMargins(.horizontal, margin, for: .scrollContent)
+        } else {
+            content
+        }
+    }
 }
