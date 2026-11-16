@@ -101,6 +101,11 @@ struct PremiumOfferView: View {
     /// Onboarding keeps the list: a first-run player has no free tier yet.
     var comparesWithFree: Bool = false
 
+    /// The carousel of what Premium opens. Left out by a page that has to
+    /// scroll: it rests on its foot, by the plans, and the card at its head
+    /// sat cut in half under the top bar (iPhone Duo, 2026-11-16).
+    var showsPreviews: Bool = true
+
     @Environment(StoreService.self) private var store
     @Environment(\.puzzleProvider) private var puzzleProvider
     /// The preview card in view, for the page dots.
@@ -122,7 +127,9 @@ struct PremiumOfferView: View {
         let groupGap = tight ? Theme.Spacing.m : (compact ? Theme.Spacing.l : Theme.Spacing.xl)
         VStack(alignment: .leading, spacing: groupGap) {
             staggered(offerHeader, delay: 0)
-            if dynamicTypeSize.isAccessibilitySize, let first = previews.first {
+            if !showsPreviews {
+                EmptyView()
+            } else if dynamicTypeSize.isAccessibilitySize, let first = previews.first {
                 // One card at its own height: the carousel's fixed height
                 // cut the text off at these sizes.
                 staggered(previewCard(first, fills: false, blurbLines: nil), delay: 0.07)
@@ -178,6 +185,23 @@ struct PremiumOfferView: View {
     /// decoration — onboarding drew those, and the solved word, until
     /// 2026-10-24; the canvas sends its "Keep going" to this same page. It goes in the tightest layout and at accessibility sizes,
     /// where the promise needs the width.
+    /// The promise, broken over two lines as the canvas draws it. On a page
+    /// short enough to have dropped its previews it runs on one line where
+    /// the width allows: a line of large type is 41pt the plans need more.
+    @ViewBuilder
+    private var headlineText: some View {
+        if showsPreviews {
+            Text(PremiumCopy.sheetHeadline)
+                .fixedSize(horizontal: false, vertical: true)
+        } else {
+            // Allowed to shrink a little to stay on the line: iPhone Duo
+            // closed has 334pt for the 358pt it sets at full size.
+            Text(PremiumCopy.sheetHeadline.replacingOccurrences(of: "\n", with: " "))
+                .lineLimit(1)
+                .minimumScaleFactor(0.85)
+        }
+    }
+
     private var offerHeader: some View {
         // 8pt rather than 12 between the chip, the headline and the line
         // under them when the page is short — the last few points the chip
@@ -189,10 +213,9 @@ struct PremiumOfferView: View {
                     if !compact || keepsSmallHero {
                         PremiumChip()
                     }
-                    Text(PremiumCopy.sheetHeadline)
+                    headlineText
                         .font(.scripture(.largeTitle, weight: .semibold))
                         .tracking(-0.4)
-                        .fixedSize(horizontal: false, vertical: true)
                         .accessibilityAddTraits(.isHeader)
                 }
                 Spacer(minLength: 0)
@@ -359,7 +382,7 @@ struct PremiumOfferView: View {
     ]
 
     private var comparison: some View {
-        Grid(alignment: .leading, horizontalSpacing: Theme.Spacing.m, verticalSpacing: Theme.Spacing.s + 2) {
+        Grid(alignment: .leading, horizontalSpacing: Theme.Spacing.m, verticalSpacing: tight ? 7 : Theme.Spacing.s + 2) {
             GridRow {
                 Text("")
                 Text("Free")

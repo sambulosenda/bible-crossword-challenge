@@ -100,8 +100,12 @@ struct PaywallView: View {
                     .frame(maxHeight: .infinity, alignment: .bottom)
                 offer(compact: true, keepsSmallHero: true)
                     .frame(maxHeight: .infinity, alignment: .bottom)
+                // Without the preview card before giving in to scrolling,
+                // and without it when scrolling too: see `showsPreviews`.
+                offer(compact: true, showsPreviews: false)
+                    .frame(maxHeight: .infinity, alignment: .bottom)
                 ScrollView {
-                    offer(compact: true)
+                    offer(compact: true, showsPreviews: false)
                 }
                 // Content shorter than the viewport rests on the bottom, and
                 // a taller page opens at its foot: the plans sit just above
@@ -110,6 +114,12 @@ struct PaywallView: View {
                 // without scrolling (iPhone Duo, 2026-11-05).
                 .defaultScrollAnchor(.bottom, for: .alignment)
                 .scrollPosition($offerScroll)
+                // Resting on its foot, a page that overflows has its head
+                // under the top bar. The soft edge left it showing through:
+                // the pack card sat behind ✕ and Restore (iPhone Duo, where
+                // the sheet has 395pt for a 440pt offer). A hard edge gives
+                // the two buttons a bar of their own to stand on.
+                .modifier(HardTopScrollEdge())
                 // `defaultScrollAnchor(for: .initialOffset)` alone isn't
                 // enough: it is applied on the first pass, before the bars
                 // attach (insets 0), and once the 74pt top and 172pt bottom
@@ -206,7 +216,7 @@ struct PaywallView: View {
     }
 
     /// The offer, at the size `body` chose for it.
-    private func offer(compact: Bool, keepsSmallHero: Bool = false) -> some View {
+    private func offer(compact: Bool, keepsSmallHero: Bool = false, showsPreviews: Bool = true) -> some View {
         PremiumOfferView(
             headline: headlineText,
             selectedID: $selectedID,
@@ -216,14 +226,20 @@ struct PaywallView: View {
             // renewal and cancelling.
             compact: compact,
             keepsSmallHero: keepsSmallHero,
-            comparesWithFree: source != .onboarding
+            // A page already short of room closes its gaps too.
+            tight: !showsPreviews,
+            comparesWithFree: source != .onboarding,
+            showsPreviews: showsPreviews
         )
         // 20pt, the app's screen edge.
         .padding(.horizontal, Theme.Spacing.m + Theme.Spacing.xs)
         // The bar above and the pinned bar below bring their own room, so a
         // short page gives these gaps back first.
-        .padding(.top, compact ? Theme.Spacing.s + 4 : Theme.Spacing.m + Theme.Spacing.xs)
-        .padding(.bottom, compact ? Theme.Spacing.s + 4 : Theme.Spacing.l)
+        // The page without its previews is the one short of room (iPhone
+        // Duo's sheet: 395pt). With these and the tight gaps it fits there
+        // by a few points, and the headline stays clear of the bar.
+        .padding(.top, !showsPreviews ? Theme.Spacing.s : (compact ? Theme.Spacing.s + 4 : Theme.Spacing.m + Theme.Spacing.xs))
+        .padding(.bottom, !showsPreviews ? 0 : (compact ? Theme.Spacing.s + 4 : Theme.Spacing.l))
         .frame(maxWidth: 520)
         .frame(maxWidth: .infinity)
     }
@@ -590,6 +606,17 @@ private struct LegacyOpaqueNavigationBar: ViewModifier {
             content
                 .toolbarBackground(.visible, for: .navigationBar)
                 .toolbarBackground(Theme.background, for: .navigationBar)
+        }
+    }
+}
+
+/// A firm edge under the top bar, where the system has one to give.
+private struct HardTopScrollEdge: ViewModifier {
+    func body(content: Content) -> some View {
+        if #available(iOS 26.0, *) {
+            content.scrollEdgeEffectStyle(.hard, for: .top)
+        } else {
+            content
         }
     }
 }
