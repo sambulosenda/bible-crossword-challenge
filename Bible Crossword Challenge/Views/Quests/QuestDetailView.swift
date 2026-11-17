@@ -248,7 +248,8 @@ struct QuestDetailView: View {
             title: puzzle.title,
             detail: puzzle.detailLine(among: steps),
             numeralTint: Color.secondary,
-            grid: puzzle.grid
+            grid: puzzle.grid,
+            accessoryDropsBelow: !isLocked && state == .upcoming
         ) {
             if !isLocked {
                 switch state {

@@ -442,6 +442,11 @@ struct TrackRow<Accessory: View>: View {
     /// so the list reads as crosswords (2026-10-25). Journeys keep numbers:
     /// their order is the point.
     var grid: [String]? = nil
+    /// Lets a wide accessory drop under the detail when the row is too
+    /// narrow for it beside one-line text. A journey's "After step 2" took
+    /// 84pt of a folded Duo's row and broke "The Tower of Babel" over two
+    /// lines, with "· Medium" on a third.
+    var accessoryDropsBelow = false
     @ViewBuilder let accessory: Accessory
 
     /// Where a list of these starts its dividers: under the title, past the
@@ -452,6 +457,19 @@ struct TrackRow<Accessory: View>: View {
     static var gridSide: CGFloat { 44 }
 
     var body: some View {
+        if accessoryDropsBelow {
+            // Beside the text while the title and detail each stay on one
+            // line; under the detail once they wouldn't.
+            ViewThatFits(in: .horizontal) {
+                row(accessoryBelow: false)
+                row(accessoryBelow: true)
+            }
+        } else {
+            row(accessoryBelow: false)
+        }
+    }
+
+    private func row(accessoryBelow: Bool) -> some View {
         HStack(spacing: Theme.Spacing.m) {
             if let grid {
                 // Grey on a pale wash, as every icon square in the app is set since
@@ -474,9 +492,15 @@ struct TrackRow<Accessory: View>: View {
                 Text(detail)
                     .font(.caption)
                     .foregroundStyle(.secondary)
+                if accessoryBelow {
+                    accessory
+                        .padding(.top, 2)
+                }
             }
             Spacer(minLength: 0)
-            accessory
+            if !accessoryBelow {
+                accessory
+            }
         }
         .cardRowPadding()
         .frame(maxWidth: .infinity, alignment: .leading)
