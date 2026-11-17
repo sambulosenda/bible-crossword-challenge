@@ -14,9 +14,6 @@ import SwiftUI
 
 struct CardColumns<Lead: View, More: View>: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-    /// Flipped each time the page has finished appearing, to lay the split
-    /// out again on screen (see `seatNudge`).
-    @State private var appeared = false
 
     /// The readable width of a column.
     var maxWidth: CGFloat = 560
@@ -50,14 +47,6 @@ struct CardColumns<Lead: View, More: View>: View {
                         column(width: nil) { more() }
                     }
                     .arrangementViewStyle(.split.axes(.horizontal))
-                    // A pushed page is laid out while it slides in, half
-                    // off screen, where the split can't seat its seam on
-                    // the hinge: it came out even, the right column's first
-                    // 40pt under the fold of the Duo half open, and nothing
-                    // laid it out again once it landed. Half a point off
-                    // the edge each time the page has appeared is a new
-                    // layout pass, made on screen.
-                    .padding(.trailing, appeared ? 0.5 : 0)
                     .environment(\.inCardColumnSplit, true)
                 } else {
                     HStack(spacing: 0) {
@@ -72,9 +61,6 @@ struct CardColumns<Lead: View, More: View>: View {
                     more()
                 }
             }
-        }
-        .background {
-            DidAppearProbe { appeared.toggle() }
         }
     }
 
@@ -130,41 +116,6 @@ private struct ColumnWidth: ViewModifier {
             content.frame(width: width)
         } else {
             content.frame(maxWidth: .infinity)
-        }
-    }
-}
-
-/// Calls back when the page has finished appearing — a push's slide over,
-/// not its start, which is when `onAppear` fires.
-private struct DidAppearProbe: UIViewControllerRepresentable {
-    let action: () -> Void
-
-    func makeUIViewController(context: Context) -> Controller {
-        Controller(action: action)
-    }
-
-    func updateUIViewController(_ controller: Controller, context: Context) {
-        controller.action = action
-    }
-
-    final class Controller: UIViewController {
-        var action: () -> Void
-
-        init(action: @escaping () -> Void) {
-            self.action = action
-            super.init(nibName: nil, bundle: nil)
-        }
-
-        required init?(coder: NSCoder) { fatalError("init(coder:) is not supported") }
-
-        override func loadView() {
-            view = UIView()
-            view.isUserInteractionEnabled = false
-        }
-
-        override func viewDidAppear(_ animated: Bool) {
-            super.viewDidAppear(animated)
-            action()
         }
     }
 }
