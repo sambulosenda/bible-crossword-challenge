@@ -368,9 +368,14 @@ struct CrosswordGameScreen: View {
     /// its seam on the hinge, so the pane under it is taller than the keypad
     /// (421pt against 285) and the board above it shorter than a flat window
     /// would give. Read from the slack itself, because nothing else says so:
-    /// the size classes and the window are the same as flat.
+    /// the size classes and the window are the same as flat. Regular width
+    /// only: an iPhone in portrait has the same slack under a 15×15 board
+    /// (the board is held by the width), and there the list replaced the
+    /// one-clue strip — no letter count, no arrows (2026-11-17).
     private var foldedLikeLaptop: Bool {
-        solveLayout == .stacked && hingeSlack >= Self.clueListSlack
+        solveLayout == .stacked
+            && horizontalSizeClass == .regular
+            && hingeSlack >= Self.clueListSlack
     }
 
     /// The least slack worth a clue list: two rows and the start of a third.
@@ -492,15 +497,15 @@ struct CrosswordGameScreen: View {
                         entryDock
                     }
                     // Under the grid the pane is exactly its content. Left
-                    // flexible, iPhone Duo open in portrait split the window
-                    // in half: 25pt cells over 133pt of nothing. A fold still
-                    // seats the seam on the hinge whatever this asks for.
-                    // Regular width only: a phone's pane already hugs its
-                    // content, and measured at its ideal size the clue
-                    // shrank to one line there instead of wrapping to two.
+                    // flexible, the split halved the window: iPhone Duo open
+                    // in portrait had 25pt cells over 133pt of nothing, and an
+                    // iPhone 18 Pro's 15×15 was too short to fit, so it opened
+                    // zoomed in, its right edge faded off, over a 100pt empty
+                    // band. A fold still seats the seam on the hinge whatever
+                    // this asks for.
                     .splitArrangementFixedLayoutSize(
                         horizontal: false,
-                        vertical: solveLayout == .stacked && horizontalSizeClass == .regular
+                        vertical: solveLayout == .stacked
                     )
                     // Left to itself the split sizes this pane by ratio;
                     // hold it to the same keypad width the fallback
