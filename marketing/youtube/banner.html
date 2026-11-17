@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 2048px; height: 1152px; overflow: hidden; }
+  body {
+    position: relative;
+    font-family: -apple-system, "SF Pro Display", "Helvetica Neue", sans-serif;
+    background: radial-gradient(ellipse 70% 90% at 50% 45%, #2A74FF 0%, #1452F0 45%, #0634C8 100%);
+    color: #fff;
+  }
+  /* faint background tiles, like the app icon */
+  .ghosts { position: absolute; inset: 0; }
+  .ghost {
+    position: absolute; width: 112px; height: 112px; border-radius: 22px;
+    background: rgba(255,255,255,0.07);
+  }
+  /* crossword fragments */
+  .frag { position: absolute; }
+  .tile {
+    position: absolute; width: 64px; height: 64px; border-radius: 13px;
+    background: #fff; color: #0B3FD9;
+    font-weight: 800; font-size: 34px; letter-spacing: 0;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 6px 18px rgba(0, 20, 90, 0.28);
+  }
+  /* centred copy, inside the 1235 x 338 safe area (x 406–1641, y 407–745) */
+  .copy {
+    position: absolute; left: 406px; top: 407px; width: 1235px; height: 338px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center;
+  }
+  h1 { font-size: 84px; font-weight: 800; letter-spacing: -2px; line-height: 1; }
+  p.tag { margin-top: 26px; font-size: 40px; font-weight: 500; opacity: 0.92; }
+  p.cta {
+    margin-top: 30px; font-size: 30px; font-weight: 700;
+    background: #fff; color: #0B3FD9; padding: 14px 34px; border-radius: 999px;
+  }
+</style>
+</head>
+<body>
+  <div class="ghosts" id="ghosts"></div>
+
+  <!-- left: JOY across, GOD down (share the O); kept left of the 1546px phone crop -->
+  <div class="frag" id="left" style="left:28px; top:472px;"></div>
+  <!-- right: ARK across, AMEN down (share the A); kept right of the phone crop -->
+  <div class="frag" id="right" style="left:1812px; top:436px;"></div>
+
+  <div class="copy">
+    <h1>Bible Crossword Challenge</h1>
+    <p class="tag">A new Bible crossword every day</p>
+    <p class="cta">Free on iPhone &amp; iPad</p>
+  </div>
+
+<script>
+  const STEP = 72; // 64 tile + 8 gap
+  function place(el, cells) {
+    for (const [r, c, ch] of cells) {
+      const t = document.createElement('div');
+      t.className = 'tile'; t.textContent = ch;
+      t.style.top = (r * STEP) + 'px'; t.style.left = (c * STEP) + 'px';
+      el.appendChild(t);
+    }
+  }
+  // JOY across row 1; GOD down col 1
+  place(document.getElementById('left'), [
+    [1,0,'J'],[1,1,'O'],[1,2,'Y'],
+    [0,1,'G'],[2,1,'D'],
+  ]);
+  // ARK across row 0; AMEN down col 0
+  place(document.getElementById('right'), [
+    [0,0,'A'],[0,1,'R'],[0,2,'K'],
+    [1,0,'M'],[2,0,'E'],[3,0,'N'],
+  ]);
+  // faint tiles scattered on a 128px grid, kept off the copy and fragments
+  const g = document.getElementById('ghosts');
+  const spots = [
+    [0,1],[0,2],[1,0],[0,13],[0,14],[1,15],[2,15],
+    [6,0],[7,0],[7,1],[8,13],[8,14],[7,15],[8,15],
+    [1,5],[1,10],[0,8],[8,4],[8,9],[7,7],
+  ];
+  for (const [r, c] of spots) {
+    const d = document.createElement('div');
+    d.className = 'ghost';
+    d.style.top = (r * 128 + 16) + 'px'; d.style.left = (c * 128 + 8) + 'px';
+    g.appendChild(d);
+  }
+</script>
+</body>
+</html>
