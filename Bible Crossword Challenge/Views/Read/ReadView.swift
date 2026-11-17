@@ -741,16 +741,61 @@ struct ReadView: View {
 
 // MARK: - Books of a testament
 
+/// A window wide enough for two pages side by side, by the reader's rule
+/// (`ChapterPage.isSpread`): iPhone Duo open or folded like a book, an iPad
+/// on its side.
+private func showsTwoPages(_ sizeClass: UserInterfaceSizeClass?, _ size: CGSize) -> Bool {
+    sizeClass == .regular && size.width >= 760 && size.width > size.height
+}
+
+/// A chapter a browse page opens.
+private struct ChapterTarget: Hashable {
+    let book: String
+    let chapter: Int
+}
+
 struct BookListView: View {
     let title: String
     /// Already filtered to one testament by the parent's snapshot — nothing
     /// here re-reads the provider or filters inside `body`.
     let books: [BibleBook]
 
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @State private var openChapter: ChapterTarget?
+    /// The book picked on the left page, kept out here so a fold and back
+    /// returns to it.
+    @State private var picked: String?
+    @State private var openBook: BibleBook?
+
     var body: some View {
+        // Where the page goes lives out here, on the part that doesn't
+        // change with the width: inside the switch, a fold would take the
+        // destination away and pop the chapter it had opened.
+        GeometryReader { proxy in
+            if showsTwoPages(horizontalSizeClass, proxy.size) {
+                BibleBrowser(books: books, initialBook: nil, picked: $picked) { openChapter = $0 }
+            } else {
+                list
+            }
+        }
+        .background(Theme.background)
+        .navigationTitle(title)
+        .navigationBarTitleDisplayMode(.inline)
+        // By item, not by value: this page is itself pushed by a view
+        // link, and a value appended to Today's path from here opened
+        // nothing.
+        .navigationDestination(item: $openBook) { book in
+            ChapterPickerView(book: book)
+        }
+        .navigationDestination(item: $openChapter) { target in
+            ChapterReaderView(startBook: target.book, startChapter: target.chapter, source: "read_browse")
+        }
+    }
+
+    private var list: some View {
         List(books) { book in
-            NavigationLink {
-                ChapterPickerView(book: book)
+            Button {
+                openBook = book
             } label: {
                 HStack {
                     Text(book.name)
@@ -758,19 +803,21 @@ struct BookListView: View {
                     Text("\(book.chapterCount)")
                         .foregroundStyle(.secondary)
                         .monospacedDigit()
+                    Image(systemName: "chevron.forward")
+                        .font(.footnote.weight(.semibold))
+                        .foregroundStyle(.tertiary)
                 }
+                .contentShape(.rect)
                 .accessibilityElement(children: .combine)
                 .accessibilityLabel("\(book.name), \(book.chapterCount) chapters")
             }
+            .foregroundStyle(.primary)
         }
         .scrollContentBackground(.hidden)
         // Readable width, as every other list here: on iPhone Duo open the
         // rows ran 950pt with the chapter count stranded at the far edge.
         .frame(maxWidth: 640)
         .frame(maxWidth: .infinity)
-        .background(Theme.background)
-        .navigationTitle(title)
-        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
@@ -778,16 +825,191 @@ struct BookListView: View {
 
 struct ChapterPickerView: View {
     let book: BibleBook
+    @Environment(\.scripture) private var scripture
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @State private var openChapter: ChapterTarget?
+    @State private var pageSize: CGSize = .zero
+    /// Another book picked on the left page. The single column shows it
+    /// too, so folding keeps the book on screen rather than going back to
+    /// the one this page was opened for.
+    @State private var picked: String?
+
+    private var twoPages: Bool { showsTwoPages(horizontalSizeClass, pageSize) }
+
+    private var shown: BibleBook {
+        picked.flatMap { scripture.book(named: $0) } ?? book
+    }
+
+    var body: some View {
+        GeometryReader { proxy in
+            if showsTwoPages(horizontalSizeClass, proxy.size) {
+                // Reached from a search or Books explored, the book opens
+                // among its testament's, as if picked from the list.
+                BibleBrowser(
+                    books: scripture.books.filter { $0.testament == book.testament },
+                    initialBook: book.name,
+                    picked: $picked
+                ) { openChapter = $0 }
+            } else {
+                ScrollView {
+                    ChapterGrid(book: shown) { openChapter = ChapterTarget(book: shown.name, chapter: $0) }
+                        .padding(Theme.Spacing.m)
+                        .frame(maxWidth: 560)
+                        .frame(maxWidth: .infinity)
+                }
+            }
+        }
+        .onGeometryChange(for: CGSize.self) { proxy in
+            proxy.size
+        } action: { size in
+            pageSize = size
+        }
+        .background(Theme.background)
+        // The testament over two pages: the book is the right page's
+        // heading, and the left page can pick another.
+        .navigationTitle(twoPages ? book.testament.label : shown.name)
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationDestination(item: $openChapter) { target in
+            ChapterReaderView(startBook: target.book, startChapter: target.chapter, source: "read_browse")
+        }
+    }
+}
+
+/// A testament's books on the left page and the chosen book's chapters on
+/// the right, on a window wide enough for both. A list of 39 names ran a
+/// 640pt column down the middle of the Duo with its fold through every row,
+/// and picking a book took a page of its own, a grid split by the fold.
+private struct BibleBrowser: View {
+    let books: [BibleBook]
+    /// The book a search or Books explored came for.
+    let initialBook: String?
+    @Binding var picked: String?
+    let onOpen: (ChapterTarget) -> Void
+
+    @AppStorage("read.lastBook") private var lastBook = ""
+
+    /// The reader's pick, else the book this page was opened for, else where
+    /// reading left off when it's in this testament, else the first.
+    private var current: BibleBook? {
+        let names = [picked, initialBook, lastBook].compactMap { $0 }
+        for name in names {
+            if let book = books.first(where: { $0.name == name }) { return book }
+        }
+        return books.first
+    }
+
+    var body: some View {
+        if let current {
+            if #available(iOS 27.1, *) {
+                // The system's split seats the seam on the hinge when the
+                // Duo is folded like a book.
+                ArrangementView {
+                    bookPage(current)
+                } secondary: {
+                    chapterPage(current)
+                }
+                .arrangementViewStyle(.split.axes(.horizontal))
+            } else {
+                HStack(spacing: 0) {
+                    bookPage(current)
+                    chapterPage(current)
+                }
+            }
+        }
+    }
+
+    /// The testament as one card of rows, padded as the facing page is so
+    /// the two start level. A system list here set its card against the
+    /// fold with no margin, and its first row sat a header's height lower
+    /// than the book's name across the gutter.
+    private func bookPage(_ current: BibleBook) -> some View {
+        ScrollViewReader { proxy in
+            ScrollView {
+                VStack(spacing: 0) {
+                    ForEach(Array(books.enumerated()), id: \.element.id) { index, book in
+                        if index > 0 {
+                            Divider().padding(.leading, Theme.Spacing.m)
+                        }
+                        bookRow(book, isCurrent: book.name == current.name)
+                            .id(book.name)
+                    }
+                }
+                .clipShape(.rect(cornerRadius: Theme.cornerRadius, style: .continuous))
+                .elevatedCard()
+                .padding(Theme.Spacing.m)
+                .frame(maxWidth: 560)
+                .frame(maxWidth: .infinity)
+            }
+            // A book deep in the testament, opened from a search, starts in
+            // view rather than thirty rows down.
+            .onAppear { proxy.scrollTo(current.name, anchor: .center) }
+        }
+    }
+
+    private func bookRow(_ book: BibleBook, isCurrent: Bool) -> some View {
+        Button {
+            picked = book.name
+        } label: {
+            HStack {
+                Text(book.name)
+                    .fontWeight(isCurrent ? .semibold : .regular)
+                Spacer(minLength: Theme.Spacing.s)
+                Text("\(book.chapterCount)")
+                    .foregroundStyle(.secondary)
+                    .monospacedDigit()
+            }
+            .padding(.horizontal, Theme.Spacing.m)
+            .padding(.vertical, 12)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            // Grey, not the accent: the choice is state, and blue here
+            // means a control.
+            .background(isCurrent ? Color(.tertiarySystemFill) : .clear)
+            .contentShape(.rect)
+            .foregroundStyle(.primary)
+        }
+        .buttonStyle(PressableCardStyle())
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(book.name), \(book.chapterCount) chapters")
+        .accessibilityAddTraits(isCurrent ? .isSelected : [])
+    }
+
+    private func chapterPage(_ book: BibleBook) -> some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: Theme.Spacing.m) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(book.name)
+                        .font(.title2.weight(.bold))
+                        .accessibilityAddTraits(.isHeader)
+                    Text("\(book.chapterCount) chapters")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
+                .padding(.horizontal, Theme.Spacing.xs)
+                ChapterGrid(book: book) { onOpen(ChapterTarget(book: book.name, chapter: $0)) }
+            }
+            .padding(Theme.Spacing.m)
+            .frame(maxWidth: 560, alignment: .leading)
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        // Each book starts at its first chapter.
+        .id(book.name)
+    }
+}
+
+/// A book's chapters as tiles, the ones its puzzles draw on dotted and the
+/// one reading left off at ringed.
+private struct ChapterGrid: View {
+    let book: BibleBook
+    let onOpen: (Int) -> Void
     @Environment(\.analytics) private var analytics
     @Environment(\.puzzleProvider) private var puzzleProvider
-    @State private var openChapter: Int?
     @AppStorage("read.lastBook") private var lastBook = ""
     @AppStorage("read.lastChapter") private var lastChapter = 0
 
     private let columns = Array(repeating: GridItem(.flexible(), spacing: 8), count: 5)
 
     /// Chapters a puzzle's verse or clue is drawn from — the reader's way
-    /// back into the game, marked on the grid. Computed once on appear: it
+    /// back into the game, marked on the grid. Computed once per book: it
     /// parses every reference in the bundle, ~3,800 strings.
     @State private var marked: Set<Int> = []
 
@@ -803,64 +1025,53 @@ struct ChapterPickerView: View {
     }
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: Theme.Spacing.m) {
-                if !marked.isEmpty {
-                    Label("Puzzles draw on the chapters marked with a dot.", systemImage: "circle.fill")
-                        .labelStyle(DotLabelStyle())
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
-                        .padding(.horizontal, Theme.Spacing.xs)
-                }
-                LazyVGrid(columns: columns, spacing: 8) {
-                    ForEach(book.chapters) { chapter in
-                        let hasPuzzle = marked.contains(chapter.number)
-                        let isLast = lastBook == book.name && lastChapter == chapter.number
-                        Button {
-                            analytics.log(.scriptureOpened(
-                                reference: "\(book.name) \(chapter.number)",
-                                source: "read_browse"
-                            ))
-                            openChapter = chapter.number
-                        } label: {
-                            VStack(spacing: 3) {
-                                Text("\(chapter.number)")
-                                    .font(.body.weight(.medium))
-                                    .monospacedDigit()
-                                Circle()
-                                    .fill(Theme.accent)
-                                    .frame(width: 5, height: 5)
-                                    .opacity(hasPuzzle ? 1 : 0)
-                            }
-                            .frame(maxWidth: .infinity, minHeight: 52)
-                            .background(Theme.surface, in: .rect(cornerRadius: 12, style: .continuous))
-                            .overlay {
-                                // Where reading left off, by a ring — the same
-                                // mark the game uses for "you are here".
-                                if isLast {
-                                    RoundedRectangle(cornerRadius: 12, style: .continuous)
-                                        .strokeBorder(Theme.accent, lineWidth: 2)
-                                }
-                            }
-                            .foregroundStyle(.primary)
+        VStack(alignment: .leading, spacing: Theme.Spacing.m) {
+            if !marked.isEmpty {
+                Label("Puzzles draw on the chapters marked with a dot.", systemImage: "circle.fill")
+                    .labelStyle(DotLabelStyle())
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                    .padding(.horizontal, Theme.Spacing.xs)
+            }
+            LazyVGrid(columns: columns, spacing: 8) {
+                ForEach(book.chapters) { chapter in
+                    let hasPuzzle = marked.contains(chapter.number)
+                    let isLast = lastBook == book.name && lastChapter == chapter.number
+                    Button {
+                        analytics.log(.scriptureOpened(
+                            reference: "\(book.name) \(chapter.number)",
+                            source: "read_browse"
+                        ))
+                        onOpen(chapter.number)
+                    } label: {
+                        VStack(spacing: 3) {
+                            Text("\(chapter.number)")
+                                .font(.body.weight(.medium))
+                                .monospacedDigit()
+                            Circle()
+                                .fill(Theme.accent)
+                                .frame(width: 5, height: 5)
+                                .opacity(hasPuzzle ? 1 : 0)
                         }
-                        // The card style, not the default: fifty accent-blue
-                        // numerals read as fifty links, and the tile is the
-                        // control here.
-                        .buttonStyle(PressableCardStyle())
-                        .accessibilityLabel(accessibilityLabel(chapter.number, hasPuzzle: hasPuzzle, isLast: isLast))
+                        .frame(maxWidth: .infinity, minHeight: 52)
+                        .background(Theme.surface, in: .rect(cornerRadius: 12, style: .continuous))
+                        .overlay {
+                            // Where reading left off, by a ring — the same
+                            // mark the game uses for "you are here".
+                            if isLast {
+                                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                    .strokeBorder(Theme.accent, lineWidth: 2)
+                            }
+                        }
+                        .foregroundStyle(.primary)
                     }
+                    // The card style, not the default: fifty accent-blue
+                    // numerals read as fifty links, and the tile is the
+                    // control here.
+                    .buttonStyle(PressableCardStyle())
+                    .accessibilityLabel(accessibilityLabel(chapter.number, hasPuzzle: hasPuzzle, isLast: isLast))
                 }
             }
-            .padding(Theme.Spacing.m)
-            .frame(maxWidth: 560)
-            .frame(maxWidth: .infinity)
-        }
-        .background(Theme.background)
-        .navigationTitle(book.name)
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationDestination(item: $openChapter) { chapter in
-            ChapterReaderView(startBook: book.name, startChapter: chapter, source: "read_browse")
         }
         .task(id: book.name) { marked = puzzleChapters() }
     }
