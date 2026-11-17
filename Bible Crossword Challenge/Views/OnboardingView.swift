@@ -92,6 +92,10 @@ struct OnboardingView: View {
     @State private var entries: [MiniPoint: Character] = [:]
     @State private var focus: MiniPoint? = MiniCrossword.firstSolveBlanks.first
     @State private var solved = false
+    /// Height the solve page has above the keys, measured. Under
+    /// `welcomeRoom` the welcome lines give way to the puzzle — see
+    /// `firstSolvePage`.
+    @State private var solveRoom: CGFloat = .infinity
     @State private var wrongAttempts = 0
 
     private let reminderPage = 3
@@ -282,12 +286,12 @@ struct OnboardingView: View {
 
     private var firstSolvePage: some View {
         let active = page == 1
-        return pageFrame(spacing: Theme.Spacing.l) {
+        return pageFrame(spacing: Theme.Spacing.l, onVisibleHeight: { solveRoom = $0 }) {
             // The welcome, on the page where the playing starts (2026-10-25):
             // what the app is, in a line, over the clue that shows it. It
             // folds away once the word is solved — the verse needs the room,
             // and by then the puzzle has said it better.
-            if !solved {
+            if !solved && solveRoom >= Self.welcomeRoom {
                 VStack(alignment: .leading, spacing: Theme.Spacing.s) {
                     Text("Bible Crossword")
                         .kicker()
@@ -365,10 +369,18 @@ struct OnboardingView: View {
                             )
                     )
                 Spacer(minLength: 0)
-            } else {
-                // The game's keys, so the first keyboard a player meets is
-                // the one they'll solve every puzzle with.
+            }
+        }
+        // The game's keys, so the first keyboard a player meets is the one
+        // they'll solve every puzzle with. Pinned under the page, not in its
+        // scroll: there, on iPhone Duo closed, the bottom row and Delete sat
+        // below the fold and the first word couldn't be finished (2026-11-16).
+        .safeAreaInset(edge: .bottom, spacing: 0) {
+            if !solved {
                 LetterKeyboardView(onLetter: type(_:), onDelete: deleteLetter)
+                    .frame(maxWidth: 560)
+                    .frame(maxWidth: .infinity)
+                    .padding(.horizontal, Theme.Spacing.l)
                     .transition(.opacity)
             }
         }
@@ -566,6 +578,11 @@ struct OnboardingView: View {
 
     // MARK: - Building blocks
 
+    /// The room above the keys the solve page needs to keep its welcome
+    /// lines and still show the clue and the whole grid without scrolling.
+    /// iPhone Duo closed has about 390; an iPhone 17e about 520.
+    private static let welcomeRoom: CGFloat = 500
+
     /// Every page shares one frame: scrollable (so a long clue or a large text
     /// size can never clip), centred, with the same gutters.
     private func pageFrame<Content: View>(
@@ -573,6 +590,7 @@ struct OnboardingView: View {
         alignment: Alignment = .center,
         padding: EdgeInsets = EdgeInsets(top: Theme.Spacing.l, leading: Theme.Spacing.l,
                                          bottom: Theme.Spacing.l, trailing: Theme.Spacing.l),
+        onVisibleHeight: ((CGFloat) -> Void)? = nil,
         @ViewBuilder content: () -> Content
     ) -> some View {
         // Centred when it fits, scrollable when it doesn't — which is what
@@ -592,6 +610,9 @@ struct OnboardingView: View {
             }
             .scrollBounceBehavior(.basedOnSize)
             .scrollIndicators(.hidden)
+            .onChange(of: geo.size.height, initial: true) { _, height in
+                onVisibleHeight?(height)
+            }
         }
     }
 
