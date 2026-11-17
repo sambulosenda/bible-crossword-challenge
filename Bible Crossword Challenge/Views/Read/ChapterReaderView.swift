@@ -415,6 +415,22 @@ private struct ChapterPage: View {
     @State private var reportedPaneWidths: [CGFloat] = [0, 0]
     /// The spread at the top of the scroll.
     @State private var visibleSpread: Int?
+    /// The verse at the top of what's being read, carried across a fold
+    /// (one column ↔ two pages) and across the pages reflowing. Each
+    /// layout used to start the chapter over: fold the Duo on page 7 and
+    /// it opened at verse 1.
+    @State private var anchorVerse: Int?
+    /// The verse at the top of the single column.
+    @State private var columnTop: Int?
+    @State private var columnWidth: CGFloat = 0
+    /// A drag has moved the scroll since it last came to rest. A swipe
+    /// that ends in the spreads' snap ends `.animating`, as a restore
+    /// does, so the phase it rests from can't tell them apart.
+    @State private var readerScrolled = false
+
+    /// A deep-linked verse the reader hasn't moved on from: it decides
+    /// where a layout opens until then.
+    private var holdsDeepLink: Bool { highlight != nil && !scrolledPast }
     /// Each verse's height set at each pane's width, and the chapter end's.
     @State private var rowHeights: [[Int: CGFloat]] = [[:], [:]]
     @State private var endHeights: [CGFloat?] = [nil, nil]
@@ -467,6 +483,25 @@ private struct ChapterPage: View {
             tallest = max(tallest, used)
         }
         return Pagination(pages: pages, tallest: tallest)
+    }
+
+    /// The spread holding the reader's place, while no deep link decides.
+    private func anchorSpread(in layout: Pagination?) -> Int? {
+        guard !holdsDeepLink, let target = anchorVerse, let layout,
+              let page = layout.pages.firstIndex(where: { $0.contains(.verse(target)) })
+        else { return nil }
+        return page / 2
+    }
+
+    /// The first verse a spread shows.
+    private func firstVerse(onSpread spread: Int, in layout: Pagination) -> Int? {
+        layout.pages[(2 * spread)..<min(2 * spread + 2, layout.pages.count)]
+            .joined()
+            .lazy
+            .compactMap { item -> Int? in
+                if case .verse(let number) = item { number } else { nil }
+            }
+            .first
     }
 
     /// The spread holding the deep-linked verse.
@@ -523,10 +558,24 @@ private struct ChapterPage: View {
         // mid-fling redrew the pager and stopped the spread short of its
         // snap.
         .onScrollPhaseChange { _, phase in
-            guard phase == .idle, settled, !scrolledPast,
+            if phase == .interacting { readerScrolled = true }
+            guard phase == .idle else { return }
+            // Only a turn the reader made moves the place: a restore
+            // scrolls to the place it already holds.
+            if readerScrolled, let layout = pagination, let spread = visibleSpread {
+                readerScrolled = false
+                anchorVerse = firstVerse(onSpread: spread, in: layout)
+            }
+            guard settled, !scrolledPast,
                   let target = highlightSpread(in: pagination), visibleSpread != target
             else { return }
             scrolledPast = true
+        }
+        // Back to the reader's place after a fold or a reflow (the panes'
+        // widths changing, a new text size).
+        .task(id: anchorSpread(in: layout)) {
+            guard let spread = anchorSpread(in: layout), visibleSpread != spread else { return }
+            visibleSpread = spread
         }
         // Keyed on the verse's spread, not the verse: the pages can
         // reflow after the first layout (the split seating its seam on
@@ -683,6 +732,7 @@ private struct ChapterPage: View {
                         endOfChapter
                     }
                 }
+                .scrollTargetLayout()
                 // A measure a reader can actually track — scripture set across
                 // a full iPad landscape width is a 40-word line.
                 .frame(maxWidth: 640, alignment: .leading)
@@ -690,8 +740,30 @@ private struct ChapterPage: View {
                 .padding(.horizontal, Theme.Spacing.l)
                 .padding(.vertical, Theme.Spacing.m)
             }
+            .scrollPosition(id: $columnTop, anchor: .top)
+            .onScrollPhaseChange { _, phase in
+                if phase == .interacting { readerScrolled = true }
+                guard phase == .idle, readerScrolled, let columnTop else { return }
+                readerScrolled = false
+                anchorVerse = columnTop
+            }
+            // Back to the reader's place, coming from the two pages, and
+            // again each time the width changes: a fold shrinks the window
+            // in steps, and a verse brought to the top at one width sat
+            // at the foot of the screen once the text rewrapped narrower.
+            .onGeometryChange(for: CGFloat.self) { proxy in
+                proxy.size.width
+            } action: { width in
+                columnWidth = width
+            }
+            .task(id: columnWidth) {
+                guard !holdsDeepLink, let anchorVerse, columnWidth > 0 else { return }
+                try? await Task.sleep(for: .milliseconds(50))
+                guard !Task.isCancelled else { return }
+                proxy.scrollTo(anchorVerse, anchor: .top)
+            }
             .task(id: holdsHighlight ? highlight : nil) {
-                guard holdsHighlight, let target = highlight else { return }
+                guard holdsHighlight, !scrolledPast, let target = highlight else { return }
                 try? await Task.sleep(for: .milliseconds(60))
                 withAnimation(.easeInOut) { proxy.scrollTo(target, anchor: .center) }
                 // Past the scroll animation before offsets count as reading.
