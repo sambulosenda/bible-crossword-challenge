@@ -92,10 +92,12 @@ struct OnboardingView: View {
     @State private var entries: [MiniPoint: Character] = [:]
     @State private var focus: MiniPoint? = MiniCrossword.firstSolveBlanks.first
     @State private var solved = false
-    /// Height the solve page has above the keys, measured. Under
-    /// `welcomeRoom` the welcome lines give way to the puzzle — see
-    /// `firstSolvePage`.
-    @State private var solveRoom: CGFloat = .infinity
+    /// Whether the solve page is short: under `welcomeRoom` above the keys,
+    /// measured while unsolved and kept once solved (the keys going changes
+    /// the height, not the window). The welcome lines give way to the
+    /// puzzle, and once solved the clue and spare gaps give way to the
+    /// verse — see `firstSolvePage`.
+    @State private var shortSolvePage = false
     @State private var wrongAttempts = 0
 
     private let reminderPage = 3
@@ -286,12 +288,15 @@ struct OnboardingView: View {
 
     private var firstSolvePage: some View {
         let active = page == 1
-        return pageFrame(spacing: Theme.Spacing.l, onVisibleHeight: { solveRoom = $0 }) {
+        let compactSolved = solved && shortSolvePage
+        return pageFrame(spacing: Theme.Spacing.l, onVisibleHeight: { height in
+            if !solved { shortSolvePage = height < Self.welcomeRoom }
+        }) {
             // The welcome, on the page where the playing starts (2026-10-25):
             // what the app is, in a line, over the clue that shows it. It
             // folds away once the word is solved — the verse needs the room,
             // and by then the puzzle has said it better.
-            if !solved && solveRoom >= Self.welcomeRoom {
+            if !solved && !shortSolvePage {
                 VStack(alignment: .leading, spacing: Theme.Spacing.s) {
                     Text("Bible Crossword")
                         .kicker()
@@ -309,15 +314,29 @@ struct OnboardingView: View {
             // the lower part of the space above the keypad, near the thumb
             // and the keys they answer to, instead of floating mid-screen
             // with a dead band under them.
-            Spacer(minLength: 0)
-            Spacer(minLength: 0)
+            // One, not two, on a short page once solved: there the page was
+            // overflowing, the spacers took no room, and the page's gap after
+            // each was 24pt the verse needed. One still centres the word and
+            // the verse with the one below them.
+            if compactSolved {
+                Spacer(minLength: 0)
+            } else {
+                Spacer(minLength: 0)
+                Spacer(minLength: 0)
+            }
 
             VStack(spacing: Theme.Spacing.xs) {
                 Text(solved ? "1 Down · Solved" : "1 Down · try it")
                     .kicker()
-                Text("Noah built one to save his family")
-                    .font(.scripture(.title2, weight: .semibold))
-                    .multilineTextAlignment(.center)
+                // On a short page the clue folds away once solved, as the
+                // welcome does: the verse under the word says it again, and on
+                // iPhone Duo closed its reference sat under Continue.
+                if !compactSolved {
+                    Text("Noah built one to save his family")
+                        .font(.scripture(.title2, weight: .semibold))
+                        .multilineTextAlignment(.center)
+                        .transition(.opacity)
+                }
             }
             .entrance(active: active, delay: 0.05, reduceMotion: reduceMotion)
             .animation(.easeInOut, value: solved)
@@ -353,7 +372,7 @@ struct OnboardingView: View {
             // it flexes. Solved: the verse follows the word it came from, so
             // the gap is fixed and the clue–grid–verse group centres as one.
             if solved {
-                Spacer().frame(height: Theme.Spacing.xl)
+                Spacer().frame(height: compactSolved ? Theme.Spacing.s : Theme.Spacing.xl)
             } else {
                 Spacer(minLength: Theme.Spacing.l)
             }
@@ -580,7 +599,8 @@ struct OnboardingView: View {
 
     /// The room above the keys the solve page needs to keep its welcome
     /// lines and still show the clue and the whole grid without scrolling.
-    /// iPhone Duo closed has about 390; an iPhone 17e about 520.
+    /// iPhone Duo closed has about 390; an iPhone 17e about 520. Under it the
+    /// page is short — see `shortSolvePage`.
     private static let welcomeRoom: CGFloat = 500
 
     /// Every page shares one frame: scrollable (so a long clue or a large text
