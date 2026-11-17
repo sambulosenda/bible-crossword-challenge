@@ -195,6 +195,13 @@ struct CrosswordGameScreen: View {
     /// The passage a verse hint opened, presented as a local sheet (see the
     /// `.sheet(item:)` note below for why not `ReaderRouter`).
     @State private var verseHintTarget: ReaderRouter.Target?
+    /// The verse hint standing in the keypad's column instead of a sheet,
+    /// where the clue list stands (see `VerseHintPanel`), with the clue it
+    /// was asked from and when it opened, for `reader_closed`.
+    @State private var inlineVerse: ReaderRouter.Target?
+    @State private var inlineVerseClue: String?
+    @State private var inlineVerseOpenedAt = Date()
+    @State private var inlineVerseExpanded = false
     /// The daily hint pool for a free player past the learning window.
     private let freeHintLimit = PlayerProfile.freeHintLimit
     /// Keeps the screen focused so a hardware keyboard can type into the grid.
@@ -475,7 +482,7 @@ struct CrosswordGameScreen: View {
                         // costs nothing there.
                         Group {
                             if cluesInDockColumn {
-                                columnClueList
+                                columnStanding
                                     // No height of its own: the list takes
                                     // the slack a pane is given, and never
                                     // asks a content-sized pane for more.
@@ -530,7 +537,7 @@ struct CrosswordGameScreen: View {
                         // player is already stuck.
                         solveNotes
                         if solveLayout == .cluesInColumn {
-                            columnClueList
+                            columnStanding
                         } else {
                             Spacer(minLength: 0)
                         }
@@ -922,6 +929,26 @@ struct CrosswordGameScreen: View {
             saveProgress()
             logAbandonIfNeeded(exitPath: "disappear")
             PostHogAnalyticsService.stopReplay()
+            closeInlineVerse()
+        }
+        // The standing verse, kept here rather than on the panel: the panel
+        // lives in a layout a fold swaps out, and its lifecycle with it.
+        // Reading costs no time; typing does — the clock starts again on the
+        // first key, verse still open.
+        .onChange(of: vm.keyPresses) {
+            if inlineVerse != nil { vm.isTimerSuppressed = false }
+        }
+        // The verse belongs to the clue it was asked from.
+        .onChange(of: vm.activeSlot?.id) {
+            if inlineVerse != nil { closeInlineVerse() }
+        }
+        // Folded to a window with no column for it: the sheet carries it on,
+        // and reports the read when it goes.
+        .onChange(of: cluesInDockColumn) { _, standing in
+            if !standing, let target = inlineVerse {
+                inlineVerse = nil
+                verseHintTarget = target
+            }
         }
     }
 
@@ -986,6 +1013,26 @@ struct CrosswordGameScreen: View {
 
     /// The clue list standing in the keypad's column. Its last row scrolls
     /// to rest a breath above the clue bar rather than flush against it.
+    /// What stands in the keypad's column above the keys: the clue list, or
+    /// the verse a clue was asked for in its place.
+    @ViewBuilder
+    private var columnStanding: some View {
+        if let inlineVerse {
+            VerseHintPanel(
+                target: inlineVerse,
+                clueLine: inlineVerseClue,
+                onClose: closeInlineVerse,
+                onReadChapter: {
+                    inlineVerseExpanded = true
+                    clueReaderTarget = inlineVerse
+                }
+            )
+            .transition(.opacity)
+        } else {
+            columnClueList
+        }
+    }
+
     private var columnClueList: some View {
         ClueListView(
             vm: vm,
@@ -1642,6 +1689,8 @@ struct CrosswordGameScreen: View {
         guard let slot = vm.activeSlot,
               let reference = slot.reference,
               let target = ReaderRouter.Target(reference: reference, source: "hint") else { return }
+        // Already standing beside the board: asked again, it's still open.
+        guard inlineVerse?.id != target.id else { return }
 
         let rec = loadOrCreateRecord()
         if !rec.usedHint {
@@ -1653,7 +1702,29 @@ struct CrosswordGameScreen: View {
         analytics.log(.scriptureOpened(reference: reference, source: "hint"))
         vm.isTimerSuppressed = true
         vm.pauseTimer()
-        verseHintTarget = target
+        if cluesInDockColumn {
+            inlineVerseClue = "\(slot.number) \(slot.direction.label) · \(slot.clue)"
+            inlineVerseOpenedAt = Date()
+            inlineVerseExpanded = false
+            withAnimation(.snappy) { inlineVerse = target }
+        } else {
+            verseHintTarget = target
+        }
+    }
+
+    /// Puts the clue list back where the verse stood, and reports the read as
+    /// the sheet does when it goes.
+    private func closeInlineVerse() {
+        guard let target = inlineVerse else { return }
+        analytics.log(.readerClosed(
+            source: target.source,
+            seconds: Int(Date().timeIntervalSince(inlineVerseOpenedAt).rounded()),
+            chaptersPaged: 0,
+            scrolledPastVerse: false,
+            expanded: inlineVerseExpanded
+        ))
+        withAnimation(.snappy) { inlineVerse = nil }
+        vm.isTimerSuppressed = false
     }
 
     private func handleCompletion(seconds: Int) {

@@ -19,8 +19,6 @@ struct VerseHintSheet: View {
 
     @Environment(\.scripture) private var scripture
     @Environment(\.analytics) private var analytics
-    @Environment(\.memoryVerses) private var memoryVerses
-    @Environment(StoreService.self) private var store
     @Environment(\.dismiss) private var dismiss
 
     @State private var window: [BibleVerse]?
@@ -77,7 +75,9 @@ struct VerseHintSheet: View {
         }
     }
 
-    private var reference: String {
+    private var reference: String { Self.reference(for: target) }
+
+    static func reference(for target: ReaderRouter.Target) -> String {
         if let verse = target.verse {
             return "\(target.book) \(target.chapter):\(verse)"
         }
@@ -86,28 +86,62 @@ struct VerseHintSheet: View {
 
     private func passage(_ verses: [BibleVerse]) -> some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: Theme.Spacing.l) {
-                VStack(alignment: .leading, spacing: Theme.Spacing.m) {
-                    ForEach(verses) { verse in
-                        verseRow(verse, isTarget: verse.number == (target.verse ?? verses.first?.number))
-                    }
-                }
-
-                VStack(spacing: Theme.Spacing.s) {
-                    Button {
-                        expanded = true
-                    } label: {
-                        Label("Read the chapter", systemImage: "book")
-                    }
-                    .buttonStyle(.pillTonal)
-
-                    memorizeButton(verses)
-                }
+            VersePassageContent(target: target, verses: verses) {
+                expanded = true
             }
             .frame(maxWidth: 640, alignment: .leading)
             .frame(maxWidth: .infinity)
             .padding(.horizontal, Theme.Spacing.l)
             .padding(.vertical, Theme.Spacing.m)
+        }
+    }
+
+    /// The deep-linked verse with one on each side; the chapter's first two
+    /// verses for a chapter-only reference. Empty if the passage can't be
+    /// found, which the caller has already guarded against.
+    static func window(around target: ReaderRouter.Target, in scripture: ScriptureProvider) -> [BibleVerse] {
+        guard let chapter = scripture.chapter(ScriptureRef(book: target.book, chapter: target.chapter))?.chapter
+        else { return [] }
+        let verses = chapter.verses
+        guard let verse = target.verse,
+              let index = verses.firstIndex(where: { $0.number == verse })
+        else { return Array(verses.prefix(2)) }
+        let lower = max(0, index - 1)
+        let upper = min(verses.count - 1, index + 1)
+        return Array(verses[lower...upper])
+    }
+}
+
+/// The passage a verse hint shows — the verse at reading size between its
+/// quieter neighbours, then the chapter and the memory door — shared by the
+/// sheet and the panel that stands beside the board on a wide window.
+struct VersePassageContent: View {
+    let target: ReaderRouter.Target
+    let verses: [BibleVerse]
+    let onReadChapter: () -> Void
+
+    @Environment(\.analytics) private var analytics
+    @Environment(\.memoryVerses) private var memoryVerses
+    @Environment(StoreService.self) private var store
+
+    private var reference: String { VerseHintSheet.reference(for: target) }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: Theme.Spacing.l) {
+            VStack(alignment: .leading, spacing: Theme.Spacing.m) {
+                ForEach(verses) { verse in
+                    verseRow(verse, isTarget: verse.number == (target.verse ?? verses.first?.number))
+                }
+            }
+
+            VStack(spacing: Theme.Spacing.s) {
+                Button(action: onReadChapter) {
+                    Label("Read the chapter", systemImage: "book")
+                }
+                .buttonStyle(.pillTonal)
+
+                memorizeButton
+            }
         }
     }
 
@@ -119,7 +153,7 @@ struct VerseHintSheet: View {
     /// when the free shelf is full: a door onto a paywall isn't worth showing
     /// (38 opens, 0 buys in the 30 days to 2026-09-10).
     @ViewBuilder
-    private func memorizeButton(_ verses: [BibleVerse]) -> some View {
+    private var memorizeButton: some View {
         if let number = target.verse,
            let verse = verses.first(where: { $0.number == number }),
            MemoryCloze.isEligible(verseText: verse.text) {
@@ -161,19 +195,70 @@ struct VerseHintSheet: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .accessibilityLabel("\(isTarget ? "Verse" : "Nearby verse") \(verse.number). \(verse.text)")
     }
+}
 
-    /// The deep-linked verse with one on each side; the chapter's first two
-    /// verses for a chapter-only reference. Empty if the passage can't be
-    /// found, which the caller has already guarded against.
-    static func window(around target: ReaderRouter.Target, in scripture: ScriptureProvider) -> [BibleVerse] {
-        guard let chapter = scripture.chapter(ScriptureRef(book: target.book, chapter: target.chapter))?.chapter
-        else { return [] }
-        let verses = chapter.verses
-        guard let verse = target.verse,
-              let index = verses.firstIndex(where: { $0.number == verse })
-        else { return Array(verses.prefix(2)) }
-        let lower = max(0, index - 1)
-        let upper = min(verses.count - 1, index + 1)
-        return Array(verses[lower...upper])
+/// The verse hint standing in the keypad's column on a wide window (iPhone
+/// Duo unfolded, or folded like a laptop), where the clue list stands: the
+/// board stays in view and the keys stay under the thumb, so the player
+/// reads the verse beside the word it answers. A sheet covered the board.
+struct VerseHintPanel: View {
+    let target: ReaderRouter.Target
+    /// "15 Across · Prophetess who held court under a palm tree": the clue
+    /// the list showed in this spot, which the verse now stands in for.
+    let clueLine: String?
+    let onClose: () -> Void
+    let onReadChapter: () -> Void
+
+    @Environment(\.scripture) private var scripture
+    @State private var verses: [BibleVerse]?
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            HStack(alignment: .firstTextBaseline) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(VerseHintSheet.reference(for: target))
+                        .font(.headline)
+                    if let clueLine {
+                        Text(clueLine)
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                            .lineLimit(2)
+                    }
+                }
+                Spacer(minLength: Theme.Spacing.s)
+                Button(action: onClose) {
+                    Image(systemName: "xmark")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.secondary)
+                        .frame(width: 44, height: 44)
+                        .contentShape(.rect)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Close the verse")
+            }
+            .padding(.leading, Theme.Spacing.m)
+            .padding(.top, Theme.Spacing.xs)
+
+            ScrollView {
+                Group {
+                    if let verses {
+                        VersePassageContent(target: target, verses: verses, onReadChapter: onReadChapter)
+                    } else {
+                        ProgressView()
+                            .frame(maxWidth: .infinity)
+                    }
+                }
+                .padding(.horizontal, Theme.Spacing.m)
+                .padding(.bottom, Theme.Spacing.m)
+            }
+            .scrollIndicators(.hidden)
+        }
+        .background(Theme.surface, in: .rect(cornerRadius: 16, style: .continuous))
+        .padding(.horizontal, Theme.Spacing.m)
+        .padding(.vertical, Theme.Spacing.s)
+        .task(id: target.id) {
+            await scripture.preload()
+            verses = VerseHintSheet.window(around: target, in: scripture)
+        }
     }
 }
