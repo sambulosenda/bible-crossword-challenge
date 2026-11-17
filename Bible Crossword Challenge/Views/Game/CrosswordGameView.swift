@@ -202,6 +202,9 @@ struct CrosswordGameScreen: View {
     @State private var inlineVerseClue: String?
     @State private var inlineVerseOpenedAt = Date()
     @State private var inlineVerseExpanded = false
+    /// The standing verse showing its whole chapter. Here rather than on the
+    /// panel, for the same reason as `inlineVerse`.
+    @State private var inlineChapterShown = false
     /// The daily hint pool for a free player past the learning window.
     private let freeHintLimit = PlayerProfile.freeHintLimit
     /// Keeps the screen focused so a hardware keyboard can type into the grid.
@@ -1021,8 +1024,13 @@ struct CrosswordGameScreen: View {
             VerseHintPanel(
                 target: inlineVerse,
                 clueLine: inlineVerseClue,
+                showsChapter: inlineChapterShown,
                 onClose: closeInlineVerse,
                 onReadChapter: {
+                    inlineVerseExpanded = true
+                    withAnimation(.snappy) { inlineChapterShown = true }
+                },
+                onOpenReader: {
                     inlineVerseExpanded = true
                     clueReaderTarget = inlineVerse
                 }
@@ -1706,6 +1714,7 @@ struct CrosswordGameScreen: View {
             inlineVerseClue = "\(slot.number) \(slot.direction.label) · \(slot.clue)"
             inlineVerseOpenedAt = Date()
             inlineVerseExpanded = false
+            inlineChapterShown = false
             withAnimation(.snappy) { inlineVerse = target }
         } else {
             verseHintTarget = target
@@ -1724,6 +1733,7 @@ struct CrosswordGameScreen: View {
             expanded: inlineVerseExpanded
         ))
         withAnimation(.snappy) { inlineVerse = nil }
+        inlineChapterShown = false
         vm.isTimerSuppressed = false
     }
 

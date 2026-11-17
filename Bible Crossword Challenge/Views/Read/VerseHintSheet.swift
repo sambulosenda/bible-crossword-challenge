@@ -201,22 +201,48 @@ struct VersePassageContent: View {
 /// Duo unfolded, or folded like a laptop), where the clue list stands: the
 /// board stays in view and the keys stay under the thumb, so the player
 /// reads the verse beside the word it answers. A sheet covered the board.
+///
+/// "Read the chapter" opens the whole chapter here too, the verse marked,
+/// while the panel has the height to read in: the chapter came up as a
+/// sheet over the board (on the Duo folded like a book, over the whole left
+/// page) and the keys went dim under it, so reading and solving took turns.
+/// Short, as under the Duo folded like a laptop, the panel is a few lines
+/// tall and the sheet still carries the chapter.
 struct VerseHintPanel: View {
     let target: ReaderRouter.Target
     /// "15 Across · Prophetess who held court under a palm tree": the clue
     /// the list showed in this spot, which the verse now stands in for.
     let clueLine: String?
+    /// The whole chapter rather than the verse and its neighbours. Held by
+    /// the game: the panel lives in a layout a fold rebuilds.
+    let showsChapter: Bool
     let onClose: () -> Void
+    /// Opens the chapter here.
     let onReadChapter: () -> Void
+    /// Opens the chapter in the full reader, over the board.
+    let onOpenReader: () -> Void
 
     @Environment(\.scripture) private var scripture
     @State private var verses: [BibleVerse]?
+    @State private var chapterVerses: [BibleVerse]?
+    @State private var height: CGFloat = 0
+    /// The passage's edges with more text past them, faded as the board's
+    /// are (`EdgeFade`). Cut flat, a line scrolled under the clue line sat
+    /// half-sliced against it.
+    @State private var overflowing: Edge.Set = []
+
+    /// The least height worth reading a chapter in: about eight lines.
+    private static let chapterRoom: CGFloat = 240
+
+    private var title: String {
+        showsChapter ? "\(target.book) \(target.chapter)" : VerseHintSheet.reference(for: target)
+    }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
+        VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
             HStack(alignment: .firstTextBaseline) {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(VerseHintSheet.reference(for: target))
+                    Text(title)
                         .font(.headline)
                     if let clueLine {
                         Text(clueLine)
@@ -239,26 +265,89 @@ struct VerseHintPanel: View {
             .padding(.leading, Theme.Spacing.m)
             .padding(.top, Theme.Spacing.xs)
 
-            ScrollView {
-                Group {
-                    if let verses {
-                        VersePassageContent(target: target, verses: verses, onReadChapter: onReadChapter)
-                    } else {
-                        ProgressView()
-                            .frame(maxWidth: .infinity)
+            ScrollViewReader { proxy in
+                ScrollView {
+                    Group {
+                        if showsChapter, let chapterVerses {
+                            chapter(chapterVerses)
+                        } else if let verses {
+                            VersePassageContent(target: target, verses: verses) {
+                                if height >= Self.chapterRoom { onReadChapter() } else { onOpenReader() }
+                            }
+                        } else {
+                            ProgressView()
+                                .frame(maxWidth: .infinity)
+                        }
                     }
+                    .padding(.horizontal, Theme.Spacing.m)
+                    .padding(.bottom, Theme.Spacing.m)
                 }
-                .padding(.horizontal, Theme.Spacing.m)
-                .padding(.bottom, Theme.Spacing.m)
+                .scrollIndicators(.hidden)
+                .onScrollGeometryChange(for: Edge.Set.self) { @Sendable geometry in
+                    EdgeFade.overflowingEdges(geometry)
+                } action: { _, edges in
+                    overflowing = edges
+                }
+                .mask { EdgeFade(edges: overflowing, depth: 20) }
+                // The clue's verse at the top of the column, once the chapter
+                // has laid out: asked straight away, the scroll landed short
+                // with the verse at the foot of the panel.
+                .task(id: showsChapter && chapterVerses != nil) {
+                    guard showsChapter, chapterVerses != nil, let verse = target.verse else { return }
+                    try? await Task.sleep(for: .milliseconds(80))
+                    guard !Task.isCancelled else { return }
+                    withAnimation(.snappy) { proxy.scrollTo(verse, anchor: .top) }
+                }
             }
-            .scrollIndicators(.hidden)
         }
         .background(Theme.surface, in: .rect(cornerRadius: 16, style: .continuous))
+        .onGeometryChange(for: CGFloat.self) { proxy in
+            proxy.size.height
+        } action: { height in
+            self.height = height
+        }
         .padding(.horizontal, Theme.Spacing.m)
         .padding(.vertical, Theme.Spacing.s)
         .task(id: target.id) {
             await scripture.preload()
             verses = VerseHintSheet.window(around: target, in: scripture)
+            chapterVerses = scripture.chapter(ScriptureRef(book: target.book, chapter: target.chapter))?.chapter.verses
         }
+    }
+
+    /// The chapter as running text at reading size, the clue's verse marked
+    /// for as long as it stands, then the way on to the full reader.
+    private func chapter(_ verses: [BibleVerse]) -> some View {
+        VStack(alignment: .leading, spacing: 0) {
+            ForEach(verses) { verse in
+                chapterRow(verse, isTarget: verse.number == target.verse)
+                    .id(verse.number)
+            }
+            Button(action: onOpenReader) {
+                Label("Open in the reader", systemImage: "book")
+            }
+            .buttonStyle(.pillTonal)
+            .padding(.top, Theme.Spacing.l)
+            .accessibilityHint("Opens the chapter full size, over the puzzle")
+        }
+    }
+
+    private func chapterRow(_ verse: BibleVerse, isTarget: Bool) -> some View {
+        let number = Text("\(verse.number) ")
+            .font(.caption.weight(.semibold))
+            .foregroundStyle(.secondary)
+        let body = Text(verse.text)
+            .font(.scripture(.body))
+        return (number + body)
+            .lineSpacing(4)
+            .fixedSize(horizontal: false, vertical: true)
+            .padding(.vertical, 2)
+            .padding(.horizontal, 6)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(
+                isTarget ? Theme.accent.opacity(0.12) : .clear,
+                in: .rect(cornerRadius: 8, style: .continuous)
+            )
+            .accessibilityLabel("\(isTarget ? "The clue's verse, " : "")verse \(verse.number). \(verse.text)")
     }
 }
