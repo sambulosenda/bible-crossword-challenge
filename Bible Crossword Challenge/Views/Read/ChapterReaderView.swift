@@ -367,53 +367,306 @@ private struct ChapterPage: View {
             && pageSize.width > pageSize.height
     }
 
-    /// Where the right page starts: the verse that brings the left page to
-    /// half the chapter's text, so the two pages come out about even.
-    private var spreadBreak: Int {
-        let verses = chapter.verses
-        let total = verses.reduce(0) { $0 + $1.text.count }
-        var running = 0
-        for (i, verse) in verses.enumerated() {
-            running += verse.text.count
-            if running * 2 >= total { return min(i + 1, verses.count) }
-        }
-        return verses.count
+    var body: some View {
+        // Measured off the page itself, not the branch inside it: the
+        // spread is an empty scroll until its verses are measured, zero
+        // wide, so measuring the content flipped it back to the column,
+        // which measured wide again — a loop that hung the reader.
+        Color.clear
+            .overlay {
+                if isSpread {
+                    spreads
+                } else {
+                    column(chapter.verses[...], endsChapter: true)
+                }
+            }
+            .onGeometryChange(for: CGSize.self) { proxy in
+                proxy.size
+            } action: { size in
+                pageSize = size
+            }
     }
 
-    var body: some View {
-        Group {
-            if isSpread {
-                let left = chapter.verses.prefix(spreadBreak)
-                let right = chapter.verses.dropFirst(spreadBreak)
-                if #available(iOS 27.1, *) {
-                    // The system's split puts the seam on the hinge when the
-                    // Duo is folded like a book, and leaves a gutter flat.
-                    ArrangementView {
-                        column(left, endsChapter: false)
-                    } secondary: {
-                        column(right, endsChapter: true)
-                    }
-                    .arrangementViewStyle(.split.axes(.horizontal))
-                } else {
-                    HStack(spacing: 0) {
-                        column(left, endsChapter: false)
-                        column(right, endsChapter: true)
-                    }
-                }
+    // MARK: - Spreads
+
+    /// One thing set on a page: a verse, or the chapter's end.
+    private enum PageItem: Hashable {
+        case verse(Int)
+        case end
+    }
+
+    /// The chapter set as pages, two to a spread, and the tallest page's
+    /// content (taller than a page only when one verse is, at the largest
+    /// text sizes).
+    private struct Pagination {
+        let pages: [[PageItem]]
+        let tallest: CGFloat
+        var spreadCount: Int { (pages.count + 1) / 2 }
+    }
+
+    /// The left and right panes' widths, measured off the spread on screen:
+    /// on the Duo folded like a book they differ, the seam sitting on the
+    /// hinge rather than mid-window.
+    @State private var paneWidths: [CGFloat] = [0, 0]
+    /// What the spreads last reported, before it holds still. Each spread
+    /// is laid out evenly for a frame before its seam seats on the hinge,
+    /// so taken straight these flipped the pages' widths whenever a spread
+    /// was built, reflowing the chapter and losing the place.
+    @State private var reportedPaneWidths: [CGFloat] = [0, 0]
+    /// The spread at the top of the scroll.
+    @State private var visibleSpread: Int?
+    /// Each verse's height set at each pane's width, and the chapter end's.
+    @State private var rowHeights: [[Int: CGFloat]] = [[:], [:]]
+    @State private var endHeights: [CGFloat?] = [nil, nil]
+    /// The text width each side's heights were last set at. Pagination
+    /// waits until it matches the pane's: heights from a width the split
+    /// has since left (its first pass, before the seam settles on the
+    /// hinge) paged the chapter wrongly and sent a deep link astray.
+    @State private var measuredWidths: [CGFloat] = [0, 0]
+    /// The height a spread fills: the scroll view's, less its insets.
+    @State private var spreadHeight: CGFloat = 0
+
+    /// Room at a page's foot for its number.
+    private static let folioRoom: CGFloat = 28
+
+    /// The width text sets at in a pane: the page's 24pt margins off it,
+    /// capped at the reader's 640pt measure.
+    private func textWidth(_ side: Int) -> CGFloat {
+        max(min(paneWidths[side] - 2 * Theme.Spacing.l, 640), 1)
+    }
+
+    private func height(of item: PageItem, side: Int) -> CGFloat? {
+        switch item {
+        case .verse(let number): rowHeights[side][number]
+        case .end: endHeights[side]
+        }
+    }
+
+    /// Verses flowed onto pages in reading order, left page then right, a
+    /// verse never split across two. Nil until every height is measured.
+    private var pagination: Pagination? {
+        guard spreadHeight > 0,
+              paneWidths.allSatisfy({ $0 > 0 }),
+              (0...1).allSatisfy({ abs(measuredWidths[$0] - textWidth($0)) < 0.5 })
+        else { return nil }
+        let room = spreadHeight - 2 * Theme.Spacing.m - Self.folioRoom
+        let items = chapter.verses.map { PageItem.verse($0.number) } + [.end]
+        var pages: [[PageItem]] = [[]]
+        var used: CGFloat = 0
+        var tallest: CGFloat = 0
+        for item in items {
+            guard let here = height(of: item, side: (pages.count - 1) % 2) else { return nil }
+            if used + here > room, !pages[pages.count - 1].isEmpty {
+                pages.append([])
+                guard let there = height(of: item, side: (pages.count - 1) % 2) else { return nil }
+                used = there
             } else {
-                column(chapter.verses[...], endsChapter: true)
+                used += here
+            }
+            pages[pages.count - 1].append(item)
+            tallest = max(tallest, used)
+        }
+        return Pagination(pages: pages, tallest: tallest)
+    }
+
+    /// The spread holding the deep-linked verse.
+    private func highlightSpread(in layout: Pagination?) -> Int? {
+        guard let target = highlight, let layout,
+              let page = layout.pages.firstIndex(where: { $0.contains(.verse(target)) })
+        else { return nil }
+        return page / 2
+    }
+
+    private var versesByNumber: [Int: BibleVerse] {
+        Dictionary(chapter.verses.map { ($0.number, $0) }, uniquingKeysWith: { first, _ in first })
+    }
+
+    /// The chapter as an open book: two pages a spread, the text running
+    /// down the left page and on down the right, and the next spread a
+    /// swipe up, snapping a whole spread at a time. Sideways still turns
+    /// the chapter. Each page used to be a scroll of its own, so a long
+    /// chapter's right page began thirty verses on from the left's first
+    /// line.
+    private var spreads: some View {
+        let layout = pagination
+        return ScrollView {
+            LazyVStack(spacing: 0) {
+                if let layout {
+                    let height = max(spreadHeight, layout.tallest + 2 * Theme.Spacing.m + Self.folioRoom)
+                    ForEach(0..<layout.spreadCount, id: \.self) { s in
+                        spread(s, of: layout)
+                            .frame(height: height)
+                    }
+                } else {
+                    // Blank pages until the verses are measured: the
+                    // panes' widths are read off this spread.
+                    spread(left: [], right: [], index: 0)
+                        .frame(height: max(spreadHeight, 1))
+                }
+            }
+            .frame(maxWidth: .infinity)
+            .scrollTargetLayout()
+        }
+        // By spread, not offset: when the page's height changes (the bars
+        // settling after the push, a fold) every spread grows, and an
+        // offset kept would leave the reader between two.
+        .scrollPosition(id: $visibleSpread, anchor: .top)
+        .scrollTargetBehavior(.viewAligned)
+        .onScrollGeometryChange(for: CGFloat.self) { @Sendable geometry in
+            geometry.containerSize.height - geometry.contentInsets.top - geometry.contentInsets.bottom
+        } action: { _, height in
+            spreadHeight = height
+        }
+        // Reading on is turning to another spread once the deep-linked
+        // verse's has been brought into view. Noted once the scroll comes
+        // to rest: the flag is the reader's state, and changing it
+        // mid-fling redrew the pager and stopped the spread short of its
+        // snap.
+        .onScrollPhaseChange { _, phase in
+            guard phase == .idle, settled, !scrolledPast,
+                  let target = highlightSpread(in: pagination), visibleSpread != target
+            else { return }
+            scrolledPast = true
+        }
+        // Keyed on the verse's spread, not the verse: the pages can
+        // reflow after the first layout (the split seating its seam on
+        // the hinge), and the verse should follow them until the
+        // reader moves on.
+        .task(id: highlightSpread(in: layout)) {
+            guard let spread = highlightSpread(in: layout), !scrolledPast else { return }
+            settled = false
+            try? await Task.sleep(for: .milliseconds(60))
+            guard !Task.isCancelled else { return }
+            withAnimation(.easeInOut) { visibleSpread = spread }
+            try? await Task.sleep(for: .milliseconds(500))
+            guard !Task.isCancelled else { return }
+            settled = true
+            guard !reduceMotion else { return }
+            flashing = true
+            try? await Task.sleep(for: .milliseconds(600))
+            withAnimation(.easeOut(duration: 0.7)) { flashing = false }
+        }
+        .background { measuringRig }
+        .task(id: reportedPaneWidths) {
+            try? await Task.sleep(for: .milliseconds(150))
+            guard !Task.isCancelled, paneWidths != reportedPaneWidths else { return }
+            paneWidths = reportedPaneWidths
+        }
+    }
+
+    private func spread(_ s: Int, of layout: Pagination) -> some View {
+        spread(
+            left: layout.pages[2 * s],
+            right: 2 * s + 1 < layout.pages.count ? layout.pages[2 * s + 1] : [],
+            index: s
+        )
+    }
+
+    @ViewBuilder
+    private func spread(left: [PageItem], right: [PageItem], index s: Int) -> some View {
+        if #available(iOS 27.1, *) {
+            // The system's split puts the seam on the hinge when the Duo is
+            // folded like a book, and leaves a gutter flat.
+            ArrangementView {
+                page(left, folio: 2 * s + 1, side: 0)
+            } secondary: {
+                page(right, folio: 2 * s + 2, side: 1)
+            }
+            .arrangementViewStyle(.split.axes(.horizontal))
+        } else {
+            HStack(spacing: 0) {
+                page(left, folio: 2 * s + 1, side: 0)
+                page(right, folio: 2 * s + 2, side: 1)
             }
         }
-        .onGeometryChange(for: CGSize.self) { proxy in
-            proxy.size
-        } action: { size in
-            pageSize = size
+    }
+
+    /// One page: its verses from the top, its number at the foot.
+    private func page(_ items: [PageItem], folio: Int, side: Int) -> some View {
+        let verses = versesByNumber
+        return VStack(alignment: .leading, spacing: 0) {
+            ForEach(items, id: \.self) { item in
+                switch item {
+                case .verse(let number):
+                    if let verse = verses[number] {
+                        verseRow(verse)
+                    }
+                case .end:
+                    VStack(spacing: 0) { endOfChapter }
+                }
+            }
+            Spacer(minLength: 0)
+            if !items.isEmpty {
+                Text("\(folio)")
+                    .font(.caption)
+                    .monospacedDigit()
+                    .foregroundStyle(.tertiary)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: Self.folioRoom, alignment: .bottom)
+                    .accessibilityHidden(true)
+            }
+        }
+        .frame(maxWidth: 640, alignment: .leading)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        .padding(.horizontal, Theme.Spacing.l)
+        .padding(.vertical, Theme.Spacing.m)
+        // The pane's width, for the measuring columns. Read off the spread
+        // on screen: a hidden split laid out beside it got one pane only.
+        // Only a spread wholly in view counts — one part scrolled away
+        // splits evenly instead of seating its seam on the hinge. Whole
+        // points, down: the hinge split reports fractions that differ from
+        // spread to spread.
+        .onGeometryChange(for: CGFloat?.self) { proxy in
+            guard let visible = proxy.bounds(of: .scrollView),
+                  visible.minY <= 1, visible.maxY >= proxy.size.height - 1
+            else { return nil }
+            return proxy.size.width.rounded(.down)
+        } action: { width in
+            guard let width, reportedPaneWidths[side] != width else { return }
+            reportedPaneWidths[side] = width
         }
     }
 
-    /// One page of the chapter: its verses, and the chapter's end on the
-    /// last page. Each scrolls on its own, so in a spread the left page can
-    /// be read to its foot before the eye moves right.
+    /// Never seen: every verse set at each pane's width, for `pagination`
+    /// to flow the pages from.
+    private var measuringRig: some View {
+        ZStack(alignment: .topLeading) {
+            measuringColumn(0)
+            measuringColumn(1)
+        }
+        .hidden()
+        .allowsHitTesting(false)
+        .accessibilityHidden(true)
+    }
+
+    private func measuringColumn(_ side: Int) -> some View {
+        VStack(alignment: .leading, spacing: 0) {
+            ForEach(chapter.verses) { verse in
+                verseRow(verse)
+                    .onGeometryChange(for: CGFloat.self) { proxy in
+                        proxy.size.height
+                    } action: { height in
+                        rowHeights[side][verse.number] = height
+                    }
+            }
+            VStack(spacing: 0) { endOfChapter }
+                .onGeometryChange(for: CGFloat.self) { proxy in
+                    proxy.size.height
+                } action: { height in
+                    endHeights[side] = height
+                }
+        }
+        .frame(width: textWidth(side))
+        .fixedSize(horizontal: false, vertical: true)
+        .onGeometryChange(for: CGFloat.self) { proxy in
+            proxy.size.width
+        } action: { width in
+            measuredWidths[side] = width
+        }
+    }
+
+    /// The chapter as one scrolling column: the reader's page everywhere
+    /// but a wide window.
     private func column(_ verses: ArraySlice<BibleVerse>, endsChapter: Bool) -> some View {
         let holdsHighlight = highlight.map { target in verses.contains { $0.number == target } } ?? false
         return ScrollViewReader { proxy in
