@@ -40,9 +40,9 @@ struct CrosswordGridView: View {
     @State private var holdCursorScrollUntil: Date?
     private static let giftHold: TimeInterval = 0.9
 
-    /// Current cell side in zoom mode; nil until the first layout pass picks
-    /// a default. Never smaller than fit (whole grid visible), never larger
-    /// than a full touch target.
+    /// Current cell side in zoom mode, once a pinch or the zoom action has
+    /// set one; nil means `startingZoomSide`. Never smaller than fit (whole
+    /// grid visible), never larger than a full touch target.
     @State private var zoomSide: CGFloat?
     /// The viewport's edges with more board beyond them.
     @State private var overflowing: Edge.Set = []
@@ -108,7 +108,7 @@ struct CrosswordGridView: View {
             let zooms = vm.size > Self.zoomThreshold || fit < minimumFittedSide
             Group {
                 if zooms {
-                    zoomableGrid(in: geo.size)
+                    zoomableGrid(in: geo.size, box: box)
                 } else {
                     fittedGrid(side: fit, box: box)
                 }
@@ -155,21 +155,25 @@ struct CrosswordGridView: View {
 
     // MARK: - Zoom mode (Sunday Specials, and any container too small to fit)
 
-    private func zoomableGrid(in size: CGSize) -> some View {
-        let fit = floor(min(size.width, size.height) / CGFloat(vm.size))
-        let side = zoomSide.map { clamped($0, fit: fit) } ?? max(fit, Self.comfortableSide)
-        let total = side * CGFloat(vm.size)
+    /// Cropped to the playable cells as the fitted grid is: a border of
+    /// block-only columns spent width the board needed.
+    private func zoomableGrid(in size: CGSize, box: PlayableBounds) -> some View {
+        let cols = CGFloat(box.cols.count), rows = CGFloat(box.rows.count)
+        let fit = floor(min(size.width / cols, size.height / rows))
+        let start = startingZoomSide(width: size.width, cols: cols, fit: fit)
+        let side = zoomSide.map { clamped($0, fit: fit) } ?? start
+        let width = side * cols, height = side * rows
 
         return ScrollViewReader { proxy in
             ScrollView([.horizontal, .vertical], showsIndicators: false) {
-                gridRows(side: side)
-                    .frame(width: total, height: total)
+                gridRows(side: side, rows: box.rows, cols: box.cols)
+                    .frame(width: width, height: height)
                     .modifier(ShakeEffect(animatableData: CGFloat(shakeTick)))
                     // Centered while zoomed out smaller than the viewport;
                     // a plain ScrollView would pin it top-leading.
                     .frame(
-                        width: max(total, size.width),
-                        height: max(total, size.height)
+                        width: max(width, size.width),
+                        height: max(height, size.height)
                     )
             }
             // Fade an edge only while the board runs past it. Cut flat, a
@@ -181,13 +185,13 @@ struct CrosswordGridView: View {
                 overflowing = edges
             }
             .mask { EdgeFade(edges: overflowing) }
-            .simultaneousGesture(magnify(fit: fit))
+            .simultaneousGesture(magnify(fit: fit, start: start))
             // Pinch is the only way to work this viewport, and it is a gesture
             // not everyone can make. Zoom mode is also where a large text size
             // lands the ordinary 15×15 (see `body`), so the people most likely
             // to be here are the ones least likely to pinch.
             .accessibilityZoomAction { action in
-                let base = zoomSide ?? max(fit, Self.comfortableSide)
+                let base = zoomSide ?? start
                 let factor = action.direction == .zoomIn
                     ? Self.zoomStep
                     : 1 / Self.zoomStep
@@ -211,7 +215,10 @@ struct CrosswordGridView: View {
                 scrollTo(pos, proxy: proxy)
             }
             .onAppear {
-                if zoomSide == nil { zoomSide = max(fit, Self.comfortableSide) }
+                // `zoomSide` stays nil until a pinch or zoom action sets
+                // it, so the start follows the board's size as the screen
+                // settles: set here, it froze at the width the board had
+                // mid-push (434pt on the folded Duo, settling at 350).
                 // Without animation: arriving on a screen already framed on
                 // your cursor, not watching it travel there.
                 proxy.scrollTo(vm.selected, anchor: .center)
@@ -236,10 +243,22 @@ struct CrosswordGridView: View {
         min(max(side, fit), Self.maxZoomSide)
     }
 
-    private func magnify(fit: CGFloat) -> some Gesture {
+    /// Where the zoomed board opens. When the board's whole width fits at a
+    /// usable size it opens there, so it only scrolls up and down: on the
+    /// folded Duo a 15×15 has the width for 25pt cells but the height for
+    /// 18, and opening at the comfortable 30pt cut three columns off as
+    /// well, a board panned both ways. A board too wide for that (a 21×21
+    /// on a phone) opens at the comfortable size, as before.
+    private func startingZoomSide(width: CGFloat, cols: CGFloat, fit: CGFloat) -> CGFloat {
+        let widthFit = floor(width / cols)
+        let preferred = widthFit >= minimumFittedSide ? min(widthFit, Self.comfortableSide) : Self.comfortableSide
+        return max(fit, preferred)
+    }
+
+    private func magnify(fit: CGFloat, start: CGFloat) -> some Gesture {
         MagnifyGesture()
             .onChanged { value in
-                let base = pinchBase ?? zoomSide ?? max(fit, Self.comfortableSide)
+                let base = pinchBase ?? zoomSide ?? start
                 pinchBase = base
                 zoomSide = clamped(base * value.magnification, fit: fit)
             }
@@ -260,10 +279,6 @@ struct CrosswordGridView: View {
         }
         guard maxR >= 0 else { return PlayableBounds(rows: 0..<vm.size, cols: 0..<vm.size) }
         return PlayableBounds(rows: minR..<(maxR + 1), cols: minC..<(maxC + 1))
-    }
-
-    private func gridRows(side: CGFloat) -> some View {
-        gridRows(side: side, rows: 0..<vm.size, cols: 0..<vm.size)
     }
 
     private func gridRows(side: CGFloat, rows: Range<Int>, cols: Range<Int>) -> some View {
