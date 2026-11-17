@@ -353,31 +353,81 @@ private struct ChapterPage: View {
     /// before that are the app moving the page, not the reader.
     @State private var settled = false
 
+    /// The page's measured size, for `isSpread`.
+    @State private var pageSize: CGSize = .zero
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+
+    /// Two pages side by side, as a printed Bible opens, on a window wide
+    /// enough for two readable columns: iPhone Duo open on its side or
+    /// folded like a book, an iPad in landscape. One column across that
+    /// width ran every line over the Duo's hinge.
+    private var isSpread: Bool {
+        horizontalSizeClass == .regular
+            && pageSize.width >= 760
+            && pageSize.width > pageSize.height
+    }
+
+    /// Where the right page starts: the verse that brings the left page to
+    /// half the chapter's text, so the two pages come out about even.
+    private var spreadBreak: Int {
+        let verses = chapter.verses
+        let total = verses.reduce(0) { $0 + $1.text.count }
+        var running = 0
+        for (i, verse) in verses.enumerated() {
+            running += verse.text.count
+            if running * 2 >= total { return min(i + 1, verses.count) }
+        }
+        return verses.count
+    }
+
     var body: some View {
-        ScrollViewReader { proxy in
+        Group {
+            if isSpread {
+                let left = chapter.verses.prefix(spreadBreak)
+                let right = chapter.verses.dropFirst(spreadBreak)
+                if #available(iOS 27.1, *) {
+                    // The system's split puts the seam on the hinge when the
+                    // Duo is folded like a book, and leaves a gutter flat.
+                    ArrangementView {
+                        column(left, endsChapter: false)
+                    } secondary: {
+                        column(right, endsChapter: true)
+                    }
+                    .arrangementViewStyle(.split.axes(.horizontal))
+                } else {
+                    HStack(spacing: 0) {
+                        column(left, endsChapter: false)
+                        column(right, endsChapter: true)
+                    }
+                }
+            } else {
+                column(chapter.verses[...], endsChapter: true)
+            }
+        }
+        .onGeometryChange(for: CGSize.self) { proxy in
+            proxy.size
+        } action: { size in
+            pageSize = size
+        }
+    }
+
+    /// One page of the chapter: its verses, and the chapter's end on the
+    /// last page. Each scrolls on its own, so in a spread the left page can
+    /// be read to its foot before the eye moves right.
+    private func column(_ verses: ArraySlice<BibleVerse>, endsChapter: Bool) -> some View {
+        let holdsHighlight = highlight.map { target in verses.contains { $0.number == target } } ?? false
+        return ScrollViewReader { proxy in
             ScrollView {
                 // No "Chapter N" kicker: the title above already says it.
                 // Verses sit a line-gap apart rather than a card-gap, so the
                 // chapter reads as running text, not a list of rows.
                 VStack(alignment: .leading, spacing: 0) {
-                    ForEach(chapter.verses) { verse in
+                    ForEach(verses) { verse in
                         verseRow(verse).id(verse.number)
                     }
 
-                    if !showsPlanFooter {
-                        chapterFooter
-                    }
-
-                    if showsPlanFooter {
-                        Button(action: onMarkRead) {
-                            Label("Mark chapter as read", systemImage: "checkmark")
-                        }
-                        .buttonStyle(.pillProminent)
-                        .padding(.top, Theme.Spacing.l)
-                        // The pager ignores the bottom safe area; clear the
-                        // home indicator.
-                        .padding(.bottom, Theme.Spacing.xl)
-                        .accessibilityHint("Marks today's chapter read and returns")
+                    if endsChapter {
+                        endOfChapter
                     }
                 }
                 // A measure a reader can actually track — scripture set across
@@ -387,8 +437,8 @@ private struct ChapterPage: View {
                 .padding(.horizontal, Theme.Spacing.l)
                 .padding(.vertical, Theme.Spacing.m)
             }
-            .task(id: highlight) {
-                guard let target = highlight else { return }
+            .task(id: holdsHighlight ? highlight : nil) {
+                guard holdsHighlight, let target = highlight else { return }
                 try? await Task.sleep(for: .milliseconds(60))
                 withAnimation(.easeInOut) { proxy.scrollTo(target, anchor: .center) }
                 // Past the scroll animation before offsets count as reading.
@@ -408,9 +458,30 @@ private struct ChapterPage: View {
             .onScrollGeometryChange(for: CGFloat.self) { @Sendable geometry in
                 geometry.contentOffset.y
             } action: { old, new in
-                guard settled, !scrolledPast, abs(new - old) > 24 else { return }
+                guard holdsHighlight, settled, !scrolledPast, abs(new - old) > 24 else { return }
                 scrolledPast = true
             }
+        }
+    }
+
+    /// The next chapter and the book's puzzles, or the reading plan's
+    /// mark-read on its chapter.
+    @ViewBuilder
+    private var endOfChapter: some View {
+        if !showsPlanFooter {
+            chapterFooter
+        }
+
+        if showsPlanFooter {
+            Button(action: onMarkRead) {
+                Label("Mark chapter as read", systemImage: "checkmark")
+            }
+            .buttonStyle(.pillProminent)
+            .padding(.top, Theme.Spacing.l)
+            // The pager ignores the bottom safe area; clear the
+            // home indicator.
+            .padding(.bottom, Theme.Spacing.xl)
+            .accessibilityHint("Marks today's chapter read and returns")
         }
     }
 
