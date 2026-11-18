@@ -33,6 +33,12 @@ struct CompletionView: View {
     /// This solve finished a pack or Journey for the first time — a review
     /// moment (`ReviewAsk`).
     var finishedCollection: Bool = false
+    /// The solve as `InviteAsk` needs it: the first time this puzzle was
+    /// finished, whether it set the profile's best time, and whether it moved
+    /// the streak. Set by the game screen's completion hook.
+    var isFirstSolve: Bool = true
+    var isNewBest: Bool = false
+    var streakAdvanced: Bool = false
     let onHome: () -> Void
 
     /// Which entry point opened the paywall, carried *as* the sheet's item.
@@ -71,11 +77,17 @@ struct CompletionView: View {
     /// Weekdays solved this week, driving the scorecard's week row. Captured on
     /// appear so the row can't shift mid-view.
     @State private var completedWeekdays: Set<Int> = []
-    /// First outgoing challenge needs a display name — collected inline. The
-    /// intent (fresh challenge vs. rematch) is stashed across the prompt.
+    /// A board needs a display name before it leaves the device; a one-to-one
+    /// challenge doesn't (see `sendChallenge`) and asks after its first send.
     @State private var showNamePrompt = false
     @State private var draftName = ""
-    @State private var pendingRematchIntent = false
+    /// The name prompt was raised after a nameless challenge went out, so
+    /// saving it only saves it.
+    @State private var pendingNameOnly = false
+    /// A nameless challenge was just sent; the prompt waits for the share
+    /// sheet to finish closing. Once ever, spent when it is raised.
+    @State private var nameAskDue = false
+    @AppStorage("challengeNameAskedAfterSend") private var nameAskedAfterSend = false
     /// True when the name prompt was raised by a board action rather than a
     /// one-to-one challenge, so saving the name resumes the right one.
     @State private var pendingBoardIntent = false
@@ -153,6 +165,17 @@ struct CompletionView: View {
     /// Decided once on appear so spending an impression can't hide the card
     /// mid-view.
     @State private var showReminderAsk = false
+    /// The return-day sheet is on its way up, so nothing else asks.
+    @State private var returnDaySheetPending = false
+    /// The scorecard's invite row, when this solve earned one — the rules
+    /// live in `InviteAsk.decide`. Latched on appear; the week's budget is
+    /// spent only once the row is seen (`logInviteAskIfSeen`).
+    @State private var inviteMoment: InviteAsk.Moment?
+    @State private var inviteRowVisible = false
+    @State private var didLogInviteAsk = false
+    @AppStorage("inviteAskLastShown") private var inviteAskLastShown = 0.0
+    /// Rows shown since the player last sent a challenge.
+    @AppStorage("inviteAskUnanswered") private var inviteAskUnanswered = 0
 
     private var kindLabel: String {
         switch puzzle.kind ?? .daily {
@@ -275,6 +298,9 @@ struct CompletionView: View {
             // card below yields to it through `ReminderAsk.decide`.
             maybeShowReturnDaySheet()
             maybeShowReminderAsk()
+            // Before the offers under the verse: they are once-ever and wait
+            // unspent for a later solve, where this row is back in a week.
+            maybeShowInviteAsk()
             maybeShowCompletionOffer()
             maybeShowWidgetOffer()
         }
@@ -296,7 +322,17 @@ struct CompletionView: View {
         .sheet(item: $paywallEntry) { entry in
             PaywallView(source: entry.source)
         }
-        .sheet(item: $challengeShare) { share in
+        .sheet(item: $challengeShare, onDismiss: {
+            // The name, asked once the first nameless challenge has gone:
+            // here rather than in the sheet's callback, which runs while the
+            // sheet is still on its way down and can't present over it.
+            guard nameAskDue else { return }
+            nameAskDue = false
+            nameAskedAfterSend = true
+            pendingNameOnly = true
+            draftName = ""
+            showNamePrompt = true
+        }) { share in
             // History and analytics record the send, not the intent: a share
             // sheet the player backs out of never happened, and a list (or a
             // `challenge_sent` count) claiming otherwise is the one thing a
@@ -305,14 +341,19 @@ struct CompletionView: View {
             ShareSheet(items: [share.caption, share.url]) { completed in
                 guard !share.isBoard else { return }
                 guard completed else {
-                    analytics.log(.challengeShareCancelled(puzzleID: puzzle.id))
+                    analytics.log(.challengeShareCancelled(puzzleID: puzzle.id, source: share.source))
                     return
                 }
                 analytics.log(share.isRematch
-                    ? .challengeRematchSent(puzzleID: puzzle.id)
-                    : .challengeSent(puzzleID: puzzle.id))
+                    ? .challengeRematchSent(puzzleID: puzzle.id, source: share.source)
+                    : .challengeSent(puzzleID: puzzle.id, source: share.source))
                 recordOutgoing(rematch: share.isRematch)
                 grantSenderFreezeIfDue()
+                // Answered, from whichever button: the row has done its work
+                // and the next one is a week off, not a month.
+                inviteAskUnanswered = 0
+                withAnimation { inviteMoment = nil }
+                if !hasChosenName, !nameAskedAfterSend { nameAskDue = true }
             }
         }
         .alert("What should we call you?", isPresented: $showNamePrompt) {
@@ -323,9 +364,11 @@ struct CompletionView: View {
             // be tapped until there's a name to save.
             Button("Save") { saveNameAndSend() }
                 .disabled(draftName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-            Button("Cancel", role: .cancel) {}
+            Button(pendingNameOnly ? "Not Now" : "Cancel", role: .cancel) { pendingNameOnly = false }
         } message: {
-            Text("We'll show this name to friends you challenge.")
+            Text(pendingNameOnly
+                 ? "Friends will see it on the next challenge you send."
+                 : "We'll show this name to friends you challenge.")
         }
     }
 
@@ -574,7 +617,7 @@ struct CompletionView: View {
             }
 
             Button {
-                sendChallenge(rematch: true)
+                sendChallenge(rematch: true, source: "result_card")
             } label: {
                 Label("Send Result Back", systemImage: "arrow.uturn.left")
             }
@@ -614,22 +657,23 @@ struct CompletionView: View {
         return !name.isEmpty && name != ChallengeService.placeholderName
     }
 
-    /// Share a challenge carrying this solve's time. Prompts for a name first if
-    /// the player hasn't set one — this is the highest-motivation moment to ask.
-    private func sendChallenge(rematch: Bool) {
-        guard hasChosenName else {
-            pendingRematchIntent = rematch
-            draftName = ""
-            showNamePrompt = true
-            return
-        }
+    /// Share a challenge carrying this solve's time. `source` is the control
+    /// that asked, for `challenge_tapped` and the sheet's outcome events.
+    ///
+    /// No name prompt in front of it any more (2026-11-18): an alert between
+    /// the tap and the share sheet was a step with nothing in it for the
+    /// sender. A nameless link reads "A friend" on the other side
+    /// (`ChallengeService.parse`), and the name is asked once the first one
+    /// has gone.
+    private func sendChallenge(rematch: Bool, source: String) {
+        analytics.log(.challengeTapped(puzzleID: puzzle.id, source: source))
         // The https universal link is tappable everywhere: it opens the app for
         // installed friends and the web landing page (→ App Store) for the rest.
         guard let url = challengeService.challengeWebURL(
-            puzzleID: puzzle.id, seconds: seconds, name: profile.username
+            puzzleID: puzzle.id, seconds: seconds, name: hasChosenName ? profile.username : ""
         ) else { return }
         let caption = "Can you beat me? I solved \"\(puzzle.title)\" in \(TimeFormat.clock(seconds)) — Bible Crossword. Solve it and you'll earn a streak freeze 🧊"
-        challengeShare = ChallengeShare(url: url, caption: caption, isRematch: rematch)
+        challengeShare = ChallengeShare(url: url, caption: caption, isRematch: rematch, source: source)
         // Sent/cancelled is logged by the share sheet's callback — presenting
         // the sheet proves intent, not a send.
     }
@@ -641,10 +685,11 @@ struct CompletionView: View {
         profile.username = String(name.prefix(20))
         context.saveLogged("challenge name")
 
-        guard pendingBoardIntent else {
-            sendChallenge(rematch: pendingRematchIntent)
+        if pendingNameOnly {
+            pendingNameOnly = false
             return
         }
+        guard pendingBoardIntent else { return }
         pendingBoardIntent = false
         // A board joined before the name was chosen carries the placeholder;
         // relabel that row rather than letting a second one appear beside it.
@@ -1103,11 +1148,141 @@ struct CompletionView: View {
                     onFinish: { withAnimation { showReminderAsk = false } }
                 )
                 .transition(.opacity)
+            } else if let inviteMoment {
+                Rectangle()
+                    .fill(Color.primary.opacity(0.08))
+                    .frame(height: 1)
+
+                inviteRow(inviteMoment)
+                    .transition(.opacity)
+                    .onScrollVisibilityChange(threshold: 0.6) { visible in
+                        inviteRowVisible = visible
+                        logInviteAskIfSeen()
+                    }
             }
         }
         .padding(20)
         .frame(maxWidth: .infinity)
         .elevatedCard(cornerRadius: Theme.featureCornerRadius)
+    }
+
+    // MARK: - Invite ask
+
+    /// The invite, named on the solves worth sending (`InviteAsk`): what the
+    /// player just did, what sending it earns, one button and a quiet ✕. Same
+    /// shape and slot as the reminder ask, which outranks it. It opens the
+    /// same share as the bar's Challenge pill — this is that action, said at
+    /// the moment there is something to say, and reachable when Next Puzzle
+    /// has the bar and the pill is in the overflow menu.
+    private func inviteRow(_ moment: InviteAsk.Moment) -> some View {
+        HStack(spacing: Theme.Spacing.s) {
+            Image(systemName: "flag.checkered")
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(.secondary)
+                .accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: 1) {
+                Text(inviteTitle(moment))
+                    .font(.subheadline.weight(.semibold))
+                Text(inviteDetail)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            }
+            .fixedSize(horizontal: false, vertical: true)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .accessibilityElement(children: .combine)
+
+            // Tinted, not filled: the bar keeps the screen's one filled
+            // button, whether that is Next Puzzle or this same challenge.
+            Button {
+                sendChallenge(rematch: lastOpponent != nil, source: "invite_row")
+            } label: {
+                Text("Challenge")
+                    .font(.subheadline.weight(.semibold))
+            }
+            .buttonStyle(.bordered)
+            .buttonBorderShape(.capsule)
+            .tint(Theme.accent)
+            .accessibilityLabel(challengeTitle)
+            .accessibilityHint("Shares this puzzle and your time with a friend")
+            .accessibilityIdentifier("inviteAskSend")
+
+            Button {
+                analytics.log(.inviteAskDismissed(moment: moment.analyticsValue))
+                withAnimation { inviteMoment = nil }
+            } label: {
+                Image(systemName: "xmark")
+                    .font(.footnote.weight(.semibold))
+                    .foregroundStyle(.secondary)
+                    .frame(width: 28, height: 28)
+                    .contentShape(.rect)
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Not now")
+            .accessibilityIdentifier("inviteAskDismiss")
+        }
+    }
+
+    private func inviteTitle(_ moment: InviteAsk.Moment) -> String {
+        switch moment {
+        case .streak(let days): "\(days) days in a row"
+        case .bestTime: "Your best time yet"
+        case .noHints: "Solved with no hints"
+        }
+    }
+
+    /// What sending earns, when it earns something: the sender's freeze is
+    /// once a day and capped (`grantSenderFreezeIfDue`), and a line promising
+    /// one that won't arrive is worse than no line.
+    private var inviteDetail: String {
+        let today = Calendar.current.startOfDay(for: Date()).timeIntervalSinceReferenceDate
+        let freezeDue = challengeFreezeLastDay != today
+            && profile.streakFreezes < PlayerProfile.maxStreakFreezes
+        return freezeDue
+            ? "Challenge a friend and earn a streak freeze"
+            : "See if a friend can beat \(TimeFormat.clock(seconds))"
+    }
+
+    private func maybeShowInviteAsk() {
+        #if DEBUG
+        // The eligible state takes a streak or a second full solve to reach;
+        // the flag puts the row up for UI tests. Gating is unit-tested
+        // (InviteAskTests).
+        if ProcessInfo.processInfo.arguments.contains("-uiForceInviteAsk") {
+            inviteMoment = .streak(7)
+            // A clean slate's first solve is due the reminder ask, which
+            // holds the same slot.
+            showReminderAsk = false
+            return
+        }
+        #endif
+        inviteMoment = InviteAsk.decide(InviteAsk.State(
+            isFirstSolve: isFirstSolve,
+            isMini: puzzle.isMini,
+            hintsUsed: hintsUsed,
+            isNewBest: isNewBest,
+            streak: streak,
+            streakAdvanced: streakAdvanced,
+            isComeback: isComeback,
+            totalCompleted: totalCompleted,
+            otherAskOnScreen: challenge != nil || didRequestReview
+                || showReminderAsk || returnDaySheetPending,
+            lastShown: inviteAskLastShown == 0
+                ? nil : Date(timeIntervalSinceReferenceDate: inviteAskLastShown),
+            unanswered: inviteAskUnanswered
+        ))
+    }
+
+    /// The impression, and the week's budget with it, once the row is really
+    /// on screen: scrolled into view and not under a sheet. A row decided on
+    /// appear but never seen costs nothing and is not counted as ignored.
+    private func logInviteAskIfSeen() {
+        guard let inviteMoment, inviteRowVisible, !didLogInviteAsk,
+              !showReturnDaySheet, paywallEntry == nil,
+              cardShare == nil, challengeShare == nil else { return }
+        didLogInviteAsk = true
+        inviteAskLastShown = Date().timeIntervalSinceReferenceDate
+        inviteAskUnanswered += 1
+        analytics.log(.inviteAskShown(moment: inviteMoment.analyticsValue))
     }
 
     /// The streak on one line — flame, run, and on its right a note when the
@@ -1315,7 +1490,7 @@ struct CompletionView: View {
     private func maybeShowCompletionOffer() {
         // One ask under the scorecard at a time: the reminder ask, when it's
         // due, outranks the offer, which waits for a later solve unspent.
-        guard !store.isPremium, !completionOfferShown, !showReminderAsk,
+        guard !store.isPremium, !completionOfferShown, !showReminderAsk, inviteMoment == nil,
               !BeginnerPath.contains(puzzle, provider: puzzleProvider) else { return }
         completionOfferShown = true
         showsCompletionOffer = true
@@ -1354,7 +1529,7 @@ struct CompletionView: View {
 
     private func maybeShowWidgetOffer() {
         // Not beside the graduation row either: one ask under the verse.
-        guard !widgetOfferShown, !showsCompletionOffer, !showReminderAsk,
+        guard !widgetOfferShown, !showsCompletionOffer, !showReminderAsk, inviteMoment == nil,
               questContext.flatMap(graduationJourney) == nil,
               profile.totalPuzzlesCompleted >= 3 else { return }
         widgetOfferShown = true
@@ -1644,6 +1819,7 @@ struct CompletionView: View {
         let previousAsked = ReminderAskSession.asked
         reminderAskLastDay = Calendar.current.startOfDay(for: Date()).timeIntervalSinceReferenceDate
         ReminderAskSession.asked = true
+        returnDaySheetPending = true
         delayedAsks.append(Task {
             guard (try? await Task.sleep(for: Self.returnDaySheetDelay)) != nil else {
                 reminderAskLastDay = previousDay
@@ -1770,7 +1946,7 @@ struct CompletionView: View {
     /// The invite, in the bar. Same action and name prompt as the menu item had.
     private var challengeButton: some View {
         Button {
-            sendChallenge(rematch: lastOpponent != nil)
+            sendChallenge(rematch: lastOpponent != nil, source: "bar")
         } label: {
             barLabel(challengeTitle, systemImage: "flag.checkered")
         }
@@ -1823,7 +1999,7 @@ struct CompletionView: View {
         }
         if challenge == nil && chainTarget != nil {
             Button {
-                sendChallenge(rematch: lastOpponent != nil)
+                sendChallenge(rematch: lastOpponent != nil, source: "menu")
             } label: {
                 Label(challengeTitle, systemImage: "flag.checkered")
             }
@@ -1893,6 +2069,8 @@ struct CompletionView: View {
         /// Carried through the sheet so the completion handler knows whether to
         /// open a history row or mark the one this answers.
         let isRematch: Bool
+        /// The control that opened the sheet — see `AnalyticsEvent.challengeSent`.
+        var source = "bar"
         /// A board share is not a one-to-one challenge and must not land in the
         /// head-to-head history — there's no single opponent to record.
         var isBoard = false

@@ -130,7 +130,7 @@ struct ChallengeHistoryView: View {
             puzzleTitle: entry.puzzleTitle,
             seconds: entry.mySeconds
         )
-        analytics.log(.challengeRematchSent(puzzleID: entry.puzzleID))
+        analytics.log(.challengeRematchSent(puzzleID: entry.puzzleID, source: "history"))
         afterDialogDismissal { share = item }
     }
 

@@ -154,6 +154,46 @@ final class Bible_Crossword_ChallengeUITests: XCTestCase {
         XCTAssertEqual(events.count(of: "reminder_ask_shown", source: "prompt"), 0, "\(events)")
     }
 
+    /// The scorecard's invite row: its impression is the denominator of the
+    /// invite's tap rate, so it logs once, when the row is on screen, and its
+    /// ✕ takes the row away without a second impression.
+    @MainActor
+    func testInviteAskLogsOnceWhenSeenAndDismisses() throws {
+        let app = launch(extra: ["-uiAutoSolve", "-uiForceInviteAsk", "-uiNoReview"])
+        openTodaysPuzzle(app)
+
+        let send = app.buttons["inviteAskSend"]
+        XCTAssertTrue(send.waitForExistence(timeout: 10), "No invite row on the scorecard")
+        let seen = NSPredicate { _, _ in self.loggedEvents().count(of: "invite_ask_shown") == 1 }
+        expectation(for: seen, evaluatedWith: nil)
+        waitForExpectations(timeout: 10)
+        app.swipeUp()
+        app.swipeDown()
+        XCTAssertEqual(loggedEvents().count(of: "invite_ask_shown"), 1)
+
+        app.buttons["inviteAskDismiss"].tap()
+        XCTAssertTrue(send.waitForNonExistence(timeout: 5), "The row stayed after its close button")
+        let events = loggedEvents(waitingFor: "invite_ask_dismissed")
+        XCTAssertEqual(events.count(of: "invite_ask_dismissed"), 1, "\(events)")
+        XCTAssertEqual(events.count(of: "invite_ask_shown"), 1, "\(events)")
+        XCTAssertEqual(events.count(of: "challenge_tapped"), 0, "\(events)")
+    }
+
+    /// The row's button goes straight to the share sheet: the tap is logged
+    /// with its source, and no name prompt stands in front of a first send.
+    @MainActor
+    func testInviteAskTapOpensTheShareWithoutANamePrompt() throws {
+        let app = launch(extra: ["-uiAutoSolve", "-uiForceInviteAsk", "-uiNoReview"])
+        openTodaysPuzzle(app)
+
+        let send = app.buttons["inviteAskSend"]
+        XCTAssertTrue(send.waitForExistence(timeout: 10), "No invite row on the scorecard")
+        send.tap()
+        let events = loggedEvents(waitingFor: "challenge_tapped")
+        XCTAssertEqual(events.count(of: "challenge_tapped", source: "invite_row"), 1, "\(events)")
+        XCTAssertFalse(app.alerts["What should we call you?"].waitForExistence(timeout: 2))
+    }
+
     /// `pack_opened` is the denominator of pack conversion. It used to fire
     /// again on every pop back from a puzzle, so one visit counted twice.
     @MainActor

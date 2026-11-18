@@ -161,6 +161,11 @@ struct CrosswordGameScreen: View {
     /// completion screen can name it rather than reporting a bare "1-day streak"
     /// to someone who just lost forty.
     @State private var isComeback = false
+    /// What the completion screen's invite row needs to know about the solve
+    /// (`InviteAsk`), set in `handleCompletion` with the rest of its facts.
+    @State private var solveWasFirst = true
+    @State private var solveSetBest = false
+    @State private var solveAdvancedStreak = false
 
     /// The break the comeback card was offering to end, and where the attempt
     /// came from. Both are cleared by the solve that ends it — see
@@ -703,6 +708,9 @@ struct CrosswordGameScreen: View {
                 isComeback: isComeback,
                 totalCompleted: profile.totalPuzzlesCompleted,
                 finishedCollection: finishedCollection,
+                isFirstSolve: solveWasFirst,
+                isNewBest: solveSetBest,
+                streakAdvanced: solveAdvancedStreak,
                 onHome: {
                     showCompletion = false
                     dismiss()
@@ -1744,6 +1752,8 @@ struct CrosswordGameScreen: View {
         let freezesBefore = profile.streakFreezes
         let advanced = Streaks.registerCompletion(profile, isReplay: !firstCompletion)
         earnedFreeze = profile.streakFreezes > freezesBefore
+        solveWasFirst = firstCompletion
+        solveAdvancedStreak = advanced
         analytics.log(.dailyPuzzleCompleted(puzzleID: puzzle.id, seconds: seconds))
         if advanced {
             analytics.log(.streakUpdated(streak: profile.currentStreak))
@@ -1772,7 +1782,11 @@ struct CrosswordGameScreen: View {
         // A zero is never a real solve — only a debug auto-solve or a grid
         // completed before the clock's first tick — and as a minimum it
         // would hold Profile's Best Time at 0:00 for good.
+        solveSetBest = false
         if !puzzle.isMini, seconds > 0 {
+            // A best needs one to beat: a first full solve is a first time,
+            // not a record.
+            if let best = profile.bestSolveSeconds { solveSetBest = seconds < best }
             profile.bestSolveSeconds = min(profile.bestSolveSeconds ?? .max, seconds)
         }
         finishedCollection = false

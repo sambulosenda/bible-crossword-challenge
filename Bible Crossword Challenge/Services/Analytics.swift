@@ -297,15 +297,30 @@ enum AnalyticsEvent {
     /// not when it was presented. 30 days to 2026-08-24: 22 "sent" at
     /// presentation, 0 ever opened; whether links even leave the phone was
     /// unmeasurable. `challengeShareCancelled` is the other half of that split.
-    case challengeSent(puzzleID: String)
+    ///
+    /// `source` is the control that opened the sheet, on all four challenge
+    /// events below: `bar` (the completion bar's pill), `menu` (its overflow,
+    /// where the pill goes when Next Puzzle owns the bar), `invite_row` (the
+    /// scorecard's ask, `InviteAsk`), `result_card` (Send Result Back) or
+    /// `history` (a row in the challenge history).
+    case challengeSent(puzzleID: String, source: String)
+    /// The tap, before the share sheet. Until 2026-11-18 only the sheet's
+    /// outcome was logged, so 31 intents in 3,732 completions could not be
+    /// split into "never saw the button" and "saw it and passed".
+    case challengeTapped(puzzleID: String, source: String)
+    /// The scorecard's invite row was on screen. `moment` is why this solve
+    /// earned it (`InviteAsk.Moment.analyticsValue`); `inviteAskDismissed` is
+    /// its ✕. Its tap is `challengeTapped` with source `invite_row`.
+    case inviteAskShown(moment: String)
+    case inviteAskDismissed(moment: String)
     /// `via` is `link` (a tapped link, the app already installed) or
     /// `pasteboard` (carried across an App Store install — the invite worked
     /// on someone new). Zero of these had ever fired before 2026-09-07; the
     /// split says which half of the fix is doing the work.
     case challengeOpened(puzzleID: String, via: String)
     case challengeCompleted(puzzleID: String, won: Bool, deltaSeconds: Int)
-    case challengeRematchSent(puzzleID: String)
-    case challengeShareCancelled(puzzleID: String)
+    case challengeRematchSent(puzzleID: String, source: String)
+    case challengeShareCancelled(puzzleID: String, source: String)
     /// The family board, which travels as a link rather than living on a server.
     /// `size` is how many names the board carried at that moment — the only
     /// measure of whether a board actually spread past two people, since there
@@ -475,6 +490,9 @@ enum AnalyticsEvent {
         case .questStepCompleted: return "quest_step_completed"
         case .questCompleted: return "quest_completed"
         case .challengeSent: return "challenge_sent"
+        case .challengeTapped: return "challenge_tapped"
+        case .inviteAskShown: return "invite_ask_shown"
+        case .inviteAskDismissed: return "invite_ask_dismissed"
         case .challengeOpened: return "challenge_opened"
         case .challengeCompleted: return "challenge_completed"
         case .challengeRematchSent: return "challenge_rematch_sent"
@@ -668,16 +686,15 @@ enum AnalyticsEvent {
             return ["quest_id": id, "step": step, "total": total]
         case .questCompleted(let id):
             return ["quest_id": id]
-        case .challengeSent(let id):
-            return ["puzzle_id": id]
+        case .challengeSent(let id, let source), .challengeTapped(let id, let source),
+             .challengeRematchSent(let id, let source), .challengeShareCancelled(let id, let source):
+            return ["puzzle_id": id, "source": source]
+        case .inviteAskShown(let moment), .inviteAskDismissed(let moment):
+            return ["moment": moment]
         case .challengeOpened(let id, let via):
             return ["puzzle_id": id, "via": via]
         case .challengeCompleted(let id, let won, let delta):
             return ["puzzle_id": id, "won": won, "delta_seconds": delta]
-        case .challengeRematchSent(let id):
-            return ["puzzle_id": id]
-        case .challengeShareCancelled(let id):
-            return ["puzzle_id": id]
         case .familyBoardStarted(let id):
             return ["puzzle_id": id]
         case .familyBoardOpened(let id, let size):

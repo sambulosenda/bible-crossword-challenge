@@ -529,13 +529,51 @@
       "expect" : {
         "name" : "challenge_sent",
         "parameterKeys" : [
-          "puzzle_id"
+          "puzzle_id",
+          "source"
         ]
       },
       "given" : {
         "case" : "challengeSent"
       },
       "name" : "challenge_sent"
+    },
+    {
+      "expect" : {
+        "name" : "challenge_tapped",
+        "parameterKeys" : [
+          "puzzle_id",
+          "source"
+        ]
+      },
+      "given" : {
+        "case" : "challengeTapped"
+      },
+      "name" : "challenge_tapped"
+    },
+    {
+      "expect" : {
+        "name" : "invite_ask_shown",
+        "parameterKeys" : [
+          "moment"
+        ]
+      },
+      "given" : {
+        "case" : "inviteAskShown"
+      },
+      "name" : "invite_ask_shown"
+    },
+    {
+      "expect" : {
+        "name" : "invite_ask_dismissed",
+        "parameterKeys" : [
+          "moment"
+        ]
+      },
+      "given" : {
+        "case" : "inviteAskDismissed"
+      },
+      "name" : "invite_ask_dismissed"
     },
     {
       "expect" : {
@@ -568,7 +606,8 @@
       "expect" : {
         "name" : "challenge_rematch_sent",
         "parameterKeys" : [
-          "puzzle_id"
+          "puzzle_id",
+          "source"
         ]
       },
       "given" : {
@@ -580,7 +619,8 @@
       "expect" : {
         "name" : "challenge_share_cancelled",
         "parameterKeys" : [
-          "puzzle_id"
+          "puzzle_id",
+          "source"
         ]
       },
       "given" : {
@@ -1014,7 +1054,7 @@
     }
   ],
   "constants" : {
-    "eventCount" : 76,
+    "eventCount" : 79,
     "paywallExits" : [
       "close",
       "free_link",
