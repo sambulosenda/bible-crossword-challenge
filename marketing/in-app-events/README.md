@@ -17,6 +17,9 @@ Use the same text for en-US, en-GB, en-CA and en-AU.
 
 ## 1. Advent Puzzle Journey
 
+**Status 2026-11-18:** APPROVED (Review Completed). Publish date Nov 17 has passed,
+so it promotes on the store from approval; event runs Dec 1–26.
+
 **Status 2026-11-16:** SUBMITTED, Waiting for Review (submitted Nov 16, 2:43 PM,
 submission id 77b3abeb-a032-4cd9-afd6-3b289869a5a0, review note pasted). Fields
 re-checked against the table below before submitting; all matched.
