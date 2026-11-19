@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Bible Crossword Challenge — Learn Scripture one puzzle a day</title>
+<meta name="description" content="A beautiful daily Bible crossword. Build a streak, unlock achievements, and learn Scripture one puzzle a day. Free on iOS." />
+
+<!-- Open Graph / social -->
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Bible Crossword Challenge" />
+<meta property="og:description" content="Learn Scripture one puzzle a day. A beautiful daily Bible crossword for iOS." />
+<meta property="og:image" content="assets/og-image.png" />
+<meta name="twitter:card" content="summary_large_image" />
+
+<link rel="icon" href="assets/favicon.png" />
+<style>
+  :root{
+    --blue:#007AFF;
+    --blue-press:#0062cc;
+    --ink:#1c1c1e;
+    --ink-2:#3a3a3c;
+    --muted:#8e8e93;
+    --bg:#f2f2f7;
+    --card:#ffffff;
+    --line:#e5e5ea;
+    --green:#34c759;
+    --gold:#ffcc00;
+    --radius:22px;
+    --shadow:0 10px 40px rgba(0,0,0,.08);
+    --shadow-sm:0 4px 16px rgba(0,0,0,.06);
+    --maxw:1080px;
+    --font:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;font-family:var(--font);color:var(--ink);background:var(--bg);
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;line-height:1.5;
+  }
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+
+  /* Nav */
+  header.nav{
+    position:sticky;top:0;z-index:50;
+    background:rgba(242,242,247,.8);backdrop-filter:saturate(180%) blur(20px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .brand{display:flex;align-items:center;gap:12px;font-weight:700;font-size:17px}
+  .brand .logo{
+    width:34px;height:34px;border-radius:9px;background:var(--blue);
+    display:grid;place-items:center;color:#fff;font-size:18px;box-shadow:var(--shadow-sm);
+  }
+  .nav-cta{
+    background:var(--blue);color:#fff;font-weight:600;font-size:15px;
+    padding:9px 18px;border-radius:980px;transition:background .15s ease,transform .15s ease;
+  }
+  .nav-cta:hover{background:var(--blue-press);transform:translateY(-1px)}
+
+  /* Hero */
+  .hero{padding:72px 0 40px;text-align:center}
+  .pill{
+    display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--blue);
+    background:rgba(0,122,255,.1);padding:7px 14px;border-radius:980px;margin-bottom:22px;
+  }
+  h1{
+    font-size:clamp(34px,6vw,60px);line-height:1.05;letter-spacing:-.02em;
+    font-weight:800;margin:0 auto 18px;max-width:14ch;
+  }
+  .hero p.lede{font-size:clamp(17px,2.4vw,21px);color:var(--ink-2);max-width:34ch;margin:0 auto 30px}
+  .cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+  .btn-app{
+    display:inline-flex;align-items:center;gap:10px;background:#000;color:#fff;
+    padding:13px 22px;border-radius:14px;font-weight:600;transition:transform .15s ease,opacity .15s ease;
+  }
+  .btn-app:hover{transform:translateY(-1px);opacity:.9}
+  .btn-app small{display:block;font-size:10px;font-weight:500;opacity:.8;line-height:1.1}
+  .btn-app strong{font-size:18px;font-weight:600;line-height:1.1}
+  .btn-ghost{
+    display:inline-flex;align-items:center;padding:13px 22px;border-radius:14px;font-weight:600;
+    background:var(--card);box-shadow:var(--shadow-sm);transition:transform .15s ease;
+  }
+  .btn-ghost:hover{transform:translateY(-1px)}
+
+  /* Phone mockups */
+  .shots{display:flex;gap:24px;justify-content:center;align-items:flex-end;margin-top:56px;flex-wrap:wrap}
+  .phone{
+    width:240px;aspect-ratio:9/19.5;border-radius:42px;background:#fff;
+    border:1px solid var(--line);box-shadow:var(--shadow);position:relative;overflow:hidden;
+    padding:10px;
+  }
+  .phone.center{width:268px;transform:translateY(-22px);box-shadow:0 24px 60px rgba(0,0,0,.16)}
+  .phone .screen{
+    width:100%;height:100%;border-radius:32px;
+    background:linear-gradient(160deg,#eef2ff,#f7f8fa);
+    display:grid;place-items:center;text-align:center;color:var(--muted);
+    border:1px solid var(--line);
+  }
+  .phone .screen .ph-label{font-size:13px;font-weight:600;padding:0 18px}
+  .phone .notch{
+    position:absolute;top:18px;left:50%;transform:translateX(-50%);
+    width:84px;height:24px;background:#000;border-radius:980px;z-index:2;
+  }
+  /* When you have images: <img class="screen" src="assets/shot-today.png" alt="..."> */
+  img.screen{object-fit:cover}
+
+  /* Section heading */
+  section{padding:64px 0}
+  .sec-head{text-align:center;max-width:36ch;margin:0 auto 44px}
+  .sec-head h2{font-size:clamp(28px,4vw,40px);letter-spacing:-.02em;font-weight:800;margin:0 0 12px}
+  .sec-head p{color:var(--ink-2);font-size:17px;margin:0}
+
+  /* Feature grid */
+  .features{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .feat{
+    background:var(--card);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow-sm);
+    transition:transform .2s ease,box-shadow .2s ease;
+  }
+  .feat:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+  .feat .ic{
+    width:46px;height:46px;border-radius:13px;display:grid;place-items:center;font-size:22px;margin-bottom:16px;
+    background:rgba(0,122,255,.1);
+  }
+  .feat h3{font-size:19px;margin:0 0 8px;letter-spacing:-.01em}
+  .feat p{color:var(--ink-2);font-size:15px;margin:0}
+
+  /* Stats band */
+  .band{background:var(--ink);color:#fff;border-radius:32px;padding:48px 32px;text-align:center}
+  .band-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:760px;margin:0 auto}
+  .band .num{font-size:clamp(34px,5vw,48px);font-weight:800;letter-spacing:-.02em}
+  .band .lbl{color:#aeaeb2;font-size:15px;margin-top:4px}
+
+  /* Showcase rows */
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;margin-bottom:72px}
+  .row:nth-child(even) .row-text{order:2}
+  .row-text h3{font-size:clamp(24px,3vw,32px);letter-spacing:-.02em;margin:0 0 14px}
+  .row-text p{color:var(--ink-2);font-size:17px;margin:0 0 18px}
+  .row-text .tag{display:inline-block;font-size:13px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px}
+  .row-shot{
+    background:linear-gradient(160deg,#eef2ff,#f7f8fa);border-radius:24px;aspect-ratio:4/3;
+    display:grid;place-items:center;color:var(--muted);font-weight:600;border:1px solid var(--line);
+    box-shadow:var(--shadow-sm);
+  }
+  img.row-shot{object-fit:contain;padding:24px}
+
+  /* FAQ */
+  .faq{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+  details{background:var(--card);border-radius:16px;padding:20px 22px;box-shadow:var(--shadow-sm);cursor:pointer}
+  details summary{font-weight:600;font-size:17px;list-style:none;display:flex;justify-content:space-between;align-items:center}
+  details summary::-webkit-details-marker{display:none}
+  details summary::after{content:"+";color:var(--muted);font-size:22px;font-weight:400}
+  details[open] summary::after{content:"–"}
+  details p{color:var(--ink-2);font-size:15px;margin:14px 0 0}
+
+  /* Final CTA */
+  .final{text-align:center}
+  .final h2{font-size:clamp(30px,4.5vw,46px);letter-spacing:-.02em;margin:0 0 16px;font-weight:800}
+  .final p{color:var(--ink-2);font-size:18px;margin:0 0 28px}
+
+  /* Footer */
+  footer{border-top:1px solid var(--line);padding:40px 0;color:var(--muted);font-size:14px}
+  .foot-inner{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+  .foot-links{display:flex;gap:22px}
+  .foot-links a:hover{color:var(--ink)}
+
+  @media(max-width:860px){
+    .features{grid-template-columns:1fr}
+    .row{grid-template-columns:1fr;gap:24px}
+    .row:nth-child(even) .row-text{order:0}
+    .band-grid{grid-template-columns:1fr;gap:28px}
+    .phone{display:none}
+    .phone.center{display:block;transform:none}
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <div class="brand"><span class="logo">✝</span> Bible Crossword</div>
+    <a class="nav-cta" href="#get">Download</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap">
+    <span class="pill">📖 New daily puzzle every day</span>
+    <h1>Learn Scripture, one puzzle a day.</h1>
+    <p class="lede">A beautiful Bible crossword that turns daily devotion into a habit. Build a streak, unlock achievements, and know the Word.</p>
+    <div class="cta-row">
+      <a class="btn-app" href="#get">
+        <span style="font-size:24px"></span>
+        <span><small>Download on the</small><strong>App Store</strong></span>
+      </a>
+      <a class="btn-ghost" href="#features">See features →</a>
+    </div>
+
+    <div class="shots">
+      <div class="phone">
+        <img class="screen" src="assets/shot-archive.png" alt="Puzzle archive" />
+      </div>
+      <div class="phone center">
+        <img class="screen" src="assets/shot-today.png" alt="Today screen with daily puzzle and verse of the day" />
+      </div>
+      <div class="phone">
+        <img class="screen" src="assets/shot-puzzle.png" alt="Crossword grid" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Everything you need to keep coming back</h2>
+      <p>Designed to feel right at home on iOS — fast, clean, and offline-first.</p>
+    </div>
+    <div class="features">
+      <div class="feat"><div class="ic">📅</div><h3>Daily Puzzle</h3><p>A fresh themed crossword every day, from easy to hard. Pick up right where you left off.</p></div>
+      <div class="feat"><div class="ic">🔥</div><h3>Streaks</h3><p>Play every day to grow your streak. Track your current and best run as motivation.</p></div>
+      <div class="feat"><div class="ic">📖</div><h3>Verse of the Day</h3><p>Start each session with a Scripture passage to reflect on and remember.</p></div>
+      <div class="feat"><div class="ic">🏆</div><h3>Achievements</h3><p>From Bible Beginner to Apostle — unlock milestones as you complete puzzles and streaks.</p></div>
+      <div class="feat"><div class="ic">📚</div><h3>Full Archive</h3><p>80+ themed puzzles to explore and replay, searchable and always available.</p></div>
+      <div class="feat"><div class="ic">📶</div><h3>Plays Offline</h3><p>No account, no connection needed. Your progress stays on your device.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS BAND -->
+<section>
+  <div class="wrap">
+    <div class="band">
+      <div class="band-grid">
+        <div><div class="num">80+</div><div class="lbl">Themed puzzles</div></div>
+        <div><div class="num">Daily</div><div class="lbl">Fresh challenge</div></div>
+        <div><div class="num">Free</div><div class="lbl">To download &amp; play</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SHOWCASE ROWS -->
+<section>
+  <div class="wrap">
+    <div class="row">
+      <div class="row-text">
+        <span class="tag">Today</span>
+        <h3>Your daily devotion, made into a game</h3>
+        <p>Open the app to today's puzzle, the Verse of the Day, your streak, and your next achievement — all in one calm, focused home screen.</p>
+      </div>
+      <img class="row-shot" src="assets/shot-today.png" alt="Today screen" />
+    </div>
+
+    <div class="row">
+      <div class="row-text">
+        <span class="tag">Play</span>
+        <h3>A crossword built for Scripture</h3>
+        <p>Clean grid, smart clue navigation, hints, and check — clues like “Black bird that fed the prophet Elijah” teach as you solve.</p>
+      </div>
+      <img class="row-shot" src="assets/shot-puzzle.png" alt="Crossword grid" />
+    </div>
+
+    <div class="row">
+      <div class="row-text">
+        <span class="tag">Progress</span>
+        <h3>Watch your knowledge grow</h3>
+        <p>Track puzzles completed, current and best streaks, and the achievements you've earned along the way on your Profile.</p>
+      </div>
+      <img class="row-shot" src="assets/shot-profile.png" alt="Profile screen" />
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><h2>Questions</h2></div>
+    <div class="faq">
+      <details><summary>Is it free?</summary><p>Yes — download and play the daily puzzle for free. Premium unlocks the full archive and extras.</p></details>
+      <details><summary>Do I need an account?</summary><p>No. The app works fully offline and your progress is saved right on your device.</p></details>
+      <details><summary>Which translation do the verses use?</summary><p>Verses are drawn from the public-domain King James Version.</p></details>
+      <details><summary>Is there an Android version?</summary><p>Bible Crossword Challenge is available on iOS today. Tell us if you'd like Android!</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section id="get" class="final">
+  <div class="wrap">
+    <h2>Start your streak today</h2>
+    <p>Free on the App Store. Your first puzzle is waiting.</p>
+    <div class="cta-row">
+      <a class="btn-app" href="#"><span><small>Download on the</small><strong>App Store</strong></span></a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-inner">
+    <div>© <span id="yr"></span> Bible Crossword Challenge</div>
+    <div class="foot-links">
+      <a href="privacy.html">Privacy</a>
+      <a href="mailto:sambulosendas@gmail.com">Support</a>
+    </div>
+  </div>
+</footer>
+
+<script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
+</body>
+</html>
