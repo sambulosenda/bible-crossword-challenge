@@ -1,4 +1,7 @@
 Thanks for playing Bible Crossword Challenge!
 
-• Advent starts December 1, and the first puzzle in the Advent pack is free for everyone
+• Challenge a friend right from your result when you reach a streak, beat your best time or solve with no hints. You both earn a streak freeze
+• Send a challenge without setting a name first
+• On iPhone Duo and iPad, read two pages side by side and keep the verse beside the board
+• The keyboard stays on screen when you turn your iPhone sideways
 • Small fixes and polish
