@@ -275,10 +275,14 @@ struct SettingsView: View {
 
     // MARK: - Support
 
-    /// Rate, share, and reach us.
+    /// Review, share, and reach us.
     private var supportSection: some View {
         Section("Support") {
-            SettingsLinkRow(title: "Rate the app", external: true) {
+            // "Write a review", not "Rate the app": the system prompt already
+            // collects stars, and this page is where the words go
+            // (2026-11-22: 49 ratings, 0 written reviews).
+            SettingsLinkRow(title: "Write a review", external: true) {
+                analytics.log(.reviewLinkTapped(source: "settings"))
                 openURL(AppLinks.review)
             }
             ShareLink(item: AppLinks.appStore) {
@@ -461,7 +465,7 @@ private enum SettingsRowColor {
 
 /// Everywhere Settings can send someone. One place, so the App Store id and
 /// site host can't drift between rows.
-private enum AppLinks {
+enum AppLinks {
     static let appStore = URL(string: "https://apps.apple.com/app/id6783034270")!
     static let review = URL(string: "https://apps.apple.com/app/id6783034270?action=write-review")!
     static let privacy = URL(string: "https://biblecrosswordchallenge.com/privacy/")!

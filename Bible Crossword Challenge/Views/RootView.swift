@@ -114,6 +114,9 @@ struct RootView: View {
             }
         }
         .task {
+            // Early, so the Premium offer's rating line is ready by the time
+            // onboarding reaches it (cached for a day after the first fetch).
+            Task { await AppStoreRating.shared.refreshIfStale() }
             mergeSyncDuplicates()
             let profile = ensureProfile()
             #if DEBUG

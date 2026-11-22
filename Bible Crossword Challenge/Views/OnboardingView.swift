@@ -569,8 +569,8 @@ struct OnboardingView: View {
             // Bottom-anchored like the layouts above when it's shorter than
             // the page; taller (a mini, an SE), it scrolls from the top.
             // 20pt sides like them too, so every size shares the button's
-            // edge. No bottom padding: "Or monthly" keeps 12pt of its own
-            // under its text, and the controls start 16pt below that.
+            // edge. No bottom padding: the controls start 16pt below the
+            // last plan card (Monthly, a card since 2026-11-22).
             pageFrame(spacing: Theme.Spacing.l, alignment: .bottom,
                       padding: EdgeInsets(top: Theme.Spacing.s,
                                           leading: Theme.Spacing.m + Theme.Spacing.xs,
@@ -711,6 +711,8 @@ struct OnboardingView: View {
             Button("Continue") { finish(exit: .premiumContinue) }
                 .buttonStyle(.pillProminent)
         } else if !store.products.isEmpty {
+            // Above the button, where the eye is when it decides.
+            PremiumReassurance(product: selectedPlan)
             Button {
                 buySelectedPlan()
             } label: {
@@ -741,9 +743,11 @@ struct OnboardingView: View {
             // there was a trial; it was removed 2026-10-13, so the line is now
             // the page's only statement of it — and App Review's requirement.
             if let plan = selectedPlan,
-               let terms = PremiumOfferView.commitmentText(for: plan, store: store) {
+               let terms = PremiumOfferView.buyTerms(for: plan, store: store) {
+                // Caption, not footnote: with the cancellation note it's
+                // three lines of small print at footnote size (2026-11-22).
                 Text(terms)
-                    .font(.footnote)
+                    .font(.caption)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
             }

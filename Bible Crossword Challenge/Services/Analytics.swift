@@ -277,6 +277,11 @@ enum AnalyticsEvent {
     /// "version"); `totalCompleted` says where in the ladder players sit when
     /// each trigger fires, which is the number the ladder is tuned against.
     case reviewPromptRequested(trigger: String, totalCompleted: Int)
+    /// The player tapped a "Write a review" link, which opens the App Store's
+    /// write-a-review page. `source` names the surface (`profile`,
+    /// `settings`). The system prompt above only collects stars: 49 ratings,
+    /// 0 written reviews as of 2026-11-22.
+    case reviewLinkTapped(source: String)
     /// `source` names the surface that pushed the pack (`home`, `packs`,
     /// `notification`) — the question a seasonal pack raises is not how many
     /// people opened it but which surface got them there, and the Home carousel
@@ -484,6 +489,7 @@ enum AnalyticsEvent {
         case .reminderSettingChanged: return "reminder_setting_changed"
         case .packNewsSettingChanged: return "pack_news_setting_changed"
         case .reviewPromptRequested: return "review_prompt_requested"
+        case .reviewLinkTapped: return "review_link_tapped"
         case .packOpened: return "pack_opened"
         case .packCompleted: return "pack_completed"
         case .questOpened: return "quest_opened"
@@ -676,6 +682,8 @@ enum AnalyticsEvent {
             return ["enabled": enabled]
         case .reviewPromptRequested(let trigger, let totalCompleted):
             return ["trigger": trigger, "total_completed": totalCompleted]
+        case .reviewLinkTapped(let source):
+            return ["source": source]
         case .packOpened(let id, let source):
             return ["pack_id": id, "source": source]
         case .packCompleted(let id):

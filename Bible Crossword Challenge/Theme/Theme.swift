@@ -413,12 +413,15 @@ private struct PillButtonBody: View {
     let configuration: ButtonStyleConfiguration
     let emphasis: PillButtonStyle.Emphasis
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    /// `.large` is the one taller pill: the Premium offer's button, the only
+    /// action on its page (2026-11-22).
+    @Environment(\.controlSize) private var controlSize
 
     var body: some View {
         configuration.label
             .font(.headline)
             .foregroundStyle(foreground)
-            .padding(.vertical, 15)
+            .padding(.vertical, controlSize == .large ? 19 : 15)
             .padding(.horizontal, Theme.Spacing.l)
             .frame(maxWidth: .infinity)
             .background(fill, in: .capsule)

@@ -33,6 +33,8 @@ struct ProfileView: View {
     @Environment(\.memoryVerses) private var memoryVerses
     @Environment(\.puzzleProvider) private var puzzleProvider
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.analytics) private var analytics
+    @Environment(\.openURL) private var openURL
     /// Books reached through a solved puzzle, and the Journey to show, worked
     /// out when the tab appears. A one-off fetch rather than a standing
     /// `@Query`: the numbers only move when a puzzle is solved elsewhere, and
@@ -77,6 +79,7 @@ struct ProfileView: View {
                     leaderboardRow
                 }
                 challengesSection
+                reviewRow
             }
             .background(Theme.background)
             .navigationTitle("Profile")
@@ -341,6 +344,35 @@ struct ProfileView: View {
             }
             .buttonStyle(PressableCardStyle())
             .accessibilityHint("Opens Game Center")
+        }
+    }
+
+    // MARK: - Review
+
+    /// A standing "Write a review" link, for players who have solved at
+    /// least one puzzle. The system prompt after a solve only collects
+    /// stars — 49 ratings, 0 written reviews as of 2026-11-22 — and the only
+    /// other way to the write page was a row in Settings. A link the player
+    /// chooses, never a prompt of our own (Guideline 5.6.1).
+    @ViewBuilder
+    private var reviewRow: some View {
+        if !isDayOne {
+            CardGroup {
+                Button {
+                    analytics.log(.reviewLinkTapped(source: "profile"))
+                    openURL(AppLinks.review)
+                } label: {
+                    CoverRow(
+                        symbol: "square.and.pencil",
+                        tint: Color.secondary,
+                        title: "Write a review",
+                        subtitle: "Help others find the app"
+                    )
+                    .cardRowPadding()
+                }
+                .buttonStyle(PressableCardStyle())
+                .accessibilityHint("Opens the App Store")
+            }
         }
     }
 

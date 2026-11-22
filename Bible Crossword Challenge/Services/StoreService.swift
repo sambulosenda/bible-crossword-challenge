@@ -251,6 +251,11 @@ final class StoreService {
             if ProcessInfo.processInfo.arguments.contains("-uiIntroIneligible") {
                 introEligible = false
             }
+            // And the other way: a simulator whose sandbox account has used
+            // its trial can't otherwise show the page most new players see.
+            if ProcessInfo.processInfo.arguments.contains("-uiIntroEligible") {
+                introEligible = true
+            }
             #endif
             products = ordered
             productsLoadFailed = products.isEmpty

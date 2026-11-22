@@ -317,6 +317,7 @@ struct SpecVectorsTests {
         .reminderDeclined(source: "completion"),
         .reminderSettingChanged(enabled: true),
         .reviewPromptRequested(trigger: "milestone_10", totalCompleted: 10),
+        .reviewLinkTapped(source: "profile"),
         .packOpened(id: "first-steps", source: "packs"),
         .packCompleted(id: "first-steps"),
         .questOpened(id: "beginnings", source: "home"),

@@ -463,6 +463,18 @@
     },
     {
       "expect" : {
+        "name" : "review_link_tapped",
+        "parameterKeys" : [
+          "source"
+        ]
+      },
+      "given" : {
+        "case" : "reviewLinkTapped"
+      },
+      "name" : "review_link_tapped"
+    },
+    {
+      "expect" : {
         "name" : "pack_opened",
         "parameterKeys" : [
           "pack_id",
@@ -1054,7 +1066,7 @@
     }
   ],
   "constants" : {
-    "eventCount" : 79,
+    "eventCount" : 80,
     "paywallExits" : [
       "close",
       "free_link",

@@ -304,6 +304,8 @@ struct PaywallView: View {
 
     private var purchaseSection: some View {
         VStack(spacing: Theme.Spacing.m) {
+            // Above the button, where the eye is when it decides.
+            PremiumReassurance(product: selectedProduct)
             Button {
                 guard let product = selectedProduct else { return }
                 didTapCTA = true
@@ -351,8 +353,10 @@ struct PaywallView: View {
             // peaks here, and the trial/price detail otherwise only lives in the
             // plan row above.
             if let subtext = ctaSubtext {
+                // Caption, not footnote: with the cancellation note it's
+                // three lines of small print at footnote size (2026-11-22).
                 Text(subtext)
-                    .font(.footnote)
+                    .font(.caption)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
             }
@@ -371,7 +375,7 @@ struct PaywallView: View {
     }
 
     private var ctaSubtext: String? {
-        PremiumOfferView.commitmentText(for: selectedProduct, store: store)
+        PremiumOfferView.buyTerms(for: selectedProduct, store: store)
     }
 
     // MARK: - Legal
@@ -525,6 +529,9 @@ enum PremiumCopy {
 struct PremiumBenefit: Identifiable {
     let icon: String
     let title: String
+    /// Two words, for the chip row. The three together fit one line on a
+    /// 390pt phone; check any rewrite on screen.
+    let short: String
     var id: String { title }
 
     /// The promise, written once for both places that make it — the sheet and
@@ -543,11 +550,11 @@ struct PremiumBenefit: Identifiable {
     static let all: [PremiumBenefit] = [
         // Three outcomes since the design pass (2026-11): packs and Journeys
         // are shown by name in the cards above, so no row repeats them.
-        PremiumBenefit(icon: "lightbulb", title: "Never stuck, with unlimited hints"),
-        PremiumBenefit(icon: "calendar", title: "Every puzzle, back to day one"),
+        PremiumBenefit(icon: "lightbulb", title: "Never stuck, with unlimited hints", short: "Unlimited hints"),
+        PremiumBenefit(icon: "calendar", title: "Every puzzle, back to day one", short: "Every puzzle"),
         // Premium lifts the 3-verse cap. "Learn", not "Unlimited verses":
         // every verse is already free to read.
-        PremiumBenefit(icon: "brain", title: "Learn as many verses as you like"),
+        PremiumBenefit(icon: "brain", title: "Learn as many verses as you like", short: "More verses"),
     ]
 }
 
