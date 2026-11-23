@@ -27,7 +27,7 @@ extension View {
 }
 
 private struct TodayTracker: ViewModifier {
-    @State private var day = Calendar.current.startOfDay(for: .now)
+    @State private var day = Self.currentDay()
     @Environment(\.scenePhase) private var scenePhase
 
     func body(content: Content) -> some View {
@@ -44,6 +44,24 @@ private struct TodayTracker: ViewModifier {
     }
 
     private func refresh() {
-        day = Calendar.current.startOfDay(for: .now)
+        day = Self.currentDay()
+    }
+
+    /// Start of today, or in DEBUG the day named by `-uiToday yyyy-MM-dd`,
+    /// to see a weekday-bound screen (Piece by Piece's weekend decoy) on any
+    /// day. Moves only `\.today` readers; code that reads `Date()` keeps the
+    /// real day.
+    private static func currentDay() -> Date {
+        #if DEBUG
+        if let text = UserDefaults.standard.string(forKey: "uiToday") {
+            let format = DateFormatter()
+            format.calendar = Calendar(identifier: .gregorian)
+            format.locale = Locale(identifier: "en_US_POSIX")
+            format.timeZone = .current
+            format.dateFormat = "yyyy-MM-dd"
+            if let date = format.date(from: text) { return Calendar.current.startOfDay(for: date) }
+        }
+        #endif
+        return Calendar.current.startOfDay(for: .now)
     }
 }
