@@ -231,11 +231,16 @@ struct HomeView: View {
         analytics.log(.upsellShown(source: UpgradeRow.source(currentStreak: profile.currentStreak).rawValue))
     }
 
+    #if DEBUG
+    private static var didDebugOpenPieces = false
+    #endif
+
     /// UI tests start from a clean slate, where the beginner path leads Today
     /// and the row is held back.
     private static var forcesClueOfTheDay: Bool {
         #if DEBUG
         ProcessInfo.processInfo.arguments.contains("-uiShowClueOfDay")
+            || ProcessInfo.processInfo.arguments.contains("-uiShowPieceByPiece")
         #else
         false
         #endif
@@ -489,6 +494,14 @@ struct HomeView: View {
             // The proactive premium ask that sat between them was removed on
             // 2026-10-03: 75 players saw it in 30 days and none tapped.
             .onAppear {
+                #if DEBUG
+                // `-uiOpenPieceByPiece`: straight to the game, to look at
+                // its layout on a device without finding the row first.
+                if ProcessInfo.processInfo.arguments.contains("-uiOpenPieceByPiece"), !Self.didDebugOpenPieces {
+                    Self.didDebugOpenPieces = true
+                    path.append(PieceByPieceRoute())
+                }
+                #endif
                 updatePremiumRowPlacement()
                 if !maybeShowTrialReoffer() { maybeShowStreakAsk() }
                 // A beat finished on a pushed screen closes the ring here,
@@ -574,6 +587,12 @@ struct HomeView: View {
             }
             .navigationDestination(for: CluePuzzleRoute.self) { route in
                 CrosswordGameView(puzzle: route.puzzle, profile: profile, entrySource: "clue_of_day")
+            }
+            .navigationDestination(for: PieceByPieceRoute.self) { _ in
+                PieceByPieceView()
+            }
+            .navigationDestination(for: PiecesPuzzleRoute.self) { route in
+                CrosswordGameView(puzzle: route.puzzle, profile: profile, entrySource: "piece_by_piece")
             }
             .navigationDestination(for: AchievementsRoute.self) { _ in
                 AchievementsView(profile: profile, source: "home_card")
@@ -663,13 +682,15 @@ struct HomeView: View {
             CompanionPuzzlesCard(rows: companions)
         }
 
-        // Clue of the Day, under the day's grids: a second, thirty-second
-        // thing to do. Not while the beginner path leads the page: a player
-        // who hasn't finished a puzzle yet gets one thing to do, and what
-        // 2.21 changed for them is still being read.
+        // The day's two short games, under its grids: Clue of the Day, and
+        // Piece by Piece (2026-11-23) as a second row of the same card. Not
+        // while the beginner path leads the page: a player who hasn't
+        // finished a puzzle yet gets one thing to do, and what 2.21 changed
+        // for them is still being read.
         if beginner == nil || Self.forcesClueOfTheDay {
             CardGroup(dividerInset: Theme.Spacing.m + CoverRow.coverSide + Theme.Spacing.m) {
                 ClueOfTheDayRow()
+                PieceByPieceRow()
             }
         }
 

@@ -135,6 +135,93 @@ final class Bible_Crossword_ChallengeUITests: XCTestCase {
         XCTAssertEqual(events.count(of: "clue_of_day_opened"), 2, "\(events)")
     }
 
+    /// Piece by Piece's impression is once per visit: a rotation moves the
+    /// board and the tray, and must not log it again. A piece put down is
+    /// still down after leaving and coming back.
+    @MainActor
+    func testPieceByPieceLogsOncePerVisitAndKeepsItsPieces() throws {
+        let app = launch(extra: ["-uiShowPieceByPiece"])
+        let row = app.buttons["pieceByPieceRow"]
+        XCTAssertTrue(row.waitForExistence(timeout: 20), "The Piece by Piece row never appeared")
+        let trayPiece = app.buttons.matching(NSPredicate(format: "label ENDSWITH 'in the tray'")).firstMatch
+        tap(row, until: trayPiece, in: app)
+
+        XCUIDevice.shared.orientation = .landscapeLeft
+        XCTAssertTrue(trayPiece.waitForExistence(timeout: 5))
+        XCUIDevice.shared.orientation = .portrait
+        XCTAssertTrue(trayPiece.waitForExistence(timeout: 5))
+
+        // Pick a piece up, then try squares until one takes it: where it
+        // fits depends on the day's cut.
+        let placed = app.buttons.matching(NSPredicate(format: "label CONTAINS ', at row '")).firstMatch
+        trayPiece.tap()
+        let squares = app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Empty square'"))
+        for index in 0..<squares.count where !placed.exists {
+            squares.element(boundBy: index).tap()
+        }
+        XCTAssertTrue(placed.waitForExistence(timeout: 5), "No square took the piece")
+
+        var events = loggedEvents()
+        XCTAssertEqual(events.count(of: "piece_by_piece_opened"), 1, "\(events)")
+        XCTAssertEqual(events.count(of: "piece_by_piece_finished"), 0, "\(events)")
+
+        // Back on Today the row carries the progress, and a second visit is
+        // a second impression with the piece where it was left.
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        XCTAssertTrue(row.waitForExistence(timeout: 10))
+        XCTAssertTrue(row.label.contains("1 of "), row.label)
+        tap(row, until: placed, in: app)
+        events = loggedEvents()
+        XCTAssertEqual(events.count(of: "piece_by_piece_opened"), 2, "\(events)")
+    }
+
+    /// The solving move logs `piece_by_piece_finished` once, and coming back
+    /// to the solved round doesn't log it again. The ending's two doors each
+    /// carry the game as their source: the verse into Memory verses and the
+    /// day's crossword. A fixed Monday, so there is no decoy in the tray.
+    @MainActor
+    func testPieceByPieceFinishLogsOnceAndItsDoorsCarryTheSource() throws {
+        let app = launch(extra: ["-uiShowPieceByPiece", "-uiPiecesAllButOne", "-uiToday", "2026-11-23"])
+        let row = app.buttons["pieceByPieceRow"]
+        XCTAssertTrue(row.waitForExistence(timeout: 20), "The Piece by Piece row never appeared")
+        let trayPiece = app.buttons.matching(NSPredicate(format: "label ENDSWITH 'in the tray'")).firstMatch
+        tap(row, until: trayPiece, in: app)
+        XCTAssertEqual(loggedEvents().count(of: "piece_by_piece_finished"), 0)
+
+        // The last piece: pick it up and try the open squares until it lands.
+        let play = app.buttons["pieceByPiecePlay"]
+        let squares = app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Empty square'"))
+        trayPiece.tap()
+        for index in 0..<squares.count where !play.exists && squares.element(boundBy: index).exists {
+            squares.element(boundBy: index).tap()
+        }
+        XCTAssertTrue(play.waitForExistence(timeout: 5), "The round never finished\n\(app.debugDescription)")
+        var events = loggedEvents()
+        XCTAssertEqual(events.count(of: "piece_by_piece_finished"), 1, "\(events)")
+
+        // The verse goes on the shelf in place, and says so.
+        let learn = app.buttons["pieceByPieceMemory"]
+        XCTAssertTrue(learn.waitForExistence(timeout: 5), "No Learn it by heart link")
+        learn.tap()
+        XCTAssertTrue(learn.waitForNonExistence(timeout: 5), "The link stayed after the verse was added")
+        events = loggedEvents()
+        XCTAssertEqual(events.count(of: "memory_verse_added", source: "piece_by_piece"), 1, "\(events)")
+
+        // Out and back in: solved stays solved, and is not finished twice.
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        XCTAssertTrue(row.waitForExistence(timeout: 10))
+        XCTAssertTrue(row.label.contains("Solved in"), row.label)
+        tap(row, until: play, in: app)
+        events = loggedEvents()
+        XCTAssertEqual(events.count(of: "piece_by_piece_opened"), 2, "\(events)")
+        XCTAssertEqual(events.count(of: "piece_by_piece_finished"), 1, "\(events)")
+
+        // On to the grid, as this game's start.
+        tap(play, until: app.buttons["Q"], in: app)
+        events = loggedEvents()
+        XCTAssertEqual(events.count(of: "daily_puzzle_started", source: "piece_by_piece"), 1, "\(events)")
+    }
+
     /// The return-day reminder sheet waits 1.5s for the celebration. Closing
     /// the results screen first used to log `reminder_ask_shown` for a sheet
     /// that never appeared.

@@ -1031,6 +1031,35 @@
     },
     {
       "expect" : {
+        "name" : "piece_by_piece_opened",
+        "parameterKeys" : [
+          "puzzle_id",
+          "state"
+        ]
+      },
+      "given" : {
+        "case" : "pieceByPieceOpened"
+      },
+      "name" : "piece_by_piece_opened"
+    },
+    {
+      "expect" : {
+        "name" : "piece_by_piece_finished",
+        "parameterKeys" : [
+          "decoys",
+          "pieces",
+          "puzzle_id",
+          "seconds",
+          "wrong_fits"
+        ]
+      },
+      "given" : {
+        "case" : "pieceByPieceFinished"
+      },
+      "name" : "piece_by_piece_finished"
+    },
+    {
+      "expect" : {
         "name" : "app_crash",
         "parameterKeys" : [
           "app_frames",
@@ -1066,7 +1095,7 @@
     }
   ],
   "constants" : {
-    "eventCount" : 80,
+    "eventCount" : 82,
     "paywallExits" : [
       "close",
       "free_link",

@@ -361,6 +361,8 @@ struct SpecVectorsTests {
         .clueOfDayOpened(roundID: "clue-001", state: "new"),
         .clueOfDayClueRevealed(roundID: "clue-001", clueNumber: 2),
         .clueOfDayFinished(roundID: "clue-001", outcome: "solved", cluesUsed: 2, wrongGuesses: 1),
+        .pieceByPieceOpened(puzzleID: "mini-001", state: "new"),
+        .pieceByPieceFinished(puzzleID: "mini-001", seconds: 52, wrongFits: 1, pieces: 8, decoys: 1),
         .appCrash(signal: 11, exceptionType: 1, exceptionCode: 0, reason: "x", build: "21", os: "26.0", frames: "a", appFrames: "b"),
         .appHang(seconds: 2.5, build: "21", os: "26.0", frames: "a", appFrames: "b"),
         ]

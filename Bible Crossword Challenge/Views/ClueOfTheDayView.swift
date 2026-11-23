@@ -287,16 +287,7 @@ struct ClueOfTheDayView: View {
     /// Today's crossword, or the Mini once that is done, with the words for
     /// where the player stands in it. Nil when both are finished today.
     private func nextPuzzle() -> (puzzle: Puzzle, title: String)? {
-        let byID = records.byPuzzleID
-        let calendar = Calendar.current
-        let next = ClueOfTheDay.nextPuzzle(on: today) { puzzle in
-            guard let record = byID[puzzle.id], record.isCompleted, let done = record.completedDate else { return false }
-            return calendar.isDate(done, inSameDayAs: today)
-        }
-        guard let next else { return nil }
-        let kind = next.id.hasPrefix("mini-") ? "Mini" : "crossword"
-        let started = byID[next.id]?.hasPlayerEntries == true && byID[next.id]?.isCompleted != true
-        return (next, "\(started ? "Continue" : "Play") today's \(kind)")
+        NextPuzzleLink.make(on: today, records: records)
     }
 
     /// The result without the answer: a friend can still play today's. The
@@ -353,6 +344,26 @@ struct ClueOfTheDayView: View {
 
     private func save(_ game: ClueGame) {
         saved = ClueOfTheDayStorage.encode(game.progress)
+    }
+}
+
+/// Where a finished short game points: today's crossword, or the Mini once
+/// that is done, with the words for where the player stands in it. Shared
+/// by Clue of the Day and Piece by Piece.
+enum NextPuzzleLink {
+    /// Nil when both are finished today.
+    static func make(
+        on today: Date, records: [PuzzleRecord], calendar: Calendar = .current
+    ) -> (puzzle: Puzzle, title: String)? {
+        let byID = records.byPuzzleID
+        let next = ClueOfTheDay.nextPuzzle(on: today) { puzzle in
+            guard let record = byID[puzzle.id], record.isCompleted, let done = record.completedDate else { return false }
+            return calendar.isDate(done, inSameDayAs: today)
+        }
+        guard let next else { return nil }
+        let kind = next.id.hasPrefix("mini-") ? "Mini" : "crossword"
+        let started = byID[next.id]?.hasPlayerEntries == true && byID[next.id]?.isCompleted != true
+        return (next, "\(started ? "Continue" : "Play") today's \(kind)")
     }
 }
 
