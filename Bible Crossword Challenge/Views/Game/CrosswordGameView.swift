@@ -311,7 +311,7 @@ struct CrosswordGameScreen: View {
                 // standing side panel — grid and keyboard on the left, every
                 // clue in view on the right, the way a paper crossword sits
                 // next to its clues.
-                if #available(iOS 27.1, *) {
+                if #available(iOS 27.1, *), !windowIsPortrait {
                     // The system's split owns the seam here too, so the
                     // panel is sized by the arrangement rather than beside
                     // it. The surface inside stays one column: left to its
@@ -328,8 +328,15 @@ struct CrosswordGameScreen: View {
                     }
                     .arrangementViewStyle(.split.axes(.horizontal))
                 } else {
+                    // Hand-built on iPad in portrait too: there the system's
+                    // split showed the grid pane alone and dropped the clue
+                    // list, while the clue bar, told the list was standing,
+                    // left the clue out — no clue anywhere on screen
+                    // (iPad Pro 13", 1032×1376pt, 2026-11-24). One column
+                    // inside: from 27.1 `solveSurface()` would bring its own
+                    // split.
                     HStack(spacing: 0) {
-                        solveSurface()
+                        solveSurface(stacked: windowIsPortrait)
                         Divider().ignoresSafeArea(edges: .bottom)
                         ClueListView(vm: vm, embedded: true, standingReaderTarget: $clueReaderTarget)
                             .frame(width: Self.cluePanelWidth)
@@ -370,6 +377,12 @@ struct CrosswordGameScreen: View {
     /// Whether the clue list is on screen as a panel rather than a sheet.
     private var cluesStanding: Bool {
         solveLayout == .withCluePanel || cluesInDockColumn
+    }
+
+    /// A measured window taller than it is wide. Unmeasured counts as not,
+    /// so the first pass keeps the layout it had before this existed.
+    private var windowIsPortrait: Bool {
+        containerSize != .zero && containerSize.height > containerSize.width
     }
 
     /// Whether the clue list stands in the keypad's column, above the keys:
