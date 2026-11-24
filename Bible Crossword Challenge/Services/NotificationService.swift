@@ -67,6 +67,13 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
 
     private let center = UNUserNotificationCenter.current()
 
+    /// Bumped by every `reschedule`. A call suspends at each `await`, and a
+    /// newer one — reminders switched off, say — can clear the queue in
+    /// between; the older call checks this before every add and stops once
+    /// it has been superseded, so it can't put back what the newer one took
+    /// away.
+    @ObservationIgnored private var scheduleGeneration = 0
+
     /// How many days ahead we keep scheduled. Well under iOS's 64-pending cap.
     private let horizonDays = 14
 
@@ -225,10 +232,12 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
     ) async {
         let packs = packs ?? PuzzleProvider.shared.packs
         let memory = memory ?? MemoryVerseStore.shared
+        scheduleGeneration += 1
+        let generation = scheduleGeneration
         center.removeAllPendingNotificationRequests()
         guard enabled || packNews else { return }
         await refreshStatus()
-        guard canDeliver else { return }
+        guard canDeliver, generation == scheduleGeneration else { return }
 
         let calendar = Calendar.current
         let now = Date()
@@ -237,7 +246,9 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
         // behind it: until 2026-10 it sat at the end of this function, so
         // switching the reminder off quietly took the pack notices with it.
         if packNews {
-            await scheduleSeasonOpenings(packs: packs, calendar: calendar, now: now)
+            await scheduleSeasonOpenings(
+                packs: packs, calendar: calendar, now: now, generation: generation
+            )
         }
         guard enabled else { return }
 
@@ -280,12 +291,13 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
             let components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: fireDate)
             let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
             let request = UNNotificationRequest(identifier: "daily-\(dayOffset)", content: content, trigger: trigger)
+            guard generation == scheduleGeneration else { return }
             try? await center.add(request)
         }
 
         await scheduleStreakRiskNudge(
             minutes: minutes, streak: streak, completedToday: completedToday,
-            freezes: freezes, calendar: calendar, now: now
+            freezes: freezes, calendar: calendar, now: now, generation: generation
         )
     }
 
@@ -307,7 +319,7 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
     /// Premium packs are announced to opted-in free players too. Browsing a
     /// pack is free, and the season is the honest reason to look now.
     private func scheduleSeasonOpenings(
-        packs: [PuzzlePack], calendar: Calendar, now: Date
+        packs: [PuzzlePack], calendar: Calendar, now: Date, generation: Int
     ) async {
         let openings = PuzzlePack.openings(
             in: packs, from: now, within: horizonDays, calendar: calendar
@@ -341,6 +353,7 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
             let request = UNNotificationRequest(
                 identifier: "pack-open-\(pack.id)", content: content, trigger: trigger
             )
+            guard generation == scheduleGeneration else { return }
             try? await center.add(request)
         }
     }
@@ -353,7 +366,7 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
     /// fires at 9 PM or later.
     private func scheduleStreakRiskNudge(
         minutes: Int, streak: Int, completedToday: Bool, freezes: Int,
-        calendar: Calendar, now: Date
+        calendar: Calendar, now: Date, generation: Int
     ) async {
         // From three days up (2026-10-25). A one- or two-day streak already
         // gets the day's reminder in streak-saver words; a second
@@ -387,6 +400,7 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
         let components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: fireDate)
         let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
         let request = UNNotificationRequest(identifier: "streak-risk", content: content, trigger: trigger)
+        guard generation == scheduleGeneration else { return }
         try? await center.add(request)
     }
 
