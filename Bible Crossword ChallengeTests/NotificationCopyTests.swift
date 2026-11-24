@@ -218,6 +218,80 @@ struct ReminderTimeSuggestionTests {
     }
 }
 
+// MARK: - Due memory verse
+
+/// A memory verse due for review rides on the daily reminder. These pin which
+/// days carry it and how it reads.
+struct DueVerseReminderTests {
+
+    @Test func lineNamesTheMostOverdueVerseAndCountsTheRest() {
+        #expect(NotificationService.dueVerseLine([]) == nil)
+        #expect(NotificationService.dueVerseLine(["John 3:16"]) == "John 3:16 is due for review, too.")
+        #expect(NotificationService.dueVerseLine(["John 3:16", "Psalm 23:1"])
+            == "John 3:16 and 1 other verse are due for review, too.")
+        #expect(NotificationService.dueVerseLine(["John 3:16", "Psalm 23:1", "Romans 8:28"])
+            == "John 3:16 and 2 other verses are due for review, too.")
+    }
+
+    /// On an ordinary day the due verse takes the body, ahead of the verse of
+    /// the day — it's the one line that asks for something.
+    @Test func ordinaryDayLeadsWithTheDueVerse() {
+        let copy = NotificationService.reminderCopy(
+            dayOffset: 2, streak: 0, completedToday: false, projectedLapse: nil,
+            verse: "“The Lord is my shepherd” — Psalm 23:1",
+            dueVerse: "John 3:16 is due for review, too."
+        )
+        #expect(copy.title == "Today's puzzle is ready")
+        #expect(copy.body == "John 3:16 is due for review, too.")
+        #expect(!copy.passive)
+    }
+
+    /// A player with a streak gets streak copy on every next reminder, so the
+    /// due verse has to ride along there or they'd never hear about it.
+    @Test func streakCopyKeepsItsWordsAndAddsTheDueVerse() {
+        let due = "John 3:16 is due for review, too."
+        let streak = NotificationService.reminderCopy(
+            dayOffset: 0, streak: 4, completedToday: false, projectedLapse: 0, dueVerse: due
+        )
+        #expect(streak.title == "Keep your streak alive 🔥")
+        #expect(streak.body.hasPrefix("You're on a 4-day streak."))
+        #expect(streak.body.hasSuffix(due))
+
+        let dayTwo = NotificationService.reminderCopy(
+            dayOffset: 1, streak: 1, completedToday: true, projectedLapse: 1, dueVerse: due
+        )
+        #expect(dayTwo.title.contains("two days running"))
+        #expect(dayTwo.body.hasSuffix(due))
+    }
+
+    /// Win-back copy says there's nothing to catch up on; a review list would
+    /// contradict it.
+    @Test func winBackLeavesTheDueVerseOut() {
+        let copy = NotificationService.reminderCopy(
+            dayOffset: 0, streak: 0, completedToday: false, projectedLapse: 7,
+            dueVerse: "John 3:16 is due for review, too."
+        )
+        #expect(copy.body == NotificationService.winBack(lapseDays: 7)!.body)
+        #expect(copy.passive)
+    }
+
+    /// No verse due leaves every reminder exactly as it was.
+    @Test func nothingDueChangesNothing() {
+        for (offset, streak, lapse) in [(0, 4, 0), (2, 0, nil), (0, 0, 7)] as [(Int, Int, Int?)] {
+            let before = NotificationService.reminderCopy(
+                dayOffset: offset, streak: streak, completedToday: false, projectedLapse: lapse
+            )
+            let after = NotificationService.reminderCopy(
+                dayOffset: offset, streak: streak, completedToday: false, projectedLapse: lapse,
+                dueVerse: NotificationService.dueVerseLine([])
+            )
+            #expect(before.title == after.title)
+            #expect(before.body == after.body)
+            #expect(before.passive == after.passive)
+        }
+    }
+}
+
 /// `notification_tapped.kind` is read off the identifier each request was
 /// scheduled under, so a renamed identifier would silently file every tap as
 /// `other`. These pin the identifiers `reschedule` actually uses.

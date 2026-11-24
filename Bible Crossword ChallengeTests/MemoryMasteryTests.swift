@@ -100,6 +100,24 @@ struct MemoryMasteryTests {
         #expect(due == expected)
     }
 
+    /// The reminders are scheduled days ahead, so "due" is asked of a future
+    /// fire date: a verse practiced now at level 1 isn't due yet, but is by
+    /// tomorrow — and the most overdue comes first.
+    @Test func dueForReviewLooksAheadAndSortsMostOverdueFirst() {
+        let (store, advance, _) = makeStore()
+        let john = store.start(reference: "John 3:16", verseText: "For God so loved")
+        let psalm = store.start(reference: "Psalm 23:1", verseText: "The Lord is my shepherd")
+        _ = store.start(reference: "Romans 8:28", verseText: "never practiced")
+        _ = store.recordCompletion(referenceKey: john.referenceKey, hintFree: false)
+        advance(60 * 60)
+        _ = store.recordCompletion(referenceKey: psalm.referenceKey, hintFree: false)
+
+        let start = Date(timeIntervalSince1970: 1_700_000_000)
+        #expect(store.dueForReview(at: start.addingTimeInterval(2 * 60 * 60)).isEmpty)
+        let tomorrowEvening = start.addingTimeInterval(36 * 60 * 60)
+        #expect(store.dueForReview(at: tomorrowEvening).map(\.reference) == ["John 3:16", "Psalm 23:1"])
+    }
+
     @Test func overdueVerseIsDue() {
         let (store, advance, _) = makeStore()
         let entry = store.start(reference: "John 3:16", verseText: "For God so loved")
