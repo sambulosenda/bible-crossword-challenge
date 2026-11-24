@@ -323,6 +323,22 @@ final class Bible_Crossword_ChallengeUITests: XCTestCase {
         waitForExpectations(timeout: 10)
     }
 
+    /// Profile's "Books explored" number opens the map of books it counts,
+    /// and the open is logged once with its source.
+    @MainActor
+    func testProfileBooksExploredOpensTheMap() throws {
+        let app = launch(extra: ["-uiSeedShowcase", "-uiNoReview"])
+        let profileTab = app.tabBars.buttons["Profile"]
+        XCTAssertTrue(profileTab.waitForExistence(timeout: 20))
+        profileTab.tap()
+        let books = app.buttons["profileBooksExplored"]
+        XCTAssertTrue(books.waitForExistence(timeout: 10), app.debugDescription)
+        books.tap()
+        XCTAssertTrue(app.navigationBars["Books explored"].waitForExistence(timeout: 10))
+        let events = loggedEvents(waitingFor: "journey_opened")
+        XCTAssertEqual(events.count(of: "journey_opened", source: "profile"), 1, "\(events)")
+    }
+
     /// `pack_opened` is the denominator of pack conversion. It used to fire
     /// again on every pop back from a puzzle, so one visit counted twice.
     @MainActor

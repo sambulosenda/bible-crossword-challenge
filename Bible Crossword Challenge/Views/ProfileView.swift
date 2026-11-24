@@ -474,7 +474,18 @@ private struct ProfileStatsRow: View {
 
     var body: some View {
         HStack(spacing: 0) {
-            stat("\(booksExplored)", of: "/\(totalBooks)", "Books explored")
+            // The one number with somewhere to go: the map of books it
+            // counts. That map's only door was a card on the Read screen, two
+            // pushes from Today, and it was opened 0 times in the 30 days to
+            // 2026-11-24. The chevron marks it out from the two plain stats.
+            NavigationLink {
+                JourneyView(source: "profile")
+            } label: {
+                stat("\(booksExplored)", of: "/\(totalBooks)", "Books explored", opens: true)
+            }
+            .buttonStyle(.plain)
+            .accessibilityHint("Shows the books of the Bible you have solved in")
+            .accessibilityIdentifier("profileBooksExplored")
             Divider()
             stat("\(versesLearned)", "Verses learned")
             Divider()
@@ -485,7 +496,7 @@ private struct ProfileStatsRow: View {
         .elevatedCard()
     }
 
-    private func stat(_ value: String, of total: String = "", _ label: String) -> some View {
+    private func stat(_ value: String, of total: String = "", _ label: String, opens: Bool = false) -> some View {
         VStack(spacing: 2) {
             (Text(value)
                 + Text(total)
@@ -496,7 +507,9 @@ private struct ProfileStatsRow: View {
                 .contentTransition(.numericText())
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
-            Text(label)
+            (opens
+                ? Text(label) + Text(" ") + Text(Image(systemName: "chevron.right")).fontWeight(.semibold)
+                : Text(label))
                 .font(.footnote)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
@@ -504,6 +517,7 @@ private struct ProfileStatsRow: View {
         }
         .frame(maxWidth: .infinity)
         .padding(.horizontal, Theme.Spacing.xs)
+        .contentShape(.rect)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(label)
         .accessibilityValue(total.isEmpty ? value : "\(value) of \(total.dropFirst())")

@@ -27,6 +27,7 @@ struct JourneyView: View {
     /// Recomputed when the records change — solving a puzzle elsewhere and
     /// coming back should move the map.
     @State private var rows: [BibleJourney.BookProgress] = []
+    @State private var didLogOpen = false
 
     var body: some View {
         // The summary and legend on the left of a wide window, the map on
@@ -45,6 +46,10 @@ struct JourneyView: View {
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             reload()
+            // Once a visit: `onAppear` runs again on the pop back from a
+            // puzzle opened here, and the open would count twice.
+            guard !didLogOpen else { return }
+            didLogOpen = true
             analytics.log(.journeyOpened(source: source))
         }
         .onChange(of: records.count, reload)
