@@ -101,6 +101,18 @@ final class MemoryVerseStore {
 
     var dueCount: Int { entries.count(where: isDue) }
 
+    /// Verses that will be due by `date`, most overdue first — what the daily
+    /// reminder names. Takes a date rather than reading the clock because the
+    /// reminders are scheduled days ahead: a verse practiced yesterday at
+    /// level 1 isn't due now, but is by tomorrow evening's reminder.
+    func dueForReview(at date: Date) -> [Entry] {
+        entries
+            .compactMap { entry in dueDate(entry).map { (entry, $0) } }
+            .filter { $0.1 <= date }
+            .sorted { $0.1 < $1.1 }
+            .map(\.0)
+    }
+
     /// When a flawless round would next raise this verse's level, while the
     /// anti-grind spacing is still holding it. Nil once a level-up is
     /// available (or the verse is mastered). The practice sheet and the list

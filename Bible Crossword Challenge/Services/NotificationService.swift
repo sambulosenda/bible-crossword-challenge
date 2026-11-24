@@ -19,6 +19,10 @@
 //  foreground, puzzle completion, settings change). The next reminder is the one
 //  that matters most, so it carries streak-aware copy; later days fall back to
 //  rotating generic prompts.
+//  A memory verse due for review rides on the daily reminder rather than
+//  getting a notification of its own (see `dueVerseLine`). Practicing or
+//  removing a verse reschedules too, from `RootView`, so a reminder never names
+//  a verse that has already been reviewed.
 //
 //  The whole app runs with default MainActor isolation, so this type is
 //  main-actor isolated and its @Observable status property is safe to read from
@@ -212,12 +216,15 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
     /// `packs` defaults to the bundled set; `nil` rather than a default
     /// expression because a default argument is evaluated outside the actor and
     /// `PuzzleProvider.shared` is main-actor isolated. Tests pass their own.
+    /// `memory` is `nil`-defaulted to `MemoryVerseStore.shared` for the same
+    /// reason.
     func reschedule(
         enabled: Bool, minutes: Int, packNews: Bool = false, streak: Int,
         completedToday: Bool, freezes: Int = 0, daysSinceLastSolve: Int? = nil,
-        packs: [PuzzlePack]? = nil
+        packs: [PuzzlePack]? = nil, memory: MemoryVerseStore? = nil
     ) async {
         let packs = packs ?? PuzzleProvider.shared.packs
+        let memory = memory ?? MemoryVerseStore.shared
         center.removeAllPendingNotificationRequests()
         guard enabled || packNews else { return }
         await refreshStatus()
@@ -254,7 +261,11 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
             let copy = Self.reminderCopy(
                 dayOffset: dayOffset, streak: streak,
                 completedToday: completedToday, projectedLapse: projectedLapse,
-                verse: Self.verseLine(on: day, calendar: calendar)
+                verse: Self.verseLine(on: day, calendar: calendar),
+                // Due as of when this one fires, not now: the same
+                // no-practice-in-between premise as the lapse above, and a
+                // practice reschedules just the same.
+                dueVerse: Self.dueVerseLine(memory.dueForReview(at: fireDate).map(\.reference))
             )
             content.title = copy.title
             content.body = copy.body
@@ -410,29 +421,57 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
     /// ordinary day (2026-10-25): after a week "Today's puzzle is ready" has
     /// stopped carrying information, and a verse is a reason to open the app
     /// in itself.
+    ///
+    /// `dueVerse`, when given, is `dueVerseLine` for the memory verses due by
+    /// fire time (2026-11-24). Nothing else tells a player a verse is due —
+    /// the Daily Bread card only says so once they're already in the app — and
+    /// spaced repetition only works if they come back on the day. It's added
+    /// to the streak copy rather than skipped there, because a player with a
+    /// streak gets streak copy on every next reminder and would otherwise
+    /// never hear about it; on an ordinary day it takes the verse of the day's
+    /// place, the one line that asks for something. Win-back copy leaves it
+    /// out: "nothing to catch up on" and a review list don't belong together.
     static func reminderCopy(
         dayOffset: Int, streak: Int, completedToday: Bool, projectedLapse: Int?,
-        verse: String? = nil
+        verse: String? = nil, dueVerse: String? = nil
     ) -> (title: String, body: String, passive: Bool) {
         let streakSaveOffset = completedToday ? 1 : 0
+        let dueSuffix = dueVerse.map { " \($0)" } ?? ""
         if streak > 0 && dayOffset == streakSaveOffset {
             if streak == 1 {
                 return (
                     "Make it two days running 🔥",
-                    "You solved yesterday's Bible puzzle. Solve today's and it's a streak.",
+                    "You solved yesterday's Bible puzzle. Solve today's and it's a streak." + dueSuffix,
                     passive: false
                 )
             }
             return (
                 "Keep your streak alive 🔥",
-                "You're on a \(streak)-day streak. Solve today's Bible puzzle to keep it going.",
+                "You're on a \(streak)-day streak. Solve today's Bible puzzle to keep it going." + dueSuffix,
                 passive: false
             )
         }
         if let projectedLapse, let winBack = winBack(lapseDays: projectedLapse) {
             return (winBack.title, winBack.body, passive: true)
         }
-        return ("Today's puzzle is ready", verse ?? prompts[dayOffset % prompts.count], passive: false)
+        return (
+            "Today's puzzle is ready",
+            dueVerse ?? verse ?? prompts[dayOffset % prompts.count],
+            passive: false
+        )
+    }
+
+    /// "John 3:16 is due for review, too." for the most overdue verse, with a
+    /// count of the rest — `references` most overdue first, as
+    /// `MemoryVerseStore.dueForReview` returns them. `nil` when none is due,
+    /// which leaves the reminder exactly as it was.
+    static func dueVerseLine(_ references: [String]) -> String? {
+        guard let first = references.first else { return nil }
+        switch references.count - 1 {
+        case 0: return "\(first) is due for review, too."
+        case 1: return "\(first) and 1 other verse are due for review, too."
+        case let others: return "\(first) and \(others) other verses are due for review, too."
+        }
     }
 
     /// "“I can do all things…” — Philippians 4:13", the verse Today shows on

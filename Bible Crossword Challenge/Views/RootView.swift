@@ -211,6 +211,21 @@ struct RootView: View {
         .onChange(of: notifications.pendingURL) { _, _ in
             drainPendingNotificationURL()
         }
+        // The daily reminder names a memory verse due for review, and it's
+        // scheduled days ahead — so practicing, starting or removing a verse
+        // reschedules, or tonight's reminder would ask for a review already
+        // done. Here, on the root, rather than in the practice screen: this
+        // view's identity is stable, and every path that changes the shelf
+        // lands on the one store.
+        .onChange(of: memoryVerses.entries) { _, _ in
+            guard let profile = profiles.first else { return }
+            Task {
+                await notifications.reschedule(
+                    for: profile, enabled: remindersEnabled,
+                    minutes: reminderMinutes, packNews: packNewsEnabled
+                )
+            }
+        }
         // Universal links (https://biblecrosswordchallenge.com/challenge/…)
         // arrive as a web-browsing activity rather than through onOpenURL.
         .onContinueUserActivity(NSUserActivityTypeBrowsingWeb) { activity in
