@@ -555,6 +555,9 @@ struct PremiumBenefit: Identifiable {
         // Premium lifts the 3-verse cap. "Learn", not "Unlimited verses":
         // every verse is already free to read.
         PremiumBenefit(icon: "brain", title: "Learn as many verses as you like", short: "More verses"),
+        // 2026-11-24: the weekly freeze. A fourth chip wraps to a second
+        // line on a 390pt phone.
+        PremiumBenefit(icon: "snowflake", title: "A streak freeze back every week", short: "Weekly freeze"),
     ]
 }
 

@@ -67,6 +67,14 @@ final class StoreService {
     private static let revenueCatAPIKey = "appl_iWdaXgiKMfmIiTcqlsaDKkIdJxQ"
 
     private(set) var isPremium = StoreService.forcesPremium
+    private static let lastKnownPremiumKey = "premiumLastKnown"
+    /// What the entitlement last resolved to, for the one launch step that
+    /// can't wait for it: the streak is normalised before RevenueCat answers,
+    /// and a subscriber's weekly freeze has to be in hand by then. Written on
+    /// every resolution, so a lapsed subscription clears it.
+    static var lastKnownPremium: Bool {
+        (UserDefaults.standard.bool(forKey: lastKnownPremiumKey) || forcesPremium) && !forcesFree
+    }
     private(set) var products: [Product] = []
     private(set) var purchaseInFlight = false
     /// True when the last product load ended with nothing to show — drives the
@@ -447,6 +455,7 @@ final class StoreService {
     private func apply(_ info: CustomerInfo) {
         isPremium = (info.entitlements[Self.entitlementID]?.isActive == true || Self.forcesPremium)
             && !Self.forcesFree
+        UserDefaults.standard.set(isPremium, forKey: Self.lastKnownPremiumKey)
         // A grant from anywhere — this sheet, a restore, another device —
         // answers the re-offer's question. Never ask it of a subscriber.
         if isPremium { clearTrialAbandon() }

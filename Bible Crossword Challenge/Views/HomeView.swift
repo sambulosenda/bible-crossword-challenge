@@ -49,6 +49,9 @@ struct HomeView: View {
     /// Written by RootView when a launch breaks the streak; cleared here on
     /// dismiss, and on the solve that starts the next run.
     @AppStorage("pendingStreakBreak") private var pendingStreakBreak = 0
+    /// The streak sheet's Premium line was tapped; the paywall follows the
+    /// sheet down.
+    @State private var streakPaywallPending = false
     /// Where the comeback solve came from, read once by the completion that
     /// logs it. Carried through UserDefaults because the puzzle is opened by
     /// navigation — there's no call chain between the tap and the solve.
@@ -359,8 +362,46 @@ struct HomeView: View {
             freezes: profile.streakFreezes,
             savedRecently: freezeSavedToday,
             completedWeekdays: completedWeekdaysThisWeek,
-            endedRun: pendingStreakBreak > 0 ? pendingStreakBreak : nil
+            endedRun: pendingStreakBreak > 0 ? pendingStreakBreak : nil,
+            weeklyRefill: store.isPremium
         )
+    }
+
+    /// Premium's weekly freeze, offered under the streak in its sheet: where
+    /// the freezes are counted, to a player with a run to protect. Never under
+    /// a run that just ended — an offer there reads as blame, the same reason
+    /// the reminder ask stays off comeback days.
+    private var showsFreezeOffer: Bool {
+        !store.isPremium && pendingStreakBreak == 0 && profile.currentStreak >= 2
+    }
+
+    private var freezeOffer: some View {
+        Button {
+            // The paywall goes up once this sheet is down: two sheets can't
+            // swap in one beat.
+            streakPaywallPending = true
+            showStreak = false
+        } label: {
+            HStack(spacing: Theme.Spacing.s) {
+                Image(systemName: "crown.fill")
+                    .foregroundStyle(Theme.badgeRim)
+                Text("Premium adds a freeze every week")
+                    .foregroundStyle(.primary)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                Image(systemName: "chevron.right")
+                    .font(.footnote.weight(.semibold))
+                    .foregroundStyle(.tertiary)
+                    .accessibilityHidden(true)
+            }
+            .font(.subheadline)
+            .padding(.horizontal, Theme.Spacing.l)
+            .padding(.vertical, Theme.Spacing.s)
+            .contentShape(.rect)
+        }
+        .buttonStyle(.plain)
+        .accessibilityHint("Opens Premium options")
+        .accessibilityIdentifier("streakFreezeOffer")
     }
 
     /// Flame and day count beside the title — where streak apps keep it.
@@ -540,10 +581,17 @@ struct HomeView: View {
                     ToolbarItem(placement: .topBarTrailing) { streakButton }
                 }
             }
-            .sheet(isPresented: $showStreak) {
+            .sheet(isPresented: $showStreak, onDismiss: {
+                guard streakPaywallPending else { return }
+                streakPaywallPending = false
+                paywall = PaywallRequest(source: .streakFreeze)
+            }) {
                 // Sized to the card: at `.medium` half the sheet was empty
                 // paper under it.
-                streakCard
+                VStack(spacing: Theme.Spacing.s) {
+                    streakCard
+                    if showsFreezeOffer { freezeOffer }
+                }
                     .padding(Theme.Spacing.m)
                     .padding(.top, Theme.Spacing.m)
                     // Plus the bottom safe area: a height detent counts the

@@ -23,6 +23,8 @@ struct StreakCard: View {
     /// The run that just broke, while its comeback is pending. Said here, in
     /// the sheet the bar's flame opens, instead of on a card of its own.
     var endedRun: Int? = nil
+    /// Premium: a freeze comes back each week, so the freeze line says so.
+    var weeklyRefill: Bool = false
 
     @ScaledMetric(relativeTo: .largeTitle) private var iconSize = 48
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -84,8 +86,12 @@ struct StreakCard: View {
             } else if current == 0 {
                 footnote("Solve today to start your streak", symbol: "flame", tint: .orange)
             } else if freezes > 0 {
-                footnote("^[\(freezes) freeze](inflect: true) ready to cover a missed day",
+                footnote(weeklyRefill
+                         ? "^[\(freezes) freeze](inflect: true) ready, and one back every week"
+                         : "^[\(freezes) freeze](inflect: true) ready to cover a missed day",
                          symbol: "snowflake", tint: .cyan)
+            } else if weeklyRefill {
+                footnote("Your next freeze arrives within a week", symbol: "snowflake", tint: .cyan)
             }
         }
         .frame(maxWidth: .infinity)
@@ -108,6 +114,9 @@ struct StreakCard: View {
             label += ". Solve today to start your streak"
         } else if freezes > 0 {
             label += ". \(freezes) streak \(freezes == 1 ? "freeze" : "freezes") available, each covers a missed day"
+            if weeklyRefill { label += ". One comes back every week" }
+        } else if weeklyRefill {
+            label += ". Your next freeze arrives within a week"
         }
         return label
     }

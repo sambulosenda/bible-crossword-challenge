@@ -151,6 +151,11 @@ enum AnalyticsEvent {
     // the next one, so the pair answers: after a break, do they come back, from
     // where, and how long did the lost streak have to be before they don't.
     case streakBroken(previousLength: Int)
+    /// A freeze covered a missed day at launch. `streak` is the run it kept,
+    /// `freezesLeft` what remains, `premium` whether the player gets the
+    /// weekly top-up. Beside `streak_broken` this says how many missed days
+    /// a freeze caught and how many it didn't.
+    case streakFreezeUsed(streak: Int, freezesLeft: Int, premium: Bool)
     case streakComebackStarted(source: String)
     case achievementUnlocked(id: String)
     // Purchases. `isTrial` is what StoreKit actually applied, so a trial start
@@ -492,6 +497,7 @@ enum AnalyticsEvent {
         case .notificationTapped: return "notification_tapped"
         case .streakUpdated: return "streak_updated"
         case .streakBroken: return "streak_broken"
+        case .streakFreezeUsed: return "streak_freeze_used"
         case .streakComebackStarted: return "streak_comeback_started"
         case .achievementUnlocked: return "achievement_unlocked"
         case .premiumPurchased: return "premium_purchased"
@@ -688,6 +694,8 @@ enum AnalyticsEvent {
             return params
         case .streakUpdated(let streak):
             return ["streak": streak]
+        case .streakFreezeUsed(let streak, let freezesLeft, let premium):
+            return ["streak": streak, "freezes_left": freezesLeft, "premium": premium]
         case .streakBroken(let previousLength):
             return ["previous_length": previousLength]
         case .streakComebackStarted(let source):

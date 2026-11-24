@@ -28,6 +28,12 @@ struct RootView: View {
     @Environment(\.challengeService) private var challengeService
     @Environment(\.familyBoard) private var familyBoard
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(StoreService.self) private var store
+    /// The day Premium's weekly freeze was last added, as a reference-date
+    /// interval; 0 for never. Per device rather than on the synced profile:
+    /// a new profile field needs a CloudKit schema deploy, and the cap of
+    /// three bounds what two devices can add between them.
+    @AppStorage("premiumFreezeRefillDay") private var premiumFreezeRefillDay = 0.0
     @State private var selectedTab: RootTab = .today
     /// Settings, presented over whichever tab is showing: Profile's gear opens
     /// it, and so does ⌘, on a hardware keyboard.
@@ -143,9 +149,21 @@ struct RootView: View {
             // A break is announced once, by the pass that causes it — see
             // `Streaks.Outcome`. A freeze save needs nothing here: the streak
             // survived, and StreakCard already carries its own reassurance.
-            if case .broken(let previous) = Streaks.normalize(profile) {
+            // Before normalize, so a top-up that is due covers a missed day.
+            let premium = store.isPremium || StoreService.lastKnownPremium
+            if premium { refillPremiumFreeze(profile) }
+            switch Streaks.normalize(profile) {
+            case .broken(let previous):
                 pendingStreakBreak = previous
                 analytics.log(.streakBroken(previousLength: previous))
+            case .freezeSaved:
+                analytics.log(.streakFreezeUsed(
+                    streak: profile.currentStreak,
+                    freezesLeft: profile.streakFreezes,
+                    premium: premium
+                ))
+            case .unchanged:
+                break
             }
             reconcilePackCompletions(profile)
             // Seed the auto-check default once, here, so the game and the
@@ -198,6 +216,16 @@ struct RootView: View {
         }
         .onOpenURL { url in
             handleDeepLink(url)
+        }
+        // The entitlement resolving after launch, or a purchase just made:
+        // the first weekly freeze arrives with Premium, not a launch later.
+        .onChange(of: store.isPremium) { _, premium in
+            guard premium, let profile = profiles.first else { return }
+            let before = profile.streakFreezes
+            refillPremiumFreeze(profile)
+            guard profile.streakFreezes != before else { return }
+            context.saveLogged("premium freeze")
+            WidgetBridge.publish(profile, context: context)
         }
         .task {
             // Fresh installs only. The classification is prompt-free; the
@@ -534,6 +562,14 @@ struct RootView: View {
         }
         // One day for every tab — see `TodayClock`.
         .tracksToday()
+    }
+
+    /// Premium's weekly freeze, when a week has passed since the last one.
+    private func refillPremiumFreeze(_ profile: PlayerProfile) {
+        let last = premiumFreezeRefillDay == 0
+            ? nil : Date(timeIntervalSinceReferenceDate: premiumFreezeRefillDay)
+        guard Streaks.refillPremiumFreeze(profile, lastRefill: last) else { return }
+        premiumFreezeRefillDay = Calendar.current.startOfDay(for: Date()).timeIntervalSinceReferenceDate
     }
 
     private func ensureProfile() -> PlayerProfile {

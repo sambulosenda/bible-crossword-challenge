@@ -369,6 +369,41 @@ enum Streaks {
         return .broken(previous: previous)
     }
 
+    /// Days between Premium's freeze top-ups.
+    static let premiumRefillDays = 7
+
+    /// Premium's streak perk: one freeze back when a week has passed since
+    /// the last top-up. Returns whether it added one; the caller stamps the
+    /// day. Free players keep the rules below unchanged (start with one, earn
+    /// one per seven-day milestone).
+    ///
+    /// Run before `normalize` at launch, so a top-up that is due covers the
+    /// day that was just missed. It is its own pass rather than a rule inside
+    /// `normalize`, whose inputs and outcomes the spec vectors pin.
+    ///
+    /// A player already holding the most is not topped up and not stamped:
+    /// the week runs from a top-up that happened, so the first freeze they
+    /// spend after a full week comes straight back.
+    @discardableResult
+    static func refillPremiumFreeze(
+        _ p: PlayerProfile,
+        lastRefill: Date?,
+        now: Date = Date(),
+        calendar: Calendar = .current
+    ) -> Bool {
+        guard p.streakFreezes < PlayerProfile.maxStreakFreezes else { return false }
+        if let lastRefill {
+            let days = calendar.dateComponents(
+                [.day],
+                from: calendar.startOfDay(for: lastRefill),
+                to: calendar.startOfDay(for: now)
+            ).day ?? 0
+            guard days >= premiumRefillDays else { return false }
+        }
+        p.streakFreezes += 1
+        return true
+    }
+
     /// Called when a puzzle is completed. Returns true if the streak advanced today.
     ///
     /// `isReplay` marks a puzzle the player had already finished. The streak

@@ -305,6 +305,24 @@ final class Bible_Crossword_ChallengeUITests: XCTestCase {
         XCTAssertEqual(events.count(of: "family_board_offer_shown"), 1, "\(events)")
     }
 
+    /// Premium's weekly freeze, offered under the streak in the flame's sheet:
+    /// a free player with a run sees the line, and its tap opens the paywall
+    /// under its own label once the sheet is down.
+    @MainActor
+    func testStreakSheetOffersTheWeeklyFreeze() throws {
+        let app = launch(extra: ["-uiSeedShowcase", "-uiFree", "-uiNoReview"])
+        let flame = app.buttons.matching(NSPredicate(format: "label ENDSWITH 'day streak'")).firstMatch
+        XCTAssertTrue(flame.waitForExistence(timeout: 20), app.debugDescription)
+        let offer = app.buttons["streakFreezeOffer"]
+        tap(flame, until: offer, in: app)
+        offer.tap()
+        let opened = NSPredicate { _, _ in
+            self.loggedEvents().count(of: "paywall_opened", source: "streak_freeze") == 1
+        }
+        expectation(for: opened, evaluatedWith: nil)
+        waitForExpectations(timeout: 10)
+    }
+
     /// `pack_opened` is the denominator of pack conversion. It used to fire
     /// again on every pop back from a puzzle, so one visit counted twice.
     @MainActor

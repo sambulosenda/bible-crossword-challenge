@@ -366,6 +366,9 @@ struct PremiumOfferView: View {
         ("Hints", "1 a day", "Unlimited"),
         ("Memory verses", "3 at a time", "Unlimited"),
         ("Packs & Journeys", "A few", "All"),
+        // 2026-11-24: free players earn a freeze per seven-day run; Premium
+        // adds one every week on top (`Streaks.refillPremiumFreeze`).
+        ("Streak freezes", "Earned", "+1 every week"),
     ]
 
     private var comparison: some View {

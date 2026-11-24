@@ -157,6 +157,39 @@ struct StreakTests {
         #expect(p.currentStreak == 1)
     }
 
+    // MARK: - Premium's weekly freeze
+
+    @Test func premiumRefillAddsOneWhenNeverRefilled() {
+        let p = PlayerProfile(streakFreezes: 0)
+        #expect(Streaks.refillPremiumFreeze(p, lastRefill: nil, now: day(2026, 7, 1), calendar: utc))
+        #expect(p.streakFreezes == 1)
+    }
+
+    @Test func premiumRefillWaitsAWeek() {
+        let p = PlayerProfile(streakFreezes: 0)
+        #expect(!Streaks.refillPremiumFreeze(p, lastRefill: day(2026, 7, 1), now: day(2026, 7, 7), calendar: utc))
+        #expect(p.streakFreezes == 0)
+        #expect(Streaks.refillPremiumFreeze(p, lastRefill: day(2026, 7, 1), now: day(2026, 7, 8), calendar: utc))
+        #expect(p.streakFreezes == 1)
+    }
+
+    @Test func premiumRefillStopsAtTheCap() {
+        let p = PlayerProfile(streakFreezes: PlayerProfile.maxStreakFreezes)
+        #expect(!Streaks.refillPremiumFreeze(p, lastRefill: nil, now: day(2026, 7, 1), calendar: utc))
+        #expect(p.streakFreezes == PlayerProfile.maxStreakFreezes)
+    }
+
+    /// The point of running it before `normalize`: a subscriber out of
+    /// freezes, with a top-up due, keeps the streak through the missed day.
+    @Test func premiumRefillDueCoversTheMissedDay() {
+        let p = PlayerProfile(streakFreezes: 0)
+        Streaks.registerCompletion(p, now: day(2026, 7, 1), calendar: utc)
+        Streaks.refillPremiumFreeze(p, lastRefill: day(2026, 6, 20), now: day(2026, 7, 3), calendar: utc)
+        #expect(Streaks.normalize(p, now: day(2026, 7, 3), calendar: utc) == .freezeSaved)
+        #expect(p.currentStreak == 1)
+        #expect(p.streakFreezes == 0)
+    }
+
     // MARK: - Break detection (ticket 11)
 
     /// The comeback card is keyed on this outcome, so the freeze path must not

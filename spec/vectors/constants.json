@@ -182,6 +182,7 @@
       "completion_offer",
       "home_card",
       "streak_card",
+      "streak_freeze",
       "profile",
       "archive",
       "past_puzzles",

@@ -47,6 +47,9 @@ enum PaywallSource: String, CaseIterable, Hashable {
     /// speaks to the habit instead of the catalogue. Its own label so the
     /// streak copy can be judged against the plain card.
     case streakCard = "streak_card"
+    /// The line under the streak in the sheet the flame opens: Premium's
+    /// weekly freeze, offered where the freezes are counted.
+    case streakFreeze = "streak_freeze"
     /// The upsell card on the profile screen.
     case profile
     /// A locked row, or the footer button, in the archive.
@@ -98,9 +101,14 @@ enum PaywallSource: String, CaseIterable, Hashable {
             return "Make it part of the morning."
         case .streakCard:
             // They already have the habit; the offer is what's beyond the
-            // daily. Nothing about the streak itself: Premium doesn't touch
-            // it, and implying it protects one would be a lie.
+            // daily. Nothing about the streak itself here: this card was
+            // written when Premium didn't touch it. `streakFreeze` is the
+            // surface that sells the weekly freeze.
             return "You've made it a habit.\nHere's the rest of it."
+        case .streakFreeze:
+            // The perk, as what it does for them. True as of 2026-11-24:
+            // Premium adds a freeze each week (`Streaks.refillPremiumFreeze`).
+            return "Miss a day.\nKeep your streak."
         case .archive:
             return PremiumCopy.archive
         case .pastPuzzles:
