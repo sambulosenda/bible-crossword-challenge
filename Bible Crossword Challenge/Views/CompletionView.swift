@@ -157,6 +157,8 @@ struct CompletionView: View {
     @State private var showsWidgetOffer = false
     @State private var didLogWidgetOffer = false
     @State private var showWidgetHow = false
+    @State private var showsBoardOffer = false
+    @State private var didLogBoardOffer = false
     @State private var showReturnDaySheet = false
     /// The review prompt and the return-day sheet wait for the celebration to
     /// land. Cancelled if the screen closes first, so an ask the player never
@@ -263,6 +265,7 @@ struct CompletionView: View {
                     }
                     .frame(minHeight: viewport.size.height, alignment: .top)
                 }
+                .modifier(SoftScrollEdges())
             }
         }
         // Whether the window is wider than tall, kept in state so the bar
@@ -303,6 +306,7 @@ struct CompletionView: View {
             maybeShowInviteAsk()
             maybeShowCompletionOffer()
             maybeShowWidgetOffer()
+            maybeShowBoardOffer()
         }
         .onDisappear {
             delayedAsks.forEach { $0.cancel() }
@@ -544,6 +548,16 @@ struct CompletionView: View {
                     guard visible, !didLogWidgetOffer else { return }
                     didLogWidgetOffer = true
                     analytics.log(.widgetOfferShown)
+                }
+        }
+
+        // Gone once the board exists: it moves up beside the scorecard.
+        if showsBoardOffer, board == nil {
+            boardOffer
+                .onScrollVisibilityChange(threshold: 0.6) { visible in
+                    guard visible, !didLogBoardOffer else { return }
+                    didLogBoardOffer = true
+                    analytics.log(.familyBoardOfferShown)
                 }
         }
 
@@ -1508,20 +1522,10 @@ struct CompletionView: View {
             analytics.log(.widgetOfferTapped)
             showWidgetHow = true
         } label: {
-            Label {
-                Text("Solve a clue a day from your Home Screen")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .fixedSize(horizontal: false, vertical: true)
-            } icon: {
-                // Grey (2026-11-03): beside the bar's blue button and the
-                // verse's two blue links, a third blue item blurred which one
-                // was the action.
-                Image(systemName: "square.text.square")
-                    .foregroundStyle(.secondary)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .contentShape(.rect)
+            // Grey icon (2026-11-03): beside the bar's blue button and the
+            // verse's two blue links, a third blue item blurred which one
+            // was the action.
+            askRowLabel("Solve a clue a day from your Home Screen", systemImage: "square.text.square")
         }
         .buttonStyle(.plain)
         .accessibilityHint("Shows how to add the widget")
@@ -1534,6 +1538,73 @@ struct CompletionView: View {
               profile.totalPuzzlesCompleted >= 3 else { return }
         widgetOfferShown = true
         showsWidgetOffer = true
+    }
+
+    /// The family board, said in the open. Since 2026-09-07 its only way in
+    /// was the overflow menu, and no board was started after 2026-09-26 (9
+    /// players had in the five weeks before). Same quiet line and slot as the
+    /// widget offer, and it yields to every other ask: one under the verse at
+    /// a time. Unlike those it isn't once-ever — a board belongs to a puzzle,
+    /// so the line is true again on the next one.
+    private var boardOffer: some View {
+        Button {
+            analytics.log(.familyBoardOfferTapped)
+            startBoard()
+        } label: {
+            askRowLabel("Race your family on this puzzle", systemImage: "person.2")
+        }
+        .buttonStyle(.plain)
+        .accessibilityHint("Starts a family board and shares its link")
+        .accessibilityIdentifier("familyBoardOffer")
+    }
+
+    /// A tappable line under the verse: the widget and the family board.
+    /// All grey it read as a caption (the widget line: 2 taps from 173
+    /// players in the 30 days to 2026-11-24), so the words are in the text
+    /// colour and a chevron closes the row. Still no blue: the bar keeps the
+    /// screen's one coloured action. The icon shares the verse links' column
+    /// (`VerseRowLabelStyle`), so the words start under theirs.
+    private func askRowLabel(_ text: String, systemImage: String) -> some View {
+        HStack(spacing: Theme.Spacing.s) {
+            Label {
+                Text(text)
+                    .foregroundStyle(.primary)
+                    .fixedSize(horizontal: false, vertical: true)
+            } icon: {
+                Image(systemName: systemImage)
+                    .foregroundStyle(.secondary)
+            }
+            .labelStyle(VerseRowLabelStyle())
+            .frame(maxWidth: .infinity, alignment: .leading)
+
+            Image(systemName: "chevron.right")
+                .font(.footnote.weight(.semibold))
+                .foregroundStyle(.tertiary)
+                .accessibilityHidden(true)
+        }
+        .font(.subheadline)
+        .contentShape(.rect)
+    }
+
+    private func maybeShowBoardOffer() {
+        #if DEBUG
+        // The row needs a second solve and a screen with no other ask; the
+        // flag puts it up on a clean slate's first, for the UI test.
+        if ProcessInfo.processInfo.arguments.contains("-uiForceBoardOffer") {
+            showsCompletionOffer = false
+            showsWidgetOffer = false
+            showsBoardOffer = true
+            return
+        }
+        #endif
+        // After the once-ever offers, which keep the slot when they're due.
+        // Not on the first solve (the celebration's), nor beside a friend's
+        // result, which already has its own send-back.
+        guard board == nil, challenge == nil,
+              !showsWidgetOffer, !showsCompletionOffer, !showReminderAsk, inviteMoment == nil,
+              questContext.flatMap(graduationJourney) == nil,
+              profile.totalPuzzlesCompleted >= 2 else { return }
+        showsBoardOffer = true
     }
 
     private func logCompletionOfferIfSeen() {
@@ -1581,6 +1652,7 @@ struct CompletionView: View {
                 } label: {
                     Label("Read the passage", systemImage: "book")
                         .font(.subheadline.weight(.medium))
+                        .labelStyle(VerseRowLabelStyle())
                 }
                 .buttonStyle(.borderless)
                 .tint(Theme.accent)
@@ -1623,6 +1695,7 @@ struct CompletionView: View {
                 } label: {
                     Label(held ? "Practice it from memory" : "Try it from memory", systemImage: "brain")
                         .font(.subheadline.weight(.medium))
+                        .labelStyle(VerseRowLabelStyle())
                 }
                 // A link since 2026-10-24, beside the passage link it
                 // belongs with, not a pill competing with the bar's action.
@@ -1978,7 +2051,7 @@ struct CompletionView: View {
     private var hasOverflowActions: Bool {
         chainTarget != nil
             || (challenge == nil && chainTarget != nil)
-            || board == nil
+            || (board == nil && !showsBoardOffer)
             || (puzzle.isMini && gameCenter.isAuthenticated)
     }
 
@@ -2004,7 +2077,8 @@ struct CompletionView: View {
                 Label(challengeTitle, systemImage: "flag.checkered")
             }
         }
-        if board == nil {
+        // The row under the verse says it when it's up; not twice.
+        if board == nil && !showsBoardOffer {
             Button {
                 startBoard()
             } label: {
@@ -2138,6 +2212,34 @@ private struct WidgetHowToSheet: View {
 /// Pins the completion's primary at the foot of the page while the bars are
 /// a side rail. `safeAreaBar` gives it the scroll edge the system bars get;
 /// before iOS 26 the rail never appears, so there is nothing to pin.
+/// One icon column for the verse's links and the lines under them. A label
+/// sizes its icon column to the glyph, so the three-person glyph started its
+/// words 10pt right of "Read the passage" above it.
+private struct VerseRowLabelStyle: LabelStyle {
+    @ScaledMetric(relativeTo: .subheadline) private var iconWidth: CGFloat = 24
+
+    func makeBody(configuration: Configuration) -> some View {
+        HStack(spacing: 6) {
+            configuration.icon
+                .frame(width: iconWidth, alignment: .leading)
+            configuration.title
+        }
+    }
+}
+
+/// The page fading out under the close button and the action bar. Without
+/// it the solve time scrolled up crisp behind the close button and the clock,
+/// and a card at rest sat behind the bar's pill.
+private struct SoftScrollEdges: ViewModifier {
+    func body(content: Content) -> some View {
+        if #available(iOS 26.0, *) {
+            content.scrollEdgeEffectStyle(.soft, for: .all)
+        } else {
+            content
+        }
+    }
+}
+
 private struct RailPrimaryBar<Bar: View>: ViewModifier {
     var isOn: Bool
     @ViewBuilder var bar: () -> Bar

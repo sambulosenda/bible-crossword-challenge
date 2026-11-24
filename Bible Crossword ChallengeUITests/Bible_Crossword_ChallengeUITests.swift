@@ -281,6 +281,30 @@ final class Bible_Crossword_ChallengeUITests: XCTestCase {
         XCTAssertFalse(app.alerts["What should we call you?"].waitForExistence(timeout: 2))
     }
 
+    /// The family board row under the verse: its impression is the
+    /// denominator of the row's tap rate, so it logs once, when the row has
+    /// been scrolled to, and the tap logs before the name prompt a first
+    /// board asks for.
+    @MainActor
+    func testFamilyBoardOfferLogsOnceWhenSeenAndTaps() throws {
+        let app = launch(extra: ["-uiAutoSolve", "-uiForceBoardOffer", "-uiNoReview"])
+        openTodaysPuzzle(app)
+
+        let offer = app.buttons["familyBoardOffer"]
+        XCTAssertTrue(app.buttons["Close"].waitForExistence(timeout: 15), "No completion screen")
+        for _ in 0..<4 where !(offer.exists && offer.isHittable) { app.swipeUp() }
+        XCTAssertTrue(offer.exists && offer.isHittable, "No family board row\n\(app.debugDescription)")
+        var events = loggedEvents(waitingFor: "family_board_offer_shown")
+        XCTAssertEqual(events.count(of: "family_board_offer_shown"), 1, "\(events)")
+        XCTAssertEqual(events.count(of: "family_board_offer_tapped"), 0, "\(events)")
+
+        offer.tap()
+        XCTAssertTrue(app.alerts["What should we call you?"].waitForExistence(timeout: 5))
+        events = loggedEvents(waitingFor: "family_board_offer_tapped")
+        XCTAssertEqual(events.count(of: "family_board_offer_tapped"), 1, "\(events)")
+        XCTAssertEqual(events.count(of: "family_board_offer_shown"), 1, "\(events)")
+    }
+
     /// `pack_opened` is the denominator of pack conversion. It used to fire
     /// again on every pop back from a puzzle, so one visit counted twice.
     @MainActor

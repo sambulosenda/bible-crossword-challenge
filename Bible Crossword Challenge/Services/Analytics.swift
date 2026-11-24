@@ -333,6 +333,11 @@ enum AnalyticsEvent {
     case familyBoardStarted(puzzleID: String)
     case familyBoardOpened(puzzleID: String, size: Int)
     case familyBoardShared(puzzleID: String, size: Int)
+    /// The "Race your family on this puzzle" row under the completion verse:
+    /// seen, and tapped. A tap goes on to `familyBoardStarted`, which the
+    /// overflow menu's item logs too — these two read the row on its own.
+    case familyBoardOfferShown
+    case familyBoardOfferTapped
     /// Someone opened a passage in the reader. `source` separates the two ways
     /// in — the Verse of the Day at the top of Today, and the closing verse
     /// after a solve — because they answer different questions: the first is
@@ -520,6 +525,8 @@ enum AnalyticsEvent {
         case .familyBoardStarted: return "family_board_started"
         case .familyBoardOpened: return "family_board_opened"
         case .familyBoardShared: return "family_board_shared"
+        case .familyBoardOfferShown: return "family_board_offer_shown"
+        case .familyBoardOfferTapped: return "family_board_offer_tapped"
         case .scriptureOpened: return "scripture_opened"
         case .readerClosed: return "reader_closed"
         case .verseAction: return "verse_action"
@@ -556,7 +563,8 @@ enum AnalyticsEvent {
 
     var parameters: [String: Any] {
         switch self {
-        case .appOpen, .widgetOfferShown, .widgetOfferTapped:
+        case .appOpen, .widgetOfferShown, .widgetOfferTapped,
+             .familyBoardOfferShown, .familyBoardOfferTapped:
             return [:]
         case .onboardingStep(let index, let name):
             return ["step_index": index, "step_name": name]
