@@ -544,19 +544,31 @@ struct PremiumOfferView: View {
     /// the button and the small line under it did — and the tap rate fell
     /// from 13% to 5% when the trial went from 7 days to 3. The saving has
     /// its own badge on the card's corner (`savingsBadge`).
+    ///
+    /// Side by side where they fit, the tag under the name where they don't.
+    /// In one row on a 375pt phone the tag kept its width and the name gave
+    /// way, breaking as "Yearl / y" and "Monthl / y" (iPhone SE, 2026-11-24).
     private func planHeading(_ product: Product) -> some View {
-        HStack(spacing: Theme.Spacing.s) {
-            Text(planTitle(product))
-                .font(.headline)
-            if let tag = planTag(product) {
-                Text(tag)
-                    .font(.caption.weight(.bold))
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 3)
-                    .foregroundStyle(Theme.onInk)
-                    .background(Theme.ink, in: .capsule)
-                    .fixedSize()
-            }
+        ViewThatFits(in: .horizontal) {
+            HStack(spacing: Theme.Spacing.s) { planHeadingParts(product) }
+            VStack(alignment: .leading, spacing: 3) { planHeadingParts(product) }
+        }
+    }
+
+    @ViewBuilder
+    private func planHeadingParts(_ product: Product) -> some View {
+        Text(planTitle(product))
+            .font(.headline)
+            .lineLimit(1)
+            .fixedSize()
+        if let tag = planTag(product) {
+            Text(tag)
+                .font(.caption.weight(.bold))
+                .padding(.horizontal, 8)
+                .padding(.vertical, 3)
+                .foregroundStyle(Theme.onInk)
+                .background(Theme.ink, in: .capsule)
+                .fixedSize()
         }
     }
 
